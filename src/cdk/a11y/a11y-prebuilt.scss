@@ -1,0 +1,3 @@
+@use './index' as a11y;
+
+@include a11y.a11y-visually-hidden();

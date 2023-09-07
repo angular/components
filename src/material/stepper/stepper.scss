@@ -1,0 +1,270 @@
+@use 'sass:math';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
+@use '../core/tokens/token-utils';
+@use './stepper-variables';
+
+// Gets the `calc` expression for the vertical padding of the stepper header.
+@function _get-vertical-padding-calc() {
+  $height: var(#{token-utils.get-token-variable(header-height)});
+  @return calc(calc(#{$height} - #{stepper-variables.$label-header-height}) / 2);
+}
+
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  display: block;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(background, container-color);
+  }
+}
+
+.mat-horizontal-stepper-header-container {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+
+  .mat-stepper-label-position-bottom & {
+    align-items: flex-start;
+  }
+
+  .mat-stepper-header-position-bottom & {
+    order: 1;
+  }
+}
+
+.mat-stepper-horizontal-line {
+  border-top-width: stepper-variables.$line-width;
+  border-top-style: solid;
+  flex: auto;
+  height: 0;
+  margin: 0 stepper-variables.$line-gap - stepper-variables.$side-gap;
+  min-width: stepper-variables.$line-gap + stepper-variables.$side-gap;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-color, line-color);
+
+    .mat-stepper-label-position-bottom & {
+      $vertical-padding: _get-vertical-padding-calc();
+      margin: 0;
+      min-width: 0;
+      position: relative;
+
+      // Ensures that the horizontal line for the step content is aligned centered vertically.
+      top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
+    }
+  }
+}
+
+%mat-header-horizontal-line-label-position-bottom {
+  $half-side-gap: math.div(stepper-variables.$side-gap, 2);
+  border-top-width: stepper-variables.$line-width;
+  border-top-style: solid;
+  content: '';
+  display: inline-block;
+  height: 0;
+  position: absolute;
+  width: calc(50% - #{$half-side-gap + stepper-variables.$line-gap});
+}
+
+.mat-horizontal-stepper-header {
+  display: flex;
+  height: stepper-variables.$header-height;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 stepper-variables.$side-gap;
+
+  .mat-step-icon {
+    margin-right: stepper-variables.$line-gap;
+    flex: none;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: stepper-variables.$line-gap;
+    }
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    $vertical-padding: _get-vertical-padding-calc();
+    @include token-utils.create-token-slot(height, header-height);
+
+    &::before,
+    &::after {
+      @include token-utils.create-token-slot(border-top-color, line-color);
+    }
+
+    .mat-stepper-label-position-bottom & {
+      padding: #{$vertical-padding} stepper-variables.$side-gap;
+
+      &::before,
+      &::after {
+        // Ensures that the horizontal lines for the step header are centered vertically.
+        top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
+      }
+    }
+  }
+
+  .mat-stepper-label-position-bottom & {
+    box-sizing: border-box;
+    flex-direction: column;
+    // We use auto instead of fixed 104px (by spec) because when there is an optional step
+    //  the height is greater than that
+    height: auto;
+
+    &:not(:last-child)::after,
+    [dir='rtl'] &:not(:first-child)::after {
+      @extend %mat-header-horizontal-line-label-position-bottom;
+      right: 0;
+    }
+
+    &:not(:first-child)::before,
+    [dir='rtl'] &:not(:last-child)::before {
+      @extend %mat-header-horizontal-line-label-position-bottom;
+      left: 0;
+    }
+
+    [dir='rtl'] &:last-child::before,
+    [dir='rtl'] &:first-child::after {
+      display: none;
+    }
+
+    & .mat-step-icon {
+      // Cleans margin both for ltr and rtl direction
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    & .mat-step-label {
+      padding: stepper-variables.$label-position-bottom-top-gap 0 0 0;
+      text-align: center;
+      width: 100%;
+    }
+  }
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+
+  // We can't use `max-height` here, because it breaks the flexbox centering in IE.
+  height: stepper-variables.$label-header-height;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    padding: #{_get-vertical-padding-calc()} stepper-variables.$side-gap;
+  }
+
+  .mat-step-icon {
+    margin-right: stepper-variables.$vertical-stepper-content-margin - stepper-variables.$side-gap;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: stepper-variables.$vertical-stepper-content-margin - stepper-variables.$side-gap;
+    }
+  }
+}
+
+.mat-horizontal-stepper-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-horizontal-stepper-content {
+  outline: 0;
+
+  &.mat-horizontal-stepper-content-inactive {
+    height: 0;
+    overflow: hidden;
+  }
+
+  // Used to avoid an issue where when the stepper is nested inside a component that
+  // changes the `visibility` as a part of an Angular animation, the stepper's content
+  // stays hidden (see #25925). The value has to be `!important` to override the incorrect
+  // `visibility` from the animations package. This can also be solved using `visibility: visible`
+  // on `.mat-horizontal-stepper-content`, but it can allow tabbing into hidden content.
+  &:not(.mat-horizontal-stepper-content-inactive) {
+    visibility: inherit !important;
+  }
+}
+
+.mat-horizontal-content-container {
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+  }
+
+  overflow: hidden;
+  padding: 0 stepper-variables.$side-gap stepper-variables.$side-gap stepper-variables.$side-gap;
+
+  .mat-stepper-header-position-bottom & {
+    padding: stepper-variables.$side-gap stepper-variables.$side-gap 0 stepper-variables.$side-gap;
+  }
+}
+
+.mat-vertical-content-container {
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+  }
+
+  margin-left: stepper-variables.$vertical-stepper-content-margin;
+  border: 0;
+  position: relative;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: stepper-variables.$vertical-stepper-content-margin;
+  }
+}
+
+.mat-stepper-vertical-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  border-left-width: stepper-variables.$line-width;
+  border-left-style: solid;
+
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    $vertical-padding: _get-vertical-padding-calc();
+    $vertical-offset: calc(#{stepper-variables.$line-gap} - #{$vertical-padding});
+
+    @include token-utils.create-token-slot(border-left-color, line-color);
+
+    // Ensures that the vertical lines for the step content exceed into the step
+    // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.
+    top: $vertical-offset;
+    bottom: $vertical-offset;
+  }
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+}
+
+.mat-vertical-stepper-content {
+  overflow: hidden;
+  outline: 0;
+
+  // Used to avoid an issue where when the stepper is nested inside a component that
+  // changes the `visibility` as a part of an Angular animation, the stepper's content
+  // stays hidden (see #25925). The value has to be `!important` to override the incorrect
+  // `visibility` from the animations package. This can also be solved using `visibility: visible`
+  // on `.mat-vertical-stepper-content`, but it can allow tabbing into hidden content.
+  &:not(.mat-vertical-stepper-content-inactive) {
+    visibility: inherit !important;
+  }
+}
+
+.mat-vertical-content {
+  padding: 0 stepper-variables.$side-gap stepper-variables.$side-gap stepper-variables.$side-gap;
+}
+
+.mat-step:last-child {
+  .mat-vertical-content-container {
+    border: none;
+  }
+}

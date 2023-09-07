@@ -1,0 +1,30 @@
+@use './elevation';
+@use '../theming/inspection';
+
+@mixin private-theme-elevation($zValue, $theme) {
+  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
+  $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
+
+  @include elevation.elevation($zValue, $elevation-color-or-default);
+}
+
+@mixin private-theme-overridable-elevation($zValue, $theme) {
+  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
+  $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
+
+  @include elevation.overridable-elevation($zValue, $elevation-color-or-default);
+}
+
+// If the mat-animation-noop class is present on the components root element,
+// prevent non css animations from running.
+// NOTE: Currently this mixin should only be used with components that do not
+// have any projected content.
+@mixin private-animation-noop() {
+  &._mat-animation-noopable {
+    // Use !important here since we don't know what context this mixin will
+    // be included in and MDC can have some really specific selectors.
+    transition: none !important;
+    animation: none !important;
+    @content;
+  }
+}

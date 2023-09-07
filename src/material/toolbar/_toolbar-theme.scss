@@ -1,0 +1,68 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin _palette-styles($theme, $palette-name) {
+  @include token-utils.create-token-values(
+    tokens-mat-toolbar.$prefix,
+    tokens-mat-toolbar.private-get-color-palette-color-tokens(
+      $background-color: inspection.get-theme-color($theme, $palette-name),
+      $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
+    )
+  );
+}
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-color-tokens($theme));
+  }
+
+  .mat-toolbar {
+    &.mat-primary {
+      @include _palette-styles($theme, primary);
+    }
+
+    &.mat-accent {
+      @include _palette-styles($theme, accent);
+    }
+
+    &.mat-warn {
+      @include _palette-styles($theme, warn);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
+  $theme: inspection.private-get-typography-back-compat-theme($theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-toolbar.$prefix,
+      tokens-mat-toolbar.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-toolbar') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

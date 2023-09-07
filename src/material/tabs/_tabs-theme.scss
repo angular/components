@@ -1,0 +1,91 @@
+@use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
+@use '@material/tab/tab-theme' as mdc-tab-theme;
+@use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
+@use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
+@use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+
+@mixin color($theme) {
+  .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
+    @include _palette-styles($theme, primary);
+
+    &.mat-accent {
+      @include _palette-styles($theme, accent);
+    }
+
+    &.mat-warn {
+      @include _palette-styles($theme, warn);
+    }
+
+    &.mat-background-primary {
+      @include _background-styles($theme, primary);
+    }
+
+    &.mat-background-accent {
+      @include _background-styles($theme, accent);
+    }
+
+    &.mat-background-warn {
+      @include _background-styles($theme, warn);
+    }
+  }
+}
+
+@mixin _background-styles($theme, $palette-name) {
+  @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+    tokens-mat-tab-header-with-background.get-color-tokens($theme, $palette-name));
+}
+
+@mixin _palette-styles($theme, $palette-name) {
+  @include mdc-tab-theme.secondary-navigation-tab-theme(
+    tokens-mdc-tab.get-color-tokens($theme, $palette-name));
+  @include mdc-tab-indicator-theme.theme(
+    tokens-mdc-tab-indicator.get-color-tokens($theme, $palette-name));
+  @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+   tokens-mat-tab-header.get-color-tokens($theme, $palette-name));
+}
+
+@mixin typography($theme) {
+  .mat-mdc-tab-header {
+    @include mdc-tab-theme.secondary-navigation-tab-theme(
+      tokens-mdc-tab.get-typography-tokens($theme));
+    @include mdc-tab-indicator-theme.theme(
+      tokens-mdc-tab-indicator.get-typography-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-typography-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  .mat-mdc-tab-header {
+    @include mdc-tab-theme.secondary-navigation-tab-theme(
+      tokens-mdc-tab.get-density-tokens($theme));
+    @include mdc-tab-indicator-theme.theme(
+      tokens-mdc-tab-indicator.get-density-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-density-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-tabs') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
+

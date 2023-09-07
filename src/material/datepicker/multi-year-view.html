@@ -1,0 +1,18 @@
+<table class="mat-calendar-table" role="grid">
+  <thead aria-hidden="true" class="mat-calendar-table-header">
+    <tr><th class="mat-calendar-table-header-divider" colspan="4"></th></tr>
+  </thead>
+  <tbody mat-calendar-body
+         [rows]="_years"
+         [todayValue]="_todayYear"
+         [startValue]="_selectedYear!"
+         [endValue]="_selectedYear!"
+         [numCols]="4"
+         [cellAspectRatio]="4 / 7"
+         [activeCell]="_getActiveCell()"
+         (selectedValueChange)="_yearSelected($event)"
+         (activeDateChange)="_updateActiveDate($event)"
+         (keyup)="_handleCalendarBodyKeyup($event)"
+         (keydown)="_handleCalendarBodyKeydown($event)">
+  </tbody>
+</table>

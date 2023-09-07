@@ -1,0 +1,63 @@
+@use '@angular/cdk';
+@use '@material/circular-progress/circular-progress' as mdc-circular-progress;
+@use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/tokens/m2/mdc/circular-progress' as m2-mdc-circular-progress;
+
+// The slots for tokens that will be configured in the theme can be emitted with no fallback.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-circular-progress-token-slots: m2-mdc-circular-progress.get-token-slots();
+
+  // Add the MDC progress spinner static styles.
+  @include mdc-circular-progress.static-styles();
+
+  .mat-mdc-progress-spinner {
+    // Add the official slots for the MDC circular progress.
+    @include mdc-circular-progress-theme.theme-styles($mdc-circular-progress-token-slots);
+  }
+}
+
+.mat-mdc-progress-spinner {
+  // Explicitly set to `block` since the browser defaults custom elements to `inline`.
+  display: block;
+
+  // Prevents the spinning of the inner element from affecting layout outside of the spinner.
+  overflow: hidden;
+
+  // Spinners with a diameter less than half the existing line-height will become distorted.
+  // Explicitly set the line-height to 0px to avoid this issue.
+  // https://github.com/material-components/material-components-web/issues/7118
+  line-height: 0;
+
+  &._mat-animation-noopable {
+    &,
+    .mdc-circular-progress__determinate-circle {
+      // The spinner itself has a transition on `opacity`.
+      transition: none;
+    }
+
+    .mdc-circular-progress__indeterminate-circle-graphic,
+    .mdc-circular-progress__spinner-layer,
+    .mdc-circular-progress__indeterminate-container {
+      // Disables the rotation animations.
+      animation: none;
+    }
+
+    .mdc-circular-progress__indeterminate-container circle {
+      // Render the indeterminate spinner as a complete circle when animations are off
+      stroke-dasharray: 0 !important;
+    }
+  }
+
+  @include cdk.high-contrast(active, off) {
+    .mdc-circular-progress__indeterminate-circle-graphic,
+    .mdc-circular-progress__determinate-circle {
+      // SVG colors aren't inverted automatically in high contrast mode. Set the
+      // stroke to currentColor in order to respect the user's color settings.
+      stroke: currentColor;
+      // currentColor blends in with the background in Chromium-based browsers
+      // so we have to fall back to `CanvasText` which isn't supported on IE.
+      stroke: CanvasText;
+    }
+  }
+}

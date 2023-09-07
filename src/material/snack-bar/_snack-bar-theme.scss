@@ -1,0 +1,49 @@
+@use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
+
+@mixin base($theme) {
+    // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-unthemable-tokens());
+  }
+}
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-color-tokens($theme));
+    @include token-utils.create-token-values(
+      tokens-mat-snack-bar.$prefix,
+      tokens-mat-snack-bar.get-color-tokens($theme)
+    );
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-snackbar-theme.theme(tokens-mdc-snack-bar.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-snack-bar') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
+

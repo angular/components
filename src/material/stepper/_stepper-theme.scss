@@ -1,0 +1,51 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-color-tokens($theme));
+
+    .mat-step-header.mat-accent {
+      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.private-get-color-palette-color-tokens($theme, accent));
+    }
+
+    .mat-step-header.mat-warn {
+      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.private-get-color-palette-color-tokens($theme, warn));
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
+      tokens-mat-stepper.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-stepper') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

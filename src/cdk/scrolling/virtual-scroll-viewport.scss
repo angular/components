@@ -1,0 +1,86 @@
+// When elements such as `<tr>` or `<li>` are repeated inside the cdk-virtual-scroll-viewport,
+// their container element (e.g. `<table>`, `<ul>`, etc.) needs to be placed in the viewport as
+// well. We reset some properties here to prevent these container elements from introducing
+// additional space that would throw off the scrolling calculations.
+@mixin _clear-container-space($direction) {
+  $start: if($direction == horizontal, 'left', 'top');
+  $end: if($direction == horizontal, 'right', 'bottom');
+
+  & > dl:not([cdkVirtualFor]),
+  & > ol:not([cdkVirtualFor]),
+  & > table:not([cdkVirtualFor]),
+  & > ul:not([cdkVirtualFor]) {
+    padding: {
+      #{$start}: 0;
+      #{$end}: 0;
+    }
+    margin: {
+      #{$start}: 0;
+      #{$end}: 0;
+    }
+    border: {
+      #{$start}-width: 0;
+      #{$end}-width: 0;
+    }
+    outline: none;
+  }
+}
+
+
+// viewport
+cdk-virtual-scroll-viewport {
+  display: block;
+  position: relative;
+  transform: translateZ(0);
+}
+
+// Scrolling container.
+.cdk-virtual-scrollable {
+  overflow: auto;
+  will-change: scroll-position;
+  contain: strict;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Wrapper element for the rendered content. This element will be transformed to push the rendered
+// content to its correct offset in the data set as a whole.
+.cdk-virtual-scroll-content-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  contain: content;
+
+  // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
+  // viewport's `scrollHeight` when the spacer's transform changes.
+
+  [dir='rtl'] & {
+    right: 0;
+    left: auto;
+  }
+}
+
+.cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
+  min-height: 100%;
+  @include _clear-container-space(horizontal);
+}
+
+.cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+  min-width: 100%;
+  @include _clear-container-space(vertical);
+}
+
+// Spacer element that whose width or height will be adjusted to match the size of the entire data
+// set if it were rendered all at once. This ensures that the scrollable content region is the
+// correct size.
+.cdk-virtual-scroll-spacer {
+  height: 1px;
+  transform-origin: 0 0;
+  flex: 0 0 auto; // prevents spacer from collapsing if display: flex is applied
+
+  // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
+  // viewport's `scrollHeight` when the spacer's transform changes.
+
+  [dir='rtl'] & {
+    transform-origin: 100% 0;
+  }
+}

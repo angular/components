@@ -1,0 +1,43 @@
+@use '@angular/cdk';
+
+@mixin ripple() {
+  // The host element of an mat-ripple directive should always have a position of "absolute" or
+  // "relative" so that the ripples inside are correctly positioned relatively to the container.
+  .mat-ripple {
+    overflow: hidden;
+
+    // By default, every ripple container should have position: relative in favor of creating an
+    // easy API for developers using the MatRipple directive.
+    position: relative;
+
+    // Promote containers that have ripples to a new layer. We want to target `:not(:empty)`,
+    // because we don't want all ripple containers to have their own layer since they're used in a
+    // lot of places and the layer is only relevant while animating. Note that ideally we'd use
+    // the `contain` property here (see #13175), because `:empty` can be broken by having extra
+    // text inside the element, but it isn't very well supported yet.
+    &:not(:empty) {
+      transform: translateZ(0);
+    }
+  }
+
+  .mat-ripple.mat-ripple-unbounded {
+    overflow: visible;
+  }
+
+  .mat-ripple-element {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+
+    transition: opacity, transform 0ms cubic-bezier(0, 0, 0.2, 1);
+
+    // We use a 3d transform here in order to avoid an issue in Safari where
+    // the ripples aren't clipped when inside the shadow DOM (see #24028).
+    transform: scale3d(0, 0, 0);
+
+    // In high contrast mode the ripple is opaque, causing it to obstruct the content.
+    @include cdk.high-contrast(active, off) {
+      display: none;
+    }
+  }
+}

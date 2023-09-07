@@ -1,0 +1,71 @@
+@use '@material/density' as mdc-density;
+@use '@material/textfield' as mdc-textfield;
+@use '../core/tokens/m2/mat/select' as tokens-mat-select;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-color-tokens($theme));
+
+    .mat-mdc-form-field.mat-accent {
+      @include token-utils.create-token-values(tokens-mat-select.$prefix,
+        tokens-mat-select.get-color-tokens($theme, accent));
+    }
+
+    .mat-mdc-form-field.mat-warn {
+      @include token-utils.create-token-values(tokens-mat-select.$prefix,
+        tokens-mat-select.get-color-tokens($theme, warn));
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+
+  // Density is clamped at -5 here, because MDC's form field throws an error for anything lower.
+  $form-field-height: mdc-density.prop-value(
+    $density-config: mdc-textfield.$density-config,
+    $density-scale: theming.clamp-density($density-scale, -5),
+    $property-name: height,
+  );
+
+  // On lower densities the filled form field hides its label which causes the label to
+  // be misaligned. Remove the additional offset that was added because of the label.
+  @if ($form-field-height < mdc-textfield.$minimum-height-for-filled-label) {
+    .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+      transform: none;
+    }
+  }
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-select.$prefix,
+      tokens-mat-select.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-select') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

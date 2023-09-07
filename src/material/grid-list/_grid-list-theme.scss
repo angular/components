@@ -1,0 +1,33 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+
+
+// Include this empty mixin for consistency with the other components.
+@mixin color($theme) {}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-grid-list.$prefix,
+      tokens-mat-grid-list.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-grid-list') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

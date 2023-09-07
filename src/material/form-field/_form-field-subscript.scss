@@ -1,0 +1,80 @@
+@use '@material/typography' as mdc-typography;
+@use '@material/textfield/variables' as mdc-textfield-variables;
+
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
+@use './form-field-sizing';
+
+@mixin private-form-field-subscript() {
+  // Wrapper for the hints and error messages.
+  .mat-mdc-form-field-subscript-wrapper {
+    box-sizing: border-box;
+    width: 100%;
+    position: relative;
+  }
+
+  .mat-mdc-form-field-hint-wrapper,
+  .mat-mdc-form-field-error-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0 mdc-textfield-variables.$padding-horizontal;
+  }
+
+  .mat-mdc-form-field-subscript-dynamic-size {
+    .mat-mdc-form-field-hint-wrapper,
+    .mat-mdc-form-field-error-wrapper {
+      position: static;
+    }
+  }
+
+  .mat-mdc-form-field-bottom-align::before {
+    content: '';
+    display: inline-block;
+    height: 16px;
+  }
+
+  .mat-mdc-form-field-bottom-align.mat-mdc-form-field-subscript-dynamic-size::before {
+    content: unset;
+  }
+
+  .mat-mdc-form-field-hint-end {
+    order: 1;
+  }
+
+  // Clears the floats on the hints. This is necessary for the hint animation to work.
+  .mat-mdc-form-field-hint-wrapper {
+    display: flex;
+  }
+
+  // Spacer used to make sure start and end hints have enough space between them.
+  .mat-mdc-form-field-hint-spacer {
+    flex: 1 0 form-field-sizing.$mat-form-field-hint-min-space;
+  }
+
+  // Single error message displayed beneath the form field underline.
+  .mat-mdc-form-field-error {
+    display: block;
+
+    @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-token-slots()) {
+      @include token-utils.create-token-slot(color, error-text-color);
+    }
+  }
+
+  // The subscript wrapper has a minimum height to avoid that the form-field
+  // jumps when hints or errors are displayed.
+  .mat-mdc-form-field-subscript-wrapper,
+  .mat-mdc-form-field-bottom-align::before {
+    @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-token-slots()) {
+      @include mdc-typography.smooth-font();
+      @include token-utils.create-token-slot(font-family, subscript-text-font);
+      @include token-utils.create-token-slot(line-height, subscript-text-line-height);
+      @include token-utils.create-token-slot(font-size, subscript-text-size);
+      @include token-utils.create-token-slot(letter-spacing, subscript-text-tracking);
+      @include token-utils.create-token-slot(font-weight, subscript-text-weight);
+    }
+  }
+}

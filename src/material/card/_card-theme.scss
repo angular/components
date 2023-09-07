@@ -1,0 +1,133 @@
+@use 'sass:map';
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/card' as tokens-mat-card;
+@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
+@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
+@use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
+
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-elevated-card-theme.theme(tokens-mdc-elevated-card.get-unthemable-tokens());
+      @include mdc-outlined-card-theme.theme(tokens-mdc-outlined-card.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+          tokens-mat-card.$prefix, tokens-mat-card.get-unthemable-tokens());
+    }
+  }
+}
+
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    $mdc-elevated-card-color-tokens: token-utils.resolve-elevation(
+        tokens-mdc-elevated-card.get-color-tokens($theme),
+        container-elevation,
+        container-shadow-color
+    );
+    $mdc-outlined-card-color-tokens: token-utils.resolve-elevation(
+        tokens-mdc-outlined-card.get-color-tokens($theme),
+        container-elevation,
+        container-shadow-color,
+    );
+    $mat-card-color-tokens: tokens-mat-card.get-color-tokens($theme);
+
+    // Add values for card tokens.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-elevated-card-theme.theme($mdc-elevated-card-color-tokens);
+      @include mdc-outlined-card-theme.theme($mdc-outlined-card-color-tokens);
+      @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-color-tokens);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    $mdc-elevated-card-typography-tokens: tokens-mdc-elevated-card.get-typography-tokens($theme);
+    $mdc-outlined-card-typography-tokens: tokens-mdc-outlined-card.get-typography-tokens($theme);
+    $mat-card-typography-tokens: tokens-mat-card.get-typography-tokens($theme);
+
+    // Add values for card tokens.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-elevated-card-theme.theme($mdc-elevated-card-typography-tokens);
+      @include mdc-outlined-card-theme.theme($mdc-outlined-card-typography-tokens);
+      @include token-utils.create-token-values(
+          tokens-mat-card.$prefix, $mat-card-typography-tokens);
+    }
+  }
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {
+    $mdc-elevated-card-density-tokens: tokens-mdc-elevated-card.get-density-tokens($theme);
+    $mdc-outlined-card-density-tokens: tokens-mdc-outlined-card.get-density-tokens($theme);
+    $mat-card-density-tokens: tokens-mat-card.get-density-tokens($theme);
+
+    // Add values for card tokens.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-elevated-card-theme.theme($mdc-elevated-card-density-tokens);
+      @include mdc-outlined-card-theme.theme($mdc-outlined-card-density-tokens);
+      @include token-utils.create-token-values(tokens-mat-card.$prefix, $mat-card-density-tokens);
+    }
+  }
+}
+
+@mixin theme($theme-or-color-config) {
+  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    }
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    $elevated-card-tokens: map.get($tokens, tokens-mdc-elevated-card.$prefix);
+    // Work around a bug in MDC where the elevation is not resolved to an actual shadow value.
+    $elevated-card-tokens: token-utils.resolve-elevation(
+        $elevated-card-tokens,
+        container-elevation,
+        container-shadow-color
+    );
+    $outlined-card-tokens: map.get($tokens, tokens-mdc-outlined-card.$prefix);
+    // Work around a bug in MDC where the elevation is not resolved to an actual shadow value.
+    $outlined-card-tokens: token-utils.resolve-elevation(
+        $outlined-card-tokens,
+        container-elevation,
+        container-shadow-color
+    );
+    @include mdc-elevated-card-theme.theme($elevated-card-tokens);
+    @include mdc-outlined-card-theme.theme($outlined-card-tokens);
+    @include token-utils.create-token-values(
+        tokens-mat-card.$prefix, map.get($tokens, tokens-mat-card.$prefix));
+  }
+}

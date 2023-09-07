@@ -1,0 +1,61 @@
+@use 'sass:color';
+@use '@material/chips/chip-theme' as mdc-chip-theme;
+@use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+
+@mixin color($theme) {
+  .mat-mdc-standard-chip {
+    $default-color-tokens: tokens-mdc-chip.get-color-tokens($theme);
+    @include mdc-chip-theme.theme($default-color-tokens);
+
+    &.mat-mdc-chip-selected,
+    &.mat-mdc-chip-highlighted {
+      &.mat-primary {
+        $primary-color-tokens: tokens-mdc-chip.get-color-tokens($theme, primary);
+        @include mdc-chip-theme.theme($primary-color-tokens);
+      }
+
+      &.mat-accent {
+        $accent-color-tokens: tokens-mdc-chip.get-color-tokens($theme, accent);
+        @include mdc-chip-theme.theme($accent-color-tokens);
+      }
+
+      &.mat-warn {
+        $warn-color-tokens: tokens-mdc-chip.get-color-tokens($theme, warn);
+        @include mdc-chip-theme.theme($warn-color-tokens);
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  $typography-tokens: tokens-mdc-chip.get-typography-tokens($theme);
+
+  .mat-mdc-standard-chip {
+    @include mdc-chip-theme.theme($typography-tokens);
+  }
+}
+
+@mixin density($theme) {
+  $density-tokens: tokens-mdc-chip.get-density-tokens($theme);
+
+  .mat-mdc-chip.mat-mdc-standard-chip {
+    @include mdc-chip-theme.theme($density-tokens);
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

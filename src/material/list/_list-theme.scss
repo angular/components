@@ -1,0 +1,147 @@
+@use 'sass:map';
+@use '@material/list/evolution-mixins';
+@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
+@use '@material/radio/radio-theme' as mdc-radio-theme;
+@use '@material/list/list-theme' as mdc-list-theme;
+
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
+@use '../core/typography/typography';
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-list-theme.theme(tokens-mdc-list.get-unthemable-tokens());
+  }
+}
+
+@mixin color($theme) {
+  $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($theme);
+
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-color-tokens);
+  }
+
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
+  }
+
+  .mat-accent {
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, accent));
+    }
+  }
+
+  .mat-warn {
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
+    }
+  }
+
+  .mat-mdc-list-option {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, primary));
+  }
+  .mat-mdc-list-option.mat-accent {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, accent));
+  }
+  .mat-mdc-list-option.mat-warn {
+    @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, warn));
+  }
+
+  // There is no token for activated color on nav list.
+  // TODO(mmalerba): Add a token to MDC or make a custom one.
+  .mat-mdc-list-base.mat-mdc-list-base {
+    @include evolution-mixins.list-selected-ink-color(inspection.get-theme-color($theme, primary));
+  }
+
+  // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can cause
+  //  opacity issues, so we need this override for now. We can remove it when all Angular Material
+  //  components stop using the old MDC mixins.
+  .mat-mdc-list-base .mdc-list-item--disabled {
+    .mdc-list-item__start,
+    .mdc-list-item__content,
+    .mdc-list-item__end {
+      opacity: 1;
+    }
+  }
+}
+
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+  $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($theme);
+
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-density-tokens);
+  }
+
+  // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based API,
+  //  to avoid screenshot diffs. We should remove it in favor of following MDC's current style, or
+  //  add custom tokens for it.
+  .mat-mdc-list-item {
+    &.mdc-list-item--with-leading-avatar,
+    &.mdc-list-item--with-leading-checkbox,
+    &.mdc-list-item--with-leading-icon {
+      &.mdc-list-item--with-one-line {
+        height: map.get((
+            0: 56px,
+            -1: 52px,
+            -2: 48px,
+            -3: 44px,
+            -4: 40px,
+            -5: 40px,
+        ), $density-scale);
+      }
+
+      &.mdc-list-item--with-two-lines {
+        height: map.get((
+            0: 72px,
+            -1: 68px,
+            -2: 64px,
+            -3: 60px,
+            -4: 56px,
+            -5: 56px,
+        ), $density-scale);
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($theme);
+
+  // Add values for MDC list tokens.
+  .mat-mdc-list-base {
+    @include mdc-list-theme.theme($mdc-list-typography-tokens);
+  }
+
+  // MDC does not have tokens for the subheader.
+  // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
+  .mdc-list-group__subheader {
+    font: inspection.get-theme-typography($theme, subtitle-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

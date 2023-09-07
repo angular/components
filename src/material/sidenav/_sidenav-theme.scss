@@ -1,0 +1,30 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mat/sidenav' as tokens-mat-sidenav;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-sidenav') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

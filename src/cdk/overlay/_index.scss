@@ -1,0 +1,152 @@
+// We want overlays to always appear over user content, so set a baseline
+// very high z-index for the overlay container, which is where we create the new
+// stacking context for all overlays.
+$overlay-container-z-index: 1000 !default;
+$overlay-z-index: 1000 !default;
+$overlay-backdrop-z-index: 1000 !default;
+
+// Background color for all of the backdrops
+$overlay-backdrop-color: rgba(0, 0, 0, 0.32) !default;
+
+// Default backdrop animation is based on the Material Design swift-ease-out.
+$backdrop-animation-duration: 400ms !default;
+$backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
+
+/// Emits structural styles required for cdk/overlay to function.
+@mixin overlay() {
+  .cdk-overlay-container, .cdk-global-overlay-wrapper {
+    // Disable events from being captured on the overlay container.
+    pointer-events: none;
+
+    // The container should be the size of the viewport.
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  // The overlay-container is an invisible element which contains all individual overlays.
+  .cdk-overlay-container {
+    position: fixed;
+    z-index: $overlay-container-z-index;
+
+    &:empty {
+      // Hide the element when it doesn't have any child nodes. This doesn't
+      // include overlays that have been detached, rather than disposed.
+      display: none;
+    }
+  }
+
+  // We use an extra wrapper element in order to use make the overlay itself a flex item.
+  // This makes centering the overlay easy without running into the subpixel rendering
+  // problems tied to using `transform` and without interfering with the other position
+  // strategies.
+  .cdk-global-overlay-wrapper {
+    display: flex;
+    position: absolute;
+    z-index: $overlay-z-index;
+  }
+
+  // A single overlay pane.
+  .cdk-overlay-pane {
+    // Note: it's important for this one to start off `absolute`,
+    // in order for us to be able to measure it correctly.
+    position: absolute;
+    pointer-events: auto;
+    box-sizing: border-box;
+    z-index: $overlay-z-index;
+
+    // For connected-position overlays, we set `display: flex` in
+    // order to force `max-width` and `max-height` to take effect.
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .cdk-overlay-backdrop {
+    // TODO(jelbourn): reuse sidenav fullscreen mixin.
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    z-index: $overlay-backdrop-z-index;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
+    opacity: 0;
+
+    &.cdk-overlay-backdrop-showing {
+      opacity: 1;
+
+      // Note that we can't import and use the `high-contrast` mixin from `_a11y.scss`, because
+      // this file will be copied to the top-level `cdk` package when putting together the files
+      // for npm. Any relative import paths we use here will become invalid once the file is copied.
+      .cdk-high-contrast-active & {
+        // In high contrast mode the rgba background will become solid
+        // so we need to fall back to making it opaque using `opacity`.
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .cdk-overlay-dark-backdrop {
+    background: $overlay-backdrop-color;
+  }
+
+  .cdk-overlay-transparent-backdrop {
+    // Define a transition on the visibility so that the `transitionend` event can fire immediately.
+    transition: visibility 1ms linear, opacity 1ms linear;
+    visibility: hidden;
+    opacity: 1;
+
+    // Note: as of Firefox 57, having the backdrop be `background: none` will prevent it from
+    // capturing the user's mouse scroll events. Since we also can't use something like
+    // `rgba(0, 0, 0, 0)`, we work around the inconsistency by not setting the background at
+    // all and using `opacity` to make the element transparent.
+    &.cdk-overlay-backdrop-showing {
+      opacity: 0;
+      visibility: visible;
+    }
+  }
+
+  .cdk-overlay-backdrop-noop-animation {
+    transition: none;
+  }
+
+  // Overlay parent element used with the connected position strategy. Used to constrain the
+  // overlay element's size to fit within the viewport.
+  .cdk-overlay-connected-position-bounding-box {
+    position: absolute;
+    z-index: $overlay-z-index;
+
+    // We use `display: flex` on this element exclusively for centering connected overlays.
+    // When *not* centering, a top/left/bottom/right will be set which overrides the normal
+    // flex layout.
+    display: flex;
+
+    // We use the `column` direction here to avoid some flexbox issues in Edge
+    // when using the "grow after open" options.
+    flex-direction: column;
+
+    // Add some dimensions so the element has an `innerText` which some people depend on in tests.
+    min-width: 1px;
+    min-height: 1px;
+  }
+
+  // Used when disabling global scrolling.
+  .cdk-global-scrollblock {
+    position: fixed;
+
+    // Necessary for the content not to lose its width. Note that we're using 100%, instead of
+    // 100vw, because 100vw includes the width plus the scrollbar, whereas 100% is the width
+    // that the element had before we made it `fixed`.
+    width: 100%;
+
+    // Note: this will always add a scrollbar to whatever element it is on, which can
+    // potentially result in double scrollbars. It shouldn't be an issue, because we won't
+    // block scrolling on a page that doesn't have a scrollbar in the first place.
+    overflow-y: scroll;
+  }
+}

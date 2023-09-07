@@ -1,0 +1,146 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@material/tokens/v0_161' as mdc-tokens;
+
+/// Picks a submap containing only the given keys out the given map.
+/// @param {Map} $map The map to pick from.
+/// @param {List} $keys The map keys to pick.
+/// @return {Map} A submap containing only the given keys.
+@function _pick($map, $keys) {
+  $result: ();
+  @each $key in $keys {
+    @if map.has-key($map, $key) {
+      $result: map.set($result, $key, map.get($map, $key));
+    }
+  }
+  @return $result;
+}
+
+/// Filters keys with a null value out of the map.
+/// @param {Map} $map The map to filter.
+/// @return {Map} The given map with all of the null keys filtered out.
+@function _filter-nulls($map) {
+  $result: ();
+  @each $key, $val in $map {
+    @if $val != null {
+      $result: map.set($result, $key, $val);
+    }
+  }
+  @return $result;
+}
+
+/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
+/// @param {List} $prefix The token prefix for the given tokens.
+/// @param {Map} $m3-values A map of M3 token values for the given prefix.
+/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
+@function _get-mdc-tokens($prefix, $m3-values, $slots) {
+  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
+  $used-m3-tokens: _pick($m3-values, $used-token-names);
+  @return (
+    $prefix: $used-m3-tokens,
+  );
+}
+
+/// Sets all of the standard typography tokens for the given token base name to the given typography
+/// level.
+/// @param {Map} $typography-tokens The MDC system-typescale tokens.
+/// @param {String} $base-name The token base name to get the typography tokens for
+/// @param {String} $typography-level The typography level to base the token values on.
+/// @return {Map} A map containing the typography tokens for the given base token name.
+@function _get-typography-tokens($typography-tokens, $base-name, $typography-level) {
+  $result: ();
+  @each $prop in (font, line-height, size, tracking, weight) {
+    $result: map.set(
+        $result,
+        #{$base-name}-#{$prop},
+        map.get($typography-tokens, #{$typography-level}-#{$prop}
+        ));
+  }
+  @return $result;
+}
+
+/// Renames the keys in a map
+/// @param {Map} $map The map whose keys should be renamed
+/// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
+/// @return {Map} The result of applying the given key renames to the given map.
+@function _rename-map-keys($map, $rename-keys) {
+  $result: $map;
+  @each $old-key-name, $new-key-name in $rename-keys {
+    @if map.has-key($map, $old-key-name) {
+      $result: map.set($result, $new-key-name, map.get($map, $old-key-name));
+    }
+  }
+  @return $result;
+}
+
+/// Renames the official checkbox tokens to match the names actually used in MDC's code (which are
+/// different). This is a temporary workaround until MDC updates to use the correct names for the
+/// tokens.
+/// @param {Map} $tokens The map of checkbox tokens with the official tokens names
+/// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
+@function _fix-checkbox-token-names($tokens) {
+  $rename-keys: (
+    'selected-icon-color': 'selected-checkmark-color',
+    'selected-disabled-icon-color': 'disabled-selected-checkmark-color',
+    'selected-container-color': 'selected-icon-color',
+    'selected-hover-container-color': 'selected-hover-icon-color',
+    'selected-disabled-container-color': 'disabled-selected-icon-color',
+    'selected-disabled-container-opacity': 'disabled-selected-icon-opacity',
+    'selected-focus-container-color': 'selected-focus-icon-color',
+    'selected-pressed-container-color': 'selected-pressed-icon-color',
+    'unselected-disabled-outline-color': 'disabled-unselected-icon-color',
+    'unselected-disabled-container-opacity': 'disabled-unselected-icon-opacity',
+    'unselected-focus-outline-color': 'unselected-focus-icon-color',
+    'unselected-hover-outline-color': 'unselected-hover-icon-color',
+    'unselected-outline-color': 'unselected-icon-color',
+    'unselected-pressed-outline-color': 'unselected-pressed-icon-color'
+  );
+  @return _rename-map-keys($tokens, $rename-keys);
+}
+
+// TODO(mmalerba): We need a way to accept custom M3 token values generated from MDCs theme builder
+//  or other means. We can't just use them directly without processing them first because we need to
+//  add our made up tokens,
+/// Gets the default token values for M3.
+/// @return The default set of M3 tokens.
+@function get-m3-tokens() {
+  $typography: mdc-tokens.md-sys-typescale-values();
+  $colors: mdc-tokens.md-sys-color-values-light();
+
+  // TODO(mmalerba): Refactor this to not depend on the legacy theme. This is a hack for now because
+  //  there is no good way to get the token slots in material-experimental without exposing them all
+  //  from material.
+  $fake-theme: mat.define-light-theme((
+    color: (
+      primary: mat.define-palette(mat.$red-palette),
+      accent: mat.define-palette(mat.$red-palette),
+      warn: mat.define-palette(mat.$red-palette),
+    ),
+    typography: mat.define-typography-config(),
+    density: 0
+  ));
+  $token-slots: mat.m2-tokens-from-theme($fake-theme);
+
+  // TODO(mmalerba): Fill in remaining tokens.
+  @return mat.private-merge-all(
+      // Fill in official MDC tokens.
+      _get-mdc-tokens((mdc, checkbox),
+        _fix-checkbox-token-names(mdc-tokens.md-comp-checkbox-values()), $token-slots),
+      _get-mdc-tokens((mdc, elevated-card), mdc-tokens.md-comp-elevated-card-values(),
+        $token-slots),
+      _get-mdc-tokens((mdc, outlined-card), mdc-tokens.md-comp-outlined-card-values(),
+        $token-slots),
+      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
+      // values.
+      (
+          (mat, card): mat.private-merge-all(
+            _get-typography-tokens($typography, title-text, title-large),
+            _get-typography-tokens($typography, subtitle-text, title-medium),
+            (
+              subtitle-text-color: map.get($colors, on-surface)
+            )
+        )
+      ),
+  );
+}

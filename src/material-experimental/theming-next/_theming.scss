@@ -1,0 +1,130 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use '@angular/material' as mat;
+
+/// Whether to throw an error when a required dep is not configured. If false, the dep will be
+/// automatically configured instead.
+$_error-on-missing-dep: false;
+
+/// Applies the theme for the given component configuration.
+/// @param {Map} $tokens A map containing the default values to use for tokens not explicitly
+///     customized in the component config object.
+/// @param {List} $component The component config object to emit theme tokens for.
+/// @output CSS variables representing the theme tokens for this component.
+@mixin _apply-theme($tokens, $component) {
+  $id: map.get($component, id);
+  $tokens: map.deep-merge($tokens, map.get($component, customizations));
+
+  // NOTE: for now we use a hardcoded if-chain, but in the future when first-class mixins are
+  // supported, the configuration data will contain a reference to its own theme mixin.
+  @if $id == 'mat.card' {
+    @include mat.private-apply-card-theme-from-tokens($tokens);
+  }
+  @else if $id == 'mat.checkbox' {
+    @include mat.private-apply-checkbox-theme-from-tokens($tokens);
+  }
+  @else {
+    @error 'Unrecognized component theme: #{id}';
+  }
+}
+
+/// Gets the transitive closure of the given list of component configuration dependencies.
+/// @param {List} $components The list of component config objects to get the transitive deps for.
+/// @param {Map} $configured [()] A map of already configured component IDs. Used for recursion,
+///     should not be passed when calling.
+/// @return {List} The transitive closure of configs for the given $components.
+// TODO(mmalerba): Currently we use the deps to determine if additional tokens, other than the
+//  explicitly requested ones need to be emitted, but the deps do not affect the ordering in which
+//  the various configs are processed. Before moving out of experimental we should think more about
+//  the ordering behavior we want. For the most part the order shouldn't matter, unless we have 2
+//  configs trying to set the same token.
+@function _get-transitive-deps($components, $configured: ()) {
+  // Mark the given components as configured.
+  @each $component in $components {
+    $configured: map.set($configured, map.get($component, id), true);
+  }
+  $new-deps: ();
+
+  // Check each of the given components for new deps.
+  @each $component in $components {
+    // Note: Deps are specified as getter functions that return a config object rather than a direct
+    // config object. This allows us to only call the getter if the dep has not yet been configured.
+    // This can be useful if we have 2 components that want to require each other to be configured.
+    // Example: form-field and input. If we used direct config objects in this case, it would cause
+    // infinite co-recursion.
+    @each $dep-getter in mat.private-coerce-to-list(map.get($component, deps)) {
+      $dep: meta.call($dep-getter);
+      $dep-id: map.get($dep, id);
+      @if not (map.has-key($configured, $dep-id)) {
+        @if $_error-on-missing-dep {
+          @error 'Missing theme: `#{map.get($component, id)}` depends on `#{$dep-id}`.' +
+            ' Please configure the theme for `#{$dep-id}` in your call to `mat.theme`';
+        }
+        @else {
+          $configured: map.set($configured, $dep-id, true);
+          $new-deps: list.append($new-deps, $dep);
+        }
+      }
+    }
+  }
+
+  // Append on the new deps to this list of component configurations and return.
+  @if list.length($new-deps) > 0 {
+    $components: list.join($components, _get-transitive-deps($new-deps, $configured));
+  }
+  @return $components;
+}
+
+/// Apply the themes for the given component configs with the given ste of fallback token values.
+/// @param {Map} $tokens A map of fallback values to use for tokens that are not explicitly
+///     customized by one of the component configs.
+/// @param {List} $components The list of component configurations to emit tokens for.
+/// @output CSS variables representing the theme tokens for the given component configs.
+@mixin _theme($tokens, $components) {
+  // Call the theme mixin for each configured component.
+  @each $component in $components {
+    @include _apply-theme($tokens, $component);
+  }
+}
+
+/// Takes a list of components to configure, and outputs theme tokens for the configured components.
+/// @param {List} $components The list of component configurations to emit tokens for.
+/// @output CSS variables representing the theme tokens for the given component configs.
+@mixin theme($components...) {
+  $filtered-components: ();
+  $tokens: null;
+  @each $component in $components {
+    @if (map.get($component, id) == 'mat.token-defaults') {
+      @if $tokens == null {
+        $tokens: map.get($component, tokens);
+      }
+      @else {
+        @error 'mat.token-defaults specified multiple times in call to mat.theme';
+      }
+    }
+    @else {
+      $filtered-components: list.append($filtered-components, $component);
+    }
+  }
+  $tokens: $tokens or ();
+  @if $tokens == () {
+    @each $component in $filtered-components {
+      @if (map.get($component, customizations) or ()) == () {
+        $component-id: map.get($component, id);
+        @warn 'Call to `#{$component-id}()` will produce no output, this is likely a mistake.' +
+          ' Did you mean to:'+
+          '\a  1. Provide default token values with `mat.token-defaults`?' +
+          '\a  2. Specify customizations in the call to `#{$component-id}`?';
+      }
+    }
+  }
+  @include _theme($tokens, $filtered-components);
+}
+
+@function token-defaults($tokens) {
+  @return (
+    id: 'mat.token-defaults',
+    tokens: $tokens
+  );
+}

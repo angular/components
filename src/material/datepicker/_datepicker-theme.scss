@@ -1,0 +1,109 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
+@use '../button/icon-button-theme';
+
+// TODO(crisbeto): these variables aren't used anymore and should be removed.
+$selected-today-box-shadow-width: 1px;
+$selected-fade-amount: 0.6;
+$range-fade-amount: 0.2;
+$today-fade-amount: 0.2;
+$calendar-body-font-size: 13px !default;
+$calendar-weekday-table-font-size: 11px !default;
+
+@mixin _calendar-color($theme, $palette-name) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
+  $range-color: tokens-mat-datepicker.private-get-range-background-color($palette-color);
+  $range-tokens: tokens-mat-datepicker.get-range-color-tokens($range-color);
+  $calendar-tokens:
+    tokens-mat-datepicker.private-get-calendar-color-palette-color-tokens($theme, $palette-name);
+
+  @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
+    map.merge($calendar-tokens, $range-tokens));
+}
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
+      tokens-mat-datepicker.get-color-tokens($theme));
+  }
+
+  .mat-datepicker-content {
+    &.mat-accent {
+      @include _calendar-color($theme, accent);
+    }
+
+    &.mat-warn {
+      @include _calendar-color($theme, warn);
+    }
+  }
+
+  .mat-datepicker-toggle-active {
+    &.mat-accent {
+      $accent-tokens:
+        tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens($theme, accent);
+      @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $accent-tokens);
+    }
+
+    &.mat-warn {
+      $warn-tokens:
+        tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens($theme, warn);
+      @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $warn-tokens);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
+      tokens-mat-datepicker.get-typography-tokens($theme));
+  }
+}
+
+@mixin date-range-colors(
+  $range-color,
+  $comparison-color: tokens-mat-datepicker.$private-default-comparison-color,
+  $overlap-color: tokens-mat-datepicker.$private-default-overlap-color,
+  $overlap-selected-color:
+    tokens-mat-datepicker.private-get-default-overlap-selected-color($overlap-color)) {
+  $tokens: tokens-mat-datepicker.get-range-color-tokens(
+    $range-color: $range-color,
+    $comparison-color: $comparison-color,
+    $overlap-color: $overlap-color,
+    $overlap-selected-color: $overlap-selected-color,
+  );
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $tokens);
+  }
+}
+
+@mixin density($theme) {
+  // TODO(crisbeto): move this into the structural styles
+  // once the icon button density is switched to tokens.
+
+  // Regardless of the user-passed density, we want the calendar
+  // previous/next buttons to remain at density -2
+  .mat-calendar-controls {
+    @include icon-button-theme.density(-2);
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-datepicker') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

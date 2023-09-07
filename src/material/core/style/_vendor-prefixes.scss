@@ -1,0 +1,46 @@
+// stylelint-disable material/no-prefixes
+@mixin user-select($value) {
+  -webkit-user-select: $value;
+  user-select: $value;
+}
+
+@mixin input-placeholder {
+  &::placeholder {
+    @content;
+  }
+
+  &::-moz-placeholder {
+    @content;
+  }
+
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  // Note: this isn't necessary anymore since we don't support
+  // IE, but it caused some presubmit failures in #23416.
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+@mixin backface-visibility($value) {
+  -webkit-backface-visibility: $value;
+  backface-visibility: $value;
+}
+
+@mixin color-adjust($value) {
+  -webkit-print-color-adjust: $value;
+  color-adjust: $value;
+}
+
+@mixin private-background-clip($value) {
+  -webkit-background-clip: $value;
+  background-clip: $value;
+}
+
+@mixin clip-path($value) {
+  -webkit-clip-path: $value;
+  clip-path: $value;
+}
+// stylelint-enable

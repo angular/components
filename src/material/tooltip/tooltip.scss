@@ -1,0 +1,98 @@
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/tooltip/tooltip' as mdc-tooltip;
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
+@use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
+
+@include mdc-custom-properties.configure($emit-fallback-values: false,
+$emit-fallback-vars: false) {
+  $mdc-tooltip-token-slots: m2-mdc-plain-tooltip.get-token-slots();
+
+  // Add the MDC tooltip static styles.
+  @include mdc-tooltip.static-styles();
+
+  .mat-mdc-tooltip {
+    // Add the official slots for the MDC tooltip.
+    @include mdc-plain-tooltip-theme.theme-styles($mdc-tooltip-token-slots);
+  }
+}
+
+.mat-mdc-tooltip {
+  // We don't use MDC's positioning so this has to be relative.
+  position: relative;
+  transform: scale(0);
+
+  // Increases the area of the tooltip so the user's pointer can go from the trigger directly to it.
+  &::before {
+    $offset: -8px;
+    content: '';
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    position: absolute;
+
+    // Only set the offset on the side closest to the panel so we
+    // don't accidentally cover more content than we need to.
+    .mat-mdc-tooltip-panel-below & {
+      top: $offset;
+    }
+
+    .mat-mdc-tooltip-panel-above & {
+      bottom: $offset;
+    }
+
+    // Note that here we use left/right instead of before/after
+    // so that we don't have to add extra styles for RTL.
+    .mat-mdc-tooltip-panel-right & {
+      left: $offset;
+    }
+
+    .mat-mdc-tooltip-panel-left & {
+      right: $offset;
+    }
+  }
+
+  &._mat-animation-noopable {
+    animation: none;
+    transform: scale(1);
+  }
+}
+
+.mat-mdc-tooltip-panel-non-interactive {
+  pointer-events: none;
+}
+
+// TODO(crisbeto): we may be able to use MDC directly for these animations.
+
+@keyframes mat-mdc-tooltip-show {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mat-mdc-tooltip-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.mat-mdc-tooltip-show {
+  animation: mat-mdc-tooltip-show 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.mat-mdc-tooltip-hide {
+  animation: mat-mdc-tooltip-hide 75ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}

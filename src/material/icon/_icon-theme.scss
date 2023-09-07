@@ -1,0 +1,51 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin _palette-colors($theme, $palette-name) {
+  $color: inspection.get-theme-color($theme, $palette-name, text);
+  $tokens: tokens-mat-icon.private-get-icon-color-tokens($color);
+  @include token-utils.create-token-values(tokens-mat-icon.$prefix, $tokens);
+}
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-icon.$prefix,
+      tokens-mat-icon.get-color-tokens($theme));
+  }
+
+  .mat-icon {
+    &.mat-primary {
+      @include _palette-colors($theme, primary);
+    }
+
+    &.mat-accent {
+      @include _palette-colors($theme, accent);
+    }
+
+    &.mat-warn {
+      @include _palette-colors($theme, warn);
+    }
+  }
+}
+
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
+

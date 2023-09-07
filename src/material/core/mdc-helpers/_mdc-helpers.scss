@@ -1,0 +1,252 @@
+// TODO(mmalerba): this file should be split into separate cohesive partials for things like
+//  "theming", "typography", "core".
+@use '../theming/inspection';
+@use '../typography/typography';
+@use '@material/feature-targeting' as mdc-feature-targeting;
+@use '@material/typography' as mdc-typography;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use '@material/theme/css' as mdc-theme-css;
+@use 'sass:map';
+@use 'sass:meta';
+
+// A set of standard queries to use with MDC's queryable mixins.
+$mdc-base-styles-query: mdc-feature-targeting.without(mdc-feature-targeting.any(color, typography));
+$mdc-base-styles-without-animation-query:
+    mdc-feature-targeting.all($mdc-base-styles-query, mdc-feature-targeting.without(animation));
+$mdc-theme-styles-query: color;
+$mdc-typography-styles-query: typography;
+
+// Mappings from Angular Material's typography levels to MDC's typography levels.
+$mat-typography-mdc-level-mappings: (
+    headline-1: headline1,
+    headline-2: headline2,
+    headline-3: headline3,
+    headline-4: headline4,
+    headline-5: headline5,
+    headline-6: headline6,
+    subtitle-1: subtitle1,
+    subtitle-2: subtitle2,
+    body-1: body1,
+    body-2: body2,
+    caption: caption,
+    button: button,
+    overline: overline
+);
+
+// Converts an Angular Material typography level config to an MDC one.
+@function typography-level-config-to-mdc($theme, $mat-level) {
+  $mdc-level: map.get($mat-typography-mdc-level-mappings, $mat-level);
+
+  $result-with-nulls: map.merge(
+      if($mdc-level,
+          map.get(mdc-typography.$styles, $mdc-level),
+          (
+            text-decoration: none,
+            -moz-osx-font-smoothing: grayscale,
+            -webkit-font-smoothing: antialiased
+          )),
+      if($mat-level,
+          (
+            font-size: inspection.get-theme-typography($theme, $mat-level, font-size),
+            line-height: inspection.get-theme-typography($theme, $mat-level, line-height),
+            font-weight: inspection.get-theme-typography($theme, $mat-level, font-weight),
+            letter-spacing: inspection.get-theme-typography($theme, $mat-level, letter-spacing),
+            font-family: inspection.get-theme-typography($theme, $mat-level, font-family),
+            // Angular Material doesn't use text-transform, so disable it.
+            text-transform: none,
+          ),
+          ()));
+
+  // We need to strip out any keys with a null value. Leaving them in will cause MDC to emit CSS
+  // variables with no fallback value, which breaks some builds.
+  $result: ();
+  @each $property, $value in $result-with-nulls {
+    @if $value != null {
+      $result: map.merge($result, ($property: $value));
+    }
+  }
+  @return $result;
+}
+
+// Converts an Angular Material typography config to an MDC one.
+@function typography-config-to-mdc($theme) {
+  $mdc-config: ();
+
+  @each $mat-level, $mdc-level in $mat-typography-mdc-level-mappings {
+    $mdc-config: map.merge(
+        $mdc-config,
+        ($mdc-level: typography-level-config-to-mdc($theme, $mat-level)));
+  }
+
+  @return $mdc-config;
+}
+
+// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
+// This function falls back to determining the tone based on whether the theme is light or dark.
+@function variable-safe-contrast-tone($value, $is-dark) {
+  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
+    @return mdc-theme-color.contrast-tone($value);
+  }
+
+  @return if($is-dark, 'light', 'dark');
+}
+
+@function _variable-safe-ink-color-for-fill($text-style, $fill-color, $is-dark) {
+  $contrast-tone: variable-safe-contrast-tone($fill-color, $is-dark);
+  @return map.get(map.get(mdc-theme-color.$text-colors, $contrast-tone), $text-style);
+}
+
+// Configures MDC's global variables to reflect the given theme, applies the given styles,
+// then resets the global variables to prevent unintended side effects.
+@mixin using-mdc-theme($theme) {
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $warn: inspection.get-theme-color($theme, warn);
+  $is-dark: inspection.get-theme-type($theme) == dark;
+
+  // Save the original values.
+  $orig-primary: mdc-theme-color.$primary;
+  $orig-on-primary: mdc-theme-color.$on-primary;
+  $orig-secondary: mdc-theme-color.$secondary;
+  $orig-on-secondary: mdc-theme-color.$on-secondary;
+  $orig-background: mdc-theme-color.$background;
+  $orig-surface: mdc-theme-color.$surface;
+  $orig-on-surface: mdc-theme-color.$on-surface;
+  $orig-error: mdc-theme-color.$error;
+  $orig-on-error: mdc-theme-color.$on-error;
+  $orig-property-values: mdc-theme-color.$property-values;
+
+  // Set new values based on the given Angular Material theme.
+  mdc-theme-color.$primary: $primary;
+  mdc-theme-color.$on-primary:
+      if(variable-safe-contrast-tone(mdc-theme-color.$primary, $is-dark) == 'dark', #000, #fff);
+  mdc-theme-color.$secondary: $accent;
+  mdc-theme-color.$on-secondary:
+      if(variable-safe-contrast-tone(mdc-theme-color.$secondary, $is-dark) == 'dark', #000, #fff);
+  mdc-theme-color.$background: inspection.get-theme-color($theme, background, background);
+  mdc-theme-color.$surface: inspection.get-theme-color($theme, background, card);
+  mdc-theme-color.$on-surface:
+      if(variable-safe-contrast-tone(mdc-theme-color.$surface, $is-dark) == 'dark', #000, #fff);
+  mdc-theme-color.$error: $warn;
+  mdc-theme-color.$on-error:
+      if(variable-safe-contrast-tone(mdc-theme-color.$error, $is-dark) == 'dark', #000, #fff);
+  mdc-theme-color.$property-values: (
+      // Primary
+      primary: mdc-theme-color.$primary,
+      // Secondary
+      secondary: mdc-theme-color.$secondary,
+      // Background
+      background: mdc-theme-color.$background,
+      // Surface
+      surface: mdc-theme-color.$surface,
+      // Error
+      error: mdc-theme-color.$error,
+      on-primary: mdc-theme-color.$on-primary,
+      on-secondary: mdc-theme-color.$on-secondary,
+      on-surface: mdc-theme-color.$on-surface,
+      on-error: mdc-theme-color.$on-error,
+      // Text-primary on "background" background
+      text-primary-on-background:
+          _variable-safe-ink-color-for-fill(primary, mdc-theme-color.$background, $is-dark),
+      text-secondary-on-background:
+          _variable-safe-ink-color-for-fill(secondary, mdc-theme-color.$background, $is-dark),
+      text-hint-on-background:
+          _variable-safe-ink-color-for-fill(hint, mdc-theme-color.$background, $is-dark),
+      text-disabled-on-background:
+          _variable-safe-ink-color-for-fill(disabled, mdc-theme-color.$background, $is-dark),
+      text-icon-on-background:
+          _variable-safe-ink-color-for-fill(icon, mdc-theme-color.$background, $is-dark),
+      // Text-primary on "light" background
+      text-primary-on-light: _variable-safe-ink-color-for-fill(primary, light, $is-dark),
+      text-secondary-on-light: _variable-safe-ink-color-for-fill(secondary, light, $is-dark),
+      text-hint-on-light: _variable-safe-ink-color-for-fill(hint, light, $is-dark),
+      text-disabled-on-light: _variable-safe-ink-color-for-fill(disabled, light, $is-dark),
+      text-icon-on-light: _variable-safe-ink-color-for-fill(icon, light, $is-dark),
+      // Text-primary on "dark" background
+      text-primary-on-dark: _variable-safe-ink-color-for-fill(primary, dark, $is-dark),
+      text-secondary-on-dark: _variable-safe-ink-color-for-fill(secondary, dark, $is-dark),
+      text-hint-on-dark: _variable-safe-ink-color-for-fill(hint, dark, $is-dark),
+      text-disabled-on-dark: _variable-safe-ink-color-for-fill(disabled, dark, $is-dark),
+      text-icon-on-dark: _variable-safe-ink-color-for-fill(icon, dark, $is-dark)
+  );
+
+  // Apply given rules.
+  @include disable-mdc-fallback-declarations {
+    @content;
+  }
+
+  // Reset the original values.
+  mdc-theme-color.$primary: $orig-primary;
+  mdc-theme-color.$on-primary: $orig-on-primary;
+  mdc-theme-color.$secondary: $orig-secondary;
+  mdc-theme-color.$on-secondary: $orig-on-secondary;
+  mdc-theme-color.$background: $orig-background;
+  mdc-theme-color.$surface: $orig-surface;
+  mdc-theme-color.$on-surface: $orig-on-surface;
+  mdc-theme-color.$error: $orig-error;
+  mdc-theme-color.$on-error: $orig-on-error;
+  mdc-theme-color.$property-values: $orig-property-values;
+}
+
+// Configures MDC's global variables to reflect the given typography config,
+// applies the given styles, then resets the global variables to prevent unintended side effects.
+@mixin using-mdc-typography($theme) {
+  // Save the original values.
+  $orig-mdc-typography-styles: mdc-typography.$styles;
+
+  // Set new values based on the given Angular Material typography configuration.
+  @if inspection.theme-has($theme, typography) {
+    mdc-typography.$styles: typography-config-to-mdc($theme);
+  }
+
+  // Apply given rules.
+  @include disable-mdc-fallback-declarations {
+    @content;
+  }
+
+  // Reset the original values.
+  mdc-typography.$styles: $orig-mdc-typography-styles;
+}
+
+// Function to create an Angular Material typography config from MDC's predefined typography levels.
+// This is used for components where we accidentally ended up supporting null typography configs
+// that were silently falling back to MDC's typography. At the moment of writing this includes
+// `dialog`, `slider` and `tooltip`.
+// Important! We shouldn't introduce any new usages of this pattern and we should eventually clean
+// up any existing usages.
+@function private-fallback-typography-from-mdc() {
+  // This is very close to what we have in `define-typography-config`, but we can't use it here,
+  // because it would cause a circular import and moving it here doesn't make sense.
+  $font-family: mdc-typography.$font-family;
+  @return (
+    font-family: $font-family,
+    headline-1: typography.typography-config-level-from-mdc(headline1, $font-family),
+    headline-2: typography.typography-config-level-from-mdc(headline2, $font-family),
+    headline-3: typography.typography-config-level-from-mdc(headline3, $font-family),
+    headline-4: typography.typography-config-level-from-mdc(headline4, $font-family),
+    headline-5: typography.typography-config-level-from-mdc(headline5, $font-family),
+    headline-6: typography.typography-config-level-from-mdc(headline6, $font-family),
+    subtitle-1: typography.typography-config-level-from-mdc(subtitle1, $font-family),
+    subtitle-2: typography.typography-config-level-from-mdc(subtitle2, $font-family),
+    body-1: typography.typography-config-level-from-mdc(body1, $font-family),
+    body-2: typography.typography-config-level-from-mdc(body2, $font-family),
+    caption: typography.typography-config-level-from-mdc(caption, $font-family),
+    button: typography.typography-config-level-from-mdc(button, $font-family),
+    overline: typography.typography-config-level-from-mdc(overline, $font-family),
+  );
+}
+
+// Disables MDC's CSS custom property fallbacks for the specified mixin content.
+@mixin disable-mdc-fallback-declarations {
+  $previous-value: mdc-theme-css.$enable-fallback-declarations;
+  mdc-theme-css.$enable-fallback-declarations: false;
+  @content;
+  mdc-theme-css.$enable-fallback-declarations: $previous-value;
+}
+
+// Excludes the passed-in CSS content if the layout is too dense to supports touch targets.
+@mixin if-touch-targets-unsupported($scale) {
+  @if ($scale == 'minimum' or (meta.type-of($scale) == 'number' and $scale < -1)) {
+    @content;
+  }
+}

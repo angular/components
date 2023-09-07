@@ -1,0 +1,137 @@
+@use '@angular/cdk';
+
+@use '../core/focus-indicators/private';
+
+$header-arrow-margin: 6px;
+$header-arrow-container-size: 12px;
+$header-arrow-stem-size: 10px;
+$header-arrow-pointer-length: 6px;
+$header-arrow-thickness: 2px;
+$header-arrow-hint-opacity: 0.38;
+
+.mat-sort-header-container {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  letter-spacing: normal;
+
+  // Needs to be reset since we don't want an outline around the inner
+  // div which is focusable. We have our own alternate focus styling.
+  outline: 0;
+
+  // Usually we could rely on the arrow showing up to be focus indication, but if a header is
+  // active, the arrow will always be shown so the user has no way of telling the difference.
+  [mat-sort-header].cdk-keyboard-focused &,
+  [mat-sort-header].cdk-program-focused & {
+    border-bottom: solid 1px currentColor;
+  }
+
+  .mat-sort-header-disabled & {
+    cursor: default;
+  }
+
+  // For the sort-header element, default inset/offset values are necessary to ensure that
+  // the focus indicator is sufficiently contrastive and renders appropriately.
+  &::before {
+    $border-width: var(--mat-focus-indicator-border-width, #{private.$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
+}
+
+.mat-sort-header-content {
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.mat-sort-header-position-before {
+  flex-direction: row-reverse;
+}
+
+.mat-sort-header-arrow {
+  height: $header-arrow-container-size;
+  width: $header-arrow-container-size;
+  min-width: $header-arrow-container-size;
+  position: relative;
+  display: flex;
+
+  // Start off at 0 since the arrow may become visible while parent are animating.
+  // This will be overwritten when the arrow animations kick in. See #11819.
+  opacity: 0;
+
+  &,
+  [dir='rtl'] .mat-sort-header-position-before & {
+    margin: 0 0 0 $header-arrow-margin;
+  }
+
+  .mat-sort-header-position-before &,
+  [dir='rtl'] & {
+    margin: 0 $header-arrow-margin 0 0;
+  }
+}
+
+.mat-sort-header-stem {
+  background: currentColor;
+  height: $header-arrow-stem-size;
+  width: $header-arrow-thickness;
+  margin: auto;
+  display: flex;
+  align-items: center;
+
+  @include cdk.high-contrast(active, off) {
+    width: 0;
+    border-left: solid $header-arrow-thickness;
+  }
+}
+
+.mat-sort-header-indicator {
+  width: 100%;
+  height: $header-arrow-thickness;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mat-sort-header-pointer-middle {
+  margin: auto;
+  height: $header-arrow-thickness;
+  width: $header-arrow-thickness;
+  background: currentColor;
+  transform: rotate(45deg);
+
+  @include cdk.high-contrast(active, off) {
+    width: 0;
+    height: 0;
+    border-top: solid $header-arrow-thickness;
+    border-left: solid $header-arrow-thickness;
+  }
+}
+
+.mat-sort-header-pointer-left,
+.mat-sort-header-pointer-right {
+  background: currentColor;
+  width: $header-arrow-pointer-length;
+  height: $header-arrow-thickness;
+  position: absolute;
+  top: 0;
+
+  @include cdk.high-contrast(active, off) {
+    width: 0;
+    height: 0;
+    border-left: solid $header-arrow-pointer-length;
+    border-top: solid $header-arrow-thickness;
+  }
+}
+
+.mat-sort-header-pointer-left {
+  transform-origin: right;
+  left: 0;
+}
+
+.mat-sort-header-pointer-right {
+  transform-origin: left;
+  right: 0;
+}

@@ -1,0 +1,22 @@
+<!-- Set aria-hidden="true" to this DOM node and other decorative nodes in this file. This might
+ be contributing to issue where sometimes VoiceOver focuses on a TextNode in the a11y tree instead
+ of the Option node (#23202). Most assistive technology will generally ignore non-role,
+ non-text-content elements. Adding aria-hidden seems to make VoiceOver behave more consistently. -->
+<mat-pseudo-checkbox *ngIf="multiple" class="mat-mdc-option-pseudo-checkbox" [disabled]="disabled"
+    [state]="selected ? 'checked' : 'unchecked'" aria-hidden="true"></mat-pseudo-checkbox>
+
+<ng-content select="mat-icon"></ng-content>
+
+<span class="mdc-list-item__primary-text" #text><ng-content></ng-content></span>
+
+<!-- Render checkmark at the end for single-selection. -->
+<mat-pseudo-checkbox *ngIf="!multiple && selected && !hideSingleSelectionIndicator"
+    class="mat-mdc-option-pseudo-checkbox" [disabled]="disabled" state="checked"
+    aria-hidden="true" appearance="minimal"></mat-pseudo-checkbox>
+
+<!-- See a11y notes inside optgroup.ts for context behind this element. -->
+<span class="cdk-visually-hidden" *ngIf="group && group._inert">({{ group.label }})</span>
+
+<div class="mat-mdc-option-ripple mat-mdc-focus-indicator" aria-hidden="true" mat-ripple
+     [matRippleTrigger]="_getHostElement()" [matRippleDisabled]="disabled || disableRipple">
+</div>

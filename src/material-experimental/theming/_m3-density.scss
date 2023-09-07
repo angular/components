@@ -1,0 +1,56 @@
+@use 'sass:list';
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+/// Maps namespaced tokens to per-density-scale values.
+/// This is used as a temporary solution for density, since Material Design currently does not have
+/// systemized density.
+/// Format:
+/// (
+///   (mdc, comp): (
+///     token: (<scale 0 value>, <scale -1 value>, <scale -2 value>, ...),
+///     ...
+///   ),
+///   ...
+/// )
+// TODO(mmalerba): Add density tokens for remaining components.
+$_density-tokens: (
+    (mdc, checkbox): (
+    state-layer-size: (40px, 36px, 32px, 28px),
+  ),
+    (mdc, elevated-card): (),
+    (mdc, outlined-card): (),
+    (mat, card): (),
+);
+
+/// Gets the value for the given density scale from the given set of density values.
+/// @param {List} $density-values The list of values for each density scale.
+/// @param {Number} $scale The density scale to get the value for.
+/// @return {*} The value for the given scale.
+@function _get-value-for-scale($density-values, $scale) {
+  $scale: mat.private-clamp-density($scale, -1 * list.length($density-values) + 1);
+  $index: -$scale + 1;
+  @return list.nth($density-values, $index);
+}
+
+/// Gets a map of all density tokens for the given scale
+/// @param {Number} $scale The density scale
+/// @return {Map} Map of all fully qualified density tokens for the given scale.
+@function get-tokens-for-scale($scale) {
+  $result: ();
+  @each $namespace, $tokens in $_density-tokens {
+    @each $token, $density-values in $tokens {
+      $tokens: map.set($tokens, $token, _get-value-for-scale($density-values, $scale));
+    }
+    $result: map.set($result, $namespace, $tokens);
+  }
+  @return $result;
+}
+
+/// Checks whether the given token is systemized by Angular Material's made up density system.
+/// @param {List} $namespace The namespace of the token
+/// @param {String} $token The name of the token
+/// @return {Boolean} Whether the token is systemized by the density system
+@function is-systemized($namespace, $token) {
+  @return map.get($_density-tokens, $namespace, $token) != null;
+}

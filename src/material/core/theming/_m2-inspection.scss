@@ -1,0 +1,268 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use './theming';
+@use '../typography/property-getters' as typography-getters;
+@use '../typography/versioning' as typography-versioning;
+
+/// Key used to access the Angular Material theme internals.
+$_internals: _mat-theming-internals-do-not-access;
+
+/// Keys that indicate a config object is a color config.
+$_color-keys: (
+  primary,
+  accent,
+  warn,
+  foreground,
+  background,
+  is-dark,
+  color, /* included for themes that incorrectly nest the color config: (color: (color: (....))) */
+);
+
+/// Keys that indicate a config object is a typography config.
+$_typography-keys: (
+  headline-1,
+  headline-2,
+  headline-3,
+  headline-4,
+  headline-5,
+  headline-6,
+  subtitle-1,
+  font-famiy,
+  subtitle-2,
+  body-1,
+  body-2,
+  button,
+  caption,
+  overline,
+);
+
+/// The CSS typography properties supported by the inspection API.
+$_typography-properties: (font, font-family, line-height, font-size, letter-spacing, font-weight);
+
+/// Gets the m2-config from the theme.
+@function _get-m2-config($theme) {
+  // It is possible for a user to pass a "density theme" that is just a number.
+  @if meta.type-of($theme) != 'map' {
+    @return $theme;
+  }
+  $internal: map.get($theme, $_internals, m2-config);
+  $theme: map.remove($theme, $_internals);
+  @return if(_is-error-theme($theme), $internal, $theme);
+}
+
+/// Checks whether the given theme contains error values.
+/// @param {*} $theme The theme to check.
+/// @return {Boolean} true if the theme contains error values, else false.
+@function _is-error-theme($theme) {
+  @if meta.type-of($theme) != 'map' {
+    @return false;
+  }
+  @if map.get($theme, ERROR) {
+    @return true;
+  }
+  @return _is-error-theme(list.nth(map.values($theme), 1));
+}
+
+/// Checks whether the given theme object has any of the given keys.
+/// @param {Map} $theme The theme to check
+/// @param {List} $keys The keys to check for
+/// @return {Boolean} Whether the theme has any of the given keys.
+@function _has-any-key($theme, $keys) {
+  @each $key in $keys {
+    @if map.has-key($theme, $key) {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+/// Checks whether the given theme is a density scale value.
+/// @param {*} $theme The theme to check.
+/// @return {Boolean} true if the theme is a density scale value, else false.
+@function _is-density-value($theme) {
+  @return $theme == minimum or $theme == maximum or meta.type-of($theme) == 'number';
+}
+
+/// Gets the type of theme represented by a theme object (light or dark).
+/// @param {Map} $theme The theme
+/// @return {String} The type of theme (either `light` or `dark`).
+@function get-theme-type($theme) {
+  $theme: _get-m2-config($theme);
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $colors: theming.get-color-config($theme);
+  // Some apps seem to have mistakenly created nested color themes that somehow work with our old
+  // theme normalization logic. This check allows those apps to keep working.
+  @if theme-has($colors, color) {
+    $colors: theming.get-color-config($colors);
+  }
+  @return if(map.get($colors, is-dark), dark, light);
+}
+
+/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
+/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
+/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
+/// third is treated as the palette hue (10, 50, etc.)
+/// @param {Map} $theme The theme
+/// @param {String} $palette-name The name of a color palette.
+/// @param {Number} $hue The palette hue to get (passing this argument means the second argument is
+///   interpreted as a palette name).
+/// @return {Color} The requested theme color.
+@function get-theme-color($theme, $palette-name, $args...) {
+  $theme: _get-m2-config($theme);
+  @if not theme-has($theme, color) {
+    @error 'Color information is not available on this theme.';
+  }
+  $colors: theming.get-color-config($theme);
+  // Some apps seem to have mistakenly created nested color themes that somehow work with our old
+  // theme normalization logic. This check allows those apps to keep working.
+  @if theme-has($colors, color) {
+    $colors: theming.get-color-config($colors);
+  }
+  $palette: map.get($colors, $palette-name);
+  @if not $palette {
+    @error 'Unrecognized palette name:' $palette-name;
+  }
+  @return theming.get-color-from-palette($palette, $args...);
+}
+
+/// Gets a typography value from a theme object.
+/// @param {Map} $theme The theme
+/// @param {String} $typescale The typescale name.
+/// @param {String} $property The CSS font property to get
+///   (font, font-family, font-size, font-weight, line-height, or letter-spacing).
+/// @return {*} The value of the requested font property.
+@function get-theme-typography($theme, $typescale, $property) {
+  $theme: _get-m2-config($theme);
+  @if not theme-has($theme, typography) {
+    @error 'Typography information is not available on this theme.';
+  }
+  $typography: typography-versioning.private-typography-to-2018-config(
+      theming.get-typography-config($theme));
+  @if $property == font {
+    $font-weight: typography-getters.font-weight($typography, $typescale);
+    $font-size: typography-getters.font-size($typography, $typescale);
+    $line-height: typography-getters.line-height($typography, $typescale);
+    $font-family: typography-getters.font-family($typography, $typescale);
+    @return ($font-weight list.slash($font-size, $line-height) $font-family);
+  }
+  @else if $property == font-family {
+    $result: typography-getters.font-family($typography, $typescale);
+    @return $result or typography-getters.font-family($typography);
+  }
+  @else if $property == font-size {
+    @return typography-getters.font-size($typography, $typescale);
+  }
+  @else if $property == font-weight {
+    @return typography-getters.font-weight($typography, $typescale);
+  }
+  @else if $property == line-height {
+    @return typography-getters.line-height($typography, $typescale);
+  }
+  @else if $property == letter-spacing {
+    @return typography-getters.letter-spacing($typography, $typescale);
+  }
+  @else {
+    @error #{'Valid typography properties are: #{$_typography-properties}. Got:'} $property;
+  }
+}
+
+/// Gets the density scale from a theme object.
+/// @param {Map} $theme The theme
+/// @return {Number} The density scale.
+@function get-theme-density($theme) {
+  $theme: _get-m2-config($theme);
+  @if not theme-has($theme, density) {
+    @error 'Density information is not available on this theme.';
+  }
+  $scale: theming.get-density-config($theme);
+  @return theming.clamp-density($scale, -5);
+}
+
+/// Checks whether the theme has information about given theming system.
+/// @param {Map} $theme The theme
+/// @param {String} $system The system to check
+/// @param {Boolean} Whether the theme has information about the system.
+@function theme-has($theme, $system) {
+  $theme: _get-m2-config($theme);
+  @if $system == base {
+    @return true;
+  }
+  @if $system == color {
+    $color: theming.get-color-config($theme);
+    @return $color != null and _has-any-key($color, $_color-keys);
+  }
+  @if $system == typography {
+    $typography: theming.get-typography-config($theme);
+    @return $typography != null and _has-any-key($typography, $_typography-keys);
+  }
+  @if $system == density {
+    // Backwards compatibility for the case where an explicit, but invalid density is given
+    // (this was previously treated as density 0).
+    @if meta.type-of($theme) == 'map' and map.get($theme, density) {
+      @return true;
+    }
+    $density: theming.get-density-config($theme);
+    @return $density != null and _is-density-value($density);
+  }
+  @error 'Valid systems are: base, color, typography, density. Got:' $system;
+}
+
+/// Removes the information about the given theming system(s) from the given theme.
+/// @param {Map} $theme The theme to remove information from
+/// @param {String...} $systems The systems to remove
+/// @return {Map} A version of the theme without the removed theming systems.
+@function theme-remove($theme, $systems...) {
+  $internal: map.get($theme, $_internals, m2-config);
+  @each $system in $systems {
+    @if $system == color {
+      $theme: map.set($theme, color, null);
+    }
+    @else if $system == typography {
+      $theme: map.set($theme, typography, null);
+    }
+    @else if $system == density {
+      $theme: map.set($theme, density, null);
+    }
+  }
+  @if $internal {
+    $internal: theme-remove($internal, $systems...);
+    $theme: map.set($theme, $_internals, m2-config, $internal);
+  }
+  @return $theme;
+}
+
+/// Gets a version of the theme with a modified typography config that preserves old behavior in
+/// some components that previously used `private-typography-to-2014-config`.
+/// Do not introduce new usages of this, it should be cleaned up and removed.
+/// @deprecated
+@function private-get-typography-back-compat-theme($theme) {
+  // It is possible for a user to pass a "density theme" that is just a number.
+  @if meta.type-of($theme) != 'map' {
+    @return $theme;
+  }
+  $internal: map.get($theme, $_internals, m2-config);
+  $theme: map.remove($theme, $_internals);
+  @if theme-has($theme, typography) {
+    $typography-config: theming.get-typography-config($theme);
+    // gmat configs have both 2018 and 2014 keys.
+    @if (not typography-versioning.private-typography-is-2014-config($typography-config)) or
+        (not typography-versioning.private-typography-is-2018-config($typography-config)) {
+      @return $theme;
+    }
+    $new-typography-config: typography-versioning.private-typography-to-2018-config(
+        $typography-config, true);
+    // subtitle-2 is mapped differently by `private-typography-to-2014-config`.
+    $new-typography-config: map.set(
+        $new-typography-config, subtitle-2, map.get($new-typography-config, body-1));
+    $theme: if($theme == $typography-config, $new-typography-config,
+      map.set($theme, typography, $new-typography-config));
+  }
+  @if $internal {
+    $internal: private-get-typography-back-compat-theme($internal);
+    $theme: map.set($theme, $_internals, m2-config, $internal);
+  }
+  @return $theme;
+}

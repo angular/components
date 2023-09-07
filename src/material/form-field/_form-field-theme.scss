@@ -1,0 +1,70 @@
+@use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
+@use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
+
+@use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
+@use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use './form-field-density';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.get-color-tokens($theme));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.get-color-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-color-tokens($theme));
+  }
+
+  .mat-mdc-form-field.mat-accent {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, accent));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, accent));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.private-get-color-palette-color-tokens($theme, accent));
+  }
+
+  .mat-mdc-form-field.mat-warn {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, warn));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, warn));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.private-get-color-palette-color-tokens($theme, warn));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-filled-text-field-theme.theme(
+      tokens-mdc-filled-text-field.get-typography-tokens($theme));
+    @include mdc-outlined-text-field-theme.theme(
+      tokens-mdc-outlined-text-field.get-typography-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+      tokens-mat-form-field.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include form-field-density.private-form-field-density($theme);
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-form-field') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

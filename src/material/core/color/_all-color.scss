@@ -1,0 +1,17 @@
+@use '../theming/all-theme';
+@use '../theming/inspection';
+
+// Includes all of the color styles.
+@mixin all-component-colors($theme) {
+  @if not inspection.theme-has($theme, color) {
+    @error 'No color configuration specified.';
+  }
+
+  @include all-theme.all-component-themes(
+      inspection.theme-remove($theme, base, typography, density));
+}
+
+// @deprecated Use `all-component-colors`.
+@mixin angular-material-color($theme) {
+  @include all-component-colors($theme);
+}

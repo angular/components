@@ -1,0 +1,77 @@
+@use './theming/theming';
+@use './theming/inspection';
+@use './style/private';
+@use './ripple/ripple-theme';
+@use './option/option-theme';
+@use './option/optgroup-theme';
+@use './selection/pseudo-checkbox/pseudo-checkbox-theme';
+@use './style/elevation';
+@use './typography/typography';
+
+@mixin color($theme) {
+  @include ripple-theme.color($theme);
+  @include option-theme.color($theme);
+  @include optgroup-theme.color($theme);
+  @include pseudo-checkbox-theme.color($theme);
+
+  // Wrapper element that provides the theme background when the user's content isn't
+  // inside of a `mat-sidenav-container`. Note that we need to exclude the ampersand
+  // selector in case the mixin is included at the top level.
+  .mat-app-background#{if(&, ', &.mat-app-background', '')} {
+    background-color: inspection.get-theme-color($theme, background, background);
+    color: inspection.get-theme-color($theme, foreground, text);
+  }
+
+  // Provides external CSS classes for each elevation value. Each CSS class is formatted as
+  // `mat-elevation-z$zValue` where `$zValue` corresponds to the z-space to which the element is
+  // elevated.
+  @for $zValue from 0 through 24 {
+    $selector: elevation.$prefix + $zValue;
+    // We need the `mat-mdc-elevation-specific`, because some MDC mixins
+    // come with elevation baked in and we don't have a way of removing it.
+    .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
+      @include private.private-theme-elevation($zValue, $theme);
+    }
+  }
+
+  // Marker that is used to determine whether the user has added a theme to their page.
+  @at-root {
+    .mat-theme-loaded-marker {
+      display: none;
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @include option-theme.typography($theme);
+  @include optgroup-theme.typography($theme);
+  @include pseudo-checkbox-theme.typography($theme);
+  // TODO(mmalerba): add typography mixin for this.
+  // @include ripple-theme.typography($config);
+}
+
+@mixin density($theme) {
+  @include option-theme.density($theme);
+  @include optgroup-theme.density($theme);
+  // TODO(mmalerba): add density mixins for these.
+  // @include ripple-theme.density($density-scale);
+  // @include pseudo-checkbox-theme.density($density-scale);
+}
+
+// Mixin that renders all of the core styles that depend on the theme.
+@mixin theme($theme) {
+  // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
+  // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
+  // the imported themes (such as `mat-ripple-theme`) should not report again.
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

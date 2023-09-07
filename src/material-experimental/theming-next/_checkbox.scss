@@ -1,0 +1,109 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+@use '@angular/material' as mat;
+@use '@material/theme/theme-color' as mdc-theme-color;
+@use './token-resolution';
+
+// TODO(mmalerba): This should live under material/checkbox when moving out of experimental.
+
+// Duplicated from core/tokens/m2/mdc/checkbox
+// TODO(mmalerba): Delete duplicated code when this is moved out of experimental.
+@function _contrast-tone($value, $light-color: '#fff', $dark-color: '#000') {
+  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
+    @return if(mdc-theme-color.contrast-tone($value) == 'dark', $dark-color, $light-color);
+  }
+  @return false;
+}
+
+/// Gets a map of checkbox token values that are derived from the given palette.
+/// @param {Map} $palette An Angular Material palette object.
+/// @return {Map} A map of checkbox token values derived from the given palette.
+@function _get-tokens-for-color-palette($palette) {
+  $palette-default-color: mat.get-color-from-palette($palette);
+  $checkmark-color: _contrast-tone($palette-default-color);
+
+  @return (
+    (mdc, checkbox): (
+      selected-checkmark-color: $checkmark-color,
+      selected-focus-icon-color: $palette-default-color,
+      selected-hover-icon-color: $palette-default-color,
+      selected-icon-color: $palette-default-color,
+      selected-pressed-icon-color: $palette-default-color,
+      selected-focus-state-layer-color: $palette-default-color,
+      selected-hover-state-layer-color: $palette-default-color,
+      selected-pressed-state-layer-color: $palette-default-color,
+    )
+  );
+}
+
+/// Gets a map of checkbox token values that are derived from the theme type.
+/// @param {'light' | 'dark'} $theme-type The type of theme.
+/// @return {Map} A map of checkbox token values derived from the given theme type.
+@function _get-tokens-for-theme-type($theme-type) {
+  $is-dark: $theme-type == dark;
+  $foreground: if($is-dark, white, black);
+  $disabled-color: color.change($foreground, $alpha: 0.38);
+  $border-color: color.change($foreground, $alpha: 0.54);
+  $active-border-color: mat.get-color-from-palette(mat.$gray-palette, if($is-dark, 200, 900));
+
+  @return (
+    (mdc, checkbox): (
+      disabled-selected-icon-color: $disabled-color,
+      disabled-unselected-icon-color: $disabled-color,
+      unselected-focus-icon-color: $active-border-color,
+      unselected-hover-icon-color: $active-border-color,
+      unselected-icon-color: $border-color,
+      unselected-pressed-icon-color: $border-color,
+      unselected-focus-state-layer-color: $foreground,
+      unselected-hover-state-layer-color: $foreground,
+      unselected-pressed-state-layer-color: $foreground,
+    )
+  );
+}
+
+/// Resolvers for mat-checkbox customizations.
+$_customization-resolvers: map.merge(
+    token-resolution.alias((
+      checkmark-color: selected-checkmark-color,
+      disabled-checkmark-color: disabled-selected-checkmark-color,
+      selected-focus-ring-opacity: selected-focus-state-layer-opacity,
+      selected-hover-ring-opacity: selected-hover-state-layer-opacity,
+      selected-pressed-ring-opacity: selected-pressed-state-layer-opacity,
+      unselected-focus-ring-opacity: unselected-focus-state-layer-opacity,
+      unselected-hover-ring-opacity: unselected-hover-state-layer-opacity,
+      unselected-pressed-ring-opacity: unselected-pressed-state-layer-opacity,
+      disabled-selected-box-color: disabled-selected-icon-color,
+      disabled-unselected-box-color: disabled-unselected-icon-color,
+      selected-focus-box-color: selected-focus-icon-color,
+      selected-hover-box-color: selected-hover-icon-color,
+      selected-box-color: selected-icon-color,
+      selected-pressed-box-color: selected-pressed-icon-color,
+      unselected-focus-box-color: unselected-focus-icon-color,
+      unselected-hover-box-color: unselected-hover-icon-color,
+      unselected-box-color: unselected-icon-color,
+      unselected-pressed-box-color: unselected-pressed-icon-color,
+      selected-focus-ring-color: selected-focus-state-layer-color,
+      selected-hover-ring-color: selected-hover-state-layer-color,
+      selected-pressed-ring-color: selected-pressed-state-layer-color,
+      unselected-focus-ring-color: unselected-focus-state-layer-color,
+      unselected-hover-ring-color: unselected-hover-state-layer-color,
+      unselected-pressed-ring-color: unselected-pressed-state-layer-color,
+      ripple-size: state-layer-size,
+    ), (mdc, checkbox)),
+    (
+      color-palette: meta.get-function(_get-tokens-for-color-palette),
+      theme-type: meta.get-function(_get-tokens-for-theme-type),
+    )
+);
+
+/// Configure the mat-checkbox's theme.
+/// @param {Map} $customizations [()] A map of custom values to use when theming mat-checkbox.
+@function checkbox($customizations: ()) {
+  @return (
+    id: 'mat.checkbox',
+    customizations: token-resolution.resolve-customized-tokens(
+        'mat.checkbox', $_customization-resolvers, $customizations),
+    deps: (),
+  );
+}

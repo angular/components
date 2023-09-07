@@ -1,0 +1,38 @@
+@use '../tokens/m2/mat/optgroup' as tokens-mat-optgroup;
+@use '../tokens/token-utils';
+@use '../style/sass-utils';
+
+@use '../theming/theming';
+@use '../theming/inspection';
+@use '../typography/typography';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
+      tokens-mat-optgroup.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-optgroup.$prefix,
+      tokens-mat-optgroup.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-optgroup') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

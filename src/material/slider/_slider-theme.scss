@@ -1,0 +1,87 @@
+@use '@material/slider/slider-theme' as mdc-slider-theme;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/slider' as m2-mat-slider;
+@use '../core/tokens/m2/mdc/slider' as m2-mdc-slider;
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-slider-theme.theme(m2-mdc-slider.get-unthemable-tokens());
+  }
+}
+
+@mixin color($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+
+  $mdc-color-tokens: token-utils.resolve-elevation(
+    m2-mdc-slider.get-color-tokens($theme),
+    handle-elevation,
+    handle-shadow-color
+  );
+
+  $mat-slider-color-tokens: m2-mat-slider.get-color-tokens($theme);
+
+  // Add values for MDC slider tokens.
+  .mat-mdc-slider {
+    @include mdc-slider-theme.theme($mdc-color-tokens);
+    @include _slider-ripple-color($theme, primary);
+    @include token-utils.create-token-values(
+      m2-mat-slider.$prefix,
+      $mat-slider-color-tokens
+    );
+
+    &.mat-accent {
+      @include mdc-slider-theme.theme(
+          m2-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
+      @include _slider-ripple-color($theme, accent);
+    }
+
+    &.mat-warn {
+      @include mdc-slider-theme.theme(
+          m2-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
+      @include _slider-ripple-color($theme, warn);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  // Add values for MDC slider tokens.
+  .mat-mdc-slider {
+    @include mdc-slider-theme.theme(m2-mdc-slider.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  // Add values for MDC slider tokens.
+  .mat-mdc-slider {
+    @include mdc-slider-theme.theme(m2-mdc-slider.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-slider') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
+
+// Generated MDC ripple color tokens are not being calculated so needs to be set
+@mixin _slider-ripple-color($theme, $palette-name) {
+  $color: inspection.get-theme-color($theme, $palette-name);
+
+  --mat-mdc-slider-ripple-color: #{$color};
+  --mat-mdc-slider-hover-ripple-color: #{rgba($color, 0.05)};
+  --mat-mdc-slider-focus-ripple-color: #{rgba($color, 0.2)};
+}

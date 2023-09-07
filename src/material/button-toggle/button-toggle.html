@@ -1,0 +1,20 @@
+<button #button class="mat-button-toggle-button mat-focus-indicator"
+        type="button"
+        [id]="buttonId"
+        [attr.tabindex]="disabled ? -1 : tabIndex"
+        [attr.aria-pressed]="checked"
+        [disabled]="disabled || null"
+        [attr.name]="_getButtonName()"
+        [attr.aria-label]="ariaLabel"
+        [attr.aria-labelledby]="ariaLabelledby"
+        (click)="_onButtonClick()">
+  <span class="mat-button-toggle-label-content">
+    <ng-content></ng-content>
+  </span>
+</button>
+
+<span class="mat-button-toggle-focus-overlay"></span>
+<span class="mat-button-toggle-ripple" matRipple
+     [matRippleTrigger]="button"
+     [matRippleDisabled]="this.disableRipple || this.disabled">
+</span>

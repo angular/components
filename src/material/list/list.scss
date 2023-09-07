@@ -1,0 +1,197 @@
+@use 'sass:map';
+@use '@material/list/list' as mdc-list;
+@use '@material/list/list-theme' as mdc-list-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/style/layout-common';
+@use '../core/tokens/m2/mdc/list' as m2-mdc-list;
+@use '../core/tokens/token-utils';
+@use './list-item-hcm-indicator';
+
+// The slots for tokens that will be configured in the theme can be emitted with no fallback.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-list-token-slots: m2-mdc-list.get-token-slots();
+
+  // Add the MDC list static styles.
+  @include mdc-list.static-styles();
+
+  // Add the official slots for the MDC list.
+  @include mdc-list-theme.theme-styles(map.merge($mdc-list-token-slots, (
+    // We structure the avatar differently from how MDC expects, so we add these slots ourselves.
+      list-item-leading-avatar-shape: null,
+      list-item-leading-avatar-color: null,
+    // We add this slot ourselves with more specificity, so we don't need MDC to emit it.
+      list-item-disabled-label-text-color: null,
+    // We don't use MDC's state layers, so we add these slots ourselves instead.
+      list-item-hover-state-layer-color: null,
+      list-item-hover-state-layer-opacity: null,
+      list-item-focus-state-layer-color: null,
+      list-item-focus-state-layer-opacity: null,
+      list-item-disabled-state-layer-color: null,
+      list-item-disabled-state-layer-opacity: null,
+  )));
+
+  // Add additional slots for the MDC list tokens, needed in Angular Material.
+  @include token-utils.use-tokens(m2-mdc-list.$prefix, $mdc-list-token-slots) {
+    // MDC allows focus and hover colors to take precedence over disabled color. We add the disabled
+    // color here with higher specificity so that the disabled color takes precedence.
+    // TODO(mmalerba): Dicuss with MDC whether to change this in their code.
+    .mdc-list-item.mdc-list-item--disabled .mdc-list-item__primary-text {
+      @include token-utils.create-token-slot(color, list-item-disabled-label-text-color);
+    }
+
+    // We don't use MDC's state layer since it's tied in with their ripple. Instead we emit slots
+    // for our own state layer.
+    // TODO(mmalerba): Consider using MDC's ripple & state layer.
+    .mdc-list-item:hover::before {
+      @include token-utils.create-token-slot(background-color, list-item-hover-state-layer-color);
+      @include token-utils.create-token-slot(opacity, list-item-hover-state-layer-opacity);
+    }
+    .mdc-list-item.mdc-list-item--disabled::before {
+      @include token-utils.create-token-slot(
+              background-color, list-item-disabled-state-layer-color);
+      @include token-utils.create-token-slot(opacity, list-item-disabled-state-layer-opacity);
+    }
+    .mdc-list-item:focus::before {
+      @include token-utils.create-token-slot(background-color, list-item-focus-state-layer-color);
+      @include token-utils.create-token-slot(opacity, list-item-focus-state-layer-opacity);
+    }
+
+    // Apply the disabled opacity to the checkbox/radio indicators.
+    // TODO(mmalerba): We should probably stop doing this and allow the checkbox/radio to decide
+    //  what their disabled state looks like. This is done for now to avoid screenshot diffs.
+    .mdc-list-item--disabled {
+      .mdc-radio,
+      .mdc-checkbox {
+        @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
+      }
+    }
+
+    // In Angular Material we put the avatar class directly on the .mdc-list-item__start element,
+    // rather than nested inside it, so we need to emit avatar slots ourselves.
+    // TODO(mmalerba): We should try to change MDC's recommended DOM or change ours to match their
+    //  recommendation.
+    .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
+      @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
+      @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
+    }
+  }
+}
+
+a.mdc-list-item--activated {
+  // Improve accessibility for Window High Contrast Mode (HCM) by adding an idicator on active
+  // links.
+  @include list-item-hcm-indicator.private-high-contrast-list-item-indicator();
+}
+
+// MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
+// explicitly set `display: block`
+.mat-mdc-list-base {
+  display: block;
+
+  // MDC sets `pointer-events: none` on these elements,
+  // even though we allowed interactive content in them.
+  .mdc-list-item__start,
+  .mdc-list-item__end,
+  .mdc-list-item__content {
+    pointer-events: auto;
+  }
+}
+
+.mat-mdc-list-item,
+.mat-mdc-list-option {
+  // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
+  // cases, we need to make sure it expands to fill the available width.
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+
+  // MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
+  // lists. See: https://github.com/material-components/material-components-web/issues/6443
+  &:not(.mat-mdc-list-item-interactive) {
+    cursor: default;
+  }
+
+  // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
+  // TODO(devversion): check if we can use the MDC dividers.
+  .mat-divider-inset {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .mat-mdc-list-item-avatar ~ .mat-divider-inset {
+    margin-left: 72px;
+
+    [dir='rtl'] & {
+      margin-right: 72px;
+    }
+  }
+}
+
+// MDC's hover and focus state styles are included with their ripple which we don't use.
+// Instead we add the focus, hover and selected styles ourselves using this pseudo-element
+.mat-mdc-list-item-interactive::before {
+  @include layout-common.fill();
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+}
+
+// The MDC-based list items already use the `::before` pseudo element for the standard
+// focus/selected/hover state. Hence, we need to have a separate list-item spanning
+// element that can be used for strong focus indicators.
+.mat-mdc-list-item {
+  > .mat-mdc-focus-indicator {
+    @include layout-common.fill();
+    pointer-events: none;
+  }
+
+  // For list items, render the focus indicator when the parent
+  // listem item is focused.
+  &:focus > .mat-mdc-focus-indicator::before {
+    content: '';
+  }
+}
+
+.mat-mdc-list-item.mdc-list-item--with-three-lines {
+  // List item lines or titles never wrap. MDC always enables wrapping for secondary text
+  // if the list item has acquired three lines. We unset these styles for line elements.
+  // https://github.com/material-components/material-components-web/blob/348665978ce73694ad4518626dd70cdf5b984113/packages/mdc-list/_evolution-mixins.scss#L205-L206.
+  // TODO: Consider removing once MDC supports the explicit tertiary line list variant.
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+    white-space: nowrap;
+    line-height: normal;
+  }
+
+  // Unscoped content can wrap if the list item has acquired three lines. MDC implements
+  // this functionality for secondary text but there is no proper text ellipsis when
+  // text overflows the third line. These styles ensure the overflow is handled properly.
+  // TODO: Move this to the MDC list once it drops IE11 support.
+  .mat-mdc-list-item-unscoped-content.mdc-list-item__secondary-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+// MDC doesn't account for button being used as a list item. We override some of
+// the default button styles here so that they look right when used as a list
+// item.
+mat-action-list button {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+}

@@ -1,0 +1,55 @@
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-plain-tooltip-theme.theme(m2-mdc-plain-tooltip.get-unthemable-tokens());
+  }
+}
+
+@mixin color($theme) {
+  $mdc-tooltip-color-tokens: m2-mdc-plain-tooltip.get-color-tokens($theme);
+
+  // Add values for MDC tooltip tokens.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-color-tokens);
+  }
+}
+
+@mixin typography($theme) {
+  $mdc-tooltip-typography-tokens: m2-mdc-plain-tooltip.get-typography-tokens($theme);
+
+  // Add values for MDC tooltip tokens.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-typography-tokens);
+  }
+}
+
+@mixin density($theme) {
+  $mdc-tooltip-density-tokens: m2-mdc-plain-tooltip.get-density-tokens($theme);
+
+  // Add values for MDC tooltip tokens.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-plain-tooltip-theme.theme($mdc-tooltip-density-tokens);
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-tooltip') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

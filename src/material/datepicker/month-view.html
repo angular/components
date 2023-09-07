@@ -1,0 +1,34 @@
+<table class="mat-calendar-table" role="grid">
+  <thead class="mat-calendar-table-header">
+    <tr>
+      <th scope="col" *ngFor="let day of _weekdays">
+        <span class="cdk-visually-hidden">{{day.long}}</span>
+        <span aria-hidden="true">{{day.narrow}}</span>
+      </th>
+    </tr>
+    <tr><th aria-hidden="true" class="mat-calendar-table-header-divider" colspan="7"></th></tr>
+  </thead>
+  <tbody mat-calendar-body
+         [label]="_monthLabel"
+         [rows]="_weeks"
+         [todayValue]="_todayDate!"
+         [startValue]="_rangeStart!"
+         [endValue]="_rangeEnd!"
+         [comparisonStart]="_comparisonRangeStart"
+         [comparisonEnd]="_comparisonRangeEnd"
+         [previewStart]="_previewStart"
+         [previewEnd]="_previewEnd"
+         [isRange]="_isRange"
+         [labelMinRequiredCells]="3"
+         [activeCell]="_dateAdapter.getDate(activeDate) - 1"
+         [startDateAccessibleName]="startDateAccessibleName"
+         [endDateAccessibleName]="endDateAccessibleName"
+         (selectedValueChange)="_dateSelected($event)"
+         (activeDateChange)="_updateActiveDate($event)"
+         (previewChange)="_previewChanged($event)"
+         (dragStarted)="dragStarted.emit($event)"
+         (dragEnded)="_dragEnded($event)"
+         (keyup)="_handleCalendarBodyKeyup($event)"
+         (keydown)="_handleCalendarBodyKeydown($event)">
+  </tbody>
+</table>

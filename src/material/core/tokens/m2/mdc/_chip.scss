@@ -1,0 +1,331 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../token-utils';
+@use '../../../mdc-helpers/mdc-helpers';
+@use '../../../style/sass-utils';
+@use '../../../theming/theming';
+@use '../../../theming/inspection';
+@use '../../../theming/palette';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, chip);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+@function get-unthemable-tokens() {
+  @return (
+    // The shape & radius of the chip.
+    container-shape:
+      (
+        family: 'rounded',
+        radius: (
+          16px 16px 16px 16px,
+        )
+      ),
+    // The shape & radius of the avatar.
+    with-avatar-avatar-shape:
+      (
+        family: 'rounded',
+        radius: (
+          14px 14px 14px 14px,
+        )
+      ),
+    // The width & height of the chip avatar.
+    with-avatar-avatar-size: 28px,
+    // The width & height of the chip icon.
+    with-icon-icon-size: 18px,
+    // Not used by MDC.
+    disabled-label-text-opacity: null,
+    // Not used by MDC.
+    disabled-outline-opacity: null,
+    // Not used by MDC.
+    elevated-disabled-container-opacity: null,
+    // Not used by MDC.
+    flat-disabled-outline-opacity: null,
+    // Not used by MDC.
+    flat-disabled-unselected-outline-opacity: null,
+    // Our chips do not have a border.
+    flat-outline-width: null,
+    // Our chips do not have a border.
+    flat-selected-outline-width: null,
+    // Our chips do not have a border.
+    flat-unselected-outline-width: null,
+    // Our chips do not have a border.
+    outline-width: null,
+    // Not used by MDC.
+    with-avatar-disabled-avatar-opacity: null,
+    // Not used by MDC.
+    with-icon-disabled-icon-opacity: null,
+    // Not used by MDC.
+    with-leading-icon-disabled-leading-icon-opacity: null,
+    // Not used by MDC.
+    with-leading-icon-leading-icon-size: null,
+    // Not used by MDC.
+    with-trailing-icon-disabled-trailing-icon-opacity: null,
+    // Not used by MDC.
+    with-trailing-icon-trailing-icon-size: null,
+    // Elevated chips not implemented.
+    container-elevation: null,
+    // Elevated chips not implemented.
+    container-shadow-color: null,
+    // Our chips do not have a border.
+    disabled-outline-color: null,
+    // Elevated chips not implemented.
+    elevated-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-container-shadow-color: null,
+    // Elevated chips not implemented.
+    container-surface-tint-layer-color: null,
+    // Elevated chips not implemented.
+    elevated-disabled-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-focus-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-hover-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-pressed-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-selected-container-color: null,
+    // Elevated chips not implemented.
+    elevated-selected-container-elevation: null,
+    // Elevated chips not implemented.
+    elevated-unselected-container-color: null,
+    // Elevated chips not implemented.
+    flat-container-elevation: null,
+    // Our chips do not have a border.
+    flat-disabled-outline-color: null,
+    // Not providing this uses
+    flat-disabled-selected-container-color: null,
+    // Not used by MDC.
+    flat-disabled-selected-container-opacity: null,
+    // Unused.
+    flat-disabled-selected-outline-color: null,
+    // Unused.
+    flat-disabled-selected-outline-opacity: null,
+    // Unused.
+    flat-disabled-unselected-outline-color: null,
+    // Unused.
+    flat-focus-outline-color: null,
+    // Unused.
+    flat-outline-color: null,
+    // Unused.
+    flat-selected-container-color: null,
+    // Unused.
+    flat-selected-focus-container-elevation: null,
+    // Unused.
+    flat-selected-hover-container-elevation: null,
+    // Unused.
+    flat-selected-outline-color: null,
+    // Unused.
+    flat-selected-pressed-container-elevation: null,
+    // Unused.
+    flat-unselected-focus-container-elevation: null,
+    // Unused.
+    flat-unselected-focus-outline-color: null,
+    // Unused.
+    flat-unselected-hover-container-elevation: null,
+    // Unused.
+    flat-unselected-outline-color: null,
+    // Unused.
+    flat-unselected-pressed-container-elevation: null,
+    // Unused.
+    focus-label-text-color: null,
+    // Unused.
+    focus-outline-color: null,
+    // Unused.
+    hover-label-text-color: null,
+    // Unused.
+    hover-state-layer-color: null,
+    // Unused.
+    hover-state-layer-opacity: null,
+    // Unused.
+    outline-color: null,
+    // Unused.
+    pressed-label-text-color: null,
+    // Unused.
+    pressed-state-layer-color: null,
+    // Unused.
+    pressed-state-layer-opacity: null,
+    // Unused.
+    selected-focus-label-text-color: null,
+    // Unused.
+    selected-focus-state-layer-color: null,
+    // Unused.
+    selected-focus-state-layer-opacity: null,
+    // Unused.
+    selected-hover-label-text-color: null,
+    // Unused.
+    selected-hover-state-layer-color: null,
+    // Unused.
+    selected-hover-state-layer-opacity: null,
+    // Unused.
+    selected-label-text-color: null,
+    // Unused.
+    selected-pressed-label-text-color: null,
+    // Unused.
+    selected-pressed-state-layer-color: null,
+    // Unused.
+    selected-pressed-state-layer-opacity: null,
+    // Unused.
+    unselected-focus-label-text-color: null,
+    // Unused.
+    unselected-focus-state-layer-color: null,
+    // Unused.
+    unselected-focus-state-layer-opacity: null,
+    // Unused.
+    unselected-hover-label-text-color: null,
+    // Unused.
+    unselected-hover-state-layer-color: null,
+    // Unused.
+    unselected-hover-state-layer-opacity: null,
+    // Unused.
+    unselected-label-text-color: null,
+    // Unused.
+    unselected-pressed-label-text-color: null,
+    // Unused.
+    unselected-pressed-state-layer-color: null,
+    // Unused.
+    unselected-pressed-state-layer-opacity: null,
+    // Unused.
+    with-icon-focus-icon-color: null,
+    // Unused.
+    with-icon-hover-icon-color: null,
+    // Unused.
+    with-icon-pressed-icon-color: null,
+    // Unused.
+    with-icon-selected-focus-icon-color: null,
+    // Unused.
+    with-icon-selected-hover-icon-color: null,
+    // Unused.
+    with-icon-selected-pressed-icon-color: null,
+    // Unused.
+    with-icon-unselected-focus-icon-color: null,
+    // Unused.
+    with-icon-unselected-hover-icon-color: null,
+    // Unused.
+    with-icon-unselected-icon-color: null,
+    // Unused.
+    with-icon-unselected-pressed-icon-color: null,
+    // Unused.
+    with-leading-icon-disabled-leading-icon-color: null,
+    // Unused.
+    with-leading-icon-focus-leading-icon-color: null,
+    // Unused.
+    with-leading-icon-hover-leading-icon-color: null,
+    // Unused.
+    with-leading-icon-leading-icon-color: null,
+    // Unused.
+    with-leading-icon-pressed-leading-icon-color: null,
+    // Unused.
+    with-trailing-icon-focus-trailing-icon-color: null,
+    // Unused.
+    with-trailing-icon-hover-trailing-icon-color: null,
+    // Unused.
+    with-trailing-icon-pressed-trailing-icon-color: null
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme, $palette-name: null) {
+  $foreground: null;
+  $background: null;
+  $state-layer-color: inspection.get-theme-color($theme, foreground, base);
+  $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
+
+  @if $palette-name == null {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+    $grey-50: map.get(palette.$grey-palette, 50);
+    $grey-900: map.get(palette.$grey-palette, 900);
+    $foreground: if($is-dark, $grey-50, $grey-900);
+
+    $surface: inspection.get-theme-color($theme, background, card);
+    $on-surface: if(
+        mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark',
+        #000,
+        #fff
+    );
+    $background: if(
+        meta.type-of($on-surface) == color and meta.type-of($surface) == color,
+        color.mix($on-surface, $surface, 12%),
+        $on-surface
+    );
+  }
+  @else {
+    $background: inspection.get-theme-color($theme, $palette-name);
+    $foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  }
+
+  @return (
+    // The text color of a disabled chip.
+    disabled-label-text-color: $foreground,
+    // The background-color of the chip.
+    elevated-container-color: $background,
+    // The background-color of a disabled chip.
+    elevated-disabled-container-color: $background,
+    // The color of the focus state layer.
+    focus-state-layer-color: $state-layer-color,
+    // The opacity of the focus state layer.
+    focus-state-layer-opacity: $state-layer-opacity,
+    // The chip text color.
+    label-text-color: $foreground,
+    // The icon color of a chip.
+    with-icon-icon-color: $foreground,
+    // The color of the icon of a disabled chip.
+    with-icon-disabled-icon-color: $foreground,
+    // The color of the icon of a selected chip.
+    with-icon-selected-icon-color: $foreground,
+    // The color of the icon at the end of a disabled chip.
+    with-trailing-icon-disabled-trailing-icon-color: $foreground,
+    // The color of the icon at the end of the chip.
+    with-trailing-icon-trailing-icon-color: $foreground
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    // The font family of the chip text.
+    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    // The line height of the chip text.
+    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    // The font size of the chip text.
+    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    // The letter spacing of the chip label.
+    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
+    // The font weight of the chip text.
+    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
+  @return (
+    // The height of the chip.
+    container-height:
+      map.get(
+        (
+          0: 32px,
+          -1: 28px,
+          -2: 24px,
+        ),
+        $scale
+      )
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+    get-unthemable-tokens(),
+    get-color-tokens(token-utils.$placeholder-color-config),
+    get-typography-tokens(token-utils.$placeholder-typography-config),
+    get-density-tokens(token-utils.$placeholder-density-config)
+  );
+}

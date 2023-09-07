@@ -1,0 +1,102 @@
+/// Emits a CSS class, `.cdk-visually-hidden`. This class can be applied to an element
+/// to make that element visually hidden while remaining available to assistive technology.
+@mixin a11y-visually-hidden() {
+  .cdk-visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+
+    // This works around a Chrome bug that can cause the tab to crash when large amounts of
+    // non-English text get wrapped: https://bugs.chromium.org/p/chromium/issues/detail?id=1201444
+    white-space: nowrap;
+
+    // Avoid browsers rendering the focus ring in some cases.
+    outline: 0;
+
+    // Avoid some cases where the browser will still render the native controls (see #9049).
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    // We need at least one of top/bottom/left/right in order to prevent cases where the
+    // absolute-positioned element is pushed down and can affect scrolling (see #24597).
+    // `left` was chosen here, because it's the least likely to break overrides where the
+    // element might have been positioned (e.g. `mat-checkbox`).
+    left: 0;
+
+    [dir='rtl'] & {
+      left: auto;
+      right: 0;
+    }
+  }
+}
+
+/// @deprecated Use `a11y-visually-hidden`.
+@mixin a11y() {
+  @include a11y-visually-hidden;
+}
+
+/// Emits the mixin's content nested under `$selector-context` if `$selector-context`
+/// is non-empty.
+/// @param {String} selector-context The selector under which to nest the mixin's content.
+@mixin _optionally-nest-content($selector-context) {
+  @if ($selector-context == '') {
+    @content;
+  }
+  @else {
+    #{$selector-context} {
+      @content;
+    }
+  }
+}
+
+/// Applies styles for users in high contrast mode. Note that this only applies
+/// to Microsoft browsers. Chrome can be included by checking for the `html[hc]`
+/// attribute, however Chrome handles high contrast differently.
+///
+/// @param {String} target Type of high contrast setting to target. Defaults to `active`, can be
+///     `white-on-black` or `black-on-white`.
+/// @param {String} encapsulation Whether to emit styles for view encapsulation. Values are:
+///     * `on` - works for `Emulated`, `Native`, and `ShadowDom`
+///     * `off` - works for `None`
+///     * `any` - works for all encapsulation modes by emitting the CSS twice (default).
+@mixin high-contrast($target: active, $encapsulation: 'any') {
+  @if ($target != 'active' and $target != 'black-on-white' and $target != 'white-on-black') {
+    @error 'Unknown cdk-high-contrast value "#{$target}" provided. ' +
+           'Allowed values are "active", "black-on-white", and "white-on-black"';
+  }
+
+  @if ($encapsulation != 'on' and $encapsulation != 'off' and $encapsulation != 'any') {
+    @error 'Unknown cdk-high-contrast encapsulation "#{$encapsulation}" provided. ' +
+           'Allowed values are "on", "off", and "any"';
+  }
+
+  // If the selector context has multiple parts, such as `.section, .region`, just doing
+  // `.cdk-high-contrast-xxx #{&}` will only apply the parent selector to the first part of the
+  // context. We address this by nesting the selector context under .cdk-high-contrast.
+  @at-root {
+    $selector-context: #{&};
+
+    @if ($encapsulation != 'on') {
+      // Note that if this selector is updated, the same change has to be made inside
+      // `_overlay.scss` which can't depend on this mixin due to some infrastructure limitations.
+      .cdk-high-contrast-#{$target} {
+        @include _optionally-nest-content($selector-context) {
+          @content;
+        }
+      }
+    }
+
+    @if ($encapsulation != 'off') {
+      .cdk-high-contrast-#{$target} :host {
+        @include _optionally-nest-content($selector-context) {
+          @content;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,146 @@
+@use 'typography-utils';
+@use '../theming/inspection';
+@use './versioning';
+
+// Definition and versioning functions live in their own files to avoid circular dependencies, but
+// we re-export them here so that historical imports from this file continue to work without needing
+// to be updated.
+@forward './definition';
+@forward './versioning';
+
+/// Emits baseline typographic styles based on a given config.
+/// @param {Map} $config-or-theme A typography config for an entire theme.
+/// @param {String} $selector Ancestor selector under which native elements, such as h1, will
+///     be styled.
+@mixin typography-hierarchy($theme, $selector: '.mat-typography') {
+  // Note that it seems redundant to prefix the class rules with the `$selector`, however it's
+  // necessary if we want to allow people to overwrite the tag selectors. This is due to
+  // selectors like `#{$selector} h1` being more specific than ones like `.mat-title`.
+  .mat-h1,
+  .mat-headline-5,
+  #{$selector} .mat-h1,
+  #{$selector} .mat-headline-5,
+  #{$selector} h1 {
+    font: inspection.get-theme-typography($theme, headline-5, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-5, letter-spacing);
+    margin: 0 0 16px;
+  }
+
+  .mat-h2,
+  .mat-headline-6,
+  #{$selector} .mat-h2,
+  #{$selector} .mat-headline-6,
+  #{$selector} h2 {
+    font: inspection.get-theme-typography($theme, headline-6, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-6, letter-spacing);
+    margin: 0 0 16px;
+  }
+
+  .mat-h3,
+  .mat-subtitle-1,
+  #{$selector} .mat-h3,
+  #{$selector} .mat-subtitle-1,
+  #{$selector} h3 {
+    font: inspection.get-theme-typography($theme, subtitle-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
+    margin: 0 0 16px;
+  }
+
+  .mat-h4,
+  .mat-body-1,
+  #{$selector} .mat-h4,
+  #{$selector} .mat-body-1,
+  #{$selector} h4 {
+    font: inspection.get-theme-typography($theme, body-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, body-1, letter-spacing);
+    margin: 0 0 16px;
+  }
+
+  // Note: the spec doesn't have anything that would correspond to h5 and h6, but we add these for
+  // consistency. The font sizes come from the Chrome user agent styles which have h5 at 0.83em
+  // and h6 at 0.67em.
+  .mat-h5,
+  #{$selector} .mat-h5,
+  #{$selector} h5 {
+    @include typography-utils.font-shorthand(
+       // calc is used here to support css variables
+      calc(#{inspection.get-theme-typography($theme, body-2, font-size)} * 0.83),
+      inspection.get-theme-typography($theme, body-2, font-weight),
+      inspection.get-theme-typography($theme, body-2, line-height),
+      inspection.get-theme-typography($theme, body-2, font-family)
+    );
+
+    margin: 0 0 12px;
+  }
+
+  .mat-h6,
+  #{$selector} .mat-h6,
+  #{$selector} h6 {
+    @include typography-utils.font-shorthand(
+       // calc is used here to support css variables
+      calc(#{inspection.get-theme-typography($theme, body-2, font-size)} * 0.67),
+      inspection.get-theme-typography($theme, body-2, font-weight),
+      inspection.get-theme-typography($theme, body-2, line-height),
+      inspection.get-theme-typography($theme, body-2, font-family)
+    );
+
+    margin: 0 0 12px;
+  }
+
+  .mat-body-strong,
+  .mat-subtitle-2,
+  #{$selector} .mat-body-strong,
+  #{$selector} .mat-subtitle-2 {
+    font: inspection.get-theme-typography($theme, subtitle-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-2, letter-spacing);
+  }
+
+  .mat-body,
+  .mat-body-2,
+  #{$selector} .mat-body,
+  #{$selector} .mat-body-2,
+  #{$selector} {
+    font: inspection.get-theme-typography($theme, body-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, body-2, letter-spacing);
+
+    p {
+      margin: 0 0 12px;
+    }
+  }
+
+  .mat-small,
+  .mat-caption,
+  #{$selector} .mat-small,
+  #{$selector} .mat-caption {
+    font: inspection.get-theme-typography($theme, caption, font);
+    letter-spacing: inspection.get-theme-typography($theme, caption, letter-spacing);
+  }
+
+  .mat-headline-1,
+  #{$selector} .mat-headline-1 {
+    font: inspection.get-theme-typography($theme, headline-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-1, letter-spacing);
+    margin: 0 0 56px;
+  }
+
+  .mat-headline-2,
+  #{$selector} .mat-headline-2 {
+    font: inspection.get-theme-typography($theme, headline-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-2, letter-spacing);
+    margin: 0 0 64px;
+  }
+
+  .mat-headline-3,
+  #{$selector} .mat-headline-3 {
+    font: inspection.get-theme-typography($theme, headline-3, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-3, letter-spacing);
+    margin: 0 0 64px;
+  }
+
+  .mat-headline-4,
+  #{$selector} .mat-headline-4 {
+    font: inspection.get-theme-typography($theme, headline-4, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-4, letter-spacing);
+    margin: 0 0 64px;
+  }
+}

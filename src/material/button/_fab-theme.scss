@@ -1,0 +1,112 @@
+@use '@material/fab/fab' as mdc-fab;
+@use '@material/fab/fab-theme' as mdc-fab-theme;
+@use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
+
+@use './button-theme-private';
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/typography/typography';
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-fab-theme.theme(tokens-mdc-fab.get-unthemable-tokens());
+    @include mdc-extended-fab-theme.theme(
+      tokens-mdc-extended-fab.get-unthemable-tokens()
+    );
+  }
+}
+
+@mixin _fab-variant($foreground, $background) {
+  $color-tokens: (
+    container-color: $background,
+    icon-color: $foreground
+  );
+  @include mdc-fab-theme.theme($color-tokens);
+
+  --mat-mdc-fab-color: #{$foreground};
+}
+
+@function white-or-black($color, $is-dark) {
+  @return if(mdc-helpers.variable-safe-contrast-tone($color, $is-dark) == 'dark', #000, #fff);
+}
+
+@mixin color($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+
+  $surface: inspection.get-theme-color($theme, background, card);
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $warn: inspection.get-theme-color($theme, warn);
+
+  $on-surface: white-or-black($surface, $is-dark);
+  $on-primary: white-or-black($primary, $is-dark);
+  $on-accent: white-or-black($accent, $is-dark);
+  $on-warn: white-or-black($warn, $is-dark);
+
+  $disabled: rgba($on-surface, 0.12);
+  $on-disabled: rgba($on-surface, if($is-dark, 0.5, 0.38));
+
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab {
+    // TODO(wagnermaciel): The ripple-theme-styles mixin depends heavily on
+    // being wrapped by using-mdc-theme. This workaround needs to be
+    // revisited w/ a more holistic solution.
+    @include mdc-helpers.using-mdc-theme($theme) {
+      @include button-theme-private.ripple-theme-styles($theme, true);
+    }
+
+    @include button-theme-private.apply-disabled-style() {
+      @include _fab-variant($on-disabled, $disabled);
+    }
+
+    &.mat-unthemed {
+      @include _fab-variant($on-surface, $surface);
+    }
+
+    &.mat-primary {
+      @include _fab-variant($on-primary, $primary);
+    }
+
+    &.mat-accent {
+      @include _fab-variant($on-accent, $accent);
+    }
+
+    &.mat-warn {
+      @include _fab-variant($on-warn, $warn);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @include mdc-helpers.using-mdc-typography($theme) {
+    @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+  }
+
+  $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($theme);
+  .mat-mdc-extended-fab {
+    @include mdc-extended-fab-theme.theme($typography-tokens);
+  }
+}
+
+@mixin density($theme) {
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

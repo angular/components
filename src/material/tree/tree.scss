@@ -1,0 +1,14 @@
+.mat-tree {
+  display: block;
+}
+
+.mat-tree-node {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  word-wrap: break-word;
+}
+
+.mat-nested-tree-node {
+  border-bottom-width: 0;
+}

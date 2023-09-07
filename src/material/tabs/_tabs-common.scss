@@ -1,0 +1,414 @@
+@use '@material/ripple' as mdc-ripple;
+@use '@material/tab' as mdc-tab;
+@use '@material/tab-indicator' as mdc-tab-indicator;
+@use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
+@use '@material/tab/tab-theme' as mdc-tab-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/vendor-prefixes';
+@use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
+@use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
+@use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use '../core/tokens/token-utils';
+@use 'sass:map';
+
+
+$mat-tab-animation-duration: 500ms !default;
+
+// Combines the various structural styles we need for the tab group and tab nav bar.
+@mixin structural-styles {
+  @include mdc-custom-properties.configure(
+    $emit-fallback-values: false,
+    $emit-fallback-vars: false
+  ) {
+    @include mdc-tab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+    @include mdc-tab-indicator.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+  }
+
+  .mat-mdc-tab-ripple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+  }
+}
+
+@mixin tab {
+  @include mdc-custom-properties.configure(
+    $emit-fallback-values: false,
+    $emit-fallback-vars: false
+  ) {
+    @include mdc-tab-indicator-theme.theme-styles(tokens-mdc-tab-indicator.get-token-slots());
+    @include mdc-tab-theme.secondary-navigation-tab-theme-styles(tokens-mdc-tab.get-token-slots());
+  }
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-decoration: none;
+
+  // Tabs might be `button` elements so we have to reset the user agent styling.
+  background: none;
+
+  &.mdc-tab {
+    // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
+    // is an opt-in behavior. Also technically we don't need to combine the two classes, but
+    // we need the extra specificity to avoid issues with CSS insertion order.
+    flex-grow: 0;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mat-tab-header.$prefix,
+    tokens-mat-tab-header.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+
+    &:hover .mdc-tab__text-label {
+      @include token-utils.create-token-slot(color, inactive-hover-label-text-color);
+    }
+
+    &:focus .mdc-tab__text-label {
+      @include token-utils.create-token-slot(color, inactive-focus-label-text-color);
+    }
+
+    &.mdc-tab--active {
+      .mdc-tab__text-label {
+        @include token-utils.create-token-slot(color, active-label-text-color);
+      }
+
+      .mdc-tab__ripple::before,
+      .mat-ripple-element {
+        @include token-utils.create-token-slot(background-color, active-ripple-color);
+      }
+
+      &:hover {
+        .mdc-tab__text-label {
+          @include token-utils.create-token-slot(color, active-hover-label-text-color);
+        }
+
+        .mdc-tab-indicator__content--underline {
+          @include token-utils.create-token-slot(border-color, active-hover-indicator-color);
+        }
+      }
+
+      &:focus {
+        .mdc-tab__text-label {
+          @include token-utils.create-token-slot(color, active-focus-label-text-color);
+        }
+
+        .mdc-tab-indicator__content--underline {
+          @include token-utils.create-token-slot(border-color, active-focus-indicator-color);
+        }
+      }
+    }
+  }
+
+  &.mat-mdc-tab-disabled {
+    // MDC doesn't support disabled tabs so we need to improvise.
+    opacity: 0.4;
+
+    // We use `pointer-events` to make the element unclickable when it's disabled, rather than
+    // preventing the default action through JS, because we can't prevent the action reliably
+    // due to other directives potentially registering their events earlier. This shouldn't cause
+    // the user to click through, because we always have a header behind the tab. Furthermore, this
+    // saves us some CSS, because we don't have to add `:not(.mat-mdc-tab-disabled)` to all the
+    // hover and focus selectors.
+    pointer-events: none;
+
+    // We also need to prevent content from being clickable.
+    .mdc-tab__content {
+      pointer-events: none;
+    }
+
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+    ) {
+      .mdc-tab__ripple::before,
+      .mat-ripple-element {
+        @include token-utils.create-token-slot(background-color, disabled-ripple-color);
+      }
+    }
+  }
+
+  // Used to render out the background tint when hovered/focused. Usually this is done by
+  // MDC's ripple styles, however we're using our own ripples due to size concerns.
+  .mdc-tab__ripple::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(background-color, inactive-ripple-color);
+    }
+  }
+
+  .mdc-tab__text-label {
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(color, inactive-label-text-color);
+    }
+
+    // We support projecting icons into the tab. These styles ensure that they're centered.
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .mdc-tab__content {
+    // Required for `fitInkBarToContent` to work. This used to be included with MDC's
+    // `without-ripple` mixin, but that no longer appears to be the case with `static-styles`.
+    // Since the latter is ~10kb smaller, we include this one extra style ourselves.
+    position: relative;
+
+    // MDC sets `pointer-events: none` on the content which prevents interactions with the
+    // nested content. Re-enable it since we allow nesting any content in the tab (see #26195).
+    pointer-events: auto;
+  }
+
+  // We need to handle the hover and focus indication ourselves, because we don't use MDC's ripple.
+  &:hover .mdc-tab__ripple::before {
+    opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+  }
+
+  &.cdk-program-focused,
+  &.cdk-keyboard-focused {
+    .mdc-tab__ripple::before {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, focus);
+    }
+  }
+
+  .mat-ripple-element {
+    opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
+
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(background-color, inactive-ripple-color);
+    }
+  }
+}
+
+// Structural styles for a tab header. Used by both `mat-tab-header` and `mat-tab-nav-bar`.
+// We need this styles on top of MDC's, because MDC doesn't support pagination like ours.
+@mixin paginated-tab-header {
+  .mat-mdc-tab-header {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+
+    @include mdc-tab-indicator-theme.theme(tokens-mdc-tab-indicator.get-unthemable-tokens());
+    @include mdc-tab-theme.secondary-navigation-tab-theme(tokens-mdc-tab.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+      tokens-mat-tab-header.$prefix, tokens-mat-tab-header.get-unthemable-tokens());
+  }
+
+  .mdc-tab-indicator .mdc-tab-indicator__content {
+    transition-duration: var(--mat-tab-animation-duration, 250ms);
+  }
+
+  .mat-mdc-tab-header-pagination {
+    @include vendor-prefixes.user-select(none);
+    position: relative;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    min-width: 32px;
+    cursor: pointer;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    box-sizing: content-box;
+    background: none;
+    border: none;
+    outline: 0;
+    padding: 0;
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
+
+    .mat-ripple-element {
+      opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
+
+      @include token-utils.use-tokens(
+        tokens-mat-tab-header.$prefix,
+        tokens-mat-tab-header.get-token-slots()
+      ) {
+        @include token-utils.create-token-slot(background-color, inactive-ripple-color);
+      }
+    }
+
+    .mat-mdc-tab-header-pagination-controls-enabled & {
+      display: flex;
+    }
+  }
+
+  // The pagination control that is displayed on the left side of the tab header.
+  .mat-mdc-tab-header-pagination-before,
+  .mat-mdc-tab-header-rtl .mat-mdc-tab-header-pagination-after {
+    padding-left: 4px;
+    .mat-mdc-tab-header-pagination-chevron {
+      transform: rotate(-135deg);
+    }
+  }
+
+  // The pagination control that is displayed on the right side of the tab header.
+  .mat-mdc-tab-header-rtl .mat-mdc-tab-header-pagination-before,
+  .mat-mdc-tab-header-pagination-after {
+    padding-right: 4px;
+    .mat-mdc-tab-header-pagination-chevron {
+      transform: rotate(45deg);
+    }
+  }
+
+  .mat-mdc-tab-header-pagination-chevron {
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    height: 8px;
+    width: 8px;
+
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(border-color, pagination-icon-color);
+    }
+  }
+
+  .mat-mdc-tab-header-pagination-disabled {
+    box-shadow: none;
+    cursor: default;
+    pointer-events: none;
+
+    .mat-mdc-tab-header-pagination-chevron {
+      opacity: 0.4;
+    }
+  }
+
+  .mat-mdc-tab-list {
+    flex-grow: 1;
+    position: relative;
+    transition: transform 500ms cubic-bezier(0.35, 0, 0.25, 1);
+
+    ._mat-animation-noopable & {
+      transition: none;
+    }
+  }
+
+  // The `span` is in the selector in order to increase the specificity, ensuring
+  // that it's always higher than the selector that declares the transition.
+  ._mat-animation-noopable {
+    span.mdc-tab-indicator__content,
+    span.mdc-tab__text-label {
+      transition: none;
+    }
+  }
+}
+
+// Structural styles for the element that wraps the paginated header items.
+@mixin paginated-tab-header-item-wrapper($parent) {
+  display: flex;
+  flex: 1 0 auto;
+
+  // We need to set the parent here explicitly, in order to prevent the alignment
+  // from any parent tab groups from propagating down to the children when nesting.
+  // Note that these are used as inputs so they shouldn't be changed to `mat-mdc-`.
+  [mat-align-tabs='center'] > #{$parent} & {
+    justify-content: center;
+  }
+
+  [mat-align-tabs='end'] > #{$parent} & {
+    justify-content: flex-end;
+  }
+}
+
+// Structural styles for the element that wraps the paginated container's content.
+@mixin paginated-tab-header-container {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  z-index: 1;
+}
+
+@mixin paginated-tab-header-with-background($header-selector, $tab-selector) {
+  &.mat-tabs-with-background {
+    @include token-utils.create-token-values(
+      tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-unthemable-tokens()
+    );
+
+    @include token-utils.use-tokens(
+      tokens-mat-tab-header-with-background.$prefix,
+      tokens-mat-tab-header-with-background.get-token-slots()
+    ) {
+      // Note that these selectors target direct descendants so
+      // that the styles don't apply to any nested tab groups.
+      > #{$header-selector}, > .mat-mdc-tab-header-pagination {
+        // Set background color for the tab group
+        @include token-utils.create-token-slot(background-color, background-color);
+      }
+
+      // Note: this is only scoped to primary, because the legacy tabs had the incorrect behavior
+      // where setting both a background and `mat-accent` would add the background, but keep
+      // accent on the selected tab. There are some internal apps whose design depends on this now
+      // so we have to replicate it here.
+      &.mat-primary > #{$header-selector} {
+        // Set labels to contrast against background
+        #{$tab-selector} .mdc-tab__text-label {
+          @include token-utils.create-token-slot(color, foreground-color);
+        }
+
+        .mdc-tab-indicator__content--underline {
+          @include token-utils.create-token-slot(border-color, foreground-color);
+        }
+      }
+
+      &:not(.mat-primary) > #{$header-selector} {
+        #{$tab-selector}:not(.mdc-tab--active) {
+          .mdc-tab__text-label {
+            @include token-utils.create-token-slot(color, foreground-color);
+          }
+
+          .mdc-tab-indicator__content--underline {
+            @include token-utils.create-token-slot(border-color, foreground-color);
+          }
+        }
+      }
+
+      > #{$header-selector}, > .mat-mdc-tab-header-pagination {
+        .mat-mdc-tab-header-pagination-chevron,
+        .mat-mdc-focus-indicator::before {
+          @include token-utils.create-token-slot(border-color, foreground-color);
+        }
+
+        .mat-ripple-element, .mdc-tab__ripple::before {
+          @include token-utils.create-token-slot(background-color, foreground-color);
+        }
+
+        .mat-mdc-tab-header-pagination-chevron {
+          @include token-utils.create-token-slot(color, foreground-color);
+        }
+      }
+    }
+  }
+}

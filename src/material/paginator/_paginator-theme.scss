@@ -1,0 +1,58 @@
+@use 'sass:meta';
+@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
+@use '../form-field/form-field-density';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-paginator.$prefix,
+      tokens-mat-paginator.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-paginator.$prefix,
+      tokens-mat-paginator.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-paginator.$prefix,
+      tokens-mat-paginator.get-density-tokens($theme));
+  }
+
+  // TODO: this should be done through tokens once the form field has been switched over.
+  .mat-mdc-paginator {
+    // We need the form field to be narrower in order to fit into the paginator,
+    // so we set its density to be -4 or denser.
+    @if ((meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
+         $density-scale == maximum) {
+      @include form-field-density.private-form-field-density(-4);
+    }
+    @else {
+      @include form-field-density.private-form-field-density($density-scale);
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-paginator') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

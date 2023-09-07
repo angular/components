@@ -1,0 +1,36 @@
+// MDCs default textarea styles cannot be used because they only apply if a special
+// class is applied to the "mdc-text-field" wrapper. Since we cannot know whether the
+// registered form-field control is a textarea and MDC by default does not have styles
+// for textareas in the fill appearance, we add our own minimal textarea styles
+// which are scoped to the actual textarea element (i.e. not require a class in the
+// text-field wrapper) and integrate better with the any configured appearance.
+
+// Mixin that can be included to override the default MDC text-field styles
+// to properly support textareas.
+@mixin private-text-field-textarea-overrides() {
+  // Ensures that textarea elements inside of the form-field have proper vertical spacing
+  // to account for the floating label. Also ensures that there is no vertical text overflow.
+  // **Note**: Before changing this selector, make sure the `cdk-textarea-autosize` class is
+  // still able to override the `resize` property to `none`.
+  .mat-mdc-form-field-textarea-control {
+    // Set the vertical alignment for textareas inside form fields to be the middle. This
+    // ensures that textareas do not stretch the infix container vertically without having
+    // multiple rows of text. See: https://github.com/angular/components/pull/22089.
+    vertical-align: middle;
+    // Textareas by default also allow users to resize the textarea horizontally. This
+    // causes the textarea to overflow the form-field. We only allow vertical resizing.
+    resize: vertical;
+    box-sizing: border-box;
+    height: auto;
+    // Using padding for textareas causes a bad user experience because the text outside
+    // of the text box will overflow vertically. Also, the vertical spacing for controls
+    // is set through the infix container to allow for arbitrary form-field controls.
+    margin: 0;
+    padding: 0;
+    border: none;
+
+    // By default IE always renders scrollbars on textarea.
+    // This brings it in line with other browsers.
+    overflow: auto;
+  }
+}

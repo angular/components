@@ -1,0 +1,258 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use '@material/typography' as mdc-typography;
+
+/// Defines a typography level from the Material Design spec.
+/// @param {String} $font-size The font-size for this level.
+/// @param {String | Number} $line-height The line-height for this level.
+/// @param {String | Number} $font-weight The font-weight for this level.
+/// @param {String} $font-family The font-family for this level.
+/// @param {String} $letter-spacing The letter-spacing for this level.
+/// @returns {Map} A map representing the definition of this typographic level.
+@function define-typography-level(
+  $font-size,
+  $line-height: $font-size,
+  $font-weight: 400,
+  $font-family: null,
+  $letter-spacing: normal) {
+
+  @return (
+    font-size: $font-size,
+    line-height: $line-height,
+    font-weight: $font-weight,
+    font-family: $font-family,
+    letter-spacing: $letter-spacing
+  );
+}
+
+/// Defines a collection of typography levels to configure typography for an application.
+/// Any level not specified defaults to the values defined in the Material Design specification:
+/// https://material.io/guidelines/style/typography.html.
+///
+/// Note that the Material Design specification does not describe explicit letter-spacing values.
+/// The values here come from reverse engineering the Material Design examples.
+/// @param {String} $font-family Default font-family for levels that don't specify font-family.
+/// @param {Map} $display-4 Configuration for the "display-4" typographic level.
+/// @param {Map} $display-3 Configuration for the "display-3" typographic level.
+/// @param {Map} $display-2 Configuration for the "display-2" typographic level.
+/// @param {Map} $display-1 Configuration for the "display-1" typographic level.
+/// @param {Map} $headline Configuration for the "headline" typographic level.
+/// @param {Map} $title Configuration for the "title" typographic level.
+/// @param {Map} $subheading-2 Configuration for the "subheading-2" typographic level.
+/// @param {Map} $subheading-1 Configuration for the "subheading-1" typographic level.
+/// @param {Map} $body-2 Configuration for the "body-2" typographic level.
+/// @param {Map} $body-1 Configuration for the "body-1" typographic level.
+/// @param {Map} $caption Configuration for the "caption" typographic level.
+/// @param {Map} $button Configuration for the "button" typographic level.
+/// @param {Map} $input Configuration for the "input" typographic level.
+/// @returns {Map} A typography config for the application.
+///
+/// @deprecated Use `mat.define-typography-config` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @breaking-change 17.0.0
+@function define-legacy-typography-config(
+  $font-family:   'Roboto, "Helvetica Neue", sans-serif',
+  $display-4:     define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+  $display-3:     define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+  $display-2:     define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+  $display-1:     define-typography-level(34px, 40px, 400),
+  $headline:      define-typography-level(24px, 32px, 400),
+  $title:         define-typography-level(20px, 32px, 500),
+  $subheading-2:  define-typography-level(16px, 28px, 400),
+  $subheading-1:  define-typography-level(15px, 24px, 400),
+  $body-2:        define-typography-level(14px, 24px, 500),
+  $body-1:        define-typography-level(14px, 20px, 400),
+  $caption:       define-typography-level(12px, 20px, 400),
+  $button:        define-typography-level(14px, 14px, 500),
+  // Line-height must be unit-less fraction of the font-size.
+  $input:         define-typography-level(inherit, 1.125, 400)
+) {
+
+  // Declare an initial map with all of the levels.
+  $config: (
+    display-4:      $display-4,
+    display-3:      $display-3,
+    display-2:      $display-2,
+    display-1:      $display-1,
+    headline:       $headline,
+    title:          $title,
+    subheading-2:   $subheading-2,
+    subheading-1:   $subheading-1,
+    body-2:         $body-2,
+    body-1:         $body-1,
+    caption:        $caption,
+    button:         $button,
+    input:          $input,
+  );
+
+  // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
+  // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
+  @each $key, $level in $config {
+    @if map.get($level, font-family) == null {
+      $new-level: map.merge($level, (font-family: $font-family));
+      $config: map.merge($config, ($key: $new-level));
+    }
+  }
+
+  // Add the base font family to the config.
+  @return map.merge($config, (font-family: $font-family));
+}
+
+/// Generates an Angular Material typography config based on values from the official Material
+/// Design spec implementation (MDC Web). All arguments are optional, but may be passed to override
+/// the default values. The `mat-typography-level` function can be used to generate a custom
+/// typography level map which can be passed to this function to override one of the default levels.
+/// All default typography sizing generated by this function is in `px` units.
+///
+/// @param {String} $font-family The font family to use for levels where it is not explicitly
+///     specified.
+/// @param {Map} $headline-1 The font settings for the headline-1 font level.
+/// @param {Map} $headline-2 The font settings for the headline-2 font level.
+/// @param {Map} $headline-3 The font settings for the headline-3 font level.
+/// @param {Map} $headline-4 The font settings for the headline-4 font level.
+/// @param {Map} $headline-5 The font settings for the headline-5 font level.
+/// @param {Map} $headline-6 The font settings for the headline-6 font level.
+/// @param {Map} $subtitle-1 The font settings for the subtitle-1 font level.
+/// @param {Map} $subtitle-2 The font settings for the subtitle-2 font level.
+/// @param {Map} $body-1 The font settings for the body-1 font level.
+/// @param {Map} $body-2 The font settings for the body-2 font level.
+/// @param {Map} $caption The font settings for the caption font level.
+/// @param {Map} $button The font settings for the button font level.
+/// @param {Map} $overline The font settings for the overline font level.
+/// @return {Map} A map containing font settings for each of the levels in the Material Design spec.
+@function define-typography-config(
+  // TODO(mmalerba): rename this function to define-typography-config,
+  //  and create a predefined px based config for people that need it.
+  $font-family: mdc-typography.$font-family,
+  $headline-1: null,
+  $headline-2: null,
+  $headline-3: null,
+  $headline-4: null,
+  $headline-5: null,
+  $headline-6: null,
+  $subtitle-1: null,
+  $subtitle-2: null,
+  $body-1: null,
+  $body-2: null,
+  $caption: null,
+  $button: null,
+  $overline: null,
+) {
+  @return _apply-font-family($font-family, (
+    headline-1: $headline-1 or _rem-to-px(typography-config-level-from-mdc(headline1)),
+    headline-2: $headline-2 or _rem-to-px(typography-config-level-from-mdc(headline2)),
+    headline-3: $headline-3 or _rem-to-px(typography-config-level-from-mdc(headline3)),
+    headline-4: $headline-4 or _rem-to-px(typography-config-level-from-mdc(headline4)),
+    headline-5: $headline-5 or _rem-to-px(typography-config-level-from-mdc(headline5)),
+    headline-6: $headline-6 or _rem-to-px(typography-config-level-from-mdc(headline6)),
+    subtitle-1: $subtitle-1 or _rem-to-px(typography-config-level-from-mdc(subtitle1)),
+    subtitle-2: $subtitle-2 or _rem-to-px(typography-config-level-from-mdc(subtitle2)),
+    body-1: $body-1 or _rem-to-px(typography-config-level-from-mdc(body1)),
+    body-2: $body-2 or _rem-to-px(typography-config-level-from-mdc(body2)),
+    caption: $caption or _rem-to-px(typography-config-level-from-mdc(caption)),
+    button: $button or _rem-to-px(typography-config-level-from-mdc(button)),
+    overline: $overline or _rem-to-px(typography-config-level-from-mdc(overline)),
+  ));
+}
+
+/// Generates an Angular Material typography config based on values from the official Material
+/// Design spec implementation (MDC Web). All arguments are optional, but may be passed to override
+/// the default values. The `mat-typography-level` function can be used to generate a custom
+/// typography level map which can be passed to this function to override one of the default levels.
+/// All default typography sizing generated by this function is in `rem` units.
+///
+/// @param {String} $font-family The font family to use for levels where it is not explicitly
+///     specified.
+/// @param {Map} $headline-1 The font settings for the headline-1 font level.
+/// @param {Map} $headline-2 The font settings for the headline-2 font level.
+/// @param {Map} $headline-3 The font settings for the headline-3 font level.
+/// @param {Map} $headline-4 The font settings for the headline-4 font level.
+/// @param {Map} $headline-5 The font settings for the headline-5 font level.
+/// @param {Map} $headline-6 The font settings for the headline-6 font level.
+/// @param {Map} $subtitle-1 The font settings for the subtitle-1 font level.
+/// @param {Map} $subtitle-2 The font settings for the subtitle-2 font level.
+/// @param {Map} $body-1 The font settings for the body-1 font level.
+/// @param {Map} $body-2 The font settings for the body-2 font level.
+/// @param {Map} $caption The font settings for the caption font level.
+/// @param {Map} $button The font settings for the button font level.
+/// @param {Map} $overline The font settings for the overline font level.
+/// @return {Map} A map containing font settings for each of the levels in the Material Design spec.
+@function define-rem-typography-config(
+  // TODO(mmalerba): rename this function to define-typography-config,
+  //  and create a predefined px based config for people that need it.
+  $font-family: mdc-typography.$font-family,
+  $headline-1: null,
+  $headline-2: null,
+  $headline-3: null,
+  $headline-4: null,
+  $headline-5: null,
+  $headline-6: null,
+  $subtitle-1: null,
+  $subtitle-2: null,
+  $body-1: null,
+  $body-2: null,
+  $caption: null,
+  $button: null,
+  $overline: null,
+) {
+  @return _apply-font-family($font-family, (
+    headline-1: $headline-1 or typography-config-level-from-mdc(headline1),
+    headline-2: $headline-2 or typography-config-level-from-mdc(headline2),
+    headline-3: $headline-3 or typography-config-level-from-mdc(headline3),
+    headline-4: $headline-4 or typography-config-level-from-mdc(headline4),
+    headline-5: $headline-5 or typography-config-level-from-mdc(headline5),
+    headline-6: $headline-6 or typography-config-level-from-mdc(headline6),
+    subtitle-1: $subtitle-1 or typography-config-level-from-mdc(subtitle1),
+    subtitle-2: $subtitle-2 or typography-config-level-from-mdc(subtitle2),
+    body-1: $body-1 or typography-config-level-from-mdc(body1),
+    body-2: $body-2 or typography-config-level-from-mdc(body2),
+    caption: $caption or typography-config-level-from-mdc(caption),
+    button: $button or typography-config-level-from-mdc(button),
+    overline: $overline or typography-config-level-from-mdc(overline),
+  ));
+}
+
+// Converts an MDC typography level config to an Angular Material one.
+@function typography-config-level-from-mdc($mdc-level, $font-family: null) {
+  $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
+
+  // Explicitly default the font family to null since we'll apply it globally
+  // through the `define-typgraphy-config`/`define-legacy-typography-config`.
+  @return define-typography-level(
+    $font-family: $font-family,
+    $font-size: map.get($mdc-level-config, font-size),
+    $line-height: map.get($mdc-level-config, line-height),
+    $font-weight: map.get($mdc-level-config, font-weight),
+    $letter-spacing: map.get($mdc-level-config, letter-spacing)
+  );
+}
+
+// Converts a map containing rem values to a map containing px values.
+@function _rem-to-px($x, $px-per-rem: 16px) {
+  @if meta.type-of($x) == 'map' {
+    @each $key, $val in $x {
+      $x: map.merge($x, ($key: _rem-to-px($val)));
+    }
+    @return $x;
+  }
+  @if meta.type-of($x) == 'number' and math.unit($x) == 'rem' {
+    @return math.div($x, 1rem) * $px-per-rem;
+  }
+  @else {
+    @return $x;
+  }
+}
+
+// Applies the default font family to all levels in a typography config.
+@function _apply-font-family($font-family, $initial-config) {
+  $config: $initial-config;
+
+  @each $key, $level in $config {
+    @if map.get($level, 'font-family') == null {
+      // Sass maps are immutable so we have to re-assign the variable each time.
+      $config: map.set($config, $key, map.set($level, 'font-family', $font-family));
+    }
+  }
+
+  @return map.set($config, 'font-family', $font-family);
+}

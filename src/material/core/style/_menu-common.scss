@@ -1,0 +1,101 @@
+@use '@angular/cdk';
+
+@use './list-common';
+@use './layout-common';
+
+// The mixins below are shared between mat-menu and mat-select
+
+// menu width must be a multiple of 56px
+$overlay-min-width: 112px !default;   // 56 * 2
+$overlay-max-width: 280px !default;   // 56 * 5
+
+$item-height: 48px !default;
+$side-padding: 16px !default;
+$icon-margin: 16px !default;
+
+
+@mixin base() {
+  min-width: $overlay-min-width;
+  max-width: $overlay-max-width;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
+}
+
+@mixin item-base() {
+  @include list-common.truncate-line();
+
+  // Needs to be a block for the ellipsis to work.
+  display: block;
+  line-height: $item-height;
+  height: $item-height;
+  padding: 0 $side-padding;
+
+  text-align: left;
+  text-decoration: none;   // necessary to reset anchor tags
+
+  // Required for Edge not to show scrollbars when setting the width manually. See #12112.
+  max-width: 100%;
+
+  &[disabled] {
+    cursor: default;
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  .mat-icon {
+    margin-right: $icon-margin;
+    vertical-align: middle;
+
+    svg {
+      vertical-align: top;
+    }
+
+    [dir='rtl'] & {
+      margin-left: $icon-margin;
+      margin-right: 0;
+    }
+  }
+}
+
+@mixin item-submenu-trigger($side-padding) {
+  // Increase the side padding to prevent the indicator from overlapping the text.
+  padding-right: $side-padding * 2;
+
+  [dir='rtl'] & {
+    padding-right: $side-padding;
+    padding-left: $side-padding * 2;
+  }
+}
+
+@mixin item-submenu-icon($side-padding) {
+  position: absolute;
+  top: 50%;
+  right: $side-padding;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 10px;
+  fill: currentColor;
+
+  [dir='rtl'] & {
+    right: auto;
+    left: $side-padding;
+    transform: translateY(-50%) scaleX(-1);
+  }
+
+  // Fix for Chromium-based browsers blending in the `currentColor` with the background.
+  @include cdk.high-contrast(active, off) {
+    fill: CanvasText;
+  }
+}
+
+@mixin item-ripple() {
+  @include layout-common.fill;
+
+  // Prevent any pointer events on the ripple container for a menu item. The ripple container is
+  // not the trigger element for the ripples and can be therefore disabled like that. Disabling
+  // the pointer events ensures that there is no `click` event that can bubble up and cause
+  // the menu panel to close.
+  pointer-events: none;
+}

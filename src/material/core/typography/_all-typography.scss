@@ -1,0 +1,96 @@
+@use './typography';
+@use '../../autocomplete/autocomplete-theme';
+@use '../../badge/badge-theme';
+@use '../../bottom-sheet/bottom-sheet-theme';
+@use '../../button/button-theme';
+@use '../../button/icon-button-theme';
+@use '../../button/fab-theme';
+@use '../../button-toggle/button-toggle-theme';
+@use '../../card/card-theme';
+@use '../../checkbox/checkbox-theme';
+@use '../../chips/chips-theme';
+@use '../../divider/divider-theme';
+@use '../../table/table-theme';
+@use '../../datepicker/datepicker-theme';
+@use '../../dialog/dialog-theme';
+@use '../../expansion/expansion-theme';
+@use '../../grid-list/grid-list-theme';
+@use '../../icon/icon-theme';
+@use '../../input/input-theme';
+@use '../../list/list-theme';
+@use '../../menu/menu-theme';
+@use '../../paginator/paginator-theme';
+@use '../../progress-bar/progress-bar-theme';
+@use '../../progress-spinner/progress-spinner-theme';
+@use '../../radio/radio-theme';
+@use '../../select/select-theme';
+@use '../../sidenav/sidenav-theme';
+@use '../../slide-toggle/slide-toggle-theme';
+@use '../../slider/slider-theme';
+@use '../../stepper/stepper-theme';
+@use '../../sort/sort-theme';
+@use '../../tabs/tabs-theme';
+@use '../../toolbar/toolbar-theme';
+@use '../../tooltip/tooltip-theme';
+@use '../../snack-bar/snack-bar-theme';
+@use '../../form-field/form-field-theme';
+@use '../../tree/tree-theme';
+@use '../theming/inspection';
+@use '../core-theme';
+
+// Includes all of the typographic styles.
+@mixin all-component-typographies($theme: null) {
+  // If no actual color configuration has been specified, create a default one.
+  @if not inspection.theme-has($theme, typography) {
+    $theme: typography.define-typography-config();
+  }
+
+  // TODO: COMP-309: Do not use individual mixins. Instead, use the all-theme mixin and only
+  // specify a `typography` config while setting `color` and `density` to `null`. This is currently
+  // not possible as it would introduce a circular dependency for typography because the `mat-core`
+  // mixin that is transitively loaded by the `all-theme` file, imports `all-typography` which
+  // would then load `all-theme` again. This ultimately results a circular dependency.
+  @include badge-theme.typography($theme);
+  @include typography.typography-hierarchy($theme);
+  @include bottom-sheet-theme.typography($theme);
+  @include button-toggle-theme.typography($theme);
+  @include divider-theme.typography($theme);
+  @include datepicker-theme.typography($theme);
+  @include expansion-theme.typography($theme);
+  @include grid-list-theme.typography($theme);
+  @include icon-theme.typography($theme);
+  @include progress-spinner-theme.typography($theme);
+  @include sidenav-theme.typography($theme);
+  @include stepper-theme.typography($theme);
+  @include sort-theme.typography($theme);
+  @include toolbar-theme.typography($theme);
+  @include tree-theme.typography($theme);
+  @include core-theme.typography($theme);
+  @include card-theme.typography($theme);
+  @include progress-bar-theme.typography($theme);
+  @include tooltip-theme.typography($theme);
+  @include form-field-theme.typography($theme);
+  @include input-theme.typography($theme);
+  @include select-theme.typography($theme);
+  @include autocomplete-theme.typography($theme);
+  @include dialog-theme.typography($theme);
+  @include chips-theme.typography($theme);
+  @include slide-toggle-theme.typography($theme);
+  @include radio-theme.typography($theme);
+  @include slider-theme.typography($theme);
+  @include menu-theme.typography($theme);
+  @include list-theme.typography($theme);
+  @include paginator-theme.typography($theme);
+  @include tabs-theme.typography($theme);
+  @include checkbox-theme.typography($theme);
+  @include button-theme.typography($theme);
+  @include icon-button-theme.typography($theme);
+  @include fab-theme.typography($theme);
+  @include snack-bar-theme.typography($theme);
+  @include table-theme.typography($theme);
+}
+
+// @deprecated Use `all-component-typographies`.
+@mixin angular-material-typography($theme: null) {
+  @include all-component-typographies($theme);
+}

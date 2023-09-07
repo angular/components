@@ -1,0 +1,174 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '@angular/cdk';
+@use '../style/layout-common';
+@use '../theming/theming';
+@use '../theming/inspection';
+
+// Private sass variables that will be used as reference throughout component stylesheets.
+$default-border-width: 3px;
+$default-border-style: solid;
+$default-border-color: transparent;
+$default-border-radius: 4px;
+
+// Mixin that renders the focus indicator structural styles.
+@mixin structural-styling($prefix) {
+  .#{$prefix}-focus-indicator {
+    position: relative;
+
+    &::before {
+      @include layout-common.fill();
+      box-sizing: border-box;
+      pointer-events: none;
+      display: var(--#{$prefix}-focus-indicator-display, none); // Hide the indicator by default.
+      border: var(
+          --#{$prefix}-focus-indicator-border-width,
+          #{$default-border-width}
+        )
+        var(
+          --#{$prefix}-focus-indicator-border-style,
+          #{$default-border-style}
+        )
+        var(
+          --#{$prefix}-focus-indicator-border-color,
+          #{$default-border-color}
+        );
+      border-radius: var(
+        --#{$prefix}-focus-indicator-border-radius,
+        #{$default-border-radius}
+      );
+    }
+
+    // By default, render the focus indicator when the focus indicator host element takes focus.
+    // Defining a pseudo element's content will cause it to render.
+    &:focus::before {
+      content: '';
+    }
+  }
+
+  // Enable the indicator in high contrast mode.
+  @include cdk.high-contrast(active, off) {
+    @include customize-focus-indicators((display: block), $prefix);
+  }
+}
+
+// Generates CSS variable declarations from a map.
+@mixin _output-variables($map) {
+  @each $key, $value in $map {
+    @if ($value) {
+      --#{$key}: #{$value};
+    }
+  }
+}
+
+// Mixin that dedups CSS variables for the strong-focus-indicators mixin.
+@mixin customize-focus-indicators($config, $prefix) {
+  $border-style: map.get($config, border-style);
+  $border-width: map.get($config, border-width);
+  $border-radius: map.get($config, border-radius);
+  $border-color: map.get($config, border-color);
+  $display: map.get($config, display);
+  $map: (
+    '#{$prefix}-focus-indicator-border-style': $border-style,
+    '#{$prefix}-focus-indicator-border-width': $border-width,
+    '#{$prefix}-focus-indicator-border-radius': $border-radius,
+    '#{$prefix}-focus-indicator-border-color': $border-color,
+    '#{$prefix}-focus-indicator-display': $display,
+  );
+
+  @if (&) {
+    @include _output-variables($map);
+  }
+  @else {
+    // We use `html` here instead of `:root`, because the
+    // latter causes some issues with internal tooling.
+    html {
+      @include _output-variables($map);
+    }
+  }
+}
+
+@mixin strong-focus-indicators($config: ()) {
+  // Default focus indicator config.
+  $default-config: (
+      border-color: black,
+      display: block,
+  );
+
+  // Merge default config with user config.
+  $config: map.merge($default-config, $config);
+
+  @include customize-focus-indicators($config, 'mat');
+}
+
+@mixin mdc-strong-focus-indicators($config: ()) {
+  // Default focus indicator config.
+  $default-config: (
+      border-color: black,
+      display: block,
+  );
+
+  // Merge default config with user config.
+  $config: map.merge($default-config, $config);
+
+  @include customize-focus-indicators($config, 'mat-mdc');
+}
+
+@mixin strong-focus-indicators-color($theme-or-color) {
+  @if meta.type-of($theme-or-color) == 'color' {
+    @include customize-focus-indicators((
+        border-color: $theme-or-color
+    ), 'mat');
+  }
+  @else {
+    $border-color: inspection.get-theme-color($theme-or-color, primary);
+    @include customize-focus-indicators((
+        border-color: $border-color
+    ), 'mat');
+  }
+}
+
+@mixin strong-focus-indicators-theme($theme-or-color) {
+  @if meta.type-of($theme-or-color) == 'color' {
+    @include customize-focus-indicators((
+        border-color: $theme-or-color
+    ), 'mat');
+  }
+  @else {
+    @include theming.private-check-duplicate-theme-styles($theme-or-color, 'mat-focus-indicators') {
+      @if inspection.theme-has($theme-or-color, color) {
+        @include strong-focus-indicators-color($theme-or-color);
+      }
+    }
+  }
+}
+
+@mixin mdc-strong-focus-indicators-color($theme-or-color) {
+  @if meta.type-of($theme-or-color) == 'color' {
+    @include customize-focus-indicators((
+        border-color: $theme-or-color
+    ), 'mat-mdc');
+  }
+  @else {
+    $border-color: inspection.get-theme-color($theme-or-color, primary);
+    @include customize-focus-indicators((
+        border-color: $border-color
+    ), 'mat-mdc');
+  }
+}
+
+@mixin mdc-strong-focus-indicators-theme($theme-or-color) {
+  @if meta.type-of($theme-or-color) == 'color' {
+    @include customize-focus-indicators((
+        border-color: $theme-or-color
+    ), 'mat-mdc');
+  }
+  @else {
+    @include theming.private-check-duplicate-theme-styles(
+        $theme-or-color, 'mat-mdc-focus-indicators') {
+      @if inspection.theme-has($theme-or-color, color) {
+        @include mdc-strong-focus-indicators-color($theme-or-color);
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+@use './private';
+
+@mixin strong-focus-indicators($config: ()) {
+  @include private.strong-focus-indicators($config);
+  @include private.mdc-strong-focus-indicators($config);
+}

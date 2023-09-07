@@ -1,0 +1,91 @@
+@use '../../theming/theming';
+@use '../../theming/inspection';
+
+@mixin _psuedo-checkbox-styles-with-color($text-color, $background) {
+  .mat-pseudo-checkbox-checked,
+  .mat-pseudo-checkbox-indeterminate {
+    &.mat-pseudo-checkbox-minimal::after {
+      color: $text-color;
+    }
+
+    // Full (checkbox) appearance inverts colors of text and background.
+    &.mat-pseudo-checkbox-full {
+      &::after {
+        color: $background;
+      }
+
+      background: $text-color;
+    }
+  }
+}
+
+@mixin color($theme) {
+  $is-dark-theme: inspection.get-theme-type($theme) == dark;
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $warn: inspection.get-theme-color($theme, warn);
+  $background: inspection.get-theme-color($theme, background, background);
+  $secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
+
+  // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
+  // this does not work well with elements layered on top of one another. To get around this we
+  // blend the colors together based on the base color and the theme background.
+  $white-30pct-opacity-on-dark: #686868;
+  $black-26pct-opacity-on-light: #b0b0b0;
+  $disabled-color: if($is-dark-theme, $white-30pct-opacity-on-dark, $black-26pct-opacity-on-light);
+  $colored-box-selector: '.mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-indeterminate';
+
+  .mat-pseudo-checkbox-full {
+    color: $secondary-text;
+    &.mat-pseudo-checkbox-disabled {
+      color: $disabled-color;
+    }
+  }
+
+  .mat-primary {
+    @include _psuedo-checkbox-styles-with-color($primary, $background);
+  }
+
+  // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
+  // theme from their parent, rather than implementing their own theming, which is why we
+  // don't attach to the `mat-*` classes. Also note that this needs to be below `.mat-primary`
+  // in order to allow for the color to be overwritten if the checkbox is inside a parent that
+  // has `mat-accent` and is placed inside another parent that has `mat-primary`.
+  @include _psuedo-checkbox-styles-with-color($accent, $background);
+  .mat-accent {
+    @include _psuedo-checkbox-styles-with-color($accent, $background);
+  }
+
+  .mat-warn {
+    @include _psuedo-checkbox-styles-with-color($warn, $background);
+  }
+
+  .mat-pseudo-checkbox-disabled.mat-pseudo-checkbox-checked,
+  .mat-pseudo-checkbox-disabled.mat-pseudo-checkbox-indeterminate {
+    &.mat-pseudo-checkbox-minimal::after {
+      color: $disabled-color;
+    }
+
+    &.mat-pseudo-checkbox-full {
+      background: $disabled-color;
+    }
+  }
+}
+
+@mixin typography($theme) {}
+
+@mixin _density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include _density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

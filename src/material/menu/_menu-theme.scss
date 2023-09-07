@@ -1,0 +1,37 @@
+@use '../core/tokens/m2/mat/menu' as tokens-mat-menu;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+      tokens-mat-menu.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+      tokens-mat-menu.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-menu') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
+

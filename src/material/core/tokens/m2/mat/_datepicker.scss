@@ -1,0 +1,174 @@
+@use 'sass:color';
+@use 'sass:meta';
+@use 'sass:math';
+@use '../../token-utils';
+@use '../../../theming/inspection';
+@use '../../../style/sass-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, datepicker);
+
+$_selected-fade-amount: 0.6;
+$_today-fade-amount: 0.2;
+
+// Utility that produces a range background color from a specific color.
+@function private-get-range-background-color($color) {
+  @return rgba($color, 0.2);
+}
+
+// Utility that produces the overlap selected color from an overlap color.
+@function private-get-default-overlap-selected-color($overlap-color) {
+  @return color.adjust($overlap-color, $lightness: -30%);
+}
+
+// Default range comparison color.
+$private-default-comparison-color: private-get-range-background-color(#f9ab00);
+
+// Default range overlap color.
+$private-default-overlap-color: #a8dab5;
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+@function get-unthemable-tokens() {
+  @return ();
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
+  $text-color: inspection.get-theme-color($theme, foreground, text);
+  $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
+  $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
+  $divider-color: inspection.get-theme-color($theme, foreground, divider);
+  $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
+  $preview-outline-color: $divider-color;
+  $today-disabled-outline-color: null;
+
+  $primary-color: inspection.get-theme-color($theme, primary);
+  $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
+  $calendar-tokens: private-get-calendar-color-palette-color-tokens($theme, primary);
+  $toggle-tokens: private-get-toggle-color-palette-color-tokens($theme, primary);
+
+  // The divider color is set under the assumption that it'll be used
+  // for a solid border, but because we're using a dashed border for the
+  // preview range, we need to bump its opacity to ensure that it's visible.
+  @if meta.type-of($preview-outline-color) == color {
+    $preview-outline-opacity: math.min(opacity($preview-outline-color) * 2, 1);
+    $preview-outline-color: rgba($preview-outline-color, $preview-outline-opacity);
+  }
+
+  @if (meta.type-of($hint-text-color) == color) {
+    $today-disabled-outline-color: color.adjust($hint-text-color, $alpha: -$_today-fade-amount);
+  }
+  @else {
+    $today-disabled-outline-color: $disabled-text-color;
+  }
+
+  @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
+    toggle-icon-color: $inactive-icon-color,
+    calendar-body-label-text-color: $secondary-text-color,
+    calendar-period-button-icon-color: $inactive-icon-color,
+    calendar-navigation-button-icon-color: $inactive-icon-color,
+    calendar-header-divider-color: $divider-color,
+    calendar-header-text-color: $secondary-text-color,
+
+    // Note: though it's not text, the border is a hint about the fact
+    // that this is today's date, so we use the hint color.
+    calendar-date-today-outline-color: $hint-text-color,
+    calendar-date-today-disabled-state-outline-color: $today-disabled-outline-color,
+    calendar-date-text-color: $text-color,
+    calendar-date-outline-color: transparent,
+    calendar-date-disabled-state-text-color: $disabled-text-color,
+    calendar-date-preview-state-outline-color: $preview-outline-color,
+
+    range-input-separator-color: $text-color,
+    range-input-disabled-state-separator-color: $disabled-text-color,
+    range-input-disabled-state-text-color: $disabled-text-color,
+
+    calendar-container-background-color: inspection.get-theme-color($theme, background, card),
+    calendar-container-text-color: $text-color,
+  ));
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    // TODO(crisbeto): the typography tokens for other components set every typography dimension of
+    // an element (e.g. size, weight, line height, letter spacing). These tokens only set the values
+    // that were set in the previous theming API to reduce the amount of subtle screenshot
+    // differences. We should look into introducing the other tokens in a follow-up.
+    calendar-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    calendar-text-size: 13px, // TODO(crisbeto): this doesn't appear to affect anything
+
+    calendar-body-label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    calendar-body-label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+
+    calendar-period-button-text-size: inspection.get-theme-typography($theme, button, font-size),
+    calendar-period-button-text-weight: inspection.get-theme-typography(
+        $theme, button, font-weight),
+
+    calendar-header-text-size: 11px,
+    calendar-header-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+  );
+}
+
+// Gets the tokens map that can be used to override the range colors.
+@function get-range-color-tokens(
+  $range-color,
+  $comparison-color: $private-default-comparison-color,
+  $overlap-color: $private-default-overlap-color,
+  $overlap-selected-color: private-get-default-overlap-selected-color($overlap-color)) {
+
+  @return (
+    calendar-date-in-range-state-background-color: $range-color,
+    calendar-date-in-comparison-range-state-background-color: $comparison-color,
+    calendar-date-in-overlap-range-state-background-color: $overlap-color,
+    calendar-date-in-overlap-range-selected-state-background-color: $overlap-selected-color,
+  );
+}
+
+@function private-get-calendar-color-palette-color-tokens($theme, $palette-name) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
+  $default-contrast: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  $active-background-color: sass-utils.safe-color-change($palette-color, $alpha: 0.3);
+  $active-disabled-color: null;
+
+  @if (meta.type-of($palette-color) == color) {
+    $active-disabled-color: color.adjust($palette-color, $alpha: -$_selected-fade-amount);
+  }
+  @else {
+    $active-disabled-color: inspection.get-theme-color($theme, foreground, disabled-button);
+  }
+
+  @return (
+    calendar-date-selected-state-text-color: $default-contrast,
+    calendar-date-selected-state-background-color: $palette-color,
+    calendar-date-selected-disabled-state-background-color: $active-disabled-color,
+    calendar-date-today-selected-state-outline-color: $default-contrast,
+    calendar-date-focus-state-background-color: $active-background-color,
+    calendar-date-hover-state-background-color: $active-background-color,
+  );
+}
+
+@function private-get-toggle-color-palette-color-tokens($theme, $palette-name) {
+  @return (
+    toggle-active-state-icon-color: inspection.get-theme-color($theme, $palette-name, text),
+  );
+}
+
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  @return ();
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+      get-unthemable-tokens(),
+      get-color-tokens(token-utils.$placeholder-color-config),
+      get-typography-tokens(token-utils.$placeholder-typography-config),
+      get-density-tokens(token-utils.$placeholder-density-config)
+  );
+}

@@ -1,0 +1,217 @@
+@use 'sass:color';
+@use 'sass:math';
+@use '@angular/cdk';
+
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+// TODO(crisbeto): some of these variables aren't used anymore and should be deleted.
+$font-size: 12px;
+$font-weight: 600;
+$default-size: 22px !default;
+$small-size: $default-size - 6;
+$large-size: $default-size + 6;
+$_badge-structure-emitted: false !default;
+
+// Internally there are some builds that throw an error if they can't figure out the values
+// of CSS variables during compliation. This flag temporarily enables fallbacks for these builds.
+// Eventually we should clean them up.
+$_emit-fallback-vars: true;
+
+// Mixin for building offset given different sizes
+@mixin _badge-size($size, $font-size-token) {
+  // This mixin isn't used in the context of a theme so we can disable the ampersand check.
+  // stylelint-disable material/no-ampersand-beyond-selector-start
+  .mat-badge-content {
+    width: $size;
+    height: $size;
+    line-height: $size;
+
+    @if ($font-size-token) {
+      @include token-utils.use-tokens(tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-token-slots()) {
+        @include token-utils.create-token-slot(font-size, $font-size-token, $_emit-fallback-vars);
+      }
+    }
+  }
+
+  &.mat-badge-above .mat-badge-content {
+    top: math.div(-$size, 2);
+  }
+
+  &.mat-badge-below .mat-badge-content {
+    bottom: math.div(-$size, 2);
+  }
+
+  &.mat-badge-before .mat-badge-content {
+    left: -$size;
+  }
+
+  [dir='rtl'] &.mat-badge-before .mat-badge-content {
+    left: auto;
+    right: -$size;
+  }
+
+  &.mat-badge-after .mat-badge-content {
+    right: -$size;
+  }
+
+  [dir='rtl'] &.mat-badge-after .mat-badge-content {
+    right: auto;
+    left: -$size;
+  }
+
+  &.mat-badge-overlap {
+    &.mat-badge-before .mat-badge-content {
+      left: math.div(-$size, 2);
+    }
+
+    [dir='rtl'] &.mat-badge-before .mat-badge-content {
+      left: auto;
+      right: math.div(-$size, 2);
+    }
+
+    &.mat-badge-after .mat-badge-content {
+      right: math.div(-$size, 2);
+    }
+
+    [dir='rtl'] &.mat-badge-after .mat-badge-content {
+      right: auto;
+      left: math.div(-$size, 2);
+    }
+  }
+  // stylelint-enable
+}
+
+// Structural styles for the badge. They have to be included as a part of the theme,
+// because the badge is a directive and we have no other way of attaching styles to it.
+@mixin _badge-structure {
+  .mat-badge {
+    position: relative;
+
+    // The badge should make sure its host is overflow visible so that the badge content
+    // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+    // style `overflow: hidden` so this requires extra specificity so that it does not
+    // depend on style load order.
+    &.mat-badge {
+      overflow: visible;
+    }
+  }
+
+  .mat-badge-content {
+    position: absolute;
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    transition: transform 200ms ease-in-out;
+    transform: scale(0.6);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    pointer-events: none;
+
+    @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, background-color);
+      @include token-utils.create-token-slot(color, text-color);
+      @include token-utils.create-token-slot(font-family, text-font, $_emit-fallback-vars);
+      @include token-utils.create-token-slot(font-size, text-size, $_emit-fallback-vars);
+      @include token-utils.create-token-slot(font-weight, text-weight, $_emit-fallback-vars);
+    }
+
+    @include cdk.high-contrast(active, off) {
+      outline: solid 1px;
+      border-radius: 0;
+    }
+  }
+
+  .mat-badge-disabled .mat-badge-content {
+    @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+      @include token-utils.create-token-slot(color, disabled-state-text-color);
+    }
+  }
+
+  .mat-badge-hidden .mat-badge-content {
+    display: none;
+  }
+
+  .ng-animate-disabled .mat-badge-content,
+  .mat-badge-content._mat-animation-noopable {
+    transition: none;
+  }
+
+  // The active class is added after the element is added
+  // so it can animate scale to default
+  .mat-badge-content.mat-badge-active {
+    // Scale to `none` instead of `1` to avoid blurry text in some browsers.
+    transform: none;
+  }
+
+  .mat-badge-small {
+    @include _badge-size($small-size, small-size-text-size);
+  }
+
+  .mat-badge-medium {
+    @include _badge-size($default-size, null);
+  }
+
+  .mat-badge-large {
+    @include _badge-size($large-size, large-size-text-size);
+  }
+}
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.get-color-tokens($theme));
+  }
+
+  .mat-badge-accent {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent));
+  }
+
+  .mat-badge-warn {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+      tokens-mat-badge.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-badge') {
+    // Try to reduce the number of times that the structural styles are emitted.
+    @if not $_badge-structure-emitted {
+      @include _badge-structure;
+
+      // Only flip the flag if the mixin is included at the top level. Otherwise the first
+      // inclusion might be inside of a theme class which will exclude the structural styles
+      // from all other themes.
+      @if not & {
+        $_badge-structure-emitted: true !global;
+      }
+    }
+
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

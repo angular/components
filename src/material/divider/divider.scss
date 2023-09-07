@@ -1,0 +1,34 @@
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
+
+
+$inset-margin: 80px;
+
+.mat-divider {
+  @include token-utils.create-token-values(
+    tokens-mat-divider.$prefix, tokens-mat-divider.get-unthemable-tokens());
+
+  display: block;
+  margin: 0;
+  border-top-style: solid;
+  @include token-utils.use-tokens(
+    tokens-mat-divider.$prefix, tokens-mat-divider.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-color, color);
+    @include token-utils.create-token-slot(border-top-width, width);
+
+    &.mat-divider-vertical {
+      border-top: 0;
+      border-right-style: solid;
+      @include token-utils.create-token-slot(border-right-color, color);
+      @include token-utils.create-token-slot(border-right-width, width);
+    }
+  }
+
+  &.mat-divider-inset {
+    margin-left: $inset-margin;
+    [dir='rtl'] & {
+      margin-left: auto;
+      margin-right: $inset-margin;
+    }
+  }
+}

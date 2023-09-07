@@ -1,0 +1,51 @@
+@use '../core/tokens/m2/mat/table' as tokens-mat-table;
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+
+@mixin _output-tokens {
+  @if (&) {
+    @content;
+  }
+  @else {
+    html {
+      @content;
+    }
+  }
+}
+
+@mixin color($theme) {
+  @include _output-tokens {
+    @include token-utils.create-token-values(tokens-mat-table.$prefix,
+      tokens-mat-table.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  @include _output-tokens {
+    @include token-utils.create-token-values(tokens-mat-table.$prefix,
+      tokens-mat-table.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include _output-tokens {
+    @include token-utils.create-token-values(tokens-mat-table.$prefix,
+      tokens-mat-table.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-table') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

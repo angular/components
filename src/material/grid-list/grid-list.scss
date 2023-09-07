@@ -1,0 +1,101 @@
+@use '../core/style/list-common';
+@use '../core/style/layout-common';
+@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use '../core/tokens/token-utils';
+
+
+// height of tile header or footer if it has one line
+$one-line-height: 48px;
+// height of tile header or footer if it has two lines
+$two-line-height: 68px;
+// side padding for text in tile headers and footers
+$text-padding: 16px;
+
+.mat-grid-list {
+  display: block;
+  position: relative;
+}
+
+.mat-grid-tile {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+
+  // Headers & footers
+  .mat-grid-tile-header,
+  .mat-grid-tile-footer {
+    @include list-common.normalize-text();
+
+    display: flex;
+    align-items: center;
+    height: $one-line-height;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.38);
+    overflow: hidden;
+    padding: 0 $text-padding;
+
+    // Positioning
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    &.mat-2-line {
+      height: $two-line-height;
+    }
+  }
+
+  .mat-grid-list-text {
+    @include list-common.wrapper-base();
+  }
+
+  .mat-grid-tile-header {
+    top: 0;
+  }
+
+  .mat-grid-tile-footer {
+    bottom: 0;
+  }
+
+  .mat-grid-avatar {
+    padding-right: $text-padding;
+
+    [dir='rtl'] & {
+      padding-right: 0;
+      padding-left: $text-padding;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+.mat-grid-tile-header {
+  @include token-utils.use-tokens(
+    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.get-token-variable(tile-header-secondary-text-size);
+    @include list-common.base(var(#{$secondary-token-name}));
+    @include token-utils.create-token-slot(font-size, tile-header-primary-text-size);
+  }
+}
+
+.mat-grid-tile-footer {
+  @include token-utils.use-tokens(
+    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.get-token-variable(tile-footer-secondary-text-size);
+    @include list-common.base(var(#{$secondary-token-name}));
+    @include token-utils.create-token-slot(font-size, tile-footer-primary-text-size);
+  }
+}
+
+.mat-grid-tile-content {
+  @include layout-common.fill;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  padding: 0;
+  margin: 0;
+}

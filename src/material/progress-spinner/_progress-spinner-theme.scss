@@ -1,0 +1,51 @@
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
+@use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-circular-progress-theme.theme(
+      tokens-mdc-circular-progress.get-unthemable-tokens()
+    );
+  }
+}
+
+@mixin color($theme) {
+  $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-circular-progress-theme.theme($mdc-circular-progress-color-tokens);
+
+    .mat-accent {
+      $color: inspection.get-theme-color($theme, accent);
+      @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
+    }
+
+    .mat-warn {
+      $color: inspection.get-theme-color($theme, warn);
+      @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
+    }
+  }
+}
+
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-spinner') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@use 'sass:math';
+@use '../../style/checkbox-common';
+@use '../../style/private';
+@use '../../style/variables';
+@use './pseudo-checkbox-common';
+
+.mat-pseudo-checkbox {
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color checkbox-common.$transition-duration
+    variables.$linear-out-slow-in-timing-function, background-color
+    checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function;
+
+  // Used to render the checkmark/mixedmark inside of the box.
+  &::after {
+    position: absolute;
+    opacity: 0;
+    content: '';
+    border-bottom: checkbox-common.$border-width solid currentColor;
+    transition: opacity checkbox-common.$transition-duration
+      variables.$linear-out-slow-in-timing-function;
+  }
+
+  @include private.private-animation-noop {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+.mat-pseudo-checkbox-disabled {
+  cursor: default;
+}
+
+.mat-pseudo-checkbox-indeterminate::after {
+  left: math.div(checkbox-common.$border-width, 2);
+  opacity: 1;
+  border-radius: 2px;
+}
+
+.mat-pseudo-checkbox-checked::after {
+  left: pseudo-checkbox-common.$padding - checkbox-common.$border-width * 1.5;
+  border-left: checkbox-common.$border-width solid currentColor;
+  transform: rotate(-45deg);
+  opacity: 1;
+  box-sizing: content-box;
+}
+
+.mat-pseudo-checkbox-full {
+  border: checkbox-common.$border-width solid;
+  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+    border-color: transparent;
+  }
+}
+
+@include pseudo-checkbox-common.size(checkbox-common.$size);

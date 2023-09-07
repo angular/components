@@ -1,0 +1,306 @@
+@use '@angular/cdk';
+@use '@material/chips/chip' as mdc-chip;
+@use '@material/chips/chip-theme' as mdc-chip-theme;
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/layout-common';
+@use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/chip' as m2-mdc-chip;
+@use '../core/tokens/token-utils';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+
+// The slots for tokens that will be configured in the theme can be emitted with no fallback.
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $token-slots: m2-mdc-chip.get-token-slots();
+
+  // Add the MDC chip static styles.
+  @include mdc-chip.static-styles();
+
+  .mat-mdc-standard-chip {
+    // Add the official slots for the MDC chip.
+    @include mdc-chip-theme.theme-styles($token-slots);
+
+    // Add default values for tokens that aren't outputted by the theming API.
+    @include mdc-chip-theme.theme(m2-mdc-chip.get-unthemable-tokens());
+  }
+
+  // Add additional slots for the MDC chip tokens, needed in Angular Material.
+  @include token-utils.use-tokens(m2-mdc-chip.$prefix, $token-slots) {
+    .mat-mdc-chip-focus-overlay {
+      @include token-utils.create-token-slot(background, focus-state-layer-color);
+      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
+  }
+}
+
+// We *should* be able to include these styles through MDC's
+// `theme-styles` mixin, but we can't at the time of writing.
+@mixin _missing-mdc-theme-styles() {
+  .mat-mdc-standard-chip {
+    @include mdc-chip-theme.checkmark-size(mdc-chip-theme.$checkmark-size);
+    @include mdc-chip-theme.trailing-action-size(mdc-chip-theme.$trailing-action-size);
+    @include mdc-chip-theme.horizontal-padding(
+      mdc-chip-theme.$leading-padding,
+      mdc-chip-theme.$trailing-padding
+    );
+    @include mdc-chip-theme.with-graphic-horizontal-padding(
+      mdc-chip-theme.$graphic-leading-padding,
+      mdc-chip-theme.$graphic-trailing-padding,
+      mdc-chip-theme.$trailing-padding
+    );
+    @include mdc-chip-theme.with-trailing-action-horizontal-padding(
+      mdc-chip-theme.$leading-padding,
+      mdc-chip-theme.$trailing-action-leading-padding,
+      mdc-chip-theme.$trailing-action-trailing-padding
+    );
+    @include mdc-chip-theme.with-graphic-and-trailing-action-horizontal-padding(
+      mdc-chip-theme.$graphic-leading-padding,
+      mdc-chip-theme.$graphic-trailing-padding,
+      mdc-chip-theme.$trailing-action-leading-padding,
+      mdc-chip-theme.$trailing-action-trailing-padding
+    );
+
+    // MDC has some code looking for a `with-icon-selected-disabled-icon-color` token for this
+    // color, but the token isn't defined in the theme map so the validation throws an error.
+    // We don't change the color anyway so we can point it to the enable color instead.
+    &.mdc-evolution-chip--disabled .mdc-evolution-chip__checkmark {
+      color: var(--mdc-chip-with-icon-selected-icon-color, currentColor);
+    }
+  }
+
+  .mdc-evolution-chip--with-avatar {
+    @include mdc-chip-theme.with-graphic-horizontal-padding(
+      mdc-chip-theme.$avatar-leading-padding,
+      mdc-chip-theme.$avatar-trailing-padding,
+      mdc-chip-theme.$trailing-padding
+    );
+    @include mdc-chip-theme.with-graphic-and-trailing-action-horizontal-padding(
+      mdc-chip-theme.$avatar-leading-padding,
+      mdc-chip-theme.$avatar-trailing-padding,
+      mdc-chip-theme.$trailing-action-leading-padding,
+      mdc-chip-theme.$trailing-action-trailing-padding
+    );
+  }
+}
+
+@include mdc-helpers.disable-mdc-fallback-declarations {
+  @include _missing-mdc-theme-styles();
+}
+
+.mat-mdc-standard-chip {
+  -webkit-tap-highlight-color: transparent;
+
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+
+    .mdc-evolution-chip__checkmark-path {
+      // SVG colors won't be changed in high contrast mode and since the checkmark is white
+      // by default, it'll blend in with the background in black-on-white mode. Override the
+      // color to ensure that it's visible. We need !important, because the theme styles are
+      // very specific.
+      stroke: CanvasText !important;
+    }
+  }
+
+  // Angular Material supports disabled chips, which MDC does not.
+  // Dim the disabled chips and stop MDC from changing the icon color on click.
+  &.mdc-evolution-chip--disabled {
+    opacity: 0.4;
+  }
+
+  // MDC sets `overflow: hidden` on these elements in order to truncate the text. This is
+  // unnecessary since our chips don't truncate their text and it makes it difficult to style
+  // the strong focus indicators so we need to override it.
+  .mdc-evolution-chip__cell--primary,
+  .mdc-evolution-chip__action--primary,
+  .mat-mdc-chip-action-label {
+    overflow: visible;
+  }
+
+  // Ensures that the trailing icon is pushed to the end if the chip has a set width.
+  .mdc-evolution-chip__cell--primary {
+    flex-basis: 100%;
+  }
+
+  // This element can be placed on a `button` node which usually has some user agent styles.
+  // Reset the font so that the typography from the root element can propagate down.
+  .mdc-evolution-chip__action--primary {
+    font: inherit;
+    letter-spacing: inherit;
+    white-space: inherit;
+  }
+
+  // MDC sizes and positions this element using `width`, `height` and `padding`.
+  // This usually works, but it's common for apps to add `box-sizing: border-box`
+  // to all elements on the page which can cause the graphic to be clipped.
+  // Set an explicit `box-sizing` in order to avoid these issues.
+  .mat-mdc-chip-graphic,
+  .mat-mdc-chip-trailing-icon {
+    box-sizing: content-box;
+  }
+
+  &._mat-animation-noopable {
+    &,
+    .mdc-evolution-chip__graphic,
+    .mdc-evolution-chip__checkmark,
+    .mdc-evolution-chip__checkmark-path {
+      // MDC listens to `transitionend` events on some of these
+      // elements so we can't disable the transitions completely.
+      transition-duration: 1ms;
+      animation-duration: 1ms;
+    }
+  }
+}
+
+// Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
+// inherit the font size, because they wrap the label in a `button` that has user agent styles.
+.mat-mdc-basic-chip .mdc-evolution-chip__action--primary {
+  font: inherit;
+}
+
+// MDC's focus and hover indication is handled through their ripple which we currently
+// don't use due to size concerns so we have to re-implement it ourselves.
+.mat-mdc-chip-focus-overlay {
+  @include layout-common.fill;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 150ms linear;
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
+  .mat-mdc-basic-chip & {
+    display: none;
+  }
+
+  .mat-mdc-chip:hover & {
+    opacity: 0.04;
+  }
+
+  .mat-mdc-chip.cdk-focused & {
+    opacity: 0.12;
+  }
+}
+
+// The ripple container should match the bounds of the entire chip.
+.mat-mdc-chip .mat-ripple.mat-mdc-chip-ripple {
+  @include layout-common.fill;
+
+  // Disable pointer events for the ripple container and state overlay because the container
+  // will overlay the user content and we don't want to disable mouse events on the user content.
+  // Pointer events can be safely disabled because the ripple trigger element is the host element.
+  pointer-events: none;
+
+  // Inherit the border radius from the parent so that state overlay and ripples don't exceed the
+  // parent button boundaries.
+  border-radius: inherit;
+}
+
+.mat-mdc-chip-avatar {
+  // In case an icon or text is used as an avatar.
+  text-align: center;
+  line-height: 1;
+
+  // Technically the avatar is only supposed to have an image, but we also allow for icons.
+  // Set the color so the icons inherit the correct color.
+  color: var(--mdc-chip-with-icon-icon-color, currentColor);
+}
+
+// Required for the strong focus indicator to fill the chip.
+.mat-mdc-chip {
+  position: relative;
+
+  // `.mat-mdc-chip-action-label` below sets a `z-index: 1` to put the label above the focus
+  // overlay, but that can also cause it to appear above other elements like sticky columns
+  // (see #26793). Set an explicit `z-index` to prevent the label from leaking out.
+  z-index: 0;
+}
+
+.mat-mdc-chip-action-label {
+  // MDC centers the text, but we have a lot of internal customers who have it at the start.
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  // When a chip has a trailing action, it'll have two focusable elements when navigating with
+  // the arrow keys: the primary action and the trailing one. If that's the case, we apply
+  // `position: relative` to the primary action container so that the indicators is only around
+  // the text label. This allows for it to be distinguished from the indicator on the trailing icon.
+  .mat-mdc-chip.mdc-evolution-chip--with-trailing-action & {
+    position: relative;
+  }
+
+  .mat-mdc-chip-primary-focus-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  // For the chip element, default inset/offset values are necessary to ensure that
+  // the focus indicator is sufficiently contrastive and renders appropriately.
+  .mat-mdc-focus-indicator::before {
+    $default-border-width: focus-indicators-private.$default-border-width;
+    $border-width: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
+
+  // Give the text label a higher z-index than the focus overlay to ensure that the focus overlay
+  // does not affect the color of the text. Material spec requires state layer to not interfere with
+  // text color.
+  z-index: 1;
+}
+
+.mat-mdc-chip-remove {
+  // Fades out the trailing icon slightly so that it can become darker when focused.
+  // The MDC theming has variables for this, but the focus/hover states don't seem to work.
+  opacity: 0.54;
+
+  &:focus {
+    opacity: 1;
+  }
+
+  &::before {
+    $default-border-width: focus-indicators-private.$default-border-width;
+    $offset: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    margin: calc(#{$offset} * -1);
+
+    // MDC sets a padding a on the chip button which stretches out the focus indicator.
+    left: 8px;
+    right: 8px;
+  }
+
+  .mat-icon {
+    width: inherit;
+    height: inherit;
+    font-size: inherit;
+    box-sizing: content-box;
+  }
+}
+
+.mat-chip-edit-input {
+  cursor: text;
+  display: inline-block;
+  color: inherit;
+  outline: 0;
+}
+
+// Single-selection chips show their selected state using a background color which won't be visible
+// in high contrast mode. This isn't necessary in multi-selection since there's a checkmark.
+.mat-mdc-chip-selected:not(.mat-mdc-chip-multiple) {
+  @include cdk.high-contrast(active, off) {
+    outline-width: 3px;
+  }
+}
+
+// The chip has multiple focus targets so we have to put the indicator on
+// a separate element, rather than on the focusable element itself.
+.mat-mdc-chip-action:focus .mat-mdc-focus-indicator::before {
+  content: '';
+}

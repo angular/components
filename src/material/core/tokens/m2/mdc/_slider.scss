@@ -1,0 +1,147 @@
+@use 'sass:map';
+@use '../../../theming/inspection';
+@use '../../token-utils';
+@use '../../../style/elevation';
+@use '../../../style/sass-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, slider);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+@function get-unthemable-tokens() {
+  @return (
+    // Height of active track.
+    active-track-height: 6px,
+    // Border radius of active track.
+    active-track-shape: 9999px,
+    // Height of handle.
+    handle-height: 20px,
+    // Border radius of handle.
+    handle-shape: 50%,
+    // Width of handle.
+    handle-width: 20px,
+    // Height of inactive track.
+    inactive-track-height: 4px,
+    // Border radius of inactive track.
+    inactive-track-shape: 9999px,
+    // Width of handle when overlapping with another handle below it.
+    with-overlap-handle-outline-width: 1px,
+    // Opacity of active container with tick marks.
+    with-tick-marks-active-container-opacity: 0.6,
+    // Border radius of container with tick marks.
+    with-tick-marks-container-shape: 50%,
+    // Size of container with tick marks.
+    with-tick-marks-container-size: 2px,
+    // Opacity of inactive container with tick marks.
+    with-tick-marks-inactive-container-opacity: 0.6,
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    disabled-handle-elevation: null,
+    label-container-elevation: null,
+    label-container-height: null,
+    track-elevation: null,
+    focus-state-layer-opacity: null,
+    hover-state-layer-opacity: null,
+    pressed-state-layer-opacity: null,
+    // MDC does not seem to use these tokens.
+    hover-state-layer-color: null,
+    pressed-handle-color: null,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $elevation: inspection.get-theme-color($theme, foreground, elevation);
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $on-surface: if($is-dark, #fff, #000);
+
+  // The default for tokens that rely on the theme will use the primary palette
+  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
+
+  @return map.merge(
+    $theme-color-tokens,
+    (
+      // Color of active track when disabled.
+      disabled-active-track-color: $on-surface,
+      // Color of handle when disabled.
+      disabled-handle-color: $on-surface,
+      // Color of inactive track when disabled.
+      disabled-inactive-track-color: $on-surface,
+      // Color of container label.
+      label-container-color: $on-surface,
+      // Color of label text.
+      label-label-text-color: if($is-dark, #000, #fff),
+      // Color of handle outline when overlapping with another handle below it.
+      with-overlap-handle-outline-color: #fff,
+      // Color of container with tick marks when disabled.
+      with-tick-marks-disabled-container-color: $on-surface,
+      // (Part of the color tokens because it needs to be combined with the
+      // shadow color to generate the box-shadow.)
+      // Elevation level for handle.
+      handle-elevation: 1,
+      // Color of handle shadow.
+      handle-shadow-color: if($elevation != null, $elevation, elevation.$color),
+    )
+  );
+}
+
+// Generates tokens for the slider properties that change based on the theme.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $color: inspection.get-theme-color($theme, $palette-name);
+  $on-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+
+  @return (
+    // Color of handle.
+    handle-color: $color,
+    // Color of handle when focused.
+    focus-handle-color: $color,
+    // Color of handle on hover.
+    hover-handle-color: $color,
+    // Color of handle when active.
+    active-track-color: $color,
+    // Color of inactive track.
+    inactive-track-color: $color,
+    // Color of inactive container with tick marks.
+    with-tick-marks-inactive-container-color: $color,
+    // Color of active container with tick marks.
+    with-tick-marks-active-container-color: $on-color,
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    // Font for label text.
+    label-label-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    // Font size of label text.
+    label-label-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    // Line height of label text.
+    label-label-text-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
+    // Letter spacing of label text.
+    label-label-text-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
+    // Font weight of label text.
+    label-label-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  @return ();
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+          get-unthemable-tokens(),
+          get-color-tokens(token-utils.$placeholder-color-config),
+          get-typography-tokens(token-utils.$placeholder-typography-config),
+          get-density-tokens(token-utils.$placeholder-density-config)
+  );
+}

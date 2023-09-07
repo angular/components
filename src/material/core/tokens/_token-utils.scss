@@ -1,0 +1,127 @@
+@use 'sass:map';
+@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/theme/theme' as mdc-theme;
+@use '@material/theme/keys' as mdc-keys;
+@use '../theming/palette';
+@use '../theming/theming';
+@use '../typography/typography';
+
+$_placeholder-color-palette: theming.define-palette(palette.$red-palette);
+
+// Placeholder color config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-color-config: (
+  primary: $_placeholder-color-palette,
+  accent: $_placeholder-color-palette,
+  warn: $_placeholder-color-palette,
+  is-dark: false,
+  foreground: palette.$light-theme-foreground-palette,
+  background: palette.$light-theme-background-palette,
+);
+
+$_placeholder-typography-level-config: typography.typography-config-level-from-mdc(body1);
+
+// Placeholder typography config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-typography-config: (
+  font-family: 'Roboto, sans-serif',
+  headline-1: $_placeholder-typography-level-config,
+  headline-2: $_placeholder-typography-level-config,
+  headline-3: $_placeholder-typography-level-config,
+  headline-4: $_placeholder-typography-level-config,
+  headline-5: $_placeholder-typography-level-config,
+  headline-6: $_placeholder-typography-level-config,
+  subtitle-1: $_placeholder-typography-level-config,
+  subtitle-2: $_placeholder-typography-level-config,
+  body-1: $_placeholder-typography-level-config,
+  body-2: $_placeholder-typography-level-config,
+  caption: $_placeholder-typography-level-config,
+  button: $_placeholder-typography-level-config,
+  overline: $_placeholder-typography-level-config,
+  subheading-1: $_placeholder-typography-level-config,
+  title: $_placeholder-typography-level-config,
+);
+
+// Placeholder density config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-density-config: 0;
+
+$_tokens: null;
+$_component-prefix: null;
+
+@mixin _configure-token-prefix($first, $rest...) {
+  $_component-prefix: '' !global;
+  @each $item in $rest {
+    $_component-prefix:
+      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+  }
+  @include mdc-custom-properties.configure($varname-prefix: $first) {
+    @content;
+  }
+  $_component-prefix: null !global;
+}
+
+// Sets the token prefix and map to use when creating token slots.
+@mixin use-tokens($prefix, $tokens) {
+  $_tokens: $tokens !global;
+  @include _configure-token-prefix($prefix...) {
+    @content;
+  }
+  $_tokens: null !global;
+}
+
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+@mixin create-token-slot($property, $token, $emit-fallback: false) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`create-token-slot` must be used within `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+  @if map.get($_tokens, $token) != null {
+    $fallback: null;
+
+    @if ($emit-fallback == true) {
+      $fallback: map.get($_tokens, $token);
+    }
+    @else if ($emit-fallback) {
+      $fallback: $emit-fallback;
+    }
+
+    $value: mdc-custom-properties.create('#{$_component-prefix}-#{$token}', $fallback: $fallback);
+    @include mdc-theme.property($property, $value);
+  }
+}
+
+// Returns the name of a token including the current prefix. Intended to be used in calculations
+// involving tokens. `create-token-slot` should be used when outputting tokens.
+@function get-token-variable($token) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`get-token-variable` must be used within `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+
+  @return mdc-custom-properties.create-varname('#{$_component-prefix}-#{$token}');
+}
+
+@mixin create-token-values($prefix, $tokens) {
+  @include _configure-token-prefix($prefix...) {
+    @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
+  }
+}
+
+// MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
+// the elevation and shadow-color tokens into a full box-shadow and use it as the value for the
+// elevation token.
+@function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
+  $elevation: map.get($tokens, $elevation-token);
+  $shadow-color: map.get($tokens, $shadow-color-token);
+  @return map.merge($tokens, (
+    $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
+    $shadow-color-token: null,
+  ));
+}

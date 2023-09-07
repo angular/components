@@ -1,0 +1,29 @@
+@use 'sass:meta';
+@use '../theming/theming';
+@use '../theming/inspection';
+
+// Colors for the ripple elements.
+@mixin color($theme) {
+  $foreground-base: inspection.get-theme-color($theme, foreground, base);
+  $color-opacity: 0.1;
+
+  .mat-ripple-element {
+    // If the ripple color is resolves to a color *type*, we can use it directly, otherwise
+    // (e.g. it resolves to a CSS variable) we fall back to using the color and setting an opacity.
+    @if (meta.type-of($foreground-base) == color) {
+      background-color: rgba($foreground-base, $color-opacity);
+    }
+    @else {
+      background-color: $foreground-base;
+      opacity: $color-opacity;
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-ripple') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+  }
+}

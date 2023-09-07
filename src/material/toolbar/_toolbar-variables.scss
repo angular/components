@@ -1,0 +1,28 @@
+// Minimum height for toolbar's in the highest density is difficult to determine because
+// developers can project arbitrary content. We use a minimum value that ensures that most
+// common content (e.g. icon buttons) does not exceed the row boundaries in highest density.
+$minimum-height: 44px !default;
+
+$height-desktop: 64px !default;
+$maximum-height-desktop: $height-desktop !default;
+$minimum-height-desktop: $minimum-height !default;
+
+$height-mobile: 56px !default;
+$maximum-height-mobile: $height-mobile !default;
+$minimum-height-mobile: $minimum-height !default;
+
+$desktop-density-config: (
+  height: (
+    default: $height-desktop,
+    maximum: $maximum-height-desktop,
+    minimum: $minimum-height-desktop,
+  )
+) !default;
+
+$mobile-density-config: (
+  height: (
+    default: $height-mobile,
+    maximum: $maximum-height-mobile,
+    minimum: $minimum-height-mobile,
+  )
+) !default;

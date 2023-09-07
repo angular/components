@@ -1,0 +1,78 @@
+@use '../../theming/inspection';
+@use '../../../button/button-theme';
+@use '../../../button/icon-button-theme';
+@use '../../../button/fab-theme';
+@use '../../../expansion/expansion-theme';
+@use '../../../stepper/stepper-theme';
+@use '../../../toolbar/toolbar-theme';
+@use '../../../tree/tree-theme';
+@use '../../../paginator/paginator-theme';
+@use '../../../form-field/form-field-theme';
+@use '../../../button-toggle/button-toggle-theme';
+@use '../../../card/card-theme';
+@use '../../../progress-bar/progress-bar-theme';
+@use '../../../progress-spinner/progress-spinner-theme';
+@use '../../../tooltip/tooltip-theme';
+@use '../../../input/input-theme';
+@use '../../../autocomplete/autocomplete-theme';
+@use '../../../checkbox/checkbox-theme';
+@use '../../../core/core-theme';
+@use '../../../select/select-theme';
+@use '../../../dialog/dialog-theme';
+@use '../../../chips/chips-theme';
+@use '../../../slide-toggle/slide-toggle-theme';
+@use '../../../radio/radio-theme';
+@use '../../../slider/slider-theme';
+@use '../../../menu/menu-theme';
+@use '../../../list/list-theme';
+@use '../../../tabs/tabs-theme';
+@use '../../../snack-bar/snack-bar-theme';
+@use '../../../table/table-theme';
+
+// Includes all of the density styles.
+@mixin all-component-densities($theme) {
+  @if not inspection.theme-has($theme, density) {
+    @error 'No density configuration specified.';
+  }
+
+  // TODO: COMP-309: Do not use individual mixins. Instead, use the all-theme mixin and only
+  // specify a `density` config while setting `color` and `typography` to `null`. This is currently
+  // not possible as it would introduce a circular dependency for density because the `mat-core`
+  // mixin that is transitively loaded by the `all-theme` file, imports `all-density` which
+  // would then load `all-theme` again. This ultimately results a circular dependency.
+  @include form-field-theme.density($theme);
+  @include card-theme.density($theme);
+  @include progress-bar-theme.density($theme);
+  @include progress-spinner-theme.density($theme);
+  @include tooltip-theme.density($theme);
+  @include input-theme.density($theme);
+  @include core-theme.density($theme);
+  @include select-theme.density($theme);
+  @include checkbox-theme.density($theme);
+  @include autocomplete-theme.density($theme);
+  @include dialog-theme.density($theme);
+  @include chips-theme.density($theme);
+  @include slide-toggle-theme.density($theme);
+  @include radio-theme.density($theme);
+  @include slider-theme.density($theme);
+  @include menu-theme.density($theme);
+  @include list-theme.density($theme);
+  @include paginator-theme.density($theme);
+  @include tabs-theme.density($theme);
+  @include snack-bar-theme.density($theme);
+  @include button-theme.density($theme);
+  @include icon-button-theme.density($theme);
+  @include fab-theme.density($theme);
+  @include table-theme.density($theme);
+  @include expansion-theme.density($theme);
+  @include stepper-theme.density($theme);
+  @include toolbar-theme.density($theme);
+  @include tree-theme.density($theme);
+  @include button-toggle-theme.density($theme);
+}
+
+
+// @deprecated Use `all-component-densities`.
+@mixin angular-material-density($theme) {
+  @include all-component-densities($theme);
+}

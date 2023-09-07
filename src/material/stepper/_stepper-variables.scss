@@ -1,0 +1,29 @@
+$header-height: 72px !default;
+// Minimum height for highest density stepper's is determined based on how much
+// stepper headers can shrink until the step icon or step label exceed. We can't use
+// a value below `42px` because the optional label for steps would otherwise exceed.
+$header-minimum-height: 42px !default;
+$header-maximum-height: $header-height !default;
+
+$density-config: (
+  height: (
+    default: $header-height,
+    maximum: $header-maximum-height,
+    minimum: $header-minimum-height,
+  )
+) !default;
+
+// Note: These variables are not denoted with `!default` because they are used in the non-theme
+// component styles. Modifying these variables does not have the desired effect for consumers.
+$label-header-height: 24px;
+$label-position-bottom-top-gap: 16px;
+$label-min-width: 50px;
+
+$vertical-stepper-content-margin: 36px;
+
+$side-gap: 24px;
+$line-width: 1px;
+$line-gap: 8px;
+
+$step-sub-label-font-size: 12px;
+$step-header-icon-size: 16px;

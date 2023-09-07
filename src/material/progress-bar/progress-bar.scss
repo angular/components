@@ -1,0 +1,66 @@
+@use 'sass:map';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/linear-progress/linear-progress' as mdc-linear-progress;
+@use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
+@use '../core/tokens/m2/mdc/linear-progress' as m2-mdc-linear-progress;
+
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-progress-bar-token-slots: m2-mdc-linear-progress.get-token-slots();
+
+  // Add the MDC progress-bar static styles.
+  @include mdc-linear-progress.static-styles();
+
+  // Add the official slots for the MDC progress-bar.
+  @include mdc-linear-progress-theme.theme-styles(
+      map.merge($mdc-progress-bar-token-slots, (
+      // Excluded because it is meant to be set by theme (b/273562256).
+      track-color: null,
+    ))
+  );
+}
+
+.mat-mdc-progress-bar {
+  // Explicitly set to `block` since the browser defaults custom elements to `inline`.
+  display: block;
+
+  // Explicitly set a `text-align` so that the content isn't affected by the parent (see #27613).
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  // Inverts the progress bar horizontally in `query` mode.
+  &[mode='query'] {
+    transform: scaleX(-1);
+  }
+
+  &._mat-animation-noopable {
+    .mdc-linear-progress__buffer-dots,
+    .mdc-linear-progress__primary-bar,
+    .mdc-linear-progress__secondary-bar,
+    .mdc-linear-progress__bar-inner.mdc-linear-progress__bar-inner {
+      // Disable the loading animations.
+      animation: none;
+    }
+
+    .mdc-linear-progress__primary-bar,
+    .mdc-linear-progress__buffer-bar {
+      // There's a `transitionend` event that depends on this element. Add a very short
+      // transition when animations are disabled so that the event can still fire.
+      transition: transform 1ms;
+    }
+  }
+
+  // These values were derived from the default values of MDC's linear-progress.
+  --mdc-linear-progress-primary-half: 83.67142%;
+  --mdc-linear-progress-primary-full: 200.611057%;
+  --mdc-linear-progress-secondary-quarter: 37.651913%;
+  --mdc-linear-progress-secondary-half: 84.386165%;
+  --mdc-linear-progress-secondary-full: 160.277782%;
+  --mdc-linear-progress-primary-half-neg: -83.67142%;
+  --mdc-linear-progress-primary-full-neg: -200.611057%;
+  --mdc-linear-progress-secondary-quarter-neg: -37.651913%;
+  --mdc-linear-progress-secondary-half-neg: -84.386165%;
+  --mdc-linear-progress-secondary-full-neg: -160.277782%;
+}

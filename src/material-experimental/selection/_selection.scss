@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+@mixin theme($theme) {
+  @include mat.private-check-duplicate-theme-styles($theme, 'mat-selection');
+}
+
+@mixin typography($theme) {}

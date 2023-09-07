@@ -1,0 +1,11 @@
+@use './private';
+
+@mixin color($theme) {
+  @include private.strong-focus-indicators-color($theme);
+  @include private.mdc-strong-focus-indicators-color($theme);
+}
+
+@mixin theme($theme) {
+  @include private.strong-focus-indicators-theme($theme);
+  @include private.mdc-strong-focus-indicators-theme($theme);
+}

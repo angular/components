@@ -1,0 +1,64 @@
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/m2/mdc/linear-progress' as tokens-mdc-linear-progress;
+@use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
+@use 'sass:map';
+
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-linear-progress-theme.theme(tokens-mdc-linear-progress.get-unthemable-tokens());
+  }
+}
+
+@mixin _palette-styles($theme, $palette-name) {
+  $color-tokens: tokens-mdc-linear-progress.get-color-tokens($theme, $palette-name);
+
+  // We can't set the `track-color` using `theme`, because it isn't possible for it to use a CSS
+  // variable since MDC's buffer animation works by constructing an SVG string from this color.
+  // We also can't set the `track-color` by creating our own token slot because the track-color
+  // is set in the SVG string in `theme-styles`.
+  @include mdc-linear-progress-theme.theme-styles((
+    // TODO(crisbeto): the buffer color should come from somewhere in MDC, however at the time of
+    // writing, their buffer color is hardcoded to #e6e6e6 which both doesn't account for theming
+    // and doesn't match the Material design spec. For now we approximate the buffer background by
+    // applying an opacity to the color of the bar.
+    track-color: map.get($color-tokens, track-color),
+  ));
+
+  @include mdc-linear-progress-theme.theme($color-tokens);
+}
+
+@mixin color($theme) {
+  .mat-mdc-progress-bar {
+    @include _palette-styles($theme, primary);
+
+    &.mat-accent {
+      @include _palette-styles($theme, accent);
+    }
+
+    &.mat-warn {
+      @include _palette-styles($theme, warn);
+    }
+  }
+}
+
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-bar') {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

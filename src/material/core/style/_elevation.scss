@@ -1,0 +1,105 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'variables';
+@use '@material/elevation/elevation-theme' as mdc-elevation;
+
+// A collection of mixins and CSS classes that can be used to apply elevation to a material
+// element.
+// See: https://material.io/design/environment/elevation.html
+// Examples:
+//
+//
+// .mat-foo {
+//   @include $mat-elevation(2);
+//
+//   &:active {
+//     @include $mat-elevation(8);
+//   }
+// }
+//
+// <div id="external-card" class="mat-elevation-z2"><p>Some content</p></div>
+//
+// For an explanation of the design behind how elevation is implemented, see the design doc at
+// https://goo.gl/Kq0k9Z.
+
+// The default duration value for elevation transitions.
+$transition-duration: 280ms !default;
+
+// The default easing value for elevation transitions.
+$transition-timing-function: variables.$fast-out-slow-in-timing-function;
+
+// The default color for elevation shadows.
+$color: black !default;
+
+// Prefix for elevation-related selectors.
+$prefix: 'mat-elevation-z';
+
+// Applies the correct css rules to an element to give it the elevation specified by $zValue.
+// The $zValue must be between 0 and 24.
+@mixin elevation($zValue, $color: $color, $opacity: null) {
+  @if meta.type-of($color) == color and $opacity == null {
+    @include mdc-elevation.elevation($zValue, $color);
+  }
+  @else {
+    // Copied from @material/elevation/_elevation-theme.scss#_box-shadow
+    // TODO(mmalerba): Add support for graceful handling of CSS var color to MDC.
+    $umbra-z-value: map.get(mdc-elevation.$umbra-map, $zValue);
+    $penumbra-z-value: map.get(mdc-elevation.$penumbra-map, $zValue);
+    $ambient-z-value: map.get(mdc-elevation.$ambient-map, $zValue);
+
+    $color-opacity: if($opacity != null, $opacity, 1);
+    $umbra-color: _compute-color-opacity($color, mdc-elevation.$umbra-opacity * $color-opacity);
+    $penumbra-color:
+      _compute-color-opacity($color, mdc-elevation.$penumbra-opacity * $color-opacity);
+    $ambient-color: _compute-color-opacity($color, mdc-elevation.$ambient-opacity * $color-opacity);
+
+    $box-shadow: (
+      #{'#{$umbra-z-value} #{$umbra-color}'},
+      #{'#{$penumbra-z-value} #{$penumbra-color}'},
+      #{$ambient-z-value} $ambient-color
+    );
+    @include mdc-elevation.shadow($box-shadow);
+  }
+}
+
+// Applies the elevation to an element in a manner that allows
+// consumers to override it via the Material elevation classes.
+@mixin overridable-elevation($zValue, $color: $color, $opacity: null) {
+  &:not([class*='#{$prefix}']) {
+    @include elevation($zValue, $color, $opacity);
+  }
+}
+
+// Returns a string that can be used as the value for a transition property for elevation.
+// Calling this function directly is useful in situations where a component needs to transition
+// more than one property.
+//
+// .foo {
+//   transition: mat-elevation-transition-property-value(), opacity 100ms ease;
+// }
+@function private-transition-property-value(
+    $duration: $transition-duration,
+    $easing: $transition-timing-function) {
+  @return box-shadow #{$duration} #{$easing};
+}
+
+// Applies the correct css rules needed to have an element transition between elevations.
+// This mixin should be applied to elements whose elevation values will change depending on their
+// context (e.g. when active or disabled).
+//
+// NOTE(traviskaufman): Both this mixin and the above function use default parameters so they can
+// be used in the same way by clients.
+@mixin elevation-transition(
+    $duration: $transition-duration,
+    $easing: $transition-timing-function) {
+  transition: private-transition-property-value($duration, $easing);
+}
+
+@function _compute-color-opacity($color, $opacity) {
+  @if meta.type-of($color) == color and $opacity != null {
+    @return rgba($color, $opacity);
+  }
+  @else {
+    @return $color;
+  }
+}

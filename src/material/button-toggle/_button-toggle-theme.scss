@@ -1,0 +1,48 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
+@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-color-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-typography-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
+      tokens-mat-legacy-button-toggle.get-density-tokens($theme));
+    @include token-utils.create-token-values(tokens-mat-standard-button-toggle.$prefix,
+      tokens-mat-standard-button-toggle.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

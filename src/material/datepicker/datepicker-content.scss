@@ -1,0 +1,118 @@
+@use '../core/style/elevation';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
+
+$calendar-padding: 8px;
+$non-touch-calendar-cell-size: 40px;
+$non-touch-calendar-width:
+    $non-touch-calendar-cell-size * 7 + $calendar-padding * 2;
+// Based on the natural height of the calendar in a month with 6 rows of dates
+// (largest the calendar will get).
+$non-touch-calendar-height: 354px;
+
+// Ideally the calendar would have a constant aspect ratio, no matter its size, and we would base
+// these measurements off the aspect ratio. Unfortunately, the aspect ratio does change a little as
+// the calendar grows, since some of the elements have pixel-based sizes. These numbers have been
+// chosen to minimize extra whitespace at larger sizes, while still ensuring we won't need
+// scrollbars at smaller sizes.
+$touch-landscape-width: 64vh;
+$touch-landscape-height: 80vh;
+$touch-portrait-width: 80vw;
+$touch-portrait-height: 100vw;
+$touch-portrait-height-with-actions: 115vw;
+$touch-min-width: 250px;
+$touch-min-height: 312px;
+$touch-max-width: 750px;
+$touch-max-height: 788px;
+
+
+.mat-datepicker-content {
+  @include elevation.elevation(4);
+  display: block;
+  border-radius: 4px;
+
+  @include token-utils.use-tokens(
+    tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, calendar-container-background-color);
+    @include token-utils.create-token-slot(color, calendar-container-text-color);
+  }
+
+  .mat-calendar {
+    width: $non-touch-calendar-width;
+    height: $non-touch-calendar-height;
+  }
+
+  // Override mat-calendar's height when custom header is provided
+  // Height should be auto, when the custom header is provided.
+  // This will prevent the content from overflowing.
+  .mat-datepicker-content-container-with-custom-header .mat-calendar {
+    height: auto;
+  }
+
+  // Note that this selector doesn't technically have to be nested, but we want the slightly
+  // higher specificity, or it can be overridden based on the CSS insertion order (see #21043).
+  .mat-datepicker-close-button {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+
+    // Hide the button while the overlay is animating, because it's rendered
+    // outside of it and it seems to cause scrollbars in some cases (see #21493).
+    .ng-animating & {
+      display: none;
+    }
+  }
+}
+
+.mat-datepicker-content-container {
+  display: flex;
+  flex-direction: column;
+
+  // Ensures that `mat-datepicker-actions` is pushed to the bottom of the popup.
+  justify-content: space-between;
+}
+
+.mat-datepicker-content-touch {
+  @include elevation.elevation(24);
+  display: block;
+  max-height: 80vh;
+
+  // Allows for the screen reader close button to be seen in touch UI mode.
+  position: relative;
+
+  // Prevents the content from jumping around on Windows while the animation is running.
+  overflow: visible;
+
+  .mat-datepicker-content-container {
+    min-height: $touch-min-height;
+    max-height: $touch-max-height;
+    min-width: $touch-min-width;
+    max-width: $touch-max-width;
+  }
+
+  .mat-calendar {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media all and (orientation: landscape) {
+  .mat-datepicker-content-touch .mat-datepicker-content-container {
+    width: $touch-landscape-width;
+    height: $touch-landscape-height;
+  }
+}
+
+@media all and (orientation: portrait) {
+  .mat-datepicker-content-touch .mat-datepicker-content-container {
+    width: $touch-portrait-width;
+    height: $touch-portrait-height;
+  }
+
+  // The content needs to be a bit taller when actions have
+  // been projected so that it doesn't have to scroll.
+  .mat-datepicker-content-touch .mat-datepicker-content-container-with-actions {
+    height: $touch-portrait-height-with-actions;
+  }
+}

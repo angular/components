@@ -1,0 +1,44 @@
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/typography/typography';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
+
+@mixin color($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-color-tokens($theme));
+  }
+}
+
+@mixin typography($theme) {
+  // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
+  $theme: inspection.private-get-typography-back-compat-theme($theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-typography-tokens($theme));
+  }
+}
+
+@mixin density($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-expansion.$prefix,
+      tokens-mat-expansion.get-density-tokens($theme));
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-expansion') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

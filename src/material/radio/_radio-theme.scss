@@ -1,0 +1,75 @@
+@use '@material/radio/radio' as mdc-radio;
+@use '@material/radio/radio-theme' as mdc-radio-theme;
+@use '@material/form-field' as mdc-form-field;
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
+@use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
+
+@mixin color($theme) {
+  @include mdc-helpers.using-mdc-theme($theme) {
+    .mat-mdc-radio-button {
+      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
+    }
+  }
+
+  .mat-mdc-radio-button {
+    &.mat-primary {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($theme, primary));
+    }
+
+    &.mat-accent {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($theme));
+    }
+
+    &.mat-warn {
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
+      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-color-tokens($theme, warn));
+    }
+  }
+}
+
+@mixin typography($theme) {
+  .mat-mdc-radio-button {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($theme));
+    @include mdc-helpers.using-mdc-typography($theme) {
+      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
+    }
+  }
+}
+
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+
+  .mat-mdc-radio-button .mdc-radio {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
+  }
+
+  @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
+    .mat-mdc-radio-touch-target {
+      display: none;
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

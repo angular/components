@@ -1,0 +1,129 @@
+@use '@angular/cdk';
+@use '@material/typography/typography' as mdc-typography;
+@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use '../core/tokens/token-utils';
+
+$padding: 0 8px;
+$page-size-margin-right: 8px;
+
+$items-per-page-label-margin: 0 4px;
+$selector-margin: 0 4px;
+$selector-trigger-width: 84px;
+
+$range-label-margin: 0 32px 0 24px;
+$button-icon-size: 28px;
+
+.mat-mdc-paginator {
+  display: block;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include mdc-typography.smooth-font();
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(background-color, container-background-color);
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+
+    .mat-mdc-select-value {
+      @include token-utils.create-token-slot(font-size, select-trigger-text-size);
+    }
+  }
+
+  // This element reserves space for hints and error messages.
+  // Hide it since we know that we won't need it.
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-select {
+    // The smaller font size inherited from the paginator throws off the centering of the select
+    // inside the form field. This `line-height` helps to center it relative to the other text.
+    line-height: 1.5;
+  }
+}
+
+// Note: this wrapper element is only used to get the flexbox vertical centering to work
+// with the `min-height` on IE11. It can be removed if we drop support for IE.
+.mat-mdc-paginator-outer-container {
+  display: flex;
+}
+
+.mat-mdc-paginator-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: $padding;
+  flex-wrap: wrap-reverse;
+  width: 100%;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include token-utils.create-token-slot(min-height, container-size);
+  }
+}
+
+.mat-mdc-paginator-page-size {
+  display: flex;
+  align-items: baseline;
+  margin-right: $page-size-margin-right;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: $page-size-margin-right;
+  }
+}
+
+.mat-mdc-paginator-page-size-label {
+  margin: $items-per-page-label-margin;
+}
+
+.mat-mdc-paginator-page-size-select {
+  margin: $selector-margin;
+  width: $selector-trigger-width;
+}
+
+.mat-mdc-paginator-range-label {
+  margin: $range-label-margin;
+}
+
+.mat-mdc-paginator-range-actions {
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-paginator-icon {
+  display: inline-block;
+  width: $button-icon-size;
+
+  @include token-utils.use-tokens(
+    tokens-mat-paginator.$prefix, tokens-mat-paginator.get-token-slots()) {
+    @include token-utils.create-token-slot(fill, enabled-icon-color);
+
+    .mat-mdc-icon-button[disabled] & {
+      @include token-utils.create-token-slot(fill, disabled-icon-color);
+    }
+  }
+
+  [dir='rtl'] & {
+    transform: rotate(180deg);
+  }
+}
+
+@include cdk.high-contrast(active, off) {
+  // The disabled button icon has to be set explicitly since the selector is too specific.
+  .mat-mdc-icon-button[disabled] .mat-mdc-paginator-icon,
+  .mat-mdc-paginator-icon {
+    fill: currentColor;
+
+    // On Chromium browsers the `currentColor` blends in with the
+    // background for SVGs so we have to fall back to `CanvasText`.
+    fill: CanvasText;
+  }
+
+  .mat-mdc-paginator-range-actions .mat-mdc-icon-button {
+    outline: solid 1px;
+  }
+}
