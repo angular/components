@@ -1,3 +1,29 @@
+<a name="17.0.0-next.2"></a>
+# 17.0.0-next.2 "metal-monkey" (2023-09-07)
+## Breaking Changes
+### multiple
+- - Themes are now more strictly validated when calling Angular Material
+  theme mixins. For example, calling `mat.button-typography` with a theme
+  has `typography: null` is now an error.
+  - The `mat.legacy-typography-hierarchy` mixin has been removed in favor
+    of `mat.typography-hierarchy`
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cac7a41f7b](https://github.com/angular/components/commit/cac7a41f7b7a6034d8049be77fe53a082c3aa5f2) | fix | **dialog:** css structure change ([#27510](https://github.com/angular/components/pull/27510)) |
+| [726fc069e3](https://github.com/angular/components/commit/726fc069e3bed2fcbc9b53de02ee7ce18c2fce5d) | fix | **tabs:** add aria-hidden to inactive tabs ([#27742](https://github.com/angular/components/pull/27742)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aa1d01d169](https://github.com/angular/components/commit/aa1d01d1696360d25e18cb0328f56b9fca9d71c4) | fix | **drag-drop:** constrainPosition now working well with boundary ([#27730](https://github.com/angular/components/pull/27730)) |
+| [8eb494e975](https://github.com/angular/components/commit/8eb494e975bb75e52c9c81ad68d3d4b993546dfe) | fix | **menu:** run change detection for  changes to overlay ref of trigger ([#27726](https://github.com/angular/components/pull/27726)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [90465a1882](https://github.com/angular/components/commit/90465a1882028144a8e56eabc03b4cc93947df9f) | refactor | convert components to theme inspection API (round 4) ([#27740](https://github.com/angular/components/pull/27740)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.3"></a>
 # 16.2.3 "plastic-part" (2023-09-07)
 ### cdk
