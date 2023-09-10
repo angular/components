@@ -1,0 +1,29 @@
+<div>
+  <form [formGroup]="form">
+    <mat-form-field class="example-chip-list">
+      <mat-label>Favorite Fruits</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Enter fruits">
+        <mat-chip-row
+          *ngFor="let fruit of fruits?.value"
+          (removed)="remove(fruit)"
+          [editable]="true"
+          (edited)="edit(fruit,$event)"
+          [aria-description]="'press enter to edit ' + fruit.name"
+        >
+          {{fruit.name}}
+          <button matChipRemove [attr.aria-label]="'remove ' + fruit.name">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input
+          placeholder="New fruit..."
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)"
+        />
+      </mat-chip-grid>
+    </mat-form-field>
+  </form>
+  <p>{{fruits?.value | json}}</p>
+</div>

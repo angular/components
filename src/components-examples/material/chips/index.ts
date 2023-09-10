@@ -6,3 +6,4 @@ export {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 export {ChipsHarnessExample} from './chips-harness/chips-harness-example';
 export {ChipsFormControlExample} from './chips-form-control/chips-form-control-example';
 export {ChipsAvatarExample} from './chips-avatar/chips-avatar-example';
+export {ChipsReactiveFormExample} from './chips-reactive-form/chips-reactive-form-example';
