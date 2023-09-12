@@ -2663,6 +2663,37 @@ describe('MDC-based MatAutocomplete', () => {
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
     }));
+
+    it('should preserve the value if a selection is required, and there are no options', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      fixture.componentInstance.states = fixture.componentInstance.filteredStates = [];
+      fixture.detectChanges();
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+      expect(spy).not.toHaveBeenCalled();
+      subscription.unsubscribe();
+    }));
   });
 
   describe('panel closing', () => {
