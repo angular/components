@@ -1,3 +1,12 @@
+<a name="16.2.4"></a>
+# 16.2.4 "wood-wagon" (2023-09-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [38ebf49060](https://github.com/angular/components/commit/38ebf4906057b2e7ad6d6cec881268339f43c972) | fix | **autocomplete:** requireSelection incorrectly resetting value when there are no options ([#27781](https://github.com/angular/components/pull/27781)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.3"></a>
 # 16.2.3 "plastic-part" (2023-09-07)
 ### cdk
