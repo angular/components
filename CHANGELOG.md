@@ -1,3 +1,12 @@
+<a name="17.0.0-next.3"></a>
+# 17.0.0-next.3 "rock-rock" (2023-09-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [db06fa8d89](https://github.com/angular/components/commit/db06fa8d8939d793f598bc3dbedc96a5a71c0db0) | fix | **autocomplete:** requireSelection incorrectly resetting value when there are no options ([#27781](https://github.com/angular/components/pull/27781)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.4"></a>
 # 16.2.4 "wood-wagon" (2023-09-13)
 ### material
