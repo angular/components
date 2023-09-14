@@ -1,4 +1,4 @@
-import {normalize, workspaces} from '@angular-devkit/core';
+import {normalize, workspaces, logging} from '@angular-devkit/core';
 import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
@@ -30,7 +30,7 @@ describe('ng-add schematic', () => {
 
     errorOutput = [];
     warnOutput = [];
-    runner.logger.subscribe(e => {
+    runner.logger.subscribe((e: logging.LogEntry) => {
       if (e.level === 'error') {
         errorOutput.push(e.message);
       } else if (e.level === 'warn') {
@@ -347,11 +347,11 @@ describe('ng-add schematic', () => {
             prefix: 'app',
             architect: {
               build: {
-                builder: '@angular-devkit/build-angular:browser',
+                builder: '@angular-devkit/build-angular:application',
                 options: {
                   outputPath: 'dist/material',
                   index: 'projects/material/src/index.html',
-                  main: 'projects/material/src/main.ts',
+                  browser: 'projects/material/src/main.ts',
                   styles: ['projects/material/src/styles.css'],
                 },
               },
@@ -360,7 +360,7 @@ describe('ng-add schematic', () => {
                 options: {
                   outputPath: 'dist/material',
                   index: 'projects/material/src/index.html',
-                  main: 'projects/material/src/main.ts',
+                  browser: 'projects/material/src/main.ts',
                   styles: ['projects/material/src/styles.css'],
                 },
               },
@@ -411,11 +411,11 @@ describe('ng-add schematic', () => {
                 prefix: 'app',
                 architect: {
                   build: {
-                    builder: '@angular-devkit/build-angular:browser',
+                    builder: '@angular-devkit/build-angular:application',
                     options: {
                       outputPath: 'dist/material',
                       index: 'projects/material/src/index.html',
-                      main: 'projects/material/src/main.ts',
+                      browser: 'projects/material/src/main.ts',
                       styles: ['projects/material/src/styles.css', stylePath],
                     },
                   },
@@ -613,7 +613,7 @@ describe('ng-add schematic - library project', () => {
 
     errorOutput = [];
     warnOutput = [];
-    runner.logger.subscribe(e => {
+    runner.logger.subscribe((e: logging.LogEntry) => {
       if (e.level === 'error') {
         errorOutput.push(e.message);
       } else if (e.level === 'warn') {

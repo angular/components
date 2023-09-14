@@ -178,8 +178,8 @@ function validateDefaultTargetBuilder(
   logger: logging.LoggerApi,
 ) {
   const defaultBuilder = defaultTargetBuilders[targetName];
-  const targetConfig = project.targets && project.targets.get(targetName);
-  const isDefaultBuilder = targetConfig && targetConfig['builder'] === defaultBuilder;
+  const targetConfig = project.targets?.get(targetName);
+  const isDefaultBuilder = targetConfig?.['builder'] === defaultBuilder;
 
   // Because the build setup for the Angular CLI can be customized by developers, we can't know
   // where to put the theme file in the workspace configuration if custom builders are being
