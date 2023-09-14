@@ -15,7 +15,7 @@ export function createLocalAngularPackageImporter(packageDirAbsPath: string) {
   return {
     findFileUrl: (url: string) => {
       if (url.startsWith(angularPrefix)) {
-        return pathToFileURL(join(packageDirAbsPath, url.substring(angularPrefix.length)));
+        return pathToFileURL(join(packageDirAbsPath, url.substring(angularPrefix.length))) as URL;
       }
       return null;
     },

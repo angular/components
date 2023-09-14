@@ -16,7 +16,7 @@
     "no-arg": true,
     "no-internal-module": true,
     "no-trailing-whitespace": true,
-    "no-shadowed-variable": true,
+    "no-shadowed-variable": false, // Disabled, because it breaks in TS 5.2
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-var-keyword": true,

@@ -16,7 +16,9 @@ const localPackageSassImporter = createLocalAngularPackageImporter(packagesDir);
 const mdcSassImporter = {
   findFileUrl: (url: string) => {
     if (url.toString().startsWith('@material')) {
-      return pathToFileURL(path.join(runfiles.resolveWorkspaceRelative('./node_modules'), url));
+      return pathToFileURL(
+        path.join(runfiles.resolveWorkspaceRelative('./node_modules'), url),
+      ) as URL;
     }
     return null;
   },
