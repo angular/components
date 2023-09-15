@@ -154,18 +154,18 @@
   .mat-mdc-unelevated-button {
     $surface: inspection.get-theme-color($theme, background, card);
     $primary: inspection.get-theme-color($theme, primary);
-    $accent: inspection.get-theme-color($theme, accent);
-    $warn: inspection.get-theme-color($theme, warn);
+    $secondary: inspection.get-theme-color($theme, accent);
+    $error: inspection.get-theme-color($theme, warn);
 
     $on-surface: on-color($theme, $surface);
     $on-primary: on-color($theme, $primary);
-    $on-accent: on-color($theme, $accent);
-    $on-warn: on-color($theme, $warn);
+    $on-secondary: on-color($theme, $secondary);
+    $on-error: on-color($theme, $error);
 
     $default-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $surface, $on-surface);
     $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
-    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $warn, $on-warn);
+    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $secondary, $on-secondary);
+    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-filled-theme.theme($default-color-tokens);
@@ -206,14 +206,10 @@
 
 @mixin density($theme) {
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-  
-  .mat-mdc-unelevated-button {
-    $density-tokens: tokens-mdc-button-filled.get-density-tokens($theme);
-    @include mdc-button-filled-theme.theme($density-tokens);
-  }
 
   .mat-mdc-button,
   .mat-mdc-raised-button,
+  .mat-mdc-unelevated-button,
   .mat-mdc-outlined-button {
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     &.mat-mdc-button-base {
