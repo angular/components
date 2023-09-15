@@ -206,10 +206,14 @@
 
 @mixin density($theme) {
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  
+  .mat-mdc-unelevated-button {
+    $density-tokens: tokens-mdc-button-filled.get-density-tokens($theme);
+    @include mdc-button-filled-theme.theme($density-tokens);
+  }
 
   .mat-mdc-button,
   .mat-mdc-raised-button,
-  .mat-mdc-unelevated-button,
   .mat-mdc-outlined-button {
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     &.mat-mdc-button-base {
