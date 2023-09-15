@@ -154,17 +154,17 @@
   .mat-mdc-unelevated-button {
     $surface: inspection.get-theme-color($theme, background, card);
     $primary: inspection.get-theme-color($theme, primary);
-    $secondary: inspection.get-theme-color($theme, accent);
+    $accent: inspection.get-theme-color($theme, accent);
     $error: inspection.get-theme-color($theme, warn);
 
     $on-surface: on-color($theme, $surface);
     $on-primary: on-color($theme, $primary);
-    $on-secondary: on-color($theme, $secondary);
+    $on-accent: on-color($theme, $accent);
     $on-error: on-color($theme, $error);
 
     $default-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $surface, $on-surface);
     $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
-    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $secondary, $on-secondary);
+    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
     $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
