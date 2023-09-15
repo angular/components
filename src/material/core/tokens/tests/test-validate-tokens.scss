@@ -2,6 +2,7 @@
 @use 'sass:map';
 
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
+@use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/card/elevated-card-theme' as mdc-elevated-card-theme;
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
@@ -25,6 +26,7 @@
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/button-protected' as tokens-mdc-button-protected;
+@use '../m2/mdc/button-filled' as tokens-mdc-button-filled;
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '../m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
@@ -160,8 +162,8 @@
 );
 @include validate-slots(
   $component: 'm2.mdc.button-filled',
-  $slots: tokens-mdc-extended-fab.get-token-slots(),
-  $reference: mdc-extended-fab-theme.$extended-light-theme
+  $slots: tokens-mdc-button-filled.get-token-slots(),
+  $reference: mdc-button-filled-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.button-protected',
