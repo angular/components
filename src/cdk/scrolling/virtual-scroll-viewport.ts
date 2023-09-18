@@ -229,6 +229,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
             // there are multiple scroll events in the same frame we only need to recheck
             // our layout once.
             auditTime(0, SCROLL_SCHEDULER),
+            // Usually `elementScrolled` is completed when the scrollable is destroyed, but
+            // that may not be the case if a `CdkVirtualScrollableElement` is used so we have
+            // to unsubscribe here just in case.
+            takeUntil(this._destroyed),
           )
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
