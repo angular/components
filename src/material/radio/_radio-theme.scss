@@ -9,6 +9,14 @@
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 
+@mixin base($theme) {
+  .mat-mdc-radio-button {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix, tokens-mat-radio.get-unthemable-tokens());
+  }
+}
+
 @mixin color($theme) {
   @include mdc-helpers.using-mdc-theme($theme) {
     .mat-mdc-radio-button {
@@ -62,6 +70,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
