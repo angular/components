@@ -4,7 +4,7 @@
 @use '../../../theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, button-filled);
+$prefix: (mdc, button-protected);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,32 +14,34 @@ $prefix: (mdc, button-filled);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    container-elevation: 0,
-    container-height: 36px,
     container-shape: 4px,
-    disabled-container-elevation: 0,
-    focus-container-elevation: 0,
-    hover-container-elevation: 0,
+    container-height: 36px,
     keep-touch-target: false,
-    pressed-container-elevation: 0,
 
+    focus-ring-color: null,
+    focus-ring-offset: null,
     focus-state-layer-opacity: null,
     hover-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
     container-shadow-color: null,
-    focus-label-text-color: null,
-    hover-label-text-color: null,
+    container-elevation: null,
+    hover-container-elevation: null,
+    disabled-container-elevation: null,
+    focus-container-elevation: null,
+    pressed-container-elevation: null,
     label-text-font: null,
     label-text-size: null,
     label-text-tracking: null,
     label-text-transform: null,
     label-text-weight: null,
+    with-icon-icon-size: null,
+    focus-label-text-color: null,
+    hover-label-text-color: null,
     pressed-label-text-color: null,
     with-icon-disabled-icon-color: null,
     with-icon-focus-icon-color: null,
     with-icon-hover-icon-color: null,
     with-icon-icon-color: null,
-    with-icon-icon-size: null,
     with-icon-pressed-icon-color: null
   );
 }
@@ -61,12 +63,12 @@ $prefix: (mdc, button-filled);
 
   @return (
     container-color: if($color, $color, transparent),
-    disabled-container-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
     focus-state-layer-color: $on-primary,
     hover-state-layer-color: $on-primary,
+    pressed-state-layer-color: $on-primary,
     label-text-color: if($on-color, $on-color, inherit),
-    pressed-state-layer-color: $on-primary
+    disabled-container-color: rgba($on-surface, 0.12),
+    disabled-label-text-color: rgba($on-surface, 0.38)
   );
 }
 
