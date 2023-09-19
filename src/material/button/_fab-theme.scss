@@ -51,32 +51,36 @@
   $disabled: rgba($on-surface, 0.12);
   $on-disabled: rgba($on-surface, if($is-dark, 0.5, 0.38));
 
-  .mat-mdc-fab,
-  .mat-mdc-mini-fab {
+  @include sass-utils.current-selector-or-root() {
     // TODO(wagnermaciel): The ripple-theme-styles mixin depends heavily on
     // being wrapped by using-mdc-theme. This workaround needs to be
     // revisited w/ a more holistic solution.
-    @include mdc-helpers.using-mdc-theme($theme) {
-      @include button-theme-private.ripple-theme-styles($theme, true);
+    .mat-mdc-fab,
+    .mat-mdc-mini-fab {
+      @include mdc-helpers.using-mdc-theme($theme) {
+        @include button-theme-private.ripple-theme-styles($theme, true);
+      }
     }
 
-    @include button-theme-private.apply-disabled-style() {
-      @include _fab-variant($on-disabled, $disabled);
+    :disabled, a[disabled='true'] {
+      @include button-theme-private.apply-disabled-style() {
+        @include _fab-variant($on-disabled, $disabled);
+      }
     }
 
-    &.mat-unthemed {
+    .mat-unthemed {
       @include _fab-variant($on-surface, $surface);
     }
 
-    &.mat-primary {
+    .mat-primary {
       @include _fab-variant($on-primary, $primary);
     }
 
-    &.mat-accent {
+    .mat-accent {
       @include _fab-variant($on-accent, $accent);
     }
 
-    &.mat-warn {
+    .mat-warn {
       @include _fab-variant($on-warn, $warn);
     }
   }
@@ -88,7 +92,7 @@
   }
 
   $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($theme);
-  .mat-mdc-extended-fab {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-extended-fab-theme.theme($typography-tokens);
   }
 }
