@@ -23,7 +23,7 @@
   $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($theme);
 
   // Add values for MDC list tokens.
-  .mat-mdc-list-base {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-list-theme.theme($mdc-list-color-tokens);
   }
 
@@ -79,7 +79,7 @@
   $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($theme);
 
   // Add values for MDC list tokens.
-  .mat-mdc-list-base {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-list-theme.theme($mdc-list-density-tokens);
   }
 
@@ -119,7 +119,7 @@
   $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($theme);
 
   // Add values for MDC list tokens.
-  .mat-mdc-list-base {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-list-theme.theme($mdc-list-typography-tokens);
   }
 
