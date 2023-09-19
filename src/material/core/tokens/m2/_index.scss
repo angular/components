@@ -20,6 +20,7 @@
 @use './mdc/snack-bar' as tokens-mdc-snack-bar;
 @use './mdc/tab' as tokens-mdc-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
 /// @param {Map} $theme The Angular Material theme object to generate token values from.
@@ -82,5 +83,6 @@
       _get-tokens-for-module($theme, tokens-mdc-snack-bar),
       _get-tokens-for-module($theme, tokens-mdc-tab),
       _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+      _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
   );
 }

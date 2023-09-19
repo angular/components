@@ -188,6 +188,11 @@
           mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
           $token-slots
       ),
+      _namespace-tokens(
+            (mdc, plain-tooltip),
+          mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
       // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
       // values.
       _namespace-tokens(
