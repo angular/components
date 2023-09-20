@@ -38,6 +38,11 @@
     pointer-events: all;
   }
 
+  .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+    // Style the cursor the same way as the rest of the input
+    cursor: inherit;
+  }
+
   // Reset the height that MDC sets on native input elements. We cannot rely on their
   // fixed height as we handle vertical spacing differently. MDC sets a fixed height for
   // inputs and modifies the baseline so that the textfield matches the spec. This does
