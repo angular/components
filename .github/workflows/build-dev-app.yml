@@ -34,7 +34,7 @@ jobs:
       # the number of concurrent actions is determined based on the host resources.
       - run: bazel build //src/dev-app:web_package --symlink_prefix=dist/ --jobs=32
 
-      - uses: angular/dev-infra/github-actions/deploy-previews/pack-and-upload-artifact@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+      - uses: angular/dev-infra/github-actions/previews/pack-and-upload-artifact@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
         with:
           workflow-artifact-name: 'dev-app'
           pull-number: '${{github.event.pull_request.number}}'
