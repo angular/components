@@ -1,3 +1,18 @@
+<a name="17.0.0-next.4"></a>
+# 17.0.0-next.4 "titanium-turtle" (2023-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2409e7071](https://github.com/angular/components/commit/2409e7071a4c1e035a6f212249e96ba36d7aeb4f) | fix | **schematics:** account for single string in styles and new styleUrl ([#27798](https://github.com/angular/components/pull/27798)) |
+| [31187abae](https://github.com/angular/components/commit/31187abae619cf76e7f0a7771ca6e5900a50e90c) | fix | **scrolling:** unsubscribe from scrolled stream when viewport is destroyed ([#27800](https://github.com/angular/components/pull/27800)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8c3d8d645](https://github.com/angular/components/commit/8c3d8d645857a381cb2a752a600796c36338ea9e) | fix | **form-field:** style the cursor the same way as the rest of the input ([#26491](https://github.com/angular/components/pull/26491)) ([#27795](https://github.com/angular/components/pull/27795)) |
+| [c7db4960e](https://github.com/angular/components/commit/c7db4960e16d0f74b0764cfa5be752392e8c30f6) | fix | **list:** Emit tokens under mixin root selector ([#27711](https://github.com/angular/components/pull/27711)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.5"></a>
 # 16.2.5 "cardboard-plane" (2023-09-20)
 ### cdk
