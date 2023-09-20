@@ -1,3 +1,16 @@
+<a name="16.2.5"></a>
+# 16.2.5 "cardboard-plane" (2023-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80acf7910](https://github.com/angular/components/commit/80acf7910bfd114a129995551b19574a9844f583) | fix | **scrolling:** unsubscribe from scrolled stream when viewport is destroyed ([#27800](https://github.com/angular/components/pull/27800)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [158d5f37a](https://github.com/angular/components/commit/158d5f37abfcf457720c79558aee9215fb26607d) | fix | **form-field:** style the cursor the same way as the rest of the input ([#26491](https://github.com/angular/components/pull/26491)) ([#27795](https://github.com/angular/components/pull/27795)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.3"></a>
 # 17.0.0-next.3 "rock-rock" (2023-09-13)
 ### material
