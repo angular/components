@@ -189,6 +189,11 @@
           $token-slots
       ),
       _namespace-tokens(
+            (mdc, snackbar),
+          mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
+          $token-slots,
+      ),
+      _namespace-tokens(
             (mdc, plain-tooltip),
           mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
           $token-slots
@@ -203,8 +208,13 @@
       _namespace-tokens(
             (mat, toolbar),
           custom-tokens.toolbar($systems, $exclude-hardcoded),
-         $token-slots,
-      )
+          $token-slots,
+      ),
+      _namespace-tokens(
+            (mat, snack-bar),
+          custom-tokens.snack-bar($systems, $exclude-hardcoded),
+          $token-slots
+      ),
   );
 
   // Strip out tokens that are systemized by our made up density system.

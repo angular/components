@@ -11,7 +11,7 @@
   $result: ();
   @each $prop in (font, line-height, size, tracking, weight) {
     $result: map.set($result, #{$base-name}-#{$prop},
-        map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
+      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
   }
   @return $result;
 }
@@ -41,5 +41,15 @@
         container-background-color: map.get($systems, md-sys-color, surface),
         container-text-color: map.get($systems, md-sys-color, on-surface),
       )
+  );
+}
+
+/// Generates custom tokens for the mat-snack-bar.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-snack-bar
+@function snack-bar($systems, $exclude-hardcoded) {
+  @return (
+    button-color: map.get($systems, md-sys-color, inverse-primary),
   );
 }
