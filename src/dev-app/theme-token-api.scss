@@ -26,9 +26,6 @@ $m3-base-config: (
   color: (
     primary: matx.$m3-green-palette
   ),
-  typography: (
-    brand-family: 'monospace'
-  )
 );
 
 // Our M3 light theme.
@@ -41,6 +38,7 @@ $dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark)
 html {
   @include mat.checkbox-theme($light-theme);
   @include mat.card-theme($light-theme);
+  @include mat.toolbar-theme($light-theme);
 }
 
 // Emit dark theme styles.
@@ -51,6 +49,7 @@ html {
 
   @include mat.checkbox-color($dark-theme);
   @include mat.card-color($dark-theme);
+  @include mat.toolbar-color($dark-theme);
 }
 
 // Emit density styles for each scale.
@@ -60,5 +59,6 @@ html {
   .demo-density-#{$scale} {
     @include mat.checkbox-density($scale-theme);
     @include mat.card-density($scale-theme);
+    @include mat.toolbar-density($scale-theme);
   }
 }
