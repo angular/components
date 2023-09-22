@@ -21,33 +21,7 @@ filegroup(
 
 ng_test_library(
     name = "unit_tests_lib",
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = [
-            "tab-group-shared.spec.ts",
-            "tab-nav-bar-shared.spec.ts",
-        ],
-    ),
-    deps = [
-        ":harness_tests_lib",
-        ":testing",
-        "//src/material/tabs",
-    ],
-)
-
-ng_web_test_suite(
-    name = "unit_tests",
-    deps = [
-        ":unit_tests_lib",
-    ],
-)
-
-ng_test_library(
-    name = "harness_tests_lib",
-    srcs = [
-        "tab-group-shared.spec.ts",
-        "tab-nav-bar-shared.spec.ts",
-    ],
+    srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
         "//src/cdk/testing",
@@ -56,5 +30,12 @@ ng_test_library(
         "//src/material/tabs",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [
+        ":unit_tests_lib",
     ],
 )
