@@ -1,4 +1,3 @@
-export {TreeChecklistExample} from './tree-checklist/tree-checklist-example';
 export {TreeDynamicExample} from './tree-dynamic/tree-dynamic-example';
 export {TreeFlatOverviewExample} from './tree-flat-overview/tree-flat-overview-example';
 export {TreeHarnessExample} from './tree-harness/tree-harness-example';
