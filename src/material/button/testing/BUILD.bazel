@@ -21,20 +21,7 @@ filegroup(
 
 ng_test_library(
     name = "unit_tests_lib",
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["shared.spec.ts"],
-    ),
-    deps = [
-        ":harness_tests_lib",
-        ":testing",
-        "//src/material/button",
-    ],
-)
-
-ng_test_library(
-    name = "harness_tests_lib",
-    srcs = ["shared.spec.ts"],
+    srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
         "//src/cdk/platform",
