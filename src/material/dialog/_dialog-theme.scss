@@ -14,13 +14,13 @@
 }
 
 @mixin color($theme) {
-  .mat-mdc-dialog-container {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-color-tokens($theme));
   }
 }
 
 @mixin typography($theme) {
-  .mat-mdc-dialog-container {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-typography-tokens($theme));
   }
 }
