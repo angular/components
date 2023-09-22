@@ -189,6 +189,11 @@
           $token-slots
       ),
       _namespace-tokens(
+            (mdc, slider),
+          mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
+      _namespace-tokens(
             (mdc, snackbar),
           mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
           $token-slots,
@@ -209,6 +214,11 @@
             (mat, toolbar),
           custom-tokens.toolbar($systems, $exclude-hardcoded),
           $token-slots,
+      ),
+      _namespace-tokens(
+            (mat, slider),
+          custom-tokens.slider($systems, $exclude-hardcoded),
+          $token-slots
       ),
       _namespace-tokens(
             (mat, snack-bar),

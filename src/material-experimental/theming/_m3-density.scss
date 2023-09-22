@@ -20,12 +20,14 @@ $_density-tokens: (
   ),
     (mdc, elevated-card): (),
     (mdc, outlined-card): (),
+    (mdc, slider): (),
     (mat, card): (),
     (mdc, plain-tooltip): (),
     (mat, toolbar): (
     standard-height: (64px, 60px, 56px, 52px),
     mobile-height: (56px, 52px, 48px, 44px),
-  )
+  ),
+    (mat, slider): (),
 );
 
 /// Gets the value for the given density scale from the given set of density values.

@@ -8,6 +8,7 @@
 @use './mat/snack-bar' as tokens-mat-snack-bar;
 @use './mat/tab-header' as tokens-mat-tab-header;
 @use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use './mat/slider' as tokens-mat-slider;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
@@ -20,6 +21,7 @@
 @use './mdc/snack-bar' as tokens-mdc-snack-bar;
 @use './mdc/tab' as tokens-mdc-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mdc/slider' as tokens-mdc-slider;
 @use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
@@ -71,6 +73,7 @@
       _get-tokens-for-module($theme, tokens-mat-tab-header),
       _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
       _get-tokens-for-module($theme, tokens-mat-toolbar),
+      _get-tokens-for-module($theme, tokens-mat-slider),
       _get-tokens-for-module($theme, tokens-mdc-checkbox),
       _get-tokens-for-module($theme, tokens-mdc-circular-progress),
       _get-tokens-for-module($theme, tokens-mdc-dialog),
@@ -83,6 +86,7 @@
       _get-tokens-for-module($theme, tokens-mdc-snack-bar),
       _get-tokens-for-module($theme, tokens-mdc-tab),
       _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+      _get-tokens-for-module($theme, tokens-mdc-slider),
       _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
   );
 }
