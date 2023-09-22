@@ -112,7 +112,7 @@ list-density, list-base;
   progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
   progress-spinner-density, progress-spinner-base;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
-  radio-density;
+  radio-density, radio-base;
 @forward './select/select-theme' as select-* show select-theme, select-color, select-typography,
   select-density;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,

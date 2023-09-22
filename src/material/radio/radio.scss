@@ -17,9 +17,6 @@
   @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
 
   .mat-mdc-radio-button {
-    @include token-utils.create-token-values(
-      tokens-mat-radio.$prefix, tokens-mat-radio.get-unthemable-tokens());
-    @include mdc-radio-theme.theme(tokens-mdc-radio.get-unthemable-tokens());
     -webkit-tap-highlight-color: transparent;
 
     .mdc-radio {
