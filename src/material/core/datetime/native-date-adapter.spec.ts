@@ -1,6 +1,6 @@
 import {LOCALE_ID} from '@angular/core';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {DEC, FEB, JAN, MAR} from '../../testing';
+import {DEC, FEB, JAN, JUL, MAR} from '../../testing';
 import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 describe('NativeDateAdapter', () => {
@@ -463,6 +463,59 @@ describe('NativeDateAdapter', () => {
 
   it('should not throw when attempting to format a date with a year greater than 9999', () => {
     expect(() => adapter.format(new Date(10000, 1, 1), {})).not.toThrow();
+  });
+
+  it('should parse strings when composed of unambiguous substrings', () => {
+    expect(adapter.parse('01/01/2020')).toEqual(new Date(2020, JAN, 1));
+    expect(adapter.parse('13/01/2020')).toEqual(new Date(2020, JAN, 13));
+    expect(adapter.parse('01/13/2020')).toEqual(new Date(2020, JAN, 13));
+    expect(adapter.parse('21 07 2020')).toEqual(new Date(2020, JUL, 21));
+    expect(adapter.getValidDateOrNull(adapter.parse('30 02 2020'))).toBeNull();
+  });
+
+  it('should parse strings when composed of unambiguous substrings with locale', () => {
+    adapter.setLocale('fr-BE');
+    expect(adapter.parse('01 janvier 2020')).toEqual(new Date(2020, JAN, 1));
+    expect(adapter.parse('mardi 21 juillet 2020')).toEqual(new Date(2020, JUL, 21));
+    expect(adapter.parse('2020    21    décembre   ')).toEqual(new Date(2020, DEC, 21));
+    expect(adapter.getValidDateOrNull(adapter.parse('30 février 2020'))).toBeNull();
+
+    adapter.setLocale('en-US');
+    expect(adapter.parse('01 january 2020')).toEqual(new Date(2020, JAN, 1));
+    expect(adapter.parse('tuesday 21 july 2020')).toEqual(new Date(2020, JUL, 21));
+    expect(adapter.parse('2020    21    december   ')).toEqual(new Date(2020, DEC, 21));
+    expect(adapter.getValidDateOrNull(adapter.parse('30 february 2020'))).toBeNull();
+    expect(adapter.getValidDateOrNull(adapter.parse('30th february 2020'))).toBeNull();
+  });
+
+  it('should parse strings and infer which component is a year if ambiguous based on locale', () => {
+    adapter.setLocale('ja-JP');
+    expect(adapter.parse('01-01-23')).toEqual(new Date(2001, JAN, 23));
+    adapter.setLocale('fr-BE');
+    expect(adapter.parse('01-01-23')).toEqual(new Date(2023, JAN, 1));
+  });
+
+  it('should accept parsing strings not supplying a year', () => {
+    adapter.setLocale('fr-BE');
+
+    const currentYear = new Date().getFullYear();
+
+    expect(adapter.parse('0101')).toEqual(new Date(currentYear, JAN, 1));
+    expect(adapter.parse('1301')).toEqual(new Date(currentYear, JAN, 13));
+    expect(adapter.parse('0113')).toEqual(new Date(currentYear, JAN, 13));
+    expect(adapter.parse('21/07')).toEqual(new Date(currentYear, JUL, 21));
+    expect(adapter.parse('21 juillet')).toEqual(new Date(currentYear, JUL, 21));
+    expect(adapter.parse('juillet 21')).toEqual(new Date(currentYear, JUL, 21));
+    expect(adapter.parse('21 déc.')).toEqual(new Date(currentYear, DEC, 21));
+    expect(adapter.parse('21 décembre')).toEqual(new Date(currentYear, DEC, 21));
+    expect(adapter.getValidDateOrNull(adapter.parse('13/13'))).toBeNull();
+  });
+
+  it('should parse strings in a locale aware manner when ambiguous', () => {
+    adapter.setLocale('fr-BE');
+    expect(adapter.parse('01-02-2020')).toEqual(new Date(2020, FEB, 1));
+    adapter.setLocale('en-US');
+    expect(adapter.parse('01-02-2020')).toEqual(new Date(2020, JAN, 2));
   });
 });
 
