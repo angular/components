@@ -30,6 +30,8 @@ const ISO_8601_REGEX =
  */
 const TIME_REGEX = /^(\d?\d)[:.](\d?\d)(?:[:.](\d?\d))?\s*(AM|PM)?$/i;
 
+const DATE_COMPONENT_SEPARATOR_REGEX = /[ \/.:,'"|\\_-]+/;
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   const valuesArray = Array(length);
@@ -148,7 +150,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
     let result = this._createDateWithOverflow(year, month, date);
     // Check that the date wasn't above the upper bound for the month, causing the month to overflow
-    if (result.getMonth() != month && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (result.getMonth() !== month && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Invalid date "${date}" for month with index "${month}".`);
     }
 
@@ -165,7 +167,65 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     if (typeof value == 'number') {
       return new Date(value);
     }
-    return value ? new Date(Date.parse(value)) : null;
+
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value !== 'string') {
+      return new Date(value);
+    }
+
+    const dateParts = (value as string)
+      .trim()
+      .split(DATE_COMPONENT_SEPARATOR_REGEX)
+      .map(part => parseInt(part, 10))
+      .filter(part => !isNaN(part));
+
+    if (dateParts.length < 2) {
+      return this.invalid();
+    }
+
+    const localeFormatParts = Intl.DateTimeFormat(this.locale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts();
+
+    let year: number | null = null;
+    let month: number | null = null;
+    let day: number | null = null;
+
+    const valueHasYear = dateParts.length > 2;
+
+    if (!valueHasYear) {
+      // Year is implied to be current year if only 2 date components are given.
+      year = new Date().getFullYear();
+    }
+
+    let parsedPartIndex = 0;
+
+    for (const part of localeFormatParts) {
+      switch (part.type) {
+        case 'year':
+          if (valueHasYear) {
+            year = dateParts[parsedPartIndex++];
+          }
+          break;
+        case 'month':
+          month = dateParts[parsedPartIndex++] - 1;
+          break;
+        case 'day':
+          day = dateParts[parsedPartIndex++];
+          break;
+      }
+    }
+
+    if (year !== null && month !== null && day !== null && this._dateComponentsAreValid(year, month, day)) {
+      return this.createDate(year, month, day);
+    }
+
+    return this._nativeParseFallback(value);
   }
 
   format(date: Date, displayFormat: Object): string {
@@ -349,6 +409,49 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     d.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
+  }
+
+  private _nativeParseFallback(value: string): Date {
+    const date = new Date(Date.parse(value));
+    if (!this.isValid(date)) {
+      return date;
+    }
+
+    // Native parsing sometimes assumes UTC, sometimes does not.
+    // We have to remove the difference between the two in order to get the date as a local date.
+
+    const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+    const difference = date.getTime() - compareDate.getTime();
+    if (difference === 0) {
+      return date;
+    }
+
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds(),
+      date.getUTCMilliseconds(),
+    );
+  }
+
+  private _dateComponentsAreValid(year: number, month: number, day: number) {
+    if (year < 0 || year > 9999 || month < 0 || month > 11 || day < 1 || day > 31) {
+      return false;
+    }
+
+    if (month === 1) {
+      const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      return isLeapYear ? day <= 29 : day <= 28;
+    }
+
+    if (month === 3 || month === 5 || month === 8 || month === 10) {
+      return day <= 30;
+    }
+
+    return true;
   }
 
   /**
