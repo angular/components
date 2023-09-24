@@ -65,7 +65,6 @@
     "no-undecorated-base-class-di": true,
     "no-undecorated-class-with-angular-features": true,
     "setters-after-getters": true,
-    "ng-on-changes-property-access": true,
     "lifecycle-hook-interface": true,
     "require-breaking-change-version": true,
     "no-nested-ternary": true,

@@ -71,8 +71,8 @@ function getDefaultComponentOption<T>(
   optionNames: string[],
   fallbackValue: T,
 ): T {
-  const schematicOptions = isJsonObject(project.extensions.schematics || null)
-    ? (project.extensions.schematics as JsonObject)
+  const schematicOptions = isJsonObject(project.extensions['schematics'] || null)
+    ? (project.extensions['schematics'] as JsonObject)
     : null;
   const defaultSchematic = schematicOptions
     ? (schematicOptions['@schematics/angular:component'] as JsonObject | null)

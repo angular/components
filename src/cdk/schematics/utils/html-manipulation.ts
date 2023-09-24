@@ -72,7 +72,7 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
     if (!hasClass) {
       // We have source code location info enabled, and we pre-checked that the element
       // has attributes, specifically the `class` attribute.
-      const classAttributeLocation = body.sourceCodeLocation!.attrs!.class;
+      const classAttributeLocation = body.sourceCodeLocation!.attrs!['class'];
       const recordedChange = host
         .beginUpdate(htmlFilePath)
         .insertRight(classAttributeLocation.endOffset - 1, ` ${className}`);

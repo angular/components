@@ -263,23 +263,23 @@ describe('MatDateRangeInput', () => {
     // Set it manually here so we can assert `rangeInput.errorState` correctly.
     fixture.componentInstance.range.markAllAsTouched();
     expect(fixture.componentInstance.rangeInput.errorState).toBe(false);
-    expect(start.errors?.matStartDateInvalid).toBeFalsy();
-    expect(end.errors?.matEndDateInvalid).toBeFalsy();
+    expect(start.errors?.['matStartDateInvalid']).toBeFalsy();
+    expect(end.errors?.['matEndDateInvalid']).toBeFalsy();
 
     start.setValue(new Date(2020, 2, 2));
     end.setValue(new Date(2020, 1, 2));
     fixture.detectChanges();
 
     expect(fixture.componentInstance.rangeInput.errorState).toBe(true);
-    expect(start.errors?.matStartDateInvalid).toBeTruthy();
-    expect(end.errors?.matEndDateInvalid).toBeTruthy();
+    expect(start.errors?.['matStartDateInvalid']).toBeTruthy();
+    expect(end.errors?.['matEndDateInvalid']).toBeTruthy();
 
     end.setValue(new Date(2020, 3, 2));
     fixture.detectChanges();
 
     expect(fixture.componentInstance.rangeInput.errorState).toBe(false);
-    expect(start.errors?.matStartDateInvalid).toBeFalsy();
-    expect(end.errors?.matEndDateInvalid).toBeFalsy();
+    expect(start.errors?.['matStartDateInvalid']).toBeFalsy();
+    expect(end.errors?.['matEndDateInvalid']).toBeFalsy();
   }));
 
   it('should pass the minimum date from the range input to the inner inputs', () => {
@@ -288,16 +288,16 @@ describe('MatDateRangeInput', () => {
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
-    expect(start.errors?.matDatepickerMin).toBeFalsy();
-    expect(end.errors?.matDatepickerMin).toBeFalsy();
+    expect(start.errors?.['matDatepickerMin']).toBeFalsy();
+    expect(end.errors?.['matDatepickerMin']).toBeFalsy();
 
     const date = new Date(2020, 2, 2);
     start.setValue(date);
     end.setValue(date);
     fixture.detectChanges();
 
-    expect(start.errors?.matDatepickerMin).toBeTruthy();
-    expect(end.errors?.matDatepickerMin).toBeTruthy();
+    expect(start.errors?.['matDatepickerMin']).toBeTruthy();
+    expect(end.errors?.['matDatepickerMin']).toBeTruthy();
   });
 
   it('should pass the maximum date from the range input to the inner inputs', () => {
@@ -306,16 +306,16 @@ describe('MatDateRangeInput', () => {
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
-    expect(start.errors?.matDatepickerMax).toBeFalsy();
-    expect(end.errors?.matDatepickerMax).toBeFalsy();
+    expect(start.errors?.['matDatepickerMax']).toBeFalsy();
+    expect(end.errors?.['matDatepickerMax']).toBeFalsy();
 
     const date = new Date(2020, 2, 2);
     start.setValue(date);
     end.setValue(date);
     fixture.detectChanges();
 
-    expect(start.errors?.matDatepickerMax).toBeTruthy();
-    expect(end.errors?.matDatepickerMax).toBeTruthy();
+    expect(start.errors?.['matDatepickerMax']).toBeTruthy();
+    expect(end.errors?.['matDatepickerMax']).toBeTruthy();
   });
 
   it('should pass the date filter function from the range input to the inner inputs', () => {
@@ -324,16 +324,16 @@ describe('MatDateRangeInput', () => {
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
-    expect(start.errors?.matDatepickerFilter).toBeFalsy();
-    expect(end.errors?.matDatepickerFilter).toBeFalsy();
+    expect(start.errors?.['matDatepickerFilter']).toBeFalsy();
+    expect(end.errors?.['matDatepickerFilter']).toBeFalsy();
 
     const date = new Date(2020, 2, 2);
     start.setValue(date);
     end.setValue(date);
     fixture.detectChanges();
 
-    expect(start.errors?.matDatepickerFilter).toBeTruthy();
-    expect(end.errors?.matDatepickerFilter).toBeTruthy();
+    expect(start.errors?.['matDatepickerFilter']).toBeTruthy();
+    expect(end.errors?.['matDatepickerFilter']).toBeTruthy();
   });
 
   it('should should revalidate when a new date filter function is assigned', () => {
@@ -448,14 +448,14 @@ describe('MatDateRangeInput', () => {
     end.setValue(date);
     fixture.detectChanges();
 
-    expect(start.errors?.matDatepickerMin).toBeTruthy();
-    expect(end.errors?.matDatepickerMin).toBeTruthy();
+    expect(start.errors?.['matDatepickerMin']).toBeTruthy();
+    expect(end.errors?.['matDatepickerMin']).toBeTruthy();
 
     fixture.componentInstance.minDate = new Date(2019, 3, 2);
     fixture.detectChanges();
 
-    expect(start.errors?.matDatepickerMin).toBeFalsy();
-    expect(end.errors?.matDatepickerMin).toBeFalsy();
+    expect(start.errors?.['matDatepickerMin']).toBeFalsy();
+    expect(end.errors?.['matDatepickerMin']).toBeFalsy();
   });
 
   it('should set the formatted date value as the input value', () => {

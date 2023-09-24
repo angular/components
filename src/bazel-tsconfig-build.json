@@ -10,6 +10,7 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "strictNullChecks": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitOverride": true,

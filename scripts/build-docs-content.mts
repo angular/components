@@ -21,7 +21,7 @@ const distDir = join(projectDir, 'dist/');
 const outputDir = join(distDir, 'docs-content-pkg');
 
 /** Command that runs Bazel. */
-const bazelCmd = process.env.BAZEL || `yarn -s bazel`;
+const bazelCmd = process.env['BAZEL'] || `yarn -s bazel`;
 
 /**
  * Builds the docs content NPM package in snapshot mode.

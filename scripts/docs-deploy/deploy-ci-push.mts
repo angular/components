@@ -13,19 +13,19 @@ import {getReleaseRepoWithApi} from './github-versioning.mjs';
 import {updateVersionsFile} from './update-versions-file.mjs';
 
 async function main() {
-  if (process.env.CIRCLE_PR_NUMBER !== undefined) {
+  if (process.env['CIRCLE_PR_NUMBER'] !== undefined) {
     console.log('Skipping deployment for pull request build.');
     return;
   }
 
-  const branchName = process.env.CIRCLE_BRANCH;
+  const branchName = process.env['CIRCLE_BRANCH'];
   if (branchName === undefined) {
     throw new Error('Deployment script is unable to determine CI branch.');
   }
 
   const repo = await getReleaseRepoWithApi();
   const active = await ActiveReleaseTrains.fetch(repo);
-  const description = `${branchName} - ${process.env.CIRCLE_SHA1!}`;
+  const description = `${branchName} - ${process.env['CIRCLE_SHA1']!}`;
   const {projectId, serviceKey} = firebaseConfig;
 
   if (branchName === active.next.branchName) {

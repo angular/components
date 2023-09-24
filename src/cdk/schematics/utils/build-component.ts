@@ -43,7 +43,8 @@ import {getDefaultComponentOptions, isStandaloneSchematic} from './schematic-opt
 function buildDefaultPath(project: workspaces.ProjectDefinition): string {
   const root = project.sourceRoot ? `/${project.sourceRoot}/` : `/${project.root}/src/`;
 
-  const projectDirName = project.extensions.projectType === ProjectType.Application ? 'app' : 'lib';
+  const projectDirName =
+    project.extensions['projectType'] === ProjectType.Application ? 'app' : 'lib';
 
   return `${root}${projectDirName}`;
 }

@@ -41,7 +41,7 @@ describe('ng-add schematic', () => {
 
   /** Expects the given file to be in the styles of the specified workspace project. */
   function expectProjectStyleFile(project: workspaces.ProjectDefinition, filePath: string) {
-    expect(getProjectTargetOptions(project, 'build').styles)
+    expect(getProjectTargetOptions(project, 'build')['styles'])
       .withContext(`Expected "${filePath}" to be added to the project styles in the workspace.`)
       .toContain(filePath);
   }
@@ -436,7 +436,7 @@ describe('ng-add schematic', () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
       const workspace = await getWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
-      const styles = getProjectTargetOptions(project, 'build').styles;
+      const styles = getProjectTargetOptions(project, 'build')['styles'];
 
       expect(styles)
         .not.withContext('Expected the existing prebuilt theme file to be removed.')
@@ -452,7 +452,7 @@ describe('ng-add schematic', () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
       const workspace = await getWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
-      const styles = getProjectTargetOptions(project, 'build').styles;
+      const styles = getProjectTargetOptions(project, 'build')['styles'];
 
       expect(styles)
         .not.withContext('Expected the default prebuilt theme to be not configured.')
@@ -467,7 +467,7 @@ describe('ng-add schematic', () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
       const workspace = await getWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
-      const styles = getProjectTargetOptions(project, 'build').styles;
+      const styles = getProjectTargetOptions(project, 'build')['styles'];
 
       expect(styles)
         .withContext(

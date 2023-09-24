@@ -24,10 +24,10 @@ export function getProjectStyleFile(
   extension?: string,
 ): string | null {
   const buildOptions = getProjectTargetOptions(project, 'build');
-  if (buildOptions.styles && isJsonArray(buildOptions.styles) && buildOptions.styles.length) {
-    const styles = buildOptions.styles.map(s =>
-      typeof s === 'string' ? s : (s as {input: string}).input,
-    );
+  const buildStyles = buildOptions['styles'];
+
+  if (buildStyles && isJsonArray(buildStyles) && buildStyles.length) {
+    const styles = buildStyles.map(s => (typeof s === 'string' ? s : (s as {input: string}).input));
 
     // Look for the default style file that is generated for new projects by the Angular CLI. This
     // default style file is usually called `styles.ext` unless it has been changed explicitly.

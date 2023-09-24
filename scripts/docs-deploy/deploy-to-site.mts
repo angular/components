@@ -45,7 +45,7 @@ export async function deployToSite(
   // Setup GCP service key for the docs-app deployment.
   // https://firebase.google.com/docs/admin/setup.
   await fs.promises.writeFile(gcpServiceKeyTmpFile, firebaseServiceKey);
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = gcpServiceKeyTmpFile;
+  process.env['GOOGLE_APPLICATION_CREDENTIALS'] = gcpServiceKeyTmpFile;
 
   await firebase('use', info.projectId);
   await firebase('target:clear', 'hosting', 'mat-aio');
