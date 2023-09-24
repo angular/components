@@ -57,7 +57,7 @@ describe('WebDriverHarnessEnvironment', () => {
 
   beforeAll(async () => {
     wd = await new webdriver.Builder()
-      .usingServer(process.env.WEB_TEST_WEBDRIVER_SERVER!)
+      .usingServer(process.env['WEB_TEST_WEBDRIVER_SERVER']!)
       .withCapabilities(webTestMetadata.capabilities)
       .build();
   });

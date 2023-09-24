@@ -19,7 +19,7 @@ export function getTargetTsconfigPath(
   project: workspaces.ProjectDefinition,
   targetName: string,
 ): WorkspacePath | null {
-  const tsconfig = project.targets?.get(targetName)?.options?.tsConfig;
+  const tsconfig = project.targets?.get(targetName)?.options?.['tsConfig'];
   return tsconfig ? normalize(tsconfig as string) : null;
 }
 

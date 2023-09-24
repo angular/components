@@ -132,10 +132,10 @@ function addThemeStyleToTarget(
     }
 
     const targetOptions = getProjectTargetOptions(project, targetName);
-    const styles = targetOptions.styles as (string | {input: string})[];
+    const styles = targetOptions['styles'] as (string | {input: string})[];
 
     if (!styles) {
-      targetOptions.styles = [assetPath];
+      targetOptions['styles'] = [assetPath];
     } else {
       const existingStyles = styles.map(s => (typeof s === 'string' ? s : s.input));
 

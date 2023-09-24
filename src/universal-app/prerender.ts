@@ -18,7 +18,7 @@ const themeCssPath = runfiles.resolvePackageRelative('./theme.css');
 const result = renderModule(KitchenSinkRootServerModule, {
   document: readFileSync(indexHtmlPath, 'utf-8'),
 });
-const outDir = process.env.TEST_UNDECLARED_OUTPUTS_DIR as string;
+const outDir = process.env['TEST_UNDECLARED_OUTPUTS_DIR'] as string;
 
 result
   .then(content => {

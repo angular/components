@@ -17,7 +17,7 @@ const TEST_DIRECTORY = CURRENT_WORKING_DIRECTORY;
 const GOLDEN_DIRECTORY = path.join(CURRENT_WORKING_DIRECTORY, process.argv[3]);
 const IGNORED_FILES = new Set(process.argv.slice(5));
 
-if (SHOULD_APPROVE && !process.env.BUILD_WORKSPACE_DIRECTORY) {
+if (SHOULD_APPROVE && !process.env['BUILD_WORKSPACE_DIRECTORY']) {
   console.error('Approval command must be run with `bazel run`.');
   process.exit(1);
 }
@@ -197,7 +197,7 @@ async function deleteFiles(file: string, ignoredFiles: Set<string>) {
     if (diffs.length) {
       if (SHOULD_APPROVE) {
         const APPROVED_GOLDEN_DIRECTORY = path.join(
-          process.env.BUILD_WORKSPACE_DIRECTORY!,
+          process.env['BUILD_WORKSPACE_DIRECTORY']!,
           process.argv[4],
         );
         await deleteFiles(
