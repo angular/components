@@ -16,10 +16,10 @@ http_archive(
 # Add sass rules
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "1ea0103fa6adcb7d43ff26373b5082efe1d4b2e09c4f34f8a8f8b351e9a8a9b0",
-    strip_prefix = "rules_sass-1.55.0",
+    sha256 = "1c89680ca9cbbba33cb9cd462eb328e5782e14c0aa1286b794c71b5333385407",
+    strip_prefix = "rules_sass-1.68.0",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.55.0.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/1.68.0.zip",
     ],
 )
 
