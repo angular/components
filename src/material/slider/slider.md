@@ -17,8 +17,10 @@ respectively. The initial value is set to the minimum value unless otherwise spe
 
 ### Selecting a range
 A `<mat-slider>` can be converted into a range slider by projecting both a `matStartThumb` and a
-`matEndThumb` into it. Each of the thumbs has an independent value, but they won't be allowed to
-overlap and they're still bound by the same `min` and `max` from the slider.
+`matEndThumb` into it. Each of the thumbs has its own value, but both are still
+constrained by the slider's `min` and `max` values. `matStartThumb` cannot have a value
+greater than `matEndThumb` and `matEndThumb` cannot have a value less than `matStartThumb`, though
+they both may have the same value.
 
 ```html
 <mat-slider>
