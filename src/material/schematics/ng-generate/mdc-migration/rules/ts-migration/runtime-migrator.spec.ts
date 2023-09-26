@@ -521,7 +521,7 @@ describe('runtime code migration', () => {
       `
         @Component({
           selector: 'card-example',
-          template: '<mat-card appearance="outlined">Learn More</mat-card>',
+          template: '<mat-card>Learn More</mat-card>',
         })
         class CardExample {}
       `,
@@ -545,7 +545,7 @@ describe('runtime code migration', () => {
       `
         @Component({
           selector: 'card-example',
-          template: \`<mat-card appearance="outlined">
+          template: \`<mat-card>
             Learn More
           </mat-card>
           \`,
@@ -568,7 +568,7 @@ describe('runtime code migration', () => {
       `
         @Component({
           selector: 'card-example',
-          template: '<mat-card appearance="outlined">Learn More</mat-card>',
+          template: '<mat-card>Learn More</mat-card>',
           styles: ['.mat-mdc-card { padding-right: 4px; }'],
         })
         class CardExample {}
@@ -599,7 +599,7 @@ describe('runtime code migration', () => {
           standalone: true,
           selector: 'card-example',
           imports: [MatCardModule],
-          template: '<mat-card appearance="outlined">Learn More</mat-card>',
+          template: '<mat-card>Learn More</mat-card>',
           styles: ['.mat-mdc-card { padding-right: 4px; }'],
         })
         class CardExample {}
