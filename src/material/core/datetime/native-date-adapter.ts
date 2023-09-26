@@ -221,7 +221,12 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       }
     }
 
-    if (year !== null && month !== null && day !== null && this._dateComponentsAreValid(year, month, day)) {
+    if (
+      year !== null &&
+      month !== null &&
+      day !== null &&
+      this._dateComponentsAreValid(year, month, day)
+    ) {
       return this.createDate(year, month, day);
     }
 
