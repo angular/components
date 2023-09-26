@@ -20,7 +20,7 @@ A `<mat-slider>` can be converted into a range slider by projecting both a `matS
 `matSliderEndThumb` into it. Each thumb has its own value, but both are still
 constrained by the slider's `min` and `max` values. The `matSliderStartThumb` cannot have a value
 greater than that of the `matSliderEndThumb` and the `matSliderEndThumb` cannot have a value less than
-that of `matSliderStartThumb`, though they both may have the same value.
+that of the `matSliderStartThumb`, though they both may have the same value.
 
 ```html
 <mat-slider>
