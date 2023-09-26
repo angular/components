@@ -412,7 +412,7 @@ $dark-theme: mat.define-dark-theme((
 .the-dense-zone {
   @include mat.button-density(-1);
 }
-```  
+```
 
 ## Strong focus indicators
 
