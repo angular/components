@@ -1,3 +1,31 @@
+<a name="17.0.0-next.5"></a>
+# 17.0.0-next.5 "aerogel-aurora" (2023-09-27)
+## Breaking Changes
+### material
+- There are new styles emitted by `mat.radio-theme` that are not
+  emitted by any of: `mat.radio-color`, `mat.radio-typography`,
+  `mat.radio-density`. If you rely on the partial mixins only and don't
+  call `mat.radio-theme`, you can add `mat.radio-base` to get the
+  missing styles.
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fbc7bdda93](https://github.com/angular/components/commit/fbc7bdda93b7c261705da81cec6720bbf607c5ce) | feat | **theming:** add M3 slider support ([#27826](https://github.com/angular/components/pull/27826)) |
+| [6b57edb1b1](https://github.com/angular/components/commit/6b57edb1b164909f8aa1eddac87a915c037e6905) | feat | **theming:** add M3 snackbar support ([#27824](https://github.com/angular/components/pull/27824)) |
+| [545db61b41](https://github.com/angular/components/commit/545db61b41957df26c5e3c95a2959ca6c83a9190) | feat | **theming:** add M3 toolbar support ([#27812](https://github.com/angular/components/pull/27812)) |
+| [1930b1dacf](https://github.com/angular/components/commit/1930b1dacf07826750ffc72dbce551fe6653fd4f) | feat | **theming:** add M3 tooltip support ([#27810](https://github.com/angular/components/pull/27810)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4c3ef50d6e](https://github.com/angular/components/commit/4c3ef50d6e7147f1af71885346503791897f2c78) | fix | **datepicker:** improved missing dateAdapters error message to include matLuxon and matDateFns ([#26889](https://github.com/angular/components/pull/26889)) |
+| [943b5dabf3](https://github.com/angular/components/commit/943b5dabf3fc14cf0dee80174a6891fef8a588c8) | fix | **radio:** move unthemable tokens to theme mixin ([#27809](https://github.com/angular/components/pull/27809)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d336370565](https://github.com/angular/components/commit/d336370565deb6a4db666783d484040e1fd99648) | fix | **menu:** context menu closing immediately on control + click on Safari ([#27838](https://github.com/angular/components/pull/27838)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.6"></a>
 # 16.2.6 "jade-jungle" (2023-09-27)
 ### cdk
