@@ -176,7 +176,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       return new Date(value);
     }
 
-    const dateParts = (value as string)
+    const dateParts = value
       .trim()
       .split(DATE_COMPONENT_SEPARATOR_REGEX)
       .map(part => parseInt(part, 10))
@@ -221,13 +221,14 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       }
     }
 
-    if (
-      year !== null &&
-      month !== null &&
-      day !== null &&
-      this._dateComponentsAreValid(year, month, day)
-    ) {
-      return this.createDate(year, month, day);
+    if (year !== null && month !== null && day !== null) {
+      const date = this.createDate(year, month, day);
+
+      if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+        return date;
+      }
+
+      return this.invalid();
     }
 
     return this._nativeParseFallback(value);
