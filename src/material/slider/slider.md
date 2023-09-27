@@ -68,8 +68,8 @@ The slider has the following keyboard bindings:
 | Up arrow    | Increment the slider value by one step.                                            |
 | Left arrow  | Decrement the slider value by one step (increments in RTL).                        |
 | Down arrow  | Decrement the slider value by one step.                                            |
-| Page up     | Increment the slider value by 10 steps.                                            |
-| Page down   | Decrement the slider value by 10 steps.                                            |
+| Page up     | Increment the slider value by 10% (of the max value).                              |
+| Page down   | Decrement the slider value by 10% (of the max value).                              |
 | End         | Set the value to the maximum possible.                                             |
 | Home        | Set the value to the minimum possible.                                             |
 
