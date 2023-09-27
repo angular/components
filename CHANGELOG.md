@@ -1,3 +1,16 @@
+<a name="16.2.6"></a>
+# 16.2.6 "jade-jungle" (2023-09-27)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3e9228a6d0](https://github.com/angular/components/commit/3e9228a6d00ef6ac84d546ccf5e7b5cd288279ee) | fix | **menu:** context menu closing immediately on control + click on Safari ([#27838](https://github.com/angular/components/pull/27838)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [451d0e5190](https://github.com/angular/components/commit/451d0e519088443e0410b39ce17529323893a2d0) | fix | **datepicker:** improved missing dateAdapters error message to include matLuxon and matDateFns ([#26889](https://github.com/angular/components/pull/26889)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.4"></a>
 # 17.0.0-next.4 "titanium-turtle" (2023-09-20)
 ### cdk
