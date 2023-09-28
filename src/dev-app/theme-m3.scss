@@ -2,10 +2,10 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
-// Add an indicator to make it clear that the app is styled with the experimental theming API.
+// Add an indicator to make it clear that the app is styled with the experimental M3 theme.
 dev-app {
   &::before {
-    content: 'Using experimental theming API';
+    content: 'Using experimental M3 theme, only components that support M3 will work';
     display: inline-block;
     position: fixed;
     z-index: 100;

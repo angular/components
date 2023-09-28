@@ -116,8 +116,8 @@ sass_binary(
 )
 
 sass_binary(
-    name = "theme_token_api",
-    src = "theme-token-api.scss",
+    name = "theme_m3",
+    src = "theme-m3.scss",
     deps = [
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
@@ -142,7 +142,7 @@ filegroup(
         "favicon.ico",
         "index.html",
         ":theme",
-        ":theme_token_api",
+        ":theme_m3",
         ":variables",
         "//src/dev-app/icon:icon_demo_assets",
         "@npm//:node_modules/moment/min/moment-with-locales.min.js",

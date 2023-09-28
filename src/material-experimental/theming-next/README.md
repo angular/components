@@ -55,4 +55,3 @@ $m2-tokens: mat.m2-tokens-from-theme($my-theme);
   need to appear differently, say within `.dark-sidebar`, set the token overrides on the
   `.dark-sidebar` element and they will be inherited down to the checkboxes within, instead of the
   values from the root element.
-- For a small example, see this [alternate partial theme](https://github.com/angular/components/blob/main/src/dev-app/theme-token-api.scss) for the dev-app

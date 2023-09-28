@@ -162,13 +162,13 @@ export class DevAppLayout {
     }
   }
 
-  toggleTokens(value = !this.state.tokensEnabled) {
+  toggleM3(value = !this.state.m3Enabled) {
     // We need to diff this one since it's a bit more expensive to toggle.
-    if (value !== this.state.tokensEnabled) {
+    if (value !== this.state.m3Enabled) {
       (document.getElementById('theme-styles') as HTMLLinkElement).href = value
-        ? 'theme-token-api.css'
+        ? 'theme-m3.css'
         : 'theme.css';
-      this.state.tokensEnabled = value;
+      this.state.m3Enabled = value;
       setAppState(this.state);
     }
   }
