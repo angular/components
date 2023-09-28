@@ -19,7 +19,7 @@
 
 @mixin color($theme) {
   @include mdc-helpers.using-mdc-theme($theme) {
-    .mat-mdc-radio-button {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
     }
   }
