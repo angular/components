@@ -11,7 +11,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {MAT_DIALOG_SCROLL_STRATEGY_PROVIDER, MatDialog} from './dialog';
+import {MatDialog} from './dialog';
 import {MatDialogContainer} from './dialog-container';
 import {
   MatDialogActions,
@@ -20,23 +20,17 @@ import {
   MatDialogTitle,
 } from './dialog-content-directives';
 
+const DIRECTIVES = [
+  MatDialogContainer,
+  MatDialogClose,
+  MatDialogTitle,
+  MatDialogActions,
+  MatDialogContent,
+];
+
 @NgModule({
-  imports: [DialogModule, OverlayModule, PortalModule, MatCommonModule],
-  exports: [
-    MatDialogContainer,
-    MatDialogClose,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatCommonModule,
-  ],
-  declarations: [
-    MatDialogContainer,
-    MatDialogClose,
-    MatDialogTitle,
-    MatDialogActions,
-    MatDialogContent,
-  ],
-  providers: [MatDialog, MAT_DIALOG_SCROLL_STRATEGY_PROVIDER],
+  imports: [DialogModule, OverlayModule, PortalModule, MatCommonModule, ...DIRECTIVES],
+  exports: [MatCommonModule, ...DIRECTIVES],
+  providers: [MatDialog],
 })
 export class MatDialogModule {}
