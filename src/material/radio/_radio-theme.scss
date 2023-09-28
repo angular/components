@@ -1,7 +1,7 @@
-@use '@material/radio/radio' as mdc-radio;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/form-field' as mdc-form-field;
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
@@ -10,7 +10,7 @@
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 
 @mixin base($theme) {
-  .mat-mdc-radio-button {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-radio-theme.theme(tokens-mdc-radio.get-unthemable-tokens());
     @include token-utils.create-token-values(
         tokens-mat-radio.$prefix, tokens-mat-radio.get-unthemable-tokens());
@@ -46,8 +46,11 @@
 }
 
 @mixin typography($theme) {
-  .mat-mdc-radio-button {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($theme));
+  }
+
+  .mat-mdc-radio-button {
     @include mdc-helpers.using-mdc-typography($theme) {
       @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
     }
@@ -57,7 +60,7 @@
 @mixin density($theme) {
   $density-scale: inspection.get-theme-density($theme);
 
-  .mat-mdc-radio-button .mdc-radio {
+  @include sass-utils.current-selector-or-root() {
     @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
   }
 
