@@ -55,7 +55,7 @@ describe('theming inspection api', () => {
             density: 0,
           ));
           div {
-            --theme-version: #{mat.private-get-theme-version($theme)};
+            --theme-version: #{mat.get-theme-version($theme)};
           }
         `),
       ).toMatch('--theme-version: 0;');
@@ -71,7 +71,7 @@ describe('theming inspection api', () => {
             ),
           ));
           div {
-            --theme-type: #{mat.private-get-theme-type($theme)};
+            --theme-type: #{mat.get-theme-type($theme)};
           }
         `),
       ).toMatch('--theme-type: dark;');
@@ -87,7 +87,7 @@ describe('theming inspection api', () => {
             )
           ));
           div {
-            color: mat.private-get-theme-color($theme, accent);
+            color: mat.get-theme-color($theme, accent);
           }
         `),
       ).toMatch('color: #4caf50;');
@@ -103,7 +103,7 @@ describe('theming inspection api', () => {
             )
           ));
           div {
-            color: mat.private-get-theme-color($theme, accent, A200);
+            color: mat.get-theme-color($theme, accent, A200);
           }
         `),
       ).toMatch('color: #69f0ae;');
@@ -115,12 +115,12 @@ describe('theming inspection api', () => {
           typography: mat.define-typography-config()
         ));
         div {
-          font: mat.private-get-theme-typography($theme, headline-1);
-          font-family: mat.private-get-theme-typography($theme, headline-1, font-family);
-          font-size: mat.private-get-theme-typography($theme, headline-1, font-size);
-          font-weight: mat.private-get-theme-typography($theme, headline-1, font-weight);
-          line-height: mat.private-get-theme-typography($theme, headline-1, line-height);
-          letter-spacing: mat.private-get-theme-typography($theme, headline-1, letter-spacing);
+          font: mat.get-theme-typography($theme, headline-1);
+          font-family: mat.get-theme-typography($theme, headline-1, font-family);
+          font-size: mat.get-theme-typography($theme, headline-1, font-size);
+          font-weight: mat.get-theme-typography($theme, headline-1, font-weight);
+          line-height: mat.get-theme-typography($theme, headline-1, line-height);
+          letter-spacing: mat.get-theme-typography($theme, headline-1, letter-spacing);
         }
       `);
       expect(css).toMatch('font: 300 96px / 96px Roboto, sans-serif;');
@@ -138,7 +138,7 @@ describe('theming inspection api', () => {
             density: -1
           ));
           div {
-            --density-scale: #{mat.private-get-theme-density($theme)};
+            --density-scale: #{mat.get-theme-density($theme)};
           }
         `),
       ).toMatch('--density-scale: -1;');
@@ -174,28 +174,28 @@ describe('theming inspection api', () => {
         ));
         div {
           --base: #{(
-            mat.private-theme-has($theme, base),
-            mat.private-theme-has($color-only, base),
-            mat.private-theme-has($typography-only, base),
-            mat.private-theme-has($density-only, base),
+            mat.theme-has($theme, base),
+            mat.theme-has($color-only, base),
+            mat.theme-has($typography-only, base),
+            mat.theme-has($density-only, base),
           )};
           --color: #{(
-            mat.private-theme-has($theme, color),
-            mat.private-theme-has($color-only, color),
-            mat.private-theme-has($typography-only, color),
-            mat.private-theme-has($density-only, color),
+            mat.theme-has($theme, color),
+            mat.theme-has($color-only, color),
+            mat.theme-has($typography-only, color),
+            mat.theme-has($density-only, color),
           )};
           --typography: #{(
-            mat.private-theme-has($theme, typography),
-            mat.private-theme-has($color-only, typography),
-            mat.private-theme-has($typography-only, typography),
-            mat.private-theme-has($density-only, typography),
+            mat.theme-has($theme, typography),
+            mat.theme-has($color-only, typography),
+            mat.theme-has($typography-only, typography),
+            mat.theme-has($density-only, typography),
           )};
           --density: #{(
-            mat.private-theme-has($theme, density),
-            mat.private-theme-has($color-only, density),
-            mat.private-theme-has($typography-only, density),
-            mat.private-theme-has($density-only, density),
+            mat.theme-has($theme, density),
+            mat.theme-has($color-only, density),
+            mat.theme-has($typography-only, density),
+            mat.theme-has($density-only, density),
           )};
         }
       `);
@@ -216,7 +216,7 @@ describe('theming inspection api', () => {
             )
           ));
           div {
-            --theme-type: #{mat.private-get-theme-type($theme)};
+            --theme-type: #{mat.get-theme-type($theme)};
           }
         `),
       ).toMatch('--theme-type: dark;');
@@ -248,7 +248,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            --theme-version: #{mat.private-get-theme-version($theme)};
+            --theme-version: #{mat.get-theme-version($theme)};
           }
         `),
       ).toMatch('--theme-version: 1;');
@@ -259,7 +259,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            --theme-type: #{mat.private-get-theme-type($theme)};
+            --theme-type: #{mat.get-theme-type($theme)};
           }
         `),
       ).toMatch('--theme-type: light;');
@@ -270,7 +270,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme, primary-container);
+            color: mat.get-theme-color($theme, primary-container);
           }
         `),
       ).toMatch('color: #f0dbff;');
@@ -281,7 +281,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme, fake-role);
+            color: mat.get-theme-color($theme, fake-role);
           }
         `),
       ).toThrowError(/Valid color roles are.*Got: fake-role/);
@@ -292,7 +292,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme, tertiary, 20);
+            color: mat.get-theme-color($theme, tertiary, 20);
           }
         `),
       ).toMatch('color: #4a0080;');
@@ -303,7 +303,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme, fake-palette, 20);
+            color: mat.get-theme-color($theme, fake-palette, 20);
           }
         `),
       ).toThrowError(/Valid palettes are.*Got: fake-palette/);
@@ -314,7 +314,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme, neutral, 11);
+            color: mat.get-theme-color($theme, neutral, 11);
           }
         `),
       ).toThrowError(/Valid hues for neutral are.*Got: 11/);
@@ -325,7 +325,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            color: mat.private-get-theme-color($theme);
+            color: mat.get-theme-color($theme);
           }
         `),
       ).toThrowError(/Expected 2 or 3 arguments. Got: 1/);
@@ -335,12 +335,12 @@ describe('theming inspection api', () => {
       const css = transpile(`
         $theme: matx.define-theme();
         div {
-          font: mat.private-get-theme-typography($theme, headline-large);
-          font-family: mat.private-get-theme-typography($theme, headline-large, font-family);
-          font-size: mat.private-get-theme-typography($theme, headline-large, font-size);
-          font-weight: mat.private-get-theme-typography($theme, headline-large, font-weight);
-          line-height: mat.private-get-theme-typography($theme, headline-large, line-height);
-          letter-spacing: mat.private-get-theme-typography($theme, headline-large, letter-spacing);
+          font: mat.get-theme-typography($theme, headline-large);
+          font-family: mat.get-theme-typography($theme, headline-large, font-family);
+          font-size: mat.get-theme-typography($theme, headline-large, font-size);
+          font-weight: mat.get-theme-typography($theme, headline-large, font-weight);
+          line-height: mat.get-theme-typography($theme, headline-large, line-height);
+          letter-spacing: mat.get-theme-typography($theme, headline-large, letter-spacing);
         }
       `);
       expect(css).toMatch('font: 400 2rem / 2.5rem Roboto, sans-serif;');
@@ -356,7 +356,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            font: mat.private-get-theme-typography($theme, subtitle-large);
+            font: mat.get-theme-typography($theme, subtitle-large);
           }
         `),
       ).toThrowError(/Valid typescales are:.*Got: subtitle-large/);
@@ -367,7 +367,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            text-transform: mat.private-get-theme-typography($theme, body-small, text-transform);
+            text-transform: mat.get-theme-typography($theme, body-small, text-transform);
           }
         `),
       ).toThrowError(/Valid typography properties are:.*Got: text-transform/);
@@ -378,7 +378,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-theme();
           div {
-            --density-scale: #{mat.private-get-theme-density($theme)};
+            --density-scale: #{mat.get-theme-density($theme)};
           }
         `),
       ).toMatch('--density-scale: 0;');
@@ -392,28 +392,28 @@ describe('theming inspection api', () => {
         $density-only: matx.define-density();
         div {
           --base: #{(
-            mat.private-theme-has($theme, base),
-            mat.private-theme-has($color-only, base),
-            mat.private-theme-has($typography-only, base),
-            mat.private-theme-has($density-only, base),
+            mat.theme-has($theme, base),
+            mat.theme-has($color-only, base),
+            mat.theme-has($typography-only, base),
+            mat.theme-has($density-only, base),
           )};
           --color: #{(
-            mat.private-theme-has($theme, color),
-            mat.private-theme-has($color-only, color),
-            mat.private-theme-has($typography-only, color),
-            mat.private-theme-has($density-only, color),
+            mat.theme-has($theme, color),
+            mat.theme-has($color-only, color),
+            mat.theme-has($typography-only, color),
+            mat.theme-has($density-only, color),
           )};
           --typography: #{(
-            mat.private-theme-has($theme, typography),
-            mat.private-theme-has($color-only, typography),
-            mat.private-theme-has($typography-only, typography),
-            mat.private-theme-has($density-only, typography),
+            mat.theme-has($theme, typography),
+            mat.theme-has($color-only, typography),
+            mat.theme-has($typography-only, typography),
+            mat.theme-has($density-only, typography),
           )};
           --density: #{(
-            mat.private-theme-has($theme, density),
-            mat.private-theme-has($color-only, density),
-            mat.private-theme-has($typography-only, density),
-            mat.private-theme-has($density-only, density),
+            mat.theme-has($theme, density),
+            mat.theme-has($color-only, density),
+            mat.theme-has($typography-only, density),
+            mat.theme-has($density-only, density),
           )};
         }
       `);
@@ -428,7 +428,7 @@ describe('theming inspection api', () => {
         transpile(`
         $theme: matx.define-density();
         div {
-          color: mat.private-get-theme-type($theme);
+          color: mat.get-theme-type($theme);
         }
       `),
       ).toThrowError(/Color information is not available on this theme/);
@@ -439,7 +439,7 @@ describe('theming inspection api', () => {
         transpile(`
         $theme: matx.define-density();
         div {
-          color: mat.private-get-theme-color($theme, primary);
+          color: mat.get-theme-color($theme, primary);
         }
       `),
       ).toThrowError(/Color information is not available on this theme/);
@@ -450,7 +450,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-density();
           div {
-            font: mat.private-get-theme-typography($theme, body-small);
+            font: mat.get-theme-typography($theme, body-small);
           }
         `),
       ).toThrowError(/Typography information is not available on this theme/);
@@ -461,7 +461,7 @@ describe('theming inspection api', () => {
         transpile(`
           $theme: matx.define-colors();
           div {
-            --density: #{mat.private-get-theme-density($theme)};
+            --density: #{mat.get-theme-density($theme)};
           }
         `),
       ).toThrowError(/Density information is not available on this theme/);

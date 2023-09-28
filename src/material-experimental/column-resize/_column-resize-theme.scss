@@ -1,9 +1,9 @@
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  $non-resizable-hover-divider: mat.private-get-theme-color($theme, foreground, divider);
-  $resizable-hover-divider: mat.private-get-theme-color($theme, primary, 600);
-  $resizable-active-divider: mat.private-get-theme-color($theme, primary, 600);
+  $non-resizable-hover-divider: mat.get-theme-color($theme, foreground, divider);
+  $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
+  $resizable-active-divider: mat.get-theme-color($theme, primary, 600);
 
   // TODO: these styles don't really belong in the `color` part of the theme.
   // We should figure out a better place for them.
@@ -136,13 +136,13 @@
 
 @mixin theme($theme) {
   @include mat.private-check-duplicate-theme-styles($theme, 'mat-column-resize') {
-    @if mat.private-theme-has($theme, color) {
+    @if mat.theme-has($theme, color) {
       @include color($theme);
     }
-    @if mat.private-theme-has($theme, density) {
+    @if mat.theme-has($theme, density) {
       @include density($theme);
     }
-    @if mat.private-theme-has($theme, typography) {
+    @if mat.theme-has($theme, typography) {
       @include typography($theme);
     }
   }
