@@ -42,6 +42,7 @@ html {
   @include mat.toolbar-theme($light-theme);
   @include mat.slider-theme($light-theme);
   @include mat.snack-bar-theme($light-theme);
+  @include mat.progress-spinner-theme($light-theme);
 }
 
 // Emit dark theme styles.
@@ -56,6 +57,7 @@ html {
   @include mat.toolbar-color($dark-theme);
   @include mat.slider-color($dark-theme);
   @include mat.snack-bar-color($dark-theme);
+  @include mat.progress-spinner-color($dark-theme);
 }
 
 // Emit density styles for each scale.
@@ -69,5 +71,6 @@ html {
     @include mat.toolbar-density($scale-theme);
     @include mat.slider-density($scale-theme);
     @include mat.snack-bar-density($scale-theme);
+    @include mat.progress-spinner-density($scale-theme);
   }
 }
