@@ -25,7 +25,7 @@ import {MatDialogConfig} from './dialog-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
-import {ComponentPortal} from '@angular/cdk/portal';
+import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -56,6 +56,8 @@ export const CLOSE_ANIMATION_DURATION = 75;
   // Disabled for consistency with the non-MDC dialog container.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [PortalModule],
   host: {
     'class': 'mat-mdc-dialog-container mdc-dialog',
     'tabindex': '-1',
