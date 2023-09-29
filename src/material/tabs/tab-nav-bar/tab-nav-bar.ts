@@ -261,10 +261,12 @@ export class _MatTabLinkBase
   }
 
   _handleKeydown(event: KeyboardEvent) {
-    if (this.disabled && (event.keyCode === SPACE || event.keyCode === ENTER)) {
-      event.preventDefault();
-    } else if (this._tabNavBar.tabPanel && event.keyCode === SPACE) {
-      this.elementRef.nativeElement.click();
+    if (event.keyCode === SPACE || event.keyCode === ENTER) {
+      if (this.disabled) {
+        event.preventDefault();
+      } else if (this._tabNavBar.tabPanel) {
+        this.elementRef.nativeElement.click();
+      }
     }
   }
 
