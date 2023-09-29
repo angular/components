@@ -19,7 +19,9 @@ describe('card styles', () => {
 
   beforeEach(async () => {
     runner = createNewTestRunner();
-    cliAppTree = patchDevkitTreeToExposeTypeScript(await createTestApp(runner));
+    cliAppTree = patchDevkitTreeToExposeTypeScript(
+      await createTestApp(runner, {standalone: false}),
+    );
   });
 
   describe('mixin migrations', () => {
