@@ -327,6 +327,19 @@ describe('MDC-based MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
   });
 
+  it('should activate a link when enter is pressed', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const tabLinks = fixture.nativeElement.querySelectorAll('.mat-mdc-tab-link');
+    expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(false);
+
+    dispatchKeyboardEvent(tabLinks[1], 'keydown', ENTER);
+    fixture.detectChanges();
+
+    expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
