@@ -104,11 +104,17 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run integration tests
         run: yarn integration-tests
-      # TODO: Set up slack notifications
-      # - name: Running size integration tests (failures are reported in Slack only).
-      #   run: |
-      # If the size integration tests fail, report the failure to a dedicated #components-ci-size-tracking Slack channel.
-      # yarn integration-tests:size-test || yarn ci-notify-slack-failure components-ci-size-tracking
+      - name: Running size integration tests
+        run: yarn integration-tests:size-test
+        continue-on-error: true
+      - name: Notify about failed integration size-test
+        if: ${{ failure() && github.event_name == 'push'}}
+        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+        with:
+          channel-id: 'C015EBF2XB6'
+          slack-message: 'Integration testing job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_aot_tests:
     runs-on: ubuntu-latest-4core
