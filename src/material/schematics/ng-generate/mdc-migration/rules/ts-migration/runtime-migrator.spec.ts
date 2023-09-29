@@ -15,7 +15,9 @@ describe('runtime code migration', () => {
 
   beforeEach(async () => {
     runner = createNewTestRunner();
-    cliAppTree = patchDevkitTreeToExposeTypeScript(await createTestApp(runner));
+    cliAppTree = patchDevkitTreeToExposeTypeScript(
+      await createTestApp(runner, {standalone: false}),
+    );
   });
 
   async function runMigrationTest(oldFileContent: string, newFileContent: string) {

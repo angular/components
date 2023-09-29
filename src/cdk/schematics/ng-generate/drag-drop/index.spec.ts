@@ -19,7 +19,7 @@ describe('CDK drag-drop schematic', () => {
   });
 
   it('should create drag-drop files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('drag-drop', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
     const files = tree.files;
@@ -34,7 +34,7 @@ describe('CDK drag-drop schematic', () => {
   });
 
   it('should add drag-drop module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('drag-drop', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
@@ -43,7 +43,7 @@ describe('CDK drag-drop schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('drag-drop', {...baseOptions, standalone: true}, app);
       const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
@@ -83,7 +83,7 @@ describe('CDK drag-drop schematic', () => {
     });
 
     it('should respect the deprecated "styleext" option value', async () => {
-      let tree = await createTestApp(runner);
+      let tree = await createTestApp(runner, {standalone: false});
       tree.overwrite(
         'angular.json',
         JSON.stringify({
@@ -185,7 +185,7 @@ describe('CDK drag-drop schematic', () => {
     });
 
     it('should respect the deprecated global "spec" option value', async () => {
-      let tree = await createTestApp(runner);
+      let tree = await createTestApp(runner, {standalone: false});
       tree.overwrite(
         'angular.json',
         JSON.stringify({

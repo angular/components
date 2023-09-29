@@ -16,7 +16,7 @@ describe('Material tree schematic', () => {
   });
 
   it('should create tree component files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('tree', baseOptions, app);
     const files = tree.files;
 
@@ -31,7 +31,7 @@ describe('Material tree schematic', () => {
   });
 
   it('should add tree imports to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('tree', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
@@ -50,7 +50,7 @@ describe('Material tree schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('tree', {...baseOptions, standalone: true}, app);
       const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');

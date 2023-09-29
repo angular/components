@@ -16,7 +16,7 @@ describe('material-dashboard-schematic', () => {
   });
 
   it('should create dashboard files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('dashboard', baseOptions, app);
     const files = tree.files;
 
@@ -31,7 +31,7 @@ describe('material-dashboard-schematic', () => {
   });
 
   it('should add dashboard imports to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('dashboard', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
@@ -60,7 +60,7 @@ describe('material-dashboard-schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('dashboard', {...baseOptions, standalone: true}, app);
       const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');

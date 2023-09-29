@@ -26,7 +26,7 @@ describe('ng-add schematic', () => {
 
   beforeEach(async () => {
     runner = new SchematicTestRunner('schematics', COLLECTION_PATH);
-    appTree = await createTestApp(runner);
+    appTree = await createTestApp(runner, {standalone: false});
 
     errorOutput = [];
     warnOutput = [];

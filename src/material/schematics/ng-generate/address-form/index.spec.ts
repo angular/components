@@ -16,7 +16,7 @@ describe('Material address-form schematic', () => {
   });
 
   it('should create address-form files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('address-form', baseOptions, app);
     const files = tree.files;
 
@@ -31,7 +31,7 @@ describe('Material address-form schematic', () => {
   });
 
   it('should add address-form imports to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('address-form', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
@@ -52,7 +52,7 @@ describe('Material address-form schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic(
         'address-form',
         {...baseOptions, standalone: true},

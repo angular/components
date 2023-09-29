@@ -19,7 +19,9 @@ describe('card template migrator', () => {
 
   beforeEach(async () => {
     runner = createNewTestRunner();
-    cliAppTree = patchDevkitTreeToExposeTypeScript(await createTestApp(runner));
+    cliAppTree = patchDevkitTreeToExposeTypeScript(
+      await createTestApp(runner, {standalone: false}),
+    );
   });
 
   it('should not update other elements', async () => {
