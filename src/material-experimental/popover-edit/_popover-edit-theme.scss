@@ -6,7 +6,7 @@
 }
 
 @mixin color($theme) {
-  $background-color: mat.private-get-theme-color($theme, background, 'card');
+  $background-color: mat.get-theme-color($theme, background, 'card');
 
   // TODO: these structural styles don't belong in the `color` part of a theme.
   // We should figure out a better place for them.
@@ -42,7 +42,7 @@
     position: relative;
 
     &::after {
-      background-color: mat.private-get-theme-color($theme, primary);
+      background-color: mat.get-theme-color($theme, primary);
       bottom: 0;
       content: '';
       height: 2px;
@@ -78,7 +78,7 @@
   .mat-edit-pane {
     @include mat.private-theme-elevation(2, $theme);
     background: $background-color;
-    color: mat.private-get-theme-color($theme, foreground, text);
+    color: mat.get-theme-color($theme, foreground, text);
     display: block;
     padding: 16px 24px;
 
@@ -144,8 +144,8 @@
 
 @mixin typography($theme) {
   [mat-edit-title] {
-    font: mat.private-get-theme-typography($theme, headline-6, font);
-    letter-spacing: mat.private-get-theme-typography($theme, headline-6, letter-spacing);
+    font: mat.get-theme-typography($theme, headline-6, font);
+    letter-spacing: mat.get-theme-typography($theme, headline-6, letter-spacing);
   }
 }
 
@@ -154,13 +154,13 @@
 
 @mixin theme($theme) {
   @include mat.private-check-duplicate-theme-styles($theme, 'mat-popover-edit') {
-    @if mat.private-theme-has($theme, color) {
+    @if mat.theme-has($theme, color) {
       @include color($theme);
     }
-    @if mat.private-theme-has($theme, density) {
+    @if mat.theme-has($theme, density) {
       @include density($theme);
     }
-    @if mat.private-theme-has($theme, typography) {
+    @if mat.theme-has($theme, typography) {
       @include typography($theme);
     }
   }
