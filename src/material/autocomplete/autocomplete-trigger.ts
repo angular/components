@@ -263,6 +263,11 @@ export abstract class _MatAutocompleteTriggerBase
   openPanel(): void {
     this._attachOverlay();
     this._floatLabel();
+    // Add aria-owns attribute when the autocomplete becomes visible.
+    if (this._trackedModal) {
+      const panelId = this.autocomplete.id;
+      addAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
+    }
   }
 
   /** Closes the autocomplete suggestion panel. */
@@ -301,6 +306,12 @@ export abstract class _MatAutocompleteTriggerBase
       // This ensures that the label is reset when the
       // user clicks outside.
       this._changeDetectorRef.detectChanges();
+    }
+
+    // Remove aria-owns attribute when the autocomplete is no longer visible.
+    if (this._trackedModal) {
+      const panelId = this.autocomplete.id;
+      removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
     }
   }
 
