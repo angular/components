@@ -83,6 +83,11 @@
     @include mdc-list-theme.theme($mdc-list-density-tokens);
   }
 
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
+  }
+
   // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based API,
   //  to avoid screenshot diffs. We should remove it in favor of following MDC's current style, or
   //  add custom tokens for it.
