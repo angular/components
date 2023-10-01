@@ -3729,6 +3729,31 @@ describe('MDC-based MatAutocomplete', () => {
         .withContext('expecting modal to own the autocommplete panel')
         .toContain(panelId);
     }));
+
+    it('should remove the aria-owns attribute of the modal when the autocomplete panel closes', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.componentInstance.trigger.closePanel();
+      fixture.detectChanges();
+
+      const panelId = fixture.componentInstance.autocomplete.id;
+      const modalElement = fixture.componentInstance.modal.nativeElement;
+
+      expect(modalElement.getAttribute('aria-owns')).toBeFalsy();
+    }));
+
+    it('should readd the aria-owns attribute of the modal when the autocomplete panel opens again', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.componentInstance.trigger.closePanel();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const panelId = fixture.componentInstance.autocomplete.id;
+      const modalElement = fixture.componentInstance.modal.nativeElement;
+
+      expect(modalElement.getAttribute('aria-owns')?.split(' '))
+        .withContext('expecting modal to own the autocommplete panel')
+        .toContain(panelId);
+    }));
   });
 });
 
