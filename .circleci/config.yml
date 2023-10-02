@@ -205,47 +205,6 @@ jobs:
       - run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
       - *slack_notify_on_failure
 
-  # ----------------------------------------------------------------------------
-  # Job that runs the unit tests on Browserstack. The browsers that will be used
-  # to run the unit tests on Browserstack are set in: test/browser-providers.js
-  # ----------------------------------------------------------------------------
-  tests_browserstack:
-    <<: *job_defaults
-    resource_class: xlarge
-    environment:
-      BROWSER_STACK_USERNAME: 'angulardevops_uNDx4q'
-      BROWSER_STACK_ACCESS_KEY: 'PXeXP2qrTvRooAFG7DPW'
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *setup_bazel_ci_config
-      - *yarn_install
-
-      - run: ./scripts/circleci/run-browserstack-tests.sh
-      - *slack_notify_on_failure
-
-  # ----------------------------------------------------------------------------
-  # Job that runs the unit tests on Saucelabs. The browsers that will be used
-  # to run the unit tests on Saucelabs are set in: test/browser-providers.js
-  # ----------------------------------------------------------------------------
-  tests_saucelabs:
-    <<: *job_defaults
-    resource_class: xlarge
-    environment:
-      SAUCE_USERNAME: 'angular-components'
-      SAUCE_ACCESS_KEY: '687f2bb5cacc-3bcb-5b64-8e8a-3825fc13'
-      # Note: This number should not be too high because otherwise we might run into
-      # a rate limit exception.
-      KARMA_PARALLEL_BROWSERS: 2
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *setup_bazel_ci_config
-      - *yarn_install
-
-      - run: ./scripts/circleci/run-saucelabs-tests.sh
-      - *slack_notify_on_failure
-
   # -------------------------------------------------------------------------------------------
   # Job that builds all release packages. The built packages can be then used in the same
   # workflow to publish snapshot builds.
@@ -450,10 +409,6 @@ workflows:
       - bazel_build:
           filters: *ignore_presubmit_branch_filter
       - tests_browsers:
-          filters: *ignore_presubmit_branch_filter
-      - tests_browserstack:
-          filters: *ignore_presubmit_branch_filter
-      - tests_saucelabs:
           filters: *ignore_presubmit_branch_filter
       - build_release_packages:
           filters: *ignore_presubmit_branch_filter
