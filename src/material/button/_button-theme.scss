@@ -229,6 +229,7 @@
   .mat-mdc-raised-button {
     $density-tokens: tokens-mdc-button-protected.get-density-tokens($theme);
     @include mdc-button-protected-theme.theme($density-tokens);
+    @include button-theme-private.touch-target-density($density-scale);
   }
 
   .mat-mdc-button,
