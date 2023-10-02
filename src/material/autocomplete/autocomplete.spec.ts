@@ -3735,7 +3735,6 @@ describe('MDC-based MatAutocomplete', () => {
       fixture.componentInstance.trigger.closePanel();
       fixture.detectChanges();
 
-      const panelId = fixture.componentInstance.autocomplete.id;
       const modalElement = fixture.componentInstance.modal.nativeElement;
 
       expect(modalElement.getAttribute('aria-owns')).toBeFalsy();
