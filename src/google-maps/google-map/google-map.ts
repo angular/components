@@ -445,6 +445,14 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     this._assertInitialized();
     return this.googleMap.getZoom();
   }
+  
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.setZoom
+   */
+  setZoom(zoom: number): number {
+    this.googleMap.setZoom(zoom);
+  }
 
   /**
    * See
