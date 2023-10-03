@@ -193,6 +193,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, list),
+      mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, outlined-card),
       mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
       $token-slots
