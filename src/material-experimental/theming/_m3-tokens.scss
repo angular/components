@@ -208,6 +208,11 @@
           mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
           $token-slots
       ),
+      _namespace-tokens(
+            (mdc, radio),
+          mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
       // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
       // values.
       _namespace-tokens(
@@ -228,6 +233,11 @@
       _namespace-tokens(
             (mat, snack-bar),
           custom-tokens.snack-bar($systems, $exclude-hardcoded),
+          $token-slots
+      ),
+      _namespace-tokens(
+            (mat, radio),
+          custom-tokens.radio($systems, $exclude-hardcoded),
           $token-slots
       ),
   );

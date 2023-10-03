@@ -63,3 +63,11 @@
     button-color: map.get($systems, md-sys-color, inverse-primary),
   );
 }
+
+@function radio($systems, $exclude-hardcoded) {
+  @return (
+    ripple-color: map.get($systems, md-sys-color, on-surface),
+    checked-ripple-color: map.get($systems, md-sys-color, primary),
+    disabled-label-color: map.get($systems, md-sys-color, on-surface),
+  );
+}
