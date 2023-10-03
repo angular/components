@@ -27,6 +27,8 @@ $calendar-weekday-table-font-size: 11px !default;
     map.merge($calendar-tokens, $range-tokens));
 }
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
@@ -96,6 +98,7 @@ $calendar-weekday-table-font-size: 11px !default;
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-datepicker') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
