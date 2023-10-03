@@ -203,6 +203,11 @@
           mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
           $token-slots
       ),
+      _namespace-tokens(
+            (mdc, circular-progress),
+          mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
       // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
       // values.
       _namespace-tokens(
