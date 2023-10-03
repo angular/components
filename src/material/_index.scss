@@ -116,7 +116,7 @@ list-density, list-base;
 @forward './select/select-theme' as select-* show select-theme, select-color, select-typography,
   select-density;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
-  sidenav-typography, sidenav-density;
+  sidenav-typography, sidenav-density, sidenav-base;
 @forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show
   slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density;
 @forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
