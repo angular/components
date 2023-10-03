@@ -6,8 +6,6 @@
 @use '../core/style/elevation';
 
 .mat-expansion-panel {
-  @include token-utils.create-token-values(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-unthemable-tokens());
   @include elevation.overridable-elevation(2);
   box-sizing: content-box;
   display: block;
