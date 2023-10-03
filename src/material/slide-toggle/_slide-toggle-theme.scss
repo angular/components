@@ -8,6 +8,12 @@
 @use '../core/tokens/m2/mat/slide-toggle' as m2-mat-slide-toggle;
 @use '../core/tokens/token-utils';
 
+@mixin base($theme) {
+  .mdc-switch {
+    @include mdc-switch-theme.theme(m2-mdc-switch.get-unthemable-tokens());
+  }
+}
+
 @mixin color($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $mdc-switch-color-tokens: m2-mdc-switch.get-color-tokens($theme);
@@ -62,6 +68,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-slide-toggle') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

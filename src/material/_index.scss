@@ -120,7 +120,8 @@ menu-base;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
   sidenav-typography, sidenav-density, sidenav-base;
 @forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show
-  slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density;
+  slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density,
+  slide-toggle-base;
 @forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
   slider-density, slider-base;
 @forward './snack-bar/snack-bar-theme' as snack-bar-* show snack-bar-theme, snack-bar-color,
