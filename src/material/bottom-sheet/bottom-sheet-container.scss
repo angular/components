@@ -11,8 +11,6 @@ $container-vertical-padding: 8px !default;
 $container-horizontal-padding: 16px !default;
 
 .mat-bottom-sheet-container {
-  @include token-utils.create-token-values(
-    tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-unthemable-tokens());
   @include elevation.elevation(16);
   padding: $container-vertical-padding
            $container-horizontal-padding;
