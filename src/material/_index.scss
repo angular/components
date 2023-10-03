@@ -127,7 +127,7 @@ list-density, list-base;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
   stepper-typography, stepper-density;
 @forward './table/table-theme' as table-* show table-theme, table-color, table-typography,
-  table-density;
+  table-density, table-base;
 @forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography, tabs-density;
 @forward './toolbar/toolbar-theme' as toolbar-* show toolbar-theme, toolbar-color,
   toolbar-typography, toolbar-density;
