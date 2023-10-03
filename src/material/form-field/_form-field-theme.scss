@@ -12,7 +12,17 @@
 @use './form-field-density';
 
 @mixin base($theme) {
-  // TODO(mmalerba): Move form field base tokens here
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(
+        tokens-mdc-filled-text-field.$prefix,
+        tokens-mdc-filled-text-field.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+        tokens-mdc-outlined-text-field.$prefix,
+        tokens-mdc-outlined-text-field.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+        tokens-mat-form-field.$prefix,
+        tokens-mat-form-field.get-unthemable-tokens());
+  }
 }
 
 @mixin color($theme) {
