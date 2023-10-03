@@ -5,6 +5,12 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 
+@mixin base($theme) {
+  .mat-mdc-standard-chip {
+    @include mdc-chip-theme.theme(tokens-mdc-chip.get-unthemable-tokens());
+  }
+}
+
 @mixin color($theme) {
   .mat-mdc-standard-chip {
     $default-color-tokens: tokens-mdc-chip.get-color-tokens($theme);
@@ -48,6 +54,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
