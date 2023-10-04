@@ -512,7 +512,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     this._didDragSinceMouseDown = false;
     // Begin a drag if a cell within the current range was targeted.
     const cell = event.target && this._getCellFromElement(event.target as HTMLElement);
-    if (!cell || !this._isInRange(cell.rawValue)) {
+    if (!cell || !this._isInRange(cell.compareValue)) {
       return;
     }
 
