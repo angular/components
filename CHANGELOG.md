@@ -1,3 +1,12 @@
+<a name="16.2.7"></a>
+# 16.2.7 "corundum-candy" (2023-10-04)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fd97395cd](https://github.com/angular/components/commit/fd97395cd4c02c8bea7f51a01ff0e76c61589f5c) | fix | **tabs:** nav bar not navigating on enter presses ([#27862](https://github.com/angular/components/pull/27862)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.5"></a>
 # 17.0.0-next.5 "aerogel-aurora" (2023-09-27)
 ## Breaking Changes
