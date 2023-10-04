@@ -35,7 +35,7 @@ describe('material-navigation-schematic', () => {
   }
 
   it('should create navigation files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('navigation', baseOptions, app);
     const files = tree.files;
 
@@ -50,13 +50,13 @@ describe('material-navigation-schematic', () => {
   });
 
   it('should add navigation imports to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('navigation', baseOptions, app);
     expectNavigationSchematicModuleImports(tree);
   });
 
   it('should support `nav` as schematic alias', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('nav', baseOptions, app);
     expectNavigationSchematicModuleImports(tree);
   });
@@ -71,7 +71,7 @@ describe('material-navigation-schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('navigation', {...baseOptions, standalone: true}, app);
       const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');

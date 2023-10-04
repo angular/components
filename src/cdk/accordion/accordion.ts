@@ -6,8 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, InjectionToken, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {
+  Directive,
+  InjectionToken,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  booleanAttribute,
+} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /** Used to generate unique ID for each accordion. */
@@ -39,18 +46,11 @@ export class CdkAccordion implements OnDestroy, OnChanges {
   readonly id: string = `cdk-accordion-${nextId++}`;
 
   /** Whether the accordion should allow multiple expanded accordion items simultaneously. */
-  @Input()
-  get multi(): boolean {
-    return this._multi;
-  }
-  set multi(multi: BooleanInput) {
-    this._multi = coerceBooleanProperty(multi);
-  }
-  private _multi: boolean = false;
+  @Input({transform: booleanAttribute}) multi: boolean = false;
 
   /** Opens all enabled accordion items in an accordion where multi is enabled. */
   openAll(): void {
-    if (this._multi) {
+    if (this.multi) {
       this._openCloseAllActions.next(true);
     }
   }

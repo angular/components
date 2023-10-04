@@ -1,3 +1,130 @@
+<a name="17.0.0-next.5"></a>
+# 17.0.0-next.5 "aerogel-aurora" (2023-09-27)
+## Breaking Changes
+### material
+- There are new styles emitted by `mat.radio-theme` that are not
+  emitted by any of: `mat.radio-color`, `mat.radio-typography`,
+  `mat.radio-density`. If you rely on the partial mixins only and don't
+  call `mat.radio-theme`, you can add `mat.radio-base` to get the
+  missing styles.
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fbc7bdda93](https://github.com/angular/components/commit/fbc7bdda93b7c261705da81cec6720bbf607c5ce) | feat | **theming:** add M3 slider support ([#27826](https://github.com/angular/components/pull/27826)) |
+| [6b57edb1b1](https://github.com/angular/components/commit/6b57edb1b164909f8aa1eddac87a915c037e6905) | feat | **theming:** add M3 snackbar support ([#27824](https://github.com/angular/components/pull/27824)) |
+| [545db61b41](https://github.com/angular/components/commit/545db61b41957df26c5e3c95a2959ca6c83a9190) | feat | **theming:** add M3 toolbar support ([#27812](https://github.com/angular/components/pull/27812)) |
+| [1930b1dacf](https://github.com/angular/components/commit/1930b1dacf07826750ffc72dbce551fe6653fd4f) | feat | **theming:** add M3 tooltip support ([#27810](https://github.com/angular/components/pull/27810)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4c3ef50d6e](https://github.com/angular/components/commit/4c3ef50d6e7147f1af71885346503791897f2c78) | fix | **datepicker:** improved missing dateAdapters error message to include matLuxon and matDateFns ([#26889](https://github.com/angular/components/pull/26889)) |
+| [943b5dabf3](https://github.com/angular/components/commit/943b5dabf3fc14cf0dee80174a6891fef8a588c8) | fix | **radio:** move unthemable tokens to theme mixin ([#27809](https://github.com/angular/components/pull/27809)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d336370565](https://github.com/angular/components/commit/d336370565deb6a4db666783d484040e1fd99648) | fix | **menu:** context menu closing immediately on control + click on Safari ([#27838](https://github.com/angular/components/pull/27838)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.6"></a>
+# 16.2.6 "jade-jungle" (2023-09-27)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3e9228a6d0](https://github.com/angular/components/commit/3e9228a6d00ef6ac84d546ccf5e7b5cd288279ee) | fix | **menu:** context menu closing immediately on control + click on Safari ([#27838](https://github.com/angular/components/pull/27838)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [451d0e5190](https://github.com/angular/components/commit/451d0e519088443e0410b39ce17529323893a2d0) | fix | **datepicker:** improved missing dateAdapters error message to include matLuxon and matDateFns ([#26889](https://github.com/angular/components/pull/26889)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.0.0-next.4"></a>
+# 17.0.0-next.4 "titanium-turtle" (2023-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2409e7071](https://github.com/angular/components/commit/2409e7071a4c1e035a6f212249e96ba36d7aeb4f) | fix | **schematics:** account for single string in styles and new styleUrl ([#27798](https://github.com/angular/components/pull/27798)) |
+| [31187abae](https://github.com/angular/components/commit/31187abae619cf76e7f0a7771ca6e5900a50e90c) | fix | **scrolling:** unsubscribe from scrolled stream when viewport is destroyed ([#27800](https://github.com/angular/components/pull/27800)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8c3d8d645](https://github.com/angular/components/commit/8c3d8d645857a381cb2a752a600796c36338ea9e) | fix | **form-field:** style the cursor the same way as the rest of the input ([#26491](https://github.com/angular/components/pull/26491)) ([#27795](https://github.com/angular/components/pull/27795)) |
+| [c7db4960e](https://github.com/angular/components/commit/c7db4960e16d0f74b0764cfa5be752392e8c30f6) | fix | **list:** Emit tokens under mixin root selector ([#27711](https://github.com/angular/components/pull/27711)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.5"></a>
+# 16.2.5 "cardboard-plane" (2023-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80acf7910](https://github.com/angular/components/commit/80acf7910bfd114a129995551b19574a9844f583) | fix | **scrolling:** unsubscribe from scrolled stream when viewport is destroyed ([#27800](https://github.com/angular/components/pull/27800)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [158d5f37a](https://github.com/angular/components/commit/158d5f37abfcf457720c79558aee9215fb26607d) | fix | **form-field:** style the cursor the same way as the rest of the input ([#26491](https://github.com/angular/components/pull/26491)) ([#27795](https://github.com/angular/components/pull/27795)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.0.0-next.3"></a>
+# 17.0.0-next.3 "rock-rock" (2023-09-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [db06fa8d89](https://github.com/angular/components/commit/db06fa8d8939d793f598bc3dbedc96a5a71c0db0) | fix | **autocomplete:** requireSelection incorrectly resetting value when there are no options ([#27781](https://github.com/angular/components/pull/27781)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.4"></a>
+# 16.2.4 "wood-wagon" (2023-09-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [38ebf49060](https://github.com/angular/components/commit/38ebf4906057b2e7ad6d6cec881268339f43c972) | fix | **autocomplete:** requireSelection incorrectly resetting value when there are no options ([#27781](https://github.com/angular/components/pull/27781)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.0.0-next.2"></a>
+# 17.0.0-next.2 "metal-monkey" (2023-09-07)
+## Breaking Changes
+### multiple
+- - Themes are now more strictly validated when calling Angular Material
+  theme mixins. For example, calling `mat.button-typography` with a theme
+  has `typography: null` is now an error.
+  - The `mat.legacy-typography-hierarchy` mixin has been removed in favor
+    of `mat.typography-hierarchy`
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cac7a41f7b](https://github.com/angular/components/commit/cac7a41f7b7a6034d8049be77fe53a082c3aa5f2) | fix | **dialog:** css structure change ([#27510](https://github.com/angular/components/pull/27510)) |
+| [726fc069e3](https://github.com/angular/components/commit/726fc069e3bed2fcbc9b53de02ee7ce18c2fce5d) | fix | **tabs:** add aria-hidden to inactive tabs ([#27742](https://github.com/angular/components/pull/27742)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aa1d01d169](https://github.com/angular/components/commit/aa1d01d1696360d25e18cb0328f56b9fca9d71c4) | fix | **drag-drop:** constrainPosition now working well with boundary ([#27730](https://github.com/angular/components/pull/27730)) |
+| [8eb494e975](https://github.com/angular/components/commit/8eb494e975bb75e52c9c81ad68d3d4b993546dfe) | fix | **menu:** run change detection for  changes to overlay ref of trigger ([#27726](https://github.com/angular/components/pull/27726)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [90465a1882](https://github.com/angular/components/commit/90465a1882028144a8e56eabc03b4cc93947df9f) | refactor | convert components to theme inspection API (round 4) ([#27740](https://github.com/angular/components/pull/27740)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.3"></a>
+# 16.2.3 "plastic-part" (2023-09-07)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ffd4209318](https://github.com/angular/components/commit/ffd4209318cdc5dc3e1e247698712679ebdf93d7) | fix | **drag-drop:** constrainPosition now working well with boundary ([#27730](https://github.com/angular/components/pull/27730)) |
+| [08dd2322ac](https://github.com/angular/components/commit/08dd2322accbac10cdb93181d51770cb4db7cf68) | fix | **menu:** run change detection for  changes to overlay ref of trigger ([#27726](https://github.com/angular/components/pull/27726)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [72a5d1eedc](https://github.com/angular/components/commit/72a5d1eedc090cbd08d3aaed30cea6c05601272e) | fix | **tabs:** add aria-hidden to inactive tabs ([#27742](https://github.com/angular/components/pull/27742)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.2"></a>
 # 16.2.2 "baryte-barnacle" (2023-08-30)
 ### cdk

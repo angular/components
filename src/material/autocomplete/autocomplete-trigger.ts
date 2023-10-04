@@ -132,8 +132,8 @@ export class MatAutocompleteTrigger
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
   private _previousValue: string | number | null;
 
-  /** Value of the input element when the panel was opened. */
-  private _valueOnOpen: string | number | null;
+  /** Value of the input element when the panel was attached (even if there are no options). */
+  private _valueOnAttach: string | number | null;
 
   /** Strategy that is used to position the panel. */
   private _positionStrategy: FlexibleConnectedPositionStrategy;
@@ -278,6 +278,11 @@ export class MatAutocompleteTrigger
   openPanel(): void {
     this._attachOverlay();
     this._floatLabel();
+    // Add aria-owns attribute when the autocomplete becomes visible.
+    if (this._trackedModal) {
+      const panelId = this.autocomplete.id;
+      addAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
+    }
   }
 
   /** Closes the autocomplete suggestion panel. */
@@ -316,6 +321,12 @@ export class MatAutocompleteTrigger
       // This ensures that the label is reset when the
       // user clicks outside.
       this._changeDetectorRef.detectChanges();
+    }
+
+    // Remove aria-owns attribute when the autocomplete is no longer visible.
+    if (this._trackedModal) {
+      const panelId = this.autocomplete.id;
+      removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
     }
   }
 
@@ -589,6 +600,7 @@ export class MatAutocompleteTrigger
                 //   of the available options,
                 // - if a valid string is entered after an invalid one.
                 if (this.panelOpen) {
+                  this._captureValueOnAttach();
                   this._emitOpened();
                 } else {
                   this.autocomplete.closed.emit();
@@ -611,8 +623,12 @@ export class MatAutocompleteTrigger
    * the state of the trigger right before the opening sequence was finished.
    */
   private _emitOpened() {
-    this._valueOnOpen = this._element.nativeElement.value;
     this.autocomplete.opened.emit();
+  }
+
+  /** Intended to be called when the panel is attached. Captures the current value of the input. */
+  private _captureValueOnAttach() {
+    this._valueOnAttach = this._element.nativeElement.value;
   }
 
   /** Destroys the autocomplete suggestion panel. */
@@ -665,7 +681,10 @@ export class MatAutocompleteTrigger
       this._onChange(toSelect.value);
       panel._emitSelectEvent(toSelect);
       this._element.nativeElement.focus();
-    } else if (panel.requireSelection && this._element.nativeElement.value !== this._valueOnOpen) {
+    } else if (
+      panel.requireSelection &&
+      this._element.nativeElement.value !== this._valueOnAttach
+    ) {
       this._clearPreviousSelectedOption(null);
       this._assignOptionValue(null);
       // Wait for the animation to finish before clearing the form control value, otherwise
@@ -727,8 +746,8 @@ export class MatAutocompleteTrigger
     this.autocomplete._isOpen = this._overlayAttached = true;
     this.autocomplete._setColor(this._formField?.color);
     this._updatePanelState();
-
     this._applyModalPanelOwnership();
+    this._captureValueOnAttach();
 
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.

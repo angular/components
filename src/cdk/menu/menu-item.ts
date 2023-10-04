@@ -7,6 +7,7 @@
  */
 
 import {
+  booleanAttribute,
   Directive,
   ElementRef,
   EventEmitter,
@@ -16,7 +17,6 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusableOption, InputModalityDetector} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
@@ -68,14 +68,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private readonly _menuTrigger = inject(CdkMenuTrigger, {optional: true, self: true});
 
   /**  Whether the CdkMenuItem is disabled - defaults to false */
-  @Input('cdkMenuItemDisabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({alias: 'cdkMenuItemDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
   /**
    * The text used to locate this item during menu typeahead. If not specified,

@@ -4,7 +4,6 @@
 
 ```ts
 
-import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -55,19 +54,25 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     disableClose: boolean;
     get disposeOnNavigation(): boolean;
     set disposeOnNavigation(value: boolean);
-    get flexibleDimensions(): boolean;
-    set flexibleDimensions(value: BooleanInput);
-    get growAfterOpen(): boolean;
-    set growAfterOpen(value: BooleanInput);
-    get hasBackdrop(): boolean;
-    set hasBackdrop(value: BooleanInput);
+    flexibleDimensions: boolean;
+    growAfterOpen: boolean;
+    hasBackdrop: boolean;
     height: number | string;
-    get lockPosition(): boolean;
-    set lockPosition(value: BooleanInput);
+    lockPosition: boolean;
     minHeight: number | string;
     minWidth: number | string;
     // (undocumented)
     static ngAcceptInputType_disposeOnNavigation: unknown;
+    // (undocumented)
+    static ngAcceptInputType_flexibleDimensions: unknown;
+    // (undocumented)
+    static ngAcceptInputType_growAfterOpen: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hasBackdrop: unknown;
+    // (undocumented)
+    static ngAcceptInputType_lockPosition: unknown;
+    // (undocumented)
+    static ngAcceptInputType_push: unknown;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -85,8 +90,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     readonly positionChange: EventEmitter<ConnectedOverlayPositionChange>;
     positions: ConnectedPosition[];
     positionStrategy: FlexibleConnectedPositionStrategy;
-    get push(): boolean;
-    set push(value: BooleanInput);
+    push: boolean;
     scrollStrategy: ScrollStrategy;
     transformOriginSelector: string;
     viewportMargin: number;

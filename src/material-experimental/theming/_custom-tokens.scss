@@ -11,7 +11,7 @@
   $result: ();
   @each $prop in (font, line-height, size, tracking, weight) {
     $result: map.set($result, #{$base-name}-#{$prop},
-        map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
+      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
   }
   @return $result;
 }
@@ -25,7 +25,49 @@
       _generate-typography-tokens($systems, title-text, title-large),
       _generate-typography-tokens($systems, subtitle-text, title-medium),
       (
-        subtitle-text-color: map.get($systems, md-ref-color, on-surface)
+        subtitle-text-color: map.get($systems, md-sys-color, on-surface)
       )
+  );
+}
+
+/// Generates custom tokens for the mat-toolbar.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-toolbar
+@function toolbar($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+      _generate-typography-tokens($systems, title-text, title-large),
+      (
+        container-background-color: map.get($systems, md-sys-color, surface),
+        container-text-color: map.get($systems, md-sys-color, on-surface),
+      )
+  );
+}
+
+/// Generates custom tokens for the mat-slider.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-slider
+@function slider($systems, $exclude-hardcoded) {
+  @return (
+    value-indicator-opacity: 1,
+  );
+}
+
+/// Generates custom tokens for the mat-snack-bar.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-snack-bar
+@function snack-bar($systems, $exclude-hardcoded) {
+  @return (
+    button-color: map.get($systems, md-sys-color, inverse-primary),
+  );
+}
+
+@function radio($systems, $exclude-hardcoded) {
+  @return (
+    ripple-color: map.get($systems, md-sys-color, on-surface),
+    checked-ripple-color: map.get($systems, md-sys-color, primary),
+    disabled-label-color: map.get($systems, md-sys-color, on-surface),
   );
 }

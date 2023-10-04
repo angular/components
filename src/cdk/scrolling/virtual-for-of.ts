@@ -34,7 +34,7 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';

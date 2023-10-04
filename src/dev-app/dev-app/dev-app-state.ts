@@ -17,7 +17,7 @@ export interface DevAppState {
   darkTheme: boolean;
   rippleDisabled: boolean;
   strongFocusEnabled: boolean;
-  tokensEnabled: boolean;
+  m3Enabled: boolean;
   direction: Direction;
 }
 
@@ -41,7 +41,7 @@ export function getAppState(): DevAppState {
       darkTheme: false,
       rippleDisabled: false,
       strongFocusEnabled: false,
-      tokensEnabled: false,
+      m3Enabled: false,
       direction: 'ltr',
     };
 

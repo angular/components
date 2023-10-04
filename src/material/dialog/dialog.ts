@@ -20,6 +20,7 @@ import {
   SkipSelf,
   TemplateRef,
   Type,
+  inject,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
@@ -39,16 +40,31 @@ export const MAT_DIALOG_DEFAULT_OPTIONS = new InjectionToken<MatDialogConfig>(
 /** Injection token that determines the scroll handling while the dialog is open. */
 export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-mdc-dialog-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.block();
+    },
+  },
 );
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used. To be removed.
+ * @breaking-change 19.0.0
+ */
 export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(
   overlay: Overlay,
 ): () => ScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used. To be removed.
+ * @breaking-change 19.0.0
+ */
 export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
   provide: MAT_DIALOG_SCROLL_STRATEGY,
   deps: [Overlay],
@@ -61,7 +77,7 @@ let uniqueId = 0;
 /**
  * Service to open Material Design modal dialogs.
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MatDialog implements OnDestroy {
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();

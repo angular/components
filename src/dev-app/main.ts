@@ -29,7 +29,7 @@ import {getAppState} from './dev-app/dev-app-state';
 // It uses a different file, instead of toggling a class, to avoid other styles from bleeding in.
 const cachedAppState = getAppState();
 const theme = document.createElement('link');
-theme.href = cachedAppState.tokensEnabled ? 'theme-token-api.css' : 'theme.css';
+theme.href = cachedAppState.m3Enabled ? 'theme-m3.css' : 'theme.css';
 theme.id = 'theme-styles';
 theme.rel = 'stylesheet';
 document.head.appendChild(theme);

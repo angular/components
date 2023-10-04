@@ -2,10 +2,10 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
-// Add an indicator to make it clear that the app is styled with the experimental theming API.
+// Add an indicator to make it clear that the app is styled with the experimental M3 theme.
 dev-app {
   &::before {
-    content: 'Using experimental theming API';
+    content: 'Using experimental M3 theme, only components that support M3 will work';
     display: inline-block;
     position: fixed;
     z-index: 100;
@@ -26,9 +26,6 @@ $m3-base-config: (
   color: (
     primary: matx.$m3-green-palette
   ),
-  typography: (
-    brand-family: 'monospace'
-  )
 );
 
 // Our M3 light theme.
@@ -41,6 +38,12 @@ $dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark)
 html {
   @include mat.checkbox-theme($light-theme);
   @include mat.card-theme($light-theme);
+  @include mat.tooltip-theme($light-theme);
+  @include mat.toolbar-theme($light-theme);
+  @include mat.slider-theme($light-theme);
+  @include mat.snack-bar-theme($light-theme);
+  @include mat.progress-spinner-theme($light-theme);
+  @include mat.radio-theme($light-theme);
 }
 
 // Emit dark theme styles.
@@ -51,6 +54,12 @@ html {
 
   @include mat.checkbox-color($dark-theme);
   @include mat.card-color($dark-theme);
+  @include mat.tooltip-color($dark-theme);
+  @include mat.toolbar-color($dark-theme);
+  @include mat.slider-color($dark-theme);
+  @include mat.snack-bar-color($dark-theme);
+  @include mat.progress-spinner-color($dark-theme);
+  @include mat.radio-color($dark-theme);
 }
 
 // Emit density styles for each scale.
@@ -60,5 +69,11 @@ html {
   .demo-density-#{$scale} {
     @include mat.checkbox-density($scale-theme);
     @include mat.card-density($scale-theme);
+    @include mat.tooltip-density($scale-theme);
+    @include mat.toolbar-density($scale-theme);
+    @include mat.slider-density($scale-theme);
+    @include mat.snack-bar-density($scale-theme);
+    @include mat.progress-spinner-density($scale-theme);
+    @include mat.radio-density($scale-theme);
   }
 }

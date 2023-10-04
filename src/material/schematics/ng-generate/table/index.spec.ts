@@ -16,7 +16,7 @@ describe('material-table-schematic', () => {
   });
 
   it('should create table files and add them to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('table', baseOptions, app);
     const files = tree.files;
 
@@ -47,7 +47,7 @@ describe('material-table-schematic', () => {
   });
 
   it('should add table imports to module', async () => {
-    const app = await createTestApp(runner);
+    const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('table', baseOptions, app);
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
@@ -72,7 +72,7 @@ describe('material-table-schematic', () => {
 
   describe('standalone option', () => {
     it('should generate a standalone component', async () => {
-      const app = await createTestApp(runner);
+      const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('table', {...baseOptions, standalone: true}, app);
       const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');

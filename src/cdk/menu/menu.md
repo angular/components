@@ -210,7 +210,7 @@ If you would like to have unrelated groups of radio buttons within a single menu
 `@angular/cdk/menu` is capable of intelligently predicting when a user intends to navigate to an
 open submenu and preventing premature closeouts. This functionality prevents users from having to
 hunt through the open menus in a maze-like fashion to reach their destination. To enable this
-feature for a menu and its sub-menus, add the `cdkMenuTargetAim` directive to the `cdkMenu` or
+feature for a menu and its sub-menus, add the `cdkTargetMenuAim` directive to the `cdkMenu` or
 `cdkMenuBar` element.
 
 ![menu aim diagram][diagram]

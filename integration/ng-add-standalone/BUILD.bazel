@@ -25,7 +25,7 @@ node_integration_test(
 
         # Generate a new standalone project with the default options.
         # Skip installation since we installed the dependencies already.
-        "yarn ng new --defaults --standalone --skip-install --style=scss --name=%s" % APP_NAME,
+        "yarn ng new --defaults --standalone --skip-install --style=scss --skip-git --name=%s" % APP_NAME,
         # Delete the package.json that the CLI generated since we want to use the existing one.
         "rm -f %s/package.json" % APP_NAME,
         # Delete the Karma config since we need to use a headless browser.

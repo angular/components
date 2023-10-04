@@ -2663,6 +2663,37 @@ describe('MDC-based MatAutocomplete', () => {
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
     }));
+
+    it('should preserve the value if a selection is required, and there are no options', fakeAsync(() => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger, states} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      stateCtrl.setValue(states[1]);
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+
+      fixture.componentInstance.states = fixture.componentInstance.filteredStates = [];
+      fixture.detectChanges();
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const spy = jasmine.createSpy('optionSelected spy');
+      const subscription = trigger.optionSelections.subscribe(spy);
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      tick();
+
+      expect(input.value).toBe('California');
+      expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
+      expect(spy).not.toHaveBeenCalled();
+      subscription.unsubscribe();
+    }));
   });
 
   describe('panel closing', () => {
@@ -3688,6 +3719,30 @@ describe('MDC-based MatAutocomplete', () => {
     }));
 
     it('should add the id of the autocomplete panel to the aria-owns of the modal', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const panelId = fixture.componentInstance.autocomplete.id;
+      const modalElement = fixture.componentInstance.modal.nativeElement;
+
+      expect(modalElement.getAttribute('aria-owns')?.split(' '))
+        .withContext('expecting modal to own the autocommplete panel')
+        .toContain(panelId);
+    }));
+
+    it('should remove the aria-owns attribute of the modal when the autocomplete panel closes', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.componentInstance.trigger.closePanel();
+      fixture.detectChanges();
+
+      const modalElement = fixture.componentInstance.modal.nativeElement;
+
+      expect(modalElement.getAttribute('aria-owns')).toBeFalsy();
+    }));
+
+    it('should readd the aria-owns attribute of the modal when the autocomplete panel opens again', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.componentInstance.trigger.closePanel();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 

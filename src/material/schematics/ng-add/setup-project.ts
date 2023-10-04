@@ -38,7 +38,7 @@ export default function (options: Schema): Rule {
     const workspace = await getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
 
-    if (project.extensions.projectType === ProjectType.Application) {
+    if (project.extensions['projectType'] === ProjectType.Application) {
       return chain([
         addAnimationsModule(options),
         addThemeToAppStyles(options),

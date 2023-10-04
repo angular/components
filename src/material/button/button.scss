@@ -6,11 +6,14 @@
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/button-filled' as tokens-mdc-button-filled;
+@use '../core/tokens/m2/mdc/button-protected' as tokens-mdc-button-protected;
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mdc-base-styles-query);
@@ -33,23 +36,35 @@
       map.merge(mdc-button-text-theme.$light-theme, $override-keys));
   }
 
-  .mat-mdc-unelevated-button {
-    @include mdc-button-filled-theme.theme-styles(
-      map.merge(map.merge(mdc-button-filled-theme.$light-theme, $override-keys), (
-        container-color: transparent,
-      )));
-  }
-
-  .mat-mdc-raised-button {
-    @include mdc-button-protected-theme.theme-styles(
-      map.merge(map.merge(mdc-button-protected-theme.$light-theme, $override-keys), (
-        container-color: transparent,
-      )));
-  }
-
   .mat-mdc-outlined-button {
     @include mdc-button-outlined-theme.theme-styles(
       map.merge(mdc-button-outlined-theme.$light-theme, $override-keys));
+  }
+}
+
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  // Note that we don't include a feature query, because this mixins declare
+  // all the "slots" for CSS variables that will be defined in the theme.
+  .mat-mdc-unelevated-button {
+    $mdc-button-filled-slots: tokens-mdc-button-filled.get-token-slots();
+
+    // Add the slots for MDC text button.
+    @include mdc-button-filled-theme.theme-styles($mdc-button-filled-slots);
+
+    // Add default values for MDC text button tokens that aren't outputted by the theming API.
+    @include mdc-button-filled-theme.theme(tokens-mdc-button-filled.get-unthemable-tokens());
+  }
+
+  // Note that we don't include a feature query, because this mixins declare
+  // all the "slots" for CSS variables that will be defined in the theme.
+  .mat-mdc-raised-button {
+    $mdc-button-protected-slots: tokens-mdc-button-protected.get-token-slots();
+
+    // Add the slots for MDC text button.
+    @include mdc-button-protected-theme.theme-styles($mdc-button-protected-slots);
+
+    // Add default values for MDC text button tokens that aren't outputted by the theming API.
+    @include mdc-button-protected-theme.theme(tokens-mdc-button-protected.get-unthemable-tokens());
   }
 }
 

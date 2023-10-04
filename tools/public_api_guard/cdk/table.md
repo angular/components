@@ -6,7 +6,6 @@
 
 import { AfterContentChecked } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/collections';
@@ -149,9 +148,11 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     set name(name: string);
     // (undocumented)
     protected _name: string;
+    // (undocumented)
+    static ngAcceptInputType_stickyEnd: unknown;
     protected _setNameInput(value: string): void;
     get stickyEnd(): boolean;
-    set stickyEnd(v: BooleanInput);
+    set stickyEnd(value: boolean);
     // (undocumented)
     _stickyEnd: boolean;
     // (undocumented)
@@ -314,7 +315,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // (undocumented)
     protected readonly _elementRef: ElementRef;
     get fixedLayout(): boolean;
-    set fixedLayout(v: BooleanInput);
+    set fixedLayout(value: boolean);
     // (undocumented)
     _footerRowOutlet: FooterRowOutlet;
     _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[];
@@ -323,10 +324,14 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     _headerRowOutlet: HeaderRowOutlet;
     protected _isNativeHtmlTable: boolean;
     get multiTemplateDataRows(): boolean;
-    set multiTemplateDataRows(v: BooleanInput);
+    set multiTemplateDataRows(value: boolean);
     // (undocumented)
     _multiTemplateDataRows: boolean;
     protected needsPositionStickyOnElement: boolean;
+    // (undocumented)
+    static ngAcceptInputType_fixedLayout: unknown;
+    // (undocumented)
+    static ngAcceptInputType_multiTemplateDataRows: unknown;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)

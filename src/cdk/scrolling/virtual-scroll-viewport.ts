@@ -9,6 +9,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {ListRange} from '@angular/cdk/collections';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -39,7 +40,6 @@ import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /** Checks if the given ranges are equal. */
@@ -106,14 +106,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    * Whether rendered items should persist in the DOM after scrolling out of view. By default, items
    * will be removed.
    */
-  @Input()
-  get appendOnly(): boolean {
-    return this._appendOnly;
-  }
-  set appendOnly(value: BooleanInput) {
-    this._appendOnly = coerceBooleanProperty(value);
-  }
-  private _appendOnly = false;
+  @Input({transform: booleanAttribute}) appendOnly: boolean = false;
 
   // Note: we don't use the typical EventEmitter here because we need to subscribe to the scroll
   // strategy lazily (i.e. only if the user is actually listening to the events). We do this because
@@ -236,6 +229,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
             // there are multiple scroll events in the same frame we only need to recheck
             // our layout once.
             auditTime(0, SCROLL_SCHEDULER),
+            // Usually `elementScrolled` is completed when the scrollable is destroyed, but
+            // that may not be the case if a `CdkVirtualScrollableElement` is used so we have
+            // to unsubscribe here just in case.
+            takeUntil(this._destroyed),
           )
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 

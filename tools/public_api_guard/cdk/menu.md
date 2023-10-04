@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
@@ -35,8 +34,9 @@ export const CDK_MENU: InjectionToken<Menu>;
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     constructor();
     close(): void;
-    get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    disabled: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
@@ -121,8 +121,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     protected readonly destroyed: Subject<void>;
     // (undocumented)
     protected readonly _dir: Directionality | null;
-    get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    disabled: boolean;
     // (undocumented)
     readonly _elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -131,6 +130,8 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     getMenuTrigger(): CdkMenuTrigger | null;
     get hasMenu(): boolean;
     isMenuOpen(): boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -177,9 +178,10 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
 
 // @public
 export abstract class CdkMenuItemSelectable extends CdkMenuItem {
-    get checked(): boolean;
-    set checked(value: BooleanInput);
+    checked: boolean;
     protected closeOnSpacebarTrigger: boolean;
+    // (undocumented)
+    static ngAcceptInputType_checked: unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuItemSelectable, never, never, { "checked": { "alias": "cdkMenuItemChecked"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)

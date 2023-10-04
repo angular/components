@@ -16,7 +16,7 @@
     "no-arg": true,
     "no-internal-module": true,
     "no-trailing-whitespace": true,
-    "no-shadowed-variable": true,
+    "no-shadowed-variable": false, // Disabled, because it breaks in TS 5.2
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-var-keyword": true,
@@ -65,7 +65,6 @@
     "no-undecorated-base-class-di": true,
     "no-undecorated-class-with-angular-features": true,
     "setters-after-getters": true,
-    "ng-on-changes-property-access": true,
     "lifecycle-hook-interface": true,
     "require-breaking-change-version": true,
     "no-nested-ternary": true,

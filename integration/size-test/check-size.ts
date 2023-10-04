@@ -77,7 +77,7 @@ if (deviatedByPercentage) {
 /** Prints the command for approving the current test. */
 function printApproveCommand() {
   console.info(chalk.yellow('You can approve the golden by running the following command:'));
-  console.info(chalk.yellow(`  bazel run ${process.env.BAZEL_TARGET}.approve`));
+  console.info(chalk.yellow(`  bazel run ${process.env['BAZEL_TARGET']}.approve`));
 }
 
 /** Gets the lexicographically sorted size-test golden. */

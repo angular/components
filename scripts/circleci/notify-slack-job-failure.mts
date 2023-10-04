@@ -8,15 +8,15 @@
 import sh from 'shelljs';
 import {isVersionBranch, getConfig, assertValidGithubConfig} from '@angular/ng-dev';
 
-if (process.env.CIRCLE_PR_NUMBER !== undefined) {
+if (process.env['CIRCLE_PR_NUMBER'] !== undefined) {
   console.info('Skipping notifications for pull requests.');
   process.exit(0);
 }
 
-const jobName = process.env.CIRCLE_JOB!;
-const branchName = process.env.CIRCLE_BRANCH!;
-const jobUrl = process.env.CIRCLE_BUILD_URL!;
-const webhookUrl = process.env.SLACK_COMPONENTS_CI_FAILURES_WEBHOOK_URL!;
+const jobName = process.env['CIRCLE_JOB']!;
+const branchName = process.env['CIRCLE_BRANCH']!;
+const jobUrl = process.env['CIRCLE_BUILD_URL']!;
+const webhookUrl = process.env['SLACK_COMPONENTS_CI_FAILURES_WEBHOOK_URL']!;
 
 const {github} = await getConfig([assertValidGithubConfig]);
 const isPublishBranch = isVersionBranch(branchName) || branchName === github.mainBranchName;

@@ -2,7 +2,7 @@ import {Octokit} from '@octokit/rest';
 import * as fetch from 'node-fetch';
 
 const apiBaseUrl = 'https://test-jperrott.firebaseio.com/pulls';
-const github = new Octokit({auth: process.env.TOKEN});
+const github = new Octokit({auth: process.env['TOKEN']});
 
 async function resync() {
   const pulls: any[] = [];

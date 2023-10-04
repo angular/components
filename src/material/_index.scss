@@ -112,7 +112,7 @@ list-density, list-base;
   progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
   progress-spinner-density, progress-spinner-base;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
-  radio-density;
+  radio-density, radio-base;
 @forward './select/select-theme' as select-* show select-theme, select-color, select-typography,
   select-density;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
@@ -142,7 +142,6 @@ list-density, list-base;
   $private-mdc-base-styles-query, $private-mdc-base-styles-without-animation-query,
   $private-mdc-theme-styles-query, $private-mdc-typography-styles-query;
 
-// New theming APIs, currently in development:
-@forward './core/theming/inspection' as private-* show private-get-theme-version,
-  private-get-theme-type, private-get-theme-color, private-get-theme-typography,
-  private-get-theme-density, private-theme-has;
+// New theming APIs:
+@forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
+  get-theme-typography, get-theme-density, theme-has;

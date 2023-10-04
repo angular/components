@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, inject, Injectable, Input, OnDestroy} from '@angular/core';
+import {booleanAttribute, Directive, inject, Injectable, Input, OnDestroy} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
@@ -14,10 +14,9 @@ import {
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {merge, partition} from 'rxjs';
-import {skip, takeUntil} from 'rxjs/operators';
+import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
 import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
 
@@ -85,14 +84,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private readonly _contextMenuTracker = inject(ContextMenuTracker);
 
   /** Whether the context menu is disabled. */
-  @Input('cdkContextMenuDisabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
   constructor() {
     super();
@@ -104,7 +96,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
    * @param coordinates where to open the context menu
    */
   open(coordinates: ContextMenuCoordinates) {
-    this._open(coordinates, false);
+    this._open(null, coordinates);
   }
 
   /** Close the currently opened context menu. */
@@ -127,7 +119,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       event.stopPropagation();
 
       this._contextMenuTracker.update(this);
-      this._open({x: event.clientX, y: event.clientY}, true);
+      this._open(event, {x: event.clientX, y: event.clientY});
 
       // A context menu can be triggered via a mouse right click or a keyboard shortcut.
       if (event.button === 2) {
@@ -180,17 +172,31 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   /**
    * Subscribe to the overlays outside pointer events stream and handle closing out the stack if a
    * click occurs outside the menus.
-   * @param ignoreFirstAuxClick Whether to ignore the first auxclick event outside the menu.
+   * @param userEvent User-generated event that opened the menu.
    */
-  private _subscribeToOutsideClicks(ignoreFirstAuxClick: boolean) {
+  private _subscribeToOutsideClicks(userEvent: MouseEvent | null) {
     if (this.overlayRef) {
       let outsideClicks = this.overlayRef.outsidePointerEvents();
-      // If the menu was triggered by the `contextmenu` event, skip the first `auxclick` event
-      // because it fires when the mouse is released on the same click that opened the menu.
-      if (ignoreFirstAuxClick) {
+
+      if (userEvent) {
         const [auxClicks, nonAuxClicks] = partition(outsideClicks, ({type}) => type === 'auxclick');
-        outsideClicks = merge(nonAuxClicks, auxClicks.pipe(skip(1)));
+        outsideClicks = merge(
+          // Using a mouse, the `contextmenu` event can fire either when pressing the right button
+          // or left button + control. Most browsers won't dispatch a `click` event right after
+          // a `contextmenu` event triggered by left button + control, but Safari will (see #27832).
+          // This closes the menu immediately. To work around it, we check that both the triggering
+          // event and the current outside click event both had the control key pressed, and that
+          // that this is the first outside click event.
+          nonAuxClicks.pipe(
+            skipWhile((event, index) => userEvent.ctrlKey && index === 0 && event.ctrlKey),
+          ),
+
+          // If the menu was triggered by the `contextmenu` event, skip the first `auxclick` event
+          // because it fires when the mouse is released on the same click that opened the menu.
+          auxClicks.pipe(skip(1)),
+        );
       }
+
       outsideClicks.pipe(takeUntil(this.stopOutsideClicksListener)).subscribe(event => {
         if (!this.isElementInsideMenuStack(_getEventTarget(event)!)) {
           this.menuStack.closeAll();
@@ -201,10 +207,10 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
   /**
    * Open the attached menu at the specified location.
+   * @param userEvent User-generated event that opened the menu
    * @param coordinates where to open the context menu
-   * @param ignoreFirstOutsideAuxClick Whether to ignore the first auxclick outside the menu after opening.
    */
-  private _open(coordinates: ContextMenuCoordinates, ignoreFirstOutsideAuxClick: boolean) {
+  private _open(userEvent: MouseEvent | null, coordinates: ContextMenuCoordinates) {
     if (this.disabled) {
       return;
     }
@@ -230,7 +236,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       }
 
       this.overlayRef.attach(this.getMenuContentPortal());
-      this._subscribeToOutsideClicks(ignoreFirstOutsideAuxClick);
+      this._subscribeToOutsideClicks(userEvent);
     }
   }
 }

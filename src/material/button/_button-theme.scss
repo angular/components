@@ -5,30 +5,24 @@
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
 @use '@material/theme/theme-color' as mdc-theme-color;
+@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 
 @use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/button-filled' as tokens-mdc-button-filled;
+@use '../core/tokens/m2/mdc/button-protected' as tokens-mdc-button-protected;
+
+@function _on-color($theme, $palette) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
+}
 
 @mixin _button-variant($color) {
   @include mdc-button-text-theme.theme((
     label-text-color: $color,
-  ));
-}
-
-@mixin _unelevated-button-variant($foreground, $background) {
-  @include mdc-button-filled-theme.theme((
-    container-color: $background,
-    label-text-color: $foreground,
-  ));
-}
-
-@mixin _raised-button-variant($foreground, $background) {
-  @include mdc-button-protected-theme.theme((
-    container-color: $background,
-    label-text-color: $foreground,
   ));
 }
 
@@ -79,65 +73,6 @@
       }
     }
 
-    .mat-mdc-unelevated-button {
-      &.mat-unthemed {
-        @include _unelevated-button-variant($on-surface, $surface);
-      }
-
-      &.mat-primary {
-        @include _unelevated-button-variant($on-primary, $primary);
-      }
-
-      &.mat-accent {
-        @include _unelevated-button-variant($on-secondary, $secondary);
-      }
-
-      &.mat-warn {
-        @include _unelevated-button-variant($on-error, $error);
-      }
-
-      @include button-theme-private.apply-disabled-style() {
-        @include mdc-button-filled-theme.theme((
-          // We need to pass both the disabled and enabled values, because the enabled
-          // ones apply to anchors while the disabled ones are for buttons.
-          disabled-container-color: $disabled-container-color,
-          disabled-label-text-color: $disabled-ink-color,
-          container-color: $disabled-container-color,
-          label-text-color: $disabled-ink-color,
-        ));
-      }
-    }
-
-    .mat-mdc-raised-button {
-      &.mat-unthemed {
-        @include _raised-button-variant($on-surface, $surface);
-      }
-
-      &.mat-primary {
-        @include _raised-button-variant($on-primary, $primary);
-      }
-
-      &.mat-accent {
-        @include _raised-button-variant($on-secondary, $secondary);
-      }
-
-      &.mat-warn {
-        @include _raised-button-variant($on-error, $error);
-      }
-
-      @include button-theme-private.apply-disabled-style() {
-        @include mdc-button-protected-theme.theme((
-          // We need to pass both the disabled and enabled values, because the enabled
-          // ones apply to anchors while the disabled ones are for buttons.
-          disabled-container-color: $disabled-container-color,
-          disabled-label-text-color: $disabled-ink-color,
-          container-color: $disabled-container-color,
-          label-text-color: $disabled-ink-color,
-          container-elevation: 0,
-        ));
-      }
-    }
-
     .mat-mdc-outlined-button {
       @include mdc-button-outlined-theme.theme((
         outline-color: rgba(mdc-theme-color.prop-value(on-surface), 0.12)
@@ -178,6 +113,106 @@
 
     .mat-mdc-raised-button, .mat-mdc-unelevated-button {
       @include button-theme-private.ripple-theme-styles($theme, true);
+    }
+  }
+
+  $surface: inspection.get-theme-color($theme, background, card);
+  $primary: inspection.get-theme-color($theme, primary);
+  $accent: inspection.get-theme-color($theme, accent);
+  $error: inspection.get-theme-color($theme, warn);
+
+  $on-surface: _on-color($theme, $surface);
+  $on-primary: _on-color($theme, $primary);
+  $on-accent: _on-color($theme, $accent);
+  $on-error: _on-color($theme, $error);
+
+  .mat-mdc-unelevated-button {
+    $default-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $surface, $on-surface);
+    $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
+    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
+
+    &.mat-unthemed {
+      @include mdc-button-filled-theme.theme($default-color-tokens);
+    }
+
+    &.mat-primary {
+      @include mdc-button-filled-theme.theme($primary-color-tokens);
+    }
+
+    &.mat-accent {
+      @include mdc-button-filled-theme.theme($accent-color-tokens);
+    }
+
+    &.mat-warn {
+      @include mdc-button-filled-theme.theme($warn-color-tokens);
+    }
+  }
+
+  .mat-mdc-raised-button {
+    $default-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+      $theme,
+      $surface,
+      $on-surface
+    );
+    $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
+    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
+
+    &.mat-unthemed {
+      @include mdc-button-protected-theme.theme($default-color-tokens);
+    }
+
+    &.mat-primary {
+      @include mdc-button-protected-theme.theme($primary-color-tokens);
+    }
+
+    &.mat-accent {
+      @include mdc-button-protected-theme.theme($accent-color-tokens);
+    }
+
+    &.mat-warn {
+      @include mdc-button-protected-theme.theme($warn-color-tokens);
+    }
+
+    // TODO(wagnermaciel): Remove this workaround when b/301126527 is resolved
+    @include mdc-helpers.disable-mdc-fallback-declarations {
+      @include mdc-elevation-theme.elevation(2);
+
+      &:hover, &:focus {
+        @include mdc-elevation-theme.elevation(4);
+      }
+
+      &:active, &:focus:active {
+        @include mdc-elevation-theme.elevation(8);
+      }
+    }
+  }
+
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
+  $disabled-container-color: rgba($on-surface, 0.12);
+
+  .mat-mdc-raised-button {
+    @include button-theme-private.apply-disabled-style() {
+      @include mdc-elevation-theme.elevation(0);
+      @include mdc-button-protected-theme.theme((
+        disabled-container-color: $disabled-container-color,
+        disabled-label-text-color: $disabled-ink-color,
+        container-color: $disabled-container-color,
+        label-text-color: $disabled-ink-color,
+      ));
+    }
+  }
+
+  .mat-mdc-unelevated-button {
+    @include button-theme-private.apply-disabled-style() {
+      @include mdc-button-filled-theme.theme((
+        disabled-container-color: $disabled-container-color,
+        disabled-label-text-color: $disabled-ink-color,
+        container-color: $disabled-container-color,
+        label-text-color: $disabled-ink-color,
+      ));
     }
   }
 }

@@ -45,7 +45,10 @@ export class ComponentResourceCollector {
   resolvedTemplates: ResolvedResource[] = [];
   resolvedStylesheets: ResolvedResource[] = [];
 
-  constructor(public typeChecker: ts.TypeChecker, private _fileSystem: FileSystem) {}
+  constructor(
+    public typeChecker: ts.TypeChecker,
+    private _fileSystem: FileSystem,
+  ) {}
 
   visitNode(node: ts.Node) {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
@@ -95,8 +98,12 @@ export class ComponentResourceCollector {
 
       const propertyName = getPropertyNameText(property.name);
 
-      if (propertyName === 'styles' && ts.isArrayLiteralExpression(property.initializer)) {
-        property.initializer.elements.forEach(el => {
+      if (propertyName === 'styles') {
+        const elements = ts.isArrayLiteralExpression(property.initializer)
+          ? property.initializer.elements
+          : [property.initializer];
+
+        elements.forEach(el => {
           if (ts.isStringLiteralLike(el)) {
             // Need to add an offset of one to the start because the template quotes are
             // not part of the template content.
@@ -135,14 +142,13 @@ export class ComponentResourceCollector {
       if (propertyName === 'styleUrls' && ts.isArrayLiteralExpression(property.initializer)) {
         property.initializer.elements.forEach(el => {
           if (ts.isStringLiteralLike(el)) {
-            const stylesheetPath = this._fileSystem.resolve(sourceFileDirPath, el.text);
-            const stylesheet = this.resolveExternalStylesheet(stylesheetPath, node);
-
-            if (stylesheet) {
-              this.resolvedStylesheets.push(stylesheet);
-            }
+            this._trackExternalStylesheet(sourceFileDirPath, el, node);
           }
         });
+      }
+
+      if (propertyName === 'styleUrl' && ts.isStringLiteralLike(property.initializer)) {
+        this._trackExternalStylesheet(sourceFileDirPath, property.initializer, node);
       }
 
       if (propertyName === 'templateUrl' && ts.isStringLiteralLike(property.initializer)) {
@@ -196,6 +202,19 @@ export class ComponentResourceCollector {
       start: 0,
       getCharacterAndLineOfPosition: pos => getLineAndCharacterFromPosition(lineStartsMap, pos),
     };
+  }
+
+  private _trackExternalStylesheet(
+    sourceFileDirPath: string,
+    node: ts.StringLiteralLike,
+    container: ts.ClassDeclaration,
+  ) {
+    const stylesheetPath = this._fileSystem.resolve(sourceFileDirPath, node.text);
+    const stylesheet = this.resolveExternalStylesheet(stylesheetPath, container);
+
+    if (stylesheet) {
+      this.resolvedStylesheets.push(stylesheet);
+    }
   }
 }
 
