@@ -5,6 +5,7 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 
+@mixin base($theme) {}
 
 // Include this empty mixin for consistency with the other components.
 @mixin color($theme) {}
@@ -20,6 +21,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-grid-list') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

@@ -10,6 +10,8 @@
   @include token-utils.create-token-values(tokens-mat-icon.$prefix, $tokens);
 }
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-icon.$prefix,
@@ -37,6 +39,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

@@ -5,6 +5,8 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/autocomplete' as tokens-mat-autocomplete;
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
@@ -18,6 +20,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-autocomplete') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

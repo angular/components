@@ -7,6 +7,8 @@
 @use '../core/tokens/token-utils';
 @use '../form-field/form-field-density';
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-paginator.$prefix,
@@ -45,6 +47,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-paginator') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

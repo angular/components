@@ -164,6 +164,8 @@ $_emit-fallback-vars: true;
   }
 }
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-badge.$prefix,
@@ -204,6 +206,7 @@ $_emit-fallback-vars: true;
       }
     }
 
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
