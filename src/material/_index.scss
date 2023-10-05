@@ -69,7 +69,7 @@
 @forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography,
   badge-density, badge-base;
 @forward './bottom-sheet/bottom-sheet-theme' as bottom-sheet-* show bottom-sheet-theme,
-  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density;
+  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density, bottom-sheet-base;
 @forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
   button-density;
 @forward './button/fab-theme' as fab-* show fab-color, fab-typography,
