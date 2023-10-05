@@ -13,6 +13,7 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mdc/outlined-button' as tokens-mdc-outlined-button;
 @use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
 @use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 
@@ -39,39 +40,6 @@
     $primary: mdc-theme-color.prop-value(primary);
     $secondary: mdc-theme-color.prop-value(secondary);
     $error: mdc-theme-color.prop-value(error);
-
-    .mat-mdc-outlined-button {
-      @include mdc-button-outlined-theme.theme((
-        outline-color: rgba(mdc-theme-color.prop-value(on-surface), 0.12)
-      ));
-
-      &.mat-unthemed {
-        @include _outlined-button-variant($on-surface);
-      }
-
-      &.mat-primary {
-        @include _outlined-button-variant($primary);
-      }
-
-      &.mat-accent {
-        @include _outlined-button-variant($secondary);
-      }
-
-      &.mat-warn {
-        @include _outlined-button-variant($error);
-      }
-
-      @include button-theme-private.apply-disabled-style() {
-        @include mdc-button-outlined-theme.theme((
-          // We need to pass both the disabled and enabled values, because the enabled
-          // ones apply to anchors while the disabled ones are for buttons.
-          label-text-color: $disabled-ink-color,
-          disabled-label-text-color: $disabled-ink-color,
-          outline-color: rgba($on-surface, 0.12),
-          disabled-outline-color: rgba($on-surface, 0.12),
-        ));
-      }
-    }
 
     // Ripple colors
     .mat-mdc-button, .mat-mdc-outlined-button {
@@ -179,6 +147,37 @@
     }
   }
 
+  .mat-mdc-outlined-button {
+    $default-color-tokens: tokens-mdc-outlined-button.get-color-tokens(
+      $theme,
+      $on-surface,
+      $on-surface
+    );
+    $primary-color-tokens: tokens-mdc-outlined-button.get-color-tokens(
+      $theme,
+      $primary,
+      $on-primary
+    );
+    $accent-color-tokens: tokens-mdc-outlined-button.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-outlined-button.get-color-tokens($theme, $error, $on-error);
+
+    &.mat-unthemed {
+      @include mdc-button-outlined-theme.theme($default-color-tokens);
+    }
+
+    &.mat-primary {
+      @include mdc-button-outlined-theme.theme($primary-color-tokens);
+    }
+
+    &.mat-accent {
+      @include mdc-button-outlined-theme.theme($accent-color-tokens);
+    }
+
+    &.mat-warn {
+      @include mdc-button-outlined-theme.theme($warn-color-tokens);
+    }
+  }
+
   $is-dark: inspection.get-theme-type($theme) == dark;
   $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
   $disabled-container-color: rgba($on-surface, 0.12);
@@ -202,6 +201,17 @@
         disabled-label-text-color: $disabled-ink-color,
         container-color: $disabled-container-color,
         label-text-color: $disabled-ink-color,
+      ));
+    }
+  }
+
+  .mat-mdc-outlined-button {
+    @include button-theme-private.apply-disabled-style() {
+      @include mdc-button-outlined-theme.theme((
+        label-text-color: $disabled-ink-color,
+        disabled-label-text-color: $disabled-ink-color,
+        disabled-outline-color: rgba($on-surface, 0.12),
+        outline-color: rgba($on-surface, 0.12),
       ));
     }
   }
