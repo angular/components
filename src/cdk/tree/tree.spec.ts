@@ -1174,6 +1174,18 @@ describe('CdkTree redesign', () => {
         expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
       });
 
+      it('maintains tabindex when a node is programatically focused', () => {
+        // activate the second child by programatically focusing it
+        nodes[1].focus();
+
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+
+        // activate the first child by programatically focusing it
+        nodes[0].focus();
+
+        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+      });
+
       it('maintains tabindex when component is blurred', () => {
         // activate the second child by clicking on it
         nodes[1].click();

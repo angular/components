@@ -1085,6 +1085,7 @@ export class CdkTree<T, K = T>
     'tabindex': '-1',
     'role': 'treeitem',
     '(click)': '_setActiveItem()',
+    '(focus)': '_setActiveItem()',
   },
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
@@ -1290,7 +1291,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     if (this.isDisabled) {
       return;
     }
-    this._tree._keyManager.onClick(this);
+    this._tree._keyManager.setActiveItem(this);
   }
 
   _emitExpansionState(expanded: boolean) {

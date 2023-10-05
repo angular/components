@@ -164,7 +164,7 @@ describe('TreeKeyManager', () => {
       });
 
       it('should maintain the active item if the amount of items changes', () => {
-        keyManager.onClick(itemList.get(0)!);
+        keyManager.setActiveItem(itemList.get(0)!);
 
         expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
         expect(keyManager.getActiveItem()?.getLabel())
@@ -199,7 +199,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should emit an event whenever the active item changes', () => {
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
@@ -214,14 +214,14 @@ describe('TreeKeyManager', () => {
         });
 
         it('should emit if the active item changed, but not the active index', () => {
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
 
           itemList.reset([new itemParam.constructor('zero'), ...itemList.toArray()]);
           itemList.notifyOnChanges();
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           expect(spy).toHaveBeenCalledTimes(1);
           subscription.unsubscribe();
@@ -248,7 +248,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should not do anything for unsupported key presses', () => {
-          keyManager.onClick(itemList.get(1)!);
+          keyManager.setActiveItem(itemList.get(1)!);
 
           expect(keyManager.getActiveItemIndex()).toBe(1);
           expect(fakeKeyEvents.unsupported.defaultPrevented).toBe(false);
@@ -260,7 +260,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should focus the first item when Home is pressed', () => {
-          keyManager.onClick(itemList.get(1)!);
+          keyManager.setActiveItem(itemList.get(1)!);
           expect(keyManager.getActiveItemIndex()).toBe(1);
 
           keyManager.onKeydown(fakeKeyEvents.home);
@@ -270,7 +270,7 @@ describe('TreeKeyManager', () => {
 
         it('should focus the first non-disabled item when Home is pressed', () => {
           itemList.get(0)!.isDisabled = true;
-          keyManager.onClick(itemList.get(2)!);
+          keyManager.setActiveItem(itemList.get(2)!);
           expect(keyManager.getActiveItemIndex()).toBe(2);
 
           keyManager.onKeydown(fakeKeyEvents.home);
@@ -279,7 +279,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should focus the last item when End is pressed', () => {
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
           expect(keyManager.getActiveItemIndex()).toBe(0);
 
           keyManager.onKeydown(fakeKeyEvents.end);
@@ -288,7 +288,7 @@ describe('TreeKeyManager', () => {
 
         it('should focus the last non-disabled item when End is pressed', () => {
           itemList.get(itemList.length - 1)!.isDisabled = true;
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
           expect(keyManager.getActiveItemIndex()).toBe(0);
 
           keyManager.onKeydown(fakeKeyEvents.end);
@@ -299,7 +299,7 @@ describe('TreeKeyManager', () => {
 
       describe('up/down key events', () => {
         it('should set subsequent items as active when the down key is pressed', () => {
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
@@ -330,7 +330,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should set previous item as active when the up key is pressed', () => {
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
@@ -365,7 +365,7 @@ describe('TreeKeyManager', () => {
 
         it('should skip disabled items', () => {
           itemList.get(1)!.isDisabled = true;
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
@@ -393,7 +393,7 @@ describe('TreeKeyManager', () => {
           itemList.get(0)!.isDisabled = undefined;
           itemList.get(1)!.isDisabled = undefined;
           itemList.get(2)!.isDisabled = undefined;
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
 
           const spy = jasmine.createSpy('change spy');
           const subscription = keyManager.change.subscribe(spy);
@@ -416,7 +416,7 @@ describe('TreeKeyManager', () => {
         });
 
         it('should not move active item past either end of the list', () => {
-          keyManager.onClick(itemList.get(itemList.length - 1)!);
+          keyManager.setActiveItem(itemList.get(itemList.length - 1)!);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, selecting the last item')
@@ -428,7 +428,7 @@ describe('TreeKeyManager', () => {
             .withContext('active item index, last item still selected after a down event')
             .toBe(itemList.length - 1);
 
-          keyManager.onClick(itemList.get(0)!);
+          keyManager.setActiveItem(itemList.get(0)!);
           keyManager.onKeydown(fakeKeyEvents.upArrow);
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, selecting the first item')
@@ -444,7 +444,7 @@ describe('TreeKeyManager', () => {
         it('should not move active item to end when the last item is disabled', () => {
           itemList.get(itemList.length - 1)!.isDisabled = true;
 
-          keyManager.onClick(itemList.get(itemList.length - 2)!);
+          keyManager.setActiveItem(itemList.get(itemList.length - 2)!);
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, last non-disabled item selected')
             .toBe(itemList.length - 2);
@@ -555,7 +555,7 @@ describe('TreeKeyManager', () => {
               let subscription: Subscription;
 
               beforeEach(() => {
-                keyManager.onClick(parentItem);
+                keyManager.setActiveItem(parentItem);
                 parentItem._isExpanded = true;
 
                 spy = jasmine.createSpy('change spy');
@@ -640,7 +640,7 @@ describe('TreeKeyManager', () => {
               let subscription: Subscription;
 
               beforeEach(() => {
-                keyManager.onClick(childItemWithNoChildren);
+                keyManager.setActiveItem(childItemWithNoChildren);
                 childItemWithNoChildren._isExpanded = true;
 
                 spy = jasmine.createSpy('change spy');
@@ -666,7 +666,7 @@ describe('TreeKeyManager', () => {
               let subscription: Subscription;
 
               beforeEach(() => {
-                keyManager.onClick(childItem);
+                keyManager.setActiveItem(childItem);
                 childItem._isExpanded = false;
 
                 spy = jasmine.createSpy('change spy');
@@ -733,7 +733,7 @@ describe('TreeKeyManager', () => {
               let subscription: Subscription;
 
               beforeEach(() => {
-                keyManager.onClick(parentItem);
+                keyManager.setActiveItem(parentItem);
                 parentItem._isExpanded = false;
 
                 spy = jasmine.createSpy('change spy');
@@ -924,7 +924,7 @@ describe('TreeKeyManager', () => {
           ]);
           itemList.notifyOnChanges();
 
-          keyManager.onClick(frodo);
+          keyManager.setActiveItem(frodo);
           keyManager.onKeydown(createKeyboardEvent('keydown', 66, 'b'));
           tick(debounceInterval);
 
@@ -942,7 +942,7 @@ describe('TreeKeyManager', () => {
           ]);
           itemList.notifyOnChanges();
 
-          keyManager.onClick(boromir);
+          keyManager.setActiveItem(boromir);
           keyManager.onKeydown(createKeyboardEvent('keydown', 66, 'b'));
           tick(debounceInterval);
 
@@ -950,7 +950,7 @@ describe('TreeKeyManager', () => {
         }));
 
         it('should wrap back around if the last item is active', fakeAsync(() => {
-          keyManager.onClick(lastItem);
+          keyManager.setActiveItem(lastItem);
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o'));
           tick(debounceInterval);
 

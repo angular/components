@@ -261,14 +261,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     event.preventDefault();
   }
 
-  /**
-   * Handles a mouse click on a particular tree item.
-   * @param treeItem The item that was clicked by the user.
-   */
-  onClick(treeItem: T) {
-    this._setActiveItem(treeItem);
-  }
-
   /** Index of the currently active item. */
   getActiveItemIndex(): number | null {
     return this._activeItemIndex;
@@ -300,7 +292,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
    */
   focusItem(item: T, options?: {emitChangeEvent?: boolean}): void;
   focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void {
-    this._setActiveItem(itemOrIndex, options);
+    this.setActiveItem(itemOrIndex, options);
   }
 
   /** Focus the first available item. */
@@ -323,10 +315,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._focusPreviousItem();
   }
 
-  private _setActiveItem(index: number, options?: {emitChangeEvent?: boolean}): void;
-  private _setActiveItem(item: T, options?: {emitChangeEvent?: boolean}): void;
-  private _setActiveItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
-  private _setActiveItem(itemOrIndex: number | T, options: {emitChangeEvent?: boolean} = {}) {
+  setActiveItem(index: number, options?: {emitChangeEvent?: boolean}): void;
+  setActiveItem(item: T, options?: {emitChangeEvent?: boolean}): void;
+  setActiveItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
+  setActiveItem(itemOrIndex: number | T, options: {emitChangeEvent?: boolean} = {}) {
     // Set default options
     options.emitChangeEvent ??= true;
 
@@ -406,7 +398,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
             !this._skipPredicateFn(item) &&
             item.getLabel?.().toLocaleUpperCase().trim().indexOf(inputString) === 0
           ) {
-            this._setActiveItem(index);
+            this.setActiveItem(index);
             break;
           }
         }
@@ -418,19 +410,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   //// Navigational methods
 
   private _focusFirstItem() {
-    this._setActiveItem(this._findNextAvailableItemIndex(-1));
+    this.setActiveItem(this._findNextAvailableItemIndex(-1));
   }
 
   private _focusLastItem() {
-    this._setActiveItem(this._findPreviousAvailableItemIndex(this._items.length));
+    this.setActiveItem(this._findPreviousAvailableItemIndex(this._items.length));
   }
 
   private _focusPreviousItem() {
-    this._setActiveItem(this._findPreviousAvailableItemIndex(this._activeItemIndex));
+    this.setActiveItem(this._findPreviousAvailableItemIndex(this._activeItemIndex));
   }
 
   private _focusNextItem() {
-    this._setActiveItem(this._findNextAvailableItemIndex(this._activeItemIndex));
+    this.setActiveItem(this._findNextAvailableItemIndex(this._activeItemIndex));
   }
 
   private _findNextAvailableItemIndex(startingIndex: number) {
@@ -466,7 +458,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
       if (!parent || this._skipPredicateFn(parent as T)) {
         return;
       }
-      this._setActiveItem(parent as T);
+      this.setActiveItem(parent as T);
     }
   }
 
@@ -488,7 +480,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
           if (!firstChild) {
             return;
           }
-          this._setActiveItem(firstChild as T);
+          this.setActiveItem(firstChild as T);
         });
     }
   }
