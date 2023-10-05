@@ -4,6 +4,13 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
 
+@mixin base($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(
+        tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-unthemable-tokens());
+  }
+}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-sidenav.$prefix,
@@ -17,6 +24,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sidenav') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
