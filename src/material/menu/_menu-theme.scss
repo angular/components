@@ -5,6 +5,13 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 
+@mixin base($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-menu.$prefix,
+      tokens-mat-menu.get-unthemable-tokens());
+  }
+}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-menu.$prefix,
@@ -23,6 +30,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-menu') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
