@@ -103,7 +103,8 @@
   input-density, input-base;
 @forward './list/list-theme' as list-* show list-theme, list-color, list-typography,
 list-density, list-base;
-@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density, menu-base;
+@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density,
+menu-base;
 @forward './paginator/paginator-theme' as paginator-* show paginator-theme, paginator-color,
   paginator-typography, paginator-density, paginator-base;
 @forward './progress-bar/progress-bar-theme' as progress-bar-* show
