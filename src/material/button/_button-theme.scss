@@ -155,9 +155,13 @@
       $surface,
       $on-surface
     );
-    $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
-    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
+    $primary-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+      $theme,
+      $primary,
+      $on-primary
+    );
+    $accent-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-protected-theme.theme($default-color-tokens);
