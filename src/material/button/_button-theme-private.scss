@@ -19,6 +19,7 @@
     opacity: map.get($opacities, hover);
   }
 
+  &:focus,
   &.cdk-program-focused,
   &.cdk-keyboard-focused {
     .mat-mdc-button-persistent-ripple::before {
