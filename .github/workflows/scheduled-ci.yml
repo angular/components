@@ -2,7 +2,7 @@ name: Scheduled CI
 
 on:
   schedule:
-    - cron:  '0 0/4 * * *'
+    - cron: '0 0/4 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
       - name: Setting up Angular snapshot builds
-        # Angular snapshots must be set up first so that the yarn install properly 
+        # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
@@ -55,7 +55,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
       - name: Setting up Angular snapshot builds
-        # Angular snapshots must be set up first so that the yarn install properly 
+        # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
@@ -85,7 +85,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
       - name: Setting up Angular snapshot builds
-        # Angular snapshots must be set up first so that the yarn install properly 
+        # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install MDC Canary
@@ -100,5 +100,25 @@ jobs:
         with:
           channel-id: 'C015EBF2XB6'
           slack-message: 'MDC snapshot test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  monitor-docs-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        with:
+          cache-node-modules: true
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Check Docs Site
+        run: yarn ci-docs-monitor-test
+      - name: Notify about failed test
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+        with:
+          channel-id: 'C015EBF2XB6'
+          slack-message: 'Docs site monitoring job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
