@@ -254,22 +254,6 @@ jobs:
       - *slack_notify_on_failure
 
   # ----------------------------------------
-  # Job that monitors the docs site, ensuring
-  # the docs site is online and works as expected.
-  # ----------------------------------------
-  monitor_docs_site:
-    docker:
-      - image: *docker-browser-image
-    resource_class: xlarge
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *yarn_install
-
-      - run: yarn ci-docs-monitor-test
-      - *slack_notify_on_failure
-
-  # ----------------------------------------
   # Job that publishes the build snapshots
   # ----------------------------------------
   publish_snapshots:
@@ -339,21 +323,3 @@ workflows:
           filters: *publish_branches_filter
           requires:
             - build_release_packages
-
-  # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
-  # This workflow runs various jobs against the Angular snapshot builds from Github.
-  snapshot_tests:
-    jobs:
-      - monitor_docs_site:
-          filters: *only_main_branch_filter
-
-    triggers:
-      - schedule:
-          cron: '0 * * * *'
-          filters:
-            branches:
-              only:
-                # We only want to run the main branch against the snapshot builds because
-                # it's not guaranteed that older versions of Angular Material always work
-                # with the latest Angular version.
-                - main
