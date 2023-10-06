@@ -197,21 +197,6 @@ jobs:
             - 'releases/**/*'
       - *slack_notify_on_failure
 
-  upload_release_packages:
-    <<: *job_defaults
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *attach_release_output
-      - *yarn_install
-
-      # Creates package archives and passes in an appropriate meaningful archive suffix. The
-      # suffix consists of the pull request number and a short SHA describing the current `HEAD`.
-      - run: ./scripts/create-package-archives.js --suffix "pr$CIRCLE_PR_NUMBER-$(git rev-parse --short HEAD)"
-      # Upload archives to the CircleCI job artifacts.
-      - store_artifacts:
-          path: dist/release-archives
-
   # ----------------------------------------
   # Job that publishes the docs site
   # ----------------------------------------
@@ -246,12 +231,6 @@ workflows:
     jobs:
       - build_release_packages:
           filters: *ignore_presubmit_branch_filter
-      - upload_release_packages:
-          # We don't want to run this job on push builds because for those, the
-          # `publish_snapshots` runs, and publishes build artifacts.
-          filters: *only_on_pull_requests_filter
-          requires:
-            - build_release_packages
       - deploy_docs_site:
           filters: *publish_branches_filter
           requires:
