@@ -32,9 +32,6 @@
 @include table-flex-styles.private-table-flex-styles();
 
 .mat-mdc-table {
-  @include token-utils.create-token-values(
-    tokens-mat-table.$prefix, tokens-mat-table.get-unthemable-tokens());
-
   // MDC Table applies `table-layout: fixed`, but this is a backwards incompatible
   // change since the table did not previously apply it.
   // TODO: Add a mixin to MDC to set the layout instead of including this override,

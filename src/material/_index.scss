@@ -55,9 +55,9 @@
 @forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density;
 @forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme;
 @forward './core/option/option-theme' as option-* show option-color, option-typography,
-  option-theme, option-density;
+  option-theme, option-density, option-base;
 @forward './core/option/optgroup-theme' as optgroup-* show optgroup-color, optgroup-typography,
-  optgroup-theme, optgroup-density;
+  optgroup-theme, optgroup-density, optgroup-base;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-theme' as pseudo-checkbox-* show
   pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-common' as pseudo-checkbox-* show
@@ -65,11 +65,11 @@
 @forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
   strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './autocomplete/autocomplete-theme' as autocomplete-* show autocomplete-theme,
-  autocomplete-color, autocomplete-typography, autocomplete-density;
+  autocomplete-color, autocomplete-typography, autocomplete-density, autocomplete-base;
 @forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography,
-  badge-density;
+  badge-density, badge-base;
 @forward './bottom-sheet/bottom-sheet-theme' as bottom-sheet-* show bottom-sheet-theme,
-  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density;
+  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density, bottom-sheet-base;
 @forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
   button-density;
 @forward './button/fab-theme' as fab-* show fab-color, fab-typography,
@@ -85,7 +85,7 @@
 @forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
   chips-density;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
-  datepicker-typography, datepicker-date-range-colors, datepicker-density;
+  datepicker-typography, datepicker-date-range-colors, datepicker-density, datepicker-base;
 @forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,
   dialog-density, dialog-base;
 @forward './dialog/dialog-legacy-padding' as dialog-* show dialog-legacy-padding;
@@ -96,15 +96,17 @@
 @forward './form-field/form-field-theme' as form-field-* show form-field-theme,
   form-field-color, form-field-typography, form-field-density;
 @forward './grid-list/grid-list-theme' as grid-list-* show grid-list-theme, grid-list-color,
-  grid-list-typography, grid-list-density;
-@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography, icon-density;
+  grid-list-typography, grid-list-density, grid-list-base;
+@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography, icon-density,
+  icon-base;
 @forward './input/input-theme' as input-* show input-theme, input-color, input-typography,
-  input-density;
+  input-density, input-base;
 @forward './list/list-theme' as list-* show list-theme, list-color, list-typography,
 list-density, list-base;
-@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density;
+@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density,
+menu-base;
 @forward './paginator/paginator-theme' as paginator-* show paginator-theme, paginator-color,
-  paginator-typography, paginator-density;
+  paginator-typography, paginator-density, paginator-base;
 @forward './progress-bar/progress-bar-theme' as progress-bar-* show
   progress-bar-theme, progress-bar-color, progress-bar-typography,
   progress-bar-density, progress-bar-base;
@@ -114,9 +116,9 @@ list-density, list-base;
 @forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
   radio-density, radio-base;
 @forward './select/select-theme' as select-* show select-theme, select-color, select-typography,
-  select-density;
+  select-density, select-base;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
-  sidenav-typography, sidenav-density;
+  sidenav-typography, sidenav-density, sidenav-base;
 @forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show
   slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density;
 @forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
@@ -125,12 +127,12 @@ list-density, list-base;
   snack-bar-typography, snack-bar-density, snack-bar-base;
 @forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography, sort-density;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
-  stepper-typography, stepper-density;
+  stepper-typography, stepper-density, stepper-base;
 @forward './table/table-theme' as table-* show table-theme, table-color, table-typography,
-  table-density;
+  table-density, table-base;
 @forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography, tabs-density;
 @forward './toolbar/toolbar-theme' as toolbar-* show toolbar-theme, toolbar-color,
-  toolbar-typography, toolbar-density;
+  toolbar-typography, toolbar-density, toolbar-base;
 @forward './tooltip/tooltip-theme' as tooltip-* show tooltip-theme, tooltip-color,
   tooltip-typography, tooltip-density, tooltip-base;
 @forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density;

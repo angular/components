@@ -33,8 +33,6 @@ mat-menu {
 }
 
 .mat-mdc-menu-panel {
-  @include token-utils.create-token-values(tokens-mat-menu.$prefix,
-    tokens-mat-menu.get-unthemable-tokens());
   @include menu-common.base;
   box-sizing: border-box;
   outline: 0;

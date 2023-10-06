@@ -6,6 +6,8 @@
 @use '../theming/inspection';
 @use '../typography/typography';
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-option.$prefix,
@@ -35,6 +37,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-option') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

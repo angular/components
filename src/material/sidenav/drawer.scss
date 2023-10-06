@@ -126,8 +126,6 @@ $drawer-over-drawer-z-index: 4;
   // See https://material.io/design/components/navigation-drawer.html
   @include elevation.elevation(16);
   @include drawer-stacking-context($drawer-over-drawer-z-index);
-  @include token-utils.create-token-values(
-    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-unthemable-tokens());
 
   @include token-utils.use-tokens(
     tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
