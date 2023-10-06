@@ -69,7 +69,7 @@ $prefix: (mdc, button-protected);
     pressed-state-layer-color: $on-primary,
     label-text-color: if($on-color, $on-color, inherit),
     disabled-container-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, 0.38)
+    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38))
   );
 }
 
