@@ -83,7 +83,7 @@
 @forward './checkbox/checkbox-theme' as checkbox-* show checkbox-theme, checkbox-color,
   checkbox-typography, checkbox-density, checkbox-base;
 @forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
-  chips-density;
+  chips-density, chips-base;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
   datepicker-typography, datepicker-date-range-colors, datepicker-density, datepicker-base;
 @forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,

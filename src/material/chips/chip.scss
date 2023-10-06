@@ -18,9 +18,6 @@
   .mat-mdc-standard-chip {
     // Add the official slots for the MDC chip.
     @include mdc-chip-theme.theme-styles($token-slots);
-
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-chip-theme.theme(m2-mdc-chip.get-unthemable-tokens());
   }
 
   // Add additional slots for the MDC chip tokens, needed in Angular Material.
