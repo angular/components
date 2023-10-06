@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  saucelabs:
+    runs-on: ubuntu-latest
+    env:
+      SAUCE_USERNAME: ${{ vars.SAUCE_USERNAME }}
+      SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+      KARMA_PARALLEL_BROWSERS: 2
+      CI_NODE_INDEX: 0
+      CI_NODE_TOTAL: 1
+      CI_RUNNER_NUMBER: ${{ github.run_id }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ba9b4487ced515e5b4d87edd681a3bd9792444d6
+        with:
+          cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@ba9b4487ced515e5b4d87edd681a3bd9792444d6
+      - name: Run tests on Saucelabs
+        run: ./scripts/circleci/run-saucelabs-tests.sh
+
+  browserstack:
+    runs-on: ubuntu-latest
+    env:
+      BROWSER_STACK_USERNAME: ${{ vars.BROWSER_STACK_USERNAME }}
+      BROWSER_STACK_ACCESS_KEY: ${{ secrets.BROWSER_STACK_ACCESS_KEY }}
+      CI_NODE_INDEX: 0
+      CI_NODE_TOTAL: 1
+      CI_RUNNER_NUMBER: ${{ github.run_id }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ba9b4487ced515e5b4d87edd681a3bd9792444d6
+        with:
+          cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@ba9b4487ced515e5b4d87edd681a3bd9792444d6
+      - name: Run tests on Browserstack
+        run: ./scripts/circleci/run-browserstack-tests.sh
