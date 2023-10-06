@@ -15,7 +15,7 @@ defaults:
     shell: bash
 
 jobs:
-  test_browsers:
+  browsers_snapshot_test:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -34,16 +34,13 @@ jobs:
         run: yarn install
       - name: Run Browser tests
         run: yarn bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - name: Notify about failed test
-        if: ${{ failure() }}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Browser snapshot test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Browser snapshot test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
-  linker_tests:
+  linker_snapshot_tests:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -64,13 +61,10 @@ jobs:
         run: yarn test-linker-aot
       - name: Run linker tests using JIT
         run: yarn test-linker-jit
-      - name: Notify about failed test
-        if: ${{ failure() }}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Snapshot linker test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Linker snapshot test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   mdc_snapshot_test:
@@ -94,13 +88,10 @@ jobs:
         run: yarn install
       - name: Run browser tests using MDC Canary
         run: bazel test --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - name: Notify about failed test
-        if: ${{ failure() }}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'MDC snapshot test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'MDC Snapshot test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   monitor-docs-site:
@@ -114,11 +105,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Check Docs Site
         run: yarn ci-docs-monitor-test
-      - name: Notify about failed test
-        if: ${{ failure() }}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Docs site monitoring job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Docs site monitoring'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
