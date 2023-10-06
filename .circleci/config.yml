@@ -309,72 +309,6 @@ jobs:
       - run: ./scripts/circleci/publish-snapshots.sh
       - *slack_notify_on_failure
 
-  # ----------------------------------------------------------------------------
-  # Job that runs the browser tests against the Angular Github snapshots
-  # ----------------------------------------------------------------------------
-  snapshot_tests_browsers:
-    <<: *job_defaults
-    resource_class: xlarge
-    environment:
-      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *setup_bazel_ci_config
-      - *setup_bazel_remote_execution
-      - *setup_snapshot_builds
-      - *yarn_install_loose_lockfile
-      - *setup_bazel_binary
-
-      - run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - *slack_notify_on_failure
-
-  # ----------------------------------------------------------------------------
-  # Job that runs both AOT and JIT linker tests against Angular snapshot builds.
-  # ----------------------------------------------------------------------------
-  snapshot_linker_tests:
-    <<: *job_defaults
-    resource_class: xlarge
-    environment:
-      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *setup_bazel_ci_config
-      - *setup_bazel_remote_execution
-      - *setup_snapshot_builds
-      - *yarn_install_loose_lockfile
-      - *setup_bazel_binary
-
-      - run: yarn test-linker-aot
-      - run: yarn test-linker-jit
-      - *slack_notify_on_failure
-
-  # ----------------------------------------------------------------------------
-  # Job that runs all Bazel tests against material-components-web@canary
-  # ----------------------------------------------------------------------------
-  mdc_snapshot_test_cronjob:
-    <<: *job_defaults
-    resource_class: xlarge
-    environment:
-      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - *yarn_install_loose_lockfile
-      - *setup_bazel_binary
-      - *setup_bazel_ci_config
-      - *setup_bazel_remote_execution
-      - *yarn_install
-
-      # Install the latest canary version of the "material-components-web".
-      - run: node ./scripts/circleci/setup-mdc-canary.js
-
-      # Setup the components repository to use the MDC snapshot builds.
-      # Run project tests with the MDC canary builds.
-      - run: bazel test --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - *slack_notify_on_failure
-
 # ----------------------------------------------------------------------------------------
 # Workflow definitions. A workflow usually groups multiple jobs together. This is useful if
 # one job depends on another.
@@ -410,15 +344,6 @@ workflows:
   # This workflow runs various jobs against the Angular snapshot builds from Github.
   snapshot_tests:
     jobs:
-      # Note that we need additional jobs for the cronjob snapshot tests because there
-      # is no easy way to detect whether a job runs inside of a cronjob or specific
-      # workflow. See: https://circleci.com/ideas/?idea=CCI-I-295
-      - snapshot_tests_browsers:
-          filters: *only_main_branch_filter
-      - mdc_snapshot_test_cronjob:
-          filters: *only_main_branch_filter
-      - snapshot_linker_tests:
-          filters: *only_main_branch_filter
       - monitor_docs_site:
           filters: *only_main_branch_filter
 
