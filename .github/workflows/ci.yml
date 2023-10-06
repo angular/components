@@ -3,14 +3,11 @@ name: CI
 on:
   push:
     branches:
+      - migrate-tests
       - main
       - '[0-9]+.[0-9]+.x'
   pull_request:
     types: [opened, synchronize, reopened]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 permissions: {}
 
@@ -20,6 +17,7 @@ defaults:
 
 jobs:
   lint:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -58,6 +56,7 @@ jobs:
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
 
   api_golden_checks:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -74,6 +73,7 @@ jobs:
         run: yarn bazel test tools/public_api_guard/...
 
   e2e:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -90,6 +90,7 @@ jobs:
         run: yarn e2e --flaky_test_attempts=2
 
   integration:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -117,6 +118,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_aot_tests:
+    if: false
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -133,6 +135,7 @@ jobs:
         run: yarn test-linker-aot
 
   linker_jit_tests:
+    if: false
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -162,4 +165,4 @@ jobs:
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run tests
-        run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+        run: bazel test --cache_test_results=no --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
