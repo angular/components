@@ -236,8 +236,13 @@
     @include button-theme-private.touch-target-density($density-scale);
   }
 
+  .mat-mdc-unelevated-button {
+    $density-tokens: tokens-mdc-button-filled.get-density-tokens($theme);
+    @include mdc-button-filled-theme.theme($density-tokens);
+    @include button-theme-private.touch-target-density($density-scale);
+  }
+
   .mat-mdc-button,
-  .mat-mdc-unelevated-button,
   .mat-mdc-outlined-button {
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     &.mat-mdc-button-base {
