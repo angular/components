@@ -2,6 +2,8 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 
+@mixin base($theme) {}
+
 @mixin color($theme) {}
 
 @mixin typography($theme) {}
@@ -10,6 +12,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-input') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

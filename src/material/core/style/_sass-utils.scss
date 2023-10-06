@@ -10,8 +10,13 @@
 /// @content Content to output under the current selector, or root selector if there is no current
 ///     selector.
 @mixin current-selector-or-root($root: html) {
-  @at-root #{& or $root} {
+  @if & {
     @content;
+  }
+  @else {
+    #{$root} {
+      @content;
+    }
   }
 }
 

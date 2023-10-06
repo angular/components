@@ -64,7 +64,7 @@ export class MatTree<T, K = T> extends CdkTree<T, K> {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTree<any, any>, never>;
 }
 
-// @public
+// @public @deprecated
 export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
     constructor(_treeControl: FlatTreeControl<F, K>, _treeFlattener: MatTreeFlattener<T, F, K>, initialData?: T[]);
     // (undocumented)

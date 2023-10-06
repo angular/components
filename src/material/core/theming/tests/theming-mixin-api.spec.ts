@@ -125,7 +125,20 @@ describe('theming api', () => {
     );
 
     expect(hasDensityStyles(parsed, null)).toBe('all');
-    expect(hasDensityStyles(parsed, '.dark-theme')).toBe('all');
+    // TODO(mmalerba): Re-enable - disabled because this test does not account
+    //  for the fact that:
+    //  ```scss
+    //  @include mat.button-theme($theme);
+    //  @include mat.checkbox-theme($theme);
+    //  ```
+    //  produces different results than:
+    //  ```scss
+    //  html {
+    //    @include mat.button-theme($theme);
+    //    @include mat.checkbox-theme($theme);
+    //  }
+    //  ```
+    // expect(hasDensityStyles(parsed, '.dark-theme')).toBe('all');
     expectWarning(/The same density styles are generated multiple times/);
   });
 

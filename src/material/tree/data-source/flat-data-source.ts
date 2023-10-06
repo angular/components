@@ -127,7 +127,8 @@ export class MatTreeFlattener<T, F, K = F> {
  * The nested tree nodes of type `T` are flattened through `MatTreeFlattener`, and converted
  * to type `F` for `MatTree` to consume.
  *
- * @deprecated Use MatTree#childrenAccessor instead. To be removed in a future version.
+ * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
+ * version.
  * @breaking-change 19.0.0
  */
 export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {

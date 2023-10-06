@@ -644,11 +644,9 @@ export class CdkTree<T, K = T>
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      this._getAllNodes()
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe(children => {
-          expansionModel.select(...children.map(child => this._getExpansionKey(child)));
-        });
+      expansionModel.select(
+        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
+      );
     }
   }
 
@@ -658,11 +656,9 @@ export class CdkTree<T, K = T>
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      this._getAllNodes()
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe(children => {
-          expansionModel.deselect(...children.map(child => this._getExpansionKey(child)));
-        });
+      expansionModel.deselect(
+        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
+      );
     }
   }
 

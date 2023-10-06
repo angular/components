@@ -1,14 +1,19 @@
+@use 'sass:map';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
-@use 'sass:map';
 
 @mixin base($theme) {
-  // Add default values for tokens not related to color, typography, or density.
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-linear-progress-theme.theme(tokens-mdc-linear-progress.get-unthemable-tokens());
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    // Add default values for tokens not related to color, typography, or density.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-linear-progress-theme.theme(tokens-mdc-linear-progress.get-unthemable-tokens());
+    }
   }
 }
 
@@ -31,15 +36,20 @@
 }
 
 @mixin color($theme) {
-  .mat-mdc-progress-bar {
-    @include _palette-styles($theme, primary);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    .mat-mdc-progress-bar {
+      @include _palette-styles($theme, primary);
 
-    &.mat-accent {
-      @include _palette-styles($theme, accent);
-    }
+      &.mat-accent {
+        @include _palette-styles($theme, accent);
+      }
 
-    &.mat-warn {
-      @include _palette-styles($theme, warn);
+      &.mat-warn {
+        @include _palette-styles($theme, warn);
+      }
     }
   }
 }
@@ -50,15 +60,26 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-bar') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include mdc-linear-progress-theme.theme(map.get($tokens, tokens-mdc-linear-progress.$prefix));
   }
 }
