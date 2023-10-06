@@ -1,0 +1,75 @@
+name: Snapshots
+
+on:
+  push:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test_browsers:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setting up Angular snapshot builds
+        # Angular snapshots must be set up first so that the yarn install properly 
+        # updates the yarn.lock as expected with the changes
+        run: node ./scripts/circleci/setup-angular-snapshots.js main
+      - name: Install node modules
+        run: yarn install
+      - run: ./scripts/circleci/setup_bazel_binary.sh
+      - run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+  linker_tests:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setting up Angular snapshot builds
+        # Angular snapshots must be set up first so that the yarn install properly 
+        # updates the yarn.lock as expected with the changes
+        run: node ./scripts/circleci/setup-angular-snapshots.js main
+      - name: Install node modules
+        run: yarn install
+      - run: ./scripts/circleci/setup_bazel_binary.sh
+      - run: yarn test-linker-aot
+      - run: yarn test-linker-jit
+
+  mdc_snapshot_test:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setting up Angular snapshot builds
+        # Angular snapshots must be set up first so that the yarn install properly 
+        # updates the yarn.lock as expected with the changes
+        run: node ./scripts/circleci/setup-angular-snapshots.js main
+      - name: Install node modules
+        run: yarn install
+      - run: ./scripts/circleci/setup_bazel_binary.sh
+      - run: node ./scripts/circleci/setup-mdc-canary.js
+      - run: bazel test --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
