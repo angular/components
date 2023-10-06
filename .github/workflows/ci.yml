@@ -235,3 +235,38 @@ jobs:
           slack-message: 'Build job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  publish_snapshots:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Build Docs Content
+        run: yarn build-docs-content
+      - name: Build Docs Content
+        run: yarn build-docs-content
+      - name: Publish Snapshots
+        run: ./scripts/circleci/publish-snapshots.sh
+        env:
+          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+      - name: Notify about failed publish
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+        with:
+          channel-id: 'C015EBF2XB6'
+          slack-message: 'Snapshot publishing failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
