@@ -56,13 +56,10 @@ jobs:
         # it has been merged.
         if: github.event_name == 'pull_request'
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Lint test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Lint check'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   api_golden_checks:
@@ -80,13 +77,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'API Goldens test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'API Golden Checks'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   e2e:
@@ -104,13 +98,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run e2e tests
         run: yarn e2e --flaky_test_attempts=2
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'E2E test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'E2E test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   integration:
@@ -131,13 +122,10 @@ jobs:
       - name: Running size integration tests
         run: yarn integration-tests:size-test
         continue-on-error: true
-      - name: Notify about failed integration size-test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Integration testing job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Integration test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_aot_tests:
@@ -155,13 +143,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run linker AOT tests
         run: yarn test-linker-aot
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Linker AOT test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Link AOT test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_jit_tests:
@@ -179,13 +164,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run linker JIT tests
         run: yarn test-linker-jit
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Linker JIT test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Link JIT test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   test:
@@ -203,13 +185,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Browser test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   build:
@@ -227,13 +206,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Build job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Build'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   publish_snapshots:
@@ -262,13 +238,10 @@ jobs:
         run: ./scripts/circleci/publish-snapshots.sh
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
-      - name: Notify about failed publish
-        if: ${{ failure() }}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Snapshot publishing failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Snapshot publishing'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   upload_package_artifacts:
@@ -296,3 +269,29 @@ jobs:
         with:
           name: Package Artifacts
           path: dist/release-archives
+
+  deploy_doc_site:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Deploy the docs app
+        run: yarn ci-push-deploy-docs-app
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Docs site deployment'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
