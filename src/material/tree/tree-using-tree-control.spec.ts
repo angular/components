@@ -5,11 +5,18 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree';
 import {Component, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {MatTree, MatTreeModule, MatTreeNestedDataSource} from './index';
+import {
+  MatTree,
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+  MatTreeModule,
+  MatTreeNestedDataSource,
+} from './index';
 
 describe('MatTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
@@ -35,7 +42,7 @@ describe('MatTree', () => {
         fixture = TestBed.createComponent(SimpleMatTreeApp);
 
         component = fixture.componentInstance;
-        underlyingDataSource = component.dataSource;
+        underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
 
         fixture.detectChanges();
@@ -91,7 +98,7 @@ describe('MatTree', () => {
         fixture = TestBed.createComponent(MatTreeAppWithToggle);
 
         component = fixture.componentInstance;
-        underlyingDataSource = component.dataSource;
+        underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
 
         fixture.detectChanges();
@@ -100,9 +107,9 @@ describe('MatTree', () => {
       it('should expand/collapse the node', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
-        let numExpandedNodes =
-          fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect no expanded node`).toBe(0);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect no expanded node`)
+          .toBe(0);
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -121,8 +128,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[2] as HTMLElement).click();
         fixture.detectChanges();
 
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).toBe(1);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node expanded one level`)
+          .toBe(1);
         expectFlatTreeToMatch(
           treeElement,
           40,
@@ -135,8 +143,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[3] as HTMLElement).click();
         fixture.detectChanges();
 
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node expanded`).toBe(2);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node expanded`)
+          .toBe(2);
         expectFlatTreeToMatch(
           treeElement,
           40,
@@ -162,9 +171,9 @@ describe('MatTree', () => {
       it('should expand/collapse the node recursively', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
-        let numExpandedNodes =
-          fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect no expanded node`).toBe(0);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect no expanded node`)
+          .toBe(0);
 
         const data = underlyingDataSource.data;
         const child = underlyingDataSource.addChild(data[2]);
@@ -182,8 +191,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[2] as HTMLElement).click();
         fixture.detectChanges();
 
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect nodes expanded`).toBe(2);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect nodes expanded`)
+          .toBe(3);
         expectFlatTreeToMatch(
           treeElement,
           40,
@@ -197,8 +207,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[2] as HTMLElement).click();
         fixture.detectChanges();
 
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node collapsed`).toBe(0);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node collapsed`)
+          .toBe(0);
 
         expectFlatTreeToMatch(
           treeElement,
@@ -219,7 +230,7 @@ describe('MatTree', () => {
         fixture = TestBed.createComponent(WhenNodeMatTreeApp);
 
         component = fixture.componentInstance;
-        underlyingDataSource = component.dataSource;
+        underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
 
         fixture.detectChanges();
@@ -421,7 +432,7 @@ describe('MatTree', () => {
         fixture = TestBed.createComponent(NestedMatTreeAppWithToggle);
 
         component = fixture.componentInstance;
-        underlyingDataSource = component.dataSource;
+        underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
 
         fixture.detectChanges();
@@ -430,7 +441,7 @@ describe('MatTree', () => {
       it('with the right aria-expanded attrs', () => {
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, null, null]);
+          .toEqual(['false', 'false', 'false']);
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -445,7 +456,7 @@ describe('MatTree', () => {
         // in DOM unless the parent node is expanded.
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null]);
+          .toEqual(['false', 'true', 'false', 'false']);
       });
 
       it('should expand/collapse the node', () => {
@@ -468,9 +479,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        let numExpandedNodes =
-          fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node expanded`).toBe(1);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node expanded`)
+          .toBe(1);
         expectNestedTreeToMatch(
           treeElement,
           [`topping_1 - cheese_1 + base_1`],
@@ -488,8 +499,9 @@ describe('MatTree', () => {
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`],
         );
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node collapsed`).toBe(0);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node collapsed`)
+          .toBe(0);
       });
 
       it('should expand/collapse the node recursively', () => {
@@ -508,9 +520,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        let numExpandedNodes =
-          fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node expanded`).toBe(2);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node expanded`)
+          .toBe(3);
         expectNestedTreeToMatch(
           treeElement,
           [`topping_1 - cheese_1 + base_1`],
@@ -523,8 +535,9 @@ describe('MatTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        numExpandedNodes = fixture.nativeElement.querySelectorAll('[aria-expanded="true"]').length;
-        expect(numExpandedNodes).withContext(`Expect node collapsed`).toBe(0);
+        expect(component.treeControl.expansionModel.selected.length)
+          .withContext(`Expect node collapsed`)
+          .toBe(0);
         expectNestedTreeToMatch(
           treeElement,
           [`topping_1 - cheese_1 + base_1`],
@@ -610,9 +623,7 @@ describe('MatTree', () => {
         it('redirects focus to the first item when the tree is focused', () => {
           treeElement.focus();
 
-          fixture.detectChanges();
-
-          expect(document.activeElement).toEqual(nodes[0]);
+          expect(document.activeElement).toBe(nodes[0]);
         });
 
         it('redirects focus to the first non-disabled item when the tree is focused', () => {
@@ -620,9 +631,8 @@ describe('MatTree', () => {
           fixture.detectChanges();
 
           treeElement.focus();
-          fixture.detectChanges();
 
-          expect(document.activeElement).toEqual(nodes[1]);
+          expect(document.activeElement).toBe(nodes[1]);
         });
       });
     });
@@ -646,7 +656,7 @@ describe('MatTree', () => {
       it('sets aria attributes for tree nodes', () => {
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'false', 'false', null, null, null]);
+          .toEqual(['false', 'false', 'false', 'false', 'false', 'false']);
         expect(getNodeAttributes(nodes, 'aria-level'))
           .withContext('aria-level attributes')
           .toEqual(['1', '1', '2', '3', '3', '1']);
@@ -663,13 +673,13 @@ describe('MatTree', () => {
         fixture.detectChanges();
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null, null, null]);
+          .toEqual(['false', 'true', 'false', 'false', 'false', 'false']);
 
         tree.collapse(underlyingDataSource.data[1]);
         fixture.detectChanges();
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'false', 'false', null, null, null]);
+          .toEqual(['false', 'false', 'false', 'false', 'false', 'false']);
       });
     });
   });
@@ -866,7 +876,7 @@ function getNodeAttributes(nodes: HTMLElement[], attribute: string) {
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                      matTreeNodePadding [matTreeNodePaddingIndent]="28"
                      matTreeNodeToggle>
@@ -879,15 +889,43 @@ class SimpleMatTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
   getChildren = (node: TestData) => node.observableChildren;
+  transformer = (node: TestData, level: number) => {
+    node.level = level;
+    return node;
+  };
 
-  dataSource = new FakeDataSource();
+  treeFlattener = new MatTreeFlattener<TestData, TestData>(
+    this.transformer,
+    this.getLevel,
+    this.isExpandable,
+    this.getChildren,
+  );
+
+  treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
+
+  constructor() {
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
 }
 
 interface FoodNode {
   name: string;
   children?: FoodNode[] | null;
+}
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
 }
 
 /**
@@ -916,7 +954,7 @@ const TREE_DATA: FoodNode[] = [
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                      matTreeNodePadding matTreeNodeToggle>
         {{node.name}}
@@ -925,18 +963,34 @@ const TREE_DATA: FoodNode[] = [
   `,
 })
 class MatTreeWithNullOrUndefinedChild {
-  childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
-  dataSource: MatTreeNestedDataSource<FoodNode>;
+  private _transformer = (node: FoodNode, level: number) => {
+    return {
+      expandable: !!node.children,
+      name: node.name,
+      level: level,
+    };
+  };
 
-  constructor() {
-    this.dataSource = new MatTreeNestedDataSource();
-    this.dataSource.data = TREE_DATA;
-  }
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable,
+  );
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children,
+  );
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, TREE_DATA);
+
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 }
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass">
         {{node.name}}
         <ng-template matTreeNodeOutlet></ng-template>
@@ -945,18 +999,21 @@ class MatTreeWithNullOrUndefinedChild {
   `,
 })
 class MatNestedTreeWithNullOrUndefinedChild {
-  childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
+  treeControl: NestedTreeControl<FoodNode>;
   dataSource: MatTreeNestedDataSource<FoodNode>;
 
   constructor() {
+    this.treeControl = new NestedTreeControl<FoodNode>(this._getChildren);
     this.dataSource = new MatTreeNestedDataSource();
     this.dataSource.data = TREE_DATA;
   }
+
+  private _getChildren = (node: FoodNode) => node.children;
 }
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                             [isExpandable]="isExpandable(node) | async"
                             [isDisabled]="node.isDisabled">
@@ -967,9 +1024,11 @@ class MatNestedTreeWithNullOrUndefinedChild {
   `,
 })
 class NestedMatTreeApp {
-  childrenAccessor = (node: TestData) => node.observableChildren;
+  getChildren = (node: TestData) => node.observableChildren;
   isExpandable = (node: TestData) =>
     node.observableChildren.pipe(map(children => children.length > 0));
+
+  treeControl = new NestedTreeControl(this.getChildren);
 
   dataSource = new MatTreeNestedDataSource();
   underlyingDataSource = new FakeDataSource();
@@ -985,7 +1044,7 @@ class NestedMatTreeApp {
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template matTreeNodeOutlet></ng-template>
@@ -993,7 +1052,7 @@ class NestedMatTreeApp {
        <mat-nested-tree-node *matTreeNodeDef="let node; when: isSpecial"
                              matTreeNodeToggle>
                      >>> {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <div *ngIf="isExpanded(node)">
+         <div *ngIf="treeControl.isExpanded(node)">
             <ng-template matTreeNodeOutlet></ng-template>
          </div>
       </mat-nested-tree-node>
@@ -1003,11 +1062,9 @@ class NestedMatTreeApp {
 class WhenNodeNestedMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;
 
-  childrenAccessor = (node: TestData) => node.observableChildren;
+  getChildren = (node: TestData) => node.observableChildren;
 
-  isExpanded = (node: TestData) => {
-    return !!this.tree && this.tree.isExpanded(node);
-  };
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
   dataSource = new MatTreeNestedDataSource();
   underlyingDataSource = new FakeDataSource();
@@ -1023,7 +1080,7 @@ class WhenNodeNestedMatTreeApp {
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                      [isExpandable]="isExpandable(node)"
                      [isDisabled]="node.isDisabled"
@@ -1037,23 +1094,44 @@ class WhenNodeNestedMatTreeApp {
 class MatTreeAppWithToggle {
   toggleRecursively: boolean = true;
 
+  getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
-  childrenAccessor = (node: TestData) => node.observableChildren;
+  getChildren = (node: TestData) => node.observableChildren;
+  transformer = (node: TestData, level: number) => {
+    node.level = level;
+    return node;
+  };
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  treeFlattener = new MatTreeFlattener<TestData, TestData>(
+    this.transformer,
+    this.getLevel,
+    this.isExpandable,
+    this.getChildren,
+  );
+
+  treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
+
+  constructor() {
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
 }
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                             [isExpandable]="isExpandable(node) | async"
                             matTreeNodeToggle
                             [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-        <div *ngIf="isExpanded(node)">
+        <div *ngIf="treeControl.isExpanded(node)">
           <ng-template matTreeNodeOutlet></ng-template>
         </div>
       </mat-nested-tree-node>
@@ -1063,22 +1141,26 @@ class MatTreeAppWithToggle {
 class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
 
-  childrenAccessor = (node: TestData) => node.observableChildren;
+  getChildren = (node: TestData) => node.observableChildren;
   isExpandable = (node: TestData) =>
     node.observableChildren.pipe(map(children => children.length > 0));
 
-  isExpanded = (node: TestData) => {
-    return !!this.tree && this.tree.isExpanded(node);
-  };
-
-  dataSource = new FakeDataSource();
+  treeControl = new NestedTreeControl(this.getChildren);
+  dataSource = new MatTreeNestedDataSource();
+  underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
+
+  constructor() {
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
 }
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
                      matTreeNodePadding [matTreeNodePaddingIndent]="28"
                      matTreeNodeToggle>
@@ -1095,10 +1177,31 @@ class NestedMatTreeAppWithToggle {
 class WhenNodeMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;
 
+  getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
-  childrenAccessor = (node: TestData) => node.observableChildren;
+  getChildren = (node: TestData) => node.observableChildren;
+  transformer = (node: TestData, level: number) => {
+    node.level = level;
+    return node;
+  };
 
-  dataSource = new FakeDataSource();
+  treeFlattener = new MatTreeFlattener<TestData, TestData>(
+    this.transformer,
+    this.getLevel,
+    this.isExpandable,
+    this.getChildren,
+  );
+
+  treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
+
+  constructor() {
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
 }
