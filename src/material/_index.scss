@@ -130,7 +130,8 @@ menu-base;
   stepper-typography, stepper-density, stepper-base;
 @forward './table/table-theme' as table-* show table-theme, table-color, table-typography,
   table-density, table-base;
-@forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography, tabs-density;
+@forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography, tabs-density,
+  tabs-base;
 @forward './toolbar/toolbar-theme' as toolbar-* show toolbar-theme, toolbar-color,
   toolbar-typography, toolbar-density, toolbar-base;
 @forward './tooltip/tooltip-theme' as tooltip-* show tooltip-theme, tooltip-color,

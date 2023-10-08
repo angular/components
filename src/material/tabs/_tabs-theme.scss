@@ -1,5 +1,6 @@
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/tab/tab-theme' as mdc-tab-theme;
+@use '../core/style/sass-utils';
 @use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
 @use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
@@ -8,6 +9,19 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
+
+@mixin base($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-tab-indicator-theme.theme(tokens-mdc-tab-indicator.get-unthemable-tokens());
+    @include mdc-tab-theme.secondary-navigation-tab-theme(tokens-mdc-tab.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+        tokens-mat-tab-header.$prefix, tokens-mat-tab-header.get-unthemable-tokens());
+    @include token-utils.create-token-values(
+        tokens-mat-tab-header-with-background.$prefix,
+        tokens-mat-tab-header-with-background.get-unthemable-tokens()
+    );
+  }
+}
 
 @mixin color($theme) {
   .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
@@ -77,6 +91,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tabs') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
