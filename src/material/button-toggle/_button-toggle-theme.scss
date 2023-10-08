@@ -6,6 +6,19 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
 
+@mixin base($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(
+        tokens-mat-legacy-button-toggle.$prefix,
+        tokens-mat-legacy-button-toggle.get-unthemable-tokens()
+    );
+    @include token-utils.create-token-values(
+        tokens-mat-standard-button-toggle.$prefix,
+        tokens-mat-standard-button-toggle.get-unthemable-tokens()
+    );
+  }
+}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-legacy-button-toggle.$prefix,
@@ -35,6 +48,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

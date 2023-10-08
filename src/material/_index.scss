@@ -77,7 +77,7 @@
 @forward './button/icon-button-theme' as icon-button-* show icon-button-color,
   icon-button-typography, icon-button-density, icon-button-theme;
 @forward './button-toggle/button-toggle-theme' as button-toggle-* show button-toggle-theme,
-  button-toggle-color, button-toggle-typography, button-toggle-density;
+  button-toggle-color, button-toggle-typography, button-toggle-density, button-toggle-base;
 @forward './card/card-theme' as card-* show card-theme, card-color, card-typography, card-density,
   card-base;
 @forward './checkbox/checkbox-theme' as checkbox-* show checkbox-theme, checkbox-color,
