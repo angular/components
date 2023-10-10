@@ -4,6 +4,10 @@
 @use '../core/typography/typography';
 @use './tree-variables';
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move tree base tokens here
+}
+
 @mixin color($theme) {
   .mat-tree {
     background: inspection.get-theme-color($theme, background, card);
@@ -44,6 +48,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tree') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

@@ -32,6 +32,10 @@
   ));
 }
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move button base tokens here
+}
+
 @mixin color($theme) {
   @include mdc-helpers.using-mdc-theme($theme) {
     $is-dark: inspection.get-theme-type($theme) == dark;
@@ -254,6 +258,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

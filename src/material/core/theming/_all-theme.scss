@@ -82,6 +82,46 @@
   }
 }
 
+@mixin all-component-bases($theme) {
+  @include core-theme.base($theme);
+  @include card-theme.base($theme);
+  @include progress-bar-theme.base($theme);
+  @include tooltip-theme.base($theme);
+  @include form-field-theme.base($theme);
+  @include input-theme.base($theme);
+  @include select-theme.base($theme);
+  @include autocomplete-theme.base($theme);
+  @include dialog-theme.base($theme);
+  @include chips-theme.base($theme);
+  @include slide-toggle-theme.base($theme);
+  @include radio-theme.base($theme);
+  @include slider-theme.base($theme);
+  @include menu-theme.base($theme);
+  @include list-theme.base($theme);
+  @include paginator-theme.base($theme);
+  @include tabs-theme.base($theme);
+  @include checkbox-theme.base($theme);
+  @include button-theme.base($theme);
+  @include icon-button-theme.base($theme);
+  @include fab-theme.base($theme);
+  @include snack-bar-theme.base($theme);
+  @include table-theme.base($theme);
+  @include progress-spinner-theme.base($theme);
+  @include badge-theme.base($theme);
+  @include bottom-sheet-theme.base($theme);
+  @include button-toggle-theme.base($theme);
+  @include datepicker-theme.base($theme);
+  @include divider-theme.base($theme);
+  @include expansion-theme.base($theme);
+  @include grid-list-theme.base($theme);
+  @include icon-theme.base($theme);
+  @include sidenav-theme.base($theme);
+  @include stepper-theme.base($theme);
+  @include sort-theme.base($theme);
+  @include toolbar-theme.base($theme);
+  @include tree-theme.base($theme);
+}
+
 // @deprecated Use `all-component-themes`.
 @mixin angular-material-theme($theme) {
   @include all-component-themes($theme);
