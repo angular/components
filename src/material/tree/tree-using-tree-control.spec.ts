@@ -441,7 +441,7 @@ describe('MatTree', () => {
       it('with the right aria-expanded attrs', () => {
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, null, null]);
+          .toEqual(['false', 'false', 'false']);
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -456,7 +456,7 @@ describe('MatTree', () => {
         // in DOM unless the parent node is expanded.
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null]);
+          .toEqual(['false', 'true', 'false', 'false']);
       });
 
       it('should expand/collapse the node', () => {
@@ -656,7 +656,7 @@ describe('MatTree', () => {
       it('sets aria attributes for tree nodes', () => {
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'false', 'false', null, null, null]);
+          .toEqual(['false', 'false', 'false', 'false', 'false', 'false']);
         expect(getNodeAttributes(nodes, 'aria-level'))
           .withContext('aria-level attributes')
           .toEqual(['1', '1', '2', '3', '3', '1']);
@@ -673,13 +673,13 @@ describe('MatTree', () => {
         fixture.detectChanges();
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null, null, null]);
+          .toEqual(['false', 'true', 'false', 'false', 'false', 'false']);
 
         tree.collapse(underlyingDataSource.data[1]);
         fixture.detectChanges();
         expect(getNodeAttributes(nodes, 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'false', 'false', null, null, null]);
+          .toEqual(['false', 'false', 'false', 'false', 'false', 'false']);
       });
     });
   });

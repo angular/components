@@ -1175,8 +1175,14 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Determines if the tree node is expandable. */
   _isExpandable(): boolean {
-    if (typeof this._tree.treeControl?.isExpandable === 'function') {
-      return this._tree.treeControl.isExpandable(this._data);
+    if (this._tree.treeControl) {
+      if (typeof this._tree.treeControl?.isExpandable === 'function') {
+        return this._tree.treeControl.isExpandable(this._data);
+      }
+
+      // For compatibility with trees created using TreeControl before we added
+      // CdkTreeNode#isExpandable.
+      return true;
     }
     return this._inputIsExpandable;
   }
@@ -1260,18 +1266,16 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Collapses this data node. Implemented for TreeKeyManagerItem. */
   collapse(): void {
-    if (!this._isExpandable()) {
-      return;
+    if (this.isExpandable) {
+      this._tree.collapse(this._data);
     }
-    this._tree.collapse(this._data);
   }
 
   /** Expands this data node. Implemented for TreeKeyManagerItem. */
   expand(): void {
-    if (!this._isExpandable()) {
-      return;
+    if (this.isExpandable) {
+      this._tree.expand(this._data);
     }
-    this._tree.expand(this._data);
   }
 
   _setTabFocusable() {

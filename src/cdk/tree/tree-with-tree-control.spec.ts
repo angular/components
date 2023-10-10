@@ -19,6 +19,7 @@ import {
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Directionality, Direction} from '@angular/cdk/bidi';
+import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
 import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -27,6 +28,7 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
+import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
 
 describe('CdkTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
@@ -758,7 +760,7 @@ describe('CdkTree', () => {
       it('with the right aria-expanded attrs', () => {
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, null, null]);
+          .toEqual(['false', 'false', 'false']);
 
         component.toggleRecursively = false;
         let data = dataSource.data;
@@ -773,10 +775,10 @@ describe('CdkTree', () => {
         // in DOM unless the parent node is expanded.
         expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null]);
+          .toEqual(['false', 'true', 'false', 'false']);
       });
 
-      it('should expand/collapse the node multiple times', () => {
+      it('should expand/collapse the node multiple times using keyboard', () => {
         component.toggleRecursively = false;
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
@@ -793,7 +795,10 @@ describe('CdkTree', () => {
 
         fixture.detectChanges();
 
-        (getNodes(treeElement)[1] as HTMLElement).click();
+        let node = getNodes(treeElement)[1] as HTMLElement;
+
+        node.focus();
+        node.dispatchEvent(createKeyboardEvent('keydown', RIGHT_ARROW));
         fixture.detectChanges();
 
         expect(component.treeControl.expansionModel.selected.length)
@@ -807,7 +812,9 @@ describe('CdkTree', () => {
           [`topping_3 - cheese_3 + base_3`],
         );
 
-        (getNodes(treeElement)[1] as HTMLElement).click();
+        node = getNodes(treeElement)[1] as HTMLElement;
+        node.focus();
+        node.dispatchEvent(createKeyboardEvent('keydown', LEFT_ARROW));
         fixture.detectChanges();
 
         expectNestedTreeToMatch(
@@ -820,7 +827,9 @@ describe('CdkTree', () => {
           .withContext(`Expect node collapsed`)
           .toBe(0);
 
-        (getNodes(treeElement)[1] as HTMLElement).click();
+        node = getNodes(treeElement)[1] as HTMLElement;
+        node.focus();
+        node.dispatchEvent(createKeyboardEvent('keydown', RIGHT_ARROW));
         fixture.detectChanges();
 
         expect(component.treeControl.expansionModel.selected.length)
@@ -1585,9 +1594,9 @@ class NestedCdkTreeAppWithToggle {
 
   getChildren = (node: TestData) => node.observableChildren;
 
-  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren, {
-    isExpandable: node => node.children.length > 0,
-  });
+  isExpandable?: (node: TestData) => boolean;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
