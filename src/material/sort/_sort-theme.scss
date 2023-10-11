@@ -3,6 +3,10 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move sort header base tokens here
+}
+
 @mixin color($theme) {
   .mat-sort-header-arrow {
     $table-background: inspection.get-theme-color($theme, background, card);
@@ -30,6 +34,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sort') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

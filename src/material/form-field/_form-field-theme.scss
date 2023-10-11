@@ -11,6 +11,10 @@
 @use '../core/tokens/token-utils';
 @use './form-field-density';
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move form field base tokens here
+}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include mdc-filled-text-field-theme.theme(
@@ -57,6 +61,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-form-field') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

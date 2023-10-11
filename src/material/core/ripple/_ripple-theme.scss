@@ -2,6 +2,10 @@
 @use '../theming/theming';
 @use '../theming/inspection';
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move ripple base tokens here
+}
+
 // Colors for the ripple elements.
 @mixin color($theme) {
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
@@ -22,6 +26,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-ripple') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

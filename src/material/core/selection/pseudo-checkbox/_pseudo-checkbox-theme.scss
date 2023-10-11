@@ -19,6 +19,10 @@
   }
 }
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move pseudo checkbox base tokens here
+}
+
 @mixin color($theme) {
   $is-dark-theme: inspection.get-theme-type($theme) == dark;
   $primary: inspection.get-theme-color($theme, primary);
@@ -78,6 +82,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }
