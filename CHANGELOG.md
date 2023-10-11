@@ -1,3 +1,8 @@
+<a name="16.2.8"></a>
+# 16.2.8 "velvet-rabbit" (2023-10-11)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.6"></a>
 # 17.0.0-next.6 "antimony-ant" (2023-10-04)
 ### cdk
