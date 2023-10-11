@@ -7,8 +7,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, Inject, ViewEncapsulation} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
+import {MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel} from './snack-bar-content';
 
 /**
  * Interface for a simple snack bar component that has a message and a single action.
@@ -27,6 +30,8 @@ export interface TextOnlySnackBar {
   exportAs: 'matSnackBar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction, CommonModule],
+  standalone: true,
   host: {
     'class': 'mat-mdc-simple-snack-bar',
   },

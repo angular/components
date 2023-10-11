@@ -21,7 +21,6 @@ import {
   SkipSelf,
   TemplateRef,
 } from '@angular/core';
-import {MatSnackBarModule} from './module';
 import {SimpleSnackBar, TextOnlySnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
@@ -46,7 +45,7 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfi
 /**
  * Service to dispatch Material Design snack bar messages.
  */
-@Injectable({providedIn: MatSnackBarModule})
+@Injectable({providedIn: 'root'})
 export class MatSnackBar implements OnDestroy {
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
