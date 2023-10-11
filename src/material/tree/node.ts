@@ -53,18 +53,20 @@ export class MatTreeNode<T, K = T>
   /**
    * The tabindex of the tree node.
    *
-   * @deprecated This will be ignored; the tree will automatically determine the appropriate tabindex for the tree node. This input will be
-   *   removed in a future version.
-   * @breaking-change 19.0.0 Remove this input
+   * @deprecated MatTreeNode ignores this proprety. Changing tabIndex has no affect. The tree
+   *   automatically determines the appropriate tabindex for the tree node. To be removed in a
+   *   future version.
+   * @breaking-change 19.0.0 Remove this attribute.
    */
   tabIndex: number;
 
   /**
    * The tabindex of the tree node.
    *
-   * @deprecated This will be ignored; the tree will automatically determine the appropriate tabindex for the tree node. This input will be
-   *   removed in a future version.
-   * @breaking-change 19.0.0 Remove this input
+   * @deprecated MatTreeNode ignores this proprety. Changing defaultTabIndex has no affect. The tree
+   *   automatically determines the appropriate tabindex for the tree node. To be removed in a
+   *   future version.
+   * @breaking-change 19.0.0 Remove this attribute.
    */
   defaultTabIndex: number;
 
@@ -85,10 +87,12 @@ export class MatTreeNode<T, K = T>
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
     changeDetectorRef: ChangeDetectorRef,
+    // Ignore tabindex attribute. MatTree manages its own active state using TreeKeyManager.
+    // Keeping tabIndex in constructor for backwards compatibility with trees created before
+    // introducing TreeKeyManager.
     @Attribute('tabindex') tabIndex: string,
   ) {
     super(elementRef, tree, changeDetectorRef);
-    this.tabIndex = Number(tabIndex) || 0;
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
@@ -151,27 +155,17 @@ export class MatNestedTreeNode<T, K = T>
     this.isDisabled = coerceBooleanProperty(value);
   }
 
-  /**
-   * The tabindex of the tree node.
-   *
-   * @deprecated This will be ignored; the tree will automatically determine the appropriate tabindex for the tree node. This input will be
-   *   removed in a future version.
-   * @breaking-change 19.0.0 Remove this input
-   */
-  get tabIndex(): number {
-    return Number(this._elementRef.nativeElement.getAttribute('tabindex') ?? '-1');
-  }
-  set tabIndex(value: number) {}
-
   constructor(
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
     differs: IterableDiffers,
     changeDetectorRef: ChangeDetectorRef,
+    // Ignore tabindex attribute. MatTree manages its own active state using TreeKeyManager.
+    // Keeping tabIndex in constructor for backwards compatibility with trees created before
+    // introducing TreeKeyManager.
     @Attribute('tabindex') tabIndex: string,
   ) {
     super(elementRef, tree, changeDetectorRef, differs);
-    this.tabIndex = Number(tabIndex) || 0;
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/19145

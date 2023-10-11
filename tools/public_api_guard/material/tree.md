@@ -45,9 +45,6 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> impleme
     ngOnInit(): void;
     // (undocumented)
     node: T;
-    // @deprecated
-    get tabIndex(): number;
-    set tabIndex(value: number);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatNestedTreeNode<any, any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; "node": { "alias": "matNestedTreeNode"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
     // (undocumented)
