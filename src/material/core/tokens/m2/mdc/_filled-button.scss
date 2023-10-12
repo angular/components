@@ -6,7 +6,7 @@
 @use '../../../theming/theming';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, button-protected);
+$prefix: (mdc, filled-button);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -17,7 +17,12 @@ $prefix: (mdc, button-protected);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 4px,
+    container-elevation: 0,
+    disabled-container-elevation: 0,
+    focus-container-elevation: 0,
+    hover-container-elevation: 0,
     keep-touch-target: false,
+    pressed-container-elevation: 0,
 
     focus-ring-color: null,
     focus-ring-offset: null,
@@ -25,24 +30,19 @@ $prefix: (mdc, button-protected);
     hover-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
     container-shadow-color: null,
-    container-elevation: null,
-    hover-container-elevation: null,
-    disabled-container-elevation: null,
-    focus-container-elevation: null,
-    pressed-container-elevation: null,
+    focus-label-text-color: null,
+    hover-label-text-color: null,
     label-text-font: null,
     label-text-size: null,
     label-text-tracking: null,
     label-text-transform: null,
     label-text-weight: null,
-    with-icon-icon-size: null,
-    focus-label-text-color: null,
-    hover-label-text-color: null,
     pressed-label-text-color: null,
     with-icon-disabled-icon-color: null,
     with-icon-focus-icon-color: null,
     with-icon-hover-icon-color: null,
     with-icon-icon-color: null,
+    with-icon-icon-size: null,
     with-icon-pressed-icon-color: null
   );
 }
@@ -64,12 +64,12 @@ $prefix: (mdc, button-protected);
 
   @return (
     container-color: if($color, $color, transparent),
+    disabled-container-color: rgba($on-surface, 0.12),
+    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
     focus-state-layer-color: $on-primary,
     hover-state-layer-color: $on-primary,
-    pressed-state-layer-color: $on-primary,
     label-text-color: if($on-color, $on-color, inherit),
-    disabled-container-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38))
+    pressed-state-layer-color: $on-primary
   );
 }
 
@@ -81,6 +81,7 @@ $prefix: (mdc, button-protected);
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
   $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+
   @return (
     container-height:
       map.get(
