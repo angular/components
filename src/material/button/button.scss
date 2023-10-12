@@ -12,8 +12,8 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/button-filled' as tokens-mdc-button-filled;
-@use '../core/tokens/m2/mdc/button-protected' as tokens-mdc-button-protected;
+@use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mdc-base-styles-query);
@@ -46,25 +46,25 @@
   // Note that we don't include a feature query, because this mixins declare
   // all the "slots" for CSS variables that will be defined in the theme.
   .mat-mdc-unelevated-button {
-    $mdc-button-filled-slots: tokens-mdc-button-filled.get-token-slots();
+    $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
     // Add the slots for MDC text button.
-    @include mdc-button-filled-theme.theme-styles($mdc-button-filled-slots);
+    @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
 
     // Add default values for MDC text button tokens that aren't outputted by the theming API.
-    @include mdc-button-filled-theme.theme(tokens-mdc-button-filled.get-unthemable-tokens());
+    @include mdc-button-filled-theme.theme(tokens-mdc-filled-button.get-unthemable-tokens());
   }
 
   // Note that we don't include a feature query, because this mixins declare
   // all the "slots" for CSS variables that will be defined in the theme.
   .mat-mdc-raised-button {
-    $mdc-button-protected-slots: tokens-mdc-button-protected.get-token-slots();
+    $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
 
     // Add the slots for MDC text button.
     @include mdc-button-protected-theme.theme-styles($mdc-button-protected-slots);
 
     // Add default values for MDC text button tokens that aren't outputted by the theming API.
-    @include mdc-button-protected-theme.theme(tokens-mdc-button-protected.get-unthemable-tokens());
+    @include mdc-button-protected-theme.theme(tokens-mdc-protected-button.get-unthemable-tokens());
   }
 }
 

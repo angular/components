@@ -25,8 +25,8 @@
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
 @use '@material/theme/validate' as mdc-validate;
 
-@use '../m2/mdc/button-protected' as tokens-mdc-button-protected;
-@use '../m2/mdc/button-filled' as tokens-mdc-button-filled;
+@use '../m2/mdc/protected-button' as tokens-mdc-protected-button;
+@use '../m2/mdc/filled-button' as tokens-mdc-filled-button;
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '../m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
@@ -161,12 +161,12 @@
   $reference: mdc-outlined-text-field-theme.$light-theme
 );
 @include validate-slots(
-  $component: 'm2.mdc.button-filled',
-  $slots: tokens-mdc-button-filled.get-token-slots(),
+  $component: 'm2.mdc.filled-button',
+  $slots: tokens-mdc-filled-button.get-token-slots(),
   $reference: mdc-button-filled-theme.$light-theme
 );
 @include validate-slots(
-  $component: 'm2.mdc.button-protected',
-  $slots: tokens-mdc-button-protected.get-token-slots(),
+  $component: 'm2.mdc.protected-button',
+  $slots: tokens-mdc-protected-button.get-token-slots(),
   $reference: mdc-button-protected-theme.$light-theme
 );
