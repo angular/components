@@ -183,6 +183,15 @@ tree how to uniquely identify nodes to track how the data changes with each upda
 The `<cdk-tree>` implements the [`tree` widget](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/),
 including keyboard navigation and appropriate roles and ARIA attributes.
 
+In order to use the new accessibility features, migrating to `levelAccessor` and `childrenAccessor`
+is required. Trees using `treeControl` do not implement the correct accessibility features for
+backwards compatibility.
+
+#### isExpandable
+
+In order for the tree to correctly determine whether or not a node is expandable, the `isExpandable`
+property must be set on all `cdk-tree-node` or `cdk-tree-nested-node` that are expandable.
+
 #### Activation actions
 
 For trees with nodes that have actions upon activation or click, `<cdk-tree-node>` will emit
