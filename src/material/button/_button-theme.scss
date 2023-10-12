@@ -12,8 +12,8 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mdc/button-filled' as tokens-mdc-button-filled;
-@use '../core/tokens/m2/mdc/button-protected' as tokens-mdc-button-protected;
+@use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
 
 @function _on-color($theme, $palette) {
   $is-dark: inspection.get-theme-type($theme) == dark;
@@ -131,10 +131,10 @@
   $on-error: _on-color($theme, $error);
 
   .mat-mdc-unelevated-button {
-    $default-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $surface, $on-surface);
-    $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
-    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
+    $default-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $surface, $on-surface);
+    $primary-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $primary, $on-primary);
+    $accent-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-filled-theme.theme($default-color-tokens);
@@ -154,18 +154,18 @@
   }
 
   .mat-mdc-raised-button {
-    $default-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+    $default-color-tokens: tokens-mdc-protected-button.get-color-tokens(
       $theme,
       $surface,
       $on-surface
     );
-    $primary-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+    $primary-color-tokens: tokens-mdc-protected-button.get-color-tokens(
       $theme,
       $primary,
       $on-primary
     );
-    $accent-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $error, $on-error);
+    $accent-color-tokens: tokens-mdc-protected-button.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-protected-button.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-protected-theme.theme($default-color-tokens);
@@ -235,13 +235,13 @@
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   .mat-mdc-raised-button {
-    $density-tokens: tokens-mdc-button-protected.get-density-tokens($theme);
+    $density-tokens: tokens-mdc-protected-button.get-density-tokens($theme);
     @include mdc-button-protected-theme.theme($density-tokens);
     @include button-theme-private.touch-target-density($density-scale);
   }
 
   .mat-mdc-unelevated-button {
-    $density-tokens: tokens-mdc-button-filled.get-density-tokens($theme);
+    $density-tokens: tokens-mdc-filled-button.get-density-tokens($theme);
     @include mdc-button-filled-theme.theme($density-tokens);
     @include button-theme-private.touch-target-density($density-scale);
   }
