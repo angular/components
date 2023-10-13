@@ -23,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 const defaultDialogConfig = new MatDialogConfig();
 
@@ -43,6 +44,7 @@ const defaultDialogConfig = new MatDialogConfig();
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSnackBarModule,
   ],
 })
 export class DialogDemo {
@@ -76,7 +78,11 @@ export class DialogDemo {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any) {
+  constructor(
+    public dialog: MatDialog,
+    public snackbar: MatSnackBar,
+    @Inject(DOCUMENT) doc: any,
+  ) {
     // Possible useful example for the open and closeAll events.
     // Adding a class to the body if a dialog opens and
     // removing it after all open dialogs are closed
@@ -110,6 +116,10 @@ export class DialogDemo {
   openTemplate() {
     this.numTemplateOpens++;
     this.dialog.open(this.template, this._getDialogConfig());
+  }
+
+  openSnackbar() {
+    this.snackbar.open('Hello from Dialog');
   }
 
   private _getDialogConfig(): MatDialogConfig {
