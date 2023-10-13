@@ -9,5 +9,6 @@ ng_module(
     deps = [
         "//src/cdk/a11y",
         "//src/material/button",
+        "//src/material/dialog",
     ],
 )
