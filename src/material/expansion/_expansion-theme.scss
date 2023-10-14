@@ -6,7 +6,10 @@
 @use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
 
 @mixin base($theme) {
-  // TODO(mmalerba): Move expansion panel base tokens here
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(
+        tokens-mat-expansion.$prefix, tokens-mat-expansion.get-unthemable-tokens());
+  }
 }
 
 @mixin color($theme) {
