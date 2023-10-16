@@ -48,7 +48,7 @@ $height-mobile-portrait: 56px !default;
     caret-color: currentColor;
   }
 
-  .mat-mdc-button-base.mat-unthemed {
+  .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
     --mdc-text-button-label-text-color: inherit;
     --mdc-outlined-button-label-text-color: inherit;
   }
