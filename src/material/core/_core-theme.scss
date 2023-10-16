@@ -8,6 +8,14 @@
 @use './style/elevation';
 @use './typography/typography';
 
+@mixin base($theme) {
+  @include ripple-theme.base($theme);
+  @include option-theme.base($theme);
+  @include optgroup-theme.base($theme);
+  @include pseudo-checkbox-theme.base($theme);
+  // TODO(mmalerba): Move additional core base tokens here
+}
+
 @mixin color($theme) {
   @include ripple-theme.color($theme);
   @include option-theme.color($theme);
@@ -64,6 +72,7 @@
   // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
   // the imported themes (such as `mat-ripple-theme`) should not report again.
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

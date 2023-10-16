@@ -38,9 +38,6 @@
     &:disabled .mdc-switch__shadow {
       box-shadow: var(--mdc-switch-disabled-handle-elevation-shadow);
     }
-
-    // Add default values for MDC switch tokens that aren't outputted by the theming API
-    @include mdc-switch-theme.theme(m2-mdc-switch.get-unthemable-tokens());
   }
 
 

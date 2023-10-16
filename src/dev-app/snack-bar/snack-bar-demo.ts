@@ -13,7 +13,6 @@ import {
   MatSnackBarConfig,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
-  MatSnackBarModule,
 } from '@angular/material/snack-bar';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -29,7 +28,6 @@ import {MatSelectModule} from '@angular/material/select';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    MatSnackBarModule,
     CommonModule,
     FormsModule,
     MatButtonModule,
@@ -49,7 +47,10 @@ export class SnackBarDemo {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-  constructor(public snackBar: MatSnackBar, private _dir: Directionality) {}
+  constructor(
+    public snackBar: MatSnackBar,
+    private _dir: Directionality,
+  ) {}
 
   open() {
     const config = this._createConfig();

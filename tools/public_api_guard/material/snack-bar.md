@@ -19,11 +19,10 @@ import { DomPortal } from '@angular/cdk/portal';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i4 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/portal';
-import * as i6 from '@angular/common';
-import * as i7 from '@angular/material/button';
-import * as i8 from '@angular/material/core';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@angular/cdk/portal';
+import * as i3 from '@angular/material/button';
+import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -70,7 +69,7 @@ export class MatSnackBar implements OnDestroy {
 // @public
 export class MatSnackBarAction {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarAction, "[matSnackBarAction]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarAction, "[matSnackBarAction]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarAction, never>;
 }
@@ -78,7 +77,7 @@ export class MatSnackBarAction {
 // @public
 export class MatSnackBarActions {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarActions, "[matSnackBarActions]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarActions, "[matSnackBarActions]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarActions, never>;
 }
@@ -124,7 +123,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     _role?: 'status' | 'alert';
     snackBarConfig: MatSnackBarConfig;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer, "mat-snack-bar-container", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer, "mat-snack-bar-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarContainer, never>;
 }
@@ -140,7 +139,7 @@ export type MatSnackBarHorizontalPosition = 'start' | 'center' | 'end' | 'left' 
 // @public
 export class MatSnackBarLabel {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarLabel, "[matSnackBarLabel]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSnackBarLabel, "[matSnackBarLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarLabel, never>;
 }
@@ -152,7 +151,7 @@ export class MatSnackBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSnackBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, [typeof i1.SimpleSnackBar, typeof i2.MatSnackBarContainer, typeof i3.MatSnackBarLabel, typeof i3.MatSnackBarActions, typeof i3.MatSnackBarAction], [typeof i4.OverlayModule, typeof i5.PortalModule, typeof i6.CommonModule, typeof i7.MatButtonModule, typeof i8.MatCommonModule], [typeof i8.MatCommonModule, typeof i2.MatSnackBarContainer, typeof i3.MatSnackBarLabel, typeof i3.MatSnackBarActions, typeof i3.MatSnackBarAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.MatButtonModule, typeof i4.MatCommonModule, typeof i5.SimpleSnackBar, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction], [typeof i4.MatCommonModule, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction]>;
 }
 
 // @public
@@ -190,7 +189,7 @@ export class SimpleSnackBar implements TextOnlySnackBar {
     // (undocumented)
     snackBarRef: MatSnackBarRef<SimpleSnackBar>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<SimpleSnackBar, "simple-snack-bar", ["matSnackBar"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<SimpleSnackBar, "simple-snack-bar", ["matSnackBar"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<SimpleSnackBar, never>;
 }

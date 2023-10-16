@@ -4,6 +4,10 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move divider base tokens here
+}
+
 @mixin color($theme) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values(tokens-mat-divider.$prefix,
@@ -17,6 +21,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-divider') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

@@ -12,18 +12,13 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mdc/button-filled' as tokens-mdc-button-filled;
-@use '../core/tokens/m2/mdc/button-protected' as tokens-mdc-button-protected;
+@use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
+@use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 
 @function _on-color($theme, $palette) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
-}
-
-@mixin _button-variant($color) {
-  @include mdc-button-text-theme.theme((
-    label-text-color: $color,
-  ));
 }
 
 @mixin _outlined-button-variant($color) {
@@ -32,46 +27,18 @@
   ));
 }
 
+@mixin base($theme) {
+  // TODO(mmalerba): Move button base tokens here
+}
+
 @mixin color($theme) {
   @include mdc-helpers.using-mdc-theme($theme) {
     $is-dark: inspection.get-theme-type($theme) == dark;
     $on-surface: mdc-theme-color.prop-value(on-surface);
-    $surface: mdc-theme-color.prop-value(surface);
     $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
-    $disabled-container-color: rgba($on-surface, 0.12);
     $primary: mdc-theme-color.prop-value(primary);
-    $on-primary: mdc-theme-color.prop-value(on-primary);
     $secondary: mdc-theme-color.prop-value(secondary);
-    $on-secondary: mdc-theme-color.prop-value(on-secondary);
     $error: mdc-theme-color.prop-value(error);
-    $on-error: mdc-theme-color.prop-value(on-error);
-
-    .mat-mdc-button {
-      &.mat-unthemed {
-        @include _button-variant($on-surface);
-      }
-
-      &.mat-primary {
-        @include _button-variant($primary);
-      }
-
-      &.mat-accent {
-        @include _button-variant($secondary);
-      }
-
-      &.mat-warn {
-        @include _button-variant($error);
-      }
-
-      @include button-theme-private.apply-disabled-style() {
-        @include mdc-button-text-theme.theme((
-          // We need to pass both the disabled and enabled values, because the enabled
-          // ones apply to anchors while the disabled ones are for buttons.
-          disabled-label-text-color: $disabled-ink-color,
-          label-text-color: $disabled-ink-color
-        ));
-      }
-    }
 
     .mat-mdc-outlined-button {
       @include mdc-button-outlined-theme.theme((
@@ -126,11 +93,30 @@
   $on-accent: _on-color($theme, $accent);
   $on-error: _on-color($theme, $error);
 
+  .mat-mdc-button {
+    @include mdc-button-text-theme.theme(tokens-mdc-text-button.get-color-tokens($theme));
+
+    &.mat-primary {
+      @include mdc-button-text-theme.theme(
+        tokens-mdc-text-button.private-get-color-palette-color-tokens($theme, primary));
+    }
+
+    &.mat-accent {
+      @include mdc-button-text-theme.theme(
+        tokens-mdc-text-button.private-get-color-palette-color-tokens($theme, accent));
+    }
+
+    &.mat-warn {
+      @include mdc-button-text-theme.theme(
+        tokens-mdc-text-button.private-get-color-palette-color-tokens($theme, warn));
+    }
+  }
+
   .mat-mdc-unelevated-button {
-    $default-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $surface, $on-surface);
-    $primary-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $primary, $on-primary);
-    $accent-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-filled.get-color-tokens($theme, $error, $on-error);
+    $default-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $surface, $on-surface);
+    $primary-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $primary, $on-primary);
+    $accent-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-filled-button.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-filled-theme.theme($default-color-tokens);
@@ -150,18 +136,18 @@
   }
 
   .mat-mdc-raised-button {
-    $default-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+    $default-color-tokens: tokens-mdc-protected-button.get-color-tokens(
       $theme,
       $surface,
       $on-surface
     );
-    $primary-color-tokens: tokens-mdc-button-protected.get-color-tokens(
+    $primary-color-tokens: tokens-mdc-protected-button.get-color-tokens(
       $theme,
       $primary,
       $on-primary
     );
-    $accent-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $accent, $on-accent);
-    $warn-color-tokens: tokens-mdc-button-protected.get-color-tokens($theme, $error, $on-error);
+    $accent-color-tokens: tokens-mdc-protected-button.get-color-tokens($theme, $accent, $on-accent);
+    $warn-color-tokens: tokens-mdc-protected-button.get-color-tokens($theme, $error, $on-error);
 
     &.mat-unthemed {
       @include mdc-button-protected-theme.theme($default-color-tokens);
@@ -197,6 +183,17 @@
   $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
   $disabled-container-color: rgba($on-surface, 0.12);
 
+  // TODO: these disabled styles are a bit too specific currently.
+  // Once the buttons are fully tokenized, we should rework how they're applied.
+  .mat-mdc-button {
+    @include button-theme-private.apply-disabled-style() {
+      @include mdc-button-text-theme.theme((
+        disabled-label-text-color: $disabled-ink-color,
+        label-text-color: $disabled-ink-color,
+      ));
+    }
+  }
+
   .mat-mdc-raised-button {
     @include button-theme-private.apply-disabled-style() {
       @include mdc-elevation-theme.elevation(0);
@@ -230,14 +227,34 @@
 @mixin density($theme) {
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
+  .mat-mdc-button {
+    $density-tokens: tokens-mdc-text-button.get-density-tokens($theme);
+    @include mdc-button-text-theme.theme($density-tokens);
+    @include button-theme-private.touch-target-density($density-scale);
+
+    // TODO(crisbeto): before the introduction of tokens, MDC's density mixin was adding
+    // `margin-top: 0` and `margin-bottom: 0` in its `density` mixin which a lot of internal
+    // clients came to depend upon. Preserve it to make tokens easier to land.
+    @if ($density-scale < 0) {
+      &.mat-mdc-button-base {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .mat-mdc-raised-button {
-    $density-tokens: tokens-mdc-button-protected.get-density-tokens($theme);
+    $density-tokens: tokens-mdc-protected-button.get-density-tokens($theme);
     @include mdc-button-protected-theme.theme($density-tokens);
     @include button-theme-private.touch-target-density($density-scale);
   }
 
-  .mat-mdc-button,
-  .mat-mdc-unelevated-button,
+  .mat-mdc-unelevated-button {
+    $density-tokens: tokens-mdc-filled-button.get-density-tokens($theme);
+    @include mdc-button-filled-theme.theme($density-tokens);
+    @include button-theme-private.touch-target-density($density-scale);
+  }
+
   .mat-mdc-outlined-button {
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     &.mat-mdc-button-base {
@@ -249,6 +266,7 @@
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
+    @include base($theme);
     @if inspection.theme-has($theme, color) {
       @include color($theme);
     }

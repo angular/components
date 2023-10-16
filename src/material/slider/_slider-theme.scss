@@ -35,22 +35,22 @@
 
     $mat-slider-color-tokens: tokens-mat-slider.get-color-tokens($theme);
 
-    // Add values for MDC slider tokens.
-    .mat-mdc-slider {
-      @include mdc-slider-theme.theme($mdc-color-tokens);
-      @include _slider-ripple-color($theme, primary);
-      @include token-utils.create-token-values(
-          tokens-mat-slider.$prefix,
-          $mat-slider-color-tokens
-      );
+  // Add values for MDC slider tokens.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-slider-theme.theme($mdc-color-tokens);
+    @include _slider-ripple-color($theme, primary);
+    @include token-utils.create-token-values(
+      tokens-mat-slider.$prefix,
+      $mat-slider-color-tokens
+    );
 
-      &.mat-accent {
-        @include mdc-slider-theme.theme(
-            tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
-        @include _slider-ripple-color($theme, accent);
-      }
+    .mat-accent {
+      @include mdc-slider-theme.theme(
+        tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
+      @include _slider-ripple-color($theme, accent);
+    }
 
-      &.mat-warn {
+      .mat-warn {
         @include mdc-slider-theme.theme(
             tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
         @include _slider-ripple-color($theme, warn);
@@ -65,7 +65,7 @@
   }
   @else {
     // Add values for MDC slider tokens.
-    .mat-mdc-slider {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-slider-theme.theme(tokens-mdc-slider.get-typography-tokens($theme));
     }
   }
@@ -77,7 +77,7 @@
   }
   @else {
     // Add values for MDC slider tokens.
-    .mat-mdc-slider {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-slider-theme.theme(tokens-mdc-slider.get-density-tokens($theme));
     }
   }

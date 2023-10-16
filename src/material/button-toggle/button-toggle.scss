@@ -27,11 +27,6 @@ $_standard-tokens: (
 
 .mat-button-toggle-standalone,
 .mat-button-toggle-group {
-  @include token-utils.create-token-values(
-    tokens-mat-legacy-button-toggle.$prefix,
-    tokens-mat-legacy-button-toggle.get-unthemable-tokens()
-  );
-
   @include elevation.overridable-elevation(2);
   position: relative;
   display: inline-flex;
@@ -54,11 +49,6 @@ $_standard-tokens: (
 
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
-  @include token-utils.create-token-values(
-    tokens-mat-standard-button-toggle.$prefix,
-    tokens-mat-standard-button-toggle.get-unthemable-tokens()
-  );
-
   @include token-utils.use-tokens($_standard-tokens...) {
     @include token-utils.create-token-slot(border-radius, shape);
     border: solid 1px var(#{token-utils.get-token-variable(divider-color)});
@@ -122,11 +112,6 @@ $_standard-tokens: (
 }
 
 .mat-button-toggle-appearance-standard {
-  @include token-utils.create-token-values(
-    tokens-mat-standard-button-toggle.$prefix,
-    tokens-mat-standard-button-toggle.get-unthemable-tokens()
-  );
-
   @include token-utils.use-tokens($_standard-tokens...) {
     $divider-color: var(#{token-utils.get-token-variable(divider-color)});
     @include token-utils.create-token-slot(color, text-color);

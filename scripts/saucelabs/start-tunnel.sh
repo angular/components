@@ -29,8 +29,8 @@ rm ${tunnelFileName}
 # Command arguments that will be passed to sauce-connect.
 sauceArgs="--readyfile ${tunnelReadyFile} --pidfile ${tunnelPidFile}"
 
-if [ ! -z "${CIRCLE_BUILD_NUM}" ]; then
-  sauceArgs="${sauceArgs} --tunnel-identifier angular-material-${CIRCLE_BUILD_NUM}-${CIRCLE_NODE_INDEX}"
+if [ ! -z "${CI_RUNNER_NUMBER}" ]; then
+  sauceArgs="${sauceArgs} --tunnel-identifier angular-material-${CI_RUNNER_NUMBER}-${CI_NODE_INDEX}"
 fi
 
 echo "Starting Sauce Connect in the background. Passed arguments: ${sauceArgs}"

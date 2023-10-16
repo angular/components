@@ -1,3 +1,83 @@
+<a name="17.0.0-next.7"></a>
+# 17.0.0-next.7 "metal-napkin" (2023-10-11)
+## Breaking Changes
+### material
+- There are new styles emitted by `mat.<component>-theme` that are not emitted by
+  any of: `mat.<component>-color`, `mat.<component>-typography`, or
+  `mat.<component>-density`. If you rely on the partial mixins only and don't call
+  `mat.<component>-theme`, you can add `mat.<component>-base` to get the missing
+  styles. Alternatively you can call `mat.all-component-bases` to get just the
+  base styles for all components.
+- There are new styles emitted by mat.bottom-sheet-theme that are not
+  emitted by any of: mat.bottom-sheet-color, mat.bottom-sheet-typography,
+  mat.bottom-sheet-density. If you rely on the partial mixins only and don't
+  call mat.bottom-sheet-theme, you can add mat.bottom-sheet-base to get the
+  missing styles.
+- There are new styles emitted by mat.button-toggle-theme that are not
+  emitted by any of: mat.button-toggle-color, mat.button-toggle-typography,
+  mat.button-toggle-density. If you rely on the partial mixins only and don't
+  call mat.button-toggle-theme, you can add mat.button-toggle-base to get the
+  missing styles.
+- There are new styles emitted by mat.chips-theme that are not
+  emitted by any of: mat.chips-color, mat.chips-typography,
+  mat.chips-density. If you rely on the partial mixins only and don't
+  call mat.chips-theme, you can add mat.chips-base to get the
+  missing styles.
+- There are new styles emitted by mat.menu-theme that are not
+  emitted by any of: mat.menu-color, mat.menu-typography,
+  mat.menu-density. If you rely on the partial mixins only and don't
+  call mat.menu-theme, you can add mat.menu-base to get the
+  missing styles.
+- There are new styles emitted by mat.sidenav-theme that are not
+  emitted by any of: mat.sidenav-color, mat.sidenav-typography,
+  mat.sidenav-density. If you rely on the partial mixins only and don't
+  call mat.sidenav-theme, you can add mat.sidenav-base to get the
+  missing styles.
+- There are new styles emitted by mat.slide-toggle-theme that are not
+  emitted by any of: mat.slide-toggle-color, mat.slide-toggle-typography,
+  mat.slide-toggle-density. If you rely on the partial mixins only and don't
+  call mat.slide-toggle-theme, you can add mat.slide-toggle-base to get the
+  missing styles.
+- There are new styles emitted by mat.table-theme that are not
+  emitted by any of: mat.table-color, mat.table-typography,
+  mat.table-density. If you rely on the partial mixins only and don't
+  call mat.table-theme, you can add mat.table-base to get the
+  missing styles.
+- There are new styles emitted by mat.tabs-theme that are not
+  emitted by any of: mat.tabs-color, mat.tabs-typography,
+  mat.tabs-density. If you rely on the partial mixins only and don't
+  call mat.tabs-theme, you can add mat.tabs-base to get the
+  missing styles.
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [289ddd3483](https://github.com/angular/components/commit/289ddd348395f0299a6c7cba2cde8662842df06d) | feat | **theming:** add M3 progress bar support ([#27880](https://github.com/angular/components/pull/27880)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [425bad872d](https://github.com/angular/components/commit/425bad872dcdd56b8f6b4dcf23627ca58e402a05) | feat | **snack-bar:** convert to standalone ([#27926](https://github.com/angular/components/pull/27926)) |
+| [7be5dde24e](https://github.com/angular/components/commit/7be5dde24e46ca889b31b307c2eda6d6f0faab56) | feat | **theming:** Add 'base' theming dimension to all components ([#27924](https://github.com/angular/components/pull/27924)) |
+| [c6bc738cd1](https://github.com/angular/components/commit/c6bc738cd1d7ca3c5d468f91252cfb8619a17b01) | fix | **bottom-sheet:** move unthemable tokens to theme mixin ([#27882](https://github.com/angular/components/pull/27882)) |
+| [bcbdf910b1](https://github.com/angular/components/commit/bcbdf910b11c0d828faab2ff99d12f92970b636d) | fix | **button-toggle:** move unthemable tokens to theme mixin ([#27883](https://github.com/angular/components/pull/27883)) |
+| [146bc23859](https://github.com/angular/components/commit/146bc23859475a778656106f7a3d656df56051d0) | fix | **button:** Emit fab tokens under mixin root selector ([#27806](https://github.com/angular/components/pull/27806)) |
+| [1de6a3aa37](https://github.com/angular/components/commit/1de6a3aa37118e4153fb995a8c8f4daecdf6d0b5) | fix | **button:** fix color tokens of raised buttons ([#27904](https://github.com/angular/components/pull/27904)) |
+| [f823c2a52a](https://github.com/angular/components/commit/f823c2a52a4eed29d2a71c8d94790107231cc139) | fix | **chips:** move unthemable tokens to theme mixin ([#27884](https://github.com/angular/components/pull/27884)) |
+| [6f0a4655e8](https://github.com/angular/components/commit/6f0a4655e8a3df9621a3c888308c7ba75c27b81c) | fix | **dialog:** Emit tokens under mixin root selector ([#27830](https://github.com/angular/components/pull/27830)) |
+| [c77ffa0cc2](https://github.com/angular/components/commit/c77ffa0cc22b5e7ed08923d97bb049ce74d71888) | fix | **menu:** move unthemable tokens to theme mixin ([#27888](https://github.com/angular/components/pull/27888)) |
+| [7cd71b6979](https://github.com/angular/components/commit/7cd71b69799fa0cf4825ac2515fc29d26e2ecd47) | fix | **sidenav:** move unthemable tokens to theme mixin ([#27889](https://github.com/angular/components/pull/27889)) |
+| [eed75ddfc7](https://github.com/angular/components/commit/eed75ddfc794d36617008c7b3ebe4fcba4bef2ff) | fix | **slide-toggle:** move unthemable tokens to theme mixin ([#27905](https://github.com/angular/components/pull/27905)) |
+| [47876311b4](https://github.com/angular/components/commit/47876311b46b62f034dbffcbfc88290a18f75e33) | fix | **slider:** Emit tokens under mixin root selector ([#27597](https://github.com/angular/components/pull/27597)) |
+| [af1840209f](https://github.com/angular/components/commit/af1840209f81dcf8011e88b7d98101ff72f0ad1c) | fix | **table:** move unthemable tokens to theme mixin ([#27890](https://github.com/angular/components/pull/27890)) |
+| [59351724df](https://github.com/angular/components/commit/59351724dfef12961e2fdbbe12bf141af065e3a8) | fix | **tabs:** move unthemable tokens to theme mixin ([#27891](https://github.com/angular/components/pull/27891)) |
+| [999029aa5a](https://github.com/angular/components/commit/999029aa5a23e9577503775c1ea4513e5c3cb4f9) | fix | **theming:** Fix subtle bug in current-selector-or-root ([#27898](https://github.com/angular/components/pull/27898)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.8"></a>
+# 16.2.8 "velvet-rabbit" (2023-10-11)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-next.6"></a>
 # 17.0.0-next.6 "antimony-ant" (2023-10-04)
 ### cdk
