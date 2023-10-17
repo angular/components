@@ -11,7 +11,6 @@ package(default_visibility = ["//visibility:public"])
 ng_module(
     name = "kitchen-sink",
     srcs = [
-        "kitchen-sink-root.ts",
         "kitchen-sink/kitchen-sink.ts",
     ],
     assets = [
@@ -31,6 +30,8 @@ ts_library(
     ],
     deps = [
         ":kitchen-sink",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
         "@npm//@angular/platform-server",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",

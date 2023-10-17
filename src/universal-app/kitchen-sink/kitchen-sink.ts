@@ -2,7 +2,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
-import {Component, ElementRef, NgModule, ErrorHandler} from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
@@ -51,52 +51,20 @@ export class TableDataSource extends DataSource<any> {
 
 @Component({
   template: `<button>Do the thing</button>`,
+  standalone: true,
 })
 export class TestEntryComponent {}
 
 @Component({
   selector: 'kitchen-sink',
   templateUrl: './kitchen-sink.html',
-  styles: [
-    `
+  standalone: true,
+  styles: `
     .universal-viewport {
       height: 100px;
       border: 1px solid black;
     }
   `,
-  ],
-})
-export class KitchenSink {
-  /** List of columns for the CDK and Material table. */
-  tableColumns = ['userId'];
-
-  /** Data source for the CDK and Material table. */
-  tableDataSource = new TableDataSource();
-
-  /** Data used to render a virtual scrolling list. */
-  virtualScrollData = Array(10000).fill(50);
-
-  constructor(
-    snackBar: MatSnackBar,
-    dialog: MatDialog,
-    viewportRuler: ViewportRuler,
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef<HTMLElement>,
-    bottomSheet: MatBottomSheet,
-  ) {
-    focusMonitor.focusVia(elementRef, 'program');
-    snackBar.open('Hello there');
-    dialog.open(TestEntryComponent);
-    bottomSheet.open(TestEntryComponent);
-
-    // Do a sanity check on the viewport ruler.
-    viewportRuler.getViewportRect();
-    viewportRuler.getViewportSize();
-    viewportRuler.getViewportScrollPosition();
-  }
-}
-
-@NgModule({
   imports: [
     MatAutocompleteModule,
     MatBadgeModule,
@@ -143,20 +111,33 @@ export class KitchenSink {
     YouTubePlayerModule,
     GoogleMapsModule,
   ],
-  declarations: [KitchenSink, TestEntryComponent],
-  exports: [KitchenSink, TestEntryComponent],
-  providers: [
-    {
-      // If an error is thrown asynchronously during server-side rendering it'll get logged to stderr,
-      // but it won't cause the build to fail. We still want to catch these errors so we provide an
-      // `ErrorHandler` that re-throws the error and causes the process to exit correctly.
-      provide: ErrorHandler,
-      useValue: {handleError: ERROR_HANDLER},
-    },
-  ],
 })
-export class KitchenSinkModule {}
+export class KitchenSink {
+  /** List of columns for the CDK and Material table. */
+  tableColumns = ['userId'];
 
-export function ERROR_HANDLER(error: Error) {
-  throw error;
+  /** Data source for the CDK and Material table. */
+  tableDataSource = new TableDataSource();
+
+  /** Data used to render a virtual scrolling list. */
+  virtualScrollData = Array(10000).fill(50);
+
+  constructor(
+    snackBar: MatSnackBar,
+    dialog: MatDialog,
+    viewportRuler: ViewportRuler,
+    focusMonitor: FocusMonitor,
+    elementRef: ElementRef<HTMLElement>,
+    bottomSheet: MatBottomSheet,
+  ) {
+    focusMonitor.focusVia(elementRef, 'program');
+    snackBar.open('Hello there');
+    dialog.open(TestEntryComponent);
+    bottomSheet.open(TestEntryComponent);
+
+    // Do a sanity check on the viewport ruler.
+    viewportRuler.getViewportRect();
+    viewportRuler.getViewportSize();
+    viewportRuler.getViewportScrollPosition();
+  }
 }
