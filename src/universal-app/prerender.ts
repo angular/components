@@ -1,12 +1,15 @@
 import 'reflect-metadata';
 import 'zone.js';
 
-import {renderModule} from '@angular/platform-server';
+import {ErrorHandler} from '@angular/core';
+import {bootstrapApplication, provideClientHydration} from '@angular/platform-browser';
+import {renderApplication} from '@angular/platform-server';
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import {runfiles} from '@bazel/runfiles';
 
-import {KitchenSinkRootServerModule} from './kitchen-sink-root';
+import {KitchenSink} from './kitchen-sink/kitchen-sink';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
 // Do not enable production mode, because otherwise the `MatCommonModule` won't execute
 // the browser related checks that could cause NodeJS issues.
@@ -15,7 +18,27 @@ import {KitchenSinkRootServerModule} from './kitchen-sink-root';
 const indexHtmlPath = runfiles.resolvePackageRelative('./index.html');
 const themeCssPath = runfiles.resolvePackageRelative('./theme.css');
 
-const result = renderModule(KitchenSinkRootServerModule, {
+function bootstrap() {
+  return bootstrapApplication(KitchenSink, {
+    providers: [
+      provideNoopAnimations(),
+      provideClientHydration(),
+      {
+        // If an error is thrown asynchronously during server-side rendering it'll get logged to
+        // stderr, but it won't cause the build to fail. We still want to catch these errors so we
+        // provide an ErrorHandler that rethrows the error and causes the process to exit correctly.
+        provide: ErrorHandler,
+        useValue: {
+          handleError: (error: Error) => {
+            throw error;
+          },
+        },
+      },
+    ],
+  });
+}
+
+const result = renderApplication(bootstrap, {
   document: readFileSync(indexHtmlPath, 'utf-8'),
 });
 const outDir = process.env['TEST_UNDECLARED_OUTPUTS_DIR'] as string;
@@ -31,8 +54,7 @@ result
     writeFileSync(themeFilename, readFileSync(themeCssPath, 'utf-8'), 'utf-8');
     console.log('Prerender done.');
   })
-  // If rendering the module factory fails, print the error and exit the process
-  // with a non-zero exit code.
+  // If rendering fails, print the error and exit the process with a non-zero exit code.
   .catch(error => {
     console.error(error);
     process.exit(1);
