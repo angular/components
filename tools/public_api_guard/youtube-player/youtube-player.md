@@ -11,17 +11,17 @@ import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
-export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
+export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     constructor(_ngZone: NgZone, platformId: Object);
     // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
-    get disableCookies(): boolean;
-    set disableCookies(value: unknown);
-    set endSeconds(endSeconds: number | undefined);
+    disableCookies: boolean;
+    endSeconds: number | undefined;
     // (undocumented)
     readonly error: Observable<YT.OnErrorEvent>;
     getAvailablePlaybackRates(): number[];
@@ -35,38 +35,36 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     getVideoLoadedFraction(): number;
     getVideoUrl(): string;
     getVolume(): number;
-    get height(): number | undefined;
+    get height(): number;
     set height(height: number | undefined);
     isMuted(): boolean;
     mute(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnDestroy(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    ngOnInit(): void;
+    ngOnDestroy(): void;
     pauseVideo(): void;
     // (undocumented)
     readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
     // (undocumented)
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
-    get playerVars(): YT.PlayerVars | undefined;
-    set playerVars(playerVars: YT.PlayerVars | undefined);
+    playerVars: YT.PlayerVars | undefined;
     playVideo(): void;
     readonly ready: Observable<YT.PlayerEvent>;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;
     showBeforeIframeApiLoads: boolean | undefined;
-    set startSeconds(startSeconds: number | undefined);
+    startSeconds: number | undefined;
     // (undocumented)
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
     stopVideo(): void;
-    set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
+    suggestedQuality: YT.SuggestedVideoQuality | undefined;
     unMute(): void;
-    get videoId(): string | undefined;
-    set videoId(videoId: string | undefined);
-    get width(): number | undefined;
+    videoId: string | undefined;
+    get width(): number;
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
