@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {A11yModule, LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'toolbar-demo',
@@ -17,9 +18,17 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [A11yModule, MatButtonModule],
 })
 export class LiveAnnouncerDemo {
-  constructor(private _liveAnnouncer: LiveAnnouncer) {}
+  constructor(
+    private _liveAnnouncer: LiveAnnouncer,
+    public dialog: MatDialog,
+  ) {}
 
   announceText(message: string) {
     this._liveAnnouncer.announce(message);
+  }
+
+  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  openDialog() {
+    this.dialog.open(this.template);
   }
 }
