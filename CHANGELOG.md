@@ -1,3 +1,14 @@
+<a name="17.0.0-rc.0"></a>
+# 17.0.0-rc.0 "chalk-cobwebs" (2023-10-18)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [74d1be62e2](https://github.com/angular/components/commit/74d1be62e2940e123aa38e1b645815fbd3eca8a9) | fix | **button:** align prefixes with MDC ([#27936](https://github.com/angular/components/pull/27936)) |
+| [1d101590ac](https://github.com/angular/components/commit/1d101590ac3574f6cb77433c30daf2d0f11f04c4) | fix | **button:** buttons in toolbars ([#27948](https://github.com/angular/components/pull/27948)) |
+| [afceed2a56](https://github.com/angular/components/commit/afceed2a563b9931097a72f1da12896e49fa6fe3) | fix | **expansion:** move unthemable tokens to theme mixin ([#27885](https://github.com/angular/components/pull/27885)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.9"></a>
 # 16.2.9 "paper-pumpkin" (2023-10-18)
 ### material
