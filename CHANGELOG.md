@@ -1,3 +1,12 @@
+<a name="16.2.9"></a>
+# 16.2.9 "paper-pumpkin" (2023-10-18)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7a8b7daa13](https://github.com/angular/components/commit/7a8b7daa1312ed4c9399db496d8525dae7bf2b1a) | fix | **button:** buttons in toolbars ([#27948](https://github.com/angular/components/pull/27948)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.8"></a>
 # 16.2.8 "velvet-rabbit" (2023-10-11)
 
