@@ -228,8 +228,9 @@ describe('CdkTable', () => {
     });
 
     it('should clear the row view containers on destroy', () => {
-      const rowOutlet = fixture.componentInstance.table._rowOutlet.viewContainer;
-      const headerPlaceholder = fixture.componentInstance.table._headerRowOutlet.viewContainer;
+      const rowOutlet = fixture.componentInstance.table._outletSource.rowOutlet.viewContainer;
+      const headerPlaceholder =
+        fixture.componentInstance.table._outletSource.headerRowOutlet.viewContainer;
 
       spyOn(rowOutlet, 'clear').and.callThrough();
       spyOn(headerPlaceholder, 'clear').and.callThrough();

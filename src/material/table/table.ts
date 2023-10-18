@@ -45,10 +45,29 @@ export class MatRecycleRows {}
   template: `
     <ng-content select="caption"></ng-content>
     <ng-content select="colgroup, col"></ng-content>
-    <ng-container headerRowOutlet></ng-container>
-    <ng-container rowOutlet></ng-container>
-    <ng-container noDataRowOutlet></ng-container>
-    <ng-container footerRowOutlet></ng-container>
+    <ng-template #defaultTable>
+      <ng-container [outletSource]="_tableOutlet">
+        <ng-container headerRowOutlet></ng-container>
+        <ng-container rowOutlet></ng-container>
+        <ng-container noDataRowOutlet></ng-container>
+        <ng-container footerRowOutlet></ng-container>
+      </ng-container>
+    </ng-template>
+    <ng-template #nativeTable>
+      <ng-container [outletSource]="_tableOutlet">
+        <thead nativeHead role="rowgroup">
+          <ng-container headerRowOutlet></ng-container>
+        </thead>
+        <tbody nativeBody role="rowgroup">
+          <ng-container rowOutlet></ng-container>
+          <ng-container noDataRowOutlet></ng-container>
+        </tbody>
+        <tfoot nativeFoot role="rowgroup">
+          <ng-container footerRowOutlet></ng-container>
+        </tfoot>
+      </ng-container>
+    </ng-template>
+    <ng-template [tableOutlet]="_isNativeHtmlTable ? nativeTable : defaultTable"></ng-template>
   `,
   styleUrls: ['table.css'],
   host: {
@@ -85,8 +104,8 @@ export class MatTable<T> extends CdkTable<T> implements OnInit {
     // tfoot). MDC requires the `mdc-data-table__content` class to be added to the body. Note that
     // this only applies to native tables, because we don't wrap the content of flexbox-based ones.
     if (this._isNativeHtmlTable) {
-      const tbody = this._elementRef.nativeElement.querySelector('tbody');
-      tbody.classList.add('mdc-data-table__content');
+      const tbody = this._outletSource.nativeBody.elementRef;
+      this._renderer.addClass(tbody.nativeElement, 'mdc-data-table__content');
     }
   }
 }

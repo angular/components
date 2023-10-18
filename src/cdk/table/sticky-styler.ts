@@ -49,7 +49,6 @@ export class StickyStyler {
     private _stickCellCss: string,
     public direction: Direction,
     private _coalescedStyleScheduler: _CoalescedStyleScheduler,
-    private _isBrowser = true,
     private readonly _needsPositionStickyOnElement = true,
     private readonly _positionListener?: StickyPositioningListener,
   ) {
@@ -109,7 +108,6 @@ export class StickyStyler {
   ) {
     if (
       !rows.length ||
-      !this._isBrowser ||
       !(stickyStartStates.some(state => state) || stickyEndStates.some(state => state))
     ) {
       if (this._positionListener) {
@@ -183,11 +181,6 @@ export class StickyStyler {
    *
    */
   stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom') {
-    // Since we can't measure the rows on the server, we can't stick the rows properly.
-    if (!this._isBrowser) {
-      return;
-    }
-
     // If positioning the rows to the bottom, reverse their order when evaluating the sticky
     // position such that the last row stuck will be "bottom: 0px" and so on. Note that the
     // sticky states need to be reversed as well.

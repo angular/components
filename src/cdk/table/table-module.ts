@@ -14,6 +14,11 @@ import {
   CdkRecycleRows,
   FooterRowOutlet,
   NoDataRowOutlet,
+  NativeBody,
+  NativeFoot,
+  NativeHead,
+  TableOutlet,
+  OutletSource,
 } from './table';
 import {
   CdkCellOutlet,
@@ -60,6 +65,11 @@ const EXPORTED_DECLARATIONS = [
   CdkNoDataRow,
   CdkRecycleRows,
   NoDataRowOutlet,
+  NativeBody,
+  NativeFoot,
+  NativeHead,
+  TableOutlet,
+  OutletSource,
 ];
 
 @NgModule({
