@@ -231,16 +231,6 @@
     $density-tokens: tokens-mdc-text-button.get-density-tokens($theme);
     @include mdc-button-text-theme.theme($density-tokens);
     @include button-theme-private.touch-target-density($density-scale);
-
-    // TODO(crisbeto): before the introduction of tokens, MDC's density mixin was adding
-    // `margin-top: 0` and `margin-bottom: 0` in its `density` mixin which a lot of internal
-    // clients came to depend upon. Preserve it to make tokens easier to land.
-    @if ($density-scale < 0) {
-      &.mat-mdc-button-base {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
-    }
   }
 
   .mat-mdc-raised-button {
