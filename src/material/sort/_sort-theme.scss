@@ -1,36 +1,34 @@
-@use 'sass:color';
-@use 'sass:meta';
+@use '../core/tokens/m2/mat/sort' as tokens-mat-sort;
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
 
-@mixin base($theme) {
-  // TODO(mmalerba): Move sort header base tokens here
-}
+@mixin base($theme) {}
 
 @mixin color($theme) {
-  .mat-sort-header-arrow {
-    $table-background: inspection.get-theme-color($theme, background, card);
-    $text-color: inspection.get-theme-color($theme, foreground, secondary-text);
-
-    // Because the arrow is made up of multiple elements that are stacked on top of each other,
-    // we can't use the semi-transparent color from the theme directly. If the value is a color
-    // *type*, we convert it into a solid color by taking the opacity from the rgba value and
-    // using the value to determine the percentage of the background to put into foreground
-    // when mixing the colors together. Otherwise, if it resolves to something different
-    // (e.g. it resolves to a CSS variable), we use the color directly.
-    @if (meta.type-of($table-background) == color and meta.type-of($text-color) == color) {
-      $text-opacity: opacity($text-color);
-      color: color.mix($table-background, rgba($text-color, 1), (1 - $text-opacity) * 100%);
-    }
-    @else {
-      color: $text-color;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-sort.$prefix,
+      tokens-mat-sort.get-color-tokens($theme));
   }
 }
 
-@mixin typography($theme) {}
+@mixin typography($theme) {
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-sort.$prefix,
+      tokens-mat-sort.get-typography-tokens($theme));
+  }
+}
 
-@mixin density($theme) {}
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-sort.$prefix,
+      tokens-mat-sort.get-density-tokens($theme));
+  }
+}
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sort') {
