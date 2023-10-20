@@ -47,7 +47,7 @@
 @forward './core/style/elevation' show elevation, overridable-elevation, elevation-transition;
 
 // Theme bundles
-@forward './core/theming/all-theme' show all-component-themes;
+@forward './core/theming/all-theme' show all-component-themes, all-component-bases;
 @forward './core/color/all-color' show all-component-colors;
 @forward './core/typography/all-typography' show all-component-typographies;
 
