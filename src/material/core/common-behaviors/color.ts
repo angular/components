@@ -7,7 +7,7 @@
  */
 
 import {AbstractConstructor, Constructor} from './constructor';
-import {ElementRef} from '@angular/core';
+import {ElementRef, Renderer2, inject} from '@angular/core';
 
 /** @docs-private */
 export interface CanColor {
@@ -38,6 +38,8 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
   defaultColor?: ThemePalette,
 ): CanColorCtor & T {
   return class extends base {
+    private _renderer = inject(Renderer2);
+
     private _color: ThemePalette;
     defaultColor = defaultColor;
 
@@ -49,10 +51,10 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 
       if (colorPalette !== this._color) {
         if (this._color) {
-          this._elementRef.nativeElement.classList.remove(`mat-${this._color}`);
+          this._renderer.removeClass(this._elementRef.nativeElement, `mat-${this._color}`);
         }
         if (colorPalette) {
-          this._elementRef.nativeElement.classList.add(`mat-${colorPalette}`);
+          this._renderer.addClass(this._elementRef.nativeElement, `mat-${colorPalette}`);
         }
 
         this._color = colorPalette;
