@@ -83,7 +83,7 @@
     }
   }
 
-  $surface: inspection.get-theme-color($theme, background, card);
+  $surface: inspection.get-theme-color($theme, background, raised-button);
   $primary: inspection.get-theme-color($theme, primary);
   $accent: inspection.get-theme-color($theme, accent);
   $error: inspection.get-theme-color($theme, warn);
