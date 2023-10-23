@@ -7,5 +7,5 @@
  */
 
 export {CdkAccordionItem} from './accordion-item';
-export {CdkAccordion} from './accordion';
+export {CdkAccordion, CDK_ACCORDION} from './accordion';
 export * from './accordion-module';
