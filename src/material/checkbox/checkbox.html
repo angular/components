@@ -11,6 +11,7 @@
            [attr.aria-label]="ariaLabel || null"
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
+           [attr.aria-checked]="indeterminate ? 'mixed' : null"
            [attr.name]="name"
            [attr.value]="value"
            [checked]="checked"
