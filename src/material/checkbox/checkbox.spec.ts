@@ -55,6 +55,9 @@ describe('MDC-based MatCheckbox', () => {
 
       expect(checkboxInstance.checked).toBe(true);
       expect(inputElement.checked).toBe(true);
+      expect(inputElement.hasAttribute('aria-checked'))
+        .withContext('Expect aria-checked attribute to not be used')
+        .toBe(false);
 
       testComponent.isChecked = false;
       fixture.detectChanges();
@@ -103,9 +106,6 @@ describe('MDC-based MatCheckbox', () => {
 
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(true);
-      expect(inputElement.hasAttribute('aria-checked'))
-        .withContext('Expect aria-checked attribute to not be used')
-        .toBe(false);
 
       testComponent.isIndeterminate = false;
       fixture.detectChanges();
@@ -145,9 +145,6 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(true);
       expect(inputElement.checked).toBe(true);
       expect(testComponent.isIndeterminate).toBe(true);
-      expect(inputElement.hasAttribute('aria-checked'))
-        .withContext('Expect aria-checked attribute to not be used')
-        .toBe(false);
 
       inputElement.click();
       fixture.detectChanges();
