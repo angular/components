@@ -1,21 +1,16 @@
-@use '../core/density/private/compatibility';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use './tree-variables';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/tree' as tokens-mat-tree;
 
-@mixin base($theme) {
-  // TODO(mmalerba): Move tree base tokens here
-}
+@mixin base($theme) {}
 
 @mixin color($theme) {
-  .mat-tree {
-    background: inspection.get-theme-color($theme, background, card);
-  }
-
-  .mat-tree-node,
-  .mat-nested-tree-node {
-    color: inspection.get-theme-color($theme, foreground, text);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-tree.$prefix,
+      tokens-mat-tree.get-color-tokens($theme));
   }
 }
 
@@ -23,26 +18,18 @@
   // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
   $theme: inspection.private-get-typography-back-compat-theme($theme);
 
-  .mat-tree {
-    font-family: inspection.get-theme-typography($theme, body-2, font-family);
-  }
-
-  .mat-tree-node,
-  .mat-nested-tree-node {
-    font-weight: inspection.get-theme-typography($theme, body-2, font-weight);
-    font-size: inspection.get-theme-typography($theme, body-2, font-size);
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-tree.$prefix,
+      tokens-mat-tree.get-typography-tokens($theme));
   }
 }
 
 @mixin density($theme) {
   $density-scale: inspection.get-theme-density($theme);
-  $height: compatibility.private-density-prop-value(tree-variables.$density-config,
-    $density-scale, height);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-tree-node {
-      min-height: $height;
-    }
+  @include sass-utils.current-selector-or-root() {
+    @include token-utils.create-token-values(tokens-mat-tree.$prefix,
+      tokens-mat-tree.get-density-tokens($theme));
   }
 }
 
