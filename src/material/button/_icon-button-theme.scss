@@ -2,6 +2,7 @@
 @use '@material/density/functions' as mdc-density-functions;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '@material/theme/theme-color' as mdc-theme-color;
+@use '../core/style/sass-utils';
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 
 @use './button-theme-private';
@@ -24,7 +25,10 @@ $_icon-size: 24px;
 }
 
 @mixin base($theme) {
-  // TODO(mmalerba): Move icon button base tokens here
+  // Add default values for tokens not related to color, typography, or density.
+  @include sass-utils.current-selector-or-root() {
+    @include mdc-icon-button-theme.theme(tokens-mdc-icon-button.get-unthemable-tokens());
+  }
 }
 
 @mixin color($theme) {

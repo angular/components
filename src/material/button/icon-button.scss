@@ -17,9 +17,6 @@
   .mat-mdc-icon-button {
     // Add the official slots for the MDC component.
     @include mdc-icon-button-theme.theme-styles($token-slots);
-
-    // Add default values for tokens that aren't outputted by the theming API.
-    @include mdc-icon-button-theme.theme(m2-mdc-icon-button.get-unthemable-tokens());
   }
 }
 
