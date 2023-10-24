@@ -1,7 +1,8 @@
 {
   "root": true,
   "ignorePatterns": [
-    "*.d.ts"
+    "*.d.ts",
+    "src/assets/stack-blitz/**/*.ts"
   ],
   "overrides": [
     {
