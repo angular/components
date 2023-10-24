@@ -1,4 +1,6 @@
+@use 'sass:map';
 @use '../../../style/sass-utils';
+@use '../../../theming/inspection';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -20,12 +22,7 @@ $prefix: (mdc, icon-button);
     state-layer-size: 48px,
     // MDC's icon size applied to svg and img elements inside the component
     icon-size: 24px,
-    // Only applies to :disabled icons, but Angular Components uses [disabled] since :disabled
-    // wouldn't work on <a> tags.
-    disabled-icon-color: black,
-    // Angular version applies an opacity 1 with a color change, and this only applies with
-    // :disabled anyways.
-    disabled-icon-opacity: 0.38,
+
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
@@ -41,13 +38,29 @@ $prefix: (mdc, icon-button);
     pressed-state-layer-opacity: null,
     focus-ring-color: null,
     focus-ring-offset: null,
+
+    // We use a color with an opacity to show the disabled state,
+    // instead of applying it to the entire button.
+    disabled-icon-opacity: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+
   @return (
     icon-color: inherit,
+    disabled-icon-color: if($is-dark, rgba(#fff, 0.5), rgba(#000, 0.38)),
+  );
+}
+
+// Generates the mapping for the properties that change based on the button palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $palette: map.get($theme, $palette-name);
+
+  @return (
+    icon-color: inspection.get-theme-color($theme, $palette-name)
   );
 }
 
