@@ -32,12 +32,14 @@ import {CdkSelection} from './selection';
   template: `
     <ng-container cdkColumnDef>
       <th cdkHeaderCell *cdkHeaderCellDef>
-        <input type="checkbox" *ngIf="selection.multiple"
-            cdkSelectAll
-            #allToggler="cdkSelectAll"
-            [checked]="allToggler.checked | async"
-            [indeterminate]="allToggler.indeterminate | async"
-            (click)="allToggler.toggle($event)">
+        @if (selection.multiple) {
+          <input type="checkbox"
+              cdkSelectAll
+              #allToggler="cdkSelectAll"
+              [checked]="allToggler.checked | async"
+              [indeterminate]="allToggler.indeterminate | async"
+              (click)="allToggler.toggle($event)">
+        }
       </th>
       <td cdkCell *cdkCellDef="let row; let i = $index">
         <input type="checkbox"

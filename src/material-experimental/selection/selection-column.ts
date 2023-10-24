@@ -32,10 +32,12 @@ import {MatSelection} from './selection';
   template: `
     <ng-container matColumnDef>
       <th mat-header-cell *matHeaderCellDef class="mat-selection-column-header">
-        <mat-checkbox *ngIf="selection.multiple"
-            matSelectAll
-            #allToggler="matSelectAll"
-            [indeterminate]="allToggler.indeterminate | async"></mat-checkbox>
+        @if (selection.multiple) {
+          <mat-checkbox
+              matSelectAll
+              #allToggler="matSelectAll"
+              [indeterminate]="allToggler.indeterminate | async"></mat-checkbox>
+        }
       </th>
       <td mat-cell *matCellDef="let row; let i = $index" class="mat-selection-column-cell">
         <mat-checkbox

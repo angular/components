@@ -17,7 +17,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i4 from '@angular/material/core';
-import * as i5 from '@angular/common';
 import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
@@ -137,7 +136,7 @@ export class MatSliderModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSliderModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb, typeof i3.MatSliderVisualThumb], [typeof i4.MatCommonModule, typeof i5.CommonModule, typeof i4.MatRippleModule], [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb, typeof i3.MatSliderVisualThumb], [typeof i4.MatCommonModule, typeof i4.MatRippleModule], [typeof i1.MatSlider, typeof i2.MatSliderThumb, typeof i2.MatSliderRangeThumb]>;
 }
 
 // @public (undocumented)

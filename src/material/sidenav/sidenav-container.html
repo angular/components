@@ -1,10 +1,15 @@
-<div class="mat-drawer-backdrop" (click)="_onBackdropClicked()" *ngIf="hasBackdrop"
-     [class.mat-drawer-shown]="_isShowingBackdrop()"></div>
+@if (hasBackdrop) {
+  <div class="mat-drawer-backdrop" (click)="_onBackdropClicked()"
+       [class.mat-drawer-shown]="_isShowingBackdrop()"></div>
+}
 
 <ng-content select="mat-sidenav"></ng-content>
 
 <ng-content select="mat-sidenav-content">
 </ng-content>
-<mat-sidenav-content *ngIf="!_content">
-  <ng-content></ng-content>
-</mat-sidenav-content>
+
+@if (!_content) {
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+}

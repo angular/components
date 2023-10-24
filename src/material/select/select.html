@@ -3,12 +3,19 @@
      (click)="toggle()"
      #fallbackOverlayOrigin="cdkOverlayOrigin"
      #trigger>
-  <div class="mat-mdc-select-value" [ngSwitch]="empty" [attr.id]="_valueId">
-    <span class="mat-mdc-select-placeholder mat-mdc-select-min-line" *ngSwitchCase="true">{{placeholder}}</span>
-    <span class="mat-mdc-select-value-text" *ngSwitchCase="false" [ngSwitch]="!!customTrigger">
-      <span class="mat-mdc-select-min-line" *ngSwitchDefault>{{triggerValue}}</span>
-      <ng-content select="mat-select-trigger" *ngSwitchCase="true"></ng-content>
-    </span>
+
+  <div class="mat-mdc-select-value" [attr.id]="_valueId">
+    @if (empty) {
+      <span class="mat-mdc-select-placeholder mat-mdc-select-min-line">{{placeholder}}</span>
+    } @else {
+      <span class="mat-mdc-select-value-text">
+        @if (customTrigger) {
+          <ng-content select="mat-select-trigger"></ng-content>
+        } @else {
+          <span class="mat-mdc-select-min-line">{{triggerValue}}</span>
+        }
+      </span>
+    }
   </div>
 
   <div class="mat-mdc-select-arrow-wrapper">

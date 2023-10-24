@@ -21,10 +21,9 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/common';
-import * as i6 from '@angular/material/core';
-import * as i7 from '@angular/cdk/accordion';
-import * as i8 from '@angular/cdk/portal';
+import * as i5 from '@angular/material/core';
+import * as i6 from '@angular/cdk/accordion';
+import * as i7 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -96,7 +95,7 @@ export class MatExpansionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatExpansionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, [typeof i1.MatAccordion, typeof i2.MatExpansionPanel, typeof i2.MatExpansionPanelActionRow, typeof i3.MatExpansionPanelHeader, typeof i3.MatExpansionPanelTitle, typeof i3.MatExpansionPanelDescription, typeof i4.MatExpansionPanelContent], [typeof i5.CommonModule, typeof i6.MatCommonModule, typeof i7.CdkAccordionModule, typeof i8.PortalModule], [typeof i1.MatAccordion, typeof i2.MatExpansionPanel, typeof i2.MatExpansionPanelActionRow, typeof i3.MatExpansionPanelHeader, typeof i3.MatExpansionPanelTitle, typeof i3.MatExpansionPanelDescription, typeof i4.MatExpansionPanelContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, [typeof i1.MatAccordion, typeof i2.MatExpansionPanel, typeof i2.MatExpansionPanelActionRow, typeof i3.MatExpansionPanelHeader, typeof i3.MatExpansionPanelTitle, typeof i3.MatExpansionPanelDescription, typeof i4.MatExpansionPanelContent], [typeof i5.MatCommonModule, typeof i6.CdkAccordionModule, typeof i7.PortalModule], [typeof i1.MatAccordion, typeof i2.MatExpansionPanel, typeof i2.MatExpansionPanelActionRow, typeof i3.MatExpansionPanelHeader, typeof i3.MatExpansionPanelTitle, typeof i3.MatExpansionPanelDescription, typeof i4.MatExpansionPanelContent]>;
 }
 
 // @public

@@ -3,31 +3,50 @@
      [matRippleDisabled]="disableRipple"></div>
 
 <div class="mat-step-icon-state-{{state}} mat-step-icon" [class.mat-step-icon-selected]="selected">
-  <div class="mat-step-icon-content" [ngSwitch]="!!(iconOverrides && iconOverrides[state])">
-    <ng-container
-      *ngSwitchCase="true"
-      [ngTemplateOutlet]="iconOverrides[state]"
-      [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <ng-container *ngSwitchDefault [ngSwitch]="state">
-      <span aria-hidden="true" *ngSwitchCase="'number'">{{_getDefaultTextForState(state)}}</span>
-      <span class="cdk-visually-hidden" *ngIf="state === 'done'">{{_intl.completedLabel}}</span>
-      <span class="cdk-visually-hidden" *ngIf="state === 'edit'">{{_intl.editableLabel}}</span>
-      <mat-icon aria-hidden="true" *ngSwitchDefault>{{_getDefaultTextForState(state)}}</mat-icon>
-    </ng-container>
+  <div class="mat-step-icon-content">
+    @if (iconOverrides && iconOverrides[state]) {
+      <ng-container
+        [ngTemplateOutlet]="iconOverrides[state]"
+        [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+    } @else {
+      @switch (state) {
+        @case ('number') {
+          <span aria-hidden="true">{{_getDefaultTextForState(state)}}</span>
+        }
+
+        @default {
+          @if (state === 'done') {
+            <span class="cdk-visually-hidden">{{_intl.completedLabel}}</span>
+          } @else if (state === 'edit') {
+            <span class="cdk-visually-hidden">{{_intl.editableLabel}}</span>
+          }
+
+          <mat-icon aria-hidden="true">{{_getDefaultTextForState(state)}}</mat-icon>
+        }
+      }
+    }
   </div>
 </div>
 <div class="mat-step-label"
      [class.mat-step-label-active]="active"
      [class.mat-step-label-selected]="selected"
      [class.mat-step-label-error]="state == 'error'">
-  <!-- If there is a label template, use it. -->
-  <div class="mat-step-text-label" *ngIf="_templateLabel()">
-    <ng-container [ngTemplateOutlet]="_templateLabel()!.template"></ng-container>
-  </div>
-  <!-- If there is no label template, fall back to the text label. -->
-  <div class="mat-step-text-label" *ngIf="_stringLabel()">{{label}}</div>
+  @if (_templateLabel(); as templateLabel) {
+    <!-- If there is a label template, use it. -->
+    <div class="mat-step-text-label">
+      <ng-container [ngTemplateOutlet]="templateLabel.template"></ng-container>
+    </div>
+  } @else if (_stringLabel()) {
+    <!-- If there is no label template, fall back to the text label. -->
+    <div class="mat-step-text-label">{{label}}</div>
+  }
 
-  <div class="mat-step-optional" *ngIf="optional && state != 'error'">{{_intl.optionalLabel}}</div>
-  <div class="mat-step-sub-label-error" *ngIf="state == 'error'">{{errorMessage}}</div>
+  @if (optional && state != 'error') {
+    <div class="mat-step-optional">{{_intl.optionalLabel}}</div>
+  }
+
+  @if (state === 'error') {
+    <div class="mat-step-sub-label-error">{{errorMessage}}</div>
+  }
 </div>
 
