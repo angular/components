@@ -27,8 +27,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
-import { TreeKeyManager } from '@angular/cdk/a11y';
 import { TreeKeyManagerItem } from '@angular/cdk/a11y';
+import { TreeKeyManagerStrategy } from '@angular/cdk/a11y';
 import { ViewContainerRef } from '@angular/core';
 
 // @public @deprecated
@@ -102,7 +102,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _getSetSize(dataNode: T): number;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
     isExpanded(dataNode: T): boolean;
-    _keyManager: TreeKeyManager<CdkTreeNode<T, K>>;
+    _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
     levelAccessor?: (dataNode: T) => number;
     // (undocumented)
     ngAfterContentChecked(): void;
@@ -167,6 +167,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     expand(): void;
     readonly expandedChange: EventEmitter<boolean>;
     focus(): void;
+    // (undocumented)
+    _focusItem(): void;
     _getAriaExpanded(): string | null;
     // (undocumented)
     getChildren(): CdkTreeNode<T, K>[] | Observable<CdkTreeNode<T, K>[]>;
@@ -191,8 +193,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     // @deprecated
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');
-    // (undocumented)
-    _setActiveItem(): void;
     // (undocumented)
     _setTabFocusable(): void;
     // (undocumented)

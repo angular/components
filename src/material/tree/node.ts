@@ -24,7 +24,17 @@ import {
   OnInit,
 } from '@angular/core';
 import {CanDisable, HasTabIndex} from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {LegacyTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
+
+/**
+ * Determinte if argument TreeKeyManager is the LegacyTreeKeyManager. This function is safe to use with SSR.
+ */
+function isLegacyTreeKeyManager<T extends TreeKeyManagerItem>(
+  keyManager: TreeKeyManagerStrategy<T>,
+): keyManager is LegacyTreeKeyManager<T> {
+  return !!(keyManager as any)._isLegacyTreeKeyManager;
+}
 
 /**
  * Wrapper for the CdkTree node with Material design styles.
@@ -41,33 +51,48 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
-    'tabindex': '-1',
-    '(click)': '_setActiveItem()',
+    '(click)': '_focusItem()',
+    'tabindex': '_getTabindexAttribute()',
   },
 })
 export class MatTreeNode<T, K = T>
   extends CdkTreeNode<T, K>
   implements CanDisable, HasTabIndex, OnInit, OnDestroy
 {
-  /**
-   * The tabindex of the tree node.
-   *
-   * @deprecated MatTreeNode ignores this proprety. Changing tabIndex has no affect. The tree
-   *   automatically determines the appropriate tabindex for the tree node. To be removed in a
-   *   future version.
-   * @breaking-change 19.0.0 Remove this attribute.
-   */
-  tabIndex: number;
+  private _tabIndex: number;
 
   /**
    * The tabindex of the tree node.
    *
-   * @deprecated MatTreeNode ignores this proprety. Changing defaultTabIndex has no affect. The tree
-   *   automatically determines the appropriate tabindex for the tree node. To be removed in a
-   *   future version.
+   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+   *   an unexpected state. Tabindex to be removed in a future version.
    * @breaking-change 19.0.0 Remove this attribute.
    */
-  defaultTabIndex: number;
+  get tabIndex(): number {
+    return this.isDisabled ? -1 : this._tabIndex;
+  }
+  set tabIndex(value: number) {
+    // If the specified tabIndex value is null or undefined, fall back to the default value.
+    this._tabIndex = value != null ? coerceNumberProperty(value) : this.defaultTabIndex;
+  }
+
+  /**
+   * The default tabindex of the tree node.
+   *
+   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+   *   an unexpected state. Tabindex to be removed in a future version.
+   * @breaking-change 19.0.0 Remove this attribute.
+   */
+  defaultTabIndex = 0;
+
+  protected _getTabindexAttribute() {
+    if (isLegacyTreeKeyManager(this._tree._keyManager)) {
+      return this.tabIndex;
+    }
+    return -1;
+  }
 
   /**
    * Whether the component is disabled.
@@ -85,12 +110,19 @@ export class MatTreeNode<T, K = T>
   constructor(
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
-    // Ignore tabindex attribute. MatTree manages its own active state using TreeKeyManager.
-    // Keeping tabIndex in constructor for backwards compatibility with trees created before
-    // introducing TreeKeyManager.
+    /**
+     * The tabindex of the tree node.
+     *
+     * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+     *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+     *   an unexpected state. Tabindex to be removed in a future version.
+     * @breaking-change 19.0.0 Remove this attribute.
+     */
     @Attribute('tabindex') tabIndex: string,
   ) {
     super(elementRef, tree);
+
+    this._tabIndex = Number(tabIndex) || this.defaultTabIndex;
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091

@@ -5,7 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {TreeKeyManager, TreeKeyManagerItem} from '@angular/cdk/a11y';
+import {
+  TREE_KEY_MANAGER,
+  TreeKeyManagerFactory,
+  TreeKeyManagerItem,
+  TreeKeyManagerOptions,
+  TreeKeyManagerStrategy,
+} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
@@ -241,8 +247,10 @@ export class CdkTree<T, K = T>
    */
   private _keyManagerNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
+  private _keyManagerFactory = inject(TREE_KEY_MANAGER) as TreeKeyManagerFactory<CdkTreeNode<T, K>>;
+
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
-  _keyManager: TreeKeyManager<CdkTreeNode<T, K>>;
+  _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
 
   constructor(
     private _differs: IterableDiffers,
@@ -283,17 +291,20 @@ export class CdkTree<T, K = T>
   }
 
   ngAfterContentInit() {
-    this._keyManager = new TreeKeyManager({
-      items: combineLatest([this._keyManagerNodes, this._nodes]).pipe(
-        map(([dataNodes, nodes]) =>
-          dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
-        ),
+    const items = combineLatest([this._keyManagerNodes, this._nodes]).pipe(
+      map(([dataNodes, nodes]) =>
+        dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
       ),
+    );
+
+    const keyManagerOptions: TreeKeyManagerOptions<CdkTreeNode<T, K>> = {
       trackBy: node => this._getExpansionKey(node.data),
       skipPredicate: node => !!node.isDisabled,
       typeAheadDebounceInterval: true,
       horizontalOrientation: this._dir.value,
-    });
+    };
+
+    this._keyManager = this._keyManagerFactory(items, keyManagerOptions);
 
     this._keyManager.change
       .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
@@ -1080,8 +1091,8 @@ export class CdkTree<T, K = T>
     '[attr.aria-setsize]': '_getSetSize()',
     'tabindex': '-1',
     'role': 'treeitem',
-    '(click)': '_setActiveItem()',
-    '(focus)': '_setActiveItem()',
+    '(click)': '_focusItem()',
+    '(focus)': '_focusItem()',
   },
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
@@ -1288,11 +1299,11 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     this._elementRef.nativeElement.setAttribute('tabindex', '-1');
   }
 
-  _setActiveItem() {
+  _focusItem() {
     if (this.isDisabled) {
       return;
     }
-    this._tree._keyManager.setActiveItem(this);
+    this._tree._keyManager.focusItem(this);
   }
 
   _emitExpansionState(expanded: boolean) {

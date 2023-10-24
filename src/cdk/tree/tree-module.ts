@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
 import {NgModule} from '@angular/core';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
@@ -27,5 +28,6 @@ const EXPORTED_DECLARATIONS = [
 @NgModule({
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
+  providers: [TREE_KEY_MANAGER_FACTORY_PROVIDER],
 })
 export class CdkTreeModule {}

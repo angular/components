@@ -21,7 +21,7 @@ import {
   ZERO,
   NINE,
 } from '@angular/cdk/keycodes';
-import {QueryList} from '@angular/core';
+import {InjectionToken, QueryList} from '@angular/core';
 import {of as observableOf, isObservable, Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, take, tap} from 'rxjs/operators';
 
@@ -70,8 +70,6 @@ export interface TreeKeyManagerItem {
  * Configuration for the TreeKeyManager.
  */
 export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
-  items: Observable<T[]> | QueryList<T> | T[];
-
   /**
    * Sets the predicate function that determines which items should be skipped by the tree key
    * manager. By default, disabled items are skipped.
@@ -110,12 +108,63 @@ export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
   typeAheadDebounceInterval?: true | number;
 }
 
+export interface TreeKeyManagerStrategy<T extends TreeKeyManagerItem> {
+  /** Stream that emits any time the focused item changes. */
+  readonly change: Subject<T | null>;
+
+  /**
+   * Handles a keyboard event on the tree.
+   *
+   * @param event Keyboard event that represents the user interaction with the tree.
+   */
+  onKeydown(event: KeyboardEvent): void;
+
+  /** Index of the currently active item. */
+  getActiveItemIndex(): number | null;
+
+  /** The currently active item. */
+  getActiveItem(): T | null;
+
+  /**
+   * Called the first time the Tree component is focused. This method will only be called once over
+   * the lifetime of the Tree component.
+   *
+   * Intended to be used to focus the first item in the tree.
+   */
+  onInitialFocus(): void;
+
+  /**
+   * Focus the provided item by index.
+   *
+   * Updates the state of the currently active item. Emits to `change` stream if active item
+   * Changes.
+   * @param index The index of the item to focus.
+   * @param options Additional focusing options.
+   */
+  focusItem(index: number, options?: {emitChangeEvent?: boolean}): void;
+  /**
+   * Focus the provided item.
+   *
+   * Updates the state of the currently active item. Emits to `change` stream if active item
+   * Changes.
+   * @param item The item to focus. Equality is determined via the trackBy function.
+   * @param options Additional focusing options.
+   */
+  focusItem(item: T, options?: {emitChangeEvent?: boolean}): void;
+  focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
+}
+
+export type TreeKeyManagerFactory<T extends TreeKeyManagerItem> = (
+  items: Observable<T[]> | QueryList<T> | T[],
+  options: TreeKeyManagerOptions<T>,
+) => TreeKeyManagerStrategy<T>;
+
 /**
  * This class manages keyboard events for trees. If you pass it a QueryList or other list of tree
  * items, it will set the active item, focus, handle expansion and typeahead correctly when
  * keyboard events occur.
  */
-export class TreeKeyManager<T extends TreeKeyManagerItem> {
+export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
   private _activeItemIndex = -1;
   private _activeItem: T | null = null;
   private _activationFollowsFocus = false;
@@ -137,14 +186,16 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
   private _items: T[] = [];
 
-  constructor({
-    items,
-    skipPredicate,
-    trackBy,
-    horizontalOrientation,
-    activationFollowsFocus,
-    typeAheadDebounceInterval,
-  }: TreeKeyManagerOptions<T>) {
+  constructor(
+    items: Observable<T[]> | QueryList<T> | T[],
+    {
+      skipPredicate,
+      trackBy,
+      horizontalOrientation,
+      activationFollowsFocus,
+      typeAheadDebounceInterval,
+    }: TreeKeyManagerOptions<T>,
+  ) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
@@ -184,12 +235,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     }
   }
 
-  /**
-   * Stream that emits any time the TAB key is pressed, so components can react
-   * when focus is shifted off of the list.
-   */
-  readonly tabOut = new Subject<void>();
-
   /** Stream that emits any time the focused item changes. */
   readonly change = new Subject<T | null>();
 
@@ -202,7 +247,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
 
     switch (keyCode) {
       case TAB:
-        this.tabOut.next();
         // NB: return here, in order to allow Tab to actually tab out of the tree
         return;
 
@@ -279,46 +323,35 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._focusFirstItem();
   }
 
+  /** Focus the first available item. */
+  private _focusFirstItem(): void {
+    this.focusItem(this._findNextAvailableItemIndex(-1));
+  }
+
+  /** Focus the last available item. */
+  private _focusLastItem(): void {
+    this.focusItem(this._findPreviousAvailableItemIndex(this._items.length));
+  }
+
+  /** Focus the next available item. */
+  private _focusNextItem(): void {
+    this.focusItem(this._findNextAvailableItemIndex(this._activeItemIndex));
+  }
+
+  /** Focus the previous available item. */
+  private _focusPreviousItem(): void {
+    this.focusItem(this._findPreviousAvailableItemIndex(this._activeItemIndex));
+  }
+
   /**
    * Focus the provided item by index.
    * @param index The index of the item to focus.
    * @param options Additional focusing options.
    */
   focusItem(index: number, options?: {emitChangeEvent?: boolean}): void;
-  /**
-   * Focus the provided item.
-   * @param item The item to focus. Equality is determined via the trackBy function.
-   * @param options Additional focusing options.
-   */
   focusItem(item: T, options?: {emitChangeEvent?: boolean}): void;
-  focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void {
-    this.setActiveItem(itemOrIndex, options);
-  }
-
-  /** Focus the first available item. */
-  focusFirstItem(): void {
-    this._focusFirstItem();
-  }
-
-  /** Focus the last available item. */
-  focusLastItem(): void {
-    this._focusLastItem();
-  }
-
-  /** Focus the next available item. */
-  focusNextItem(): void {
-    this._focusNextItem();
-  }
-
-  /** Focus the previous available item. */
-  focusPreviousItem(): void {
-    this._focusPreviousItem();
-  }
-
-  setActiveItem(index: number, options?: {emitChangeEvent?: boolean}): void;
-  setActiveItem(item: T, options?: {emitChangeEvent?: boolean}): void;
-  setActiveItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
-  setActiveItem(itemOrIndex: number | T, options: {emitChangeEvent?: boolean} = {}) {
+  focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
+  focusItem(itemOrIndex: number | T, options: {emitChangeEvent?: boolean} = {}) {
     // Set default options
     options.emitChangeEvent ??= true;
 
@@ -343,6 +376,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._activeItemIndex = index;
 
     if (options.emitChangeEvent) {
+      // Emit to `change` stream as required by TreeKeyManagerStrategy interface.
       this.change.next(this._activeItem);
     }
     this._activeItem?.focus();
@@ -398,7 +432,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
             !this._skipPredicateFn(item) &&
             item.getLabel?.().toLocaleUpperCase().trim().indexOf(inputString) === 0
           ) {
-            this.setActiveItem(index);
+            this.focusItem(index);
             break;
           }
         }
@@ -408,23 +442,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
   }
 
   //// Navigational methods
-
-  private _focusFirstItem() {
-    this.setActiveItem(this._findNextAvailableItemIndex(-1));
-  }
-
-  private _focusLastItem() {
-    this.setActiveItem(this._findPreviousAvailableItemIndex(this._items.length));
-  }
-
-  private _focusPreviousItem() {
-    this.setActiveItem(this._findPreviousAvailableItemIndex(this._activeItemIndex));
-  }
-
-  private _focusNextItem() {
-    this.setActiveItem(this._findNextAvailableItemIndex(this._activeItemIndex));
-  }
-
   private _findNextAvailableItemIndex(startingIndex: number) {
     for (let i = startingIndex + 1; i < this._items.length; i++) {
       if (!this._skipPredicateFn(this._items[i])) {
@@ -458,7 +475,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
       if (!parent || this._skipPredicateFn(parent as T)) {
         return;
       }
-      this.setActiveItem(parent as T);
+      this.focusItem(parent as T);
     }
   }
 
@@ -480,7 +497,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
           if (!firstChild) {
             return;
           }
-          this.setActiveItem(firstChild as T);
+          this.focusItem(firstChild as T);
         });
     }
   }
@@ -523,3 +540,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> {
     this._activeItem?.activate();
   }
 }
+
+/** Injection token that determines the key manager to use. */
+export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>(
+  'cdk-tree-key-manager',
+);
+
+/** @docs-private */
+export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T> {
+  return (items, options) => new TreeKeyManager(items, options);
+}
+
+/** @docs-private */
+export const TREE_KEY_MANAGER_FACTORY_PROVIDER = {
+  provide: TREE_KEY_MANAGER,
+  useFactory: TREE_KEY_MANAGER_FACTORY,
+};

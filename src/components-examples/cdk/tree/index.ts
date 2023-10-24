@@ -5,3 +5,5 @@ export {CdkTreeNestedLevelAccessorExample} from './cdk-tree-nested-level-accesso
 export {CdkTreeNestedChildrenAccessorExample} from './cdk-tree-nested-children-accessor/cdk-tree-nested-children-accessor-example';
 export {CdkTreeNestedExample} from './cdk-tree-nested/cdk-tree-nested-example';
 export {CdkTreeComplexExample} from './cdk-tree-complex/cdk-tree-complex-example';
+export {CdkTreeCustomKeyManagerExample} from './cdk-tree-custom-key-manager/cdk-tree-custom-key-manager-example';
+export {CdkTreeLegacyKeyboardInterfaceExample} from './cdk-tree-legacy-keyboard-interface/cdk-tree-legacy-keyboard-interface-example';
