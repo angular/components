@@ -290,11 +290,11 @@ jobs:
         run: yarn check-tooling-setup
       - name: Deploy the docs app
         run: yarn ci-push-deploy-docs-app
-      - uses: ./.github/actions/slack
-        if: ${{ failure() && github.event_name == 'push' }}
         env:
           CIRCLE_BRANCH: ${{ github.ref_name }}
           CIRCLE_SHA1: ${{ github.sha }}
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
           JOB_NAME: 'Docs site deployment'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
