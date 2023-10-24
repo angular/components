@@ -1,7 +1,6 @@
 @use 'sass:math';
 @use '@material/density/functions' as mdc-density-functions;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
-@use '@material/theme/theme-color' as mdc-theme-color;
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 
 @use './button-theme-private';
@@ -10,17 +9,10 @@
 
 $_icon-size: 24px;
 
+// TODO(crisbeto): move these into tokens
 @mixin _ripple-color($color) {
   --mat-mdc-button-persistent-ripple-color: #{$color};
   --mat-mdc-button-ripple-color: #{rgba($color, 0.1)};
-}
-
-@function _variable-safe-contrast-tone($value, $is-dark) {
-  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
-    @return mdc-theme-color.contrast-tone($value);
-  }
-
-  @return if($is-dark, 'light', 'dark');
 }
 
 @mixin base($theme) {
@@ -29,45 +21,34 @@ $_icon-size: 24px;
 
 @mixin color($theme) {
   $color-tokens: tokens-mdc-icon-button.get-color-tokens($theme);
-  $surface: inspection.get-theme-color($theme, background, card);
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if(_variable-safe-contrast-tone($surface, $is-dark) == 'dark', #000, #fff);
 
   .mat-mdc-icon-button {
     @include button-theme-private.ripple-theme-styles($theme, false);
     @include mdc-icon-button-theme.theme($color-tokens);
-    @include _ripple-color($on-surface);
+    @include _ripple-color(if($is-dark, #fff, #000));
 
     &.mat-primary {
-      $color: inspection.get-theme-color($theme, primary);
-      @include mdc-icon-button-theme.theme((icon-color: $color));
-      @include _ripple-color($color);
+      @include _ripple-color(inspection.get-theme-color($theme, primary));
+      @include mdc-icon-button-theme.theme(
+        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, primary));
     }
 
     &.mat-accent {
-      $color: inspection.get-theme-color($theme, accent);
-      @include mdc-icon-button-theme.theme((icon-color: $color));
-      @include _ripple-color($color);
+      @include _ripple-color(inspection.get-theme-color($theme, accent));
+      @include mdc-icon-button-theme.theme(
+        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, accent));
     }
 
     &.mat-warn {
-      $color: inspection.get-theme-color($theme, warn);
-      @include mdc-icon-button-theme.theme((icon-color: $color));
-      @include _ripple-color($color);
-    }
-
-    @include button-theme-private.apply-disabled-style() {
-      $disabled-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
-      @include mdc-icon-button-theme.theme((
-        icon-color: $disabled-color,
-        disabled-icon-color: $disabled-color,
-      ));
+      @include _ripple-color(inspection.get-theme-color($theme, warn));
+      @include mdc-icon-button-theme.theme(
+        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, warn));
     }
   }
 }
 
-@mixin typography($theme) {
-}
+@mixin typography($theme) {}
 
 @mixin density($theme) {
   $density-scale: inspection.get-theme-density($theme);
