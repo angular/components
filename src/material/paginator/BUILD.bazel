@@ -23,7 +23,6 @@ ng_module(
         "//src/material/core",
         "//src/material/select",
         "//src/material/tooltip",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",  # TODO(jelbourn): transitive dep via generated code
         "@npm//rxjs",

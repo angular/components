@@ -33,7 +33,6 @@ ng_module(
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "@npm//@angular/animations",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",

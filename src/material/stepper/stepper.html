@@ -1,56 +1,60 @@
-<ng-container [ngSwitch]="orientation">
-  <!-- Horizontal stepper -->
-  <div class="mat-horizontal-stepper-wrapper" *ngSwitchCase="'horizontal'">
-    <div class="mat-horizontal-stepper-header-container">
-      <ng-container *ngFor="let step of steps; let i = index; let isLast = last">
+@switch (orientation) {
+  @case ('horizontal') {
+    <div class="mat-horizontal-stepper-wrapper">
+      <div class="mat-horizontal-stepper-header-container">
+        @for (step of steps; track step; let i = $index, isLast = $last) {
+          <ng-container
+            [ngTemplateOutlet]="stepTemplate"
+            [ngTemplateOutletContext]="{step: step, i: i}"></ng-container>
+          @if (!isLast) {
+            <div class="mat-stepper-horizontal-line"></div>
+          }
+        }
+      </div>
+
+      <div class="mat-horizontal-content-container">
+        @for (step of steps; track step; let i = $index) {
+          <div class="mat-horizontal-stepper-content" role="tabpanel"
+               [@horizontalStepTransition]="{
+                  'value': _getAnimationDirection(i),
+                  'params': {'animationDuration': _getAnimationDuration()}
+                }"
+               (@horizontalStepTransition.done)="_animationDone.next($event)"
+               [id]="_getStepContentId(i)"
+               [attr.aria-labelledby]="_getStepLabelId(i)"
+               [class.mat-horizontal-stepper-content-inactive]="selectedIndex !== i">
+            <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @case ('vertical') {
+    @for (step of steps; track step; let i = $index, isLast = $last) {
+      <div class="mat-step">
         <ng-container
           [ngTemplateOutlet]="stepTemplate"
           [ngTemplateOutletContext]="{step: step, i: i}"></ng-container>
-        <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
-      </ng-container>
-    </div>
-
-    <div class="mat-horizontal-content-container">
-      <div *ngFor="let step of steps; let i = index"
-           class="mat-horizontal-stepper-content" role="tabpanel"
-           [@horizontalStepTransition]="{
-              'value': _getAnimationDirection(i),
-              'params': {'animationDuration': _getAnimationDuration()}
-            }"
-           (@horizontalStepTransition.done)="_animationDone.next($event)"
-           [id]="_getStepContentId(i)"
-           [attr.aria-labelledby]="_getStepLabelId(i)"
-           [class.mat-horizontal-stepper-content-inactive]="selectedIndex !== i">
-        <ng-container [ngTemplateOutlet]="step.content"></ng-container>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vertical stepper -->
-  <ng-container *ngSwitchCase="'vertical'">
-    <div class="mat-step" *ngFor="let step of steps; let i = index; let isLast = last">
-      <ng-container
-        [ngTemplateOutlet]="stepTemplate"
-        [ngTemplateOutletContext]="{step: step, i: i}"></ng-container>
-      <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
-        <div class="mat-vertical-stepper-content" role="tabpanel"
-             [@verticalStepTransition]="{
-                'value': _getAnimationDirection(i),
-                'params': {'animationDuration': _getAnimationDuration()}
-              }"
-             (@verticalStepTransition.done)="_animationDone.next($event)"
-             [id]="_getStepContentId(i)"
-             [attr.aria-labelledby]="_getStepLabelId(i)"
-             [class.mat-vertical-stepper-content-inactive]="selectedIndex !== i">
-          <div class="mat-vertical-content">
-            <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+        <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
+          <div class="mat-vertical-stepper-content" role="tabpanel"
+               [@verticalStepTransition]="{
+                  'value': _getAnimationDirection(i),
+                  'params': {'animationDuration': _getAnimationDuration()}
+                }"
+               (@verticalStepTransition.done)="_animationDone.next($event)"
+               [id]="_getStepContentId(i)"
+               [attr.aria-labelledby]="_getStepLabelId(i)"
+               [class.mat-vertical-stepper-content-inactive]="selectedIndex !== i">
+            <div class="mat-vertical-content">
+              <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ng-container>
-
-</ng-container>
+    }
+  }
+}
 
 <!-- Common step templating -->
 <ng-template let-step="step" let-i="i" #stepTemplate>

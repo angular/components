@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MAT_PAGINATOR_INTL_PROVIDER} from './paginator-intl';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,7 +14,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatPaginator} from './paginator';
 
 @NgModule({
-  imports: [CommonModule, MatButtonModule, MatSelectModule, MatTooltipModule],
+  imports: [MatButtonModule, MatSelectModule, MatTooltipModule],
   exports: [MatPaginator],
   declarations: [MatPaginator],
   providers: [MAT_PAGINATOR_INTL_PROVIDER],

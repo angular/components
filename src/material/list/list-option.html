@@ -36,20 +36,21 @@
   </div>
 </ng-template>
 
-<!-- Container for the checkbox at start. -->
-<span class="mdc-list-item__start mat-mdc-list-option-checkbox-before"
-      *ngIf="_hasCheckboxAt('before')">
-  <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
-</span>
-<!-- Container for the radio at the start. -->
-<span class="mdc-list-item__start mat-mdc-list-option-radio-before"
-      *ngIf="_hasRadioAt('before')">
-  <ng-template [ngTemplateOutlet]="radio"></ng-template>
-</span>
+@if (_hasCheckboxAt('before')) {
+  <!-- Container for the checkbox at start. -->
+  <span class="mdc-list-item__start mat-mdc-list-option-checkbox-before">
+    <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
+  </span>
+} @else if (_hasRadioAt('before')) {
+  <!-- Container for the radio at the start. -->
+  <span class="mdc-list-item__start mat-mdc-list-option-radio-before">
+    <ng-template [ngTemplateOutlet]="radio"></ng-template>
+  </span>
+}
 <!-- Conditionally renders icons/avatars before the list item text. -->
-<ng-template [ngIf]="_hasIconsOrAvatarsAt('before')">
+@if (_hasIconsOrAvatarsAt('before')) {
   <ng-template [ngTemplateOutlet]="icons"></ng-template>
-</ng-template>
+}
 
 <!-- Text -->
 <span class="mdc-list-item__content">
@@ -61,18 +62,22 @@
   </span>
 </span>
 
-<!-- Container for the checkbox at the end. -->
-<span class="mdc-list-item__end" *ngIf="_hasCheckboxAt('after')">
-  <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
-</span>
-<!-- Container for the radio at the end. -->
-<span class="mdc-list-item__end" *ngIf="_hasRadioAt('after')">
-  <ng-template [ngTemplateOutlet]="radio"></ng-template>
-</span>
+@if (_hasCheckboxAt('after')) {
+  <!-- Container for the checkbox at the end. -->
+  <span class="mdc-list-item__end">
+    <ng-template [ngTemplateOutlet]="checkbox"></ng-template>
+  </span>
+} @else if (_hasRadioAt('after')) {
+  <!-- Container for the radio at the end. -->
+  <span class="mdc-list-item__end">
+    <ng-template [ngTemplateOutlet]="radio"></ng-template>
+  </span>
+}
+
 <!-- Conditionally renders icons/avatars after the list item text. -->
-<ng-template [ngIf]="_hasIconsOrAvatarsAt('after')">
+@if (_hasIconsOrAvatarsAt('after')) {
   <ng-template [ngTemplateOutlet]="icons"></ng-template>
-</ng-template>
+}
 
 <!-- Divider -->
 <ng-content select="mat-divider"></ng-content>

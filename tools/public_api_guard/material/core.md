@@ -15,7 +15,6 @@ import { FormGroupDirective } from '@angular/forms';
 import { HighContrastModeDetector } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
-import * as i4 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -300,7 +299,7 @@ export class MatOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_2.MatCommonModule, typeof i6.MatPseudoCheckboxModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i1_2.MatCommonModule, typeof i5.MatPseudoCheckboxModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
 }
 
 // @public
