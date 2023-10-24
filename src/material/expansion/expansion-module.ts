@@ -8,7 +8,6 @@
 
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {PortalModule} from '@angular/cdk/portal';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {MatAccordion} from './accordion';
@@ -21,7 +20,7 @@ import {
 } from './expansion-panel-header';
 
 @NgModule({
-  imports: [CommonModule, MatCommonModule, CdkAccordionModule, PortalModule],
+  imports: [MatCommonModule, CdkAccordionModule, PortalModule],
   exports: [
     MatAccordion,
     MatExpansionPanel,

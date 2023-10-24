@@ -7,7 +7,6 @@
  */
 
 import {ENTER} from '@angular/cdk/keycodes';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatChip} from './chip';
@@ -37,7 +36,7 @@ const CHIP_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, CommonModule, MatRippleModule],
+  imports: [MatCommonModule, MatRippleModule],
   exports: [MatCommonModule, CHIP_DECLARATIONS],
   declarations: [MatChipAction, CHIP_DECLARATIONS],
   providers: [

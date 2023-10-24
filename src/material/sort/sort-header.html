@@ -25,18 +25,19 @@
   </div>
 
   <!-- Disable animations while a current animation is running -->
-  <div class="mat-sort-header-arrow"
-       *ngIf="_renderArrow()"
-       [@arrowOpacity]="_getArrowViewState()"
-       [@arrowPosition]="_getArrowViewState()"
-       [@allowChildren]="_getArrowDirectionState()"
-       (@arrowPosition.start)="_disableViewStateAnimation = true"
-       (@arrowPosition.done)="_disableViewStateAnimation = false">
-    <div class="mat-sort-header-stem"></div>
-    <div class="mat-sort-header-indicator" [@indicator]="_getArrowDirectionState()">
-      <div class="mat-sort-header-pointer-left" [@leftPointer]="_getArrowDirectionState()"></div>
-      <div class="mat-sort-header-pointer-right" [@rightPointer]="_getArrowDirectionState()"></div>
-      <div class="mat-sort-header-pointer-middle"></div>
+  @if (_renderArrow()) {
+    <div class="mat-sort-header-arrow"
+        [@arrowOpacity]="_getArrowViewState()"
+        [@arrowPosition]="_getArrowViewState()"
+        [@allowChildren]="_getArrowDirectionState()"
+        (@arrowPosition.start)="_disableViewStateAnimation = true"
+        (@arrowPosition.done)="_disableViewStateAnimation = false">
+      <div class="mat-sort-header-stem"></div>
+      <div class="mat-sort-header-indicator" [@indicator]="_getArrowDirectionState()">
+        <div class="mat-sort-header-pointer-left" [@leftPointer]="_getArrowDirectionState()"></div>
+        <div class="mat-sort-header-pointer-right" [@rightPointer]="_getArrowDirectionState()"></div>
+        <div class="mat-sort-header-pointer-middle"></div>
+      </div>
     </div>
-  </div>
+  }
 </div>
