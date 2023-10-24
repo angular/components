@@ -2,8 +2,8 @@
 
 ## What is theming?
 
-Angular Material's theming system lets you customize color, typography, and density styles for components
-in your application. The theming system is based on Google's
+Angular Material's theming system lets you customize base, color, typography, and density styles for
+components in your application. The theming system is based on Google's
 [Material Design][material-design-theming] specification.
 
 This document describes the concepts and APIs for customizing colors. For typography customization,
@@ -86,8 +86,8 @@ $my-palette: mat.$indigo-palette;
 
 ## Themes
 
-A **theme** is a collection of color, typography, and density options. Each theme includes three palettes that
-determine component colors:
+A **theme** is a collection of color, typography, and density options. Each theme includes three
+palettes that determine component colors:
 
 * A **primary** palette for the color that appears most frequently throughout your application
 * An **accent**, or _secondary_, palette used to selectively highlight key parts of your UI
@@ -117,7 +117,8 @@ times will result in duplicate CSS in your application.
 #### Defining a theme
 
 Angular Material represents a theme as a Sass map that contains your color, typography, and density
-choices. See [Angular Material Typography][mat-typography] for an in-depth guide to customizing typography. See
+choices, as well as some base design system settings. See
+[Angular Material Typography][mat-typography] for an in-depth guide to customizing typography. See
 [Customizing density](#customizing-density) below for details on adjusting component density.
 
 Constructing the theme first requires defining your primary and accent palettes, with an optional
@@ -166,13 +167,15 @@ $my-theme: mat.define-light-theme((
 The `core-theme` Sass mixin emits prerequisite styles for common features used by multiple
 components, such as ripples. This mixin must be included once per theme.
 
-Each Angular Material component has a mixin for each color , typography, and density. For example, `MatButton` declares
-`button-color`, `button-typography`, and `button-density`. Each mixin emits only the styles corresponding to that
-area of customization.
+Each Angular Material component has a mixin for each [theming dimension](#theming-dimensions): base,
+color, typography, and density. For example, `MatButton` declares `button-base`, `button-color`,
+`button-typography`, and `button-density`. Each mixin emits only the styles corresponding to that
+dimension of customization.
 
-Additionally, each component has a "theme" mixin that emits all styles that depend on the theme config.
-This theme mixin only emits color, typography, or density styles if you provided a corresponding
-configuration to `define-light-theme` or `define-dark-theme`.
+Additionally, each component has a "theme" mixin that emits all styles that depend on the theme
+config. This theme mixin only emits color, typography, or density styles if you provided a
+corresponding configuration to `define-light-theme` or `define-dark-theme`, and it always emits the
+base styles.
 
 Apply the styles for each of the components used in your application by including each of their
 theme Sass mixins.
@@ -205,10 +208,11 @@ $my-theme: mat.define-light-theme((
 ```
 
 As an alternative to listing every component that your application uses, Angular Material offers
-Sass mixins that includes styles for all components in the library: `all-component-colors`,
-`all-component-typographies`, `all-component-densities`, and `all-component-themes`. These mixins behave the same as
-individual component mixins, except they emit styles for `core-theme` and _all_ 35+ components in Angular
-Material. Unless your application uses every single component, this will produce unnecessary CSS.
+Sass mixins that includes styles for all components in the library: `all-component-bases`,
+`all-component-colors`, `all-component-typographies`, `all-component-densities`, and
+`all-component-themes`. These mixins behave the same as individual component mixins, except they
+emit styles for `core-theme` and _all_ 35+ components in Angular Material. Unless your application
+uses every single component, this will produce unnecessary CSS.
 
 ```scss
 @use '@angular/material' as mat;
@@ -234,6 +238,46 @@ To include the emitted styles in your application, [add your theme file to the `
 your project's `angular.json` file][adding-styles].
 
 [adding-styles]: https://angular.io/guide/workspace-config#styles-and-scripts-configuration
+
+#### Theming dimensions
+
+Angular Material themes are divided along several dimensions:
+
+Base
+: Common base styles for the design system. These styles don't change based on your configured
+colors, typography, or density, so they only need to be included once per application. These
+mixins include structural styles such as border-radius, border-width, etc. All components have a base
+mixin that can be used to include its base styles. (For example,
+`@include mat.checkbox-base($theme)`)
+
+Color
+: Styles related to the colors in your application. These style should be included at least once in
+your application. Depending on your needs, you may need to include these styles multiple times
+with different configurations. (For example, if your app supports light and dark theme colors.)
+All components have a color mixin that can be used to include its color styles. (For example,
+`@include mat.checkbox-color($theme)`)
+
+Typography
+: Styles related to the fonts used in your application, including the font family, size, weight,
+line-height, and letter-spacing. These style should be included at least once in your application.
+Depending on your needs, you may need to include these styles multiple times with different
+configurations. (For example, if your app supports reading content in either a serif or sans-serif
+font.) All components  have a typography mixin that can be used to include its typography
+styles. (For example, `@include mat.checkbox-typography($theme)`)
+
+Density
+: Styles related to the size and spacing of elements in your application. These style should be
+included at least once in your application. Depending on your needs, you may need to include these
+styles multiple times with different configurations. (For example, if your app supports both a
+normal and compact mode). All components have a density mixin that can be used to include its
+density styles. (For example, `@include mat.checkbox-density($theme)`)
+
+All components also support a theme mixin that can be used to include the component's styles for all
+theme dimensions at once. (For example, `@include mat.checkbox-theme($theme)`).
+
+The recommended approach is to rely on the `theme` mixins to lay down your base styles, and if
+needed us the single dimension mixins to override particular aspects for parts of your app (see the
+section on [Multiple themes in one file](#multiple-themes-in-one-file).)
 
 ### Using a pre-built theme
 
@@ -327,7 +371,8 @@ file. The approach for this loading depends on your application.
 By default, Angular Material does not apply any styles to your DOM outside
 its own components. If you want to set your application's background color
 to match the components' theme, you can either:
-1. Put your application's main content inside `mat-sidenav-container`, assuming you're using `MatSidenav`, or
+1. Put your application's main content inside `mat-sidenav-container`, assuming you're using
+   `MatSidenav`, or
 2. Apply the `mat-app-background` CSS class to your main content root element (typically `body`).
 
 ### Scoping style customizations
@@ -385,20 +430,22 @@ $my-palette: mat.define-palette(mat.$indigo-palette);
 ## Customizing density
 
 Angular Material's density customization is based on the
-[Material Design density guidelines](https://m2.material.io/design/layout/applying-density.html). This system
-defines a scale where zero represents the default density. You can decrement the number for _more density_ and increment
-the number for _less density_.
+[Material Design density guidelines][material-density]. This system defines a scale where zero
+represents the default density. You can decrement the number for _more density_ and increment the
+number for _less density_.
 
 The density system is based on a *density scale*. The scale starts with the
 default density of `0`. Each whole number step down (`-1`, `-2`, etc.) reduces
-the affected sizes by `4px`, down to the minimum size necessary for a component to render coherently.
+the affected sizes by `4px`, down to the minimum size necessary for a component to render
+coherently.
 
-Components that appear in task-based or pop-up contexts, such as `MatDatepicker`, don't change their size via the
-density system. The [Material Design density guidance](https://m2.material.io/design/layout/applying-density.html)
-explicitly discourages increasing density for such interactions because they don't compete for space in the
+Components that appear in task-based or pop-up contexts, such as `MatDatepicker`, don't change their
+size via the density system. The [Material Design density guidance][material-density] explicitly
+discourages increasing density for such interactions because they don't compete for space in the
 application's layout.
 
-You can apply custom density setting to the entire library or to individual components using their density Sass mixins.
+You can apply custom density setting to the entire library or to individual components using their
+density Sass mixins.
 
 ```scss
 // You can set a density setting in your theme to apply to all components.
@@ -413,6 +460,8 @@ $dark-theme: mat.define-dark-theme((
   @include mat.button-density(-1);
 }
 ```
+
+[material-density]: https://m2.material.io/design/layout/applying-density.html
 
 ## Strong focus indicators
 
@@ -505,14 +554,14 @@ the CSS in each shadow root, or by using [Constructable Stylesheets][constructab
 
 ## User preference media queries
 
-Angular Material does not apply styles based on user preference media queries, such as `prefers-color-scheme`
-or `prefers-contrast`. Instead, Angular Material's Sass mixins give you the flexibility to
-apply theme styles to based on the conditions that make the most sense for your users. This may mean using media
-queries directly or reading a saved user preference.
+Angular Material does not apply styles based on user preference media queries, such as 
+`prefers-color-scheme` or `prefers-contrast`. Instead, Angular Material's Sass mixins give you the
+flexibility to apply theme styles to based on the conditions that make the most sense for your
+users. This may mean using media queries directly or reading a saved user preference.
 
 ## Style customization outside the theming system
 
-Angular Material supports customizing color, typography, and density as outlined in this document. Angular
-strongly discourages, and does not directly support, overriding component CSS outside the theming
-APIs described above. Component DOM structure and CSS classes are considered private implementation
-details that may change at any time.
+Angular Material supports customizing color, typography, and density as outlined in this document. 
+Angular strongly discourages, and does not directly support, overriding component CSS outside the 
+theming APIs described above. Component DOM structure and CSS classes are considered private 
+implementation details that may change at any time.
