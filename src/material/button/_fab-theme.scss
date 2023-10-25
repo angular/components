@@ -9,6 +9,8 @@
 @use '../core/theming/inspection';
 @use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
 @use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 
 @mixin base($theme) {
@@ -21,37 +23,25 @@
   }
 }
 
-@mixin _fab-variant($foreground, $background) {
-  $color-tokens: (
-    container-color: $background,
-    icon-color: $foreground
+@mixin _fab-variant($theme, $palette) {
+  $mdc-tokens: if($palette,
+    tokens-mdc-fab.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-fab.get-color-tokens($theme)
   );
-  @include mdc-fab-theme.theme($color-tokens);
 
-  --mat-mdc-fab-color: #{$foreground};
-}
+  $mat-tokens: if($palette,
+    tokens-mat-fab.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-fab.get-color-tokens($theme)
+  );
 
-@function white-or-black($color, $is-dark) {
-  @return if(mdc-helpers.variable-safe-contrast-tone($color, $is-dark) == 'dark', #000, #fff);
+  @include mdc-fab-theme.theme($mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-tokens);
 }
 
 @mixin color($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-
-  $surface: inspection.get-theme-color($theme, background, card);
-  $primary: inspection.get-theme-color($theme, primary);
-  $accent: inspection.get-theme-color($theme, accent);
-  $warn: inspection.get-theme-color($theme, warn);
-
-  $on-surface: white-or-black($surface, $is-dark);
-  $on-primary: white-or-black($primary, $is-dark);
-  $on-accent: white-or-black($accent, $is-dark);
-  $on-warn: white-or-black($warn, $is-dark);
-
-  $disabled: rgba($on-surface, 0.12);
-  $on-disabled: rgba($on-surface, if($is-dark, 0.5, 0.38));
-
   @include sass-utils.current-selector-or-root() {
+    @include _fab-variant($theme, null);
+
     // TODO(wagnermaciel): The ripple-theme-styles mixin depends heavily on
     // being wrapped by using-mdc-theme. This workaround needs to be
     // revisited w/ a more holistic solution.
@@ -60,28 +50,18 @@
       @include mdc-helpers.using-mdc-theme($theme) {
         @include button-theme-private.ripple-theme-styles($theme, true);
       }
-    }
 
-    :disabled, a[disabled='true'] {
-      @include button-theme-private.apply-disabled-style() {
-        @include _fab-variant($on-disabled, $disabled);
+      &.mat-primary {
+        @include _fab-variant($theme, primary);
       }
-    }
 
-    .mat-unthemed {
-      @include _fab-variant($on-surface, $surface);
-    }
+      &.mat-accent {
+        @include _fab-variant($theme, accent);
+      }
 
-    .mat-primary {
-      @include _fab-variant($on-primary, $primary);
-    }
-
-    .mat-accent {
-      @include _fab-variant($on-accent, $accent);
-    }
-
-    .mat-warn {
-      @include _fab-variant($on-warn, $warn);
+      &.mat-warn {
+        @include _fab-variant($theme, warn);
+      }
     }
   }
 }

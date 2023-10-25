@@ -22,6 +22,10 @@ $ripple-target: '.mdc-fab__ripple';
     container-shape: 50%,
     icon-size: 24px,
 
+    // We don't use this token, because it doesn't set the color of any text inside the FAB.
+    // We create a custom token for it instead.
+    icon-color: null,
+
     container-elevation: null,
     container-height: null,
     container-shadow-color: null,
@@ -56,10 +60,17 @@ $ripple-target: '.mdc-fab__ripple';
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $surface: inspection.get-theme-color($theme, primary, default);
-  $on-surface: inspection.get-theme-color($theme, primary, default-contrast);
+  @return (
+    // Background color of the FAB.
+    container-color: inspection.get-theme-color($theme, background, card),
+  );
+}
 
-  @return (container-color: $surface, icon-color: $on-surface);
+// Generates the mapping for the properties that change based on the FAB palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  @return (
+    container-color: inspection.get-theme-color($theme, $palette-name, default),
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
