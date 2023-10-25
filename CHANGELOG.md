@@ -1,3 +1,19 @@
+<a name="17.0.0-rc.1"></a>
+# 17.0.0-rc.1 "transparent-table" (2023-10-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [215b92ae2](https://github.com/angular/components/commit/215b92ae2ec8326f4265693b5168a2837d59e618) | fix | **checkbox:** add aria-checked ([#27970](https://github.com/angular/components/pull/27970)) |
+| [c6fa905dd](https://github.com/angular/components/commit/c6fa905dd489b7a1b66c8a91efd68cdc07efed86) | fix | **divider:** move unthemable tokens to theme mixin ([#27881](https://github.com/angular/components/pull/27881)) |
+| [0ac19114c](https://github.com/angular/components/commit/0ac19114cdcbd2c874c7d93ef8b9234d0a42d0ce) | fix | **form-field:** move unthemable tokens to theme mixin ([#27887](https://github.com/angular/components/pull/27887)) |
+| [041a71b87](https://github.com/angular/components/commit/041a71b87a16a40de3307ed7bc9e97a6020d2433) | fix | **schematics:** Create a schematic to add the base theme dimension ([#27964](https://github.com/angular/components/pull/27964)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a3f9ca14b](https://github.com/angular/components/commit/a3f9ca14ba57a8e39f65858066b8681908f46590) | perf | switch to built-in control flow ([#27987](https://github.com/angular/components/pull/27987)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-rc.0"></a>
 # 17.0.0-rc.0 "chalk-cobwebs" (2023-10-18)
 ### material
