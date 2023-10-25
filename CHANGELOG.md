@@ -1,3 +1,12 @@
+<a name="16.2.10"></a>
+# 16.2.10 "plaster-pineapple" (2023-10-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2b5a7faea](https://github.com/angular/components/commit/2b5a7faea2617626d59f375100a4923e51c04aa0) | fix | **checkbox:** add aria-checked ([#27970](https://github.com/angular/components/pull/27970)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.9"></a>
 # 16.2.9 "paper-pumpkin" (2023-10-18)
 ### material
