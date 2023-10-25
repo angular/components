@@ -1,19 +1,21 @@
 @use '@material/fab' as mdc-fab;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
-@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
+@use '../core/style/elevation';
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/token-utils';
 @use '../core/style/private' as style-private;
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/extended-fab' as m2-mdc-extended-fab;
-@use '../core/tokens/m2/mdc/fab' as m2-mdc-fab;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-fab-token-slots: m2-mdc-fab.get-token-slots();
-  $mdc-extended-fab-token-slots: m2-mdc-extended-fab.get-token-slots();
+  $mdc-fab-token-slots: tokens-mdc-fab.get-token-slots();
+  $mdc-extended-fab-token-slots: tokens-mdc-extended-fab.get-token-slots();
 
   // Add the MDC fab static styles.
   @include mdc-fab.static-styles();
@@ -34,33 +36,31 @@
   @include button-base.mat-private-button-interactive();
   @include button-base.mat-private-button-touch-target(true);
   @include style-private.private-animation-noop();
+  @include elevation.elevation(6);
+  flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
   @include mdc-helpers.disable-mdc-fallback-declarations {
-    // TODO(crisbeto): the elevation can be controlled using `container-elevation` in `theme-styles`
-    // however when it is passed in, MDC throws an error that `container-shadow-color` isn't
-    // passed in. When `container-shadow-color` is passed in, MDC throws another error, because
-    // the produced value isn't valid CSS. Eventually we should switch to it once it's fixed.
-    @include mdc-elevation-theme.elevation(6);
-
-    &:hover, &:focus {
-      @include mdc-elevation-theme.elevation(8);
-    }
-
-    &:active, &:focus:active {
-      @include mdc-elevation-theme.elevation(12);
-    }
-
-    @include button-base.mat-private-button-disabled {
-      @include mdc-elevation-theme.elevation(0);
+    @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
+      @include token-utils.create-token-slot(color, foreground-color, inherit);
     }
   }
 
-  // TODO(crisbeto): `theme-styles` doesn't allow for the color to be controlled. Define a custom
-  // variable for now so we have something to target.
-  color: var(--mat-mdc-fab-color, inherit);
+  &:hover, &:focus {
+    @include elevation.elevation(8);
+  }
 
-  // Prevent the button from shrinking since it's always supposed to be a circle.
-  flex-shrink: 0;
+  &:active, &:focus:active {
+    @include elevation.elevation(12);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    @include elevation.elevation(0);
+
+    @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
+      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
+      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
+    }
+  }
 
   // MDC adds some styles to fab and mini-fab that conflict with some of our focus indicator
   // styles and don't actually do anything. This undoes those conflicting styles.
