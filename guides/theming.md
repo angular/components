@@ -353,34 +353,10 @@ The example below shows how to customize the color of all buttons inside element
 
 ### Reading hues from palettes
 
-You can use the `get-color-from-palette` function to get specific hues from a palette by their
-number identifier. You can also access the contrast color for a particular hue by suffixing the
-hue's number identifier with `-contrast`.
+It is possible to read colors from a theme for use in your own components. For more information
+about this see our guide on [Theming your own components][reading-colors].
 
-```scss
-@use '@angular/material' as mat;
-
-$my-palette: mat.define-palette(mat.$indigo-palette);
-
-.my-custom-style {
- background: mat.get-color-from-palette($my-palette, 500);
- color: mat.get-color-from-palette($my-palette, '500-contrast');
-}
-```
-
-You can also reference colors using the `"default"`, `"lighter"`, `"darker"`, and `"text"` colors
-passed to `define-palette`.
-
-```scss
-@use '@angular/material' as mat;
-
-$my-palette: mat.define-palette(mat.$indigo-palette);
-
-.my-custom-darker-style {
- background: mat.get-color-from-palette($my-palette, 'darker');
- color: mat.get-color-from-palette($my-palette, 'darker-contrast');
-}
-```
+[reading-colors]: https://material.angular.io/guide/theming-your-components#reading-color-values
 
 ## Customizing density
 
