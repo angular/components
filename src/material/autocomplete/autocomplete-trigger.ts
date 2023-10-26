@@ -420,7 +420,10 @@ export class MatAutocompleteTrigger
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
-    Promise.resolve(null).then(() => this._assignOptionValue(value));
+    Promise.resolve(null).then(() => {
+      this._updateMarkedSelection(value);
+      this._assignOptionValue(value);
+    });
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -646,12 +649,6 @@ export class MatAutocompleteTrigger
   }
 
   private _updateNativeInputValue(value: string): void {
-    // We want to clear the previous selection if our new value is falsy. e.g: reactive form field
-    // being reset.
-    if (!value) {
-      this._clearPreviousSelectedOption(null, false);
-    }
-
     // If it's used within a `MatFormField`, we should set it through the property so it can go
     // through change detection.
     if (this._formField) {
@@ -697,6 +694,26 @@ export class MatAutocompleteTrigger
     }
 
     this.closePanel();
+  }
+
+  /**
+   * This method updates the options so that only those matching the display of the
+   * specified value are marked as selected.
+   */
+  private _updateMarkedSelection(value: any) {
+    const displayWith = this.autocomplete?.displayWith ?? (value => value);
+    const valueDisplay = displayWith(value);
+
+    // Null checks are necessary here, because the autocomplete
+    // or its options may not have been assigned yet.
+    this.autocomplete?.options?.forEach(option => {
+      const optionDisplay = displayWith(option.value);
+      if (option.selected && optionDisplay !== valueDisplay) {
+        option.deselect(false);
+      } else if (!option.selected && optionDisplay === valueDisplay) {
+        option.select(false);
+      }
+    });
   }
 
   /**

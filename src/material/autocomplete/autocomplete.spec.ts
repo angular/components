@@ -847,7 +847,22 @@ describe('MDC-based MatAutocomplete', () => {
       expect(input.value).withContext(`Expected input value to be empty after reset.`).toEqual('');
     }));
 
-    it('should clear the previous selection when reactive form field is reset programmatically', fakeAsync(() => {
+    it('should select option correctly if value is set programmatically', fakeAsync(() => {
+      expect(fixture.componentInstance.options.first.selected)
+        .withContext(`Expected first option to start off unselected.`)
+        .toBe(false);
+
+      fixture.componentInstance.stateCtrl.setValue({code: 'AL', name: 'Alabama'});
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.options.first.selected)
+        .withContext(`Expected first option to be selected.`)
+        .toBe(true);
+    }));
+
+    it('should clear selected option if value is reset programmatically', fakeAsync(() => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
@@ -855,14 +870,12 @@ describe('MDC-based MatAutocomplete', () => {
       const options = overlayContainerElement.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
-      const clickedOption = options[0];
-      const option = fixture.componentInstance.options.first;
-
-      clickedOption.click();
+      options[0].click();
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
-      expect(option.selected).toBe(true);
+      expect(fixture.componentInstance.options.first.selected)
+        .withContext(`Expected first option to be selected.`)
+        .toBe(true);
 
       fixture.componentInstance.stateCtrl.reset();
       tick();
@@ -870,8 +883,9 @@ describe('MDC-based MatAutocomplete', () => {
       fixture.detectChanges();
       tick();
 
-      expect(fixture.componentInstance.stateCtrl.value).toEqual(null);
-      expect(option.selected).toBe(false);
+      expect(fixture.componentInstance.options.first.selected)
+        .withContext(`Expected first option to be deselected.`)
+        .toBe(false);
     }));
 
     it('should disable input in view when disabled programmatically', () => {
@@ -2559,7 +2573,7 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('Oregon');
       expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
-      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(2);
 
       subscription.unsubscribe();
     }));
@@ -2591,7 +2605,7 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('Oregon');
       expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
-      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(2);
 
       subscription.unsubscribe();
     }));
@@ -2658,7 +2672,7 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('');
       expect(stateCtrl.value).toBe(null);
-      expect(spy).not.toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledTimes(1);
 
       subscription.unsubscribe();
     }));
