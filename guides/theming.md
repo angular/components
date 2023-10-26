@@ -241,36 +241,42 @@ your project's `angular.json` file][adding-styles].
 
 #### Theming dimensions
 
-Angular Material themes are divided along several dimensions:
+Angular Material themes are divided along four dimensions: base, color, typography, and density.
 
-Base
-: Common base styles for the design system. These styles don't change based on your configured
+##### Base
+
+Common base styles for the design system. These styles don't change based on your configured
 colors, typography, or density, so they only need to be included once per application. These
 mixins include structural styles such as border-radius, border-width, etc. All components have a base
 mixin that can be used to include its base styles. (For example,
 `@include mat.checkbox-base($theme)`)
 
-Color
-: Styles related to the colors in your application. These style should be included at least once in
+##### Color
+
+Styles related to the colors in your application. These style should be included at least once in
 your application. Depending on your needs, you may need to include these styles multiple times
 with different configurations. (For example, if your app supports light and dark theme colors.)
 All components have a color mixin that can be used to include its color styles. (For example,
 `@include mat.checkbox-color($theme)`)
 
-Typography
-: Styles related to the fonts used in your application, including the font family, size, weight,
+##### Typography
+
+Styles related to the fonts used in your application, including the font family, size, weight,
 line-height, and letter-spacing. These style should be included at least once in your application.
 Depending on your needs, you may need to include these styles multiple times with different
 configurations. (For example, if your app supports reading content in either a serif or sans-serif
 font.) All components  have a typography mixin that can be used to include its typography
 styles. (For example, `@include mat.checkbox-typography($theme)`)
 
-Density
-: Styles related to the size and spacing of elements in your application. These style should be
+##### Density
+
+Styles related to the size and spacing of elements in your application. These style should be
 included at least once in your application. Depending on your needs, you may need to include these
 styles multiple times with different configurations. (For example, if your app supports both a
 normal and compact mode). All components have a density mixin that can be used to include its
 density styles. (For example, `@include mat.checkbox-density($theme)`)
+
+##### Theme mixin
 
 All components also support a theme mixin that can be used to include the component's styles for all
 theme dimensions at once. (For example, `@include mat.checkbox-theme($theme)`).
