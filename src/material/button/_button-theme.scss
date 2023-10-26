@@ -3,7 +3,6 @@
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
-@use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 
 @use './button-theme-private';
@@ -21,35 +20,11 @@
   @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
 }
 
-@mixin _outlined-button-variant($color) {
-  @include mdc-button-outlined-theme.theme((
-    label-text-color: $color,
-  ));
-}
-
 @mixin base($theme) {
   // TODO(mmalerba): Move button base tokens here
 }
 
 @mixin color($theme) {
-  @include mdc-helpers.using-mdc-theme($theme) {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $on-surface: mdc-theme-color.prop-value(on-surface);
-    $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
-    $primary: mdc-theme-color.prop-value(primary);
-    $secondary: mdc-theme-color.prop-value(secondary);
-    $error: mdc-theme-color.prop-value(error);
-
-    // Ripple colors
-    .mat-mdc-button, .mat-mdc-outlined-button {
-      @include button-theme-private.ripple-theme-styles($theme, false);
-    }
-
-    .mat-mdc-raised-button, .mat-mdc-unelevated-button {
-      @include button-theme-private.ripple-theme-styles($theme, true);
-    }
-  }
-
   $surface: inspection.get-theme-color($theme, background, card);
   $primary: inspection.get-theme-color($theme, primary);
   $accent: inspection.get-theme-color($theme, accent);
@@ -59,6 +34,18 @@
   $on-primary: _on-color($theme, $primary);
   $on-accent: _on-color($theme, $accent);
   $on-error: _on-color($theme, $error);
+
+  // TODO: remove these when tokenizing the ripples.
+  @include mdc-helpers.using-mdc-theme($theme) {
+    // Ripple colors
+    .mat-mdc-button, .mat-mdc-outlined-button {
+      @include button-theme-private.ripple-theme-styles($theme, false);
+    }
+
+    .mat-mdc-raised-button, .mat-mdc-unelevated-button {
+      @include button-theme-private.ripple-theme-styles($theme, true);
+    }
+  }
 
   .mat-mdc-button {
     @include mdc-button-text-theme.theme(tokens-mdc-text-button.get-color-tokens($theme));
@@ -174,55 +161,6 @@
 
     &.mat-warn {
       @include mdc-button-outlined-theme.theme($warn-color-tokens);
-    }
-  }
-
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $disabled-ink-color: rgba($on-surface, if($is-dark, 0.5, 0.38));
-  $disabled-container-color: rgba($on-surface, 0.12);
-
-  // TODO: these disabled styles are a bit too specific currently.
-  // Once the buttons are fully tokenized, we should rework how they're applied.
-  .mat-mdc-button {
-    @include button-theme-private.apply-disabled-style() {
-      @include mdc-button-text-theme.theme((
-        disabled-label-text-color: $disabled-ink-color,
-        label-text-color: $disabled-ink-color,
-      ));
-    }
-  }
-
-  .mat-mdc-raised-button {
-    @include button-theme-private.apply-disabled-style() {
-      @include mdc-elevation-theme.elevation(0);
-      @include mdc-button-protected-theme.theme((
-        disabled-container-color: $disabled-container-color,
-        disabled-label-text-color: $disabled-ink-color,
-        container-color: $disabled-container-color,
-        label-text-color: $disabled-ink-color,
-      ));
-    }
-  }
-
-  .mat-mdc-outlined-button {
-    @include button-theme-private.apply-disabled-style() {
-      @include mdc-button-outlined-theme.theme((
-        label-text-color: $disabled-ink-color,
-        disabled-label-text-color: $disabled-ink-color,
-        disabled-outline-color: rgba($on-surface, 0.12),
-        outline-color: rgba($on-surface, 0.12),
-      ));
-    }
-  }
-
-  .mat-mdc-unelevated-button {
-    @include button-theme-private.apply-disabled-style() {
-      @include mdc-button-filled-theme.theme((
-        disabled-container-color: $disabled-container-color,
-        disabled-label-text-color: $disabled-ink-color,
-        container-color: $disabled-container-color,
-        label-text-color: $disabled-ink-color,
-      ));
     }
   }
 }

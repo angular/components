@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/touch-target' as mdc-touch-target;
 
 @use '../core/style/layout-common';
@@ -88,16 +87,4 @@
       $set-width: $is-square,
       $query: mdc-helpers.$mdc-base-styles-query);
   }
-}
-
-// Changes a button token set to exclude the ripple styles.
-@function mat-private-button-remove-ripple($tokens) {
-  @return map.merge($tokens, (
-    focus-state-layer-color: null,
-    focus-state-layer-opacity: null,
-    hover-state-layer-color: null,
-    hover-state-layer-opacity: null,
-    pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null,
-  ));
 }
