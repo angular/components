@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/button/button' as mdc-button;
 @use '@material/button/button-base' as mdc-button-base;
 @use '@material/button/variables' as mdc-button-variables;
@@ -11,39 +10,33 @@
 @use './button-base';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
+@use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mdc/outlined-button' as tokens-mdc-outlined-button;
 @use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
 @use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mdc-base-styles-query);
-
-  .mat-mdc-outlined-button {
-    // Keys to exclude from the MDC theme config, allowing us to drop styles we don't need.
-    $override-keys: button-base.mat-private-button-remove-ripple((
-      label-text-font: null,
-      label-text-size: null,
-      label-text-tracking: null,
-      label-text-transform: null,
-      label-text-weight: null,
-      with-icon-icon-size: null,
-      label-text-color: inherit,
-    ));
-
-    @include mdc-button-outlined-theme.theme-styles(
-      map.merge(mdc-button-outlined-theme.$light-theme, $override-keys));
-  }
 }
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   .mat-mdc-button {
-    @include mdc-button-text-theme.theme-styles(tokens-mdc-text-button.get-token-slots());
+    $mdc-text-button-slots: tokens-mdc-text-button.get-token-slots();
+
+    @include mdc-button-text-theme.theme-styles($mdc-text-button-slots);
     @include mdc-button-text-theme.theme(tokens-mdc-text-button.get-unthemable-tokens());
+
+    @include token-utils.use-tokens(tokens-mdc-text-button.$prefix, $mdc-text-button-slots) {
+      // We need to re-apply the disabled tokens since MDC uses
+      // `:disabled` which doesn't apply to anchors.
+      @include button-base.mat-private-button-disabled {
+        @include token-utils.create-token-slot(color, disabled-label-text-color);
+      }
+    }
   }
 
-  // Note that we don't include a feature query, because this mixins declare
-  // all the "slots" for CSS variables that will be defined in the theme.
   .mat-mdc-unelevated-button {
     $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
@@ -52,10 +45,17 @@
 
     // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-filled-theme.theme(tokens-mdc-filled-button.get-unthemable-tokens());
+
+    @include token-utils.use-tokens(tokens-mdc-filled-button.$prefix, $mdc-filled-button-slots) {
+      // We need to re-apply the disabled tokens since MDC uses
+      // `:disabled` which doesn't apply to anchors.
+      @include button-base.mat-private-button-disabled {
+        @include token-utils.create-token-slot(color, disabled-label-text-color);
+        @include token-utils.create-token-slot(background-color, disabled-container-color);
+      }
+    }
   }
 
-  // Note that we don't include a feature query, because this mixins declare
-  // all the "slots" for CSS variables that will be defined in the theme.
   .mat-mdc-raised-button {
     $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
 
@@ -64,6 +64,43 @@
 
     // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-protected-theme.theme(tokens-mdc-protected-button.get-unthemable-tokens());
+
+    @include token-utils.use-tokens(
+      tokens-mdc-protected-button.$prefix,
+      $mdc-button-protected-slots) {
+      // We need to re-apply the disabled tokens since MDC uses
+      // `:disabled` which doesn't apply to anchors.
+      @include button-base.mat-private-button-disabled {
+        @include token-utils.create-token-slot(color, disabled-label-text-color);
+        @include token-utils.create-token-slot(background-color, disabled-container-color);
+
+        // Since we're still doing elevation through the theme, we need additional specificity here.
+        &[disabled] {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .mat-mdc-outlined-button {
+    $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
+
+    // Add the slots for MDC text button.
+    @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
+
+    // Add default values for MDC text button tokens that aren't outputted by the theming API.
+    @include mdc-button-outlined-theme.theme(tokens-mdc-outlined-button.get-unthemable-tokens());
+
+    @include token-utils.use-tokens(
+      tokens-mdc-outlined-button.$prefix,
+      $mdc-outlined-button-slots) {
+      // We need to re-apply the disabled tokens since MDC uses
+      // `:disabled` which doesn't apply to anchors.
+      @include button-base.mat-private-button-disabled {
+        @include token-utils.create-token-slot(color, disabled-label-text-color);
+        @include token-utils.create-token-slot(border-color, disabled-outline-color);
+      }
+    }
   }
 }
 
@@ -72,7 +109,6 @@
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button {
   @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-disabled();
   @include button-base.mat-private-button-touch-target(false);
   @include style-private.private-animation-noop();
 }
