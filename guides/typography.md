@@ -227,27 +227,7 @@ The following example demonstrates usage of the typography styles emitted by the
 
 ### Reading typography values from a config
 
-You can read typography style values from a typography config via the following Sass functions. Each
-accepts a typography config and a level.
+It is possible to read typography properties from a theme for use in your own components. For more
+information about this see our guide on [Theming your own components][reading-typography].
 
-| Function         | Example usage                            |
-|------------------|------------------------------------------|
-| `font-size`      | `mat.font-size($config, 'body-1');`      |
-| `font-family`    | `mat.font-family($config, 'body-1');`    |
-| `font-weight`    | `mat.font-weight($config, 'body-1');`    |
-| `line-height`    | `mat.line-height($config, 'body-1');`    |
-| `letter-spacing` | `mat.letter-spacing($config, 'body-1');` |
-
-Additionally, you can use the `typography-level` Sass mixin to directly emit the CSS styles for a
-given typography level.
-
-```scss
-@use '@angular/material' as mat;
-
-// Use the default configuration.
-$my-typography: mat.define-typography-config();
-
-.some-class-name {
-  @include mat.typography-level($my-typography, 'body-1');
-}
-```
+[reading-typography]: https://material.angular.io/guide/theming-your-components#reading-typography-values
