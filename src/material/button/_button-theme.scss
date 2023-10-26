@@ -1,5 +1,4 @@
 @use '@material/button/button' as mdc-button;
-@use '@material/button/button-theme' as mdc-button-theme;
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
@@ -194,11 +193,9 @@
   }
 
   .mat-mdc-outlined-button {
-    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
-    &.mat-mdc-button-base {
-      @include mdc-button-theme.density($density-scale, $query: mdc-helpers.$mdc-base-styles-query);
-      @include button-theme-private.touch-target-density($density-scale);
-    }
+    $density-tokens: tokens-mdc-outlined-button.get-density-tokens($theme);
+    @include mdc-button-outlined-theme.theme($density-tokens);
+    @include button-theme-private.touch-target-density($density-scale);
   }
 }
 
