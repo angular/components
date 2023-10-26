@@ -64,12 +64,13 @@ $prefix: (mdc, outlined-button);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $color: null, $on-color: null) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $surface: inspection.get-theme-color($theme, background, card);
   $on-surface: _on-color($theme, $surface);
 
   @return (
     disabled-outline-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, 0.38),
+    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
     label-text-color: if($color, $color, inherit),
     outline-color: rgba($on-surface, 0.12)
   );
