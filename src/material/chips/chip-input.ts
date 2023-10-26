@@ -75,16 +75,19 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   /** Whether the control is focused. */
   focused: boolean = false;
-  _chipGrid: MatChipGrid;
 
   /** Register input for chip list */
   @Input('matChipInputFor')
+  get chipGrid(): MatChipGrid {
+    return this._chipGrid;
+  }
   set chipGrid(value: MatChipGrid) {
     if (value) {
       this._chipGrid = value;
       this._chipGrid.registerInput(this);
     }
   }
+  private _chipGrid: MatChipGrid;
 
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.

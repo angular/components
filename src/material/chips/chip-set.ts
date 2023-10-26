@@ -80,9 +80,14 @@ export class MatChipSet
     return this._getChipStream(chip => chip._onFocus);
   }
 
-  /** Combined stream of all of the child chips' remove events. */
+  /** Combined stream of all of the child chips' destroy events. */
   get chipDestroyedChanges(): Observable<MatChipEvent> {
     return this._getChipStream(chip => chip.destroyed);
+  }
+
+  /** Combined stream of all of the child chips' remove events. */
+  get chipRemovedChanges(): Observable<MatChipEvent> {
+    return this._getChipStream(chip => chip.removed);
   }
 
   /** Whether the chip set is disabled. */
