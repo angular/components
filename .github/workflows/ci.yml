@@ -293,6 +293,8 @@ jobs:
         env:
           CIRCLE_BRANCH: ${{ github.ref_name }}
           CIRCLE_SHA1: ${{ github.sha }}
+          DOCS_SITE_GCP_SERVICE_KEY: ${{ secrets.DOCS_SITE_GCP_SERVICE_KEY }}
+          DOCS_DEPLOY_GITHUB_TOKEN: ${{ secrets.DOCS_DEPLOY_GITHUB_TOKEN }}
       - uses: ./.github/actions/slack
         if: ${{ failure() && github.event_name == 'push' }}
         with:
