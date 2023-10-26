@@ -11,46 +11,149 @@ customize components. Angular Material provides APIs for reading values from thi
 
 ### Reading color values
 
-To read color values from a theme, you can use the `get-color-config` Sass function. This function
-returns a Sass map containing the theme's primary, accent, and warn palettes, as well as a flag
-indicating whether dark mode is set.
+To read color values from a theme, you can use the `get-theme-color` Sass function. This function
+supports reading colors for both the app color palettes (primary, accent, and warn), as well as the
+foreground and background palettes. `get-theme-color` takes three arguments: The theme to read from,
+the name of the palette, and the name of the color.
+
+Each of the color palettes (primary, accent, and warn) supports reading the following named colors:
+
+| Color Name       | Description                                                                                                                                                        |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| default          | The default color from this palette                                                                                                                                |
+| lighter          | A lighter version of the color for this palette                                                                                                                    |
+| darker           | A darker version of the color for this palette                                                                                                                     |
+| text             | The text color for this palette                                                                                                                                    |
+| default-contrast | A color that stands out against the this palette's default color                                                                                                   |
+| lighter-contrast | A color that stands out against the this palette's lighter color                                                                                                   |
+| darker-contrast  | A color that stands out against the this palette's darker color                                                                                                    |
+| [hue]            | The [hue] color for the palette.<br />[hue] can be one of: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, A100, A200, A400, A700                                 |
+| [hue]-contrast   | A color that stands out against the [hue] color for the palette.<br />[hue] can be one of: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, A100, A200, A400, A700 |
+
+The background palette supports reading the following named colors:
+
+| Color Name               | Description                                        |
+|--------------------------|----------------------------------------------------|
+| status-bar               | The background color for a status bar              |
+| app-bar                  | The background color for an app bar                |
+| background               | The background color for the app                   |
+| hover                    | The background color of a hover overlay            |
+| card                     | The background color of a card                     |
+| dialog                   | The background color of a dialog                   |
+| raised-button            | The background color of a raised button            |
+| selected-button          | The background color of a selected button          |
+| selected-disabled-button | The background color of a selected disabled button |
+| disabled-button          | The background color of a disabled button          |
+| focused-button           | The background color of a focused button           |
+| disabled-button-toggle   | The background color of a disabled button toggle   |
+| unselected-chip          | The background color of an unselected chip         |
+| disabled-list-option     | The background color of a disabled list option     |
+| tooltip                  | The background color of a tooltip                  |
+
+The foreground palette supports reading the following named colors:
+
+| Color name        | Description                                                                                              |
+|-------------------|----------------------------------------------------------------------------------------------------------|
+| base              | The base foreground color, can be used to for color mixing or creating a custom opacity foreground color |
+| divider           | The color of a divider                                                                                   |
+| dividers          | (Alternate name for divider)                                                                             |
+| disabled-text     | The color for disabled text                                                                              |
+| disabled          | (Alternate name for disabled-text)                                                                       |
+| disabled-button   | The color for disabled button text                                                                       |
+| elevation         | The color elevation shadows                                                                              |
+| hint-text         | The color for hint text                                                                                  |
+| secondary-text    | The color for secondary text                                                                             |
+| icon              | The color for icons                                                                                      |
+| icons             | (Alternate name for icon)                                                                                |
+| text              | The color for text                                                                                       |                                                                         |
+
+In addition to reading particular colors, you can use the `get-theme-type` Sass function to
+determine the type of theme (either light or dark). This function takes a single argument, the
+theme, and returns either `light` or `dark`.
+
+See the below example of reading some colors from a theme:
 
 ```scss
-@use 'sass:map';
-@use '@angular/material' as mat;
+$theme: mat.define-dark-theme(...);
 
-$primary: mat.define-palette(mat.$indigo-palette);
-$accent: mat.define-palette(mat.$pink-palette);
-$warn: mat.define-palette(mat.$red-palette);
-
-$theme: mat.define-light-theme((
-  color: (primary: $primary, accent: $accent, warn: $warn),
-));
-
-$color-config:    mat.get-color-config($theme);
-$primary-palette: map.get($color-config, 'primary');
-$accent-palette:  map.get($color-config, 'accent');
-$warn-palette:    map.get($color-config, 'warn');
-$is-dark-theme:   map.get($color-config, 'is-dark');
+$primary-default: mat.get-theme-color($theme, primary, default);
+$accent-a100: mat.get-theme-color($theme, accent, A100);
+$warn-500-contrast: mat.get-theme-color($theme, warn, 500-contrast);
+$foreground-text: mat.get-theme-color($theme, foreground, text);
+$background-card: mat.get-theme-color($theme, background, card);
+$type: mat.get-theme-type($theme);
+$custom-background: if($type == dark, #030, #dfd);
 ```
-
-See the [theming guide][theme-read-hues] for more information on reading hues from palettes.
-
-[theme-read-hues]: https://material.angular.io/guide/theming#reading-hues-from-palettes
 
 ### Reading typography values
 
-To read typography values from a theme, you can use the `get-typography-config` Sass function. See
-the [Typography guide][typography-config] for more information about the typography config data
-structure and for APIs for reading values from this config.
+To read typography values from a theme, you can use the `get-theme-typography` Sass function. This
+function supports reading typography properties from the typography levels defined in the theme.
+There are two ways to call the function. 
 
-[typography-config]: https://material.angular.io/guide/typography#typography-config
+The first way to call it is by passing just the theme and the typography level to get a shorthand
+`font` property based on the settings for that level. (Note: `letter-spacing` cannot be expressed in
+the `font` shorthand, so it must be applied separately).
+
+The second way to call it is by passing the theme, typography level, and the specific font property
+you want: `font-family`, `font-size`, `font-weight`, `line-height`, or `letter-spacing`.
+
+The available typography levels are:
+
+| Name       | Description                                                          |
+|------------|----------------------------------------------------------------------|
+| headline-1 | One-off header, usually at the top of the page (e.g. a hero header). |
+| headline-2 | One-off header, usually at the top of the page (e.g. a hero header). |
+| headline-3 | One-off header, usually at the top of the page (e.g. a hero header). |
+| headline-4 | One-off header, usually at the top of the page (e.g. a hero header). |
+| headline-5 | Section heading corresponding to the `<h1>` tag.                     |
+| headline-6 | Section heading corresponding to the `<h2>` tag.                     |
+| subtitle-1 | Section heading corresponding to the `<h3>` tag.                     |
+| subtitle-2 | Section heading corresponding to the `<h4>` tag.                     |
+| body-1     | Base body text.                                                      |
+| body-2     | Secondary body text.                                                 |
+| caption    | Smaller body and hint text.                                          |
+| button     | Buttons and anchors.                                                 |
+
+See the below example of reading some typography settings from a theme:
 
 ```scss
-@use '@angular/material' as mat;
+$theme: mat.define-dark-theme(...);
 
-$typography-config: mat.get-typography-config($theme);
-$my-font-family: mat.font-family($typography-config);
+body {
+  font: mat.get-theme-typography($theme, body-1);
+  letter-spacing: mat.get-theme-typography($theme, body-1, letter-spacing);
+}
+```
+
+### Reading density values
+
+To read the density scale from a theme, you can use the `get-theme-density` Sass function. This
+function takes a theme and returns the density scale (0, -1, -2, -3, -4, or -5).
+
+See the below example of reading the density scale from a theme:
+
+```scss
+$theme: mat.define-dark-theme(...);
+
+$density-scale: mat.get-theme-desity($theme);
+```
+
+### Checking what dimensions are configured for a theme
+
+Depending on how a theme was created, it may not have configuration data for all theming dimensions
+(base, color, typography, density). You can check if a theme has a configuration for a particular
+dimension by calling the `theme-has` Sass function, passing the theme and the dimension to check.
+
+See the below example of checking the configured dimensions for a theme:
+
+```scss
+$theme: mat.define-dark-theme(...);
+
+$has-base: mat.theme-has($theme, base);
+$has-color: mat.theme-has($theme, color);
+$has-typography: mat.theme-has($theme, typography);
+$has-density: mat.theme-has($theme, density);
 ```
 
 ## Separating theme styles
@@ -134,24 +237,16 @@ theme passed into the mixins.
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  // Get the color config from the theme.
-  $color-config: mat.get-color-config($theme);
-
-  // Get the primary color palette from the color-config.
-  $primary-palette: map.get($color-config, 'primary');
-
   .my-carousel-button {
     // Read the 500 hue from the primary color palette.
-    color: mat.get-color-from-palette($primary-palette, 500);
+    color: mat.get-theme-color($theme, primary, 500);
   }
 }
 
 @mixin typography($theme) {
-  // Get the typography config from the theme.
-  $typography-config: mat.get-typography-config($theme);
-
   .my-carousel {
-    font-family: mat.font-family($typography-config);
+    // Get the headline font from the theme.
+    font: mat.get-theme-typography($theme, headline-1);
   }
 }
 ```
@@ -169,35 +264,25 @@ have a config specified.
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  // Get the color config from the theme.
-  $color-config: mat.get-color-config($theme);
-
-  // Get the primary color palette from the color-config.
-  $primary-palette: map.get($color-config, 'primary');
-
   .my-carousel-button {
     // Read the 500 hue from the primary color palette.
-    color: mat.get-color-from-palette($primary-palette, 500);
+    color: mat.get-theme-color($theme, primary, 500);
   }
 }
 
 @mixin typography($theme) {
-  // Get the typography config from the theme.
-  $typography-config: mat.get-typography-config($theme);
-
   .my-carousel {
-    font-family: mat.font-family($typography-config);
+    // Get the headline font from the theme.
+    font: mat.get-theme-typography($theme, headline-1);
   }
 }
 
 @mixin theme($theme) {
-  $color-config: mat.get-color-config($theme);
-  @if $color-config != null {
+  @if mat.theme-has($theme, color) {
     @include color($theme);
   }
 
-  $typography-config: mat.get-typography-config($theme);
-  @if $typography-config != null {
+  @if mat.theme-has($theme, typography) {
     @include typography($theme);
   }
 }
