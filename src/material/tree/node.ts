@@ -58,7 +58,14 @@ function isLegacyTreeKeyManager<T extends TreeKeyManagerItem>(
   standalone: true,
 })
 export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
-  /** Tabindex of the node. */
+  /**
+   * The tabindex of the tree node.
+   *
+   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+   *   an unexpected state. Tabindex to be removed in a future version.
+   * @breaking-change 19.0.0 Remove this attribute.
+   */
   @Input({
     transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
   })
@@ -70,15 +77,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     this._tabIndex = value;
   }
   private _tabIndex: number;
-
-  /**
-   * The tabindex of the tree node.
-   *
-   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
-   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
-   *   an unexpected state. Tabindex to be removed in a future version.
-   * @breaking-change 19.0.0 Remove this attribute.
-   */
 
   /**
    * The default tabindex of the tree node.

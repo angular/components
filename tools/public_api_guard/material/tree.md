@@ -132,6 +132,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    // @deprecated
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
