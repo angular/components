@@ -1,0 +1,20 @@
+.example-load-more {
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    cursor: pointer;
+}
+.example-load-more:focus {
+    /*
+      Display a focus state for the "Load More" button.
+      0.12 is a common value in Material Design
+    */
+    background: rgba(0, 0, 0, 0.12);
+}
+.example-load-more:hover {
+    /*
+      Display a focus state for the "Load More" button.
+      0.04 is a common value in Material Design
+    */
+    background: rgba(0, 0, 0, 0.04);
+}

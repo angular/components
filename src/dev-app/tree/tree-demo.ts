@@ -7,7 +7,17 @@
  */
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
-import {CdkTreeFlatExample, CdkTreeNestedExample} from '@angular/components-examples/cdk/tree';
+import {
+  CdkTreeFlatExample,
+  CdkTreeNestedExample,
+  CdkTreeFlatLevelAccessorExample,
+  CdkTreeNestedLevelAccessorExample,
+  CdkTreeNestedChildrenAccessorExample,
+  CdkTreeFlatChildrenAccessorExample,
+  CdkTreeComplexExample,
+  CdkTreeCustomKeyManagerExample,
+  CdkTreeLegacyKeyboardInterfaceExample,
+} from '@angular/components-examples/cdk/tree';
 import {
   TreeDynamicExample,
   TreeFlatOverviewExample,
@@ -33,8 +43,15 @@ import {MatTreeModule} from '@angular/material/tree';
   standalone: true,
   imports: [
     CdkTreeModule,
+    CdkTreeCustomKeyManagerExample,
     CdkTreeFlatExample,
     CdkTreeNestedExample,
+    CdkTreeFlatChildrenAccessorExample,
+    CdkTreeFlatLevelAccessorExample,
+    CdkTreeLegacyKeyboardInterfaceExample,
+    CdkTreeNestedChildrenAccessorExample,
+    CdkTreeNestedLevelAccessorExample,
+    CdkTreeComplexExample,
     CommonModule,
     FormsModule,
     TreeDynamicExample,

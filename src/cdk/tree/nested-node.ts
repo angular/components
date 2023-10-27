@@ -16,12 +16,10 @@ import {
   OnInit,
   QueryList,
 } from '@angular/core';
-import {isObservable} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {CDK_TREE_NODE_OUTLET_NODE, CdkTreeNodeOutlet} from './outlet';
 import {CdkTree, CdkTreeNode} from './tree';
-import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
@@ -69,17 +67,10 @@ export class CdkNestedTreeNode<T, K = T>
 
   ngAfterContentInit() {
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
-    if (!this._tree.treeControl.getChildren && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw getTreeControlFunctionsMissingError();
-    }
-    const childrenNodes = this._tree.treeControl.getChildren(this.data);
-    if (Array.isArray(childrenNodes)) {
-      this.updateChildrenNodes(childrenNodes as T[]);
-    } else if (isObservable(childrenNodes)) {
-      childrenNodes
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(result => this.updateChildrenNodes(result));
-    }
+    this._tree
+      ._getDirectChildren(this.data)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(result => this.updateChildrenNodes(result));
     this.nodeOutlet.changes
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.updateChildrenNodes());
@@ -88,6 +79,7 @@ export class CdkNestedTreeNode<T, K = T>
   // This is a workaround for https://github.com/angular/angular/issues/23091
   // In aot mode, the lifecycle hooks from parent class are not called.
   override ngOnInit() {
+    this._tree._setNodeTypeIfUnset('nested');
     super.ngOnInit();
   }
 
