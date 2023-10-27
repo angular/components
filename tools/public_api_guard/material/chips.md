@@ -243,9 +243,8 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     _addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
+    get chipGrid(): MatChipGrid;
     set chipGrid(value: MatChipGrid);
-    // (undocumented)
-    _chipGrid: MatChipGrid;
     clear(): void;
     get disabled(): boolean;
     set disabled(value: BooleanInput);
@@ -443,6 +442,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, H
     _chipActions: QueryList<MatChipAction>;
     get chipDestroyedChanges(): Observable<MatChipEvent>;
     get chipFocusChanges(): Observable<MatChipEvent>;
+    get chipRemovedChanges(): Observable<MatChipEvent>;
     _chips: QueryList<MatChip>;
     protected _defaultRole: string;
     protected _destroyed: Subject<void>;
