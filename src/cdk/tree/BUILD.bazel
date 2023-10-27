@@ -20,6 +20,7 @@ ng_module(
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],
@@ -35,6 +36,8 @@ ng_test_library(
         ":tree",
         "//src/cdk/bidi",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/testbed",
         "@npm//rxjs",
     ],
 )

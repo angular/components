@@ -18,6 +18,7 @@ ng_module(
     ),
     assets = [":tree.css"] + glob(["**/*.html"]),
     deps = [
+        "//src/cdk/a11y",
         "//src/cdk/collections",
         "//src/cdk/tree",
         "//src/material/core",
