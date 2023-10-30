@@ -8,7 +8,6 @@
 
 import {NgModule} from '@angular/core';
 
-import {TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatCommonModule} from '@angular/material/core';
 import {MatNestedTreeNode, MatTreeNodeDef, MatTreeNode} from './node';
@@ -31,6 +30,5 @@ const MAT_TREE_DIRECTIVES = [
   imports: [CdkTreeModule, MatCommonModule],
   exports: [MatCommonModule, MAT_TREE_DIRECTIVES],
   declarations: MAT_TREE_DIRECTIVES,
-  providers: [TREE_KEY_MANAGER_FACTORY_PROVIDER],
 })
 export class MatTreeModule {}

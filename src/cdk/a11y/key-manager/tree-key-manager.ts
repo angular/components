@@ -542,7 +542,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 }
 
 /** Injection token that determines the key manager to use. */
-export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>('tree-key-manager');
+export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>('tree-key-manager', {
+  providedIn: 'root',
+  factory: TREE_KEY_MANAGER_FACTORY,
+});
 
 /** @docs-private */
 export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T> {
