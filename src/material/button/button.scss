@@ -40,10 +40,7 @@
   .mat-mdc-unelevated-button {
     $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
-    // Add the slots for MDC text button.
     @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
-
-    // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-filled-theme.theme(tokens-mdc-filled-button.get-unthemable-tokens());
 
     @include token-utils.use-tokens(tokens-mdc-filled-button.$prefix, $mdc-filled-button-slots) {
@@ -59,10 +56,7 @@
   .mat-mdc-raised-button {
     $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
 
-    // Add the slots for MDC text button.
     @include mdc-button-protected-theme.theme-styles($mdc-button-protected-slots);
-
-    // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-protected-theme.theme(tokens-mdc-protected-button.get-unthemable-tokens());
 
     @include token-utils.use-tokens(
@@ -85,10 +79,7 @@
   .mat-mdc-outlined-button {
     $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
 
-    // Add the slots for MDC text button.
     @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
-
-    // Add default values for MDC text button tokens that aren't outputted by the theming API.
     @include mdc-button-outlined-theme.theme(tokens-mdc-outlined-button.get-unthemable-tokens());
 
     @include token-utils.use-tokens(
@@ -176,4 +167,9 @@
   $border-width: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
   $offset: calc(#{$border-width} + 3px);
   margin: calc(#{$offset} * -1);
+}
+
+// TODO(wagnermaciel): Remove this once typography tokens have landed.
+.mat-mdc-button-base.mat-mdc-button-base {
+  line-height: normal;
 }
