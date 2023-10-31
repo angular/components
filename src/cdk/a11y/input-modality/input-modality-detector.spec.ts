@@ -138,7 +138,7 @@ describe('InputModalityDetector', () => {
 
     // Create a fake screen-reader mouse event.
     const event = createMouseEvent('mousedown');
-    Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
+    Object.defineProperties(event, {detail: {get: () => 0}});
     dispatchEvent(document, event);
 
     expect(detector.mostRecentModality).toBe('keyboard');
