@@ -26,15 +26,12 @@ export function addFontsToIndex(options: Schema): Rule {
       throw new SchematicsException('No project index HTML file could be found.');
     }
 
-    const preconnect = `<link rel="preconnect" href="https://fonts.gstatic.com">`;
     const fonts = [
       'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap',
       'https://fonts.googleapis.com/icon?family=Material+Icons',
     ];
 
     projectIndexFiles.forEach(indexFilePath => {
-      appendHtmlElementToHead(host, indexFilePath, preconnect);
-
       fonts.forEach(font => {
         appendHtmlElementToHead(host, indexFilePath, `<link href="${font}" rel="stylesheet">`);
       });
