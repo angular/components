@@ -33,7 +33,8 @@ export function getProjectBuildTargets(
     project,
     builder =>
       builder === '@angular-devkit/build-angular:application' ||
-      builder === '@angular-devkit/build-angular:browser',
+      builder === '@angular-devkit/build-angular:browser' ||
+      builder === '@angular-devkit/build-angular:browser-esbuild',
   );
 }
 
