@@ -82,7 +82,7 @@ export class MatDialog implements OnDestroy {
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
-  private _dialog: Dialog;
+  protected _dialog: Dialog;
   protected dialogConfigClass = MatDialogConfig;
 
   private readonly _dialogRefConstructor: Type<MatDialogRef<any>>;
