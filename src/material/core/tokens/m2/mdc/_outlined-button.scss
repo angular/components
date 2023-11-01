@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '../../token-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
@@ -21,6 +20,9 @@ $prefix: (mdc, outlined-button);
     outline-width: 1px,
     container-shape: 4px,
 
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
     hover-state-layer-opacity: null,
     focus-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
@@ -55,24 +57,23 @@ $prefix: (mdc, outlined-button);
   );
 }
 
-@function _on-color($theme, $palette) {
-  @if ($palette) {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
-  }
-}
-
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color: null, $on-color: null) {
+@function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
-  $on-surface: _on-color($theme, $surface);
+  $on-surface: if($is-dark, #fff, #000);
 
   @return (
     disabled-outline-color: rgba($on-surface, 0.12),
     disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
-    label-text-color: if($color, $color, inherit),
+    label-text-color: inherit,
     outline-color: rgba($on-surface, 0.12)
+  );
+}
+
+// Generates the mapping for the properties that change based on the button palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  @return (
+    label-text-color: inspection.get-theme-color($theme, $palette-name, default),
   );
 }
 

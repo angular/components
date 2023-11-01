@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../token-utils';
@@ -57,8 +56,6 @@ $prefix: (mdc, icon-button);
 
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $palette: map.get($theme, $palette-name);
-
   @return (
     icon-color: inspection.get-theme-color($theme, $palette-name)
   );

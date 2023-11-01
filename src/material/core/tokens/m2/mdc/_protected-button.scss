@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '../../token-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
@@ -19,6 +18,9 @@ $prefix: (mdc, protected-button);
     container-shape: 4px,
     keep-touch-target: false,
 
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
     focus-ring-color: null,
     focus-ring-offset: null,
     focus-state-layer-opacity: null,
@@ -43,33 +45,31 @@ $prefix: (mdc, protected-button);
     with-icon-focus-icon-color: null,
     with-icon-hover-icon-color: null,
     with-icon-icon-color: null,
-    with-icon-pressed-icon-color: null
+    with-icon-pressed-icon-color: null,
+    focus-state-layer-color: null,
+    hover-state-layer-color: null,
+    pressed-state-layer-color: null,
   );
 }
 
-@function _on-color($theme, $palette) {
-  @if ($palette) {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
-  }
-}
-
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color: null, $on-color: null) {
+@function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $primary: inspection.get-theme-color($theme, primary);
-  $surface: inspection.get-theme-color($theme, background, card);
-  $on-primary: _on-color($theme, $primary);
-  $on-surface: _on-color($theme, $surface);
+  $on-surface: if($is-dark, #fff, #000);
 
   @return (
-    container-color: if($color, $color, transparent),
-    focus-state-layer-color: $on-primary,
-    hover-state-layer-color: $on-primary,
-    pressed-state-layer-color: $on-primary,
-    label-text-color: if($on-color, $on-color, inherit),
+    container-color: inspection.get-theme-color($theme, background, card),
+    label-text-color: inherit,
     disabled-container-color: rgba($on-surface, 0.12),
     disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38))
+  );
+}
+
+// Generates the mapping for the properties that change based on the button palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  @return (
+    container-color: inspection.get-theme-color($theme, $palette-name, default),
+    label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
 }
 
