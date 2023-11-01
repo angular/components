@@ -1,9 +1,9 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '@material/ripple/ripple-theme' as mdc-ripple-theme;
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
+@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, protected-button);
@@ -43,11 +43,14 @@ $prefix: (mat, protected-button);
 
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $container-color: inspection.get-theme-color($theme, $palette-name);
+  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+  $color: if($contrast-tone == 'dark', #000, #fff);
 
   @return (
     state-layer-color: $color,
-    ripple-color: if(meta.type-of($color) == color, rgba($color, 0.1), $color),
+    ripple-color: rgba($color, 0.1),
   );
 }
 

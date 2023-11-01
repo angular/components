@@ -3,6 +3,7 @@
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
+@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, protected-button);
@@ -59,7 +60,7 @@ $prefix: (mdc, protected-button);
 
   @return (
     container-color: inspection.get-theme-color($theme, background, card),
-    label-text-color: inherit,
+    label-text-color: $on-surface,
     disabled-container-color: rgba($on-surface, 0.12),
     disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38))
   );
@@ -67,9 +68,13 @@ $prefix: (mdc, protected-button);
 
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $container-color: inspection.get-theme-color($theme, $palette-name, default);
+  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+
   @return (
-    container-color: inspection.get-theme-color($theme, $palette-name, default),
-    label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
+    container-color: $container-color,
+    label-text-color: if($contrast-tone == 'dark', #000, #fff),
   );
 }
 
