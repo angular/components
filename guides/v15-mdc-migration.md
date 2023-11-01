@@ -1,6 +1,6 @@
 # Migrating to MDC-based Angular Material Components
 
-In Angular Material v15, many of the components have been refactored to be based on the official
+In Angular Material v15 and later, many of the components have been refactored to be based on the official
 [Material Design Components for Web (MDC)](https://github.com/material-components/material-components-web).
 The components from the following imports have been refactored:
 
@@ -81,22 +81,22 @@ practices before migrating.
   component. Using component harnesses makes your tests easier to understand and more robust to
   changes in Angular Material
 
-### 1. Update to Angular Material v15
+### 1. Update to Angular Material v16
 
 Angular Material includes a schematic to help migrate applications to use the new MDC-based
-components. To get started, upgrade your application to Angular Material 15.
+components. To get started, upgrade your application to Angular Material 16.
 
 ```shell
-ng update @angular/material@15
+ng update @angular/material@16
 ```
 
 As part of this update, a schematic will run to automatically move your application to use the
 "legacy" imports containing the old component implementations. This provides a quick path to getting
-your application running on v15 with minimal manual changes.
+your application running on v16 with minimal manual changes.
 
 ### 2. Run the migration tool
 
-After upgrading to v15, you can run the migration tool to switch from the legacy component
+After upgrading to v16, you can run the migration tool to switch from the legacy component
 implementations to the new MDC-based ones.
 
 ```shell
