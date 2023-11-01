@@ -1,3 +1,12 @@
+<a name="16.2.11"></a>
+# 16.2.11 "fabric-fantasy" (2023-11-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2f468f1606](https://github.com/angular/components/commit/2f468f160604a50141048afe75c829bc6b8c85b1) | fix | **accordion:** add `CDK_ACCORDION` export ([#27981](https://github.com/angular/components/pull/27981)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.10"></a>
 # 16.2.10 "plaster-pineapple" (2023-10-25)
 ### material
