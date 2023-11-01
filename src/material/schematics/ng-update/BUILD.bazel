@@ -69,6 +69,7 @@ ts_library(
         "//src/cdk/schematics",
         "//src/cdk/schematics/testing",
         "//src/material/schematics:paths",
+        "@npm//@angular-devkit/core",
         "@npm//@angular-devkit/schematics",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
