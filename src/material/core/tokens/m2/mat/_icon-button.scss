@@ -1,12 +1,12 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '@material/ripple/ripple-theme' as mdc-ripple-theme;
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, fab);
+$prefix: (mat, icon-button);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -24,9 +24,6 @@ $prefix: (mat, fab);
   );
 
   @return (
-    // Color of icons and text projected into a FAB.
-    foreground-color: inspection.get-theme-color($theme, foreground, base),
-
     // Color of the element that shows the hover, focus and pressed states.
     state-layer-color: $on-surface,
 
@@ -41,27 +38,16 @@ $prefix: (mat, fab);
 
     // Opacity of the ripple when the button is pressed.
     pressed-state-layer-opacity: map.get($ripple-opacities, press),
-
-    // MDC doesn't have tokens for disabled FABs so we need to implemented them ourselves.
-    // Background color of the container when the FAB is disabled.
-    disabled-state-container-color: rgba($on-surface, 0.12),
-
-    // Color of the icons and projected text when the FAB is disabled.
-    disabled-state-foreground-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
   );
 }
 
-// Generates the mapping for the properties that change based on the FAB palette color.
+// Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $container-color: inspection.get-theme-color($theme, $palette-name);
-  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
-  $color: if($contrast-tone == 'dark', #000, #fff);
+  $color: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    foreground-color: $color,
     state-layer-color: $color,
-    ripple-color: rgba($color, 0.1),
+    ripple-color: if(meta.type-of($color) == color, rgba($color, 0.1), $color),
   );
 }
 

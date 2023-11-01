@@ -45,8 +45,8 @@ describe('legacy imports error', () => {
 
     expect(fatalLogs.length).toBe(1);
     expect(fatalLogs[0]).toContain(
-      'Cannot update to Angular Material v17, ' +
-        'because the project is using the legacy Material components',
+      'Cannot update to Angular Material v17 because the ' +
+        'project is using the legacy Material components',
     );
   });
 
