@@ -28,6 +28,8 @@ export const WHITE_ON_BLACK_CSS_CLASS = 'cdk-high-contrast-white-on-black';
 /** CSS class applied to the document body when in high-contrast mode. */
 export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
 
+const MODE_DETECTOR_ACTIVE_ATTR = 'cdk-high-contrast-mode-detector';
+
 /**
  * Service to determine whether the browser is currently in a high-contrast-mode environment.
  *
@@ -45,17 +47,28 @@ export class HighContrastModeDetector implements OnDestroy {
    * Figuring out the high contrast mode and adding the body classes can cause
    * some expensive layouts. This flag is used to ensure that we only do it once.
    */
-  private _hasCheckedHighContrastMode: boolean;
+  private _hasCheckedHighContrastMode: boolean = false;
+  private _forcedColorsActive: boolean = false;
   private _document: Document;
   private _breakpointSubscription: Subscription;
 
-  constructor(private _platform: Platform, @Inject(DOCUMENT) document: any) {
-    this._document = document;
+  constructor(private _platform: Platform, @Inject(DOCUMENT) doc: any) {
+    this._document = doc;
+
+    // Mark if there's a HighContrastMode detector active on the body so if multiple
+    // copies of angular are loaded each one doesn't try to apply the classes.
+    if (doc.body) {
+      this._hasCheckedHighContrastMode = doc.body.hasAttribute(MODE_DETECTOR_ACTIVE_ATTR);
+      doc.body.setAttribute(MODE_DETECTOR_ACTIVE_ATTR, '');
+    }
 
     this._breakpointSubscription = inject(BreakpointObserver)
       .observe('(forced-colors: active)')
-      .subscribe(() => {
-        if (this._hasCheckedHighContrastMode) {
+      .subscribe(({ matches }) => {
+        // TODO: This is inefficient when going in and out of forced color mode with more than
+        // one copy of angular active. Each one will check for the new state forcing a big recalc.
+        if (this._hasCheckedHighContrastMode && this._forcedColorsActive !== matches) {
+          this._forcedColorsActive = matches;
           this._hasCheckedHighContrastMode = false;
           this._applyBodyHighContrastModeCssClasses();
         }
