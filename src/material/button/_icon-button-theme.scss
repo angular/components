@@ -2,48 +2,48 @@
 @use '@material/density/functions' as mdc-density-functions;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
+@use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 
-@use './button-theme-private';
+@use '../core/style/sass-utils';
+@use './button-base';
+@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 
-$_icon-size: 24px;
-
-// TODO(crisbeto): move these into tokens
-@mixin _ripple-color($color) {
-  --mat-mdc-button-persistent-ripple-color: #{$color};
-  --mat-mdc-button-ripple-color: #{rgba($color, 0.1)};
-}
 
 @mixin base($theme) {
   // TODO(mmalerba): Move icon button base tokens here
 }
 
-@mixin color($theme) {
-  $color-tokens: tokens-mdc-icon-button.get-color-tokens($theme);
-  $is-dark: inspection.get-theme-type($theme) == dark;
+@mixin _icon-button-variant($theme, $palette) {
+  $mdc-tokens: if($palette,
+    tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-icon-button.get-color-tokens($theme)
+  );
 
+  $mat-tokens: if($palette,
+    tokens-mat-icon-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-icon-button.get-color-tokens($theme)
+  );
+
+  @include mdc-icon-button-theme.theme($mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
+}
+
+@mixin color($theme) {
   .mat-mdc-icon-button {
-    @include button-theme-private.ripple-theme-styles($theme, false);
-    @include mdc-icon-button-theme.theme($color-tokens);
-    @include _ripple-color(if($is-dark, #fff, #000));
+    @include _icon-button-variant($theme, null);
 
     &.mat-primary {
-      @include _ripple-color(inspection.get-theme-color($theme, primary));
-      @include mdc-icon-button-theme.theme(
-        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, primary));
+      @include _icon-button-variant($theme, primary);
     }
 
     &.mat-accent {
-      @include _ripple-color(inspection.get-theme-color($theme, accent));
-      @include mdc-icon-button-theme.theme(
-        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, accent));
+      @include _icon-button-variant($theme, accent);
     }
 
     &.mat-warn {
-      @include _ripple-color(inspection.get-theme-color($theme, warn));
-      @include mdc-icon-button-theme.theme(
-        tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, warn));
+      @include _icon-button-variant($theme, warn);
     }
   }
 }
@@ -51,6 +51,7 @@ $_icon-size: 24px;
 @mixin typography($theme) {}
 
 @mixin density($theme) {
+  $icon-size: 24px;
   $density-scale: inspection.get-theme-density($theme);
   // Manually apply the expected density theming, and include the padding
   // as it was applied before
@@ -81,9 +82,9 @@ $_icon-size: 24px;
     // fails validation because the variable is "undefined" in the sass stack.
     width: var(--mdc-icon-button-state-layer-size);
     height: var(--mdc-icon-button-state-layer-size);
-    padding: math.div($calculated-size - $_icon-size, 2);
+    padding: math.div($calculated-size - $icon-size, 2);
 
-    @include button-theme-private.touch-target-density($density-scale);
+    @include button-base.mat-private-button-touch-target-density($density-scale);
   }
 }
 

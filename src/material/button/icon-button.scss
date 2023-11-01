@@ -3,6 +3,7 @@
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
+@use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 
 @use './button-base';
 @use '../core/style/private';
@@ -56,6 +57,8 @@
   }
 
   @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-ripple(tokens-mat-icon-button.$prefix,
+    tokens-mat-icon-button.get-token-slots());
   @include button-base.mat-private-button-touch-target(true);
   @include private.private-animation-noop();
 

@@ -2,7 +2,6 @@
 @use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 
-@use './button-theme-private';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
@@ -42,15 +41,8 @@
   @include sass-utils.current-selector-or-root() {
     @include _fab-variant($theme, null);
 
-    // TODO(wagnermaciel): The ripple-theme-styles mixin depends heavily on
-    // being wrapped by using-mdc-theme. This workaround needs to be
-    // revisited w/ a more holistic solution.
     .mat-mdc-fab,
     .mat-mdc-mini-fab {
-      @include mdc-helpers.using-mdc-theme($theme) {
-        @include button-theme-private.ripple-theme-styles($theme, true);
-      }
-
       &.mat-primary {
         @include _fab-variant($theme, primary);
       }

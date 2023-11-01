@@ -1,5 +1,6 @@
 @use '@material/touch-target' as mdc-touch-target;
 
+@use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 @use '../core/mdc-helpers/mdc-helpers';
 
@@ -39,11 +40,6 @@
   .mat-mdc-button-persistent-ripple::before {
     content: '';
     opacity: 0;
-    background-color: var(--mat-mdc-button-persistent-ripple-color);
-  }
-
-  .mat-ripple-element {
-    background-color: var(--mat-mdc-button-ripple-color);
   }
 
   // The content should appear over the state and ripple layers, otherwise they may adversely affect
@@ -62,6 +58,33 @@
   }
 }
 
+@mixin mat-private-button-ripple($prefix, $slots) {
+  @include token-utils.use-tokens($prefix, $slots) {
+    .mat-ripple-element {
+      @include token-utils.create-token-slot(background-color, ripple-color);
+    }
+
+    .mat-mdc-button-persistent-ripple::before {
+      @include token-utils.create-token-slot(background-color, state-layer-color);
+    }
+
+    &:hover .mat-mdc-button-persistent-ripple::before {
+      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+    }
+
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused {
+      .mat-mdc-button-persistent-ripple::before {
+        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      }
+    }
+
+    &:active .mat-mdc-button-persistent-ripple::before {
+      @include token-utils.create-token-slot(opacity, pressed-state-layer-opacity);
+    }
+  }
+}
+
 // MDC's disabled buttons define a default cursor with pointer-events none. However, they select
 // :disabled for this, which does not affect anchor tags.
 // TODO(andrewseguin): Discuss with the MDC team about a mixin we can call for applying this style,
@@ -72,6 +95,15 @@
     cursor: default;
     pointer-events: none;
     @content;
+  }
+}
+
+// Hides the touch target on lower densities.
+@mixin mat-private-button-touch-target-density($scale) {
+  @include mdc-helpers.if-touch-targets-unsupported($scale) {
+    .mat-mdc-button-touch-target {
+      display: none;
+    }
   }
 }
 
