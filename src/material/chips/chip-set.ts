@@ -8,7 +8,6 @@
 
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -21,22 +20,13 @@ import {
   Optional,
   QueryList,
   ViewEncapsulation,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
-import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
 import {merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction} from './chip-action';
-
-/**
- * Boilerplate for applying mixins to MatChipSet.
- * @docs-private
- */
-abstract class MatChipSetBase {
-  abstract disabled: boolean;
-  constructor(_elementRef: ElementRef) {}
-}
-const _MatChipSetMixinBase = mixinTabIndex(MatChipSetBase);
 
 /**
  * Basic container component for the MatChip component.
@@ -59,10 +49,7 @@ const _MatChipSetMixinBase = mixinTabIndex(MatChipSetBase);
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipSet
-  extends _MatChipSetMixinBase
-  implements AfterViewInit, HasTabIndex, OnDestroy
-{
+export class MatChipSet implements AfterViewInit, OnDestroy {
   /** Index of the last destroyed chip that had focus. */
   private _lastDestroyedFocusedChipIndex: number | null = null;
 
@@ -91,12 +78,12 @@ export class MatChipSet
   }
 
   /** Whether the chip set is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
     this._syncChipsState();
   }
   protected _disabled: boolean = false;
@@ -115,6 +102,12 @@ export class MatChipSet
 
     return this.empty ? null : this._defaultRole;
   }
+
+  /** Tabindex of the chip set. */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number = 0;
 
   set role(value: string | null) {
     this._explicitRole = value;
@@ -141,9 +134,7 @@ export class MatChipSet
     protected _elementRef: ElementRef<HTMLElement>,
     protected _changeDetectorRef: ChangeDetectorRef,
     @Optional() private _dir: Directionality,
-  ) {
-    super(_elementRef);
-  }
+  ) {}
 
   ngAfterViewInit() {
     this._setUpFocusManagement();
