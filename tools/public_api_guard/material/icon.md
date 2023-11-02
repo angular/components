@@ -4,11 +4,7 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterViewChecked } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanColor } from '@angular/material/core';
-import { _Constructor } from '@angular/material/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ElementRef } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
@@ -65,14 +61,19 @@ export const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
 export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 // @public
-export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, CanColor, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, _iconRegistry: MatIconRegistry, ariaHidden: string, _location: MatIconLocation, _errorHandler: ErrorHandler, defaults?: MatIconDefaultOptions);
+export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
+    constructor(_elementRef: ElementRef<HTMLElement>, _iconRegistry: MatIconRegistry, ariaHidden: string, _location: MatIconLocation, _errorHandler: ErrorHandler, defaults?: MatIconDefaultOptions);
+    get color(): string | null | undefined;
+    set color(value: string | null | undefined);
+    // (undocumented)
+    readonly _elementRef: ElementRef<HTMLElement>;
     get fontIcon(): string;
     set fontIcon(value: string);
     get fontSet(): string;
     set fontSet(value: string);
-    get inline(): boolean;
-    set inline(inline: BooleanInput);
+    inline: boolean;
+    // (undocumented)
+    static ngAcceptInputType_inline: unknown;
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
