@@ -4,22 +4,18 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkAccordion } from '@angular/cdk/accordion';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i5 from '@angular/material/core';
 import * as i6 from '@angular/cdk/accordion';
@@ -54,8 +50,9 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
     _handleHeaderFocus(header: MatExpansionPanelHeader): void;
     _handleHeaderKeydown(event: KeyboardEvent): void;
     _headers: QueryList<MatExpansionPanelHeader>;
-    get hideToggle(): boolean;
-    set hideToggle(show: BooleanInput);
+    hideToggle: boolean;
+    // (undocumented)
+    static ngAcceptInputType_hideToggle: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -114,9 +111,11 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     _hasSpacing(): boolean;
     _headerId: string;
     get hideToggle(): boolean;
-    set hideToggle(value: BooleanInput);
+    set hideToggle(value: boolean);
     readonly _inputChanges: Subject<SimpleChanges>;
     _lazyContent: MatExpansionPanelContent;
+    // (undocumented)
+    static ngAcceptInputType_hideToggle: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -171,7 +170,7 @@ export class MatExpansionPanelDescription {
 }
 
 // @public
-export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase implements AfterViewInit, OnDestroy, FocusableOption, HasTabIndex {
+export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
     constructor(panel: MatExpansionPanel, _element: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, defaultOptions?: MatExpansionPanelDefaultOptions, _animationMode?: string | undefined, tabIndex?: string);
     // (undocumented)
     _animationMode?: string | undefined;
@@ -186,15 +185,18 @@ export class MatExpansionPanelHeader extends _MatExpansionPanelHeaderMixinBase i
     _isExpanded(): boolean;
     _keydown(event: KeyboardEvent): void;
     // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     panel: MatExpansionPanel;
     _showToggle(): boolean;
+    tabIndex: number;
     _toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatExpansionPanelHeader, "mat-expansion-panel-header", never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; "expandedHeight": { "alias": "expandedHeight"; "required": false; }; "collapsedHeight": { "alias": "collapsedHeight"; "required": false; }; }, {}, never, ["mat-panel-title", "mat-panel-description", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatExpansionPanelHeader, "mat-expansion-panel-header", never, { "expandedHeight": { "alias": "expandedHeight"; "required": false; }; "collapsedHeight": { "alias": "collapsedHeight"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["mat-panel-title", "mat-panel-description", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelHeader, [{ host: true; }, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
