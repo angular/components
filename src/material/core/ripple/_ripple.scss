@@ -1,4 +1,6 @@
 @use '@angular/cdk';
+@use '../tokens/m2/mat/ripple' as tokens-mat-ripple;
+@use '../tokens/token-utils';
 
 @mixin ripple() {
   // The host element of an mat-ripple directive should always have a position of "absolute" or
@@ -34,6 +36,12 @@
     // We use a 3d transform here in order to avoid an issue in Safari where
     // the ripples aren't clipped when inside the shadow DOM (see #24028).
     transform: scale3d(0, 0, 0);
+
+    @include token-utils.use-tokens(
+      tokens-mat-ripple.$prefix, tokens-mat-ripple.get-token-slots()) {
+      // We have to emit a fallback value here, because some internal builds depend on it.
+      background-color: var(#{token-utils.get-token-variable(color)}, rgba(#000, 0.1));
+    }
 
     // In high contrast mode the ripple is opaque, causing it to obstruct the content.
     @include cdk.high-contrast(active, off) {
