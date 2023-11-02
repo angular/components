@@ -24,7 +24,10 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
 
-      - run: yarn -s deploy-dev-app
+      - name: Building dev-app
+        run: |
+          yarn -s bazel build //src/dev-app:web_package --symlink_prefix=dist/
+          cp -R dist/bin/src/dev-app/web_package dist/dev-app-web-pkg
 
       - name: Configure Firebase deploy target
         run: |
@@ -39,6 +42,7 @@ jobs:
           repoToken: ''
           firebaseServiceAccount: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
           projectId: '${{env.PREVIEW_PROJECT}}'
+          entryPoint: './'
           channelId: '${{env.PREVIEW_CHANNEL}}'
 
       - name: Result
