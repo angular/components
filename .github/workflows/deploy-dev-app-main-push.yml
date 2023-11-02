@@ -1,0 +1,46 @@
+name: Deploying dev-app to Firebase [main push].
+
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+env:
+  PREVIEW_PROJECT: ng-dev-previews
+  PREVIEW_SITE: ng-dev-previews-comp
+  PREVIEW_CHANNEL: main-branch
+
+jobs:
+  deploy-material2-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+
+      - run: yarn -s deploy-dev-app
+
+      - name: Configure Firebase deploy target
+        run: |
+          # We can use `npx` as the Firebase deploy actions uses it too.
+          npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
+          npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
+
+      - uses: FirebaseExtended/action-hosting-deploy@638d3c162747cead0c1c0d3093208ed59dfd8231 # v0
+        id: deploy
+        with:
+          # Note: No token used here as the action otherwise may attempt to post a comment.
+          repoToken: ''
+          firebaseServiceAccount: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
+          projectId: '${{env.PREVIEW_PROJECT}}'
+          channelId: '${{env.PREVIEW_CHANNEL}}'
+
+      - name: Result
+        run: |
+          echo "Deployed to: ${{steps.deploy.outputs.details_url}}"
