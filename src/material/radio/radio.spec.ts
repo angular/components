@@ -79,7 +79,7 @@ describe('MDC-based MatRadio', () => {
     });
 
     it('should coerce the disabled binding on the radio group', () => {
-      (groupInstance as any).disabled = '';
+      (testComponent as any).isGroupDisabled = '';
       fixture.detectChanges();
 
       radioLabelElements[0].click();
