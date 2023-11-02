@@ -19,12 +19,12 @@ import {
   Host,
   Inject,
   Input,
+  numberAttribute,
   OnDestroy,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {MatAccordionTogglePosition} from './accordion-base';
@@ -35,13 +35,6 @@ import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
 
-// Boilerplate for applying mixins to MatExpansionPanelHeader.
-/** @docs-private */
-abstract class MatExpansionPanelHeaderBase {
-  abstract readonly disabled: boolean;
-}
-const _MatExpansionPanelHeaderMixinBase = mixinTabIndex(MatExpansionPanelHeaderBase);
-
 /**
  * Header element of a `<mat-expansion-panel>`.
  */
@@ -51,13 +44,12 @@ const _MatExpansionPanelHeaderMixinBase = mixinTabIndex(MatExpansionPanelHeaderB
   templateUrl: 'expansion-panel-header.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['tabIndex'],
   animations: [matExpansionAnimations.indicatorRotate],
   host: {
     'class': 'mat-expansion-panel-header mat-focus-indicator',
     'role': 'button',
     '[attr.id]': 'panel._headerId',
-    '[attr.tabindex]': 'tabIndex',
+    '[attr.tabindex]': 'disabled ? -1 : tabIndex',
     '[attr.aria-controls]': '_getPanelId()',
     '[attr.aria-expanded]': '_isExpanded()',
     '[attr.aria-disabled]': 'panel.disabled',
@@ -70,10 +62,7 @@ const _MatExpansionPanelHeaderMixinBase = mixinTabIndex(MatExpansionPanelHeaderB
     '(keydown)': '_keydown($event)',
   },
 })
-export class MatExpansionPanelHeader
-  extends _MatExpansionPanelHeaderMixinBase
-  implements AfterViewInit, OnDestroy, FocusableOption, HasTabIndex
-{
+export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
@@ -87,7 +76,6 @@ export class MatExpansionPanelHeader
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
     @Attribute('tabindex') tabIndex?: string,
   ) {
-    super();
     const accordionHideToggleChange = panel.accordion
       ? panel.accordion._stateChanges.pipe(
           filter(changes => !!(changes['hideToggle'] || changes['togglePosition'])),
@@ -124,6 +112,12 @@ export class MatExpansionPanelHeader
 
   /** Height of the header while the panel is collapsed. */
   @Input() collapsedHeight: string;
+
+  /** Tab index of the header. */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number = 0;
 
   /**
    * Whether the associated panel is disabled. Implemented as a part of `FocusableOption`.
