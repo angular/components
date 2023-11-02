@@ -7,8 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {Directive, ElementRef, Input, OnDestroy, Optional} from '@angular/core';
+import {Directive, ElementRef, Input, numberAttribute, OnDestroy, Optional} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {CdkTree, CdkTreeNode} from './tree';
@@ -34,11 +33,11 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   indentUnits = 'px';
 
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
-  @Input('cdkTreeNodePadding')
+  @Input({alias: 'cdkTreeNodePadding', transform: numberAttribute})
   get level(): number {
     return this._level;
   }
-  set level(value: NumberInput) {
+  set level(value: number) {
     this._setLevelInput(value);
   }
   _level: number;
@@ -107,11 +106,11 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
    * @docs-private
    */
-  protected _setLevelInput(value: NumberInput) {
+  protected _setLevelInput(value: number) {
     // Set to null as the fallback value so that _setPadding can fall back to the node level if the
     // consumer set the directive as `cdkTreeNodePadding=""`. We still want to take this value if
     // they set 0 explicitly.
-    this._level = coerceNumberProperty(value, null)!;
+    this._level = isNaN(value) ? null! : value;
     this._setPadding();
   }
 
@@ -132,7 +131,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
     }
 
     this.indentUnits = units;
-    this._indent = coerceNumberProperty(value);
+    this._indent = numberAttribute(value);
     this._setPadding();
   }
 }
