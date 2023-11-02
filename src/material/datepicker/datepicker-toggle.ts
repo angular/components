@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Attribute,
@@ -21,6 +20,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
   ViewChild,
+  booleanAttribute,
 } from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
@@ -67,7 +67,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @Input('aria-label') ariaLabel: string;
 
   /** Whether the toggle button is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     if (this._disabled === undefined && this.datepicker) {
       return this.datepicker.disabled;
@@ -75,8 +75,8 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 
     return !!this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
   private _disabled: boolean;
 

@@ -21,13 +21,13 @@ import {
   Inject,
   OnChanges,
   SimpleChanges,
+  booleanAttribute,
 } from '@angular/core';
 import {MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {ThemePalette, DateAdapter} from '@angular/material/core';
 import {NgControl, ControlContainer, Validators} from '@angular/forms';
 import {Subject, merge, Subscription} from 'rxjs';
 import {FocusOrigin} from '@angular/cdk/a11y';
-import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
 import {
   MatStartDate,
   MatEndDate,
@@ -128,7 +128,7 @@ export class MatDateRangeInput<D>
   private _rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
 
   /** Whether the input is required. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get required(): boolean {
     return (
       this._required ??
@@ -138,8 +138,8 @@ export class MatDateRangeInput<D>
       false
     );
   }
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
+  set required(value: boolean) {
+    this._required = value;
   }
   private _required: boolean | undefined;
 
@@ -196,17 +196,15 @@ export class MatDateRangeInput<D>
   private _max: D | null;
 
   /** Whether the input is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._startInput && this._endInput
       ? this._startInput.disabled && this._endInput.disabled
       : this._groupDisabled;
   }
-  set disabled(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._groupDisabled) {
-      this._groupDisabled = newValue;
+  set disabled(value: boolean) {
+    if (value !== this._groupDisabled) {
+      this._groupDisabled = value;
       this.stateChanges.next(undefined);
     }
   }
