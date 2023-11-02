@@ -16,18 +16,10 @@ import {
   Directive,
   ElementRef,
   Inject,
+  Input,
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
-
-// Boilerplate for applying mixins to MatToolbar.
-/** @docs-private */
-const _MatToolbarBase = mixinColor(
-  class {
-    constructor(public _elementRef: ElementRef) {}
-  },
-);
 
 @Directive({
   selector: 'mat-toolbar-row',
@@ -41,28 +33,30 @@ export class MatToolbarRow {}
   exportAs: 'matToolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
-  inputs: ['color'],
   host: {
     'class': 'mat-toolbar',
+    '[class]': 'color ? "mat-" + color : ""',
     '[class.mat-toolbar-multiple-rows]': '_toolbarRows.length > 0',
     '[class.mat-toolbar-single-row]': '_toolbarRows.length === 0',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewInit {
+export class MatToolbar implements AfterViewInit {
+  // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
+  /** Palette color of the toolbar. */
+  @Input() color?: string | null;
+
   private _document: Document;
 
   /** Reference to all toolbar row elements that have been projected. */
   @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
 
   constructor(
-    elementRef: ElementRef,
+    protected _elementRef: ElementRef,
     private _platform: Platform,
     @Inject(DOCUMENT) document?: any,
   ) {
-    super(elementRef);
-
     // TODO: make the document a required param when doing breaking changes.
     this._document = document;
   }
