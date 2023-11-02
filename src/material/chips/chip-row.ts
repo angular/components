@@ -47,7 +47,6 @@ export interface MatChipEditedEvent extends MatChipEvent {
   selector: 'mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]',
   templateUrl: 'chip-row.html',
   styleUrls: ['chip.css'],
-  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-row mdc-evolution-chip',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',

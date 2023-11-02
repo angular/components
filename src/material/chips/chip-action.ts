@@ -6,17 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  Input,
+  booleanAttribute,
+  numberAttribute,
+} from '@angular/core';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {Directive, ElementRef, Inject, Input} from '@angular/core';
-import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
 import {MAT_CHIP} from './tokens';
-
-abstract class _MatChipActionBase {
-  abstract disabled: boolean;
-}
-
-const _MatChipActionMixinBase = mixinTabIndex(_MatChipActionBase, -1);
 
 /**
  * Section within a chip.
@@ -24,7 +23,6 @@ const _MatChipActionMixinBase = mixinTabIndex(_MatChipActionBase, -1);
  */
 @Directive({
   selector: '[matChipAction]',
-  inputs: ['disabled', 'tabIndex'],
   host: {
     'class': 'mdc-evolution-chip__action mat-mdc-chip-action',
     '[class.mdc-evolution-chip__action--primary]': '_isPrimary',
@@ -37,7 +35,7 @@ const _MatChipActionMixinBase = mixinTabIndex(_MatChipActionBase, -1);
     '(keydown)': '_handleKeydown($event)',
   },
 })
-export class MatChipAction extends _MatChipActionMixinBase implements HasTabIndex {
+export class MatChipAction {
   /** Whether the action is interactive. */
   @Input() isInteractive = true;
 
@@ -45,14 +43,20 @@ export class MatChipAction extends _MatChipActionMixinBase implements HasTabInde
   _isPrimary = true;
 
   /** Whether the action is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled || this._parentChip.disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
   private _disabled = false;
+
+  /** Tab index of the action. */
+  @Input({
+    transform: (value: unknown) => (value == null ? -1 : numberAttribute(value)),
+  })
+  tabIndex: number = -1;
 
   /**
    * Private API to allow focusing this chip when it is disabled.
@@ -88,8 +92,6 @@ export class MatChipAction extends _MatChipActionMixinBase implements HasTabInde
       _isEditing?: boolean;
     },
   ) {
-    super();
-
     if (_elementRef.nativeElement.nodeName === 'BUTTON') {
       _elementRef.nativeElement.setAttribute('type', 'button');
     }

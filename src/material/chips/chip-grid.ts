@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -55,8 +55,15 @@ export class MatChipGridChange {
 
 /**
  * Boilerplate for applying mixins to MatChipGrid.
+ * Important! this class needs to be marked as a component or a directive, because
+ * leaving it without metadata cuases the framework to execute the host bindings multiple
+ * times which breaks the keyboard navigation. We can't use `@Directive()` here, because
+ * `MatChipSet` is a component. We should able to remove this class altogether once
+ * the error state is moved away from using mixins.
  * @docs-private
  */
+// tslint:disable-next-line:validate-decorators
+@Component({template: ''})
 class MatChipGridBase extends MatChipSet {
   /**
    * Emits whenever the component state changes and should cause the parent
@@ -96,11 +103,10 @@ const _MatChipGridMixinBase = mixinErrorState(MatChipGridBase);
     </div>
   `,
   styleUrls: ['chip-set.css'],
-  inputs: ['tabIndex'],
   host: {
     'class': 'mat-mdc-chip-set mat-mdc-chip-grid mdc-evolution-chip-set',
     '[attr.role]': 'role',
-    '[tabIndex]': '_chips && _chips.length === 0 ? -1 : tabIndex',
+    '[attr.tabindex]': '(disabled || (_chips && _chips.length === 0)) ? -1 : tabIndex',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[class.mat-mdc-chip-list-disabled]': 'disabled',
@@ -156,12 +162,12 @@ export class MatChipGrid
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   override get disabled(): boolean {
     return this.ngControl ? !!this.ngControl.disabled : this._disabled;
   }
-  override set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  override set disabled(value: boolean) {
+    this._disabled = value;
     this._syncChipsState();
   }
 
@@ -206,12 +212,12 @@ export class MatChipGrid
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get required(): boolean {
     return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
   }
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
+  set required(value: boolean) {
+    this._required = value;
     this.stateChanges.next();
   }
   protected _required: boolean | undefined;
