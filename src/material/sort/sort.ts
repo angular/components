@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   EventEmitter,
@@ -18,8 +17,9 @@ import {
   OnInit,
   Optional,
   Output,
+  booleanAttribute,
 } from '@angular/core';
-import {CanDisable, HasInitialized, mixinDisabled, mixinInitialized} from '@angular/material/core';
+import {HasInitialized, mixinInitialized} from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {SortDirection} from './sort-direction';
 import {
@@ -67,7 +67,7 @@ export const MAT_SORT_DEFAULT_OPTIONS = new InjectionToken<MatSortDefaultOptions
 
 // Boilerplate for applying mixins to MatSort.
 /** @docs-private */
-const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
+const _MatSortBase = mixinInitialized(class {});
 
 /** Container for MatSortables to manage the sort state and provide default sort parameters. */
 @Directive({
@@ -76,12 +76,8 @@ const _MatSortBase = mixinInitialized(mixinDisabled(class {}));
   host: {
     'class': 'mat-sort',
   },
-  inputs: ['disabled: matSortDisabled'],
 })
-export class MatSort
-  extends _MatSortBase
-  implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit
-{
+export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, OnDestroy, OnInit {
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
 
@@ -119,14 +115,12 @@ export class MatSort
    * Whether to disable the user from clearing the sort by finishing the sort direction cycle.
    * May be overridden by the MatSortable's disable clear input.
    */
-  @Input('matSortDisableClear')
-  get disableClear(): boolean {
-    return this._disableClear;
-  }
-  set disableClear(v: BooleanInput) {
-    this._disableClear = coerceBooleanProperty(v);
-  }
-  private _disableClear: boolean;
+  @Input({alias: 'matSortDisableClear', transform: booleanAttribute})
+  disableClear: boolean;
+
+  /** Whether the sortable is disabled. */
+  @Input({alias: 'matSortDisabled', transform: booleanAttribute})
+  disabled: boolean = false;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
