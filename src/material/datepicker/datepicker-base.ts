@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
+import {coerceStringArray} from '@angular/cdk/coercion';
 import {
   DOWN_ARROW,
   ESCAPE,
@@ -50,8 +50,9 @@ import {
   SimpleChanges,
   OnInit,
   inject,
+  booleanAttribute,
 } from '@angular/core';
-import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {DateAdapter, ThemePalette} from '@angular/material/core';
 import {AnimationEvent} from '@angular/animations';
 import {merge, Subject, Observable, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
@@ -99,14 +100,6 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
 };
 
-// Boilerplate for applying mixins to MatDatepickerContent.
-/** @docs-private */
-const _MatDatepickerContentBase = mixinColor(
-  class {
-    constructor(public _elementRef: ElementRef) {}
-  },
-);
-
 /**
  * Component used as the content for the datepicker overlay. We use this instead of using
  * MatCalendar directly as the content so we can control the initial focus. This also gives us a
@@ -120,6 +113,7 @@ const _MatDatepickerContentBase = mixinColor(
   styleUrls: ['datepicker-content.css'],
   host: {
     'class': 'mat-datepicker-content',
+    '[class]': 'color ? "mat-" + color : ""',
     '[@transformPanel]': '_animationState',
     '(@transformPanel.start)': '_handleAnimationEvent($event)',
     '(@transformPanel.done)': '_handleAnimationEvent($event)',
@@ -129,16 +123,17 @@ const _MatDatepickerContentBase = mixinColor(
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['color'],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
-  extends _MatDatepickerContentBase
-  implements OnInit, AfterViewInit, OnDestroy, CanColor
+  implements OnInit, AfterViewInit, OnDestroy
 {
   private _subscriptions = new Subscription();
   private _model: MatDateSelectionModel<S, D>;
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+
+  /** Palette color of the internal calendar. */
+  @Input() color: ThemePalette;
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepickerBase<any, S, D>;
@@ -180,7 +175,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   _dialogLabelId: string | null;
 
   constructor(
-    elementRef: ElementRef,
+    protected _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _globalModel: MatDateSelectionModel<S, D>,
     private _dateAdapter: DateAdapter<D>,
@@ -189,7 +184,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     private _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>,
     intl: MatDatepickerIntl,
   ) {
-    super(elementRef);
     this._closeButtonText = intl.closeCalendarLabel;
   }
 
@@ -333,10 +327,11 @@ export interface MatDatepickerPanel<
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<
-  C extends MatDatepickerControl<D>,
-  S,
-  D = ExtractDateTypeFromSelection<S>,
-> implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
+    C extends MatDatepickerControl<D>,
+    S,
+    D = ExtractDateTypeFromSelection<S>,
+  >
+  implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _scrollStrategy: () => ScrollStrategy;
   private _inputStateChanges = Subscription.EMPTY;
@@ -376,27 +371,19 @@ export abstract class MatDatepickerBase<
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a dropdown and elements have more padding to allow for bigger touch targets.
    */
-  @Input()
-  get touchUi(): boolean {
-    return this._touchUi;
-  }
-  set touchUi(value: BooleanInput) {
-    this._touchUi = coerceBooleanProperty(value);
-  }
-  private _touchUi = false;
+  @Input({transform: booleanAttribute})
+  touchUi: boolean = false;
 
   /** Whether the datepicker pop-up should be disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled === undefined && this.datepickerInput
       ? this.datepickerInput.disabled
       : !!this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._disabled) {
-      this._disabled = newValue;
+  set disabled(value: boolean) {
+    if (value !== this._disabled) {
+      this._disabled = value;
       this.stateChanges.next(undefined);
     }
   }
@@ -415,14 +402,8 @@ export abstract class MatDatepickerBase<
    * Note that automatic focus restoration is an accessibility feature and it is recommended that
    * you provide your own equivalent, if you decide to turn it off.
    */
-  @Input()
-  get restoreFocus(): boolean {
-    return this._restoreFocus;
-  }
-  set restoreFocus(value: BooleanInput) {
-    this._restoreFocus = coerceBooleanProperty(value);
-  }
-  private _restoreFocus = true;
+  @Input({transform: booleanAttribute})
+  restoreFocus: boolean = true;
 
   /**
    * Emits selected year in multiyear view.
@@ -466,12 +447,16 @@ export abstract class MatDatepickerBase<
   private _panelClass: string[];
 
   /** Whether the calendar is open. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get opened(): boolean {
     return this._opened;
   }
-  set opened(value: BooleanInput) {
-    coerceBooleanProperty(value) ? this.open() : this.close();
+  set opened(value: boolean) {
+    if (value) {
+      this.open();
+    } else {
+      this.close();
+    }
   }
   private _opened = false;
 
@@ -639,7 +624,7 @@ export abstract class MatDatepickerBase<
     }
 
     const canRestoreFocus =
-      this._restoreFocus &&
+      this.restoreFocus &&
       this._focusedElementBeforeOpen &&
       typeof this._focusedElementBeforeOpen.focus === 'function';
 
