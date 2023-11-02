@@ -56,7 +56,7 @@ $button-icon-size: 28px;
   align-items: center;
   justify-content: flex-end;
   padding: $padding;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   width: 100%;
 
   @include token-utils.use-tokens(
