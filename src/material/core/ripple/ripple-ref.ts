@@ -7,7 +7,7 @@
  */
 
 /** Possible states for a ripple element. */
-export const enum RippleState {
+export enum RippleState {
   FADING_IN,
   VISIBLE,
   FADING_OUT,

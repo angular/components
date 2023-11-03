@@ -18,7 +18,7 @@ export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolb
 }
 
 // @public
-export const enum MatToolbarSection {
+export enum MatToolbarSection {
     // (undocumented)
     ROW = ".mat-toolbar-row"
 }

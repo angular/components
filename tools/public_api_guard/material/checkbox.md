@@ -161,7 +161,7 @@ export class _MatCheckboxRequiredValidatorModule {
 }
 
 // @public
-export const enum TransitionCheckState {
+export enum TransitionCheckState {
     Checked = 1,
     Indeterminate = 3,
     Init = 0,

@@ -546,7 +546,7 @@ export class RippleRenderer implements EventListenerObject {
 }
 
 // @public
-export const enum RippleState {
+export enum RippleState {
     // (undocumented)
     FADING_IN = 0,
     // (undocumented)

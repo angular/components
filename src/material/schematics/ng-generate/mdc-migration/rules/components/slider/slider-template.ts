@@ -24,7 +24,7 @@ interface Binding {
 }
 
 /** Describes the different types of bindings we care about. */
-const enum BindingType {
+enum BindingType {
   INPUT,
   OUTPUT,
   ATTRIBUTE,

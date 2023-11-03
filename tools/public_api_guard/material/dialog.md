@@ -243,7 +243,7 @@ export class MatDialogRef<T, R = any> {
 }
 
 // @public (undocumented)
-export const enum MatDialogState {
+export enum MatDialogState {
     // (undocumented)
     CLOSED = 2,
     // (undocumented)

@@ -35,7 +35,7 @@ const FOCUS_DELAY = 0;
  * FOCUSABLE - Rendered in the dom and styled for its contents to be focusable but invisible.
  * ON - Rendered and fully visible.
  */
-export const enum HoverContentState {
+export enum HoverContentState {
   OFF = 0,
   FOCUSABLE,
   ON,

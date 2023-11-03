@@ -9,7 +9,7 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** Possible types of icons. */
-export const enum IconType {
+export enum IconType {
   SVG,
   FONT,
 }

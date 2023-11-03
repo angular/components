@@ -10,7 +10,7 @@ import {ContentContainerComponentHarness, HarnessPredicate, parallel} from '@ang
 import {ToolbarHarnessFilters} from './toolbar-harness-filters';
 
 /** Selectors for different sections of the mat-toolbar that contain user content. */
-export const enum MatToolbarSection {
+export enum MatToolbarSection {
   ROW = '.mat-toolbar-row',
 }
 

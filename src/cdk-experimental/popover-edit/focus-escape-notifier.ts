@@ -12,7 +12,7 @@ import {FocusTrap, InteractivityChecker} from '@angular/cdk/a11y';
 import {Observable, Subject} from 'rxjs';
 
 /** Value indicating whether focus left the target area before or after the enclosed elements. */
-export const enum FocusEscapeNotifierDirection {
+export enum FocusEscapeNotifierDirection {
   START,
   END,
 }
