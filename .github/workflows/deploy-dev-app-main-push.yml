@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
 
-permissions: {}
+permissions:
+  deployments: write
 
 env:
   PREVIEW_PROJECT: ng-dev-previews
@@ -48,3 +49,11 @@ jobs:
       - name: Result
         run: |
           echo "Deployed to: ${{steps.deploy.outputs.details_url}}"
+
+      - name: Deployment Status
+        uses: zattoo/deploy-status@c8a0267e54a90ea07765fa88f7c7c35171859eec # v1
+        with:
+          token: '${{github.token}}'
+          environment: 'dev'
+          environment_url: '${{steps.deploy.outputs.details_url}}'
+          state: success
