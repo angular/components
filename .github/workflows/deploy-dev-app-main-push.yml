@@ -9,8 +9,8 @@ permissions:
 
 env:
   PREVIEW_PROJECT: ng-dev-previews
-  PREVIEW_SITE: ng-dev-previews-comp
-  PREVIEW_CHANNEL: main-branch
+  PREVIEW_SITE: ng-comp-devapp
+  PREVIEW_CHANNEL: live
 
 jobs:
   deploy-material2-dev:
