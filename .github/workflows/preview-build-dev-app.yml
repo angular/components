@@ -23,18 +23,18 @@ jobs:
       (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'dev-app preview'))
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e0ec7b60641d7f6369be45d8d02663fd50f320be
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@e0ec7b60641d7f6369be45d8d02663fd50f320be
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e0ec7b60641d7f6369be45d8d02663fd50f320be
 
       # Build the web package
       - run: bazel build //src/dev-app:web_package --symlink_prefix=dist/
 
-      - uses: angular/dev-infra/github-actions/previews/pack-and-upload-artifact@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - uses: angular/dev-infra/github-actions/previews/pack-and-upload-artifact@e0ec7b60641d7f6369be45d8d02663fd50f320be
         with:
           workflow-artifact-name: 'dev-app'
           pull-number: '${{github.event.pull_request.number}}'
