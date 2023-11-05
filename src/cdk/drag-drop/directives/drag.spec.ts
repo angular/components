@@ -240,8 +240,8 @@ describe('CdkDrag', () => {
         const event = createMouseEvent('mousedown', 0, 0);
 
         Object.defineProperties(event, {
-          offsetX: {get: () => 0},
-          offsetY: {get: () => 0},
+          buttons: {get: () => 0},
+          detail: {get: () => 0},
         });
 
         expect(dragElement.style.transform).toBeFalsy();
