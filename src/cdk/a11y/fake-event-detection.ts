@@ -9,13 +9,11 @@
 /** Gets whether an event could be a faked `mousedown` event dispatched by a screen reader. */
 export function isFakeMousedownFromScreenReader(event: MouseEvent): boolean {
   // Some screen readers will dispatch a fake `mousedown` event when pressing enter or space on
-  // a clickable element. We can distinguish these events when both `offsetX` and `offsetY` are
-  // zero or `event.buttons` is zero, depending on the browser:
+  // a clickable element. We can distinguish these events when `event.buttons` is zero, or
+  // `event.detail` is zero depending on the browser:
   // - `event.buttons` works on Firefox, but fails on Chrome.
-  // - `offsetX` and `offsetY` work on Chrome, but fail on Firefox.
-  // Note that there's an edge case where the user could click the 0x0 spot of the
-  // screen themselves, but that is unlikely to contain interactive elements.
-  return event.buttons === 0 || (event.offsetX === 0 && event.offsetY === 0);
+  // - `detail` works on Chrome, but fails on Firefox.
+  return event.buttons === 0 || event.detail === 0;
 }
 
 /** Gets whether an event could be a faked `touchstart` event dispatched by a screen reader. */
