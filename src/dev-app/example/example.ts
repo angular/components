@@ -24,14 +24,18 @@ import {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="label" *ngIf="showLabel">
-      <span class="title"> {{title}} </span>
-      <span class="id"> <{{id}}> </span>
-    </div>
+    @if (showLabel) {
+      <div class="label">
+        <span class="title"> {{title}} </span>
+        <span class="id"> <{{id}}> </span>
+      </div>
+    }
 
-    <div *ngIf="!id">
-      Could not find example {{id}}
-    </div>
+    @if (!id) {
+      <div>
+        Could not find example {{id}}
+      </div>
+    }
   `,
   styles: [
     `

@@ -21,11 +21,12 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       [hideSingleSelectionIndicator]="reactiveHideSingleSelectionIndicator"
       [autoActiveFirstOption]="reactiveAutoActiveFirstOption"
       [requireSelection]="reactiveRequireSelection">
-      <mat-option *ngFor="let state of reactiveStates; let index = index" [value]="state"
-        [disabled]="reactiveIsStateDisabled(state.index)">
-        <span>{{ state.name }}</span>
-        <span class="demo-secondary-text"> ({{ state.code }}) </span>
-      </mat-option>
+      @for (state of reactiveStates; track state; let index = $index) {
+        <mat-option [value]="state" [disabled]="reactiveIsStateDisabled(state.index)">
+          <span>{{ state.name }}</span>
+          <span class="demo-secondary-text"> ({{ state.code }}) </span>
+        </mat-option>
+      }
     </mat-autocomplete>
 
     <p>
@@ -66,21 +67,25 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Template-driven value (currentState): {{ currentState }}</div>
     <div>Template-driven dirty: {{ modelDir ? modelDir.dirty : false }}</div>
 
-    <!-- Added an ngIf below to test that autocomplete works with ngIf -->
-    <mat-form-field *ngIf="true" [color]="templateStatesTheme">
-      <mat-label>State</mat-label>
-      <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
-        (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
-      <mat-autocomplete #tdAuto="matAutocomplete"
-        [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator"
-        [autoActiveFirstOption]="templateAutoActiveFirstOption"
-        [requireSelection]="templateRequireSelection">
-        <mat-option *ngFor="let state of tdStates" [value]="state.name"
-          [disabled]="templateIsStateDisabled(state.index)">
-          <span>{{ state.name }}</span>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <!-- Added an @if below to test that autocomplete works with @if -->
+    @if (true) {
+      <mat-form-field [color]="templateStatesTheme">
+        <mat-label>State</mat-label>
+        <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
+          (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
+        <mat-autocomplete #tdAuto="matAutocomplete"
+          [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator"
+          [autoActiveFirstOption]="templateAutoActiveFirstOption"
+          [requireSelection]="templateRequireSelection">
+          @for (state of tdStates; track state) {
+            <mat-option [value]="state.name"
+              [disabled]="templateIsStateDisabled(state.index)">
+              <span>{{ state.name }}</span>
+            </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    }
 
     <p>
       <button mat-button (click)="clearTemplateState()">RESET</button>
@@ -89,9 +94,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         TOGGLE DISABLED
       </button>
       <select [(ngModel)]="templateStatesTheme">
-        <option *ngFor="let theme of availableThemes" [value]="theme.value">
-          {{theme.name}}
-        </option>
+        @for (theme of availableThemes; track theme) {
+          <option [value]="theme.value">{{theme.name}}</option>
+        }
       </select>
     </p>
     <p>
@@ -141,8 +146,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
 </div>
 
 <mat-autocomplete #groupedAuto="matAutocomplete">
-  <mat-optgroup *ngFor="let group of filteredGroupedStates"
-    [label]="'States starting with ' + group.letter">
-    <mat-option *ngFor="let state of group.states" [value]="state.name">{{ state.name }}</mat-option>
-  </mat-optgroup>
+  @for (group of filteredGroupedStates; track group) {
+    <mat-optgroup [label]="'States starting with ' + group.letter">
+      @for (state of group.states; track state) {
+        <mat-option [value]="state.name">{{ state.name }}</mat-option>
+      }
+    </mat-optgroup>
+  }
 </mat-autocomplete>

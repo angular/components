@@ -73,12 +73,12 @@
       <mat-form-field>
         <mat-label>Email</mat-label>
         <input matInput [formControl]="emailFormControl">
-        <mat-error *ngIf="emailFormControl.hasError('required')">
-          This field is required
-        </mat-error>
-        <mat-error *ngIf="emailFormControl.hasError('pattern')">
-          Please enter a valid email address
-        </mat-error>
+        @if (emailFormControl.hasError('required')) {
+          <mat-error>This field is required</mat-error>
+        }
+        @if (emailFormControl.hasError('pattern')) {
+          <mat-error>Please enter a valid email address</mat-error>
+        }
       </mat-form-field>
     </p>
 
@@ -124,7 +124,9 @@
     <mat-form-field [appearance]="prefixSuffixAppearance" class="demo-text-align-end">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <span matTextPrefix *ngIf="showPrefix">$</span>
+      @if (showPrefix) {
+        <span matTextPrefix>$</span>
+      }
       <span matTextSuffix>.00</span>
     </mat-form-field>
 
@@ -140,7 +142,9 @@
     <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <mat-icon matIconPrefix *ngIf="showPrefix">calendar_today</mat-icon>
+      @if (showPrefix) {
+        <mat-icon matIconPrefix>calendar_today</mat-icon>
+      }
       <mat-icon matIconSuffix>mode_edit</mat-icon>
     </mat-form-field>
 
@@ -148,9 +152,11 @@
     <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <button mat-icon-button matIconPrefix *ngIf="showPrefix">
-        <mat-icon>calendar_today</mat-icon>
-      </button>
+      @if (showPrefix) {
+        <button mat-icon-button matIconPrefix>
+          <mat-icon>calendar_today</mat-icon>
+        </button>
+      }
       <button mat-icon-button matIconSuffix>
         <mat-icon>mode_edit</mat-icon>
       </button>
@@ -162,9 +168,11 @@
       <input matInput>
       <span matTextPrefix>$</span>
       <span matTextSuffix>.00</span>
-      <button mat-icon-button matIconPrefix *ngIf="showPrefix">
-        <mat-icon>calendar_today</mat-icon>
-      </button>
+      @if (showPrefix) {
+        <button mat-icon-button matIconPrefix>
+          <mat-icon>calendar_today</mat-icon>
+        </button>
+      }
       <button mat-icon-button matIconSuffix>
         <mat-icon>mode_edit</mat-icon>
       </button>
@@ -491,21 +499,23 @@
         <button (click)="addABunch(1000)">Add 1000</button>
       </td>
       </thead>
-      <tr *ngFor="let item of items; let i = index">
-        <td>{{i+1}}</td>
-        <td>
-          <mat-form-field>
-            <mat-label>Value</mat-label>
-            <input matInput
-                   type="number"
-                   [(ngModel)]="items[i].value">
-          </mat-form-field>
-        </td>
-        <td>
-          <input type="number" [(ngModel)]="items[i].value">
-        </td>
-        <td>{{item.value}}</td>
-      </tr>
+      @for (item of items; track item; let i = $index) {
+        <tr>
+          <td>{{i+1}}</td>
+          <td>
+            <mat-form-field>
+              <mat-label>Value</mat-label>
+              <input matInput
+                    type="number"
+                    [(ngModel)]="items[i].value">
+            </mat-form-field>
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="items[i].value">
+          </td>
+          <td>{{item.value}}</td>
+        </tr>
+      }
     </table>
   </mat-card-content>
 </mat-card>
@@ -730,7 +740,9 @@
         <input type="text" aria-label="Number" matInput
                [matAutocomplete]="autoComplete1">
         <mat-autocomplete #autoComplete1="matAutocomplete">
-          <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+          @for (option of options; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
     </p>
@@ -741,7 +753,9 @@
         <input type="text" aria-label="Number" matInput
                [matAutocomplete]="autoComplete2">
         <mat-autocomplete #autoComplete2="matAutocomplete">
-          <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+          @for (option of options; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
     </p>
@@ -776,7 +790,9 @@
           <mat-label>Amount</mat-label>
           <input matInput>
           <span matTextPrefix>$&nbsp;</span>
-          <span matTextPrefix *ngIf="showSecondPrefix">!&nbsp;</span>
+          @if (showSecondPrefix) {
+            <span matTextPrefix>!&nbsp;</span>
+          }
           <span matTextSuffix>.00</span>
         </mat-form-field>
       </mat-tab>
