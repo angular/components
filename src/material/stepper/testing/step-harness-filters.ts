@@ -8,7 +8,7 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** Possible orientations for a stepper. */
-export const enum StepperOrientation {
+export enum StepperOrientation {
   HORIZONTAL,
   VERTICAL,
 }

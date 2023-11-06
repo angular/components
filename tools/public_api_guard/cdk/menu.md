@@ -275,7 +275,7 @@ export interface FocusableElement {
 }
 
 // @public
-export const enum FocusNext {
+export enum FocusNext {
     // (undocumented)
     currentItem = 2,
     // (undocumented)

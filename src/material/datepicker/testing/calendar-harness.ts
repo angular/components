@@ -11,7 +11,7 @@ import {CalendarHarnessFilters, CalendarCellHarnessFilters} from './datepicker-h
 import {MatCalendarCellHarness} from './calendar-cell-harness';
 
 /** Possible views of a `MatCalendarHarness`. */
-export const enum CalendarView {
+export enum CalendarView {
   MONTH,
   YEAR,
   MULTI_YEAR,
