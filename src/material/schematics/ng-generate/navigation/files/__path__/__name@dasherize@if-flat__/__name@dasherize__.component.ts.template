@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';<% } %>
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
@@ -26,7 +27,9 @@ import { map, shareReplay } from 'rxjs/operators';
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    AsyncPipe,
+    NgIf
   ]<% } %>
 })
 export class <%= classify(name) %>Component {
