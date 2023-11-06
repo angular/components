@@ -21,7 +21,7 @@
 
 <!-- Template vars on <ng-template> elements can't be accessed _in_ the template because Angular
     doesn't support grabbing the instance / TemplateRef this way because the variable may be
-    referring to something *in* the template (such as #item in ngFor). As such, the component
+    referring to something *in* the template (such as #item in @for). As such, the component
     has to use @ViewChild / @ViewChildren to get these references.
     See https://github.com/angular/angular/issues/7158 -->
 <ng-template cdk-portal>
