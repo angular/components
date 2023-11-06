@@ -32,8 +32,8 @@ export class GoogleMapDemo {
             [center]="center"
             [zoom]="zoom"
             (mapClick)="addMarker($event)">
-  <map-marker *ngFor="let markerPosition of markerPositions"
-              [position]="markerPosition"
-              [options]="markerOptions"></map-marker>
+  @for (position of markerPositions; track position) {
+    <map-marker [position]="position" [options]="markerOptions"></map-marker>
+  }
 </google-map>
 ```

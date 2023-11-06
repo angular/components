@@ -1533,14 +1533,13 @@ describe('MDC-based MatTooltip', () => {
 @Component({
   selector: 'app',
   template: `
-    <button #button
-            *ngIf="showButton"
-            [matTooltip]="message"
-            [matTooltipPosition]="position"
-            [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass }"
-            [matTooltipTouchGestures]="touchGestures">
-      Button
-    </button>`,
+    @if (showButton) {
+      <button #button
+        [matTooltip]="message"
+        [matTooltipPosition]="position"
+        [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass }"
+        [matTooltipTouchGestures]="touchGestures">Button</button>
+    }`,
 })
 class BasicTooltipDemo {
   position: string = 'below';
@@ -1557,11 +1556,11 @@ class BasicTooltipDemo {
   template: `
     <div cdkScrollable style="padding: 100px; margin: 300px;
                                height: 200px; width: 200px; overflow: auto;">
-      <button *ngIf="showButton" style="margin-bottom: 600px"
+      @if (showButton) {
+        <button style="margin-bottom: 600px"
               [matTooltip]="message"
-              [matTooltipPosition]="position">
-        Button
-      </button>
+              [matTooltipPosition]="position">Button</button>
+      }
     </div>`,
 })
 class ScrollableTooltipDemo {
@@ -1599,10 +1598,10 @@ class OnPushTooltipDemo {
 @Component({
   selector: 'app',
   template: `
-    <button *ngFor="let tooltip of tooltips"
-            [matTooltip]="tooltip">
-      Button {{tooltip}}
-    </button>`,
+    @for (tooltip of tooltips; track tooltip) {
+      <button [matTooltip]="tooltip">Button {{tooltip}}</button>
+    }
+  `,
 })
 class DynamicTooltipsDemo {
   tooltips: string[] = [];

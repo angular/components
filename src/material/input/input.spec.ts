@@ -1629,7 +1629,9 @@ class MatInputHintLabelTestController {
   template: `
     <mat-form-field [hintLabel]="label">
       <input matInput [formControl]="formControl" [aria-describedby]="userDescribedByValue">
-      <mat-error *ngIf="showError">Some error</mat-error>
+      @if (showError) {
+        <mat-error>Some error</mat-error>
+      }
     </mat-form-field>`,
 })
 class MatInputWithSubscriptAndAriaDescribedBy {
@@ -1782,7 +1784,9 @@ class MatInputMissingMatInputTestController {}
       <mat-form-field>
         <input matInput [formControl]="formControl">
         <mat-hint>Please type something</mat-hint>
-        <mat-error *ngIf="renderError">This field is required</mat-error>
+        @if (renderError) {
+          <mat-error>This field is required</mat-error>
+        }
       </mat-form-field>
     </form>
   `,
@@ -1855,7 +1859,9 @@ class MatInputWithPrefixAndSuffix {}
 @Component({
   template: `
     <mat-form-field>
-      <input matInput *ngIf="renderInput">
+      @if (renderInput) {
+        <input matInput>
+      }
     </mat-form-field>
   `,
 })

@@ -39,10 +39,12 @@ export class GoogleMapDemo {
             [center]="center"
             [zoom]="zoom"
             (mapClick)="addMarker($event)">
-  <map-marker #marker="mapMarker"
-              *ngFor="let markerPosition of markerPositions"
-              [position]="markerPosition"
-              (mapClick)="openInfoWindow(marker)"></map-marker>
+
+  @for (position of markerPositions; track position) {
+    <map-marker #marker="mapMarker"
+                [position]="position"
+                (mapClick)="openInfoWindow(marker)"></map-marker>
+  }
   <map-info-window>Info Window content</map-info-window>
 </google-map>
 ```

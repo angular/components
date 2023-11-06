@@ -449,10 +449,12 @@ class NavListWithOneAnchorItem extends BaseTestList {
 @Component({
   template: `
   <mat-nav-list [disableRipple]="disableListRipple">
-    <a *ngFor="let item of items; let index = index" mat-list-item [disableRipple]="disableItemRipple"
-      [activated]="index === activatedIndex">
-      {{item.name}}
-    </a>
+    @for (item of items; track item; let index = $index) {
+      <a mat-list-item [disableRipple]="disableItemRipple"
+        [activated]="index === activatedIndex">
+        {{item.name}}
+      </a>
+    }
   </mat-nav-list>`,
 })
 class NavListWithActivatedItem extends BaseTestList {
@@ -493,9 +495,9 @@ class ActionListWithType extends BaseTestList {
 @Component({
   template: `
   <mat-action-list [disabled]="disableList">
-    <button mat-list-item *ngFor="let item of items">
-      {{item.name}}
-    </button>
+    @for (item of items; track item) {
+      <button mat-list-item>{{item.name}}</button>
+    }
   </mat-action-list>`,
 })
 class ActionListWithDisabledList extends BaseTestList {
@@ -528,11 +530,13 @@ class ListWithOneItem extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      <img src="">
-      <h3 matListItemTitle>{{item.name}}</h3>
-      <p matListItemLine>{{item.description}}</p>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>
+        <img src="">
+        <h3 matListItemTitle>{{item.name}}</h3>
+        <p matListItemLine>{{item.description}}</p>
+      </mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithTwoLineItem extends BaseTestList {}
@@ -540,11 +544,13 @@ class ListWithTwoLineItem extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      <h3 matListItemTitle>{{item.name}}</h3>
-      <p matListItemLine>{{item.description}}</p>
-      <p matListItemLine>Some other text</p>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>
+        <h3 matListItemTitle>{{item.name}}</h3>
+        <p matListItemLine>{{item.description}}</p>
+        <p matListItemLine>Some other text</p>
+      </mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithThreeLineItem extends BaseTestList {}
@@ -552,12 +558,14 @@ class ListWithThreeLineItem extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      <h3 matListItemTitle>Line 1</h3>
-      <p matListItemLine>Line 2</p>
-      <p matListItemLine>Line 3</p>
-      <p matListItemLine>Line 4</p>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>
+        <h3 matListItemTitle>Line 1</h3>
+        <p matListItemLine>Line 2</p>
+        <p matListItemLine>Line 3</p>
+        <p matListItemLine>Line 4</p>
+      </mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithManyLines extends BaseTestList {}
@@ -579,10 +587,12 @@ class ListWithAvatar extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item class="test-class" *ngFor="let item of items">
-      <h3 matListItemTitle>{{item.name}}</h3>
-      <p matListItemLine>{{item.description}}</p>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item class="test-class">
+        <h3 matListItemTitle>{{item.name}}</h3>
+        <p matListItemLine>{{item.description}}</p>
+      </mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithItemWithCssClass extends BaseTestList {}
@@ -590,11 +600,15 @@ class ListWithItemWithCssClass extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      <h3 matListItemTitle>{{item.name}}</h3>
-      <p matListItemLine>{{item.description}}</p>
-      <p matListItemLine *ngIf="showThirdLine">Some other text</p>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>
+        <h3 matListItemTitle>{{item.name}}</h3>
+        <p matListItemLine>{{item.description}}</p>
+        @if (showThirdLine) {
+          <p matListItemLine>Some other text</p>
+        }
+      </mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
@@ -602,9 +616,9 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
 @Component({
   template: `
   <mat-list>
-    <mat-list-item *ngFor="let item of items">
-      {{item.name}}
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>{{item.name}}</mat-list-item>
+    }
   </mat-list>`,
 })
 class ListWithMultipleItems extends BaseTestList {}

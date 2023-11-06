@@ -303,10 +303,12 @@ describe('MatAccordion', () => {
 @Component({
   template: `
   <mat-accordion [multi]="multi">
-    <mat-expansion-panel *ngFor="let i of [0, 1, 2, 3]">
-      <mat-expansion-panel-header>Summary {{i}}</mat-expansion-panel-header>
-      <p>Content</p>
-    </mat-expansion-panel>
+    @for (i of [0, 1, 2, 3]; track i) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Summary {{i}}</mat-expansion-panel-header>
+        <p>Content</p>
+      </mat-expansion-panel>
+    }
   </mat-accordion>`,
 })
 class SetOfItems {

@@ -51,7 +51,8 @@ export class GoogleMapDemo {
             width="750px"
             [center]="center"
             [zoom]="zoom">
-  <map-directions-renderer *ngIf="(directionsResults$ | async) as directionsResults"
-                           [directions]="directionsResults"></map-directions-renderer>
+  @if (directionsResults$ | async; as directionsResults) {
+    <map-directions-renderer [directions]="directionsResults"></map-directions-renderer>
+  }
 </google-map>
 ```

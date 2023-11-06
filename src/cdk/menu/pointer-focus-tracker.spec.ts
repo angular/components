@@ -108,7 +108,9 @@ class MockWrapper implements FocusableElement {
     <div>
       <wrapper>First</wrapper>
       <wrapper>Second</wrapper>
-      <wrapper *ngIf="showThird">Third</wrapper>
+      @if (showThird) {
+        <wrapper>Third</wrapper>
+      }
     </div>
   `,
 })

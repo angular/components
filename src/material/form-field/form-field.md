@@ -86,7 +86,7 @@ has interacted with the element or the parent form has been submitted. Since the
 same space as the hints, the hints are hidden when the errors are shown.
 
 If a form field can have more than one error state, it is up to the consumer to toggle which
-messages should be displayed. This can be done with CSS, `ngIf` or `ngSwitch`. Multiple error
+messages should be displayed. This can be done with CSS, `@if` or `@switch`. Multiple error
 messages can be shown at the same time if desired, but the `<mat-form-field>` only reserves enough
 space to display one error message at a time. Ensuring that enough space is available to display
 multiple errors is up to the user.

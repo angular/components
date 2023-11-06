@@ -185,18 +185,16 @@ describe('radio harness', () => {
     });
 
     it('should get label text', async () => {
-      const [firstRadio, secondRadio, thirdRadio] = await loader.getAllHarnesses(
-        MatRadioButtonHarness,
-      );
+      const [firstRadio, secondRadio, thirdRadio] =
+        await loader.getAllHarnesses(MatRadioButtonHarness);
       expect(await firstRadio.getLabelText()).toBe('Option #1');
       expect(await secondRadio.getLabelText()).toBe('Option #2');
       expect(await thirdRadio.getLabelText()).toBe('Option #3');
     });
 
     it('should get value', async () => {
-      const [firstRadio, secondRadio, thirdRadio] = await loader.getAllHarnesses(
-        MatRadioButtonHarness,
-      );
+      const [firstRadio, secondRadio, thirdRadio] =
+        await loader.getAllHarnesses(MatRadioButtonHarness);
       expect(await firstRadio.getValue()).toBe('opt1');
       expect(await secondRadio.getValue()).toBe('opt2');
       expect(await thirdRadio.getValue()).toBe('opt3');
@@ -264,23 +262,25 @@ describe('radio harness', () => {
 
 @Component({
   template: `
-    <mat-radio-button *ngFor="let value of values, let i = index"
-                      [name]="value === 'opt3' ? 'group2' : 'group1'"
-                      [disabled]="disableAll"
-                      [checked]="value === 'opt2'"
-                      [id]="value"
-                      [required]="value === 'opt2'"
-                      [value]="value">
-      Option #{{i + 1}}
-    </mat-radio-button>
+    @for (value of values; track value) {
+      <mat-radio-button
+        [name]="value === 'opt3' ? 'group2' : 'group1'"
+        [disabled]="disableAll"
+        [checked]="value === 'opt2'"
+        [id]="value"
+        [required]="value === 'opt2'"
+        [value]="value">
+        Option #{{$index + 1}}
+      </mat-radio-button>
+    }
 
     <mat-radio-group id="my-group-1" name="my-group-1-name">
-      <mat-radio-button *ngFor="let value of values"
-                        [checked]="value === 'opt2'"
-                        [value]="value"
-                        [id]="value + '-group-one'">
-        {{value}}
-      </mat-radio-button>
+      @for (value of values; track value) {
+        <mat-radio-button
+          [checked]="value === 'opt2'"
+          [value]="value"
+          [id]="value + '-group-one'">{{value}}</mat-radio-button>
+      }
     </mat-radio-group>
 
 
