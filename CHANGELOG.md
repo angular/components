@@ -1,3 +1,16 @@
+<a name="17.0.0-rc.3"></a>
+# 17.0.0-rc.3 "vandium-vest" (2023-11-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0b38dede](https://github.com/angular/components/commit/c0b38dede8806629a7c9c5319c707aaeedd6812c) | perf | **a11y:** Don't trigger re-layout when detecting fake mousedown ([#28029](https://github.com/angular/components/pull/28029)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [157c0e28f](https://github.com/angular/components/commit/157c0e28f7c8170433fafcd57cc70fb63cc57ff4) | fix | **schematics:** asyncPipe not imported but used in the template ([#28055](https://github.com/angular/components/pull/28055)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-rc.2"></a>
 # 17.0.0-rc.2 "beryllium-brilliance" (2023-11-01)
 ### cdk
