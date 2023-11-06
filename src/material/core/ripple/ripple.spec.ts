@@ -874,7 +874,7 @@ class RippleContainerWithInputBindings {
 class RippleContainerWithoutBindings {}
 
 @Component({
-  template: `<div id="container" matRipple *ngIf="!isDestroyed"></div>`,
+  template: `@if (!isDestroyed) {<div id="container" matRipple></div>}`,
 })
 class RippleContainerWithNgIf {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -897,9 +897,9 @@ class RippleCssTransitionDurationZero {}
 
 @Component({
   template: `
-    <div *ngIf="show" (click)="show = false" matRipple>
-      Click to remove this element.
-    </div>
+    @if (show) {
+      <div (click)="show = false" matRipple>Click to remove this element.</div>
+    }
   `,
 })
 class RippleWithDomRemovalOnClick {

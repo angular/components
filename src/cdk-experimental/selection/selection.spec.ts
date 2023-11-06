@@ -442,15 +442,17 @@ describe('cdkSelectionColumn with multiple = false', () => {
       <button cdkSelectAll #toggleAll="cdkSelectAll" (click)="toggleAll.toggle($event)">
         {{selectAllState(toggleAll.indeterminate | async, toggleAll.checked | async)}}
       </button>
-      <li *ngFor="let item of data; index as i">
-        <button cdkSelectionToggle #toggle="cdkSelectionToggle"
-            [cdkSelectionToggleValue]="item"
-            [cdkSelectionToggleIndex]="i"
-            (click)="toggle.toggle()">
-          {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
-        </button>
-        {{item}}
-      </li>
+      @for (item of data; track item; let i = $index) {
+        <li>
+          <button cdkSelectionToggle #toggle="cdkSelectionToggle"
+              [cdkSelectionToggleValue]="item"
+              [cdkSelectionToggleIndex]="i"
+              (click)="toggle.toggle()">
+            {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
+          </button>
+          {{item}}
+        </li>
+      }
     </ul>`,
 })
 class ListWithMultiSelection {
@@ -460,7 +462,10 @@ class ListWithMultiSelection {
 
   selectionChange?: SelectionChange<string>;
 
-  constructor(private readonly _elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly _elementRef: ElementRef,
+    private readonly _cdr: ChangeDetectorRef,
+  ) {}
 
   selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
@@ -502,15 +507,17 @@ class ListWithMultiSelection {
   template: `
     <ul cdkSelection [dataSource]="data" [cdkSelectionMultiple]="false"
         (cdkSelectionChange)="selectionChange = $event" >
-      <li *ngFor="let item of data; index as i">
-        <button cdkSelectionToggle #toggle="cdkSelectionToggle"
-            [cdkSelectionToggleValue]="item"
-            [cdkSelectionToggleIndex]="i"
-            (click)="toggle.toggle()">
-          {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
-        </button>
-        {{item}}
-      </li>
+      @for (item of data; track item; let i = $index) {
+        <li>
+          <button cdkSelectionToggle #toggle="cdkSelectionToggle"
+              [cdkSelectionToggleValue]="item"
+              [cdkSelectionToggleIndex]="i"
+              (click)="toggle.toggle()">
+            {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
+          </button>
+          {{item}}
+        </li>
+      }
     </ul>`,
 })
 class ListWithSingleSelection {
@@ -530,7 +537,10 @@ class ListWithSingleSelection {
     this._cdr.detectChanges();
   }
 
-  constructor(private readonly _elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly _elementRef: ElementRef,
+    private readonly _cdr: ChangeDetectorRef,
+  ) {}
 
   getSelectionToggle(index: number) {
     return this._elementRef.nativeElement.querySelectorAll('[cdkselectiontoggle]')[index];
@@ -585,7 +595,10 @@ class MultiSelectTableWithSelectionColumn {
     this._cdr.detectChanges();
   }
 
-  constructor(readonly elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
+  constructor(
+    readonly elementRef: ElementRef,
+    private readonly _cdr: ChangeDetectorRef,
+  ) {}
 
   getSelectAll(): HTMLInputElement {
     return this.elementRef.nativeElement.querySelector('input[cdkselectall]');
@@ -632,7 +645,10 @@ class SingleSelectTableWithSelectionColumn {
     this._cdr.detectChanges();
   }
 
-  constructor(readonly elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
+  constructor(
+    readonly elementRef: ElementRef,
+    private readonly _cdr: ChangeDetectorRef,
+  ) {}
 
   getSelectionToggle(index: number): HTMLInputElement {
     return this.elementRef.nativeElement.querySelectorAll('input[cdkselectiontoggle]')[index];

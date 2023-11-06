@@ -962,7 +962,9 @@ describe('MatButtonToggle without forms', () => {
   <mat-button-toggle-group [disabled]="isGroupDisabled"
                            [vertical]="isVertical"
                            [(value)]="groupValue">
-    <mat-button-toggle value="test1" *ngIf="renderFirstToggle">Test1</mat-button-toggle>
+    @if (renderFirstToggle) {
+      <mat-button-toggle value="test1">Test1</mat-button-toggle>
+    }
     <mat-button-toggle value="test2">Test2</mat-button-toggle>
     <mat-button-toggle value="test3">Test3</mat-button-toggle>
   </mat-button-toggle-group>
@@ -981,12 +983,12 @@ class ButtonTogglesInsideButtonToggleGroup {
     [name]="groupName"
     [(ngModel)]="modelValue"
     (change)="lastEvent = $event">
-    <mat-button-toggle *ngFor="let option of options"
-      [value]="option.value"
-      [disableRipple]="disableRipple"
-      [name]="option.name">
-      {{option.label}}
-    </mat-button-toggle>
+    @for (option of options; track option) {
+      <mat-button-toggle
+        [value]="option.value"
+        [disableRipple]="disableRipple"
+        [name]="option.name">{{option.label}}</mat-button-toggle>
+    }
   </mat-button-toggle-group>
   `,
 })
@@ -1064,14 +1066,14 @@ class ButtonToggleGroupWithFormControl {
 }
 
 @Component({
-  // We need the `ngSwitch` so that there's a directive between the group and the toggles.
+  // We need the `@if` so that there's a container between the group and the toggles.
   template: `
     <mat-button-toggle-group [formControl]="control">
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-button-toggle value="red">Value Red</mat-button-toggle>
         <mat-button-toggle value="green">Value Green</mat-button-toggle>
         <mat-button-toggle value="blue">Value Blue</mat-button-toggle>
-      </ng-container>
+      }
     </mat-button-toggle-group>
   `,
 })
@@ -1094,9 +1096,9 @@ class ButtonToggleWithAriaLabelledby {}
 @Component({
   template: `
     <mat-button-toggle-group [(value)]="value">
-      <mat-button-toggle *ngFor="let toggle of possibleValues" [value]="toggle">
-        {{toggle}}
-      </mat-button-toggle>
+      @for (toggle of possibleValues; track toggle) {
+        <mat-button-toggle [value]="toggle">{{toggle}}</mat-button-toggle>
+      }
     </mat-button-toggle-group>
   `,
 })
@@ -1141,7 +1143,9 @@ class ButtonToggleWithStaticAriaAttributes {}
 @Component({
   template: `
   <mat-button-toggle-group [formControl]="control">
-    <mat-button-toggle *ngFor="let value of values" [value]="value">{{value}}</mat-button-toggle>
+    @for (value of values; track value) {
+      <mat-button-toggle [value]="value">{{value}}</mat-button-toggle>
+    }
   </mat-button-toggle-group>
   `,
 })

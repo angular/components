@@ -270,26 +270,34 @@ describe('MatSelectHarness', () => {
   template: `
     <mat-form-field>
       <mat-select [disabled]="isDisabled" [required]="isRequired" id="single-selection">
-        <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
+        @for (state of states; track state) {
+          <mat-option [value]="state.code">{{ state.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-select multiple id="multiple-selection">
-        <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
+        @for (state of states; track state) {
+  <mat-option [value]="state.code">{{ state.name }}</mat-option>
+}
       </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-select id="grouped">
-        <mat-optgroup *ngFor="let group of stateGroups" [label]="group.name">
-          <mat-option
-            *ngFor="let state of group.states"
-            [value]="state.code">{{ state.name }}</mat-option>
-        </mat-optgroup>
+        @for (group of stateGroups; track group) {
+          <mat-optgroup [label]="group.name">
+            @for (state of group.states; track state) {
+              <mat-option [value]="state.code">{{ state.name }}</mat-option>
+            }
+          </mat-optgroup>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-select [formControl]="formControl" id="with-form-control">
-        <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
+        @for (state of states; track state) {
+          <mat-option [value]="state.code">{{ state.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
