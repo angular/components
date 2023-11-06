@@ -4,7 +4,6 @@
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 
-@use '../core/style/sass-utils';
 @use './button-base';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
