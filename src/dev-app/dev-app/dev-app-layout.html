@@ -1,15 +1,15 @@
 <mat-sidenav-container class="demo-container">
   <mat-sidenav #navigation role="navigation">
     <mat-nav-list>
-      <a *ngFor="let navItem of navItems"
-         mat-list-item
-         (click)="navigation.close()"
-         routerLinkActive
-         #routerLinkActiveInstance="routerLinkActive"
-         [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-         [routerLink]="[navItem.route]">
-        {{navItem.name}}
-      </a>
+      @for (navItem of navItems; track navItem) {
+        <a
+          mat-list-item
+          (click)="navigation.close()"
+          routerLinkActive
+          #routerLinkActiveInstance="routerLinkActive"
+          [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+          [routerLink]="[navItem.route]">{{navItem.name}}</a>
+      }
 
       <mat-divider></mat-divider>
 

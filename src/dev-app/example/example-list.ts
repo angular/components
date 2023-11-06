@@ -20,18 +20,20 @@ import {Example} from './example';
   imports: [CommonModule, MatExpansionModule, Example],
   template: `
     <mat-accordion multi>
-      <mat-expansion-panel *ngFor="let id of ids" [expanded]="expandAll">
-        <mat-expansion-panel-header>
-          <div class="header">
-            <div class="title">{{_getTitle(id)}}</div>
-            <div class="id"> <{{id}}> </div>
-          </div>
-        </mat-expansion-panel-header>
+      @for (id of ids; track id) {
+        <mat-expansion-panel [expanded]="expandAll">
+          <mat-expansion-panel-header>
+            <div class="header">
+              <div class="title">{{_getTitle(id)}}</div>
+              <div class="id"> <{{id}}> </div>
+            </div>
+          </mat-expansion-panel-header>
 
-        <ng-template matExpansionPanelContent>
-          <material-example [id]="id"></material-example>
-        </ng-template>
-      </mat-expansion-panel>
+          <ng-template matExpansionPanelContent>
+            <material-example [id]="id"></material-example>
+          </ng-template>
+        </mat-expansion-panel>
+      }
     </mat-accordion>
   `,
   styles: [

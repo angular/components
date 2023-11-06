@@ -5,12 +5,13 @@
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="todo"
-    >
-      <div *ngFor="let item of todo" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      [cdkDropListData]="todo">
+      @for (item of todo; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 
@@ -20,12 +21,13 @@
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="done"
-    >
-      <div *ngFor="let item of done" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      [cdkDropListData]="done">
+      @for (item of done; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 </div>
@@ -38,12 +40,13 @@
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="ages"
-    >
-      <div *ngFor="let item of ages" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      [cdkDropListData]="ages">
+      @for (item of ages; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 
@@ -54,12 +57,13 @@
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="preferredAges"
-    >
-      <div *ngFor="let item of preferredAges" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      [cdkDropListData]="preferredAges">
+      @for (item of preferredAges; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 </div>
