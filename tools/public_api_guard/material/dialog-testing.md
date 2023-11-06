@@ -44,7 +44,7 @@ export class MatDialogHarness extends ContentContainerComponentHarness<MatDialog
 }
 
 // @public
-export const enum MatDialogSection {
+export enum MatDialogSection {
     // (undocumented)
     ACTIONS = ".mat-mdc-dialog-actions",
     // (undocumented)

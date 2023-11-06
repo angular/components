@@ -1420,7 +1420,7 @@ class IconFromSvgName {
 @Component({template: '<mat-icon aria-hidden="false">face</mat-icon>'})
 class IconWithAriaHiddenFalse {}
 
-@Component({template: `<mat-icon [svgIcon]="iconName" *ngIf="showIcon">{{iconName}}</mat-icon>`})
+@Component({template: `@if (showIcon) {<mat-icon [svgIcon]="iconName">{{iconName}}</mat-icon>}`})
 class IconWithBindingAndNgIf {
   iconName = 'fluffy';
   showIcon = true;

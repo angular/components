@@ -111,7 +111,9 @@ autocomplete is attached to using the `matAutocompleteOrigin` directive together
 </div>
 
 <mat-autocomplete #auto="matAutocomplete">
-  <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+  @for (option of options; track option) {
+    <mat-option [value]="option">{{option}}</mat-option>
+  }
 </mat-autocomplete>
 ```
 

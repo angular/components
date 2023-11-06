@@ -1,5 +1,7 @@
 <mat-autocomplete #autocomplete="matAutocomplete">
-  <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
+  @for (state of states; track state) {
+    <mat-option [value]="state.code">{{ state.name }}</mat-option>
+  }
 </mat-autocomplete>
 
 <input id="plain" [matAutocomplete]="autocomplete">

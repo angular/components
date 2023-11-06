@@ -723,12 +723,11 @@ interface Tab {
                (indexFocused)="focusedIndex = $event"
                (selectFocusedIndex)="selectedIndex = $event"
                [disablePagination]="disablePagination">
-      <div matTabLabelWrapper class="label-content" style="min-width: 30px; width: 30px"
-           *ngFor="let tab of tabs; let i = index"
+      @for (tab of tabs; track tab; let i = $index) {
+        <div matTabLabelWrapper class="label-content" style="min-width: 30px; width: 30px"
            [disabled]="!!tab.disabled"
-           (click)="selectedIndex = i">
-         {{tab.label}}
-      </div>
+           (click)="selectedIndex = i">{{tab.label}}</div>
+      }
     </mat-tab-header>
   </div>
   `,

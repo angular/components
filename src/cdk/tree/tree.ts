@@ -26,6 +26,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  numberAttribute,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -46,7 +47,6 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -133,7 +133,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     end: Number.MAX_VALUE,
   });
 
-  constructor(private _differs: IterableDiffers, private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private _differs: IterableDiffers,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -376,7 +379,10 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
       : this._parentNodeAriaLevel;
   }
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>, protected _tree: CdkTree<T, K>) {
+  constructor(
+    protected _elementRef: ElementRef<HTMLElement>,
+    protected _tree: CdkTree<T, K>,
+  ) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     this.role = 'treeitem';
   }
@@ -428,7 +434,7 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
       return -1;
     }
   } else if (parent.classList.contains('cdk-nested-tree-node')) {
-    return coerceNumberProperty(parent.getAttribute('aria-level')!);
+    return numberAttribute(parent.getAttribute('aria-level')!);
   } else {
     // The ancestor element is the cdk-tree itself
     return 0;

@@ -526,14 +526,13 @@ describe('MatTabNavBar with enabled animations', () => {
          [disableRipple]="disableRippleOnBar"
          [fitInkBarToContent]="fitInkBarToContent"
          [tabPanel]="tabPanel">
-      <a mat-tab-link
-         *ngFor="let tab of tabs; let index = index"
-         [active]="activeIndex === index"
-         [disabled]="disabled"
-         (click)="activeIndex = index"
-         [disableRipple]="disableRippleOnLink">
-        Tab link {{label}}
-      </a>
+      @for (tab of tabs; track tab; let index = $index) {
+        <a mat-tab-link
+          [active]="activeIndex === index"
+          [disabled]="disabled"
+          (click)="activeIndex = index"
+          [disableRipple]="disableRippleOnLink">Tab link {{label}}</a>
+      }
     </nav>
     <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
   `,
@@ -555,7 +554,9 @@ class SimpleTabNavBarTestApp {
 @Component({
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-      <a mat-tab-link *ngIf="!isDestroyed">Link</a>
+      @if (!isDestroyed) {
+        <a mat-tab-link>Link</a>
+      }
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
@@ -567,7 +568,9 @@ class TabLinkWithNgIf {
 @Component({
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-      <a mat-tab-link *ngFor="let tab of tabs" [active]="false">Tab link {{label}}</a>
+      @for (tab of tabs; track tab) {
+        <a mat-tab-link [active]="false">Tab link {{label}}</a>
+      }
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
@@ -579,7 +582,9 @@ class TabBarWithInactiveTabsOnInit {
 @Component({
   template: `
     <nav [animationDuration]="500" mat-tab-nav-bar [tabPanel]="tabPanel">
-    <a mat-tab-link *ngFor="let link of links">{{link}}</a>
+    @for (link of links; track link) {
+      <a mat-tab-link>{{link}}</a>
+    }
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,

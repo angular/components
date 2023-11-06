@@ -24,7 +24,6 @@ ng_module(
     ] + glob(["**/*.html"]),
     deps = [
         "//src/cdk/bidi",
-        "//src/cdk/coercion",
         "//src/cdk/platform",
         "//src/material/core",
         "@npm//@angular/forms",

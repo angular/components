@@ -582,11 +582,14 @@ class PanelWithContent {
 
 @Component({
   template: `
-  <div *ngIf="expansionShown">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
-    </mat-expansion-panel>
-  </div>`,
+    @if (expansionShown) {
+      <div>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </div>
+    }
+  `,
 })
 class PanelWithContentInNgIf {
   expansionShown = true;

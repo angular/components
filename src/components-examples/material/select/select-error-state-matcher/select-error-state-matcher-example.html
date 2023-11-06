@@ -7,10 +7,12 @@
     <mat-option value="invalid">Invalid option</mat-option>
   </mat-select>
   <mat-hint>Errors appear instantly!</mat-hint>
-  <mat-error *ngIf="selected.hasError('required')">You must make a selection</mat-error>
-  <mat-error *ngIf="selected.hasError('pattern') && !selected.hasError('required')">
-    Your selection is invalid
-  </mat-error>
+  @if (selected.hasError('required')) {
+    <mat-error>You must make a selection</mat-error>
+  }
+  @if (selected.hasError('pattern') && !selected.hasError('required')) {
+    <mat-error>Your selection is invalid</mat-error>
+  }
 </mat-form-field>
 
 <h4>native html select</h4>
@@ -21,8 +23,10 @@
     <option value="valid" selected>Valid option</option>
     <option value="invalid">Invalid option</option>
   </select>
-  <mat-error *ngIf="nativeSelectFormControl.hasError('required')">You must make a selection</mat-error>
-  <mat-error *ngIf="nativeSelectFormControl.hasError('pattern') && !nativeSelectFormControl.hasError('required')">
-    Your selection is invalid
-  </mat-error>
+  @if (nativeSelectFormControl.hasError('required')) {
+    <mat-error>You must make a selection</mat-error>
+  }
+  @if (nativeSelectFormControl.hasError('pattern') && !nativeSelectFormControl.hasError('required')) {
+    <mat-error>Your selection is invalid</mat-error>
+  }
 </mat-form-field>

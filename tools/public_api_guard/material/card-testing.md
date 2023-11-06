@@ -26,7 +26,7 @@ export class MatCardHarness extends ContentContainerComponentHarness<MatCardSect
 }
 
 // @public
-export const enum MatCardSection {
+export enum MatCardSection {
     // (undocumented)
     ACTIONS = ".mat-mdc-card-actions",
     // (undocumented)

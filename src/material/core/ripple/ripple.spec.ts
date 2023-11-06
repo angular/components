@@ -201,7 +201,7 @@ describe('MatRipple', () => {
 
     it('should ignore fake mouse events from screen readers', () => {
       const event = createMouseEvent('mousedown');
-      Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
+      Object.defineProperties(event, {buttons: {get: () => 0}, detail: {get: () => 0}});
 
       dispatchEvent(rippleTarget, event);
 
@@ -874,7 +874,7 @@ class RippleContainerWithInputBindings {
 class RippleContainerWithoutBindings {}
 
 @Component({
-  template: `<div id="container" matRipple *ngIf="!isDestroyed"></div>`,
+  template: `@if (!isDestroyed) {<div id="container" matRipple></div>}`,
 })
 class RippleContainerWithNgIf {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -897,9 +897,9 @@ class RippleCssTransitionDurationZero {}
 
 @Component({
   template: `
-    <div *ngIf="show" (click)="show = false" matRipple>
-      Click to remove this element.
-    </div>
+    @if (show) {
+      <div (click)="show = false" matRipple>Click to remove this element.</div>
+    }
   `,
 })
 class RippleWithDomRemovalOnClick {

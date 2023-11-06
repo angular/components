@@ -1158,10 +1158,12 @@ class SimpleTabsTestApp {
         (focusChange)="handleFocus($event)"
         (selectedTabChange)="handleSelection($event)"
         [disablePagination]="disablePagination">
-      <mat-tab *ngFor="let tab of tabs">
-        <ng-template mat-tab-label>{{tab.label}}</ng-template>
-        {{tab.content}}
-      </mat-tab>
+      @for (tab of tabs; track tab) {
+        <mat-tab>
+          <ng-template mat-tab-label>{{tab.label}}</ng-template>
+          {{tab.content}}
+        </mat-tab>
+      }
     </mat-tab-group>
   `,
 })
@@ -1186,9 +1188,9 @@ class SimpleDynamicTabsTestApp {
 @Component({
   template: `
     <mat-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
-      <mat-tab *ngFor="let tab of tabs" label="{{tab.label}}">
-        {{tab.content}}
-      </mat-tab>
+      @for (tab of tabs; track tab) {
+        <mat-tab label="{{tab.label}}">{{tab.content}}</mat-tab>
+      }
     </mat-tab-group>
   `,
 })
@@ -1234,10 +1236,12 @@ class DisabledTabsTestApp {
 @Component({
   template: `
     <mat-tab-group class="tab-group">
-      <mat-tab *ngFor="let tab of tabs | async">
-        <ng-template mat-tab-label>{{ tab.label }}</ng-template>
-        {{ tab.content }}
-      </mat-tab>
+      @for (tab of tabs | async; track tab) {
+        <mat-tab>
+          <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+          {{ tab.content }}
+        </mat-tab>
+      }
    </mat-tab-group>
   `,
 })
@@ -1327,7 +1331,9 @@ class TabGroupWithAriaInputs {
       <mat-tab label="Vegetables"> Broccoli, spinach </mat-tab>
     </mat-tab-group>
 
-    <div *ngIf="pizza.isActive">pizza is active</div>
+    @if (pizza.isActive) {
+      <div>pizza is active</div>
+    }
   `,
 })
 class TabGroupWithIsActiveBinding {}
@@ -1345,10 +1351,10 @@ class TabsWithCustomAnimationDuration {}
 @Component({
   template: `
     <mat-tab-group>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-tab label="One">Tab one content</mat-tab>
         <mat-tab label="Two">Tab two content</mat-tab>
-      </ng-container>
+      }
     </mat-tab-group>
   `,
 })

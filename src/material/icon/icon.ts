@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -24,19 +24,11 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, ThemePalette, mixinColor} from '@angular/material/core';
+import {ThemePalette} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 import {MatIconRegistry} from './icon-registry';
-
-// Boilerplate for applying mixins to MatIcon.
-/** @docs-private */
-const _MatIconBase = mixinColor(
-  class {
-    constructor(public _elementRef: ElementRef) {}
-  },
-);
 
 /** Default options for `mat-icon`.  */
 export interface MatIconDefaultOptions {
@@ -140,10 +132,10 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   selector: 'mat-icon',
   exportAs: 'matIcon',
   styleUrls: ['icon.css'],
-  inputs: ['color'],
   host: {
     'role': 'img',
     'class': 'mat-icon notranslate',
+    '[class]': 'color ? "mat-" + color : ""',
     '[attr.data-mat-icon-type]': '_usingFontIcon() ? "font" : "svg"',
     '[attr.data-mat-icon-name]': '_svgName || fontIcon',
     '[attr.data-mat-icon-namespace]': '_svgNamespace || fontSet',
@@ -154,19 +146,25 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, CanColor, OnDestroy {
+export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
+  private _defaultColor: ThemePalette;
+
+  /** Theme palette color of the icon. */
+  @Input()
+  get color() {
+    return this._color || this._defaultColor;
+  }
+  set color(value: string | null | undefined) {
+    this._color = value;
+  }
+  private _color: string | null | undefined;
+
   /**
    * Whether the icon should be inlined, automatically sizing the icon to match the font size of
    * the element the icon is contained in.
    */
-  @Input()
-  get inline(): boolean {
-    return this._inline;
-  }
-  set inline(inline: BooleanInput) {
-    this._inline = coerceBooleanProperty(inline);
-  }
-  private _inline: boolean = false;
+  @Input({transform: booleanAttribute})
+  inline: boolean = false;
 
   /** Name of the icon in the SVG icon set. */
   @Input()
@@ -231,7 +229,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _currentIconFetch = Subscription.EMPTY;
 
   constructor(
-    elementRef: ElementRef<HTMLElement>,
+    readonly _elementRef: ElementRef<HTMLElement>,
     private _iconRegistry: MatIconRegistry,
     @Attribute('aria-hidden') ariaHidden: string,
     @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
@@ -240,11 +238,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     @Inject(MAT_ICON_DEFAULT_OPTIONS)
     defaults?: MatIconDefaultOptions,
   ) {
-    super(elementRef);
-
     if (defaults) {
       if (defaults.color) {
-        this.color = this.defaultColor = defaults.color;
+        this.color = this._defaultColor = defaults.color;
       }
 
       if (defaults.fontSet) {
@@ -255,7 +251,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
     // the right thing to do for the majority of icon use-cases.
     if (!ariaHidden) {
-      elementRef.nativeElement.setAttribute('aria-hidden', 'true');
+      _elementRef.nativeElement.setAttribute('aria-hidden', 'true');
     }
   }
 

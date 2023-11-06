@@ -70,10 +70,12 @@ export class BottomSheetDemo {
 @Component({
   template: `
     <mat-nav-list>
-      <a href="#" mat-list-item (click)="handleClick($event)" *ngFor="let action of [1, 2, 3]">
-        <span matListItemTitle>Action {{ action }}</span>
-        <span matListItemLine>Description</span>
-      </a>
+      @for (action of [1, 2, 3]; track action) {
+        <a href="#" mat-list-item (click)="handleClick($event)">
+          <span matListItemTitle>Action {{ action }}</span>
+          <span matListItemLine>Description</span>
+        </a>
+      }
     </mat-nav-list>
   `,
   standalone: true,

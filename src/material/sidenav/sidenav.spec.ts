@@ -105,13 +105,13 @@ class SidenavWithFixedPosition {
 }
 
 @Component({
-  // Note that we need the `ng-container` with the `ngSwitch` so that
-  // there's a directive between the container and the sidenav.
+  // Note that we need the `@if` so that there's an embedded
+  // view between the container and the sidenav.
   template: `
     <mat-sidenav-container #container>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-sidenav #sidenav>Sidenav.</mat-sidenav>
-      </ng-container>
+      }
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
 })

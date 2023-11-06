@@ -1419,9 +1419,9 @@ class VirtualScrollWithItemInjectingViewContainer {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport [itemSize]="itemSize">
-      <ng-container *ngIf="renderVirtualFor">
+      @if (renderVirtualFor) {
         <div class="item" *cdkVirtualFor="let item of items; trackBy: trackBy">{{item}}</div>
-      </ng-container>
+      }
     </cdk-virtual-scroll-viewport>
   `,
   styles: [

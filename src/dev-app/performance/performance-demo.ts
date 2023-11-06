@@ -64,7 +64,7 @@ export class PerformanceDemo implements AfterViewInit {
   /** The average plus/minus the stdev. */
   computedResults = '';
 
-  /** Used in an ngFor to render the desired number of comonents. */
+  /** Used in an `@for` to render the desired number of comonents. */
   componentArray = [].constructor(this.componentCount);
 
   /** The standard deviation of the recorded samples. */

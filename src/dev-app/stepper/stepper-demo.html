@@ -16,7 +16,9 @@
   <mat-form-field>
     <mat-label>Theme</mat-label>
     <mat-select [(ngModel)]="theme">
-      <mat-option *ngFor="let theme of availableThemes" [value]="theme.value">{{theme.name}}</mat-option>
+      @for (theme of availableThemes; track theme) {
+        <mat-option [value]="theme.value">{{theme.name}}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </p>
@@ -231,17 +233,19 @@
 
 <h3>Horizontal Stepper Demo with Templated Label</h3>
 <mat-stepper [color]="theme">
-  <mat-step *ngFor="let step of steps">
-    <ng-template matStepLabel>{{step.label}}</ng-template>
-    <mat-form-field>
-      <mat-label>Answer</mat-label>
-      <input matInput [(ngModel)]="step.content">
-    </mat-form-field>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
+  @for (step of steps; track step) {
+    <mat-step>
+      <ng-template matStepLabel>{{step.label}}</ng-template>
+      <mat-form-field>
+        <mat-label>Answer</mat-label>
+        <input matInput [(ngModel)]="step.content">
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+  }
 </mat-stepper>
 
 <h3>Stepper with autosize textarea</h3>

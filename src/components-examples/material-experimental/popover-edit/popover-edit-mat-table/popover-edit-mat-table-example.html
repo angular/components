@@ -70,11 +70,11 @@
         </div>
       </ng-template>
 
-      <ng-container *ngIf="nameEditEnabled">
+      @if (nameEditEnabled) {
         <span *matRowHoverContent>
           <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
         </span>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
@@ -99,10 +99,9 @@
                   [ngModel]="[element.type]"
                   (selectionChange)="f.ngSubmit.emit()"
                   aria-label="Element type">
-                <mat-list-option *ngFor="let type of TYPES"
-                    [value]="type">
-                  {{type}}
-                </mat-list-option>
+                @for (type of TYPES; track type) {
+                  <mat-list-option [value]="type">{{type}}</mat-list-option>
+                }
               </mat-selection-list>
             </div>
           </form>
@@ -155,11 +154,11 @@
               <mat-selection-list [ngModel]="element.fantasyCounterparts"
                   name="fantasyCounterparts"
                   aria-label="Fantasy Element Counterparts">
-                <mat-list-option *ngFor="let fantasyElement of FANTASY_ELEMENTS"
+                @for (fantasyElement of FANTASY_ELEMENTS; track fantasyElement) {
+                  <mat-list-option
                     [value]="fantasyElement"
-                    checkboxPosition="before">
-                  {{fantasyElement}}
-                </mat-list-option>
+                    checkboxPosition="before">{{fantasyElement}}</mat-list-option>
+                }
               </mat-selection-list>
             </div>
             <div mat-edit-actions>

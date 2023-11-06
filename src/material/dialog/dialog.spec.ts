@@ -2121,7 +2121,7 @@ class ComponentWithOnPushViewContainer {
 
 @Component({
   selector: 'arbitrary-component',
-  template: `<dir-with-view-container *ngIf="showChildView"></dir-with-view-container>`,
+  template: `@if (showChildView) {<dir-with-view-container></dir-with-view-container>}`,
 })
 class ComponentWithChildViewContainer {
   showChildView = true;
@@ -2162,9 +2162,15 @@ class PizzaMsg {
 
 @Component({
   template: `
-    <h1 mat-dialog-title *ngIf="shouldShowTitle('first')">This is the first title</h1>
-    <h1 mat-dialog-title *ngIf="shouldShowTitle('second')">This is the second title</h1>
-    <h1 mat-dialog-title *ngIf="shouldShowTitle('third')">This is the third title</h1>
+    @if (shouldShowTitle('first')) {
+      <h1 mat-dialog-title>This is the first title</h1>
+    }
+    @if (shouldShowTitle('second')) {
+      <h1 mat-dialog-title>This is the second title</h1>
+    }
+    @if (shouldShowTitle('third')) {
+      <h1 mat-dialog-title>This is the third title</h1>
+    }
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-dialog-close>Close</button>
@@ -2189,9 +2195,15 @@ class ContentElementDialog {
 @Component({
   template: `
     <ng-template>
-      <h1 mat-dialog-title *ngIf="shouldShowTitle('first')">This is the first title</h1>
-      <h1 mat-dialog-title *ngIf="shouldShowTitle('second')">This is the second title</h1>
-      <h1 mat-dialog-title *ngIf="shouldShowTitle('third')">This is the third title</h1>
+      @if (shouldShowTitle('first')) {
+        <h1 mat-dialog-title>This is the first title</h1>
+      }
+      @if (shouldShowTitle('second')) {
+        <h1 mat-dialog-title>This is the second title</h1>
+      }
+      @if (shouldShowTitle('third')) {
+        <h1 mat-dialog-title>This is the third title</h1>
+      }
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
       <mat-dialog-actions align="end">
         <button mat-dialog-close>Close</button>
@@ -2238,7 +2250,10 @@ class ShadowDomComponent {}
 
 @Component({template: ''})
 class ModuleBoundDialogParentComponent {
-  constructor(private _injector: Injector, private _dialog: MatDialog) {}
+  constructor(
+    private _injector: Injector,
+    private _dialog: MatDialog,
+  ) {}
 
   openDialog(): void {
     const ngModuleRef = createNgModuleRef(

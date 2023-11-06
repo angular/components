@@ -779,7 +779,10 @@ class ArbitraryViewContainerRefComponent {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild(SaveParentNodeOnInit) saveParentNodeOnInit: SaveParentNodeOnInit;
 
-  constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) {}
+  constructor(
+    public viewContainerRef: ViewContainerRef,
+    public injector: Injector,
+  ) {}
 }
 
 /** Test-bed component that contains a portal outlet and a couple of template portals. */
@@ -799,7 +802,9 @@ class ArbitraryViewContainerRefComponent {
 
   <ng-template cdk-portal>
     <ul>
-      <li *ngFor="let fruitName of fruits"> {{fruitName}} </li>
+      @for (fruitName of fruits; track fruitName) {
+        <li> {{fruitName}} </li>
+      }
     </ul>
   </ng-template>
 
@@ -825,7 +830,10 @@ class PortalTestApp {
   fruits = ['Apple', 'Pineapple', 'Durian'];
   attachedSpy = jasmine.createSpy('attached spy');
 
-  constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) {}
+  constructor(
+    public viewContainerRef: ViewContainerRef,
+    public injector: Injector,
+  ) {}
 
   get cakePortal() {
     return this.portals.first;

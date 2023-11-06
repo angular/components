@@ -168,7 +168,7 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   return {x, y};
 }
 
-const enum Thumb {
+enum Thumb {
   START = 1,
   END = 2,
 }

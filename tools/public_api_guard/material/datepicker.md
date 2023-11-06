@@ -11,8 +11,6 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanColor } from '@angular/material/core';
 import { CanUpdateErrorState } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -372,8 +370,8 @@ export class MatDatepickerCancel {
 }
 
 // @public
-export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extends _MatDatepickerContentBase implements OnInit, AfterViewInit, OnDestroy, CanColor {
-    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl);
+export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implements OnInit, AfterViewInit, OnDestroy {
+    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl);
     _actionsPortal: TemplatePortal | null;
     readonly _animationDone: Subject<void>;
     _animationState: 'enter-dropdown' | 'enter-dialog' | 'void';
@@ -382,10 +380,13 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extend
     _calendar: MatCalendar<D>;
     _closeButtonFocused: boolean;
     _closeButtonText: string;
+    color: ThemePalette;
     comparisonEnd: D | null;
     comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
     _dialogLabelId: string | null;
+    // (undocumented)
+    protected _elementRef: ElementRef;
     endDateAccessibleName: string | null;
     // (undocumented)
     _getSelected(): D | DateRange<D> | null;
@@ -537,10 +538,12 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     _customIcon: MatDatepickerToggleIcon;
     datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     disableRipple: boolean;
     // (undocumented)
     _intl: MatDatepickerIntl;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -574,7 +577,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get dateFilter(): DateFilterFn<D>;
     set dateFilter(value: DateFilterFn<D>);
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     get empty(): boolean;
     // (undocumented)
     _endInput: MatEndDate<D>;
@@ -599,6 +602,10 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get min(): D | null;
     set min(value: D | null);
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     ngControl: NgControl | null;
     // (undocumented)
@@ -611,7 +618,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     get rangePicker(): MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
     set rangePicker(rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>);
     get required(): boolean;
-    set required(value: BooleanInput);
+    set required(value: boolean);
     separator: string;
     setDescribedByIds(ids: string[]): void;
     _shouldHidePlaceholders(): boolean;

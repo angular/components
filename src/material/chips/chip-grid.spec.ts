@@ -1033,10 +1033,12 @@ describe('MDC-based MatChipGrid', () => {
 @Component({
   template: `
     <mat-chip-grid [tabIndex]="tabIndex" [role]="role" #chipGrid>
-      <mat-chip-row *ngFor="let i of chips"
+      @for (i of chips; track i) {
+  <mat-chip-row
                     [editable]="editable">
         {{name}} {{i + 1}}
       </mat-chip-row>
+}
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
 })
@@ -1053,7 +1055,9 @@ class StandardChipGrid {
     <mat-form-field>
       <mat-label>Add a chip</mat-label>
       <mat-chip-grid #chipGrid>
-        <mat-chip-row *ngFor="let chip of chips" (removed)="remove(chip)">{{chip}}</mat-chip-row>
+        @for (chip of chips; track chip) {
+  <mat-chip-row (removed)="remove(chip)">{{chip}}</mat-chip-row>
+}
       </mat-chip-grid>
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
@@ -1076,9 +1080,11 @@ class FormFieldChipGrid {
     <mat-form-field>
       <mat-label>New food...</mat-label>
       <mat-chip-grid #chipGrid placeholder="Food" [formControl]="control">
-        <mat-chip-row *ngFor="let food of foods" [value]="food.value" (removed)="remove(food)">
+        @for (food of foods; track food) {
+  <mat-chip-row [value]="food.value" (removed)="remove(food)">
           {{ food.viewValue }}
         </mat-chip-row>
+}
       </mat-chip-grid>
       <input
           [matChipInputFor]="chipGrid"
@@ -1136,9 +1142,11 @@ class InputChipGrid {
 <form #form="ngForm" novalidate>
   <mat-form-field>
     <mat-chip-grid #chipGrid [formControl]="formControl">
-      <mat-chip-row *ngFor="let food of foods" [value]="food.value">
+      @for (food of foods; track food) {
+  <mat-chip-row [value]="food.value">
       {{food.viewValue}}
       </mat-chip-row>
+}
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>
     <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
@@ -1162,7 +1170,9 @@ class ChipGridWithFormErrorMessages {
 @Component({
   template: `
     <mat-chip-grid #chipGrid>
-      <mat-chip-row *ngFor="let i of numbers" (removed)="remove(i)">{{i}}</mat-chip-row>
+      @for (i of numbers; track i) {
+  <mat-chip-row (removed)="remove(i)">{{i}}</mat-chip-row>
+}
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-chip-grid>`,
   animations: [
@@ -1189,10 +1199,12 @@ class StandardChipGridWithAnimations {
   template: `
     <mat-form-field>
       <mat-chip-grid #chipGrid>
-        <mat-chip-row [value]="i" (removed)="removeChip($event)" *ngFor="let i of chips">
+        @for (i of chips; track i) {
+  <mat-chip-row [value]="i" (removed)="removeChip($event)">
           Chip {{i + 1}}
           <span matChipRemove>Remove</span>
         </mat-chip-row>
+}
       </mat-chip-grid>
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>

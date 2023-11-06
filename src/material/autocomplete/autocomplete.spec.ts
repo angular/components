@@ -3758,7 +3758,9 @@ describe('MDC-based MatAutocomplete', () => {
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
   <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width" [color]="theme">
-    <mat-label *ngIf="hasLabel">State</mat-label>
+    @if (hasLabel) {
+      <mat-label>State</mat-label>
+    }
     <input
       matInput
       placeholder="State"
@@ -3777,13 +3779,14 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
     [aria-labelledby]="ariaLabelledby"
     (opened)="openedSpy()"
     (closed)="closedSpy()">
-    <mat-option
-      *ngFor="let state of filteredStates"
-      [value]="state"
-      [style.height.px]="state.height"
-      [disabled]="state.disabled">
-      <span>{{ state.code }}: {{ state.name }}</span>
-    </mat-option>
+    @for (state of filteredStates; track state) {
+      <mat-option
+        [value]="state"
+        [style.height.px]="state.height"
+        [disabled]="state.disabled">
+        <span>{{ state.code }}: {{ state.name }}</span>
+      </mat-option>
+    }
   </mat-autocomplete>
 `;
 
@@ -3848,14 +3851,18 @@ class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
 @Component({
   template: `
-    <mat-form-field *ngIf="isVisible">
+    @if (isVisible) {
+<mat-form-field>
       <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
     </mat-form-field>
+}
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      @for (option of filteredOptions | async; track option) {
+  <mat-option [value]="option">
          {{option}}
       </mat-option>
+}
     </mat-autocomplete>
   `,
 })
@@ -3888,9 +3895,11 @@ class NgIfAutocomplete {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates" [value]="state">
-        <span> {{ state }}  </span>
-      </mat-option>
+      @for (state of filteredStates; track state) {
+        <mat-option [value]="state">
+          <span> {{ state }}  </span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3915,9 +3924,11 @@ class AutocompleteWithoutForms {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates" [value]="state">
-        <span>{{ state }}</span>
-      </mat-option>
+      @for (state of filteredStates; track state) {
+        <mat-option [value]="state">
+          <span>{{ state }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3944,9 +3955,11 @@ class AutocompleteWithNgModel {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let number of numbers" [value]="number">
-        <span>{{ number }}</span>
-      </mat-option>
+      @for (number of numbers; track number) {
+        <mat-option [value]="number">
+          <span>{{ number }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3963,7 +3976,9 @@ class AutocompleteWithNumbers {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
+      @for (option of options; track option) {
+        <mat-option [value]="option">{{ option }}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3983,9 +3998,9 @@ class AutocompleteWithOnPushDelay implements OnInit {
     <input placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-         {{option}}
-      </mat-option>
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option">{{option}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4024,11 +4039,15 @@ class AutocompleteWithoutPanel {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-optgroup *ngFor="let group of stateGroups" [label]="group.label">
-        <mat-option *ngFor="let state of group.states" [value]="state">
-          <span>{{ state }}</span>
-        </mat-option>
-      </mat-optgroup>
+      @for (group of stateGroups; track group) {
+        <mat-optgroup [label]="group.label">
+          @for (state of group.states; track state) {
+            <mat-option [value]="state">
+              <span>{{ state }}</span>
+            </mat-option>
+          }
+        </mat-optgroup>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4058,13 +4077,17 @@ class AutocompleteWithGroups {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <ng-container [ngSwitch]="true">
-        <mat-optgroup *ngFor="let group of stateGroups" [label]="group.label">
-          <mat-option *ngFor="let state of group.states" [value]="state">
-            <span>{{ state }}</span>
-          </mat-option>
-        </mat-optgroup>
-      </ng-container>
+      @if (true) {
+        @for (group of stateGroups; track group) {
+          <mat-optgroup [label]="group.label">
+            @for (state of group.states; track state) {
+              <mat-option [value]="state">
+                <span>{{ state }}</span>
+              </mat-option>
+            }
+          </mat-optgroup>
+        }
+      }
     </mat-autocomplete>
   `,
 })
@@ -4077,9 +4100,11 @@ class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
-      <mat-option *ngFor="let state of states" [value]="state">
-        <span>{{ state }}</span>
-      </mat-option>
+      @for (state of states; track state) {
+        <mat-option [value]="state">
+          <span>{{ state }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4109,7 +4134,9 @@ class PlainAutocompleteInputWithFormControl {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
+      @for (value of values; track value) {
+        <mat-option [value]="value">{{value}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4139,7 +4166,9 @@ class AutocompleteWithNumberInputAndNgModel {
     </div>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
+      @for (value of values; track value) {
+        <mat-option [value]="value">{{value}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4173,7 +4202,9 @@ class InputWithoutAutocompleteAndDisabled {}
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete" (optionActivated)="optionActivated($event)">
-      <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+      @for (state of states; track state) {
+        <mat-option [value]="state">{{ state }}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4198,9 +4229,9 @@ class AutocompleteWithActivatedEvent {
           <input matInput [matAutocomplete]="reactiveAuto" [formControl]="formControl">
         </mat-form-field>
         <mat-autocomplete #reactiveAuto="matAutocomplete">
-          <mat-option *ngFor="let food of foods; let index = index" [value]="food">
-            {{food.viewValue}}
-          </mat-option>
+          @for (food of foods; track food; let index = $index) {
+            <mat-option [value]="food">{{food.viewValue}}</mat-option>
+          }
         </mat-autocomplete>
       </div>
     </ng-template>

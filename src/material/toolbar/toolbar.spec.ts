@@ -128,7 +128,9 @@ class ToolbarMultipleRows {}
   template: `
     <mat-toolbar>
       First Row
-      <mat-toolbar-row *ngIf="showToolbarRow">Second Row</mat-toolbar-row>
+      @if (showToolbarRow) {
+        <mat-toolbar-row>Second Row</mat-toolbar-row>
+      }
     </mat-toolbar>
   `,
 })
@@ -140,10 +142,10 @@ class ToolbarMixedRowModes {
   // The ng-container is there so we have a node with a directive between the toolbar and the rows.
   template: `
     <mat-toolbar>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-toolbar-row>First Row</mat-toolbar-row>
         <mat-toolbar-row>Second Row</mat-toolbar-row>
-      </ng-container>
+      }
     </mat-toolbar>
   `,
 })

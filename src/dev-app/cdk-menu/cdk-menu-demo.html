@@ -145,48 +145,44 @@
 
   <ng-template #sizeMenu>
     <div class="example-menu" cdkMenu>
-      <button
-          *ngFor="let size of sizes"
+      @for (size of sizes; track size) {
+        <button
           cdkMenuItemRadio
           [cdkMenuItemChecked]="selectedSize === size"
-          (cdkMenuItemTriggered)="selectedSize = size">
-        {{size}}
-      </button>
+          (cdkMenuItemTriggered)="selectedSize = size">{{size}}</button>
+      }
     </div>
   </ng-template>
 
   <ng-template #colorMenu>
     <div class="example-menu" cdkMenu>
       <div cdkMenuGroup>
-        <button
-            *ngFor="let color of colors"
+        @for (color of colors; track color) {
+          <button
             cdkMenuItemRadio
             [cdkMenuItemChecked]="selectedColor === color"
-            (cdkMenuItemTriggered)="selectedColor = color">
-          {{color}}
-        </button>
+            (cdkMenuItemTriggered)="selectedColor = color">{{color}}</button>
+        }
       </div>
     </div>
   </ng-template>
 
   <ng-template #sizeAndColorMenu>
     <div class="example-menu" cdkMenu>
-      <button
-          *ngFor="let size of sizes"
+      @for (size of sizes; track size) {
+        <button
           cdkMenuItemRadio
           [cdkMenuItemChecked]="selectedSize === size"
-          (cdkMenuItemTriggered)="selectedSize = size">
-        {{size}}
-      </button>
+          (cdkMenuItemTriggered)="selectedSize = size">{{size}}</button>
+      }
       <hr />
       <div cdkMenuGroup>
-        <button
-            *ngFor="let color of colors"
+        @for (color of colors; track color) {
+          <button
             cdkMenuItemRadio
             [cdkMenuItemChecked]="selectedColor === color"
-            (cdkMenuItemTriggered)="selectedColor = color">
-          {{color}}
-        </button>
+            (cdkMenuItemTriggered)="selectedColor = color">{{color}}</button>
+        }
       </div>
     </div>
   </ng-template>

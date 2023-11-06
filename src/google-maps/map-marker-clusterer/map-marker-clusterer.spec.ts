@@ -325,9 +325,15 @@ describe('MapMarkerClusterer', () => {
                                      [options]="options"
                                      (clusteringbegin)="onClusteringBegin()"
                                      (clusterClick)="onClusterClick()">
-                 <map-marker *ngIf="state === 'state1'"></map-marker>
-                 <map-marker *ngIf="state === 'state1' || state === 'state2'"></map-marker>
-                 <map-marker *ngIf="state === 'state2'"></map-marker>
+                 @if (state === 'state1') {
+                  <map-marker></map-marker>
+                }
+                 @if (state === 'state1' || state === 'state2') {
+                  <map-marker></map-marker>
+                }
+                 @if (state === 'state2') {
+                  <map-marker></map-marker>
+                }
                </map-marker-clusterer>
              </google-map>`,
 })

@@ -4,7 +4,6 @@ import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {NgFor} from '@angular/common';
 import {MatRadioModule} from '@angular/material/radio';
 
 @Injectable()
@@ -25,7 +24,6 @@ export class StepperIntl extends MatStepperIntl {
   imports: [
     MatRadioModule,
     FormsModule,
-    NgFor,
     MatStepperModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -43,7 +41,10 @@ export class StepperIntlExample {
     secondCtrl: ['', Validators.required],
   });
 
-  constructor(private _formBuilder: FormBuilder, private _matStepperIntl: MatStepperIntl) {}
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _matStepperIntl: MatStepperIntl,
+  ) {}
 
   updateOptionalLabel() {
     this._matStepperIntl.optionalLabel = this.optionalLabelText;

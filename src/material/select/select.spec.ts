@@ -4575,18 +4575,24 @@ describe('MDC-based MatSelect', () => {
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
-      <mat-label *ngIf="hasLabel">Select a food</mat-label>
+      @if (hasLabel) {
+        <mat-label>Select a food</mat-label>
+      }
       <mat-select placeholder="Food" [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [aria-describedby]="ariaDescribedBy"
         [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
         [panelClass]="panelClass" [disableRipple]="disableRipple"
         [typeaheadDebounceInterval]="typeaheadDebounceInterval"
         [panelWidth]="panelWidth">
-        <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ capitalize ? food.viewValue.toUpperCase() : food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value" [disabled]="food.disabled">
+            {{ capitalize ? food.viewValue.toUpperCase() : food.viewValue }}
+          </mat-option>
+        }
       </mat-select>
-      <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+      @if (hint) {
+        <mat-hint>{{ hint }}</mat-hint>
+      }
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
@@ -4627,9 +4633,9 @@ class BasicSelect {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" ngModel [disabled]="isDisabled">
-        <mat-option *ngFor="let food of foods"
-                    [value]="food.value">{{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4668,15 +4674,17 @@ class ManySelects {}
 @Component({
   selector: 'ng-if-select',
   template: `
-    <div *ngIf="isShowing">
-      <mat-form-field>
-        <mat-select placeholder="Food I want to eat right now" [formControl]="control">
-          <mat-option *ngFor="let food of foods" [value]="food.value">
-            {{ food.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    @if (isShowing) {
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Food I want to eat right now" [formControl]="control">
+            @for (food of foods; track food) {
+              <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
   `,
 })
 class NgIfSelect {
@@ -4696,7 +4704,9 @@ class NgIfSelect {
   template: `
     <mat-form-field>
       <mat-select (selectionChange)="changeListener($event)">
-        <mat-option *ngFor="let food of foods" [value]="food">{{ food }}</mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food">{{ food }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4721,9 +4731,9 @@ class SelectWithChangeEvent {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food I want to eat right now" [formControl]="control">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4808,9 +4818,9 @@ class ThrowsErrorOnInit implements OnInit {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4830,9 +4840,9 @@ class BasicSelectOnPush {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4853,9 +4863,9 @@ class BasicSelectOnPushPreselected {
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Select a food</mat-label>
       <mat-select [placeholder]="placeholder" [formControl]="control">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
     `,
@@ -4879,9 +4889,9 @@ class FloatLabelSelect {
     <mat-form-field>
       <mat-select multiple placeholder="Food" [formControl]="control"
         [sortComparator]="sortComparator">
-        <mat-option *ngFor="let food of foods"
-                    [value]="food.value">{{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -4916,7 +4926,9 @@ class SelectWithPlainTabindex {}
     <mat-form-field>
       <mat-select #select="matSelect"></mat-select>
     </mat-form-field>
-    <div *ngIf="select.selected"></div>
+    @if (select.selected) {
+      <div></div>
+    }
   `,
 })
 class SelectEarlyAccessSibling {}
@@ -4969,9 +4981,9 @@ class BasicSelectWithTheming {
     <mat-form-field>
       <mat-label>Select a food</mat-label>
       <mat-select [formControl]="control">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
         <mat-option>None</mat-option>
       </mat-select>
     </mat-form-field>
@@ -4995,9 +5007,9 @@ class ResetValuesSelect {
   template: `
     <mat-form-field>
       <mat-select [formControl]="control">
-        <mat-option *ngFor="let food of foods"
-                    [value]="food.value">{{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5016,12 +5028,13 @@ class FalsyValueSelect {
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
-        <mat-optgroup *ngFor="let group of pokemonTypes" [label]="group.name"
-          [disabled]="group.disabled">
-          <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
-            {{ pokemon.viewValue }}
-          </mat-option>
-        </mat-optgroup>
+        @for (group of pokemonTypes; track group) {
+          <mat-optgroup [label]="group.name" [disabled]="group.disabled">
+            @for (pokemon of group.pokemon; track pokemon) {
+              <mat-option [value]="pokemon.value">{{ pokemon.viewValue }}</mat-option>
+            }
+          </mat-optgroup>
+        }
         <mat-option value="mime-11">Mr. Mime</mat-option>
       </mat-select>
     </mat-form-field>
@@ -5073,11 +5086,13 @@ class SelectWithGroups {
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
-        <mat-optgroup *ngFor="let group of pokemonTypes" [label]="group.name">
-          <ng-container *ngFor="let pokemon of group.pokemon">
-            <mat-option [value]="pokemon.value">{{ pokemon.viewValue }}</mat-option>
-          </ng-container>
-        </mat-optgroup>
+        @for (group of pokemonTypes; track group) {
+          <mat-optgroup [label]="group.name">
+            @for (pokemon of group.pokemon; track pokemon) {
+              <mat-option [value]="pokemon.value">{{ pokemon.viewValue }}</mat-option>
+            }
+          </mat-optgroup>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5111,9 +5126,9 @@ class InvalidSelectInForm {
       <mat-form-field>
         <mat-label>Food</mat-label>
         <mat-select formControlName="food">
-          <mat-option *ngFor="let option of options" [value]="option.value">
-            {{option.viewValue}}
-          </mat-option>
+          @for (option of options; track option) {
+            <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+          }
         </mat-select>
 
         <mat-error>This field is required</mat-error>
@@ -5138,9 +5153,9 @@ class SelectInsideFormGroup {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFood">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5160,9 +5175,9 @@ class BasicSelectWithoutForms {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFood">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5181,9 +5196,9 @@ class BasicSelectWithoutFormsPreselected {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(value)]="selectedFoods" multiple>
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5207,9 +5222,9 @@ class BasicSelectWithoutFormsMultiple {
         <mat-select-trigger>
           {{ select.selected?.viewValue.split('').reverse().join('') }}
         </mat-select-trigger>
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5228,7 +5243,9 @@ class SelectWithCustomTrigger {
     <mat-form-field>
       <mat-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)"
                  [compareWith]="comparator">
-        <mat-option *ngFor="let food of foods" [value]="food">{{ food.viewValue }}</mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5273,9 +5290,9 @@ class NgModelCompareWithSelect {
 @Component({
   template: `
     <mat-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
-      <mat-option *ngFor="let food of foods" [value]="food.value">
-        {{ food.viewValue }}
-      </mat-option>
+      @for (food of foods; track food) {
+        <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+      }
     </mat-select>
   `,
 })
@@ -5293,9 +5310,9 @@ class CustomErrorBehaviorSelect {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [(ngModel)]="selectedFoods">
-        <mat-option *ngFor="let food of foods"
-                    [value]="food.value">{{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5318,9 +5335,9 @@ class SingleSelectWithPreselectedArrayValues {
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" disableOptionCentering>
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5361,9 +5378,11 @@ class SelectWithFormFieldLabel {
   template: `
     <mat-form-field appearance="fill">
       <mat-label>Select something</mat-label>
-      <mat-select *ngIf="showSelect">
-        <mat-option value="1">One</mat-option>
-      </mat-select>
+      @if (showSelect) {
+        <mat-select>
+          <mat-option value="1">One</mat-option>
+        </mat-select>
+      }
     </mat-form-field>
   `,
 })
@@ -5375,7 +5394,9 @@ class SelectWithNgIfAndLabel {
   template: `
     <mat-form-field>
       <mat-select multiple [ngModel]="value">
-        <mat-option *ngFor="let item of items" [value]="item">{{item}}</mat-option>
+        @for (item of items; track item) {
+          <mat-option [value]="item">{{item}}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   `,
@@ -5416,13 +5437,13 @@ class SelectWithResetOptionAndFormControl {
   selector: 'select-with-placeholder-in-ngcontainer-with-ngIf',
   template: `
     <mat-form-field>
-      <ng-container *ngIf="true">
+      @if (true) {
         <mat-select placeholder="Product Area">
           <mat-option value="a">A</mat-option>
           <mat-option value="b">B</mat-option>
           <mat-option value="c">C</mat-option>
         </mat-select>
-      </ng-container>
+      }
     </mat-form-field>
   `,
 })
@@ -5458,17 +5479,23 @@ class SelectInsideDynamicFormGroup {
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
-      <mat-label *ngIf="hasLabel">Select a food</mat-label>
+      @if (hasLabel) {
+        <mat-label>Select a food</mat-label>
+      }
       <mat-select placeholder="Food" [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [aria-describedby]="ariaDescribedBy"
         [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
         [panelClass]="panelClass" [disableRipple]="disableRipple"
         [typeaheadDebounceInterval]="typeaheadDebounceInterval">
-        <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ food.viewValue }}
-        </mat-option>
+        @for (food of foods; track food) {
+          <mat-option [value]="food.value" [disabled]="food.disabled">
+            {{ food.viewValue }}
+          </mat-option>
+        }
       </mat-select>
-      <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+      @if (hint) {
+        <mat-hint>{{ hint }}</mat-hint>
+      }
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
@@ -5512,9 +5539,9 @@ class BasicSelectWithFirstAndLastOptionDisabled {
         <mat-form-field>
           <mat-label>Select a food</mat-label>
           <mat-select placeholder="Food" ngModel>
-            <mat-option *ngFor="let food of foods"
-                        [value]="food.value">{{ food.viewValue }}
-            </mat-option>
+            @for (food of foods; track food) {
+              <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>

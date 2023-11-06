@@ -59,7 +59,7 @@ export class GoogleMapsDemoComponent {
   apiLoaded: Observable<boolean>;
 
   constructor(httpClient: HttpClient) {
-    // If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization` library 
+    // If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization` library
     // when loading the Google Maps API. To do so, you can add `&libraries=visualization` to the script URL:
     // https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization
 
@@ -75,9 +75,9 @@ export class GoogleMapsDemoComponent {
 ```html
 <!-- google-maps-demo.component.html -->
 
-<div *ngIf="apiLoaded | async">
+@if (apiLoaded | async) {
   <google-map></google-map>
-</div>
+}
 ```
 
 ## Components

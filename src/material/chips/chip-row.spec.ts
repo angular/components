@@ -384,18 +384,22 @@ describe('MDC-based Row Chips', () => {
 @Component({
   template: `
     <mat-chip-grid #chipGrid>
-      <div *ngIf="shouldShow">
-        <mat-chip-row [removable]="removable"
-                 [color]="color" [disabled]="disabled" [editable]="editable"
-                 (destroyed)="chipDestroy($event)"
-                 (removed)="chipRemove($event)" (edited)="chipEdit($event)"
-                 [aria-label]="ariaLabel" [aria-description]="ariaDescription">
-          {{name}}
-          <button matChipRemove>x</button>
-          <span *ngIf="useCustomEditInput" class="projected-edit-input" matChipEditInput></span>
-        </mat-chip-row>
-        <input matInput [matChipInputFor]="chipGrid" #chipInput>
-      </div>
+      @if (shouldShow) {
+        <div>
+          <mat-chip-row [removable]="removable"
+                  [color]="color" [disabled]="disabled" [editable]="editable"
+                  (destroyed)="chipDestroy($event)"
+                  (removed)="chipRemove($event)" (edited)="chipEdit($event)"
+                  [aria-label]="ariaLabel" [aria-description]="ariaDescription">
+            {{name}}
+            <button matChipRemove>x</button>
+            @if (useCustomEditInput) {
+              <span class="projected-edit-input" matChipEditInput></span>
+            }
+          </mat-chip-row>
+          <input matInput [matChipInputFor]="chipGrid" #chipInput>
+        </div>
+      }
     </mat-chip-grid>`,
 })
 class SingleChip {

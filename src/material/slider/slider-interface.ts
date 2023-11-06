@@ -13,13 +13,13 @@ import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
  * Thumb types: range slider has two thumbs (START, END) whereas single point
  * slider only has one thumb (END).
  */
-export const enum _MatThumb {
+export enum _MatThumb {
   START = 1,
   END = 2,
 }
 
 /** Tick mark enum, for discrete sliders. */
-export const enum _MatTickMark {
+export enum _MatTickMark {
   ACTIVE = 0,
   INACTIVE = 1,
 }

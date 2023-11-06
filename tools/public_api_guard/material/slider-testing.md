@@ -55,7 +55,7 @@ export interface SliderThumbHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export const enum ThumbPosition {
+export enum ThumbPosition {
     // (undocumented)
     END = 1,
     // (undocumented)

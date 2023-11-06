@@ -29,12 +29,14 @@
       </mat-radio-group>
     </section>
 
-    <section class="example-section" *ngIf="mode === 'determinate'">
-      <label class="example-margin">Progress:</label>
-      <mat-slider class="example-margin">
-        <input type="range" [(ngModel)]="value" matSliderThumb>
-      </mat-slider>
-    </section>
+    @if (mode === 'determinate') {
+      <section class="example-section">
+        <label class="example-margin">Progress:</label>
+        <mat-slider class="example-margin">
+          <input type="range" [(ngModel)]="value" matSliderThumb>
+        </mat-slider>
+      </section>
+    }
   </mat-card-content>
 </mat-card>
 

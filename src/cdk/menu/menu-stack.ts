@@ -11,7 +11,7 @@ import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
 
 /** The relative item in the inline menu to focus after closing all popup menus. */
-export const enum FocusNext {
+export enum FocusNext {
   nextItem,
   previousItem,
   currentItem,
