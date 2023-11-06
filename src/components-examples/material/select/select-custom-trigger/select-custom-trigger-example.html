@@ -3,10 +3,14 @@
   <mat-select [formControl]="toppings" multiple>
     <mat-select-trigger>
       {{toppings.value?.[0] || ''}}
-      <span *ngIf="(toppings.value?.length || 0) > 1" class="example-additional-selection">
-        (+{{(toppings.value?.length || 0) - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
-      </span>
+      @if ((toppings.value?.length || 0) > 1) {
+        <span class="example-additional-selection">
+          (+{{(toppings.value?.length || 0) - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
+        </span>
+      }
     </mat-select-trigger>
-    <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+    @for (topping of toppingList; track topping) {
+  <mat-option [value]="topping">{{topping}}</mat-option>
+}
   </mat-select>
 </mat-form-field>

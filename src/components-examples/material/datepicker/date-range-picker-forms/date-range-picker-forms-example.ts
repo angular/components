@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgIf, JsonPipe} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -15,7 +15,6 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
-    NgIf,
     JsonPipe,
     MatNativeDateModule,
   ],

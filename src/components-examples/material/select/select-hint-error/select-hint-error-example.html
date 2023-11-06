@@ -3,11 +3,13 @@
   <mat-label>Favorite animal</mat-label>
   <mat-select [formControl]="animalControl" required>
     <mat-option>--</mat-option>
-    <mat-option *ngFor="let animal of animals" [value]="animal">
-      {{animal.name}}
-    </mat-option>
+    @for (animal of animals; track animal) {
+      <mat-option [value]="animal">{{animal.name}}</mat-option>
+    }
   </mat-select>
-  <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>
+  @if (animalControl.hasError('required')) {
+    <mat-error>Please choose an animal</mat-error>
+  }
   <mat-hint>{{animalControl.value?.sound}}</mat-hint>
 </mat-form-field>
 
@@ -20,9 +22,9 @@
     <option value="mercedes">Mercedes</option>
     <option value="audi">Audi</option>
   </select>
-  <mat-error *ngIf="selectFormControl.hasError('required')">
-    This field is required
-  </mat-error>
+  @if (selectFormControl.hasError('required')) {
+    <mat-error>This field is required</mat-error>
+  }
   <mat-hint>You can pick up your favorite car here</mat-hint>
 </mat-form-field>
 

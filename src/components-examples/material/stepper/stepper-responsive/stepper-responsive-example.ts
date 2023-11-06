@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {NgSwitch, NgSwitchCase, AsyncPipe} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 
 /**
  * @title Stepper responsive
@@ -18,8 +18,6 @@ import {NgSwitch, NgSwitchCase, AsyncPipe} from '@angular/common';
   styleUrls: ['stepper-responsive-example.css'],
   standalone: true,
   imports: [
-    NgSwitch,
-    NgSwitchCase,
     MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
@@ -41,7 +39,10 @@ export class StepperResponsiveExample {
   });
   stepperOrientation: Observable<StepperOrientation>;
 
-  constructor(private _formBuilder: FormBuilder, breakpointObserver: BreakpointObserver) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    breakpointObserver: BreakpointObserver,
+  ) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));

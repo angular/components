@@ -6,16 +6,18 @@
       [formControl]="signCtrl"
       aria-labelledby="example-zodiac-sign-label"
       class="example-listbox">
-    <li *ngFor="let sign of signs"
-        [cdkOption]="sign"
-        class="example-option">
-      {{sign}}
-    </li>
+    @for (sign of signs; track sign) {
+      <li [cdkOption]="sign" class="example-option">{{sign}}</li>
+    }
   </ul>
 </div>
-<div class="example-listbox-errors" *ngIf="invalid | async">
-  <p *ngFor="let error of getErrors()">{{error}}</p>
-</div>
+@if (invalid | async) {
+  <div class="example-listbox-errors">
+    @for (error of getErrors(); track error) {
+      <p>{{error}}</p>
+    }
+  </div>
+}
 <p>
   Your zodiac sign is: <strong>{{signCtrl.value | json}}</strong>&nbsp;
   <button (click)="signCtrl.setValue(['Cat'])">Set: Cat</button>&nbsp;

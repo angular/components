@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -9,7 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'select-multiple-example',
   templateUrl: 'select-multiple-example.html',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, NgFor],
+  imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
 })
 export class SelectMultipleExample {
   toppings = new FormControl('');

@@ -9,11 +9,12 @@
     class="example-list"
     (cdkDropListDropped)="drop($event)"
     [cdkDropListEnterPredicate]="noReturnPredicate">
-    <div
-      class="example-box"
-      *ngFor="let number of all"
-      [cdkDragData]="number"
-      cdkDrag>{{number}}</div>
+    @for (number of all; track number) {
+      <div
+          class="example-box"
+          [cdkDragData]="number"
+          cdkDrag>{{number}}</div>
+    }
   </div>
 </div>
 
@@ -28,11 +29,12 @@
     class="example-list"
     (cdkDropListDropped)="drop($event)"
     [cdkDropListEnterPredicate]="evenPredicate">
-    <div
-      class="example-box"
-      *ngFor="let number of even"
-      cdkDrag
-      [cdkDragData]="number">{{number}}</div>
+    @for (number of even; track number) {
+      <div
+          class="example-box"
+          cdkDrag
+          [cdkDragData]="number">{{number}}</div>
+    }
   </div>
 </div>
 
