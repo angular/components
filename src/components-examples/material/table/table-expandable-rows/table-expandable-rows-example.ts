@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {NgFor, NgIf} from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 
 /**
@@ -20,7 +19,7 @@ import {MatTableModule} from '@angular/material/table';
     ]),
   ],
   standalone: true,
-  imports: [MatTableModule, NgFor, MatButtonModule, NgIf, MatIconModule],
+  imports: [MatTableModule, MatButtonModule, MatIconModule],
 })
 export class TableExpandableRowsExample {
   dataSource = ELEMENT_DATA;

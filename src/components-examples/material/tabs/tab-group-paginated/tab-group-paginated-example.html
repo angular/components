@@ -1,3 +1,5 @@
 <mat-tab-group>
-  <mat-tab [label]="tab" *ngFor="let tab of lotsOfTabs">Content</mat-tab>
+  @for (tab of lotsOfTabs; track tab) {
+    <mat-tab [label]="tab">Content</mat-tab>
+  }
 </mat-tab-group>

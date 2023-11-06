@@ -8,11 +8,9 @@
       [(ngModel)]="order"
       aria-labelledby="example-toppings-label"
       class="example-listbox">
-    <li *ngFor="let topping of toppings"
-        [cdkOption]="topping"
-        class="example-option">
-      {{topping}}
-    </li>
+    @for (topping of toppings; track topping) {
+      <li [cdkOption]="topping" class="example-option">{{topping}}</li>
+    }
   </ul>
   <!-- #enddocregion listbox -->
 </div>

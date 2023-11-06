@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {NgFor} from '@angular/common';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -16,7 +15,7 @@ import {
   templateUrl: 'cdk-drag-drop-connected-sorting-example.html',
   styleUrls: ['cdk-drag-drop-connected-sorting-example.css'],
   standalone: true,
-  imports: [CdkDropList, NgFor, CdkDrag],
+  imports: [CdkDropList, CdkDrag],
 })
 export class CdkDragDropConnectedSortingExample {
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];

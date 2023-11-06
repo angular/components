@@ -8,11 +8,9 @@
       cdkListboxUseActiveDescendant
       aria-labelledby="example-spatula-label"
       class="example-listbox">
-    <li *ngFor="let feature of features"
-        [cdkOption]="feature"
-        class="example-option">
-      {{feature}}
-    </li>
+    @for (feature of features; track feature) {
+      <li [cdkOption]="feature" class="example-option">{{feature}}</li>
+    }
   </ul>
   <!-- #enddocregion listbox -->
 </div>

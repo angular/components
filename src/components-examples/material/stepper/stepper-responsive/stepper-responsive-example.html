@@ -1,7 +1,11 @@
-<ng-container [ngSwitch]="stepperOrientation | async">
-  <div *ngSwitchCase="'horizontal'">Make your screen smaller to see a vertical stepper</div>
-  <div *ngSwitchCase="'vertical'">Make your screen larger to see a horizontal stepper</div>
-</ng-container>
+@switch (stepperOrientation | async) {
+  @case ('horizontal') {
+    <div>Make your screen smaller to see a vertical stepper</div>
+  }
+  @case ('vertical') {
+    <div>Make your screen larger to see a horizontal stepper</div>
+  }
+}
 
 <mat-stepper
   class="example-stepper"
