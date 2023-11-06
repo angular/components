@@ -10,9 +10,9 @@
 
 1. The code author sends a PR for review. This request should include:
 
-- A high-level description of the change being made
-- Links to any relevant issues
-- Screenshots (for visual changes or new additions)
+   - A high-level description of the change being made
+   - Links to any relevant issues
+   - Screenshots (for visual changes or new additions)
 
 2. Reviews provide comments and the author responds / makes changes. Repeat until LGTM.
 3. One or more of the reviewers approve the pull request.
