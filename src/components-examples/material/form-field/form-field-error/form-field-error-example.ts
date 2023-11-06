@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgIf} from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -10,7 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   templateUrl: 'form-field-error-example.html',
   styleUrls: ['form-field-error-example.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, NgIf],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
 })
 export class FormFieldErrorExample {
   email = new FormControl('', [Validators.required, Validators.email]);

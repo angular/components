@@ -8,11 +8,13 @@
            [matAutocomplete]="autoGroup">
 <!-- #docregion mat-autocomplete -->
       <mat-autocomplete #autoGroup="matAutocomplete">
-        <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.letter">
-          <mat-option *ngFor="let name of group.names" [value]="name">
-            {{name}}
-          </mat-option>
-      </mat-optgroup>
+        @for (group of stateGroupOptions | async; track group) {
+          <mat-optgroup [label]="group.letter">
+            @for (name of group.names; track name) {
+              <mat-option [value]="name">{{name}}</mat-option>
+            }
+          </mat-optgroup>
+        }
     </mat-autocomplete>
 <!-- #enddocregion mat-autocomplete -->
   </mat-form-field>

@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {NgFor} from '@angular/common';
 import {MatButtonToggleGroup, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
@@ -12,7 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrls: ['table-sticky-complex-example.css'],
   templateUrl: 'table-sticky-complex-example.html',
   standalone: true,
-  imports: [MatButtonModule, MatButtonToggleModule, NgFor, MatTableModule],
+  imports: [MatButtonModule, MatButtonToggleModule, MatTableModule],
 })
 export class TableStickyComplexExample {
   displayedColumns: string[] = [];

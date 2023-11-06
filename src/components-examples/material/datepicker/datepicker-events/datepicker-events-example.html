@@ -8,5 +8,7 @@
 </mat-form-field>
 
 <div class="example-events">
-  <div *ngFor="let e of events">{{e}}</div>
+  @for (e of events; track e) {
+    <div>{{e}}</div>
+  }
 </div>

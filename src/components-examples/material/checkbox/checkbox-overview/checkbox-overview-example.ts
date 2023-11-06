@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';
-import {NgFor} from '@angular/common';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 export interface Task {
@@ -19,7 +18,7 @@ export interface Task {
   templateUrl: 'checkbox-overview-example.html',
   styleUrls: ['checkbox-overview-example.css'],
   standalone: true,
-  imports: [MatCheckboxModule, NgFor, FormsModule],
+  imports: [MatCheckboxModule, FormsModule],
 })
 export class CheckboxOverviewExample {
   task: Task = {

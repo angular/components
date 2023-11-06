@@ -3,7 +3,6 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -20,7 +19,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
     CdkScrollable,
     MatButtonModule,
     MatTooltipModule,
