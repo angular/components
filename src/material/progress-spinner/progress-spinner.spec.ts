@@ -462,9 +462,11 @@ class IndeterminateSpinnerInShadowDom {
 
 @Component({
   template: `
-    <div *ngIf="true">
-      <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
-    </div>
+    @if (true) {
+      <div>
+        <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
+      </div>
+    }
   `,
   encapsulation: ViewEncapsulation.ShadowDom,
 })

@@ -176,15 +176,18 @@ items.
 
 This error is thrown if you attempt to bind the `multiple` property on `<mat-select>` to a dynamic
 value. (e.g. `[multiple]="isMultiple"` where the value of `isMultiple` changes over the course of
-the component's lifetime). If you need to change this dynamically, use `ngIf` or `ngSwitch` instead:
+the component's lifetime). If you need to change this dynamically, use `@if` or `@switch` instead:
 
 ```html
-<mat-select *ngIf="isMultiple" multiple>
-  ...
-</mat-select>
-<mat-select *ngIf="!isMultiple">
-  ...
-</mat-select>
+@if (isMultiple) {
+  <mat-select multiple>
+    ...
+  </mat-select>
+} @else {
+  <mat-select>
+    ...
+  </mat-select>
+}
 ```
 
 #### Error: Value must be an array in multiple-selection mode

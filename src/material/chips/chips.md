@@ -94,7 +94,7 @@ See the [accessibility](#accessibility) section for best practices on implementi
 
 ### Orientation
 
-By default, chips are displayed horizontally. To stack chips vertically, apply the `mat-mdc-chip-set-stacked` class to `<mat-chip-set>`, `<mat-chip-listbox>` or `<mat-chip-grid>`. 
+By default, chips are displayed horizontally. To stack chips vertically, apply the `mat-mdc-chip-set-stacked` class to `<mat-chip-set>`, `<mat-chip-listbox>` or `<mat-chip-grid>`.
 
 <!-- example(chips-stacked) -->
 
@@ -141,14 +141,15 @@ The chips components support 3 user interaction patterns, each with its own cont
 ```html
 <mat-form-field>
   <mat-chip-grid #myChipGrid [(ngModel)]="mySelection"
-  aria-label="enter sandwich fillings">
-    <mat-chip-row *ngFor="let filling of fillings"
-                 (removed)="remove(filling)">
-      {{filling.name}}
-      <button matChipRemove>
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
+    aria-label="enter sandwich fillings">
+    @for (filling of fillings; track filling) {
+      <mat-chip-row (removed)="remove(filling)">
+        {{filling.name}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
     <input [matChipInputFor]="myChipGrid"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            (matChipInputTokenEnd)="add($event)" />

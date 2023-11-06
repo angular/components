@@ -46,7 +46,9 @@ will be connected to all other lists automatically.
 ```html
 <div cdkDropListGroup>
   <!-- All lists in here will be connected. -->
-  <div cdkDropList *ngFor="let list of lists"></div>
+  @for (list of lists; track list) {
+    <div cdkDropList></div>
+  }
 </div>
 ```
 
@@ -58,9 +60,13 @@ or `cdkDropListData`, respectively. Events fired from both directives include th
 you to easily identify the origin of the drag or drop interaction.
 
 ```html
-<div cdkDropList [cdkDropListData]="list" *ngFor="let list of lists" (cdkDropListDropped)="drop($event)">
-  <div cdkDrag [cdkDragData]="item" *ngFor="let item of list"></div>
-</div>
+@for (list of lists; track list) {
+  <div cdkDropList [cdkDropListData]="list" (cdkDropListDropped)="drop($event)">
+    @for (item of list; track item) {
+      <div cdkDrag [cdkDragData]="item"></div>
+    }
+  </div>
+}
 ```
 
 ### Styling

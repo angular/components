@@ -62,7 +62,9 @@ Simple navigation lists can use the `mat-list-item` attribute on anchor tag elem
 
 ```html
 <mat-nav-list>
-  <a mat-list-item href="..." *ngFor="let link of links" [activated]="link.isActive">{{ link }}</a>
+  @for (link of list; track link) {
+    <a mat-list-item href="..." [activated]="link.isActive">{{ link }}</a>
+  }
 </mat-nav-list>
 ```
 
@@ -71,12 +73,14 @@ element in an `<mat-list-item>`.
 
 ```html
 <mat-nav-list>
-  <mat-list-item *ngFor="let link of links" [activated]="link.isActive">
-     <a matListItemTitle href="...">{{ link }}</a>
-     <button mat-icon-button (click)="showInfo(link)" matListItemMeta>
-        <mat-icon>info</mat-icon>
-     </button>
-  </mat-list-item>
+  @for (link of links; track link) {
+    <mat-list-item [activated]="link.isActive">
+       <a matListItemTitle href="...">{{ link }}</a>
+       <button mat-icon-button (click)="showInfo(link)" matListItemMeta>
+          <mat-icon>info</mat-icon>
+       </button>
+    </mat-list-item>
+  }
 </mat-nav-list>
 ```
 
@@ -111,22 +115,26 @@ attribute. Whichever heading tag is appropriate for your DOM hierarchy should be
 ```html
 <!-- two line list -->
 <mat-list>
-  <mat-list-item *ngFor="let message of messages">
-    <h3 matListItemTitle>{{message.from}}</h3>
-    <p matListItemLine>
-      <span>{{message.subject}}</span>
-      <span class="demo-2"> -- {{message.content}}</span>
-    </p>
-  </mat-list-item>
+  @for (message of messages; track message) {
+    <mat-list-item>
+      <h3 matListItemTitle>{{message.from}}</h3>
+      <p matListItemLine>
+        <span>{{message.subject}}</span>
+        <span class="demo-2"> -- {{message.content}}</span>
+      </p>
+    </mat-list-item>
+  }
 </mat-list>
 
 <!-- three line list -->
 <mat-list>
-  <mat-list-item *ngFor="let message of messages">
-    <h3 matListItemTitle>{{message.from}}</h3>
-    <p matListItemLine>{{message.subject}}</p>
-    <p matListItemLine class="demo-2">{{message.content}}</p>
-  </mat-list-item>
+  @for (message of messages; track message) {
+    <mat-list-item>
+      <h3 matListItemTitle>{{message.from}}</h3>
+      <p matListItemLine>{{message.subject}}</p>
+      <p matListItemLine class="demo-2">{{message.content}}</p>
+    </mat-list-item>
+  }
 </mat-list>
 ```
 
@@ -137,14 +145,16 @@ To add an icon to your list item, use the `matListItemIcon` attribute.
 
 ```html
 <mat-list>
-  <mat-list-item *ngFor="let message of messages">
-    <mat-icon matListItemIcon>folder</mat-icon>
-    <h3 matListItemTitle>{{message.from}}</h3>
-    <p matListItemLine>
-      <span>{{message.subject}}</span>
-      <span class="demo-2"> -- {{message.content}}</span>
-    </p>
-  </mat-list-item>
+  @for (message of messages; track message) {
+    <mat-list-item>
+      <mat-icon matListItemIcon>folder</mat-icon>
+      <h3 matListItemTitle>{{message.from}}</h3>
+      <p matListItemLine>
+        <span>{{message.subject}}</span>
+        <span class="demo-2"> -- {{message.content}}</span>
+      </p>
+    </mat-list-item>
+  }
 </mat-list>
 ```
 
@@ -154,14 +164,16 @@ To include an avatar image, add an image tag with an `matListItemAvatar` attribu
 
 ```html
 <mat-list>
-  <mat-list-item *ngFor="let message of messages">
-    <img matListItemAvatar src="..." alt="...">
-    <h3 matListItemTitle>{{message.from}}</h3>
-    <p matListItemLine>
-      <span>{{message.subject}}</span>
-      <span class="demo-2"> -- {{message.content}}</span>
-    </p>
-  </mat-list-item>
+  @for (message of messages; track message) {
+    <mat-list-item>
+      <img matListItemAvatar src="..." alt="...">
+      <h3 matListItemTitle>{{message.from}}</h3>
+      <p matListItemLine>
+        <span>{{message.subject}}</span>
+        <span class="demo-2"> -- {{message.content}}</span>
+      </p>
+    </mat-list-item>
+  }
 </mat-list>
 ```
 
@@ -173,18 +185,22 @@ To add a divider, use `<mat-divider>`.
 ```html
 <mat-list>
    <h3 matSubheader>Folders</h3>
-   <mat-list-item *ngFor="let folder of folders">
-      <mat-icon matListIcon>folder</mat-icon>
-      <h4 matListItemTitle>{{folder.name}}</h4>
-      <p matListItemLine class="demo-2"> {{folder.updated}} </p>
-   </mat-list-item>
+   @for (folder of folders; track folder) {
+     <mat-list-item>
+        <mat-icon matListIcon>folder</mat-icon>
+        <h4 matListItemTitle>{{folder.name}}</h4>
+        <p matListItemLine class="demo-2"> {{folder.updated}} </p>
+     </mat-list-item>
+   }
    <mat-divider></mat-divider>
    <h3 matSubheader>Notes</h3>
-   <mat-list-item *ngFor="let note of notes">
-      <mat-icon matListIcon>note</mat-icon>
-      <h4 matListItemTitle>{{note.name}}</h4>
-      <p matListItemLine class="demo-2"> {{note.updated}} </p>
-   </mat-list-item>
+   @for (note of notes; track note) {
+     <mat-list-item>
+        <mat-icon matListIcon>note</mat-icon>
+        <h4 matListItemTitle>{{note.name}}</h4>
+        <p matListItemLine class="demo-2"> {{note.updated}} </p>
+     </mat-list-item>
+   }
 </mat-list>
 ```
 

@@ -1725,9 +1725,11 @@ describe('MDC-based MatSelectionList with forms', () => {
     <mat-list-option togglePosition="before" value="archive">
       Archive
     </mat-list-option>
-    <mat-list-option togglePosition="before" value="drafts" *ngIf="showLastOption">
-      Drafts
-    </mat-list-option>
+    @if (showLastOption) {
+      <mat-list-option togglePosition="before" value="drafts">
+        Drafts
+      </mat-list-option>
+    }
   </mat-selection-list>`,
 })
 class SelectionListWithListOptions {
@@ -1837,7 +1839,9 @@ class SelectionListWithOnlyOneOption {}
       [(ngModel)]="selectedOptions"
       (ngModelChange)="modelChangeSpy()"
       [multiple]="multiple">
-      <mat-list-option *ngFor="let option of options" [value]="option">{{option}}</mat-list-option>
+      @for (option of options; track option) {
+        <mat-list-option [value]="option">{{option}}</mat-list-option>
+      }
     </mat-selection-list>`,
 })
 class SelectionListWithModel {
@@ -1849,12 +1853,16 @@ class SelectionListWithModel {
 
 @Component({
   template: `
-    <mat-selection-list [formControl]="formControl" *ngIf="renderList">
-      <mat-list-option value="opt1">Option 1</mat-list-option>
-      <mat-list-option value="opt2">Option 2</mat-list-option>
-      <mat-list-option value="opt3">Option 3</mat-list-option>
-      <mat-list-option value="opt4" *ngIf="renderExtraOption">Option 4</mat-list-option>
-    </mat-selection-list>
+    @if (renderList) {
+      <mat-selection-list [formControl]="formControl">
+        <mat-list-option value="opt1">Option 1</mat-list-option>
+        <mat-list-option value="opt2">Option 2</mat-list-option>
+        <mat-list-option value="opt3">Option 3</mat-list-option>
+        @if (renderExtraOption) {
+          <mat-list-option value="opt4">Option 4</mat-list-option>
+        }
+      </mat-selection-list>
+    }
   `,
 })
 class SelectionListWithFormControl {
@@ -1889,7 +1897,9 @@ class SelectionListWithPreselectedOptionAndModel {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-selection-list [formControl]="formControl">
-      <mat-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</mat-list-option>
+      @for (opt of opts; track opt) {
+        <mat-list-option [value]="opt">{{opt}}</mat-list-option>
+      }
     </mat-selection-list>
   `,
 })
@@ -1901,9 +1911,9 @@ class SelectionListWithPreselectedFormControlOnPush {
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
-      <mat-list-option *ngFor="let option of options" [value]="option">
-        {{option.label}}
-      </mat-list-option>
+      @for (option of options; track option) {
+        <mat-list-option [value]="option">{{option.label}}</mat-list-option>
+      }
     </mat-selection-list>`,
 })
 class SelectionListWithCustomComparator {
@@ -1946,13 +1956,13 @@ class SelectionListWithIcon {
 }
 
 @Component({
-  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  // Note the blank `@if` which we need in order to hit the bug that we're testing.
   template: `
     <mat-selection-list>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-list-option [value]="1">One</mat-list-option>
         <mat-list-option [value]="2">Two</mat-list-option>
-      </ng-container>
+      }
     </mat-selection-list>`,
 })
 class SelectionListWithIndirectChildOptions {

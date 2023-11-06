@@ -554,17 +554,19 @@ describe('YoutubePlayer', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <youtube-player #player [videoId]="videoId" *ngIf="visible" [width]="width" [height]="height"
-      [startSeconds]="startSeconds" [endSeconds]="endSeconds" [suggestedQuality]="suggestedQuality"
-      [playerVars]="playerVars"
-      [disableCookies]="disableCookies"
-      (ready)="onReady($event)"
-      (stateChange)="onStateChange($event)"
-      (playbackQualityChange)="onPlaybackQualityChange($event)"
-      (playbackRateChange)="onPlaybackRateChange($event)"
-      (error)="onError($event)"
-      (apiChange)="onApiChange($event)">
-    </youtube-player>
+    @if (visible) {
+      <youtube-player #player [videoId]="videoId" [width]="width" [height]="height"
+        [startSeconds]="startSeconds" [endSeconds]="endSeconds" [suggestedQuality]="suggestedQuality"
+        [playerVars]="playerVars"
+        [disableCookies]="disableCookies"
+        (ready)="onReady($event)"
+        (stateChange)="onStateChange($event)"
+        (playbackQualityChange)="onPlaybackQualityChange($event)"
+        (playbackRateChange)="onPlaybackRateChange($event)"
+        (error)="onError($event)"
+        (apiChange)="onApiChange($event)">
+      </youtube-player>
+    }
   `,
 })
 class TestApp {

@@ -43,8 +43,9 @@ export class GoogleMapDemo {
             [zoom]="zoom"
             (mapClick)="addMarker($event)">
   <map-marker-clusterer [imagePath]="markerClustererImagePath">
-    <map-marker *ngFor="let markerPosition of markerPositions"
-                [position]="markerPosition"></map-marker>
+    @for (position of markerPositions; track position) {
+      <map-marker [position]="position"></map-marker>
+    }
   </map-marker-clusterer>
 </google-map>
 ```
