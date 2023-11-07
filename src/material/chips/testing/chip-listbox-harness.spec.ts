@@ -112,9 +112,11 @@ describe('MatChipListboxHarness', () => {
 @Component({
   template: `
     <mat-chip-listbox [multiple]="isMultiple" [disabled]="disabled" [required]="required">
-      <mat-chip-option *ngFor="let option of options" [selected]="option.selected">
-        {{option.text}}
-      </mat-chip-option>
+      @for (option of options; track option) {
+        <mat-chip-option [selected]="option.selected">
+          {{option.text}}
+        </mat-chip-option>
+      }
     </mat-chip-listbox>
   `,
 })

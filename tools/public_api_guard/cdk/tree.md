@@ -7,7 +7,6 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/collections';
@@ -18,7 +17,6 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -72,7 +70,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
     nodeOutlet: QueryList<CdkTreeNodeOutlet>;
     protected updateChildrenNodes(children?: T[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["nodeOutlet"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkNestedTreeNode<any, any>, never>;
 }
@@ -177,8 +175,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     _getPositionInSet(): number;
     _getSetSize(): number;
     isDisabled?: boolean;
-    get isExpandable(): boolean | '' | null;
-    set isExpandable(isExpandable: boolean | '' | null);
+    get isExpandable(): boolean;
+    set isExpandable(isExpandable: boolean);
     _isExpandable(): boolean;
     // (undocumented)
     get isExpanded(): boolean;
@@ -186,6 +184,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     // (undocumented)
     get level(): number;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
+    // (undocumented)
+    static ngAcceptInputType_isDisabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_isExpandable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_isExpanded: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -248,14 +252,16 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
     _indent: number;
     indentUnits: string;
     get level(): number;
-    set level(value: NumberInput);
+    set level(value: number);
     // (undocumented)
     _level: number;
+    // (undocumented)
+    static ngAcceptInputType_level: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     _paddingIndent(): string | null;
     protected _setIndentInput(indent: number | string): void;
-    protected _setLevelInput(value: NumberInput): void;
+    protected _setLevelInput(value: number): void;
     // (undocumented)
     _setPadding(forceChange?: boolean): void;
     // (undocumented)
@@ -267,10 +273,9 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
 // @public
 export class CdkTreeNodeToggle<T, K = T> {
     constructor(_tree: CdkTree<T, K>, _treeNode: CdkTreeNode<T, K>);
-    get recursive(): boolean;
-    set recursive(value: BooleanInput);
     // (undocumented)
-    protected _recursive: boolean;
+    static ngAcceptInputType_recursive: unknown;
+    recursive: boolean;
     // (undocumented)
     _toggle(event: Event): void;
     // (undocumented)

@@ -34,14 +34,14 @@ const DROP_PROXIMITY_THRESHOLD = 0.05;
 const SCROLL_PROXIMITY_THRESHOLD = 0.05;
 
 /** Vertical direction in which we can auto-scroll. */
-const enum AutoScrollVerticalDirection {
+enum AutoScrollVerticalDirection {
   NONE,
   UP,
   DOWN,
 }
 
 /** Horizontal direction in which we can auto-scroll. */
-const enum AutoScrollHorizontalDirection {
+enum AutoScrollHorizontalDirection {
   NONE,
   LEFT,
   RIGHT,

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
-import {NgFor, DatePipe} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {MatListModule} from '@angular/material/list';
 
 export interface Section {
@@ -17,7 +17,7 @@ export interface Section {
   styleUrls: ['list-sections-example.css'],
   templateUrl: 'list-sections-example.html',
   standalone: true,
-  imports: [MatListModule, NgFor, MatIconModule, MatDividerModule, DatePipe],
+  imports: [MatListModule, MatIconModule, MatDividerModule, DatePipe],
 })
 export class ListSectionsExample {
   folders: Section[] = [

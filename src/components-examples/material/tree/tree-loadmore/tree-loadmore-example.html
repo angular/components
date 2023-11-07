@@ -19,7 +19,7 @@
   </mat-tree-node>
 
   <mat-tree-node class="example-load-more" *matTreeNodeDef="let node; when: isLoadMore"
-    role="button" (click)="loadOnClick($event, node)"
+    role="treeitem" (click)="loadOnClick($event, node)"
     (keydown)="loadOnKeypress($event, node)">
     Load more of {{node.parent}}...
   </mat-tree-node>

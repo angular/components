@@ -7,7 +7,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 @Component({
   selector: 'expansion-overview-example',
   templateUrl: 'expansion-overview-example.html',
-  styleUrls: ['expansion-overview-example.css'],
   standalone: true,
   imports: [MatExpansionModule],
 })

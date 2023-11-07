@@ -60,7 +60,7 @@ export class MatExpansionPanelHarness extends ContentContainerComponentHarness<M
 }
 
 // @public
-export const enum MatExpansionPanelSection {
+export enum MatExpansionPanelSection {
     // (undocumented)
     CONTENT = ".mat-expansion-panel-content",
     // (undocumented)

@@ -1,7 +1,7 @@
 <mat-selection-list #shoes [multiple]="false">
-  <mat-list-option *ngFor="let shoe of typesOfShoes" [value]="shoe">
-    {{shoe}}
-  </mat-list-option>
+  @for (shoe of typesOfShoes; track shoe) {
+    <mat-list-option [value]="shoe">{{shoe}}</mat-list-option>
+  }
 </mat-selection-list>
 
 <p>

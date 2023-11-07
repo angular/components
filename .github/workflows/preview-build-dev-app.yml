@@ -22,19 +22,19 @@ jobs:
       (github.event.action == 'labeled' && github.event.label.name == 'dev-app preview') ||
       (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'dev-app preview'))
     steps:
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
-      - uses: ./.github/actions/yarn-install
-
-      - uses: angular/dev-infra/github-actions/setup-bazel-remote-exec@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e0ec7b60641d7f6369be45d8d02663fd50f320be
         with:
-          bazelrc: ./.bazelrc.user
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@e0ec7b60641d7f6369be45d8d02663fd50f320be
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e0ec7b60641d7f6369be45d8d02663fd50f320be
 
-      # Build the web package. Note: We run Bazel from a low-resource Github action container,
-      # so we manually need to instruct Bazel to run more actions concurrently as by default
-      # the number of concurrent actions is determined based on the host resources.
-      - run: bazel build //src/dev-app:web_package --symlink_prefix=dist/ --jobs=32
+      # Build the web package
+      - run: bazel build //src/dev-app:web_package --symlink_prefix=dist/
 
-      - uses: angular/dev-infra/github-actions/previews/pack-and-upload-artifact@fb30926790c6225d553b91a4818cab2fdde4fb4e
+      - uses: angular/dev-infra/github-actions/previews/pack-and-upload-artifact@e0ec7b60641d7f6369be45d8d02663fd50f320be
         with:
           workflow-artifact-name: 'dev-app'
           pull-number: '${{github.event.pull_request.number}}'

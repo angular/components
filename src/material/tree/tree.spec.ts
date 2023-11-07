@@ -993,9 +993,11 @@ class NestedMatTreeApp {
        <mat-nested-tree-node *matTreeNodeDef="let node; when: isSpecial"
                              matTreeNodeToggle>
                      >>> {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <div *ngIf="isExpanded(node)">
-            <ng-template matTreeNodeOutlet></ng-template>
-         </div>
+         @if (isExpanded(node)) {
+            <div>
+              <ng-template matTreeNodeOutlet></ng-template>
+            </div>
+         }
       </mat-nested-tree-node>
     </mat-tree>
   `,
@@ -1053,9 +1055,11 @@ class MatTreeAppWithToggle {
                             matTreeNodeToggle
                             [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-        <div *ngIf="isExpanded(node)">
-          <ng-template matTreeNodeOutlet></ng-template>
-        </div>
+        @if (isExpanded(node)) {
+          <div>
+            <ng-template matTreeNodeOutlet></ng-template>
+          </div>
+        }
       </mat-nested-tree-node>
     </mat-tree>
   `,

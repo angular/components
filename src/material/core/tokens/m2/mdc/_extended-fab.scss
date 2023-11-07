@@ -8,6 +8,9 @@ $prefix: (mdc, extended-fab);
 
 @function get-unthemable-tokens() {
   @return (
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
     container-color: null,
     container-elevation: null,
     container-height: null,

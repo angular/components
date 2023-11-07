@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -10,7 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'select-reset-example',
   templateUrl: 'select-reset-example.html',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, NgFor, MatInputModule, FormsModule],
+  imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
 })
 export class SelectResetExample {
   states: string[] = [

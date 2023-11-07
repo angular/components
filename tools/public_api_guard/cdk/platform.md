@@ -56,7 +56,7 @@ export class PlatformModule {
 }
 
 // @public
-export const enum RtlScrollAxisType {
+export enum RtlScrollAxisType {
     INVERTED = 2,
     NEGATED = 1,
     NORMAL = 0

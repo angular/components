@@ -22,6 +22,8 @@ import {
   IterableDiffers,
   OnDestroy,
   OnInit,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
 import {CanDisable, HasTabIndex} from '@angular/material/core';
 import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
@@ -42,7 +44,6 @@ function isLegacyTreeKeyManager<T extends TreeKeyManagerItem>(
 @Directive({
   selector: 'mat-tree-node',
   exportAs: 'matTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex', 'isExpandable', 'isExpanded', 'isDisabled'],
   outputs: ['activation', 'expandedChange'],
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}],
   host: {
@@ -69,13 +70,10 @@ export class MatTreeNode<T, K = T>
    *   an unexpected state. Tabindex to be removed in a future version.
    * @breaking-change 19.0.0 Remove this attribute.
    */
-  get tabIndex(): number {
-    return this.isDisabled ? -1 : this._tabIndex;
-  }
-  set tabIndex(value: number) {
-    // If the specified tabIndex value is null or undefined, fall back to the default value.
-    this._tabIndex = value != null ? coerceNumberProperty(value) : this.defaultTabIndex;
-  }
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number;
 
   /**
    * The default tabindex of the tree node.
@@ -100,11 +98,12 @@ export class MatTreeNode<T, K = T>
    * @deprecated This is an alias for `isDisabled`.
    * @breaking-change 19.0.0 Remove this input
    */
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this.isDisabled ?? false;
   }
-  set disabled(value: BooleanInput) {
-    this.isDisabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this.isDisabled = value;
   }
 
   constructor(
@@ -155,7 +154,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 @Directive({
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex', 'isExpandable', 'isExpanded', 'isDisabled'],
   outputs: ['activation', 'expandedChange'],
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
@@ -173,7 +171,7 @@ export class MatNestedTreeNode<T, K = T>
   @Input('matNestedTreeNode') node: T;
 
   /**
-   * Whether the component is disabled.
+   * Whether the node is disabled.
    *
    * @deprecated This is an alias for `isDisabled`.
    * @breaking-change 19.0.0 Remove this input
@@ -184,6 +182,17 @@ export class MatNestedTreeNode<T, K = T>
   set disabled(value: BooleanInput) {
     this.isDisabled = coerceBooleanProperty(value);
   }
+
+  /** Tabindex for the node. */
+  @Input()
+  get tabIndex(): number {
+    return this.disabled ? -1 : this._tabIndex;
+  }
+  set tabIndex(value: number) {
+    // If the specified tabIndex value is null or undefined, fall back to the default value.
+    this._tabIndex = value != null ? value : 0;
+  }
+  private _tabIndex: number;
 
   constructor(
     elementRef: ElementRef<HTMLElement>,

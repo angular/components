@@ -1501,16 +1501,15 @@ class SimpleCdkTreeApp {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel"
-        nodeType="flat">
-      <ng-container [ngSwitch]="true">
+    <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+      @if (true) {
         <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                       cdkTreeNodePadding [cdkTreeNodePaddingIndent]="indent"
                       cdkTreeNodeToggle
                       [isExpandable]="isExpandable(node)">
                       {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
         </cdk-tree-node>
-      </ng-container>
+      }
     </cdk-tree>
   `,
 })
@@ -1626,9 +1625,11 @@ class CdkTreeAppWithToggle {
                             cdkTreeNodeToggle
                             [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-        <div *ngIf="tree.isExpanded(node)">
+        @if (tree.isExpanded(node)) {
+<div>
           <ng-template cdkTreeNodeOutlet></ng-template>
         </div>
+}
       </cdk-nested-tree-node>
     </cdk-tree>
   `,

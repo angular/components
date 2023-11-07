@@ -13,7 +13,6 @@ import {
   TreeKeyManagerStrategy,
 } from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   CollectionViewer,
   DataSource,
@@ -43,7 +42,9 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   inject,
+  numberAttribute,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -1119,15 +1120,15 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    * If not using `FlatTreeControl`, or if `isExpandable` is not provided to
    * `NestedTreeControl`, this should be provided for correct node a11y.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get isExpandable() {
     return this._isExpandable();
   }
-  set isExpandable(isExpandable: boolean | '' | null) {
-    this._inputIsExpandable = coerceBooleanProperty(isExpandable);
+  set isExpandable(isExpandable: boolean) {
+    this._inputIsExpandable = isExpandable;
   }
 
-  @Input()
+  @Input({transform: booleanAttribute})
   get isExpanded(): boolean {
     return this._tree.isExpanded(this._data);
   }
@@ -1143,7 +1144,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    * Whether or not this node is disabled. If it's disabled, then the user won't be able to focus
    * or activate this node.
    */
-  @Input() isDisabled?: boolean;
+  @Input({transform: booleanAttribute}) isDisabled?: boolean;
 
   /** This emits when the node has been programatically activated or activated by keyboard. */
   @Output()
@@ -1323,7 +1324,7 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
       return -1;
     }
   } else if (parent.classList.contains('cdk-nested-tree-node')) {
-    return coerceNumberProperty(parent.getAttribute('aria-level')!);
+    return numberAttribute(parent.getAttribute('aria-level')!);
   } else {
     // The ancestor element is the cdk-tree itself
     return 0;

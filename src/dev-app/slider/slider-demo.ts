@@ -17,7 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {ThemePalette} from '@angular/material/core';
 
 interface DialogData {
-  color: string;
+  color: ThemePalette;
   discrete: boolean;
   showTickMarks: boolean;
 }

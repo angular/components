@@ -1,3 +1,41 @@
+<a name="17.0.0-rc.3"></a>
+# 17.0.0-rc.3 "vandium-vest" (2023-11-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0b38dede](https://github.com/angular/components/commit/c0b38dede8806629a7c9c5319c707aaeedd6812c) | perf | **a11y:** Don't trigger re-layout when detecting fake mousedown ([#28029](https://github.com/angular/components/pull/28029)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [157c0e28f](https://github.com/angular/components/commit/157c0e28f7c8170433fafcd57cc70fb63cc57ff4) | fix | **schematics:** asyncPipe not imported but used in the template ([#28055](https://github.com/angular/components/pull/28055)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.0.0-rc.2"></a>
+# 17.0.0-rc.2 "beryllium-brilliance" (2023-11-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b361de136b](https://github.com/angular/components/commit/b361de136b40377ce07430f9f2cf8111ffd300ca) | fix | **accordion:** add `CDK_ACCORDION` export ([#27981](https://github.com/angular/components/pull/27981)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fcaa95e695](https://github.com/angular/components/commit/fcaa95e6955d05773037650f48eb50efc445b24c) | fix | **core:** prevent updates to v17 if project uses legacy components ([#28024](https://github.com/angular/components/pull/28024)) |
+| [c4a62a884f](https://github.com/angular/components/commit/c4a62a884f9eabeacdfd299a91deccc9003fc34c) | fix | **dialog:** MatDialog: change member _dialog (cdk) from private to protected ([#28019](https://github.com/angular/components/pull/28019)) ([#28020](https://github.com/angular/components/pull/28020)) |
+| [7a42a5de98](https://github.com/angular/components/commit/7a42a5de9888fcd2dc459c3887a167860d0726fd) | fix | **schematics:** account for browser-esbuild builder ([#28025](https://github.com/angular/components/pull/28025)) |
+| [9fe4fe1f54](https://github.com/angular/components/commit/9fe4fe1f54f8dab72d4291e2dbee96dc8ade62b6) | fix | **schematics:** don't add the preconnect for fonts ([#28026](https://github.com/angular/components/pull/28026)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.2.11"></a>
+# 16.2.11 "fabric-fantasy" (2023-11-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2f468f1606](https://github.com/angular/components/commit/2f468f160604a50141048afe75c829bc6b8c85b1) | fix | **accordion:** add `CDK_ACCORDION` export ([#27981](https://github.com/angular/components/pull/27981)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.10"></a>
 # 16.2.10 "plaster-pineapple" (2023-10-25)
 ### material

@@ -23,35 +23,21 @@ import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
 import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
-import {mixinColor, CanColor} from '@angular/material/core';
-
-// Boilerplate for applying mixins to MatStepHeader.
-/** @docs-private */
-const _MatStepHeaderBase = mixinColor(
-  class MatStepHeaderBase extends CdkStepHeader {
-    constructor(elementRef: ElementRef) {
-      super(elementRef);
-    }
-  },
-  'primary',
-);
+import {ThemePalette} from '@angular/material/core';
 
 @Component({
   selector: 'mat-step-header',
   templateUrl: 'step-header.html',
   styleUrls: ['step-header.css'],
-  inputs: ['color'],
   host: {
     'class': 'mat-step-header',
+    '[class]': '"mat-" + (color || "primary")',
     'role': 'tab',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatStepHeader
-  extends _MatStepHeaderBase
-  implements AfterViewInit, OnDestroy, CanColor
-{
+export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
@@ -80,6 +66,9 @@ export class MatStepHeader
 
   /** Whether the ripple should be disabled. */
   @Input() disableRipple: boolean;
+
+  /** Theme palette color of the step header. */
+  @Input() color: ThemePalette;
 
   constructor(
     public _intl: MatStepperIntl,

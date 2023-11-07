@@ -60,7 +60,7 @@ export interface IconHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export const enum IconType {
+export enum IconType {
     // (undocumented)
     FONT = 1,
     // (undocumented)

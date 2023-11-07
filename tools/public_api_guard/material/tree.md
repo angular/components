@@ -23,7 +23,6 @@ import * as i0 from '@angular/core';
 import * as i6 from '@angular/cdk/tree';
 import * as i7 from '@angular/material/core';
 import { IterableDiffers } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -44,8 +43,10 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> impleme
     ngOnInit(): void;
     // (undocumented)
     node: T;
+    get tabIndex(): number;
+    set tabIndex(value: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNestedTreeNode<any, any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; "node": { "alias": "matNestedTreeNode"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNestedTreeNode<any, any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "node": { "alias": "matNestedTreeNode"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatNestedTreeNode<any, any>, [null, null, null, { attribute: "tabindex"; }]>;
 }
@@ -119,18 +120,21 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements CanDisab
     defaultTabIndex: number;
     // @deprecated
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     // (undocumented)
     protected _getTabindexAttribute(): number;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     // @deprecated
-    get tabIndex(): number;
-    set tabIndex(value: number);
+    tabIndex: number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNode<any, any>, "mat-tree-node", ["matTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNode<any, any>, "mat-tree-node", ["matTreeNode"], { "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNode<any, any>, [null, null, { attribute: "tabindex"; }]>;
 }
@@ -163,7 +167,9 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
     get indent(): number | string;
     set indent(indent: number | string);
     get level(): number;
-    set level(value: NumberInput);
+    set level(value: number);
+    // (undocumented)
+    static ngAcceptInputType_level: unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodePadding<any, any>, "[matTreeNodePadding]", never, { "level": { "alias": "matTreeNodePadding"; "required": false; }; "indent": { "alias": "matTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)

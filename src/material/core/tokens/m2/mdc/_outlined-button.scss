@@ -1,9 +1,9 @@
 @use 'sass:map';
 @use '../../token-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
+@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, outlined-button);
@@ -21,6 +21,9 @@ $prefix: (mdc, outlined-button);
     outline-width: 1px,
     container-shape: 4px,
 
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
     hover-state-layer-opacity: null,
     focus-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
@@ -55,24 +58,30 @@ $prefix: (mdc, outlined-button);
   );
 }
 
-@function _on-color($theme, $palette) {
-  @if ($palette) {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    @return if(mdc-helpers.variable-safe-contrast-tone($palette, $is-dark) == 'dark', #000, #fff);
-  }
-}
-
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color: null, $on-color: null) {
+@function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $surface: inspection.get-theme-color($theme, background, card);
-  $on-surface: _on-color($theme, $surface);
+  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($surface, $is-dark);
+  $on-surface: if($contrast-tone == 'dark', #000, #fff);
 
   @return (
     disabled-outline-color: rgba($on-surface, 0.12),
     disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
-    label-text-color: if($color, $color, inherit),
+    label-text-color: if($is-dark, #fff, #000),
     outline-color: rgba($on-surface, 0.12)
+  );
+}
+
+// Generates the mapping for the properties that change based on the button palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  @return (
+    label-text-color: inspection.get-theme-color($theme, $palette-name, default),
+
+    // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
+    // there are a bunch of tests internally that depend on it. We should remove this and clean
+    // up the screenshots separately.
+    outline-color: map.get(get-color-tokens($theme), outline-color),
   );
 }
 

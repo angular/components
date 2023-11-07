@@ -45,7 +45,7 @@ export class MatGridTileHarness extends ContentContainerComponentHarness<MatGrid
 }
 
 // @public
-export const enum MatGridTileSection {
+export enum MatGridTileSection {
     // (undocumented)
     FOOTER = ".mat-grid-tile-footer",
     // (undocumented)

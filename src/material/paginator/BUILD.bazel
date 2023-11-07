@@ -18,7 +18,6 @@ ng_module(
     ),
     assets = [":paginator.css"] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/coercion",
         "//src/material/button",
         "//src/material/core",
         "//src/material/select",

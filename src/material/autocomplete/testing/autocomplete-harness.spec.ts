@@ -156,15 +156,19 @@ describe('MatAutocompleteHarness', () => {
 @Component({
   template: `
     <mat-autocomplete #autocomplete="matAutocomplete">
-      <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
+      @for (state of states; track state) {
+        <mat-option [value]="state.code">{{ state.name }}</mat-option>
+      }
     </mat-autocomplete>
 
     <mat-autocomplete #groupedAutocomplete="matAutocomplete">
-      <mat-optgroup *ngFor="let group of stateGroups" [label]="group.name">
-        <mat-option
-          *ngFor="let state of group.states"
-          [value]="state.code">{{ state.name }}</mat-option>
-      </mat-optgroup>
+      @for (group of stateGroups; track group) {
+        <mat-optgroup [label]="group.name">
+          @for (state of group.states; track state) {
+            <mat-option [value]="state.code">{{ state.name }}</mat-option>
+          }
+        </mat-optgroup>
+      }
     </mat-autocomplete>
 
     <input id="plain" [matAutocomplete]="autocomplete">

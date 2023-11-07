@@ -14,7 +14,7 @@ import {
 import {CardHarnessFilters} from './card-harness-filters';
 
 /** Selectors for different sections of the mat-card that can container user content. */
-export const enum MatCardSection {
+export enum MatCardSection {
   HEADER = '.mat-mdc-card-header',
   CONTENT = '.mat-mdc-card-content',
   ACTIONS = '.mat-mdc-card-actions',

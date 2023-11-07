@@ -19,7 +19,6 @@ ng_module(
     assets = [":radio_scss"] + glob(["**/*.html"]),
     deps = [
         "//src/cdk/a11y",
-        "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/material/core",
         "@npm//@angular/forms",

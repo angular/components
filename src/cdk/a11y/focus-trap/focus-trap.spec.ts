@@ -339,10 +339,12 @@ class SimpleFocusTrap {
 
 const AUTO_FOCUS_TEMPLATE = `
   <button type="button">Toggle</button>
-  <div *ngIf="showTrappedRegion" cdkTrapFocus [cdkTrapFocusAutoCapture]="autoCaptureEnabled">
-    <input id="auto-capture-target">
-    <button>SAVE</button>
-  </div>
+  @if (showTrappedRegion) {
+    <div cdkTrapFocus [cdkTrapFocusAutoCapture]="autoCaptureEnabled">
+      <input id="auto-capture-target">
+      <button>SAVE</button>
+    </div>
+  }
 `;
 
 @Component({template: AUTO_FOCUS_TEMPLATE})
@@ -360,11 +362,13 @@ class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {}
 
 @Component({
   template: `
-    <div *ngIf="renderFocusTrap" [cdkTrapFocus]="_isFocusTrapEnabled">
-      <input>
-      <button>SAVE</button>
-    </div>
-    `,
+    @if (renderFocusTrap) {
+      <div [cdkTrapFocus]="_isFocusTrapEnabled">
+        <input>
+        <button>SAVE</button>
+      </div>
+    }
+  `,
 })
 class FocusTrapWithBindings {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
