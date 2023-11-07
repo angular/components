@@ -1,5 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import {MatMenuTrigger, MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 /**
@@ -9,7 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'dialog-from-menu-example',
   templateUrl: 'dialog-from-menu-example.html',
   standalone: true,
-  imports: [MatButtonModule, MatMenuModule, MatDialogModule],
+  imports: [MatButtonModule, MatMenuModule],
 })
 export class DialogFromMenuExample {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
@@ -31,6 +36,6 @@ export class DialogFromMenuExample {
   selector: 'dialog-from-menu-dialog',
   templateUrl: 'dialog-from-menu-example-dialog.html',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
 })
 export class DialogFromMenuExampleDialog {}
