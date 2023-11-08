@@ -17,22 +17,20 @@ import {
 /**
  * @docs-private
  *
- * @deprecated LegacyTreeKeyManager deprecated. Use TreeKeyManager or inject a
+ * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
  * @breaking-change 19.0.0
  */
-// LegacyTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
+// NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
 // not emit to streams.
 //
 // Used for applications built before TreeKeyManager to opt-out of TreeKeyManager and revert to
 // legacy behavior.
-export class LegacyTreeKeyManager<T extends TreeKeyManagerItem>
-  implements TreeKeyManagerStrategy<T>
-{
-  readonly _isLegacyTreeKeyManager = true;
+export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
+  readonly _isNoopTreeKeyManager = true;
 
-  // Provide change as required by TreeKeyManagerStrategy. LegacyTreeKeyManager is a "noop"
+  // Provide change as required by TreeKeyManagerStrategy. NoopTreeKeyManager is a "noop"
   // implementation that does not emit to streams.
   readonly change = new Subject<T | null>();
 
@@ -41,13 +39,13 @@ export class LegacyTreeKeyManager<T extends TreeKeyManagerItem>
   }
 
   getActiveItemIndex() {
-    // Always return null. LegacyTreeKeyManager is a "noop" implementation that does not maintain
+    // Always return null. NoopTreeKeyManager is a "noop" implementation that does not maintain
     // the active item.
     return null;
   }
 
   getActiveItem() {
-    // Always return null. LegacyTreeKeyManager is a "noop" implementation that does not maintain
+    // Always return null. NoopTreeKeyManager is a "noop" implementation that does not maintain
     // the active item.
     return null;
   }
@@ -64,7 +62,7 @@ export class LegacyTreeKeyManager<T extends TreeKeyManagerItem>
 /**
  * @docs-private
  *
- * @deprecated LegacyTreeKeyManager deprecated. Use TreeKeyManager or inject a
+ * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
  * @breaking-change 19.0.0
@@ -72,13 +70,13 @@ export class LegacyTreeKeyManager<T extends TreeKeyManagerItem>
 export function LEGACY_TREE_KEY_MANAGER_FACTORY<
   T extends TreeKeyManagerItem,
 >(): TreeKeyManagerFactory<T> {
-  return () => new LegacyTreeKeyManager<T>();
+  return () => new NoopTreeKeyManager<T>();
 }
 
 /**
  * @docs-private
  *
- * @deprecated LegacyTreeKeyManager deprecated. Use TreeKeyManager or inject a
+ * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
  * @breaking-change 19.0.0
