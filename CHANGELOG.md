@@ -1,3 +1,16 @@
+<a name="16.2.12"></a>
+# 16.2.12 "practical-pinecone" (2023-11-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3b6f023d8](https://github.com/angular/components/commit/3b6f023d83e757a28ae6c27b5a73703d33a0e57d) | perf | **a11y:** Don't trigger re-layout when detecting fake mousedown ([#28029](https://github.com/angular/components/pull/28029)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fb64fe6b5](https://github.com/angular/components/commit/fb64fe6b55a09e877bb370b62770cd7ef4a884e6) | fix | **schematics:** asyncPipe not imported but used in the template ([#28055](https://github.com/angular/components/pull/28055)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0-rc.3"></a>
 # 17.0.0-rc.3 "vandium-vest" (2023-11-06)
 ### cdk
