@@ -40,7 +40,7 @@ publishPackage() {
 
   buildDir="$(pwd)/dist/releases/${packageName}"
   buildVersion=$(node -pe "require('./package.json').version")
-  branchName=${CIRCLE_BRANCH:-'main'}
+  branchName=${GITHUB_REF_NAME:-'main'}
 
   commitSha=$(git rev-parse --short HEAD)
   commitAuthorName=$(git --no-pager show -s --format='%an' HEAD)
