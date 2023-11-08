@@ -46,6 +46,7 @@ html {
   @include mat.snack-bar-theme($light-theme);
   @include mat.toolbar-theme($light-theme);
   @include mat.tooltip-theme($light-theme);
+  @include mat.tree-theme($light-theme);
 }
 
 // Emit dark theme styles.
@@ -64,6 +65,7 @@ html {
   @include mat.snack-bar-color($dark-theme);
   @include mat.toolbar-color($dark-theme);
   @include mat.tooltip-color($dark-theme);
+  @include mat.tree-color($dark-theme);
 }
 
 // Emit density styles for each scale.
@@ -81,5 +83,6 @@ html {
     @include mat.snack-bar-density($scale-theme);
     @include mat.toolbar-density($scale-theme);
     @include mat.tooltip-density($scale-theme);
+    @include mat.tree-density($scale-theme);
   }
 }

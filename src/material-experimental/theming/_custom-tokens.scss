@@ -83,3 +83,17 @@
     disabled-label-color: map.get($systems, md-sys-color, on-surface),
   );
 }
+
+/// Generates custom tokens for the mat-tree.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-tree
+@function tree($systems, $exclude-hardcoded) {
+  @return (
+    container-background-color: map.get($systems, md-sys-color, surface),
+    node-text-color: map.get($systems, md-sys-color, on-surface),
+    node-text-font: map.get($systems, md-sys-typescale, body-large-font),
+    node-text-size: map.get($systems, md-sys-typescale, body-large-size),
+    node-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
+  );
+}

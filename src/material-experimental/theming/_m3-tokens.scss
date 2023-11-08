@@ -254,6 +254,11 @@
           custom-tokens.radio($systems, $exclude-hardcoded),
           $token-slots
       ),
+      _namespace-tokens(
+            (mat, tree),
+          custom-tokens.tree($systems, $exclude-hardcoded),
+          $token-slots
+      ),
   );
 
   // Strip out tokens that are systemized by our made up density system.
