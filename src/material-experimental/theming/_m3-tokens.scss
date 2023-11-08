@@ -199,6 +199,11 @@
           $token-slots,
       ),
       _namespace-tokens(
+            (mdc, switch),
+          mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
+          $token-slots
+      ),
+      _namespace-tokens(
             (mdc, plain-tooltip),
           mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
           $token-slots
@@ -228,6 +233,11 @@
             (mat, toolbar),
           custom-tokens.toolbar($systems, $exclude-hardcoded),
           $token-slots,
+      ),
+      _namespace-tokens(
+            (mat, slide-toggle),
+          custom-tokens.slide-toggle($systems, $exclude-hardcoded),
+          $token-slots
       ),
       _namespace-tokens(
             (mat, slider),
