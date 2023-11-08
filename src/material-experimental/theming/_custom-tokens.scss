@@ -44,6 +44,14 @@
   );
 }
 
+/// Generates custom tokens for the mat-slide-toggle.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-slide-toggle
+@function slide-toggle($systems, $exclude-hardcoded) {
+  @return _generate-typography-tokens($systems, label-text, label-large);
+}
+
 /// Generates custom tokens for the mat-slider.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
