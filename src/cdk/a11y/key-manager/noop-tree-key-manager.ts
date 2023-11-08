@@ -14,6 +14,11 @@ import {
   TreeKeyManagerStrategy,
 } from './tree-key-manager';
 
+// NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
+// not emit to streams.
+//
+// Used for applications built before TreeKeyManager to opt-out of TreeKeyManager and revert to
+// legacy behavior.
 /**
  * @docs-private
  *
@@ -22,11 +27,6 @@ import {
  *
  * @breaking-change 19.0.0
  */
-// NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
-// not emit to streams.
-//
-// Used for applications built before TreeKeyManager to opt-out of TreeKeyManager and revert to
-// legacy behavior.
 export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
   readonly _isNoopTreeKeyManager = true;
 

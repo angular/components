@@ -441,7 +441,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       });
   }
 
-  //// Navigational methods
   private _findNextAvailableItemIndex(startingIndex: number) {
     for (let i = startingIndex + 1; i < this._items.length; i++) {
       if (!this._skipPredicateFn(this._items[i])) {
