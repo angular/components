@@ -12,7 +12,8 @@ import {
 } from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '../../testing/private';
 import {QueryList} from '@angular/core';
-import {TreeKeyManager, TreeKeyManagerItem} from './tree-key-manager';
+import {TreeKeyManager} from './tree-key-manager';
+import {TreeKeyManagerItem} from './tree-key-manager-strategy';
 import {Observable, of as observableOf, Subscription} from 'rxjs';
 import {fakeAsync, tick} from '@angular/core/testing';
 

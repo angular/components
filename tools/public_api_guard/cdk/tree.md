@@ -175,8 +175,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     _getPositionInSet(): number;
     _getSetSize(): number;
     isDisabled: boolean;
-    get isExpandable(): boolean | '' | null;
-    set isExpandable(isExpandable: boolean | '' | null);
+    get isExpandable(): boolean;
+    set isExpandable(isExpandable: boolean);
     _isExpandable(): boolean;
     // (undocumented)
     get isExpanded(): boolean;
@@ -186,6 +186,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     // (undocumented)
     static ngAcceptInputType_isDisabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_isExpandable: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -273,9 +275,7 @@ export class CdkTreeNodeToggle<T, K = T> {
     static ngAcceptInputType_recursive: unknown;
     recursive: boolean;
     // (undocumented)
-    _toggle(event: Event): void;
-    // (undocumented)
-    _toggleOnEnterOrSpace(event: KeyboardEvent): void;
+    _toggle(): void;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)

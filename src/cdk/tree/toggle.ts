@@ -7,7 +7,6 @@
  */
 
 import {Directive, Input, booleanAttribute} from '@angular/core';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 import {CdkTree, CdkTreeNode} from './tree';
 
@@ -20,8 +19,9 @@ import {CdkTree, CdkTreeNode} from './tree';
 @Directive({
   selector: '[cdkTreeNodeToggle]',
   host: {
-    '(click)': '_toggle($event)',
-    '(keydown)': '_toggleOnEnterOrSpace($event)',
+    '(click)': '_toggle(); $event.stopPropagation();',
+    '(keydown.Enter)': '_toggle(); $event.preventDefault();',
+    '(keydown.Space)': '_toggle(); $event.preventDefault();',
     'tabindex': '-1',
   },
   standalone: true,
@@ -40,20 +40,11 @@ export class CdkTreeNodeToggle<T, K = T> {
   //
   // Focus this node with expanding or collapsing it. This ensures that the active node will always
   // be visible when expanding and collapsing.
-  _toggle(event: Event): void {
+  _toggle(): void {
     this.recursive
       ? this._tree.toggleDescendants(this._treeNode.data)
       : this._tree.toggle(this._treeNode.data);
 
     this._tree._keyManager.focusItem(this._treeNode);
-
-    event.stopPropagation();
-  }
-
-  _toggleOnEnterOrSpace(event: KeyboardEvent) {
-    if (event.keyCode === ENTER || event.keyCode === SPACE) {
-      this._toggle(event);
-      event.preventDefault();
-    }
   }
 }
