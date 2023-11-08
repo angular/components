@@ -22,11 +22,11 @@
 /// @return {Map} A set of custom tokens for the mat-card
 @function card($systems, $exclude-hardcoded) {
   @return mat.private-merge-all(
-      _generate-typography-tokens($systems, title-text, title-large),
-      _generate-typography-tokens($systems, subtitle-text, title-medium),
-      (
-        subtitle-text-color: map.get($systems, md-sys-color, on-surface)
-      )
+    _generate-typography-tokens($systems, title-text, title-large),
+    _generate-typography-tokens($systems, subtitle-text, title-medium),
+    (
+      subtitle-text-color: map.get($systems, md-sys-color, on-surface)
+    )
   );
 }
 
@@ -36,11 +36,11 @@
 /// @return {Map} A set of custom tokens for the mat-toolbar
 @function toolbar($systems, $exclude-hardcoded) {
   @return mat.private-merge-all(
-      _generate-typography-tokens($systems, title-text, title-large),
-      (
-        container-background-color: map.get($systems, md-sys-color, surface),
-        container-text-color: map.get($systems, md-sys-color, on-surface),
-      )
+    _generate-typography-tokens($systems, title-text, title-large),
+    (
+      container-background-color: map.get($systems, md-sys-color, surface),
+      container-text-color: map.get($systems, md-sys-color, on-surface),
+    )
   );
 }
 
@@ -81,6 +81,44 @@
     ripple-color: map.get($systems, md-sys-color, on-surface),
     checked-ripple-color: map.get($systems, md-sys-color, primary),
     disabled-label-color: map.get($systems, md-sys-color, on-surface),
+  );
+}
+
+/// Generates custom tokens for the mat-tab-header.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-tab-header
+@function tab-header($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    _generate-typography-tokens($systems, label-text, title-small),
+    (
+      disabled-ripple-color: transparent, // TODO(mmalerba): Figure out correct value.
+      pagination-icon-color: map.get($systems, md-sys-color, on-surface),
+      inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-ripple-color: map.get($systems, md-sys-color, on-surface),
+      inactive-ripple-color: map.get($systems, md-sys-color, on-surface),
+      inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+      inactive-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-focus-label-text-color: map.get($systems, md-sys-color, primary),
+      active-hover-label-text-color: map.get($systems, md-sys-color, primary),
+      active-focus-indicator-color: map.get($systems, md-sys-color, primary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, primary),
+    ),
+  );
+}
+
+/// Generates custom tokens for the mdc-tab-indicator. (MDC has a tab-indicator component, but they
+/// seem to have made up the tokens rather than using ones generated from the token database,
+/// therefore we need a custom token function for it).
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mdc-tab-indicator
+@function tab-indicator($systems, $exclude-hardcoded) {
+  @return (
+    active-indicator-height: 2px,
+    active-indicator-shape: 0,
+    active-indicator-color: map.get($systems, md-sys-color, primary),
   );
 }
 
