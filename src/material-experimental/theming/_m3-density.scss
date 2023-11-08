@@ -29,6 +29,7 @@ $_density-tokens: (
     state-layer-size: (40px, 36px, 32px, 28px),
   ),
     (mdc, linear-progress): (),
+    (mdc, switch): (),
   // Custom Angular Material tokens
     (mat, card): (),
     (mat, toolbar): (
@@ -38,6 +39,7 @@ $_density-tokens: (
     (mat, slider): (),
     (mat, snack-bar): (),
     (mat, radio): (),
+    (mat, slide-toggle): (),
 );
 
 /// Gets the value for the given density scale from the given set of density values.
