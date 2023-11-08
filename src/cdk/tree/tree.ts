@@ -13,7 +13,6 @@ import {
   TreeKeyManagerStrategy,
 } from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   CollectionViewer,
   DataSource,
@@ -85,10 +84,6 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
     return observableOf(data);
   }
   return data;
-}
-
-function isNotNullish<T>(val: T | null | undefined): val is T {
-  return val != null;
 }
 
 /**
@@ -264,13 +259,24 @@ export class CdkTree<T, K = T>
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      const provided = [this.treeControl, this.levelAccessor, this.childrenAccessor].filter(
-        value => !!value,
-      ).length;
-      if (provided > 1) {
-        throw getMultipleTreeControlsError();
-      } else if (provided === 0) {
+      // Verify that Tree follows API contract of using one of TreeControl, levelAccessor or
+      // childrenAccessor. Throw an appropriate error if contract is not met.
+      let numTreeControls = 0;
+
+      if (this.treeControl) {
+        numTreeControls++;
+      }
+      if (this.levelAccessor) {
+        numTreeControls++;
+      }
+      if (this.childrenAccessor) {
+        numTreeControls++;
+      }
+
+      if (!numTreeControls) {
         throw getTreeControlMissingError();
+      } else if (numTreeControls > 1) {
+        throw getMultipleTreeControlsError();
       }
     }
   }
@@ -294,8 +300,14 @@ export class CdkTree<T, K = T>
 
   ngAfterContentInit() {
     const items = combineLatest([this._keyManagerNodes, this._nodes]).pipe(
-      map(([dataNodes, nodes]) =>
-        dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
+      map(([keyManagerNodes, renderNodes]) =>
+        keyManagerNodes.reduce<CdkTreeNode<T, K>[]>((items, data) => {
+          const node = renderNodes.get(this._getExpansionKey(data));
+          if (node) {
+            items.push(node);
+          }
+          return items;
+        }, []),
       ),
     );
 
@@ -546,10 +558,7 @@ export class CdkTree<T, K = T>
     // Otherwise, use the level of parent node.
     if (levelAccessor) {
       context.level = levelAccessor(nodeData);
-    } else if (
-      typeof parentData !== 'undefined' &&
-      this._levels.has(this._getExpansionKey(parentData))
-    ) {
+    } else if (parentData !== undefined && this._levels.has(this._getExpansionKey(parentData))) {
       context.level = this._levels.get(this._getExpansionKey(parentData))! + 1;
     } else {
       context.level = 0;
@@ -803,9 +812,14 @@ export class CdkTree<T, K = T>
   _getNodeChildren(node: CdkTreeNode<T, K>) {
     return this._getDirectChildren(node.data).pipe(
       map(children =>
-        children
-          .map(child => this._nodes.value.get(this._getExpansionKey(child)))
-          .filter(isNotNullish),
+        children.reduce<CdkTreeNode<T, K>[]>((nodes, child) => {
+          const value = this._nodes.value.get(this._getExpansionKey(child));
+          if (value) {
+            nodes.push(value);
+          }
+
+          return nodes;
+        }, []),
       ),
     );
   }
@@ -1121,12 +1135,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    * If not using `FlatTreeControl`, or if `isExpandable` is not provided to
    * `NestedTreeControl`, this should be provided for correct node a11y.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get isExpandable() {
     return this._isExpandable();
   }
-  set isExpandable(isExpandable: boolean | '' | null) {
-    this._inputIsExpandable = coerceBooleanProperty(isExpandable);
+  set isExpandable(isExpandable: boolean) {
+    this._inputIsExpandable = isExpandable;
   }
 
   @Input()

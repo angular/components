@@ -23,7 +23,6 @@ import {map} from 'rxjs/operators';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
-import {ENTER} from '@angular/cdk/keycodes';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
@@ -316,7 +315,7 @@ describe('CdkTree redesign', () => {
         );
 
         (getNodes(treeElement)[2] as HTMLElement)!.dispatchEvent(
-          createKeyboardEvent('keydown', ENTER),
+          createKeyboardEvent('keydown', undefined, 'Enter'),
         );
         fixture.detectChanges();
 

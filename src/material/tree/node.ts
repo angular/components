@@ -25,17 +25,15 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
-import {CanDisable, HasTabIndex} from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {LegacyTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
+import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
 
 /**
- * Determinte if argument TreeKeyManager is the LegacyTreeKeyManager. This function is safe to use with SSR.
+ * Determinte if argument TreeKeyManager is the NoopTreeKeyManager. This function is safe to use with SSR.
  */
-function isLegacyTreeKeyManager<T extends TreeKeyManagerItem>(
+function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
   keyManager: TreeKeyManagerStrategy<T>,
-): keyManager is LegacyTreeKeyManager<T> {
-  return !!(keyManager as any)._isLegacyTreeKeyManager;
+): keyManager is NoopTreeKeyManager<T> {
+  return !!(keyManager as any)._isNoopTreeKeyManager;
 }
 
 /**
@@ -89,7 +87,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   defaultTabIndex = 0;
 
   protected _getTabindexAttribute() {
-    if (isLegacyTreeKeyManager(this._tree._keyManager)) {
+    if (isNoopTreeKeyManager(this._tree._keyManager)) {
       return this.tabIndex;
     }
     return -1;

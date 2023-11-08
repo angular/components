@@ -24,6 +24,12 @@ import {
 import {InjectionToken, QueryList} from '@angular/core';
 import {of as observableOf, isObservable, Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, take, tap} from 'rxjs/operators';
+import {
+  TreeKeyManagerFactory,
+  TreeKeyManagerItem,
+  TreeKeyManagerOptions,
+  TreeKeyManagerStrategy,
+} from './tree-key-manager-strategy';
 
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 
@@ -33,131 +39,6 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   }
   return data;
 }
-
-/** Represents an item within a tree that can be passed to a TreeKeyManager. */
-export interface TreeKeyManagerItem {
-  /** Whether the item is disabled. */
-  isDisabled?: (() => boolean) | boolean;
-
-  /** The user-facing label for this item. */
-  getLabel?(): string;
-
-  /** Perform the main action (i.e. selection) for this item. */
-  activate(): void;
-
-  /** Retrieves the parent for this item. This is `null` if there is no parent. */
-  getParent(): TreeKeyManagerItem | null;
-
-  /** Retrieves the children for this item. */
-  getChildren(): TreeKeyManagerItem[] | Observable<TreeKeyManagerItem[]>;
-
-  /** Determines if the item is currently expanded. */
-  isExpanded: (() => boolean) | boolean;
-
-  /** Collapses the item, hiding its children. */
-  collapse(): void;
-
-  /** Expands the item, showing its children. */
-  expand(): void;
-
-  /**
-   * Focuses the item. This should provide some indication to the user that this item is focused.
-   */
-  focus(): void;
-}
-
-/**
- * Configuration for the TreeKeyManager.
- */
-export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
-  /**
-   * Sets the predicate function that determines which items should be skipped by the tree key
-   * manager. By default, disabled items are skipped.
-   *
-   * If the item is to be skipped, this function should return false.
-   */
-  skipPredicate?: (item: T) => boolean;
-
-  /**
-   * If true, then the key manager will call `activate` in addition to calling `focus` when a
-   * particular item is focused. By default, this is false.
-   */
-  activationFollowsFocus?: boolean;
-
-  /**
-   * The direction in which the tree items are laid out horizontally. This influences which key
-   * will be interpreted as expand or collapse. Defaults to 'ltr'.
-   */
-  horizontalOrientation?: 'rtl' | 'ltr';
-
-  /**
-   * If provided, determines how the key manager determines if two items are equivalent.
-   *
-   * It should provide a unique key for each unique tree item. If two tree items are equivalent,
-   * then this function should return the same value.
-   */
-  trackBy?: (treeItem: T) => unknown;
-
-  /**
-   * If a value is provided, enables typeahead mode, which allows users to set the active item
-   * by typing the visible label of the item.
-   *
-   * If a number is provided, this will be the time to wait after the last keystroke before
-   * setting the active item. If `true` is provided, the default interval of 200ms will be used.
-   */
-  typeAheadDebounceInterval?: true | number;
-}
-
-export interface TreeKeyManagerStrategy<T extends TreeKeyManagerItem> {
-  /** Stream that emits any time the focused item changes. */
-  readonly change: Subject<T | null>;
-
-  /**
-   * Handles a keyboard event on the tree.
-   *
-   * @param event Keyboard event that represents the user interaction with the tree.
-   */
-  onKeydown(event: KeyboardEvent): void;
-
-  /** Index of the currently active item. */
-  getActiveItemIndex(): number | null;
-
-  /** The currently active item. */
-  getActiveItem(): T | null;
-
-  /**
-   * Called the first time the Tree component is focused. This method will only be called once over
-   * the lifetime of the Tree component.
-   *
-   * Intended to be used to focus the first item in the tree.
-   */
-  onInitialFocus(): void;
-
-  /**
-   * Focus the provided item by index.
-   *
-   * Updates the state of the currently active item. Emits to `change` stream if active item
-   * Changes.
-   * @param index The index of the item to focus.
-   * @param options Additional focusing options.
-   */
-  focusItem(index: number, options?: {emitChangeEvent?: boolean}): void;
-  /**
-   * Focus the provided item.
-   *
-   * Updates the state of the currently active item. Emits to `change` stream if active item
-   * Changes.
-   * @param item The item to focus. Equality is determined via the trackBy function.
-   * @param options Additional focusing options.
-   */
-  focusItem(item: T, options?: {emitChangeEvent?: boolean}): void;
-  focusItem(itemOrIndex: number | T, options?: {emitChangeEvent?: boolean}): void;
-}
-
-export type TreeKeyManagerFactory<T extends TreeKeyManagerItem> = (
-  items: Observable<T[]> | QueryList<T> | T[],
-  options: TreeKeyManagerOptions<T>,
-) => TreeKeyManagerStrategy<T>;
 
 /**
  * This class manages keyboard events for trees. If you pass it a QueryList or other list of tree
@@ -186,16 +67,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
   private _items: T[] = [];
 
-  constructor(
-    items: Observable<T[]> | QueryList<T> | T[],
-    {
-      skipPredicate,
-      trackBy,
-      horizontalOrientation,
-      activationFollowsFocus,
-      typeAheadDebounceInterval,
-    }: TreeKeyManagerOptions<T>,
-  ) {
+  constructor(items: Observable<T[]> | QueryList<T> | T[], config: TreeKeyManagerOptions<T>) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
@@ -214,24 +86,25 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       this._items = items;
     }
 
-    if (typeof skipPredicate !== 'undefined') {
-      this._skipPredicateFn = skipPredicate;
+    if (typeof config.activationFollowsFocus === 'boolean') {
+      this._activationFollowsFocus = config.activationFollowsFocus;
     }
-    if (typeof trackBy !== 'undefined') {
-      this._trackByFn = trackBy;
+    if (config.horizontalOrientation) {
+      this._horizontal = config.horizontalOrientation;
     }
-    if (typeof horizontalOrientation !== 'undefined') {
-      this._horizontal = horizontalOrientation;
+    if (config.skipPredicate) {
+      this._skipPredicateFn = config.skipPredicate;
     }
-    if (typeof activationFollowsFocus !== 'undefined') {
-      this._activationFollowsFocus = activationFollowsFocus;
+    if (config.trackBy) {
+      this._trackByFn = config.trackBy;
     }
-    if (typeof typeAheadDebounceInterval !== 'undefined') {
-      this._setTypeAhead(
-        typeof typeAheadDebounceInterval === 'number'
-          ? typeAheadDebounceInterval
-          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS,
-      );
+    if (typeof config.typeAheadDebounceInterval !== 'undefined') {
+      const typeAheadInterval =
+        typeof config.typeAheadDebounceInterval === 'number'
+          ? config.typeAheadDebounceInterval
+          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS;
+
+      this._setTypeAhead(typeAheadInterval);
     }
   }
 
@@ -387,14 +260,16 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
   private _updateActiveItemIndex(newItems: T[]) {
     const activeItem = this._activeItem;
-    if (activeItem) {
-      const newIndex = newItems.findIndex(
-        item => this._trackByFn(item) === this._trackByFn(activeItem),
-      );
+    if (!activeItem) {
+      return;
+    }
 
-      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
-        this._activeItemIndex = newIndex;
-      }
+    const newIndex = newItems.findIndex(
+      item => this._trackByFn(item) === this._trackByFn(activeItem),
+    );
+
+    if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+      this._activeItemIndex = newIndex;
     }
   }
 
@@ -441,7 +316,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       });
   }
 
-  //// Navigational methods
   private _findNextAvailableItemIndex(startingIndex: number) {
     for (let i = startingIndex + 1; i < this._items.length; i++) {
       if (!this._skipPredicateFn(this._items[i])) {
@@ -490,6 +364,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     if (!this._isCurrentItemExpanded()) {
       this._activeItem.expand();
     } else {
+      const children = this._activeItem.getChildren();
+
+      const children2 = isObservable(children) ? children : observableOf(children);
+
       coerceObservable(this._activeItem.getChildren())
         .pipe(take(1))
         .subscribe(children => {
@@ -541,16 +419,16 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   }
 }
 
+/** @docs-private */
+export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T> {
+  return (items, options) => new TreeKeyManager(items, options);
+}
+
 /** Injection token that determines the key manager to use. */
 export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>('tree-key-manager', {
   providedIn: 'root',
   factory: TREE_KEY_MANAGER_FACTORY,
 });
-
-/** @docs-private */
-export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T> {
-  return (items, options) => new TreeKeyManager(items, options);
-}
 
 /** @docs-private */
 export const TREE_KEY_MANAGER_FACTORY_PROVIDER = {
