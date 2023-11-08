@@ -12,6 +12,7 @@ export * from './key-manager/focus-key-manager';
 export * from './key-manager/noop-tree-key-manager';
 export * from './key-manager/list-key-manager';
 export * from './key-manager/tree-key-manager';
+export * from './key-manager/tree-key-manager-strategy';
 export * from './focus-trap/configurable-focus-trap';
 export * from './focus-trap/configurable-focus-trap-config';
 export * from './focus-trap/configurable-focus-trap-factory';

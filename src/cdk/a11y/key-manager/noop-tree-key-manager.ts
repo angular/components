@@ -7,12 +7,12 @@
  */
 
 import {Subject} from 'rxjs';
+import {TREE_KEY_MANAGER} from './tree-key-manager';
 import {
-  TREE_KEY_MANAGER,
   TreeKeyManagerFactory,
   TreeKeyManagerItem,
   TreeKeyManagerStrategy,
-} from './tree-key-manager';
+} from './tree-key-manager-strategy';
 
 // NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
 // not emit to streams.
