@@ -186,7 +186,10 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
   private _didDragSinceMouseDown = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {
     _ngZone.runOutsideAngular(() => {
       const element = _elementRef.nativeElement;
 
