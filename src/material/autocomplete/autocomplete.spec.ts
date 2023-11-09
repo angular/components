@@ -847,6 +847,33 @@ describe('MDC-based MatAutocomplete', () => {
       expect(input.value).withContext(`Expected input value to be empty after reset.`).toEqual('');
     }));
 
+    it('should clear the previous selection when reactive form field is reset programmatically', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      const clickedOption = options[0];
+      const option = fixture.componentInstance.options.first;
+
+      clickedOption.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(option.selected).toBe(true);
+
+      fixture.componentInstance.stateCtrl.reset();
+      tick();
+
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual(null);
+      expect(option.selected).toBe(false);
+    }));
+
     it('should disable input in view when disabled programmatically', () => {
       const formFieldElement = fixture.debugElement.query(
         By.css('.mat-mdc-form-field'),

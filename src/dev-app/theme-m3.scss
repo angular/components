@@ -36,15 +36,16 @@ $dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark)
 
 // Emit default theme styles.
 html {
-  @include mat.checkbox-theme($light-theme);
   @include mat.card-theme($light-theme);
-  @include mat.tooltip-theme($light-theme);
-  @include mat.toolbar-theme($light-theme);
-  @include mat.slider-theme($light-theme);
-  @include mat.snack-bar-theme($light-theme);
+  @include mat.checkbox-theme($light-theme);
+  @include mat.progress-bar-theme($light-theme);
   @include mat.progress-spinner-theme($light-theme);
   @include mat.radio-theme($light-theme);
-  @include mat.progress-bar-theme($light-theme);
+  @include mat.slide-toggle-theme($light-theme);
+  @include mat.slider-theme($light-theme);
+  @include mat.snack-bar-theme($light-theme);
+  @include mat.toolbar-theme($light-theme);
+  @include mat.tooltip-theme($light-theme);
 }
 
 // Emit dark theme styles.
@@ -53,16 +54,16 @@ html {
   background: black;
   color: white;
 
-  @include mat.checkbox-color($dark-theme);
   @include mat.card-color($dark-theme);
-  @include mat.tooltip-color($dark-theme);
-  @include mat.toolbar-color($dark-theme);
-  @include mat.slider-color($dark-theme);
-  @include mat.snack-bar-color($dark-theme);
+  @include mat.checkbox-color($dark-theme);
+  @include mat.progress-bar-color($dark-theme);
   @include mat.progress-spinner-color($dark-theme);
   @include mat.radio-color($dark-theme);
-  @include mat.progress-bar-color($dark-theme);
-
+  @include mat.slide-toggle-color($dark-theme);
+  @include mat.slider-color($dark-theme);
+  @include mat.snack-bar-color($dark-theme);
+  @include mat.toolbar-color($dark-theme);
+  @include mat.tooltip-color($dark-theme);
 }
 
 // Emit density styles for each scale.
@@ -70,14 +71,15 @@ html {
   $scale-theme: matx.define-theme(map.set($m3-base-config, density, scale, $scale));
 
   .demo-density-#{$scale} {
-    @include mat.checkbox-density($scale-theme);
     @include mat.card-density($scale-theme);
-    @include mat.tooltip-density($scale-theme);
-    @include mat.toolbar-density($scale-theme);
-    @include mat.slider-density($scale-theme);
-    @include mat.snack-bar-density($scale-theme);
+    @include mat.checkbox-density($scale-theme);
+    @include mat.progress-bar-density($scale-theme);
     @include mat.progress-spinner-density($scale-theme);
     @include mat.radio-density($scale-theme);
-    @include mat.progress-bar-density($scale-theme);
+    @include mat.slide-toggle-density($scale-theme);
+    @include mat.slider-density($scale-theme);
+    @include mat.snack-bar-density($scale-theme);
+    @include mat.toolbar-density($scale-theme);
+    @include mat.tooltip-density($scale-theme);
   }
 }
