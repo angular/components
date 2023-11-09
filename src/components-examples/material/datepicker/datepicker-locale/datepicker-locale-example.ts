@@ -6,12 +6,11 @@ import {
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDatepickerModule, MatDatepickerIntl} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import 'moment/locale/ja';
 import 'moment/locale/fr';
-import {MatDatepickerIntl} from '@angular/material/datepicker';
 
 /** @title Datepicker with different locale */
 @Component({
