@@ -46,14 +46,10 @@ jobs:
           entryPoint: './'
           channelId: '${{env.PREVIEW_CHANNEL}}'
 
-      - name: Result
-        run: |
-          echo "Deployed to: ${{steps.deploy.outputs.details_url}}"
-
       - name: Deployment Status
         uses: zattoo/deploy-status@c8a0267e54a90ea07765fa88f7c7c35171859eec # v1
         with:
           token: '${{github.token}}'
           environment: 'dev'
-          environment_url: '${{steps.deploy.outputs.details_url}}'
+          environment_url: 'https://ng-comp-devapp.web.app'
           state: success
