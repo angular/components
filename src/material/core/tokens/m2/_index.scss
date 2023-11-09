@@ -5,6 +5,7 @@
 @use './mat/card' as tokens-mat-card;
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/radio' as tokens-mat-radio;
+@use './mat/ripple' as tokens-mat-ripple;
 @use './mat/snack-bar' as tokens-mat-snack-bar;
 @use './mat/tab-header' as tokens-mat-tab-header;
 @use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
@@ -72,6 +73,7 @@
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-radio),
+      _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-snack-bar),
       _get-tokens-for-module($theme, tokens-mat-tab-header),
       _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),

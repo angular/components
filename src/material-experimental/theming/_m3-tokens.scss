@@ -266,6 +266,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, ripple),
+      custom-tokens.ripple($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, tab-header),
       custom-tokens.tab-header($systems, $exclude-hardcoded),
       $token-slots

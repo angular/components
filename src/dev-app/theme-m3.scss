@@ -41,6 +41,7 @@ html {
   @include mat.progress-bar-theme($light-theme);
   @include mat.progress-spinner-theme($light-theme);
   @include mat.radio-theme($light-theme);
+  @include mat.ripple-theme($light-theme);
   @include mat.slide-toggle-theme($light-theme);
   @include mat.slider-theme($light-theme);
   @include mat.snack-bar-theme($light-theme);
@@ -61,6 +62,7 @@ html {
   @include mat.progress-bar-color($dark-theme);
   @include mat.progress-spinner-color($dark-theme);
   @include mat.radio-color($dark-theme);
+  @include mat.ripple-color($dark-theme);
   @include mat.slide-toggle-color($dark-theme);
   @include mat.slider-color($dark-theme);
   @include mat.snack-bar-color($dark-theme);

@@ -1,6 +1,10 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
+@function _hardcode($value, $exclude-hardcoded) {
+  @return if($exclude-hardcoded, null, $value);
+}
+
 /// Sets all of the standard typography tokens for the given token base name to the given typography
 /// level.
 /// @param {Map} $systems The MDC system tokens
@@ -58,7 +62,7 @@
 /// @return {Map} A set of custom tokens for the mat-slider
 @function slider($systems, $exclude-hardcoded) {
   @return (
-    value-indicator-opacity: 1,
+    value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
   );
 }
 
@@ -81,6 +85,16 @@
     ripple-color: map.get($systems, md-sys-color, on-surface),
     checked-ripple-color: map.get($systems, md-sys-color, primary),
     disabled-label-color: map.get($systems, md-sys-color, on-surface),
+  );
+}
+
+/// Generates custom tokens for the mat-ripple.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-ripple
+@function ripple($systems, $exclude-hardcoded) {
+  @return (
+    color: mat.private-safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.1),
   );
 }
 
@@ -116,8 +130,8 @@
 /// @return {Map} A set of custom tokens for the mdc-tab-indicator
 @function tab-indicator($systems, $exclude-hardcoded) {
   @return (
-    active-indicator-height: 2px,
-    active-indicator-shape: 0,
+    active-indicator-height: _hardcode(2px, $exclude-hardcoded),
+    active-indicator-shape: _hardcode(0, $exclude-hardcoded),
     active-indicator-color: map.get($systems, md-sys-color, primary),
   );
 }
