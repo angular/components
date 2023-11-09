@@ -74,9 +74,42 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
     const keyManager = this.keyManager;
     switch (event.keyCode) {
       case LEFT_ARROW:
+        if (!hasModifierKey(event)) {
+          event.preventDefault();
+
+          if (
+            this._parentTrigger &&
+            this.nativeElement === document.activeElement &&
+            this.dir?.value !== 'rtl'
+          ) {
+            this.menuStack.close(this, {
+              focusNextOnEmpty: FocusNext.currentItem,
+              focusParentTrigger: true,
+            });
+            return;
+          }
+
+          keyManager.setFocusOrigin('keyboard');
+          keyManager.onKeydown(event);
+        }
+        break;
+
       case RIGHT_ARROW:
         if (!hasModifierKey(event)) {
           event.preventDefault();
+
+          if (
+            this._parentTrigger &&
+            this.nativeElement === document.activeElement &&
+            this.dir?.value === 'rtl'
+          ) {
+            this.menuStack.close(this, {
+              focusNextOnEmpty: FocusNext.currentItem,
+              focusParentTrigger: true,
+            });
+            return;
+          }
+
           keyManager.setFocusOrigin('keyboard');
           keyManager.onKeydown(event);
         }
