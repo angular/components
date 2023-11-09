@@ -190,7 +190,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ngAcceptInputType_autocompleteDisabled: unknown;
+    static ngAcceptInputType_autocompleteDisabled: unknown /** Handles keyboard events coming from the overlay panel. */;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
