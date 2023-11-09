@@ -267,7 +267,7 @@
     ),
     _namespace-tokens(
       (mat, tab-header),
-      custom-tokens.tree($systems, $exclude-hardcoded),
+      custom-tokens.tab-header($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(

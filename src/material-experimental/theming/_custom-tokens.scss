@@ -92,7 +92,7 @@
   @return mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
-      disabled-ripple-color: transparent, // TODO(mmalerba): Figure out correct value.
+      disabled-ripple-color: blue, // TODO(mmalerba): Figure out correct value.
       pagination-icon-color: map.get($systems, md-sys-color, on-surface),
       inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
       active-label-text-color: map.get($systems, md-sys-color, on-surface),
@@ -100,8 +100,8 @@
       inactive-ripple-color: map.get($systems, md-sys-color, on-surface),
       inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
       inactive-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
-      active-focus-label-text-color: map.get($systems, md-sys-color, primary),
-      active-hover-label-text-color: map.get($systems, md-sys-color, primary),
+      active-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
       active-focus-indicator-color: map.get($systems, md-sys-color, primary),
       active-hover-indicator-color: map.get($systems, md-sys-color, primary),
     ),
