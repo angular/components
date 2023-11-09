@@ -271,6 +271,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, sort),
+      custom-tokens.sort($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, stepper),
       custom-tokens.stepper($systems, $exclude-hardcoded),
       $token-slots

@@ -45,6 +45,7 @@ html {
   @include mat.slide-toggle-theme($light-theme);
   @include mat.slider-theme($light-theme);
   @include mat.snack-bar-theme($light-theme);
+  @include mat.sort-theme($light-theme);
   @include mat.stepper-theme($light-theme);
   @include mat.table-theme($light-theme);
   @include mat.tabs-theme($light-theme);
@@ -68,6 +69,7 @@ html {
   @include mat.slide-toggle-color($dark-theme);
   @include mat.slider-color($dark-theme);
   @include mat.snack-bar-color($dark-theme);
+  @include mat.sort-color($dark-theme);
   @include mat.stepper-color($dark-theme);
   @include mat.table-color($dark-theme);
   @include mat.tabs-color($dark-theme);
@@ -89,6 +91,7 @@ html {
     @include mat.slide-toggle-density($scale-theme);
     @include mat.slider-density($scale-theme);
     @include mat.snack-bar-density($scale-theme);
+    @include mat.sort-density($scale-theme);
     @include mat.stepper-density($scale-theme);
     @include mat.table-density($scale-theme);
     @include mat.tabs-density($scale-theme);
