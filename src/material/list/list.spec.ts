@@ -17,7 +17,6 @@ describe('MDC-based MatList', () => {
         ListWithItemWithCssClass,
         ListWithDynamicNumberOfLines,
         ListWithMultipleItems,
-        ListWithManyLines,
         NavListWithOneAnchorItem,
         NavListWithActivatedItem,
         ActionListWithoutType,
@@ -69,7 +68,7 @@ describe('MDC-based MatList', () => {
   });
 
   it('should have a strong focus indicator configured for all list-items', () => {
-    const fixture = TestBed.createComponent(ListWithManyLines);
+    const fixture = TestBed.createComponent(ListWithThreeLineItem);
     fixture.detectChanges();
     const listItems = fixture.debugElement.children[0]
       .queryAll(By.css('mat-list-item'))
@@ -554,21 +553,6 @@ class ListWithTwoLineItem extends BaseTestList {}
   </mat-list>`,
 })
 class ListWithThreeLineItem extends BaseTestList {}
-
-@Component({
-  template: `
-  <mat-list>
-    @for (item of items; track item) {
-      <mat-list-item>
-        <h3 matListItemTitle>Line 1</h3>
-        <p matListItemLine>Line 2</p>
-        <p matListItemLine>Line 3</p>
-        <p matListItemLine>Line 4</p>
-      </mat-list-item>
-    }
-  </mat-list>`,
-})
-class ListWithManyLines extends BaseTestList {}
 
 @Component({
   template: `
