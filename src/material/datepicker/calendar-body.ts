@@ -186,7 +186,10 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
   private _didDragSinceMouseDown = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {
     _ngZone.runOutsideAngular(() => {
       const element = _elementRef.nativeElement;
 
@@ -512,7 +515,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     this._didDragSinceMouseDown = false;
     // Begin a drag if a cell within the current range was targeted.
     const cell = event.target && this._getCellFromElement(event.target as HTMLElement);
-    if (!cell || !this._isInRange(cell.rawValue)) {
+    if (!cell || !this._isInRange(cell.compareValue)) {
       return;
     }
 
