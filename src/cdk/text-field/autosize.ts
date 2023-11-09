@@ -7,23 +7,23 @@
  */
 
 import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
-import {
-  Directive,
-  ElementRef,
-  Input,
-  AfterViewInit,
-  DoCheck,
-  OnDestroy,
-  NgZone,
-  booleanAttribute,
-  inject,
-  Renderer2,
-} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {auditTime} from 'rxjs/operators';
+import {DOCUMENT} from '@angular/common';
+import {
+  AfterViewInit,
+  Directive,
+  DoCheck,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  Renderer2,
+  booleanAttribute,
+  inject,
+} from '@angular/core';
 import {Subject} from 'rxjs';
+import {auditTime} from 'rxjs/operators';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** Directive to automatically resize a textarea to fit its content. */
@@ -209,9 +209,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     cloneStyles.visibility = 'hidden';
     cloneStyles.border = 'none';
     cloneStyles.padding = '0';
-    cloneStyles.height = '';
-    cloneStyles.minHeight = '';
-    cloneStyles.maxHeight = '';
+    cloneStyles.height = 'initial';
+    cloneStyles.minHeight = 'initial';
+    cloneStyles.maxHeight = 'initial';
 
     // App styles might be messing with the height through the positioning properties.
     cloneStyles.top = cloneStyles.bottom = cloneStyles.left = cloneStyles.right = 'auto';
