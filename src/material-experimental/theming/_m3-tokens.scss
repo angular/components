@@ -276,6 +276,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, table),
+      custom-tokens.table($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, tree),
       custom-tokens.tree($systems, $exclude-hardcoded),
       $token-slots

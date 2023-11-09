@@ -9,6 +9,7 @@
 @use './mat/snack-bar' as tokens-mat-snack-bar;
 @use './mat/tab-header' as tokens-mat-tab-header;
 @use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use './mat/table' as tokens-mat-table;
 @use './mat/slider' as tokens-mat-slider;
 @use './mat/slide-toggle' as tokens-mat-slide-toggle;
 @use './mat/tree' as tokens-mat-tree;
@@ -77,6 +78,7 @@
       _get-tokens-for-module($theme, tokens-mat-snack-bar),
       _get-tokens-for-module($theme, tokens-mat-tab-header),
       _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
+      _get-tokens-for-module($theme, tokens-mat-table),
       _get-tokens-for-module($theme, tokens-mat-toolbar),
       _get-tokens-for-module($theme, tokens-mat-slide-toggle),
       _get-tokens-for-module($theme, tokens-mat-slider),

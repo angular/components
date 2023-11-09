@@ -136,6 +136,21 @@
   );
 }
 
+@function table($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    _generate-typography-tokens($systems, header-headline, title-small),
+    _generate-typography-tokens($systems, row-item-label-text, body-medium),
+    _generate-typography-tokens($systems, footer-supporting-text, body-medium),
+    (
+      row-item-outline-width: _hardcode(1px, $exclude-hardcoded),
+      background-color: map.get($systems, md-sys-color, surface),
+      header-headline-color: map.get($systems, md-sys-color, on-surface),
+      row-item-label-text-color: map.get($systems, md-sys-color, on-surface),
+      row-item-outline-color: map.get($systems, md-sys-color, outline-variant),
+    ),
+  );
+}
+
 /// Generates custom tokens for the mat-tree.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
