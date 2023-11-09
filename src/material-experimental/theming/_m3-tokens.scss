@@ -271,6 +271,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, stepper),
+      custom-tokens.stepper($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, tab-header),
       custom-tokens.tab-header($systems, $exclude-hardcoded),
       $token-slots
@@ -317,6 +322,7 @@
   @return _generate-tokens((
     md-sys-color: $sys-color,
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
+    md-sys-state: mdc-tokens.md-sys-state-values(),
   ));
 }
 

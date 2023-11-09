@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
+/// Hardcode the given value, or null if hardcoded values are excluded.
 @function _hardcode($value, $exclude-hardcoded) {
   @return if($exclude-hardcoded, null, $value);
 }
@@ -98,6 +99,43 @@
   );
 }
 
+/// Generates custom tokens for the mat-stepper.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-stepper
+@function stepper($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    (
+      container-color: map.get($systems, md-sys-color, surface),
+      line-color: map.get($systems, md-sys-color, outline-variant),
+      header-hover-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, inverse-surface),
+        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+      ),
+      header-focus-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, inverse-surface),
+        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+      ),
+      header-label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-optional-label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-selected-state-label-text-color: map.get($systems, md-sys-color, on-surface),
+      header-icon-background-color: map.get($systems, md-sys-color, inverse-surface),
+      header-icon-foreground-color: map.get($systems, md-sys-color, inverse-on-surface),
+      header-error-state-label-text-color: map.get($systems, md-sys-color, error),
+      header-error-state-icon-foreground-color: map.get($systems, md-sys-color, error),
+      header-error-state-icon-background-color: _hardcode(transparent, $exclude-hardcoded),
+      container-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+      header-label-text-font: map.get($systems, md-sys-typescale, title-small-font),
+      header-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+      header-label-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
+      header-error-state-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+      header-selected-state-label-text-size: map.get($systems, md-sys-typescale, title-small-szie),
+      header-selected-state-label-text-weight: map.get(
+          $systems, md-sys-typescale, title-small-weight),
+    ),
+  );
+}
+
 /// Generates custom tokens for the mat-tab-header.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
@@ -136,6 +174,10 @@
   );
 }
 
+/// Generates custom tokens for the mat-table.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-table
 @function table($systems, $exclude-hardcoded) {
   @return mat.private-merge-all(
     _generate-typography-tokens($systems, header-headline, title-small),

@@ -46,6 +46,9 @@ $_density-tokens: (
   (mat, radio): (),
   (mat, ripple): (),
   (mat, slide-toggle): (),
+  (mat, stepper): (
+    header-height: (72px, 68px, 64px, 60px, 42px),
+  ),
   (mat, tab-header): (),
   (mat, table): (
     header-container-height: (56px, 52px, 48px, 44px, 40px),
