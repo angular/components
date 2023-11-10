@@ -20,7 +20,9 @@ $_density-tokens: (
     state-layer-size: (40px, 36px, 32px, 28px),
   ),
   (mdc, elevated-card): (),
+  (mdc, filled-text-field): (),
   (mdc, outlined-card): (),
+  (mdc, outlined-text-field): (),
   (mdc, slider): (),
   (mdc, snackbar): (),
   (mdc, plain-tooltip): (),
@@ -37,6 +39,7 @@ $_density-tokens: (
 
   // Custom Angular Material tokens
   (mat, card): (),
+  (mat, form-fild): (),
   (mat, toolbar): (
     standard-height: (64px, 60px, 56px, 52px),
     mobile-height: (56px, 52px, 48px, 44px),
