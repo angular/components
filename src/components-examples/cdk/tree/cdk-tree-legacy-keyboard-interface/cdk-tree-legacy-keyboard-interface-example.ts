@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {FlatTreeControl, CdkTreeModule} from '@angular/cdk/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
+import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
 
 const TREE_DATA: ExampleFlatNode[] = [
   {
@@ -79,7 +79,8 @@ interface ExampleFlatNode {
   styleUrls: ['cdk-tree-legacy-keyboard-interface-example.css'],
   standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
-  providers: [LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER],
+  providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeLegacyKeyboardInterfaceExample {
   treeControl = new FlatTreeControl<ExampleFlatNode>(

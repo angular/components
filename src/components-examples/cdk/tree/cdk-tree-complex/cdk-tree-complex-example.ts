@@ -1,6 +1,6 @@
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -279,6 +279,7 @@ class ComplexDataStore {
   styleUrls: ['cdk-tree-complex-example.css'],
   standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule, CommonModule, MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeComplexExample implements OnInit {
   private readonly _dataStore = new ComplexDataStore();
