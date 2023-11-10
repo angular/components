@@ -548,10 +548,7 @@ export class CdkTree<T, K = T>
     // Otherwise, use the level of parent node.
     if (levelAccessor) {
       context.level = levelAccessor(nodeData);
-    } else if (
-      typeof parentData !== 'undefined' &&
-      this._levels.has(this._getExpansionKey(parentData))
-    ) {
+    } else if (parentData !== undefined && this._levels.has(this._getExpansionKey(parentData))) {
       context.level = this._levels.get(this._getExpansionKey(parentData))! + 1;
     } else {
       context.level = 0;

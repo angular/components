@@ -67,16 +67,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
   private _items: T[] = [];
 
-  constructor(
-    items: Observable<T[]> | QueryList<T> | T[],
-    {
-      skipPredicate,
-      trackBy,
-      horizontalOrientation,
-      activationFollowsFocus,
-      typeAheadDebounceInterval,
-    }: TreeKeyManagerOptions<T>,
-  ) {
+  constructor(items: Observable<T[]> | QueryList<T> | T[], config: TreeKeyManagerOptions<T>) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
@@ -95,24 +86,25 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       this._items = items;
     }
 
-    if (typeof skipPredicate !== 'undefined') {
-      this._skipPredicateFn = skipPredicate;
+    if (typeof config.activationFollowsFocus === 'boolean') {
+      this._activationFollowsFocus = config.activationFollowsFocus;
     }
-    if (typeof trackBy !== 'undefined') {
-      this._trackByFn = trackBy;
+    if (config.horizontalOrientation) {
+      this._horizontal = config.horizontalOrientation;
     }
-    if (typeof horizontalOrientation !== 'undefined') {
-      this._horizontal = horizontalOrientation;
+    if (config.skipPredicate) {
+      this._skipPredicateFn = config.skipPredicate;
     }
-    if (typeof activationFollowsFocus !== 'undefined') {
-      this._activationFollowsFocus = activationFollowsFocus;
+    if (config.trackBy) {
+      this._trackByFn = config.trackBy;
     }
-    if (typeof typeAheadDebounceInterval !== 'undefined') {
-      this._setTypeAhead(
-        typeof typeAheadDebounceInterval === 'number'
-          ? typeAheadDebounceInterval
-          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS,
-      );
+    if (typeof config.typeAheadDebounceInterval !== 'undefined') {
+      const typeAheadInterval =
+        typeof config.typeAheadDebounceInterval === 'number'
+          ? config.typeAheadDebounceInterval
+          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS;
+
+      this._setTypeAhead(typeAheadInterval);
     }
   }
 
