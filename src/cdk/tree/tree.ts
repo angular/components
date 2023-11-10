@@ -1136,12 +1136,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    * If not using `FlatTreeControl`, or if `isExpandable` is not provided to
    * `NestedTreeControl`, this should be provided for correct node a11y.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get isExpandable() {
     return this._isExpandable();
   }
-  set isExpandable(isExpandable: boolean | '' | null) {
-    this._inputIsExpandable = coerceBooleanProperty(isExpandable);
+  set isExpandable(isExpandable: boolean) {
+    this._inputIsExpandable = isExpandable;
   }
 
   @Input()
