@@ -273,9 +273,7 @@ export class CdkTreeNodeToggle<T, K = T> {
     static ngAcceptInputType_recursive: unknown;
     recursive: boolean;
     // (undocumented)
-    _toggle(event: Event): void;
-    // (undocumented)
-    _toggleOnEnterOrSpace(event: KeyboardEvent): void;
+    _toggle(): void;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)
