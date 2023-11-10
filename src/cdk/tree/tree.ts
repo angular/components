@@ -87,10 +87,6 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   return data;
 }
 
-function isNotNullish<T>(val: T | null | undefined): val is T {
-  return val != null;
-}
-
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
@@ -294,8 +290,14 @@ export class CdkTree<T, K = T>
 
   ngAfterContentInit() {
     const items = combineLatest([this._keyManagerNodes, this._nodes]).pipe(
-      map(([dataNodes, nodes]) =>
-        dataNodes.map(data => nodes.get(this._getExpansionKey(data))).filter(isNotNullish),
+      map(([keyManagerNodes, renderNodes]) =>
+        keyManagerNodes.reduce<CdkTreeNode<T, K>[]>((items, data) => {
+          const node = renderNodes.get(this._getExpansionKey(data));
+          if (node) {
+            items.push(node);
+          }
+          return items;
+        }, []),
       ),
     );
 
@@ -803,9 +805,14 @@ export class CdkTree<T, K = T>
   _getNodeChildren(node: CdkTreeNode<T, K>) {
     return this._getDirectChildren(node.data).pipe(
       map(children =>
-        children
-          .map(child => this._nodes.value.get(this._getExpansionKey(child)))
-          .filter(isNotNullish),
+        children.reduce<CdkTreeNode<T, K>[]>((nodes, child) => {
+          const value = this._nodes.value.get(this._getExpansionKey(child));
+          if (value) {
+            nodes.push(value);
+          }
+
+          return nodes;
+        }, []),
       ),
     );
   }
