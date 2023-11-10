@@ -260,13 +260,24 @@ export class CdkTree<T, K = T>
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      const provided = [this.treeControl, this.levelAccessor, this.childrenAccessor].filter(
-        value => !!value,
-      ).length;
-      if (provided > 1) {
-        throw getMultipleTreeControlsError();
-      } else if (provided === 0) {
+      // Verify that Tree follows API contract of using one of TreeControl, levelAccessor or
+      // childrenAccessor. Throw an appropriate error if contract is not met.
+      let numTreeControls = 0;
+
+      if (this.treeControl) {
+        numTreeControls++;
+      }
+      if (this.levelAccessor) {
+        numTreeControls++;
+      }
+      if (this.childrenAccessor) {
+        numTreeControls++;
+      }
+
+      if (!numTreeControls) {
         throw getTreeControlMissingError();
+      } else if (numTreeControls > 1) {
+        throw getMultipleTreeControlsError();
       }
     }
   }
