@@ -138,20 +138,24 @@
   }
 }
 
-// Creates the expansion indicator arrow. Done using ::after
-// rather than havingadditional nodes in the template.
-.mat-expansion-indicator::after {
-  border-style: solid;
-  border-width: 0 2px 2px 0;
-  content: '';
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(45deg);
-  vertical-align: middle;
+.mat-expansion-indicator {
+  display: flex;
 
-  @include token-utils.use-tokens(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-    @include token-utils.create-token-slot(color, header-indicator-color);
+  // Creates the expansion indicator arrow. Done using ::after
+  // rather than havingadditional nodes in the template.
+  &::after {
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    content: '';
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    vertical-align: middle;
+
+    @include token-utils.use-tokens(
+      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+      @include token-utils.create-token-slot(color, header-indicator-color);
+    }
   }
 }
 
