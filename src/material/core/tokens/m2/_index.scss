@@ -1,15 +1,19 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../style/sass-utils';
-
 @use './mat/card' as tokens-mat-card;
-@use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/radio' as tokens-mat-radio;
+@use './mat/ripple' as tokens-mat-ripple;
+@use './mat/slide-toggle' as tokens-mat-slide-toggle;
+@use './mat/slider' as tokens-mat-slider;
 @use './mat/snack-bar' as tokens-mat-snack-bar;
+@use './mat/sort' as tokens-mat-sort;
+@use './mat/stepper' as tokens-mat-stepper;
 @use './mat/tab-header' as tokens-mat-tab-header;
 @use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
-@use './mat/slider' as tokens-mat-slider;
-@use './mat/slide-toggle' as tokens-mat-slide-toggle;
+@use './mat/table' as tokens-mat-table;
+@use './mat/toolbar' as tokens-mat-toolbar;
+@use './mat/tree' as tokens-mat-tree;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
@@ -18,13 +22,13 @@
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
 @use './mdc/list' as tokens-mdc-list;
 @use './mdc/outlined-card' as tokens-mdc-outlined-card;
+@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use './mdc/radio' as tokens-mdc-radio;
+@use './mdc/slider' as tokens-mdc-slider;
 @use './mdc/snack-bar' as tokens-mdc-snack-bar;
+@use './mdc/switch' as tokens-mdc-switch;
 @use './mdc/tab' as tokens-mdc-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
-@use './mdc/slider' as tokens-mdc-slider;
-@use './mdc/switch' as tokens-mdc-switch;
-@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
 /// @param {Map} $theme The Angular Material theme object to generate token values from.
@@ -71,12 +75,17 @@
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-radio),
-      _get-tokens-for-module($theme, tokens-mat-snack-bar),
-      _get-tokens-for-module($theme, tokens-mat-tab-header),
-      _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
-      _get-tokens-for-module($theme, tokens-mat-toolbar),
+      _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-slide-toggle),
       _get-tokens-for-module($theme, tokens-mat-slider),
+      _get-tokens-for-module($theme, tokens-mat-snack-bar),
+      _get-tokens-for-module($theme, tokens-mat-sort),
+      _get-tokens-for-module($theme, tokens-mat-stepper),
+      _get-tokens-for-module($theme, tokens-mat-tab-header),
+      _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
+      _get-tokens-for-module($theme, tokens-mat-table),
+      _get-tokens-for-module($theme, tokens-mat-toolbar),
+      _get-tokens-for-module($theme, tokens-mat-tree),
       _get-tokens-for-module($theme, tokens-mdc-checkbox),
       _get-tokens-for-module($theme, tokens-mdc-circular-progress),
       _get-tokens-for-module($theme, tokens-mdc-dialog),
@@ -85,12 +94,12 @@
       _get-tokens-for-module($theme, tokens-mdc-linear-progress),
       _get-tokens-for-module($theme, tokens-mdc-list),
       _get-tokens-for-module($theme, tokens-mdc-outlined-card),
+      _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
       _get-tokens-for-module($theme, tokens-mdc-radio),
+      _get-tokens-for-module($theme, tokens-mdc-slider),
       _get-tokens-for-module($theme, tokens-mdc-snack-bar),
+      _get-tokens-for-module($theme, tokens-mdc-switch),
       _get-tokens-for-module($theme, tokens-mdc-tab),
       _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
-      _get-tokens-for-module($theme, tokens-mdc-slider),
-      _get-tokens-for-module($theme, tokens-mdc-switch),
-      _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
   );
 }
