@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,7 +12,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   templateUrl: 'snack-bar-overview-example.html',
   styleUrls: ['snack-bar-overview-example.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatSnackBarModule],
+  imports: [MatFormFieldModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarOverviewExample {
   constructor(private _snackBar: MatSnackBar) {}

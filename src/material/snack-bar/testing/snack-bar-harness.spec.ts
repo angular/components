@@ -2,7 +2,13 @@ import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSnackBar, MatSnackBarConfig, MatSnackBarModule} from '@angular/material/snack-bar';
+import {
+  MatSnackBar,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarConfig,
+  MatSnackBarLabel,
+} from '@angular/material/snack-bar';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarHarness} from './snack-bar-harness';
 
@@ -12,8 +18,7 @@ describe('MatSnackBarHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, NoopAnimationsModule],
-      declarations: [SnackbarHarnessTest],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SnackbarHarnessTest);
@@ -166,6 +171,8 @@ describe('MatSnackBarHarness', () => {
       <div matSnackBarActions><button matSnackBarAction>Ok</button></div>
     </ng-template>
   `,
+  standalone: true,
+  imports: [MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
 })
 class SnackbarHarnessTest {
   @ViewChild('custom') customTmpl: TemplateRef<any>;

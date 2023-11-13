@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
 import {FormValueContainer, CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
 import {NgForm, FormsModule} from '@angular/forms';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -218,7 +218,6 @@ const FANTASY_ELEMENTS: readonly FantasyElement[] = [
     MatIconModule,
     MatCheckboxModule,
     MatListModule,
-    MatSnackBarModule,
   ],
 })
 export class PopoverEditMatTableExample {
