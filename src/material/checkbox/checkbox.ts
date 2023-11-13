@@ -20,6 +20,7 @@ import {
   Input,
   NgZone,
   numberAttribute,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
@@ -28,7 +29,7 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {MatRipple} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
@@ -92,7 +93,9 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCheckbox implements AfterViewInit, ControlValueAccessor, FocusableOption {
+export class MatCheckbox
+  implements AfterViewInit, ControlValueAccessor, FocusableOption, OnDestroy
+{
   /** Focuses the checkbox. */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -204,6 +207,7 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
     public _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ngZone: NgZone,
+    private _focusMonitor: FocusMonitor,
     @Attribute('tabindex') tabIndex: string,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
     @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?: MatCheckboxDefaultOptions,
@@ -215,7 +219,19 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
   }
 
   ngAfterViewInit() {
+    this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
+      if (!focusOrigin) {
+        Promise.resolve().then(() => {
+          this._onTouched();
+          this._changeDetectorRef.markForCheck();
+        });
+      }
+    });
     this._syncIndeterminate(this._indeterminate);
+  }
+
+  ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Whether the checkbox is checked. */
