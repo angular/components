@@ -16,7 +16,13 @@ import {
   QueryList,
 } from '@angular/core';
 import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
@@ -42,7 +48,6 @@ export class FocusTrapShadowDomDemo {}
     CommonModule,
     MatButtonModule,
     MatCardModule,
-    MatDialogModule,
     MatToolbarModule,
     FocusTrapShadowDomDemo,
   ],
@@ -91,7 +96,7 @@ let dialogCount = 0;
   styleUrls: ['focus-trap-dialog-demo.css'],
   templateUrl: 'focus-trap-dialog-demo.html',
   standalone: true,
-  imports: [MatDialogModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
 })
 export class FocusTrapDialogDemo {
   id = dialogCount++;

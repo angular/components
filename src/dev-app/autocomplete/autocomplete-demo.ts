@@ -15,7 +15,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {ThemePalette} from '@angular/material/core';
-import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 export interface State {
   code: string;
@@ -42,7 +42,6 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
-    MatDialogModule,
     MatInputModule,
     ReactiveFormsModule,
   ],
@@ -248,14 +247,7 @@ export class AutocompleteDemo {
   `,
   ],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-  ],
+  imports: [CommonModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
 })
 export class AutocompleteDemoExampleDialog {
   constructor(public dialogRef: MatDialogRef<AutocompleteDemoExampleDialog>) {}
