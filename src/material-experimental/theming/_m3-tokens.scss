@@ -168,92 +168,133 @@
   // TODO(mmalerba): Fill in remaining tokens.
   $result: mat.private-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
-      (
-          (mdc, theme): map.get($systems, md-sys-color),
-          (mdc, typography): map.get($systems, md-sys-typescale),
-      ),
-      // Get the official MDC component tokens
-      _namespace-tokens(
-            (mdc, checkbox),
-          _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, elevated-card),
-          mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, outlined-card),
-          mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, slider),
-          mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, snackbar),
-          mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
-          $token-slots,
-      ),
-      _namespace-tokens(
-            (mdc, switch),
-          mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, plain-tooltip),
-          mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, circular-progress),
-          mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, radio),
-          mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, linear-progress),
-          mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
-          $token-slots),
-      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
-      // values.
-      _namespace-tokens(
-            (mat, card),
-          custom-tokens.card($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, toolbar),
-          custom-tokens.toolbar($systems, $exclude-hardcoded),
-          $token-slots,
-      ),
-      _namespace-tokens(
-            (mat, slide-toggle),
-          custom-tokens.slide-toggle($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, slider),
-          custom-tokens.slider($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, snack-bar),
-          custom-tokens.snack-bar($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, radio),
-          custom-tokens.radio($systems, $exclude-hardcoded),
-          $token-slots
-      ),
+    (
+      (mdc, theme): map.get($systems, md-sys-color),
+      (mdc, typography): map.get($systems, md-sys-typescale),
+    ),
+    // Get the official MDC component tokens
+    _namespace-tokens(
+      (mdc, checkbox),
+      _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, elevated-card),
+      mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, outlined-card),
+      mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, slider),
+      mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, snackbar),
+      mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
+      $token-slots,
+    ),
+    _namespace-tokens(
+      (mdc, switch),
+      mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, plain-tooltip),
+      mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, circular-progress),
+      mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, radio),
+      mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, linear-progress),
+      mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, tab),
+      mdc-tokens.md-comp-secondary-navigation-tab-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
+    // values.
+    _namespace-tokens(
+      (mdc, tab-indicator),
+      custom-tokens.tab-indicator($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, card),
+      custom-tokens.card($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, toolbar),
+      custom-tokens.toolbar($systems, $exclude-hardcoded),
+      $token-slots,
+    ),
+    _namespace-tokens(
+      (mat, slide-toggle),
+      custom-tokens.slide-toggle($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, slider),
+      custom-tokens.slider($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, snack-bar),
+      custom-tokens.snack-bar($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, radio),
+      custom-tokens.radio($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, ripple),
+      custom-tokens.ripple($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, sort),
+      custom-tokens.sort($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, stepper),
+      custom-tokens.stepper($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, tab-header),
+      custom-tokens.tab-header($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, table),
+      custom-tokens.table($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, tree),
+      custom-tokens.tree($systems, $exclude-hardcoded),
+      $token-slots
+    ),
   );
 
   // Strip out tokens that are systemized by our made up density system.
@@ -286,6 +327,7 @@
   @return _generate-tokens((
     md-sys-color: $sys-color,
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
+    md-sys-state: mdc-tokens.md-sys-state-values(),
   ));
 }
 

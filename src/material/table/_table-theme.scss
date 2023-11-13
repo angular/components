@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../core/tokens/m2/mat/table' as tokens-mat-table;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -6,44 +7,76 @@
 @use '../core/style/sass-utils';
 
 @mixin base($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(
-        tokens-mat-table.$prefix, tokens-mat-table.get-unthemable-tokens());
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+          tokens-mat-table.$prefix, tokens-mat-table.get-unthemable-tokens());
+    }
   }
 }
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-table.$prefix,
-      tokens-mat-table.get-color-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-table.$prefix,
+        tokens-mat-table.get-color-tokens($theme));
+    }
   }
 }
 
 @mixin typography($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-table.$prefix,
-      tokens-mat-table.get-typography-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-table.$prefix,
+        tokens-mat-table.get-typography-tokens($theme));
+    }
   }
 }
 
 @mixin density($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-table.$prefix,
-      tokens-mat-table.get-density-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-table.$prefix,
+        tokens-mat-table.get-density-tokens($theme));
+    }
   }
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-table') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+        tokens-mat-table.$prefix, map.get($tokens, tokens-mat-table.$prefix));
   }
 }

@@ -11,9 +11,12 @@ import {Component, Inject, TemplateRef, ViewChild, ViewEncapsulation} from '@ang
 import {
   MAT_DIALOG_DATA,
   MatDialog,
+  MatDialogActions,
+  MatDialogClose,
   MatDialogConfig,
+  MatDialogContent,
   MatDialogRef,
-  MatDialogModule,
+  MatDialogTitle,
 } from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -39,7 +42,6 @@ const defaultDialogConfig = new MatDialogConfig();
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
-    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -76,7 +78,10 @@ export class DialogDemo {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any) {
+  constructor(
+    public dialog: MatDialog,
+    @Inject(DOCUMENT) doc: any,
+  ) {
     // Possible useful example for the open and closeAll events.
     // Adding a class to the body if a dialog opens and
     // removing it after all open dialogs are closed
@@ -230,7 +235,7 @@ export class JazzDialog {
     </mat-dialog-actions>
   `,
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
 })
 export class ContentElementDialog {
   actionsAlignment: 'start' | 'center' | 'end';
@@ -266,6 +271,6 @@ export class ContentElementDialog {
     </mat-dialog-actions>
   `,
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
 })
 export class IFrameDialog {}
