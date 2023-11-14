@@ -193,11 +193,6 @@
       $token-slots
     ),
     _namespace-tokens(
-      (mdc, list),
-      mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
       (mdc, outlined-card),
       mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
       $token-slots
@@ -272,6 +267,11 @@
     _namespace-tokens(
       (mat, icon),
       custom-tokens.icon($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, sidenav),
+      custom-tokens.sidenav($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -357,11 +357,11 @@
   $sys-color: if($type == dark,
     mdc-tokens.md-sys-color-values-dark($ref),
     mdc-tokens.md-sys-color-values-light($ref));
-  @return _generate-tokens((
+  @return _generate-tokens(map.merge($ref, (
     md-sys-color: $sys-color,
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
     md-sys-state: mdc-tokens.md-sys-state-values(),
-  ));
+  )));
 }
 
 /// Generates a set of namespaced color tokens for all components.
