@@ -38,7 +38,7 @@ $theme-version: 1;
   }
 
   $type: map.get($config, theme-type) or light;
-  $primary: map.get($config, primary) or m3-palettes.$indigo-palette;
+  $primary: map.get($config, primary) or m3-palettes.$purple-palette;
   $secondary: map.get($config, secondary) or $primary;
   $tertiary: map.get($config, tertiary) or $secondary;
 
@@ -47,15 +47,15 @@ $theme-version: 1;
       theme-version: $theme-version,
       theme-type: $type,
       palettes: (
-        primary: map.remove($primary, neutral-variant),
-        secondary: map.remove($secondary, neutral-variant),
-        tertiary: map.remove($tertiary, neutral-variant),
-        neutral: m3-palettes.$neutral-palette,
+        primary: map.remove($primary, neutral, neutral-variant),
+        secondary: map.remove($secondary, neutral, neutral-variant),
+        tertiary: map.remove($tertiary, neutral, neutral-variant),
+        neutral: map.get($primary, neutral),
         neutral-variant: map.get($primary, neutral-variant),
-        error: m3-palettes.$red-palette
+        error: map.remove(m3-palettes.$red-palette, neutral, neutral-variant),
       ),
-      color-tokens: m3-tokens.generate-color-tokens($type, $primary, $secondary, $tertiary,
-        m3-palettes.$neutral-palette, m3-palettes.$red-palette)
+      color-tokens: m3-tokens.generate-color-tokens(
+          $type, $primary, $secondary, $tertiary, m3-palettes.$red-palette)
     )
   );
 }
