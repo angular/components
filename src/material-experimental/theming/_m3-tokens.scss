@@ -65,7 +65,7 @@
 /// @param {String} $prefix The key prefix used to name the tokens
 /// @return {Map} A set of tokens for the given palette
 @function _generate-palette-tokens($palette, $prefix) {
-  $palette: map.remove($palette, neutral-variant);
+  $palette: map.remove($palette, neutral, neutral-variant);
   $result: ();
   @each $hue, $value in $palette {
     $result: map.set($result, '#{$prefix}#{$hue}', $value);
@@ -78,16 +78,15 @@
 /// @param {Map} $primary The primary palette
 /// @param {Map} $secondary The secondary palette
 /// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $neutral The neutral palette
 /// @param {Map} $error The error palette
 /// @return {Map} A set of `md-ref-palette` tokens
-@function _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error) {
+@function _generate-ref-palette-tokens($primary, $secondary, $tertiary, $error) {
   @return mat.private-merge-all(
       (black: #000, white: #fff),
       _generate-palette-tokens($primary, primary),
       _generate-palette-tokens($secondary, secondary),
       _generate-palette-tokens($tertiary, tertiary),
-      _generate-palette-tokens($neutral, neutral),
+      _generate-palette-tokens(map.get($primary, neutral), neutral),
       _generate-palette-tokens(map.get($primary, neutral-variant), neutral-variant),
       _generate-palette-tokens($error, error),
   );
@@ -329,12 +328,11 @@
 /// @param {Map} $primary The primary palette
 /// @param {Map} $secondary The secondary palette
 /// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $neutral The neutral palette
 /// @param {Map} $error The error palette
 /// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $secondary, $tertiary, $neutral, $error) {
+@function generate-color-tokens($type, $primary, $secondary, $tertiary, $error) {
   $ref: (
-    md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error)
+    md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $error)
   );
   $sys-color: if($type == dark,
     mdc-tokens.md-sys-color-values-dark($ref),
