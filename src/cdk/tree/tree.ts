@@ -86,6 +86,18 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   return data;
 }
 
+type RenderingData<T> =
+  | {
+      flattenedNodes: null;
+      nodeType: null;
+      renderNodes: T[];
+    }
+  | {
+      flattenedNodes: T[];
+      nodeType: 'nested' | 'flat';
+      renderNodes: [];
+    };
+
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
@@ -257,29 +269,13 @@ export class CdkTree<T, K = T>
     private _elementRef: ElementRef<HTMLElement>,
   ) {}
 
-  ngOnInit() {
-    this._dataDiffer = this._differs.find([]).create(this.trackBy);
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      // Verify that Tree follows API contract of using one of TreeControl, levelAccessor or
-      // childrenAccessor. Throw an appropriate error if contract is not met.
-      let numTreeControls = 0;
+  ngAfterContentInit() {
+    this._initializeKeyManager();
+  }
 
-      if (this.treeControl) {
-        numTreeControls++;
-      }
-      if (this.levelAccessor) {
-        numTreeControls++;
-      }
-      if (this.childrenAccessor) {
-        numTreeControls++;
-      }
-
-      if (!numTreeControls) {
-        throw getTreeControlMissingError();
-      } else if (numTreeControls > 1) {
-        throw getMultipleTreeControlsError();
-      }
-    }
+  ngAfterContentChecked() {
+    this._updateDefaultNodeDefinition();
+    this._subscribeToDataChanges();
   }
 
   ngOnDestroy() {
@@ -299,51 +295,17 @@ export class CdkTree<T, K = T>
     }
   }
 
-  ngAfterContentInit() {
-    const items = combineLatest([this._keyManagerNodes, this._nodes]).pipe(
-      map(([keyManagerNodes, renderNodes]) =>
-        keyManagerNodes.reduce<CdkTreeNode<T, K>[]>((items, data) => {
-          const node = renderNodes.get(this._getExpansionKey(data));
-          if (node) {
-            items.push(node);
-          }
-          return items;
-        }, []),
-      ),
-    );
-
-    const keyManagerOptions: TreeKeyManagerOptions<CdkTreeNode<T, K>> = {
-      trackBy: node => this._getExpansionKey(node.data),
-      skipPredicate: node => !!node.isDisabled,
-      typeAheadDebounceInterval: true,
-      horizontalOrientation: this._dir.value,
-    };
-
-    this._keyManager = this._keyManagerFactory(items, keyManagerOptions);
-
-    this._keyManager.change
-      .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
-      .subscribe(([prev, next]) => {
-        prev?._setTabUnfocusable();
-        next?._setTabFocusable();
-      });
-
-    this._keyManager.change.pipe(startWith(null), takeUntil(this._onDestroy)).subscribe(() => {
-      // refresh the tabindex when the active item changes.
-      this._setTabIndex();
-    });
+  ngOnInit() {
+    this._checkTreeControlUsage();
+    this._initializeDataDiffer();
   }
 
-  ngAfterContentChecked() {
+  private _updateDefaultNodeDefinition() {
     const defaultNodeDefs = this._nodeDefs.filter(def => !def.when);
     if (defaultNodeDefs.length > 1 && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getTreeMultipleDefaultNodeDefsError();
     }
     this._defaultNodeDef = defaultNodeDefs[0];
-
-    if (this.dataSource && this._nodeDefs && !this._dataSubscription) {
-      this._observeRenderChanges();
-    }
   }
 
   /**
@@ -397,12 +359,16 @@ export class CdkTree<T, K = T>
 
     this._dataSource = dataSource;
     if (this._nodeDefs) {
-      this._observeRenderChanges();
+      this._subscribeToDataChanges();
     }
   }
 
   /** Set up a subscription for the data provided by the data source. */
-  private _observeRenderChanges() {
+  private _subscribeToDataChanges() {
+    if (this._dataSubscription) {
+      return;
+    }
+
     let dataStream: Observable<readonly T[]> | undefined;
 
     if (isDataSource(this._dataSource)) {
@@ -413,6 +379,13 @@ export class CdkTree<T, K = T>
       dataStream = observableOf(this._dataSource);
     }
 
+    if (!dataStream) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw getTreeNoValidDataSourceError();
+      }
+      return;
+    }
+
     let expansionModel;
     if (!this.treeControl) {
       this._expansionModel = new SelectionModel<K>(true);
@@ -421,49 +394,48 @@ export class CdkTree<T, K = T>
       expansionModel = this.treeControl.expansionModel;
     }
 
-    if (dataStream) {
-      this._dataSubscription = combineLatest([
-        dataStream,
-        this._nodeType,
-        // NB: the data is unused below, however we add it here to essentially
-        // trigger data rendering when expansion changes occur.
-        expansionModel.changed.pipe(
-          startWith(null),
-          tap(expansionChanges => {
-            this._emitExpansionChanges(expansionChanges);
-          }),
-        ),
-      ])
-        .pipe(
-          switchMap(([data, nodeType]) => {
-            if (nodeType === null) {
-              return observableOf([{renderNodes: data}, nodeType] as const);
-            }
-
-            // If we're here, then we know what our node type is, and therefore can
-            // perform our usual rendering pipeline, which necessitates converting the data
-            return this._convertData(data, nodeType).pipe(
-              map(convertedData => [convertedData, nodeType] as const),
-            );
-          }),
-          takeUntil(this._onDestroy),
-        )
-        .subscribe(([data, nodeType]) => {
+    this._dataSubscription = combineLatest([
+      dataStream,
+      this._nodeType,
+      // NB: the data is unused below, however we add it here to essentially
+      // trigger data rendering when expansion changes occur.
+      expansionModel.changed.pipe(
+        startWith(null),
+        tap(expansionChanges => {
+          this._emitExpansionChanges(expansionChanges);
+        }),
+      ),
+    ])
+      .pipe(
+        switchMap(([data, nodeType]) => {
           if (nodeType === null) {
-            // Skip saving cached and key manager data.
-            this.renderNodeChanges(data.renderNodes);
-            return;
+            return observableOf([{renderNodes: data}, nodeType] as const);
           }
 
           // If we're here, then we know what our node type is, and therefore can
-          // perform our usual rendering pipeline.
-          this._updateCachedData(data.flattenedNodes);
-          this.renderNodeChanges(data.renderNodes);
-          this._updateKeyManagerItems(data.flattenedNodes);
-        });
-    } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      throw getTreeNoValidDataSourceError();
+          // perform our usual rendering pipeline, which necessitates converting the data
+          return this._convertData(data, nodeType).pipe(
+            map(convertedData => [convertedData, nodeType] as const),
+          );
+        }),
+        takeUntil(this._onDestroy),
+      )
+      .subscribe(([data, nodeType]) => {
+        this._renderDataChanges({nodeType, ...data} as RenderingData<T>);
+      });
+  }
+
+  private _renderDataChanges(data: RenderingData<T>) {
+    if (data.nodeType === null) {
+      this.renderNodeChanges(data.renderNodes);
+      return;
     }
+
+    // If we're here, then we know what our node type is, and therefore can
+    // perform our usual rendering pipeline.
+    this._updateCachedData(data.flattenedNodes);
+    this.renderNodeChanges(data.renderNodes);
+    this._updateKeyManagerItems(data.flattenedNodes);
   }
 
   private _emitExpansionChanges(expansionChanges: SelectionChange<K> | null) {
@@ -479,6 +451,69 @@ export class CdkTree<T, K = T>
     for (const removed of expansionChanges.removed) {
       const node = nodes.get(removed);
       node?._emitExpansionState(false);
+    }
+  }
+
+  private _initializeKeyManager() {
+    const items = combineLatest([this._keyManagerNodes, this._nodes]).pipe(
+      map(([keyManagerNodes, renderNodes]) =>
+        keyManagerNodes.reduce<CdkTreeNode<T, K>[]>((items, data) => {
+          const node = renderNodes.get(this._getExpansionKey(data));
+          if (node) {
+            items.push(node);
+          }
+          return items;
+        }, []),
+      ),
+    );
+
+    const keyManagerOptions: TreeKeyManagerOptions<CdkTreeNode<T, K>> = {
+      trackBy: node => this._getExpansionKey(node.data),
+      skipPredicate: node => !!node.isDisabled,
+      typeAheadDebounceInterval: true,
+      horizontalOrientation: this._dir.value,
+    };
+
+    this._keyManager = this._keyManagerFactory(items, keyManagerOptions);
+
+    this._keyManager.change
+      .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
+      .subscribe(([prev, next]) => {
+        prev?._setTabUnfocusable();
+        next?._setTabFocusable();
+      });
+
+    this._keyManager.change.pipe(startWith(null), takeUntil(this._onDestroy)).subscribe(() => {
+      // refresh the tabindex when the active item changes.
+      this._setTabIndex();
+    });
+  }
+
+  private _initializeDataDiffer() {
+    this._dataDiffer = this._differs.find([]).create(this.trackBy);
+  }
+
+  private _checkTreeControlUsage() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      // Verify that Tree follows API contract of using one of TreeControl, levelAccessor or
+      // childrenAccessor. Throw an appropriate error if contract is not met.
+      let numTreeControls = 0;
+
+      if (this.treeControl) {
+        numTreeControls++;
+      }
+      if (this.levelAccessor) {
+        numTreeControls++;
+      }
+      if (this.childrenAccessor) {
+        numTreeControls++;
+      }
+
+      if (!numTreeControls) {
+        throw getTreeControlMissingError();
+      } else if (numTreeControls > 1) {
+        throw getMultipleTreeControlsError();
+      }
     }
   }
 
