@@ -184,8 +184,18 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, filled-text-field),
+      mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, outlined-card),
       mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, outlined-text-field),
+      mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -238,6 +248,11 @@
     _namespace-tokens(
       (mat, card),
       custom-tokens.card($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, form-field),
+      custom-tokens.form-field($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
