@@ -75,6 +75,16 @@
   );
 }
 
+/// Generates custom tokens for the mat-icon.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-icon
+@function icon($systems, $exclude-hardcoded) {
+  @return (
+    color: _hardcode(inherit, $exclude-hardcoded),
+  );
+}
+
 /// Generates custom tokens for the mat-toolbar.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

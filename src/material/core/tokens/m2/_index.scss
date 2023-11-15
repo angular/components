@@ -4,6 +4,7 @@
 @use './mat/card' as tokens-mat-card;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
+@use './mat/icon' as tokens-mat-icon;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/slide-toggle' as tokens-mat-slide-toggle;
@@ -80,6 +81,7 @@
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
+      _get-tokens-for-module($theme, tokens-mat-icon),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-slide-toggle),
