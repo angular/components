@@ -2,6 +2,7 @@
 @use 'sass:meta';
 @use '../../style/sass-utils';
 @use './mat/card' as tokens-mat-card;
+@use './mat/form-field' as tokens-mat-form-field;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/slide-toggle' as tokens-mat-slide-toggle;
@@ -18,10 +19,12 @@
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
 @use './mdc/elevated-card' as tokens-mdc-elevated-card;
+@use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
 @use './mdc/list' as tokens-mdc-list;
 @use './mdc/outlined-card' as tokens-mdc-outlined-card;
+@use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 @use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use './mdc/radio' as tokens-mdc-radio;
 @use './mdc/slider' as tokens-mdc-slider;
@@ -74,6 +77,7 @@
 @function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
+      _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-slide-toggle),
@@ -90,10 +94,12 @@
       _get-tokens-for-module($theme, tokens-mdc-circular-progress),
       _get-tokens-for-module($theme, tokens-mdc-dialog),
       _get-tokens-for-module($theme, tokens-mdc-elevated-card),
+      _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
       _get-tokens-for-module($theme, tokens-mdc-icon-button),
       _get-tokens-for-module($theme, tokens-mdc-linear-progress),
       _get-tokens-for-module($theme, tokens-mdc-list),
       _get-tokens-for-module($theme, tokens-mdc-outlined-card),
+      _get-tokens-for-module($theme, tokens-mdc-outlined-text-field),
       _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
       _get-tokens-for-module($theme, tokens-mdc-radio),
       _get-tokens-for-module($theme, tokens-mdc-slider),
