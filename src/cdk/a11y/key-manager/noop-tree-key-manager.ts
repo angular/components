@@ -50,10 +50,6 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
     return null;
   }
 
-  onInitialFocus() {
-    // noop
-  }
-
   focusItem() {
     // noop
   }

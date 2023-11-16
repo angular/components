@@ -28,7 +28,7 @@ import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
  * but modifies them to use the newer API.
  */
-describe('CdkTree redesign', () => {
+describe('CdkTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = {};
   let dataSource: FakeDataSource;
@@ -61,34 +61,36 @@ describe('CdkTree redesign', () => {
     }).compileComponents();
   }
 
-  it('should clear out the `mostRecentTreeNode` on destroy', () => {
-    configureCdkTreeTestingModule([SimpleCdkTreeApp]);
-    const fixture = TestBed.createComponent(SimpleCdkTreeApp);
-    fixture.detectChanges();
+  describe('onDestroy', () => {
+    it('should clear out the `mostRecentTreeNode` on destroy', () => {
+      configureCdkTreeTestingModule([SimpleCdkTreeApp]);
+      const fixture = TestBed.createComponent(SimpleCdkTreeApp);
+      fixture.detectChanges();
 
-    // Cast the assertions to a boolean to avoid Jasmine going into an
-    // infinite loop when stringifying the object, if the test starts failing.
-    expect(!!CdkTreeNode.mostRecentTreeNode).toBe(true);
+      // Cast the assertions to a boolean to avoid Jasmine going into an
+      // infinite loop when stringifying the object, if the test starts failing.
+      expect(!!CdkTreeNode.mostRecentTreeNode).toBe(true);
 
-    fixture.destroy();
+      fixture.destroy();
 
-    expect(!!CdkTreeNode.mostRecentTreeNode).toBe(false);
-  });
+      expect(!!CdkTreeNode.mostRecentTreeNode).toBe(false);
+    });
 
-  it('should complete the viewChange stream on destroy', () => {
-    configureCdkTreeTestingModule([SimpleCdkTreeApp]);
-    const fixture = TestBed.createComponent(SimpleCdkTreeApp);
-    fixture.detectChanges();
-    const spy = jasmine.createSpy('completeSpy');
-    const subscription = fixture.componentInstance.tree.viewChange.subscribe({complete: spy});
+    it('should complete the viewChange stream on destroy', () => {
+      configureCdkTreeTestingModule([SimpleCdkTreeApp]);
+      const fixture = TestBed.createComponent(SimpleCdkTreeApp);
+      fixture.detectChanges();
+      const spy = jasmine.createSpy('completeSpy');
+      const subscription = fixture.componentInstance.tree.viewChange.subscribe({complete: spy});
 
-    fixture.destroy();
-    expect(spy).toHaveBeenCalled();
-    subscription.unsubscribe();
+      fixture.destroy();
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
+    });
   });
 
   describe('flat tree', () => {
-    describe('should initialize', () => {
+    describe('displaying a flat tree', () => {
       let fixture: ComponentFixture<SimpleCdkTreeApp>;
       let component: SimpleCdkTreeApp;
 
@@ -104,19 +106,19 @@ describe('CdkTree redesign', () => {
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
       });
 
-      it('with a connected data source', () => {
+      it('connects the datasource', () => {
         expect(tree.dataSource).toBe(dataSource);
         expect(dataSource.isConnected).toBe(true);
       });
 
-      it('with rendered dataNodes', () => {
+      it('renders at least one node', () => {
         const nodes = getNodes(treeElement);
 
         expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
         expect(nodes[0].classList).toContain('customNodeClass');
       });
 
-      it('with the right data', () => {
+      it('renders nodes that match the datasource', () => {
         expect(dataSource.data.length).toBe(3);
 
         let data = dataSource.data;
@@ -145,7 +147,7 @@ describe('CdkTree redesign', () => {
         );
       });
 
-      it('should be able to use units different from px for the indentation', () => {
+      it('indents when given an indentation of 15rem', () => {
         component.indent = '15rem';
         fixture.detectChanges();
 
@@ -161,7 +163,7 @@ describe('CdkTree redesign', () => {
         );
       });
 
-      it('should default to px if no unit is set for string value indentation', () => {
+      it('indents in units of pixel when no unit is given', () => {
         component.indent = '17';
         fixture.detectChanges();
 
@@ -193,7 +195,7 @@ describe('CdkTree redesign', () => {
         );
       });
 
-      it('should reset the opposite direction padding if the direction changes', () => {
+      it('should reset element.styel to the opposite direction padding if the direction changes', () => {
         const node = getNodes(treeElement)[0];
 
         component.indent = 10;
@@ -770,7 +772,7 @@ describe('CdkTree redesign', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+        expect(getNodes(treeElement).map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, null, null]);
 
@@ -785,7 +787,7 @@ describe('CdkTree redesign', () => {
 
         // NB: only four elements are present here; children are not present
         // in DOM unless the parent node is expanded.
-        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+        expect(getNodes(treeElement).map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'true', 'false', null]);
       });
@@ -1150,79 +1152,90 @@ describe('CdkTree redesign', () => {
     });
 
     describe('focus management', () => {
-      it('the tree is tabbable when no element is active', () => {
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
+      beforeEach(() => {
+        fixture.destroy();
+
+        fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        nodes = getNodes(treeElement);
+
+        dataSource.clear();
+
+        dataSource.data = [
+          new TestData('cheese'),
+          new TestData('pepperoni'),
+          new TestData('anchovie'),
+        ];
+
+        fixture.detectChanges();
+        nodes = getNodes(treeElement);
       });
 
-      it('the tree is not tabbable when an element is active', () => {
+      it('the tree does not have tabindex attribute', () => {
+        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
+      });
+
+      it('the tree does not have a tabindex when an element is active', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        fixture.detectChanges();
 
-        expect(treeElement.getAttribute('tabindex')).toBe(null);
+        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
+      });
+
+      it('sets the tabindex to the first item by default', () => {
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
       });
 
       it('sets tabindex on the latest activated item, with all others "-1"', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        fixture.detectChanges();
 
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
-
-        // activate the first child by clicking on it
-        nodes[0].click();
-
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
       });
 
       it('maintains tabindex when a node is programatically focused', () => {
         // activate the second child by programatically focusing it
         nodes[1].focus();
+        fixture.detectChanges();
 
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
 
         // activate the first child by programatically focusing it
         nodes[0].focus();
+        fixture.detectChanges();
 
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
       });
 
       it('maintains tabindex when component is blurred', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        fixture.detectChanges();
 
         expect(document.activeElement).toBe(nodes[1]);
         // blur the currently active element (which we just checked is the above node)
         nodes[1].blur();
+        fixture.detectChanges();
 
-        expect(treeElement.getAttribute('tabindex')).toBe(null);
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
       });
 
       it('ignores clicks on disabled items', () => {
-        dataSource.data[0].isDisabled = true;
+        dataSource.data[1].isDisabled = true;
         fixture.detectChanges();
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
 
         // attempt to click on the first child
-        nodes[0].click();
+        nodes[1].click();
+        fixture.detectChanges();
 
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '-1', '-1', '-1', '-1', '-1']);
-      });
-
-      describe('when no item is currently active', () => {
-        it('redirects focus to the first item when the tree is focused', () => {
-          treeElement.focus();
-
-          expect(document.activeElement).toBe(nodes[0]);
-        });
-
-        it('redirects focus to the first non-disabled item when the tree is focused', () => {
-          dataSource.data[0].isDisabled = true;
-          fixture.detectChanges();
-
-          treeElement.focus();
-
-          expect(document.activeElement).toBe(nodes[1]);
-        });
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
       });
     });
 
@@ -1232,7 +1245,7 @@ describe('CdkTree redesign', () => {
       });
 
       it('sets the treeitem role on all nodes', () => {
-        expect(getNodeAttributes(nodes, 'role')).toEqual([
+        expect(nodes.map(x => x.getAttribute('role'))).toEqual([
           'treeitem',
           'treeitem',
           'treeitem',
@@ -1243,16 +1256,16 @@ describe('CdkTree redesign', () => {
       });
 
       it('sets aria attributes for tree nodes', () => {
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'false', 'false', null, null, null]);
-        expect(getNodeAttributes(nodes, 'aria-level'))
+        expect(nodes.map(x => x.getAttribute('aria-level')))
           .withContext('aria-level attributes')
           .toEqual(['1', '1', '2', '3', '3', '1']);
-        expect(getNodeAttributes(nodes, 'aria-posinset'))
+        expect(nodes.map(x => x.getAttribute('aria-posinset')))
           .withContext('aria-posinset attributes')
           .toEqual(['1', '2', '1', '1', '2', '3']);
-        expect(getNodeAttributes(nodes, 'aria-setsize'))
+        expect(nodes.map(x => x.getAttribute('aria-setsize')))
           .withContext('aria-setsize attributes')
           .toEqual(['3', '3', '1', '2', '2', '3']);
       });
@@ -1260,13 +1273,13 @@ describe('CdkTree redesign', () => {
       it('changes aria-expanded status when expanded or collapsed', () => {
         tree.expand(dataSource.data[1]);
         fixture.detectChanges();
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'true', 'false', null, null, null]);
 
         tree.collapse(dataSource.data[1]);
         fixture.detectChanges();
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'false', 'false', null, null, null]);
       });
@@ -1283,7 +1296,7 @@ export class TestData {
   isDisabled?: boolean;
   readonly observableChildren: BehaviorSubject<TestData[]>;
 
-  constructor(pizzaTopping: string, pizzaCheese: string, pizzaBase: string, level: number = 1) {
+  constructor(pizzaTopping: string, pizzaCheese = '', pizzaBase = '', level: number = 1) {
     this.pizzaTopping = pizzaTopping;
     this.pizzaCheese = pizzaCheese;
     this.pizzaBase = pizzaBase;
@@ -1464,10 +1477,6 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));
   }
-}
-
-function getNodeAttributes(nodes: HTMLElement[], attribute: string) {
-  return nodes.map(node => node.getAttribute(attribute));
 }
 
 @Component({

@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
-import {FlatTreeControl, CdkTreeModule} from '@angular/cdk/tree';
+import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
+import {MatTreeModule} from '@angular/material/tree';
 
 const TREE_DATA: ExampleFlatNode[] = [
   {
@@ -74,15 +75,15 @@ interface ExampleFlatNode {
  * @title Tree with flat nodes
  */
 @Component({
-  selector: 'cdk-tree-legacy-keyboard-interface-example',
-  templateUrl: 'cdk-tree-legacy-keyboard-interface-example.html',
-  styleUrls: ['cdk-tree-legacy-keyboard-interface-example.css'],
+  selector: 'tree-legacy-keyboard-interface-example',
+  templateUrl: 'tree-legacy-keyboard-interface-example.html',
+  styleUrls: ['tree-legacy-keyboard-interface-example.css'],
   standalone: true,
-  imports: [CdkTreeModule, MatButtonModule, MatIconModule],
+  imports: [MatTreeModule, MatButtonModule, MatIconModule],
   providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CdkTreeLegacyKeyboardInterfaceExample {
+export class TreeLegacyKeyboardInterfaceExample {
   treeControl = new FlatTreeControl<ExampleFlatNode>(
     node => node.level,
     node => node.expandable,

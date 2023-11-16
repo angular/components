@@ -111,6 +111,22 @@ export class VimTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyM
 
   private _items: T[] = [];
 
+  private _hasInitialFocused = false;
+
+  private _initialFocus() {
+    if (this._hasInitialFocused) {
+      return;
+    }
+
+    if (!this._items.length) {
+      return;
+    }
+
+    this._focusFirstItem();
+
+    this._hasInitialFocused = true;
+  }
+
   // TreeKeyManagerOptions not implemented.
   constructor(items: Observable<T[]> | QueryList<T> | T[]) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
@@ -121,14 +137,17 @@ export class VimTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyM
       items.changes.subscribe((newItems: QueryList<T>) => {
         this._items = newItems.toArray();
         this._updateActiveItemIndex(this._items);
+        this._initialFocus();
       });
     } else if (isObservable(items)) {
       items.subscribe(newItems => {
         this._items = newItems;
         this._updateActiveItemIndex(newItems);
+        this._initialFocus();
       });
     } else {
       this._items = items;
+      this._initialFocus();
     }
   }
 
@@ -190,14 +209,6 @@ export class VimTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyM
   /** The currently active item. */
   getActiveItem(): T | null {
     return this._activeItem;
-  }
-
-  /**
-   * Focus the initial element; this is intended to be called when the tree is focused for
-   * the first time.
-   */
-  onInitialFocus(): void {
-    this._focusFirstItem();
   }
 
   /**
