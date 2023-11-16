@@ -39,6 +39,7 @@ html {
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
   @include mat.form-field-theme($light-theme);
+  @include mat.grid-list-theme($light-theme);
   @include mat.input-theme($light-theme);
   @include mat.list-theme($light-theme);
   @include mat.progress-bar-theme($light-theme);
@@ -66,6 +67,7 @@ html {
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
   @include mat.form-field-color($dark-theme);
+  @include mat.grid-list-color($dark-theme);
   @include mat.input-color($dark-theme);
   @include mat.list-color($dark-theme);
   @include mat.progress-bar-color($dark-theme);
@@ -92,6 +94,7 @@ html {
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
     @include mat.form-field-density($scale-theme);
+    @include mat.grid-list-density($scale-theme);
     @include mat.input-density($scale-theme);
     @include mat.list-density($scale-theme);
     @include mat.progress-bar-density($scale-theme);
