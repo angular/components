@@ -1,3 +1,25 @@
+<a name="17.0.1"></a>
+# 17.0.1 "plastic-chicken" (2023-11-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [df5e9c4f3f](https://github.com/angular/components/commit/df5e9c4f3f13ca9b89ea8fe0661f51a83cb635cd) | fix | **autocomplete:** clear previous selection on reactive form reset ([#27653](https://github.com/angular/components/pull/27653)) |
+| [efc0dcfc4c](https://github.com/angular/components/commit/efc0dcfc4c330e6d119edf6bf37cd0225627932a) | fix | **autocomplete:** regression in requireSelection when options are filtered ([#28119](https://github.com/angular/components/pull/28119)) |
+| [09c7eb4f8b](https://github.com/angular/components/commit/09c7eb4f8b0b3ddc8e8f0a1b71c704a414f66823) | fix | **button:** fix raised button line-height ([#28073](https://github.com/angular/components/pull/28073)) |
+| [1a61fc7eea](https://github.com/angular/components/commit/1a61fc7eeaabfe843a5632e50b350b3b4503d85c) | fix | **datepicker:** Fix raw date value being compared ([#27896](https://github.com/angular/components/pull/27896)) |
+| [fe339ee2ba](https://github.com/angular/components/commit/fe339ee2ba7b1afcc03cf1e56cec7c6cfade2ce4) | fix | **list:** validation using wrong variable ([#27638](https://github.com/angular/components/pull/27638)) |
+| [a09ca60be8](https://github.com/angular/components/commit/a09ca60be80f49594d848efaef65629e63934c64) | fix | **schematics:** switch to new control flow ([#28106](https://github.com/angular/components/pull/28106)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cfe596ab1d](https://github.com/angular/components/commit/cfe596ab1d0c3816355f11cd966ea9d6619ee917) | feat | **theming:** add M3 form-field & input support ([#28121](https://github.com/angular/components/pull/28121)) |
+| [365789bd0f](https://github.com/angular/components/commit/365789bd0f8c9fa13778891ec90e712a21216d29) | feat | **theming:** add M3 list support ([#28122](https://github.com/angular/components/pull/28122)) |
+| [81a8cc77e8](https://github.com/angular/components/commit/81a8cc77e8c7a66eb40d598eb373ca0346015978) | feat | **theming:** add M3 slide-toggle support ([#28014](https://github.com/angular/components/pull/28014)) |
+| [ac62b42742](https://github.com/angular/components/commit/ac62b42742ae6231bcff922da57f8d5df451bd33) | feat | **theming:** add M3 sort support ([#28105](https://github.com/angular/components/pull/28105)) |
+| [c5e4766d0f](https://github.com/angular/components/commit/c5e4766d0f0d02c0c8d8a23e5e090e0e456bbe0b) | fix | **theming:** Update M3 palettes ([#28109](https://github.com/angular/components/pull/28109)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.0"></a>
 # 17.0.0 "deferred-diamond" (2023-11-08)
 ## Breaking Changes
