@@ -169,7 +169,8 @@
     @include mdc-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
   }
 
-  .mat-mdc-raised-button {
+  .mat-mdc-raised-button,
+  .mat-mdc-button {
     line-height: inherit;
   }
 }
