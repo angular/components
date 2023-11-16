@@ -19,23 +19,23 @@ $_density-tokens: (
   (mdc, checkbox): (
     state-layer-size: (40px, 36px, 32px, 28px),
   ),
+  (mdc, circular-progress): (),
   (mdc, elevated-card): (),
   (mdc, filled-text-field): (),
-  (mdc, outlined-card): (),
-  (mdc, outlined-text-field): (),
-  (mdc, slider): (),
-  (mdc, snackbar): (),
-  (mdc, plain-tooltip): (),
-  (mdc, circular-progress): (),
-  (mdc, radio): (
-    state-layer-size: (40px, 36px, 32px, 28px),
-  ),
   (mdc, linear-progress): (),
   (mdc, list): (
     list-item-one-line-container-height: (48px, 44px, 40px, 36px, 32px, 24px),
     list-item-two-line-container-height: (64px, 60px, 56px, 52px, 48px, 48px),
     list-item-three-line-container-height: (88px, 84px, 80px, 76px, 72px, 56px),
   ),
+  (mdc, outlined-card): (),
+  (mdc, outlined-text-field): (),
+  (mdc, plain-tooltip): (),
+  (mdc, radio): (
+    state-layer-size: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, slider): (),
+  (mdc, snackbar): (),
   (mdc, switch): (),
   (mdc, tab): (
     container-height: (48px, 44px, 40px, 36px, 32px)
@@ -47,16 +47,13 @@ $_density-tokens: (
   (mat, form-fild): (),
   (mat, grid-list): (),
   (mat, icon): (),
-  (mat, toolbar): (
-    standard-height: (64px, 60px, 56px, 52px),
-    mobile-height: (56px, 52px, 48px, 44px),
-  ),
-  (mat, slider): (),
-  (mat, snack-bar): (),
+  (mat, menu): (),
   (mat, radio): (),
   (mat, ripple): (),
   (mat, sidenav): (),
   (mat, slide-toggle): (),
+  (mat, slider): (),
+  (mat, snack-bar): (),
   (mat, sort): (),
   (mat, stepper): (
     header-height: (72px, 68px, 64px, 60px, 42px),
@@ -66,6 +63,10 @@ $_density-tokens: (
     header-container-height: (56px, 52px, 48px, 44px, 40px),
     footer-container-height: (52px, 48px, 44px, 40px, 36px),
     row-item-container-height: (52px, 48px, 44px, 40px, 36px),
+  ),
+  (mat, toolbar): (
+    standard-height: (64px, 60px, 56px, 52px),
+    mobile-height: (56px, 52px, 48px, 44px),
   ),
   (mat, tree): (
     node-min-height: (48px, 44px, 40px, 36px, 28px),
