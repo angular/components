@@ -281,6 +281,8 @@ export class CdkTree<T, K = T>
       this._dataSubscription.unsubscribe();
       this._dataSubscription = null;
     }
+
+    this._keyManager.destroy();
   }
 
   ngOnInit() {

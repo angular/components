@@ -34,6 +34,10 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
   // implementation that does not emit to streams.
   readonly change = new Subject<T | null>();
 
+  destroy() {
+    this.change.complete();
+  }
+
   onKeydown() {
     // noop
   }
