@@ -47,6 +47,7 @@ html {
   @include mat.progress-spinner-theme($light-theme);
   @include mat.radio-theme($light-theme);
   @include mat.ripple-theme($light-theme);
+  @include mat.sidenav-theme($light-theme);
   @include mat.slide-toggle-theme($light-theme);
   @include mat.slider-theme($light-theme);
   @include mat.snack-bar-theme($light-theme);
@@ -76,6 +77,7 @@ html {
   @include mat.progress-spinner-color($dark-theme);
   @include mat.radio-color($dark-theme);
   @include mat.ripple-color($dark-theme);
+  @include mat.sidenav-color($dark-theme);
   @include mat.slide-toggle-color($dark-theme);
   @include mat.slider-color($dark-theme);
   @include mat.snack-bar-color($dark-theme);
@@ -103,6 +105,7 @@ html {
     @include mat.progress-bar-density($scale-theme);
     @include mat.progress-spinner-density($scale-theme);
     @include mat.radio-density($scale-theme);
+    @include mat.sidenav-density($scale-theme);
     @include mat.slide-toggle-density($scale-theme);
     @include mat.slider-density($scale-theme);
     @include mat.snack-bar-density($scale-theme);

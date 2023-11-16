@@ -149,6 +149,23 @@
   );
 }
 
+/// Generates custom tokens for the mat-sidenav.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-sidenav
+@function sidenav($systems, $exclude-hardcoded) {
+  @return (
+    container-shape: 16px,
+    container-divider-color: map.get($systems, md-sys-color, outline),
+    container-background-color: map.get($systems, md-sys-color, surface),
+    container-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    content-background-color: _hardcode(inherit, $exclude-hardcoded),
+    content-text-color: _hardcode(inherit, $exclude-hardcoded),
+    scrim-color: mat.private-safe-color-change(
+        map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
+  );
+}
+
 /// Generates custom tokens for the mat-sort.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
