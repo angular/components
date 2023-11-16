@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
@@ -10,45 +11,76 @@
   @include token-utils.create-token-values(tokens-mat-icon.$prefix, $tokens);
 }
 
-@mixin base($theme) {}
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {}
+}
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-icon.$prefix,
-      tokens-mat-icon.get-color-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
-
-  .mat-icon {
-    &.mat-primary {
-      @include _palette-colors($theme, primary);
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-icon.$prefix,
+        tokens-mat-icon.get-color-tokens($theme));
     }
 
-    &.mat-accent {
-      @include _palette-colors($theme, accent);
-    }
+    .mat-icon {
+      &.mat-primary {
+        @include _palette-colors($theme, primary);
+      }
 
-    &.mat-warn {
-      @include _palette-colors($theme, warn);
+      &.mat-accent {
+        @include _palette-colors($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _palette-colors($theme, warn);
+      }
     }
   }
 }
 
-@mixin typography($theme) {}
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {}
+}
 
-@mixin density($theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
+}
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }
 
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+        tokens-mat-icon.$prefix, map.get($tokens, tokens-mat-icon.$prefix));
+  }
+}
