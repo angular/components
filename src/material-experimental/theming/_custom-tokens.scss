@@ -35,6 +35,17 @@
   );
 }
 
+/// Generates custom tokens for the mat-divider.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-divider
+@function divider($systems, $exclude-hardcoded) {
+  @return (
+    width: _hardcode(1px, $exclude-hardcoded),
+    color: map.get($systems, md-sys-color, outline-variant),
+  );
+}
+
 /// Generates custom tokens for the mat-form-field.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

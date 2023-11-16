@@ -2,6 +2,7 @@
 @use 'sass:meta';
 @use '../../style/sass-utils';
 @use './mat/card' as tokens-mat-card;
+@use './mat/divider' as tokens-mat-divider;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
@@ -81,6 +82,7 @@
 @function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
+      _get-tokens-for-module($theme, tokens-mat-divider),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
       _get-tokens-for-module($theme, tokens-mat-icon),

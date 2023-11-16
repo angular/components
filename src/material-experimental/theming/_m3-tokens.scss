@@ -256,6 +256,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, divider),
+      custom-tokens.divider($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, form-field),
       custom-tokens.form-field($systems, $exclude-hardcoded),
       $token-slots
