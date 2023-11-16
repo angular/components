@@ -1342,6 +1342,10 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     }
   }
 
+  getLabel(): string {
+    return this._elementRef.nativeElement.textContent ?? '';
+  }
+
   _setTabFocusable() {
     this._elementRef.nativeElement.setAttribute('tabindex', '0');
   }
