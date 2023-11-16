@@ -62,6 +62,19 @@
   );
 }
 
+/// Generates custom tokens for the mat-grid-list.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-grid-list
+@function grid-list($systems, $exclude-hardcoded) {
+  @return (
+    tile-header-primary-text-size: map.get($systems, md-sys-typescale, body-large),
+    tile-header-secondary-text-size: map.get($systems, md-sys-typescale, body-medium),
+    tile-footer-primary-text-size: map.get($systems, md-sys-typescale, body-large),
+    tile-footer-secondary-text-size: map.get($systems, md-sys-typescale, body-medium),
+  );
+}
+
 /// Generates custom tokens for the mat-toolbar.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
