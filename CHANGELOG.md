@@ -1,13 +1,3 @@
-<a name="17.1.0-next.0"></a>
-# 17.1.0-next.0 "plastic-rhino" (2023-11-16)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6719168192](https://github.com/angular/components/commit/67191681921550b7e4e0c587880e4db25686c589) | feat | **chips:** expose _chipGrid in MatChipInput and add a stream of chip removal events ([#28012](https://github.com/angular/components/pull/28012)) ([#28013](https://github.com/angular/components/pull/28013)) |
-| [556eeb19c8](https://github.com/angular/components/commit/556eeb19c8d53e8675df12670f5ccaa6148d2532) | fix | **button:** Move unthemable icon button tokens to theme mixin ([#27570](https://github.com/angular/components/pull/27570)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="17.0.1"></a>
 # 17.0.1 "plastic-chicken" (2023-11-16)
 ### material
