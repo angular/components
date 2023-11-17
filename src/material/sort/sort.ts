@@ -19,8 +19,7 @@ import {
   Output,
   booleanAttribute,
 } from '@angular/core';
-import {HasInitialized, mixinInitialized} from '@angular/material/core';
-import {Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {SortDirection} from './sort-direction';
 import {
   getSortDuplicateSortableIdError,
@@ -65,10 +64,6 @@ export const MAT_SORT_DEFAULT_OPTIONS = new InjectionToken<MatSortDefaultOptions
   'MAT_SORT_DEFAULT_OPTIONS',
 );
 
-// Boilerplate for applying mixins to MatSort.
-/** @docs-private */
-const _MatSortBase = mixinInitialized(class {});
-
 /** Container for MatSortables to manage the sort state and provide default sort parameters. */
 @Directive({
   selector: '[matSort]',
@@ -78,7 +73,9 @@ const _MatSortBase = mixinInitialized(class {});
   },
   standalone: true,
 })
-export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, OnDestroy, OnInit {
+export class MatSort implements OnChanges, OnDestroy, OnInit {
+  private _initializedStream = new ReplaySubject<void>(1);
+
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
 
@@ -126,13 +123,14 @@ export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, 
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
+  /** Emits when the paginator is initialized. */
+  initialized: Observable<void> = this._initializedStream;
+
   constructor(
     @Optional()
     @Inject(MAT_SORT_DEFAULT_OPTIONS)
     private _defaultOptions?: MatSortDefaultOptions,
-  ) {
-    super();
-  }
+  ) {}
 
   /**
    * Register function to be used by the contained MatSortables. Adds the MatSortable to the
@@ -192,7 +190,7 @@ export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, 
   }
 
   ngOnInit() {
-    this._markInitialized();
+    this._initializedStream.next();
   }
 
   ngOnChanges() {
@@ -201,6 +199,7 @@ export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, 
 
   ngOnDestroy() {
     this._stateChanges.complete();
+    this._initializedStream.complete();
   }
 }
 
