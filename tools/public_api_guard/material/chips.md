@@ -4,12 +4,9 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanUpdateErrorState } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
@@ -172,7 +169,7 @@ export interface MatChipEvent {
 }
 
 // @public
-export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentInit, AfterViewInit, CanUpdateErrorState, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
+export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
     protected _allowFocusEscape(): void;
     _blur(): void;
@@ -187,7 +184,10 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     get disabled(): boolean;
     set disabled(value: boolean);
     get empty(): boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     focus(): void;
     get focused(): boolean;
     // (undocumented)
@@ -202,6 +202,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -223,6 +225,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
+    readonly stateChanges: Subject<void>;
+    updateErrorState(): void;
     get value(): any;
     set value(value: any);
     // (undocumented)

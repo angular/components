@@ -33,7 +33,7 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import {CanUpdateErrorState, ErrorStateMatcher, mixinErrorState} from '@angular/material/core';
+import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
 import {MatFormFieldControl} from '@angular/material/form-field';
 import {MatChipTextControl} from './chip-text-control';
 import {Observable, Subject, merge} from 'rxjs';
@@ -52,44 +52,6 @@ export class MatChipGridChange {
     public value: any,
   ) {}
 }
-
-/**
- * Boilerplate for applying mixins to MatChipGrid.
- * Important! this class needs to be marked as a component or a directive, because
- * leaving it without metadata cuases the framework to execute the host bindings multiple
- * times which breaks the keyboard navigation. We can't use `@Directive()` here, because
- * `MatChipSet` is a component. We should able to remove this class altogether once
- * the error state is moved away from using mixins.
- * @docs-private
- */
-// tslint:disable-next-line:validate-decorators
-@Component({template: ''})
-class MatChipGridBase extends MatChipSet {
-  /**
-   * Emits whenever the component state changes and should cause the parent
-   * form-field to update. Implemented as part of `MatFormFieldControl`.
-   * @docs-private
-   */
-  readonly stateChanges = new Subject<void>();
-
-  constructor(
-    elementRef: ElementRef,
-    changeDetectorRef: ChangeDetectorRef,
-    dir: Directionality,
-    public _defaultErrorStateMatcher: ErrorStateMatcher,
-    public _parentForm: NgForm,
-    public _parentFormGroup: FormGroupDirective,
-    /**
-     * Form control bound to the component.
-     * Implemented as part of `MatFormFieldControl`.
-     * @docs-private
-     */
-    public ngControl: NgControl,
-  ) {
-    super(elementRef, changeDetectorRef, dir);
-  }
-}
-const _MatChipGridMixinBase = mixinErrorState(MatChipGridBase);
 
 /**
  * An extension of the MatChipSet component used with MatChipRow chips and
@@ -120,11 +82,10 @@ const _MatChipGridMixinBase = mixinErrorState(MatChipGridBase);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipGrid
-  extends _MatChipGridMixinBase
+  extends MatChipSet
   implements
     AfterContentInit,
     AfterViewInit,
-    CanUpdateErrorState,
     ControlValueAccessor,
     DoCheck,
     MatFormFieldControl<any>,
@@ -140,6 +101,7 @@ export class MatChipGrid
   protected _chipInput: MatChipTextControl;
 
   protected override _defaultRole = 'grid';
+  private _errorStateTracker: _ErrorStateTracker;
 
   /**
    * List of element ids to propagate to the chipInput's aria-describedby attribute.
@@ -244,7 +206,13 @@ export class MatChipGrid
   protected _value: any[] = [];
 
   /** An object used to control when error messages are shown. */
-  @Input() override errorStateMatcher: ErrorStateMatcher;
+  @Input()
+  get errorStateMatcher() {
+    return this._errorStateTracker.matcher;
+  }
+  set errorStateMatcher(value: ErrorStateMatcher) {
+    this._errorStateTracker.matcher = value;
+  }
 
   /** Combined stream of all of the child chips' blur events. */
   get chipBlurChanges(): Observable<MatChipEvent> {
@@ -270,6 +238,21 @@ export class MatChipGrid
   // We need an initializer here to avoid a TS error. The value will be set in `ngAfterViewInit`.
   override _chips: QueryList<MatChipRow> = undefined!;
 
+  /**
+   * Emits whenever the component state changes and should cause the parent
+   * form-field to update. Implemented as part of `MatFormFieldControl`.
+   * @docs-private
+   */
+  readonly stateChanges = new Subject<void>();
+
+  /** Whether the chip grid is in an error state. */
+  get errorState() {
+    return this._errorStateTracker.errorState;
+  }
+  set errorState(value: boolean) {
+    this._errorStateTracker.errorState = value;
+  }
+
   constructor(
     elementRef: ElementRef,
     changeDetectorRef: ChangeDetectorRef,
@@ -277,20 +260,21 @@ export class MatChipGrid
     @Optional() parentForm: NgForm,
     @Optional() parentFormGroup: FormGroupDirective,
     defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() @Self() ngControl: NgControl,
+    @Optional() @Self() public ngControl: NgControl,
   ) {
-    super(
-      elementRef,
-      changeDetectorRef,
-      dir,
-      defaultErrorStateMatcher,
-      parentForm,
-      parentFormGroup,
-      ngControl,
-    );
+    super(elementRef, changeDetectorRef, dir);
+
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
+
+    this._errorStateTracker = new _ErrorStateTracker(
+      defaultErrorStateMatcher,
+      ngControl,
+      parentFormGroup,
+      parentForm,
+      this.stateChanges,
+    );
   }
 
   ngAfterContentInit() {
@@ -405,6 +389,11 @@ export class MatChipGrid
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     this.stateChanges.next();
+  }
+
+  /** Refreshes the error state of the chip grid. */
+  updateErrorState() {
+    this._errorStateTracker.updateErrorState();
   }
 
   /** When blurred, mark the field as touched when focus moved outside the chip grid. */
