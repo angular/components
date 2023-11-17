@@ -11,10 +11,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -46,7 +46,7 @@ export const MAT_SORT_HEADER_INTL_PROVIDER: {
 export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl): MatSortHeaderIntl;
 
 // @public
-export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, OnDestroy, OnInit {
+export class MatSort implements OnChanges, OnDestroy, OnInit {
     constructor(_defaultOptions?: MatSortDefaultOptions | undefined);
     active: string;
     deregister(sortable: MatSortable): void;
@@ -55,6 +55,7 @@ export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, 
     disableClear: boolean;
     disabled: boolean;
     getNextSortDirection(sortable: MatSortable): SortDirection;
+    initialized: Observable<void>;
     // (undocumented)
     static ngAcceptInputType_disableClear: unknown;
     // (undocumented)
