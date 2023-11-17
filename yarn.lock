@@ -161,10 +161,10 @@
     "@angular/core" "^13.0.0 || ^14.0.0-0"
     reflect-metadata "^0.1.13"
 
-"@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#96ad5e16c3db2eec332a0fd16886991da1d7d153":
-  version "0.0.0-43f424f003987829b6c1375478936d155fd47219"
-  uid "96ad5e16c3db2eec332a0fd16886991da1d7d153"
-  resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#96ad5e16c3db2eec332a0fd16886991da1d7d153"
+"@angular/build-tooling@https://github.com/angular/dev-infra-private-build-tooling-builds.git#6d925d8f1474f694c27e4f1fdcb0fa54ba22875c":
+  version "0.0.0-af6d1c371f387efd5703a24739412ea862c3218e"
+  uid "6d925d8f1474f694c27e4f1fdcb0fa54ba22875c"
+  resolved "https://github.com/angular/dev-infra-private-build-tooling-builds.git#6d925d8f1474f694c27e4f1fdcb0fa54ba22875c"
   dependencies:
     "@angular-devkit/build-angular" "17.0.0"
     "@angular/benchpress" "0.3.0"
@@ -191,7 +191,7 @@
     clang-format "1.8.0"
     highlight.js "^11.8.0"
     html-entities "^2.4.0"
-    marked "^9.1.5"
+    marked "^10.0.0"
     marked-mangle "^1.1.4"
     preact "^10.17.1"
     preact-render-to-string "^6.2.1"
@@ -289,10 +289,10 @@
     fast-glob "3.3.1"
     yargs "^17.2.1"
 
-"@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#509294cf24b91ff7d1e830b5793916a2b0a07682":
-  version "0.0.0-43f424f003987829b6c1375478936d155fd47219"
-  uid "509294cf24b91ff7d1e830b5793916a2b0a07682"
-  resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#509294cf24b91ff7d1e830b5793916a2b0a07682"
+"@angular/ng-dev@https://github.com/angular/dev-infra-private-ng-dev-builds.git#a18326e3d94aac04d75f99207a0d28399d549b27":
+  version "0.0.0-af6d1c371f387efd5703a24739412ea862c3218e"
+  uid a18326e3d94aac04d75f99207a0d28399d549b27
+  resolved "https://github.com/angular/dev-infra-private-ng-dev-builds.git#a18326e3d94aac04d75f99207a0d28399d549b27"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     typescript "~4.9.0"
@@ -11523,15 +11523,15 @@ marked@^0.7.0:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
   integrity sha512-c+yYdCZJQrsRjTPhUx7VKkApw9bwDkNbHUKo1ovgcfDjb2kc8rLuRbIFyXL5WOEUwzSSKo3IXpph2K6DqB/KZg==
 
+marked@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-10.0.0.tgz#7fe1805bb908433d760e2de0fcc8841a2b2d745c"
+  integrity sha512-YiGcYcWj50YrwBgNzFoYhQ1hT6GmQbFG8SksnYJX1z4BXTHSOrz1GB5/Jm2yQvMg4nN1FHP4M6r03R10KrVUiA==
+
 marked@^2.0.0:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/marked/-/marked-2.1.3.tgz#bd017cef6431724fd4b27e0657f5ceb14bff3753"
   integrity sha512-/Q+7MGzaETqifOMWYEA7HVMaZb4XbcRfaOzcSsHZEith83KGlvaSG33u0SKu89Mj5h+T8V2hM+8O45Qc5XTgwA==
-
-marked@^9.1.5:
-  version "9.1.6"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-9.1.6.tgz#5d2a3f8180abfbc5d62e3258a38a1c19c0381695"
-  integrity sha512-jcByLnIFkd5gSXZmjNvS1TlmRhCXZjIzHYlaGkPlLIekG55JDR2Z4va9tZwCiP+/RDERiNhMOFu01xd6O5ct1Q==
 
 marky@^1.2.2:
   version "1.2.4"

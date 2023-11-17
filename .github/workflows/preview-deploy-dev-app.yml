@@ -33,7 +33,7 @@ jobs:
           npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
           npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
 
-      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@43f424f003987829b6c1375478936d155fd47219
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@af6d1c371f387efd5703a24739412ea862c3218e
         with:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'dev-app'
