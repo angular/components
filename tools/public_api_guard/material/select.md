@@ -4,16 +4,13 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { CanUpdateErrorState } from '@angular/material/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
@@ -69,8 +66,8 @@ export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): (
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
 
 // @public (undocumented)
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any>, CanUpdateErrorState {
-    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
+export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any> {
+    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, defaultErrorStateMatcher: ErrorStateMatcher, _elementRef: ElementRef, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
     ariaLabel: string;
     ariaLabelledby: string;
     protected _canOpen(): boolean;
@@ -88,8 +85,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     disabled: boolean;
     disableOptionCentering: boolean;
     disableRipple: boolean;
+    // (undocumented)
+    readonly _elementRef: ElementRef;
     get empty(): boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     focus(options?: FocusOptions): void;
     get focused(): boolean;
     _getAriaActiveDescendant(): string | null;
@@ -122,6 +124,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     static ngAcceptInputType_typeaheadDebounceInterval: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -176,12 +180,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
     sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+    readonly stateChanges: Subject<void>;
     _syncParentProperties(): void;
     tabIndex: number;
     toggle(): void;
     trigger: ElementRef;
     get triggerValue(): string;
     typeaheadDebounceInterval: number;
+    updateErrorState(): void;
     userAriaDescribedBy: string;
     get value(): any;
     set value(newValue: any);
