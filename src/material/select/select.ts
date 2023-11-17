@@ -70,14 +70,13 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  CanUpdateErrorState,
+  _ErrorStateTracker,
   ErrorStateMatcher,
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
-  mixinErrorState,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
 } from '@angular/material/core';
@@ -161,32 +160,6 @@ export class MatSelectChange {
   ) {}
 }
 
-// Boilerplate for applying mixins to MatSelect.
-/** @docs-private */
-const _MatSelectMixinBase = mixinErrorState(
-  class {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `MatFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-      public _elementRef: ElementRef,
-      public _defaultErrorStateMatcher: ErrorStateMatcher,
-      public _parentForm: NgForm,
-      public _parentFormGroup: FormGroupDirective,
-      /**
-       * Form control bound to the component.
-       * Implemented as part of `MatFormFieldControl`.
-       * @docs-private
-       */
-      public ngControl: NgControl,
-    ) {}
-  },
-);
-
 @Component({
   selector: 'mat-select',
   exportAs: 'matSelect',
@@ -225,7 +198,6 @@ const _MatSelectMixinBase = mixinErrorState(
   ],
 })
 export class MatSelect
-  extends _MatSelectMixinBase
   implements
     AfterContentInit,
     OnChanges,
@@ -233,8 +205,7 @@ export class MatSelect
     OnInit,
     DoCheck,
     ControlValueAccessor,
-    MatFormFieldControl<any>,
-    CanUpdateErrorState
+    MatFormFieldControl<any>
 {
   /** All of the defined select options. */
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
@@ -340,6 +311,16 @@ export class MatSelect
 
   /** Emits whenever the component is destroyed. */
   protected readonly _destroy = new Subject<void>();
+
+  /** Tracks the error state of the select. */
+  private _errorStateTracker: _ErrorStateTracker;
+
+  /**
+   * Emits whenever the component state changes and should cause the parent
+   * form-field to update. Implemented as part of `MatFormFieldControl`.
+   * @docs-private
+   */
+  readonly stateChanges = new Subject<void>();
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -505,7 +486,13 @@ export class MatSelect
   @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Object used to control when error messages are shown. */
-  @Input() override errorStateMatcher: ErrorStateMatcher;
+  @Input()
+  get errorStateMatcher() {
+    return this._errorStateTracker.matcher;
+  }
+  set errorStateMatcher(value: ErrorStateMatcher) {
+    this._errorStateTracker.matcher = value;
+  }
 
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   @Input({transform: numberAttribute})
@@ -527,6 +514,14 @@ export class MatSelect
     this.stateChanges.next();
   }
   private _id: string;
+
+  /** Whether the select is in an error state. */
+  get errorState() {
+    return this._errorStateTracker.errorState;
+  }
+  set errorState(value: boolean) {
+    this._errorStateTracker.errorState = value;
+  }
 
   /**
    * Width of the panel. If set to `auto`, the panel will match the trigger width.
@@ -583,20 +578,18 @@ export class MatSelect
     protected _viewportRuler: ViewportRuler,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _ngZone: NgZone,
-    _defaultErrorStateMatcher: ErrorStateMatcher,
-    elementRef: ElementRef,
+    defaultErrorStateMatcher: ErrorStateMatcher,
+    readonly _elementRef: ElementRef,
     @Optional() private _dir: Directionality,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
     @Optional() @Inject(MAT_FORM_FIELD) protected _parentFormField: MatFormField,
-    @Self() @Optional() ngControl: NgControl,
+    @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
     private _liveAnnouncer: LiveAnnouncer,
     @Optional() @Inject(MAT_SELECT_CONFIG) protected _defaultOptions?: MatSelectConfig,
   ) {
-    super(elementRef, _defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
-
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
       // the `providers` to avoid running into a circular import.
@@ -609,6 +602,13 @@ export class MatSelect
       this.typeaheadDebounceInterval = _defaultOptions.typeaheadDebounceInterval;
     }
 
+    this._errorStateTracker = new _ErrorStateTracker(
+      defaultErrorStateMatcher,
+      ngControl,
+      parentFormGroup,
+      parentForm,
+      this.stateChanges,
+    );
     this._scrollStrategyFactory = scrollStrategyFactory;
     this._scrollStrategy = this._scrollStrategyFactory();
     this.tabIndex = parseInt(tabIndex) || 0;
@@ -886,6 +886,11 @@ export class MatSelect
     }
 
     return this._selectionModel.selected[0].viewValue;
+  }
+
+  /** Refreshes the error state of the select. */
+  updateErrorState() {
+    this._errorStateTracker.updateErrorState();
   }
 
   /** Whether the element is in RTL mode. */
