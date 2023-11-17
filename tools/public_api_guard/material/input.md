@@ -4,12 +4,9 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterViewInit } from '@angular/core';
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { _Constructor } from '@angular/material/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -38,8 +35,8 @@ export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
 }>;
 
 // @public (undocumented)
-export class MatInput extends _MatInputBase implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState {
-    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
+export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
+    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
     autofilled: boolean;
     controlType: string;
     protected _dirtyCheckNativeValue(): void;
@@ -50,7 +47,10 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
     get empty(): boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     focus(options?: FocusOptions): void;
     _focusChanged(isFocused: boolean): void;
     focused: boolean;
@@ -73,6 +73,8 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     protected _neverEmptyInputTypes: string[];
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -102,6 +104,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     protected _type: string;
     // (undocumented)
     protected _uid: string;
+    updateErrorState(): void;
     userAriaDescribedBy: string;
     protected _validateType(): void;
     get value(): string;
