@@ -22,12 +22,12 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
-import {MatFormField, MatFormFieldAppearance} from '@angular/material/form-field';
-import {HasInitialized, MatOption, mixinInitialized, ThemePalette} from '@angular/material/core';
+import {MatOption, ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
-import {Subscription} from 'rxjs';
+import {MatFormField, MatFormFieldAppearance} from '@angular/material/form-field';
+import {Observable, ReplaySubject, Subscription} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
 
 /** The default page size if there is no page size and there are no provided page size options. */
@@ -90,10 +90,6 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
   'MAT_PAGINATOR_DEFAULT_OPTIONS',
 );
 
-// Boilerplate for applying mixins to _MatPaginatorBase.
-/** @docs-private */
-const _MatPaginatorMixinBase = mixinInitialized(class {});
-
 let nextUniqueId = 0;
 
 /**
@@ -115,18 +111,16 @@ let nextUniqueId = 0;
   standalone: true,
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
-export class MatPaginator
-  extends _MatPaginatorMixinBase
-  implements OnInit, OnDestroy, HasInitialized
-{
+export class MatPaginator implements OnInit, OnDestroy {
   /** If set, styles the "page size" form field with the designated style. */
   _formFieldAppearance?: MatFormFieldAppearance;
 
   /** ID for the DOM node containing the paginator's items per page label. */
   readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
 
-  private _initialized: boolean;
   private _intlChanges: Subscription;
+  private _isInitialized = false;
+  private _initializedStream = new ReplaySubject<void>(1);
 
   /** Theme color to be used for the underlying form controls. */
   @Input() color: ThemePalette;
@@ -196,12 +190,14 @@ export class MatPaginator
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
 
+  /** Emits when the paginator is initialized. */
+  initialized: Observable<void> = this._initializedStream;
+
   constructor(
     public _intl: MatPaginatorIntl,
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions,
   ) {
-    super();
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
 
     if (defaults) {
@@ -228,12 +224,13 @@ export class MatPaginator
   }
 
   ngOnInit() {
-    this._initialized = true;
+    this._isInitialized = true;
     this._updateDisplayedPageSizeOptions();
-    this._markInitialized();
+    this._initializedStream.next();
   }
 
   ngOnDestroy() {
+    this._initializedStream.complete();
     this._intlChanges.unsubscribe();
   }
 
@@ -337,7 +334,7 @@ export class MatPaginator
    * the page size is an option and that the list is sorted.
    */
   private _updateDisplayedPageSizeOptions() {
-    if (!this._initialized) {
+    if (!this._isInitialized) {
       return;
     }
 
