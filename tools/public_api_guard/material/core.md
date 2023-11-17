@@ -134,6 +134,16 @@ export class ErrorStateMatcher {
 }
 
 // @public
+export class _ErrorStateTracker {
+    constructor(_defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
+    errorState: boolean;
+    matcher: ErrorStateMatcher;
+    // (undocumented)
+    ngControl: NgControl | null;
+    updateErrorState(): void;
+}
+
+// @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public
