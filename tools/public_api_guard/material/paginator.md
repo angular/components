@@ -6,13 +6,13 @@
 
 import { ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/button';
 import * as i2 from '@angular/material/select';
 import * as i3 from '@angular/material/tooltip';
 import { InjectionToken } from '@angular/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
@@ -33,7 +33,7 @@ export const MAT_PAGINATOR_INTL_PROVIDER: {
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
-export class MatPaginator extends _MatPaginatorMixinBase implements OnInit, OnDestroy, HasInitialized {
+export class MatPaginator implements OnInit, OnDestroy {
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
@@ -45,6 +45,7 @@ export class MatPaginator extends _MatPaginatorMixinBase implements OnInit, OnDe
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
     hidePageSize: boolean;
+    initialized: Observable<void>;
     // (undocumented)
     _intl: MatPaginatorIntl;
     lastPage(): void;
