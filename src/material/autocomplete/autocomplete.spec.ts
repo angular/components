@@ -705,6 +705,65 @@ describe('MDC-based MatAutocomplete', () => {
     }).not.toThrow();
   });
 
+  it('should clear the selected option if it no longer matches the input text while typing', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(false);
+  }));
+
+  it('should not clear the selected option if it no longer matches the input text while typing with requireSelection', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.componentInstance.requireSelection = true;
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+  }));
+
   describe('forms integration', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
