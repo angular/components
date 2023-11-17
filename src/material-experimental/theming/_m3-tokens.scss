@@ -178,6 +178,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, circular-progress),
+      mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, elevated-card),
       mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
       $token-slots
@@ -185,6 +190,11 @@
     _namespace-tokens(
       (mdc, filled-text-field),
       mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, linear-progress),
+      mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -203,6 +213,16 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, plain-tooltip),
+      mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, radio),
+      mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, slider),
       mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
       $token-slots
@@ -218,30 +238,11 @@
       $token-slots
     ),
     _namespace-tokens(
-      (mdc, plain-tooltip),
-      mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mdc, circular-progress),
-      mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mdc, radio),
-      mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mdc, linear-progress),
-      mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
       (mdc, tab),
       mdc-tokens.md-comp-secondary-navigation-tab-values($systems, $exclude-hardcoded),
       $token-slots
     ),
+
     // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
     // values.
     _namespace-tokens(
@@ -252,6 +253,11 @@
     _namespace-tokens(
       (mat, card),
       custom-tokens.card($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, divider),
+      custom-tokens.divider($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -270,14 +276,24 @@
       $token-slots
     ),
     _namespace-tokens(
-      (mat, sidenav),
-      custom-tokens.sidenav($systems, $exclude-hardcoded),
+      (mat, menu),
+      custom-tokens.menu($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
-      (mat, toolbar),
-      custom-tokens.toolbar($systems, $exclude-hardcoded),
-      $token-slots,
+      (mat, radio),
+      custom-tokens.radio($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, ripple),
+      custom-tokens.ripple($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, sidenav),
+      custom-tokens.sidenav($systems, $exclude-hardcoded),
+      $token-slots
     ),
     _namespace-tokens(
       (mat, slide-toggle),
@@ -292,16 +308,6 @@
     _namespace-tokens(
       (mat, snack-bar),
       custom-tokens.snack-bar($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, radio),
-      custom-tokens.radio($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, ripple),
-      custom-tokens.ripple($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -323,6 +329,11 @@
       (mat, table),
       custom-tokens.table($systems, $exclude-hardcoded),
       $token-slots
+    ),
+    _namespace-tokens(
+      (mat, toolbar),
+      custom-tokens.toolbar($systems, $exclude-hardcoded),
+      $token-slots,
     ),
     _namespace-tokens(
       (mat, tree),

@@ -2,9 +2,11 @@
 @use 'sass:meta';
 @use '../../style/sass-utils';
 @use './mat/card' as tokens-mat-card;
+@use './mat/divider' as tokens-mat-divider;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
+@use './mat/menu' as tokens-mat-menu;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/sidenav' as tokens-mat-sidenav;
@@ -80,9 +82,11 @@
 @function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
+      _get-tokens-for-module($theme, tokens-mat-divider),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
       _get-tokens-for-module($theme, tokens-mat-icon),
+      _get-tokens-for-module($theme, tokens-mat-menu),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-sidenav),

@@ -35,6 +35,17 @@
   );
 }
 
+/// Generates custom tokens for the mat-divider.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-divider
+@function divider($systems, $exclude-hardcoded) {
+  @return (
+    width: _hardcode(1px, $exclude-hardcoded),
+    color: map.get($systems, md-sys-color, outline-variant),
+  );
+}
+
 /// Generates custom tokens for the mat-form-field.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
@@ -85,45 +96,27 @@
   );
 }
 
-/// Generates custom tokens for the mat-toolbar.
+/// Generates custom tokens for the mat-menu.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @return {Map} A set of custom tokens for the mat-toolbar
-@function toolbar($systems, $exclude-hardcoded) {
+/// @return {Map} A set of custom tokens for the mat-menu
+@function menu($systems, $exclude-hardcoded) {
   @return mat.private-merge-all(
-    _generate-typography-tokens($systems, title-text, title-large),
+    _generate-typography-tokens($systems, item-label-text, label-large),
     (
-      container-background-color: map.get($systems, md-sys-color, surface),
-      container-text-color: map.get($systems, md-sys-color, on-surface),
+      container-shape: _hardcode(4px, $exclude-hardcoded),
+      item-label-text-color: map.get($systems, md-sys-color, on-surface),
+      item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      item-hover-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+      ),
+      item-focus-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+      ),
+      container-color: map.get($systems, md-sys-color, surface-container),
     )
-  );
-}
-
-/// Generates custom tokens for the mat-slide-toggle.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @return {Map} A set of custom tokens for the mat-slide-toggle
-@function slide-toggle($systems, $exclude-hardcoded) {
-  @return _generate-typography-tokens($systems, label-text, label-large);
-}
-
-/// Generates custom tokens for the mat-slider.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @return {Map} A set of custom tokens for the mat-slider
-@function slider($systems, $exclude-hardcoded) {
-  @return (
-    value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
-  );
-}
-
-/// Generates custom tokens for the mat-snack-bar.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @return {Map} A set of custom tokens for the mat-snack-bar
-@function snack-bar($systems, $exclude-hardcoded) {
-  @return (
-    button-color: map.get($systems, md-sys-color, inverse-primary),
   );
 }
 
@@ -163,6 +156,34 @@
     content-text-color: _hardcode(inherit, $exclude-hardcoded),
     scrim-color: mat.private-safe-color-change(
         map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
+  );
+}
+
+/// Generates custom tokens for the mat-slide-toggle.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-slide-toggle
+@function slide-toggle($systems, $exclude-hardcoded) {
+  @return _generate-typography-tokens($systems, label-text, label-large);
+}
+
+/// Generates custom tokens for the mat-slider.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-slider
+@function slider($systems, $exclude-hardcoded) {
+  @return (
+    value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
+  );
+}
+
+/// Generates custom tokens for the mat-snack-bar.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-snack-bar
+@function snack-bar($systems, $exclude-hardcoded) {
+  @return (
+    button-color: map.get($systems, md-sys-color, inverse-primary),
   );
 }
 
@@ -221,7 +242,7 @@
   @return mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
-      disabled-ripple-color: blue, // TODO(mmalerba): Figure out correct value.
+      disabled-ripple-color: null, // TODO(mmalerba): Figure out correct value.
       pagination-icon-color: map.get($systems, md-sys-color, on-surface),
       inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
       active-label-text-color: map.get($systems, md-sys-color, on-surface),
@@ -267,6 +288,20 @@
       row-item-label-text-color: map.get($systems, md-sys-color, on-surface),
       row-item-outline-color: map.get($systems, md-sys-color, outline-variant),
     ),
+  );
+}
+
+/// Generates custom tokens for the mat-toolbar.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-toolbar
+@function toolbar($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+      _generate-typography-tokens($systems, title-text, title-large),
+      (
+        container-background-color: map.get($systems, md-sys-color, surface),
+        container-text-color: map.get($systems, md-sys-color, on-surface),
+      )
   );
 }
 
