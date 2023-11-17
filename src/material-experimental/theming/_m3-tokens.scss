@@ -281,6 +281,16 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, optgroup),
+      custom-tokens.optgroup($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, option),
+      custom-tokens.option($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, radio),
       custom-tokens.radio($systems, $exclude-hardcoded),
       $token-slots
