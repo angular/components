@@ -142,6 +142,28 @@
   );
 }
 
+/// Generates custom tokens for the mat-select.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-select
+@function select($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    _generate-typography-tokens($systems, trigger-text, body-large),
+    (
+      panel-background-color: map.get($systems, md-sys-color, surface-container),
+      enabled-trigger-text-color: map.get($systems, md-sys-color, on-surface),
+      disabled-trigger-text-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      placeholder-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      enabled-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-arrow-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      focused-arrow-color: map.get($systems, md-sys-color, primary),
+      invalid-arrow-color: map.get($systems, md-sys-color, error),
+    )
+  );
+}
+
 /// Generates custom tokens for the mat-sidenav.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

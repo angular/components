@@ -291,6 +291,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, select),
+      custom-tokens.select($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, sidenav),
       custom-tokens.sidenav($systems, $exclude-hardcoded),
       $token-slots
