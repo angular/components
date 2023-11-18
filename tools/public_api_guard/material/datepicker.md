@@ -4,17 +4,14 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { CanUpdateErrorState } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
-import { _Constructor } from '@angular/material/core';
 import { ControlContainer } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
@@ -676,7 +673,7 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
 }
 
 // @public
-export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
@@ -689,7 +686,7 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdat
     // (undocumented)
     protected _validator: ValidatorFn | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatEndDate<any>, "input[matEndDate]", never, { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatEndDate<any>, "input[matEndDate]", never, {}, { "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatEndDate<any>, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
@@ -826,7 +823,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
 }
 
 // @public
-export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
@@ -841,7 +838,7 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
     // (undocumented)
     protected _validator: ValidatorFn | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStartDate<any>, "input[matStartDate]", never, { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStartDate<any>, "input[matStartDate]", never, {}, { "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStartDate<any>, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }

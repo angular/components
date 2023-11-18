@@ -16,6 +16,7 @@ import {
   OnInit,
   Injector,
   DoCheck,
+  Input,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -29,12 +30,11 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import {
-  CanUpdateErrorState,
-  mixinErrorState,
   MAT_DATE_FORMATS,
   DateAdapter,
   MatDateFormats,
   ErrorStateMatcher,
+  _ErrorStateTracker,
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
@@ -81,14 +81,28 @@ abstract class MatDateRangeInputPartBase<D>
    */
   ngControl: NgControl;
 
-  /** @docs-private */
-  abstract updateErrorState(): void;
-
   protected abstract override _validator: ValidatorFn | null;
   protected abstract override _assignValueToModel(value: D | null): void;
   protected abstract override _getValueFromModel(modelValue: DateRange<D>): D | null;
-
   protected readonly _dir = inject(Directionality, {optional: true});
+  private _errorStateTracker: _ErrorStateTracker;
+
+  /** Object used to control when error messages are shown. */
+  @Input()
+  get errorStateMatcher() {
+    return this._errorStateTracker.matcher;
+  }
+  set errorStateMatcher(value: ErrorStateMatcher) {
+    this._errorStateTracker.matcher = value;
+  }
+
+  /** Whether the input is in an error state. */
+  get errorState() {
+    return this._errorStateTracker.errorState;
+  }
+  set errorState(value: boolean) {
+    this._errorStateTracker.errorState = value;
+  }
 
   constructor(
     @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent<D>,
@@ -101,6 +115,13 @@ abstract class MatDateRangeInputPartBase<D>
     @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
   ) {
     super(_elementRef, dateAdapter, dateFormats);
+    this._errorStateTracker = new _ErrorStateTracker(
+      this._defaultErrorStateMatcher,
+      null,
+      this._parentFormGroup,
+      this._parentForm,
+      this.stateChanges,
+    );
   }
 
   ngOnInit() {
@@ -110,11 +131,11 @@ abstract class MatDateRangeInputPartBase<D>
     // itself. Usually we can work around it for the CVA, but there's no API to do it for the
     // validator. We work around it here by injecting the `NgControl` in `ngOnInit`, after
     // everything has been resolved.
-    // tslint:disable-next-line:no-bitwise
     const ngControl = this._injector.get(NgControl, null, {optional: true, self: true});
 
     if (ngControl) {
       this.ngControl = ngControl;
+      this._errorStateTracker.ngControl = ngControl;
     }
   }
 
@@ -147,6 +168,11 @@ abstract class MatDateRangeInputPartBase<D>
     const element = this._elementRef.nativeElement;
     const value = element.value;
     return value.length > 0 ? value : element.placeholder;
+  }
+
+  /** Refreshes the error state of the input. */
+  updateErrorState() {
+    this._errorStateTracker.updateErrorState();
   }
 
   /** Handles `input` events on the input element. */
@@ -199,8 +225,6 @@ abstract class MatDateRangeInputPartBase<D>
   }
 }
 
-const _MatDateRangeInputBase = mixinErrorState(MatDateRangeInputPartBase);
-
 /** Input for entering the start date in a `mat-date-range-input`. */
 @Directive({
   selector: 'input[matStartDate]',
@@ -224,9 +248,8 @@ const _MatDateRangeInputBase = mixinErrorState(MatDateRangeInputPartBase);
   // These need to be specified explicitly, because some tooling doesn't
   // seem to pick them up from the base class. See #20932.
   outputs: ['dateChange', 'dateInput'],
-  inputs: ['errorStateMatcher'],
 })
-export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
   /** Validator that checks that the start date isn't after the end date. */
   private _startValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const start = this._dateAdapter.getValidDateOrNull(
@@ -337,9 +360,8 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
   // These need to be specified explicitly, because some tooling doesn't
   // seem to pick them up from the base class. See #20932.
   outputs: ['dateChange', 'dateInput'],
-  inputs: ['errorStateMatcher'],
 })
-export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
   /** Validator that checks that the end date isn't before the start date. */
   private _endValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const end = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(control.value));
