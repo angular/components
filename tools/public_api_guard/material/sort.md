@@ -13,7 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/material/core';
+import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -72,7 +72,7 @@ export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, 
     start: SortDirection;
     readonly _stateChanges: Subject<void>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSort, "[matSort]", ["matSort"], { "active": { "alias": "matSortActive"; "required": false; }; "start": { "alias": "matSortStart"; "required": false; }; "direction": { "alias": "matSortDirection"; "required": false; }; "disableClear": { "alias": "matSortDisableClear"; "required": false; }; "disabled": { "alias": "matSortDisabled"; "required": false; }; }, { "sortChange": "matSortChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSort, "[matSort]", ["matSort"], { "active": { "alias": "matSortActive"; "required": false; }; "start": { "alias": "matSortStart"; "required": false; }; "direction": { "alias": "matSortDirection"; "required": false; }; "disableClear": { "alias": "matSortDisableClear"; "required": false; }; "disabled": { "alias": "matSortDisabled"; "required": false; }; }, { "sortChange": "matSortChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSort, [{ optional: true; }]>;
 }
@@ -148,7 +148,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     _updateArrowDirection(): void;
     _viewState: ArrowViewStateTransition;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "id": { "alias": "mat-sort-header"; "required": false; }; "arrowPosition": { "alias": "arrowPosition"; "required": false; }; "start": { "alias": "start"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "sortActionDescription": { "alias": "sortActionDescription"; "required": false; }; "disableClear": { "alias": "disableClear"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "id": { "alias": "mat-sort-header"; "required": false; }; "arrowPosition": { "alias": "arrowPosition"; "required": false; }; "start": { "alias": "start"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "sortActionDescription": { "alias": "sortActionDescription"; "required": false; }; "disableClear": { "alias": "disableClear"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, [null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -169,7 +169,7 @@ export class MatSortModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSortModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, [typeof i1.MatSort, typeof i2.MatSortHeader], [typeof i3.MatCommonModule], [typeof i1.MatSort, typeof i2.MatSortHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, never, [typeof i1.MatCommonModule, typeof i2.MatSort, typeof i3.MatSortHeader], [typeof i2.MatSort, typeof i3.MatSortHeader]>;
 }
 
 // @public

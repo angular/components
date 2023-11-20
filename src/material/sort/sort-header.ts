@@ -93,6 +93,7 @@ interface MatSortHeaderColumnDef {
     matSortAnimations.arrowPosition,
     matSortAnimations.allowChildren,
   ],
+  standalone: true,
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
   private _rerenderSubscription: Subscription;
