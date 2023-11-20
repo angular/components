@@ -28,6 +28,7 @@ const _MatTabLabelWrapperMixinBase = mixinInkBarItem(
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[attr.aria-disabled]': '!!disabled',
   },
+  standalone: true,
 })
 export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase {
   /** Whether the tab is disabled. */

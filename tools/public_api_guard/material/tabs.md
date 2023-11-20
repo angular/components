@@ -22,11 +22,7 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/material/core';
-import * as i11 from '@angular/cdk/portal';
-import * as i12 from '@angular/cdk/observers';
-import * as i13 from '@angular/cdk/a11y';
-import * as i9 from '@angular/common';
+import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
@@ -185,7 +181,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     set templateLabel(value: MatTabLabel);
     textLabel: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, [null, { optional: true; }]>;
 }
@@ -213,7 +209,7 @@ export class MatTabBody implements OnInit, OnDestroy {
     preserveContent: boolean;
     readonly _translateTabComplete: Subject<AnimationEvent_2>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabBody, "mat-tab-body", never, { "_content": { "alias": "content"; "required": false; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabBody, "mat-tab-body", never, { "_content": { "alias": "content"; "required": false; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBody, [null, { optional: true; }, null]>;
 }
@@ -227,7 +223,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabBodyPortal, "[matTabBodyHost]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabBodyPortal, "[matTabBodyHost]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBodyPortal, never>;
 }
@@ -247,7 +243,7 @@ export class MatTabContent {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabContent, "[matTabContent]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabContent, "[matTabContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabContent, never>;
 }
@@ -320,7 +316,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     _tabs: QueryList<MatTab>;
     updatePagination(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabGroup, "mat-tab-group", ["matTabGroup"], { "color": { "alias": "color"; "required": false; }; "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "contentTabIndex": { "alias": "contentTabIndex"; "required": false; }; "disablePagination": { "alias": "disablePagination"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["_allTabs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabGroup, "mat-tab-group", ["matTabGroup"], { "color": { "alias": "color"; "required": false; }; "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "contentTabIndex": { "alias": "contentTabIndex"; "required": false; }; "disablePagination": { "alias": "disablePagination"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["_allTabs"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabGroup, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -360,7 +356,7 @@ export class MatTabHeader extends MatPaginatedTabHeader implements AfterContentC
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -374,7 +370,7 @@ export class MatTabLabel extends CdkPortal {
     // (undocumented)
     _closestTab: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabel, "[mat-tab-label], [matTabLabel]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabel, "[mat-tab-label], [matTabLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLabel, [null, null, { optional: true; }]>;
 }
@@ -393,7 +389,7 @@ export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabelWrapper, "[matTabLabelWrapper]", never, { "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabelWrapper, "[matTabLabelWrapper]", never, { "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLabelWrapper, never>;
 }
@@ -441,7 +437,7 @@ export class MatTabLink extends _MatTabLinkMixinBase implements AfterViewInit, O
     // (undocumented)
     tabIndex: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, [null, null, { optional: true; }, { attribute: "tabindex"; }, null, { optional: true; }]>;
 }
@@ -491,7 +487,7 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentChec
     tabPanel?: MatTabNavPanel;
     updateActiveLink(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabPanel": { "alias": "tabPanel"; "required": false; }; }, {}, ["_items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabPanel": { "alias": "tabPanel"; "required": false; }; }, {}, ["_items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNav, [null, { optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -501,7 +497,7 @@ export class MatTabNavPanel {
     _activeTabId?: string;
     id: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNavPanel, "mat-tab-nav-panel", ["matTabNavPanel"], { "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNavPanel, "mat-tab-nav-panel", ["matTabNavPanel"], { "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNavPanel, never>;
 }
@@ -529,7 +525,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, [typeof i1.MatTabContent, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatTabGroup, typeof i5.MatTabNav, typeof i5.MatTabNavPanel, typeof i5.MatTabLink, typeof i6.MatTabBody, typeof i6.MatTabBodyPortal, typeof i7.MatTabLabelWrapper, typeof i8.MatTabHeader], [typeof i9.CommonModule, typeof i10.MatCommonModule, typeof i11.PortalModule, typeof i10.MatRippleModule, typeof i12.ObserversModule, typeof i13.A11yModule], [typeof i10.MatCommonModule, typeof i1.MatTabContent, typeof i2.MatTabLabel, typeof i3.MatTab, typeof i4.MatTabGroup, typeof i5.MatTabNav, typeof i5.MatTabNavPanel, typeof i5.MatTabLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof i1.MatCommonModule, typeof i2.MatTabContent, typeof i3.MatTabLabel, typeof i4.MatTab, typeof i5.MatTabGroup, typeof i6.MatTabNav, typeof i6.MatTabNavPanel, typeof i6.MatTabLink], [typeof i1.MatCommonModule, typeof i2.MatTabContent, typeof i3.MatTabLabel, typeof i4.MatTab, typeof i5.MatTabGroup, typeof i6.MatTabNav, typeof i6.MatTabNavPanel, typeof i6.MatTabLink]>;
 }
 
 // @public
