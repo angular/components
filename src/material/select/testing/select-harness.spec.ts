@@ -16,8 +16,13 @@ describe('MatSelectHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSelectModule, MatFormFieldModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [SelectHarnessTest],
+      imports: [
+        MatSelectModule,
+        MatFormFieldModule,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+        SelectHarnessTest,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectHarnessTest);
@@ -301,6 +306,8 @@ describe('MatSelectHarness', () => {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectHarnessTest {
   formControl = new FormControl(undefined as string | undefined, [Validators.required]);
