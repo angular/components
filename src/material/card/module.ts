@@ -44,8 +44,7 @@ const CARD_DIRECTIVES = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, CommonModule],
+  imports: [MatCommonModule, CommonModule, ...CARD_DIRECTIVES],
   exports: [CARD_DIRECTIVES, MatCommonModule],
-  declarations: CARD_DIRECTIVES,
 })
 export class MatCardModule {}

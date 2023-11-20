@@ -11,8 +11,7 @@ describe('MatCardHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatCardModule],
-      declarations: [CardHarnessTest],
+      imports: [MatCardModule, CardHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CardHarnessTest);
@@ -124,6 +123,8 @@ describe('MatCardHarness', () => {
         </mat-card-footer>
       </mat-card>
   `,
+  standalone: true,
+  imports: [MatCardModule],
 })
 class CardHarnessTest {}
 
