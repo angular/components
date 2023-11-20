@@ -8,8 +8,7 @@ import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
 describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [TestApp],
+      imports: [MatButtonModule, TestApp],
     });
 
     TestBed.compileComponents();
@@ -355,8 +354,7 @@ describe('MDC-based MatButton', () => {
 describe('MatFabDefaultOptions', () => {
   function configure(defaults: MatFabDefaultOptions) {
     TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [TestApp],
+      imports: [MatButtonModule, TestApp],
       providers: [{provide: MAT_FAB_DEFAULT_OPTIONS, useValue: defaults}],
     });
 
@@ -396,6 +394,8 @@ describe('MatFabDefaultOptions', () => {
     <button mat-fab [extended]="extended" class="extended-fab-test">Extended</button>
     <button mat-mini-fab>Mini Fab Button</button>
   `,
+  standalone: true,
+  imports: [MatButtonModule],
 })
 class TestApp {
   clickCount: number = 0;
