@@ -23,7 +23,7 @@ export class CdkCopyToClipboard implements OnDestroy {
     ngOnDestroy(): void;
     text: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { "text": { "alias": "cdkCopyToClipboard"; "required": false; }; "attempts": { "alias": "cdkCopyToClipboardAttempts"; "required": false; }; }, { "copied": "cdkCopyToClipboardCopied"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { "text": { "alias": "cdkCopyToClipboard"; "required": false; }; "attempts": { "alias": "cdkCopyToClipboardAttempts"; "required": false; }; }, { "copied": "cdkCopyToClipboardCopied"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkCopyToClipboard, [null, null, { optional: true; }]>;
 }
@@ -52,7 +52,7 @@ export class ClipboardModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<ClipboardModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<ClipboardModule, [typeof i1.CdkCopyToClipboard], never, [typeof i1.CdkCopyToClipboard]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<ClipboardModule, never, [typeof i1.CdkCopyToClipboard], [typeof i1.CdkCopyToClipboard]>;
 }
 
 // @public
