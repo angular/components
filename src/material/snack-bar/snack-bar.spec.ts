@@ -1,6 +1,5 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {CommonModule} from '@angular/common';
 import {
   Component,
   Directive,
@@ -39,8 +38,9 @@ describe('MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         BurritosNotification,
         DirectiveWithViewContainer,
@@ -765,8 +765,12 @@ describe('MatSnackBar with parent MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [ComponentThatProvidesMatSnackBar, DirectiveWithViewContainer],
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
+        ComponentThatProvidesMatSnackBar,
+        DirectiveWithViewContainer,
+      ],
     }).compileComponents();
   }));
 
@@ -839,8 +843,12 @@ describe('MatSnackBar Positioning', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
+        ComponentWithChildViewContainer,
+        DirectiveWithViewContainer,
+      ],
     }).compileComponents();
   }));
 
@@ -1084,7 +1092,10 @@ describe('MatSnackBar Positioning', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  selector: 'dir-with-view-container',
+  standalone: true,
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
@@ -1092,6 +1103,8 @@ class DirectiveWithViewContainer {
 @Component({
   selector: 'arbitrary-component',
   template: `@if (childComponentExists) {<dir-with-view-container></dir-with-view-container>}`,
+  standalone: true,
+  imports: [DirectiveWithViewContainer],
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
@@ -1110,6 +1123,7 @@ class ComponentWithChildViewContainer {
       Fries {{localValue}} {{data?.value}}
     </ng-template>
   `,
+  standalone: true,
 })
 class ComponentWithTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
@@ -1117,7 +1131,10 @@ class ComponentWithTemplateRef {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Burritos are on the way.</p>'})
+@Component({
+  template: '<p>Burritos are on the way.</p>',
+  standalone: true,
+})
 class BurritosNotification {
   constructor(
     public snackBarRef: MatSnackBarRef<BurritosNotification>,
@@ -1128,6 +1145,7 @@ class BurritosNotification {
 @Component({
   template: '',
   providers: [MatSnackBar],
+  standalone: true,
 })
 class ComponentThatProvidesMatSnackBar {
   constructor(public snackBar: MatSnackBar) {}
