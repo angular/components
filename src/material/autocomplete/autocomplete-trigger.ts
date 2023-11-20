@@ -15,6 +15,7 @@ import {
   ElementRef,
   forwardRef,
   Host,
+  inject,
   Inject,
   InjectionToken,
   Input,
@@ -82,6 +83,13 @@ export function getMatAutocompleteMissingPanelError(): Error {
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-autocomplete-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -118,6 +126,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   },
   exportAs: 'matAutocompleteTrigger',
   providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR],
+  standalone: true,
 })
 export class MatAutocompleteTrigger
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy

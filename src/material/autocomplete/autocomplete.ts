@@ -38,6 +38,7 @@ import {coerceStringArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
+import {NgClass} from '@angular/common';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -118,6 +119,8 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   },
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],
+  standalone: true,
+  imports: [NgClass],
 })
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _activeOptionChanges = Subscription.EMPTY;
