@@ -7,8 +7,9 @@ import {MatToolbarModule} from './index';
 describe('MatToolbar', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatToolbarModule, CommonModule],
-      declarations: [
+      imports: [
+        MatToolbarModule,
+        CommonModule,
         ToolbarSingleRow,
         ToolbarMultipleRows,
         ToolbarMixedRowModes,
@@ -109,6 +110,8 @@ describe('MatToolbar', () => {
       <span>First Row</span>
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarSingleRow {
   toolbarColor: string;
@@ -121,6 +124,8 @@ class ToolbarSingleRow {
       <mat-toolbar-row>Second Row</mat-toolbar-row>
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMultipleRows {}
 
@@ -133,6 +138,8 @@ class ToolbarMultipleRows {}
       }
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMixedRowModes {
   showToolbarRow: boolean = true;
@@ -148,5 +155,7 @@ class ToolbarMixedRowModes {
       }
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMultipleIndirectRows {}
