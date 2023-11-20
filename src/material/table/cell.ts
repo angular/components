@@ -24,6 +24,7 @@ import {
 @Directive({
   selector: '[matCellDef]',
   providers: [{provide: CdkCellDef, useExisting: MatCellDef}],
+  standalone: true,
 })
 export class MatCellDef extends CdkCellDef {}
 
@@ -34,6 +35,7 @@ export class MatCellDef extends CdkCellDef {}
 @Directive({
   selector: '[matHeaderCellDef]',
   providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}],
+  standalone: true,
 })
 export class MatHeaderCellDef extends CdkHeaderCellDef {}
 
@@ -44,6 +46,7 @@ export class MatHeaderCellDef extends CdkHeaderCellDef {}
 @Directive({
   selector: '[matFooterCellDef]',
   providers: [{provide: CdkFooterCellDef, useExisting: MatFooterCellDef}],
+  standalone: true,
 })
 export class MatFooterCellDef extends CdkFooterCellDef {}
 
@@ -58,6 +61,7 @@ export class MatFooterCellDef extends CdkFooterCellDef {}
     {provide: CdkColumnDef, useExisting: MatColumnDef},
     {provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: MatColumnDef},
   ],
+  standalone: true,
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
@@ -88,6 +92,7 @@ export class MatColumnDef extends CdkColumnDef {
     'class': 'mat-mdc-header-cell mdc-data-table__header-cell',
     'role': 'columnheader',
   },
+  standalone: true,
 })
 export class MatHeaderCell extends CdkHeaderCell {}
 
@@ -97,6 +102,7 @@ export class MatHeaderCell extends CdkHeaderCell {}
   host: {
     'class': 'mat-mdc-footer-cell mdc-data-table__cell',
   },
+  standalone: true,
 })
 export class MatFooterCell extends CdkFooterCell {}
 
@@ -106,5 +112,6 @@ export class MatFooterCell extends CdkFooterCell {}
   host: {
     'class': 'mat-mdc-cell mdc-data-table__cell',
   },
+  standalone: true,
 })
 export class MatCell extends CdkCell {}
