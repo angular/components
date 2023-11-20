@@ -12,7 +12,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -62,7 +62,7 @@ export class CdkStep implements OnChanges {
     // (undocumented)
     _stepper: CdkStepper;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkStep, "cdk-step", ["cdkStep"], { "stepControl": { "alias": "stepControl"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "state": { "alias": "state"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "completed": { "alias": "completed"; "required": false; }; "hasError": { "alias": "hasError"; "required": false; }; }, { "interactedStream": "interacted"; }, ["stepLabel"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkStep, "cdk-step", ["cdkStep"], { "stepControl": { "alias": "stepControl"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "state": { "alias": "state"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "completed": { "alias": "completed"; "required": false; }; "hasError": { "alias": "hasError"; "required": false; }; }, { "interactedStream": "interacted"; }, ["stepLabel"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStep, [null, { optional: true; }]>;
 }
@@ -74,7 +74,7 @@ export class CdkStepHeader implements FocusableOption {
     _elementRef: ElementRef<HTMLElement>;
     focus(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepHeader, "[cdkStepHeader]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepHeader, "[cdkStepHeader]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepHeader, never>;
 }
@@ -85,7 +85,7 @@ export class CdkStepLabel {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepLabel, "[cdkStepLabel]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepLabel, "[cdkStepLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepLabel, never>;
 }
@@ -129,7 +129,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     readonly steps: QueryList<CdkStep>;
     _steps: QueryList<CdkStep>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": { "alias": "linear"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "selectionChange": "selectionChange"; "selectedIndexChange": "selectedIndexChange"; }, ["_steps", "_stepHeader"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": { "alias": "linear"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "selectionChange": "selectionChange"; "selectedIndexChange": "selectedIndexChange"; }, ["_steps", "_stepHeader"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepper, [{ optional: true; }, null, null]>;
 }
@@ -141,7 +141,7 @@ export class CdkStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<CdkStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkStepperModule, [typeof i1.CdkStep, typeof i1.CdkStepper, typeof i2.CdkStepHeader, typeof i3.CdkStepLabel, typeof i4.CdkStepperNext, typeof i4.CdkStepperPrevious], [typeof i5.BidiModule], [typeof i1.CdkStep, typeof i1.CdkStepper, typeof i2.CdkStepHeader, typeof i3.CdkStepLabel, typeof i4.CdkStepperNext, typeof i4.CdkStepperPrevious]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkStepperModule, never, [typeof i1.BidiModule, typeof i2.CdkStep, typeof i2.CdkStepper, typeof i3.CdkStepHeader, typeof i4.CdkStepLabel, typeof i5.CdkStepperNext, typeof i5.CdkStepperPrevious], [typeof i2.CdkStep, typeof i2.CdkStepper, typeof i3.CdkStepHeader, typeof i4.CdkStepLabel, typeof i5.CdkStepperNext, typeof i5.CdkStepperPrevious]>;
 }
 
 // @public
@@ -151,7 +151,7 @@ export class CdkStepperNext {
     _stepper: CdkStepper;
     type: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepperNext, "button[cdkStepperNext]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepperNext, "button[cdkStepperNext]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepperNext, never>;
 }
@@ -163,7 +163,7 @@ export class CdkStepperPrevious {
     _stepper: CdkStepper;
     type: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepperPrevious, "button[cdkStepperPrevious]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepperPrevious, "button[cdkStepperPrevious]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepperPrevious, never>;
 }

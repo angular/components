@@ -17,6 +17,7 @@ import {CdkStepper} from './stepper';
     '[type]': 'type',
     '(click)': '_stepper.next()',
   },
+  standalone: true,
 })
 export class CdkStepperNext {
   /** Type of the next button. Defaults to "submit" if not specified. */
@@ -32,6 +33,7 @@ export class CdkStepperNext {
     '[type]': 'type',
     '(click)': '_stepper.previous()',
   },
+  standalone: true,
 })
 export class CdkStepperPrevious {
   /** Type of the previous button. Defaults to "button" if not specified. */
