@@ -2,8 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createKmlLayerConstructorSpy,
   createKmlLayerSpy,
@@ -25,7 +24,7 @@ describe('MapKmlLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap, MapKmlLayer],
       declarations: [TestApp],
     });
   }));

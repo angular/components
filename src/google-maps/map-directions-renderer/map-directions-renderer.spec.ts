@@ -2,8 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MapDirectionsRenderer} from './map-directions-renderer';
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createDirectionsRendererConstructorSpy,
   createDirectionsRendererSpy,
@@ -21,7 +20,7 @@ describe('MapDirectionsRenderer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap, MapDirectionsRenderer],
       declarations: [TestApp],
     });
   }));

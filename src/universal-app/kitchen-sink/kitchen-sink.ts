@@ -38,7 +38,22 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSortModule} from '@angular/material/sort';
 import {MatStepperModule} from '@angular/material/stepper';
 import {YouTubePlayer} from '@angular/youtube-player';
-import {GoogleMapsModule} from '@angular/google-maps';
+import {
+  GoogleMap,
+  MapBicyclingLayer,
+  MapCircle,
+  MapGroundOverlay,
+  MapHeatmapLayer,
+  MapInfoWindow,
+  MapKmlLayer,
+  MapMarker,
+  MapMarkerClusterer,
+  MapPolygon,
+  MapPolyline,
+  MapRectangle,
+  MapTrafficLayer,
+  MapTransitLayer,
+} from '@angular/google-maps';
 import {Observable, of as observableOf} from 'rxjs';
 
 export class TableDataSource extends DataSource<any> {
@@ -107,7 +122,20 @@ export class TestEntryComponent {}
 
     // Other modules
     YouTubePlayer,
-    GoogleMapsModule,
+    GoogleMap,
+    MapBicyclingLayer,
+    MapCircle,
+    MapGroundOverlay,
+    MapHeatmapLayer,
+    MapInfoWindow,
+    MapKmlLayer,
+    MapMarker,
+    MapMarkerClusterer,
+    MapPolygon,
+    MapPolyline,
+    MapRectangle,
+    MapTrafficLayer,
+    MapTransitLayer,
   ],
 })
 export class KitchenSink {

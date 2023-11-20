@@ -2,7 +2,6 @@ import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {GoogleMapsModule} from '../google-maps-module';
 import {createMapConstructorSpy, createMapSpy} from '../testing/fake-google-map-utils';
 import {DEFAULT_HEIGHT, DEFAULT_OPTIONS, DEFAULT_WIDTH, GoogleMap} from './google-map';
 
@@ -26,7 +25,7 @@ describe('GoogleMap', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap],
       declarations: [TestApp],
     });
   }));

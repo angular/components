@@ -32,6 +32,7 @@ const COMPONENTS = [
   MapCircle,
   MapDirectionsRenderer,
   MapGroundOverlay,
+  MapHeatmapLayer,
   MapInfoWindow,
   MapKmlLayer,
   MapMarker,
@@ -41,11 +42,10 @@ const COMPONENTS = [
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
-  MapHeatmapLayer,
 ];
 
 @NgModule({
-  declarations: COMPONENTS,
+  imports: COMPONENTS,
   exports: COMPONENTS,
 })
 export class GoogleMapsModule {}

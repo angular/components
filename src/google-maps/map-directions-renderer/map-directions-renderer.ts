@@ -33,6 +33,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-directions-renderer',
   exportAs: 'mapDirectionsRenderer',
+  standalone: true,
 })
 export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -68,7 +69,10 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   /** The underlying google.maps.DirectionsRenderer object. */
   directionsRenderer?: google.maps.DirectionsRenderer;
 
-  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

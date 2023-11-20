@@ -24,6 +24,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-kml-layer',
   exportAs: 'mapKmlLayer',
+  standalone: true,
 })
 export class MapKmlLayer implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -69,7 +70,10 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   @Output() readonly statusChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('status_changed');
 
-  constructor(private readonly _map: GoogleMap, private _ngZone: NgZone) {}
+  constructor(
+    private readonly _map: GoogleMap,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

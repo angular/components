@@ -2,8 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -22,7 +21,7 @@ describe('MapRectangle', () => {
     rectangleBounds = {east: 30, north: 15, west: 10, south: -5};
     rectangleOptions = {bounds: rectangleBounds, strokeColor: 'grey', strokeOpacity: 0.8};
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap, MapRectangle],
       declarations: [TestApp],
     });
   }));

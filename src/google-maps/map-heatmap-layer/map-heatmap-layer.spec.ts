@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 
-import {GoogleMapsModule} from '../google-maps-module';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -20,7 +19,7 @@ describe('MapHeatmapLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap, MapHeatmapLayer],
       declarations: [TestApp],
     });
   }));
