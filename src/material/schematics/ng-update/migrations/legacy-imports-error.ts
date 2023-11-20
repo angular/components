@@ -26,27 +26,33 @@ export function legacyImportsError(onSuccess: Rule): Rule {
     const filesUsingLegacyImports = new Set<string>();
 
     tree.visit(path => {
-      if (!path.endsWith('.ts')) {
+      if (path.includes('node_modules') || path.endsWith('.d.ts') || !path.endsWith('.ts')) {
         return;
       }
 
       const content = tree.readText(path);
+
+      // Skip over any files that definitely cannot contain the legacy imports.
+      if (!content.includes(LEGACY_IMPORTS_START)) {
+        return;
+      }
+
       const sourceFile = ts.createSourceFile(path, content, ts.ScriptTarget.Latest);
 
-      sourceFile.forEachChild(function walk(node) {
-        const isImportOrExport = ts.isImportDeclaration(node) || ts.isExportDeclaration(node);
+      // Only check top-level imports/exports.
+      for (const statement of sourceFile.statements) {
+        if (!ts.isImportDeclaration(statement) && !ts.isExportDeclaration(statement)) {
+          continue;
+        }
 
         if (
-          isImportOrExport &&
-          node.moduleSpecifier &&
-          ts.isStringLiteralLike(node.moduleSpecifier) &&
-          node.moduleSpecifier.text.startsWith(LEGACY_IMPORTS_START)
+          statement.moduleSpecifier &&
+          ts.isStringLiteralLike(statement.moduleSpecifier) &&
+          statement.moduleSpecifier.text.startsWith(LEGACY_IMPORTS_START)
         ) {
           filesUsingLegacyImports.add(path);
         }
-
-        node.forEachChild(walk);
-      });
+      }
     });
 
     // If there are no legacy imports left, we can continue with the migrations.
