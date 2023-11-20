@@ -59,6 +59,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   numberAttribute,
 } from '@angular/core';
 import {
@@ -97,12 +98,20 @@ import {
   getMatSelectNonArrayValueError,
   getMatSelectNonFunctionValueError,
 } from './select-errors';
+import {NgClass} from '@angular/common';
 
 let nextUniqueId = 0;
 
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-select-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -196,6 +205,8 @@ export class MatSelectChange {
     {provide: MatFormFieldControl, useExisting: MatSelect},
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
+  standalone: true,
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgClass],
 })
 export class MatSelect
   implements
@@ -1414,5 +1425,6 @@ export class MatSelect
 @Directive({
   selector: 'mat-select-trigger',
   providers: [{provide: MAT_SELECT_TRIGGER, useExisting: MatSelectTrigger}],
+  standalone: true,
 })
 export class MatSelectTrigger {}
