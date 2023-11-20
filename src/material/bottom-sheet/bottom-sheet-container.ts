@@ -26,6 +26,7 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {matBottomSheetAnimations} from './bottom-sheet-animations';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 
 /**
  * Internal component that wraps user-provided bottom sheet content.
@@ -52,6 +53,8 @@ import {matBottomSheetAnimations} from './bottom-sheet-animations';
     '(@state.start)': '_onAnimationStart($event)',
     '(@state.done)': '_onAnimationDone($event)',
   },
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
   private _breakpointSubscription: Subscription;

@@ -3,7 +3,11 @@ import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
@@ -45,8 +49,9 @@ describe('MatBottomSheet', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatBottomSheetModule,
+        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         ComponentWithTemplateRef,
         ContentElementDialog,
@@ -857,8 +862,7 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
-      declarations: [ComponentThatProvidesMatBottomSheet],
+      imports: [MatBottomSheetModule, NoopAnimationsModule, ComponentThatProvidesMatBottomSheet],
     }).compileComponents();
   }));
 
@@ -943,8 +947,12 @@ describe('MatBottomSheet with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
-      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      imports: [
+        MatBottomSheetModule,
+        NoopAnimationsModule,
+        ComponentWithChildViewContainer,
+        DirectiveWithViewContainer,
+      ],
       providers: [{provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
 
@@ -998,12 +1006,19 @@ describe('MatBottomSheet with default options', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  selector: 'dir-with-view-container',
+  standalone: true,
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
-@Component({template: `<dir-with-view-container></dir-with-view-container>`})
+@Component({
+  template: `<dir-with-view-container></dir-with-view-container>`,
+  standalone: true,
+  imports: [DirectiveWithViewContainer],
+})
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
 
@@ -1016,6 +1031,7 @@ class ComponentWithChildViewContainer {
   selector: 'arbitrary-component-with-template-ref',
   template: `<ng-template let-data let-bottomSheetRef="bottomSheetRef">
       Cheese {{localValue}} {{data?.value}}{{setRef(bottomSheetRef)}}</ng-template>`,
+  standalone: true,
 })
 class ComponentWithTemplateRef {
   localValue: string;
@@ -1029,7 +1045,10 @@ class ComponentWithTemplateRef {
   }
 }
 
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({
+  template: '<p>Pizza</p> <input> <button>Close</button>',
+  standalone: true,
+})
 class PizzaMsg {
   constructor(
     public bottomSheetRef: MatBottomSheetRef<PizzaMsg>,
@@ -1038,7 +1057,10 @@ class PizzaMsg {
   ) {}
 }
 
-@Component({template: '<p>Taco</p>'})
+@Component({
+  template: '<p>Taco</p>',
+  standalone: true,
+})
 class TacoMsg {}
 
 @Component({
@@ -1046,18 +1068,24 @@ class TacoMsg {}
     <h1>This is the title</h1>
     <p>This is the paragraph</p>
   `,
+  standalone: true,
 })
 class ContentElementDialog {}
 
 @Component({
   template: '',
   providers: [MatBottomSheet],
+  standalone: true,
+  imports: [MatBottomSheetModule],
 })
 class ComponentThatProvidesMatBottomSheet {
   constructor(public bottomSheet: MatBottomSheet) {}
 }
 
-@Component({template: ''})
+@Component({
+  template: '',
+  standalone: true,
+})
 class BottomSheetWithInjectedData {
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {}
 }
@@ -1065,5 +1093,6 @@ class BottomSheetWithInjectedData {
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: true,
 })
 class ShadowDomComponent {}

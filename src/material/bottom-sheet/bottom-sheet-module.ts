@@ -11,10 +11,11 @@ import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
+import {MatBottomSheet} from './bottom-sheet';
 
 @NgModule({
-  imports: [DialogModule, MatCommonModule, PortalModule],
+  imports: [DialogModule, MatCommonModule, PortalModule, MatBottomSheetContainer],
   exports: [MatBottomSheetContainer, MatCommonModule],
-  declarations: [MatBottomSheetContainer],
+  providers: [MatBottomSheet],
 })
 export class MatBottomSheetModule {}
