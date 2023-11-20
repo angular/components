@@ -188,6 +188,16 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, fab),
+      mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, extended-fab),
+      mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, filled-text-field),
       mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
       $token-slots
@@ -263,6 +273,11 @@
     _namespace-tokens(
       (mat, divider),
       custom-tokens.divider($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, fab),
+      custom-tokens.fab($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
