@@ -10,7 +10,7 @@ import { ElementRef } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
+import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -89,7 +89,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
     // (undocumented)
     _usingFontIcon(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatIcon, "mat-icon", ["matIcon"], { "color": { "alias": "color"; "required": false; }; "inline": { "alias": "inline"; "required": false; }; "svgIcon": { "alias": "svgIcon"; "required": false; }; "fontSet": { "alias": "fontSet"; "required": false; }; "fontIcon": { "alias": "fontIcon"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatIcon, "mat-icon", ["matIcon"], { "color": { "alias": "color"; "required": false; }; "inline": { "alias": "inline"; "required": false; }; "svgIcon": { "alias": "svgIcon"; "required": false; }; "fontSet": { "alias": "fontSet"; "required": false; }; "fontIcon": { "alias": "fontIcon"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatIcon, [null, null, { attribute: "aria-hidden"; }, null, null, { optional: true; }]>;
 }
@@ -113,7 +113,7 @@ export class MatIconModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatIconModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, [typeof i1.MatIcon], [typeof i2.MatCommonModule], [typeof i1.MatIcon, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, never, [typeof i1.MatCommonModule, typeof i2.MatIcon], [typeof i2.MatIcon, typeof i1.MatCommonModule]>;
 }
 
 // @public

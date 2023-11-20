@@ -145,6 +145,7 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   private _defaultColor: ThemePalette;
