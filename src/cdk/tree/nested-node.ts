@@ -39,6 +39,7 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
   host: {
     'class': 'cdk-nested-tree-node',
   },
+  standalone: true,
 })
 export class CdkNestedTreeNode<T, K = T>
   extends CdkTreeNode<T, K>

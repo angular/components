@@ -18,6 +18,7 @@ import {CdkTree, CdkTreeNode} from './tree';
   host: {
     '(click)': '_toggle($event)',
   },
+  standalone: true,
 })
 export class CdkTreeNodeToggle<T, K = T> {
   /** Whether expand/collapse the node recursively. */
