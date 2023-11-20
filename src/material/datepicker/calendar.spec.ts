@@ -5,7 +5,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   MockNgZone,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component, NgZone} from '@angular/core';
 import {
   fakeAsync,
@@ -28,17 +28,17 @@ describe('MatCalendar', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],
+      providers: [
+        MatDatepickerIntl,
+        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
+        {provide: Directionality, useFactory: () => ({value: 'ltr'})},
+      ],
       declarations: [
         // Test components.
         StandardCalendar,
         CalendarWithMinMax,
         CalendarWithDateFilter,
         CalendarWithSelectableMinDate,
-      ],
-      providers: [
-        MatDatepickerIntl,
-        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
-        {provide: Directionality, useFactory: () => ({value: 'ltr'})},
       ],
     });
 

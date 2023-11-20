@@ -19,8 +19,13 @@ describe('matDateRangeInputHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, MatDatepickerModule, FormsModule],
-      declarations: [DateRangeInputHarnessTest],
+      imports: [
+        NoopAnimationsModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        FormsModule,
+        DateRangeInputHarnessTest,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateRangeInputHarnessTest);
@@ -249,6 +254,8 @@ describe('matDateRangeInputHarness', () => {
       <input matEndDate>
     </mat-date-range-input>
   `,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule, FormsModule],
 })
 class DateRangeInputHarnessTest {
   startDate: Date | null = null;

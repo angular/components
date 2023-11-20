@@ -26,7 +26,7 @@ import {
   ScrollStrategy,
   FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -72,7 +72,9 @@ import {
   MatDateRangeSelectionStrategy,
 } from './date-range-selection-strategy';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, NgClass} from '@angular/common';
+import {MatButton} from '@angular/material/button';
+import {CdkTrapFocus} from '@angular/cdk/a11y';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -80,6 +82,13 @@ let datepickerUid = 0;
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-datepicker-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -123,6 +132,8 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CdkTrapFocus, MatCalendar, NgClass, CdkPortalOutlet, MatButton],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   implements OnInit, AfterViewInit, OnDestroy

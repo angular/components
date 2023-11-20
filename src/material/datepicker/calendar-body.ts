@@ -23,6 +23,7 @@ import {
   inject,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {NgClass} from '@angular/common';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -86,6 +87,8 @@ const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgClass],
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
   private _platform = inject(Platform);

@@ -2,12 +2,16 @@ import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 import {By} from '@angular/platform-browser';
-import {dispatchMouseEvent, dispatchFakeEvent, dispatchTouchEvent} from '../../cdk/testing/private';
+import {
+  dispatchMouseEvent,
+  dispatchFakeEvent,
+  dispatchTouchEvent,
+} from '@angular/cdk/testing/private';
 
 describe('MatCalendarBody', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
+      imports: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
     });
 
     TestBed.compileComponents();
@@ -693,6 +697,8 @@ describe('MatCalendarBody', () => {
           [activeCell]="10"
           (selectedValueChange)="onSelect($event)">
     </table>`,
+  standalone: true,
+  imports: [MatCalendarBody],
 })
 class StandardCalendarBody {
   label = 'Jan 2017';
@@ -724,6 +730,8 @@ class StandardCalendarBody {
           (dragEnded)="dragEnded($event)"
           >
     </table>`,
+  standalone: true,
+  imports: [MatCalendarBody],
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);

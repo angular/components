@@ -20,8 +20,7 @@ describe('MatCalendarHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule],
-      declarations: [CalendarHarnessTest],
+      imports: [MatNativeDateModule, MatDatepickerModule, CalendarHarnessTest],
       providers: [
         {
           // Usually it's the date range picker that provides the default range selection strategy,
@@ -326,6 +325,8 @@ describe('MatCalendarHarness', () => {
       [comparisonEnd]="comparisonEnd"
       (selectedChange)="rangeChanged($event)"></mat-calendar>
   `,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class CalendarHarnessTest {
   // Start the datepickers off at a specific date so tests

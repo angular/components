@@ -24,6 +24,7 @@ import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
 @Directive({
   selector: '[matDatepickerApply], [matDateRangePickerApply]',
   host: {'(click)': '_applySelection()'},
+  standalone: true,
 })
 export class MatDatepickerApply {
   constructor(private _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>) {}
@@ -38,6 +39,7 @@ export class MatDatepickerApply {
 @Directive({
   selector: '[matDatepickerCancel], [matDateRangePickerCancel]',
   host: {'(click)': '_datepicker.close()'},
+  standalone: true,
 })
 export class MatDatepickerCancel {
   constructor(public _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>) {}
@@ -59,6 +61,7 @@ export class MatDatepickerCancel {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {
   @ViewChild(TemplateRef) _template: TemplateRef<unknown>;

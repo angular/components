@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
   AfterContentInit,
   AfterViewChecked,
@@ -40,6 +40,8 @@ import {
 } from './multi-year-view';
 import {MatYearView} from './year-view';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
+import {MatIconButton, MatButton} from '@angular/material/button';
+import {CdkMonitorFocus} from '@angular/cdk/a11y';
 
 let calendarHeaderId = 1;
 
@@ -56,6 +58,8 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatButton, MatIconButton],
 })
 export class MatCalendarHeader<D> {
   constructor(
@@ -234,6 +238,8 @@ export class MatCalendarHeader<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
+  standalone: true,
+  imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */

@@ -55,6 +55,8 @@ import {DateRange} from './date-selection-model';
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatCalendarBody],
 })
 export class MatYearView<D> implements AfterContentInit, OnDestroy {
   private _rerenderSubscription = Subscription.EMPTY;

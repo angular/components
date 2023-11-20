@@ -12,6 +12,7 @@ import {MatDatepicker} from './datepicker';
 describe('MatDatepickerActions', () => {
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
+      declarations: [component],
       imports: [
         CommonModule,
         FormsModule,
@@ -22,7 +23,6 @@ describe('MatDatepickerActions', () => {
         ReactiveFormsModule,
         MatNativeDateModule,
       ],
-      declarations: [component],
     });
 
     return TestBed.createComponent(component);
