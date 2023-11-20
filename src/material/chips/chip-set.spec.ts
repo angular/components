@@ -7,8 +7,7 @@ import {MatChip, MatChipSet, MatChipsModule} from './index';
 describe('MDC-based MatChipSet', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule, CommonModule],
-      declarations: [BasicChipSet, IndirectDescendantsChipSet],
+      imports: [MatChipsModule, CommonModule, BasicChipSet, IndirectDescendantsChipSet],
     });
 
     TestBed.compileComponents();
@@ -114,6 +113,8 @@ describe('MDC-based MatChipSet', () => {
         }
       </mat-chip-set>
   `,
+  standalone: true,
+  imports: [MatChipsModule, CommonModule],
 })
 class BasicChipSet {
   name: string = 'Test';
@@ -130,5 +131,7 @@ class BasicChipSet {
       }
     </mat-chip-set>
   `,
+  standalone: true,
+  imports: [MatChipsModule, CommonModule],
 })
 class IndirectDescendantsChipSet extends BasicChipSet {}

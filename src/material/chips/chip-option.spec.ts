@@ -36,7 +36,6 @@ describe('MDC-based Option Chips', () => {
 
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
-      declarations: [SingleChip],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {
@@ -48,6 +47,7 @@ describe('MDC-based Option Chips', () => {
         },
         {provide: MAT_CHIPS_DEFAULT_OPTIONS, useFactory: () => defaultOptions},
       ],
+      declarations: [SingleChip],
     });
 
     TestBed.compileComponents();

@@ -11,8 +11,7 @@ describe('MatChipOptionHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipOptionHarnessTest],
+      imports: [MatChipsModule, ChipOptionHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipOptionHarnessTest);
@@ -89,5 +88,7 @@ describe('MatChipOptionHarness', () => {
       </mat-chip-option>
     </mat-chip-listbox>
   `,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class ChipOptionHarnessTest {}

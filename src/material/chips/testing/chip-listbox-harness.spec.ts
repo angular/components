@@ -11,8 +11,7 @@ describe('MatChipListboxHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipListboxHarnessTest],
+      imports: [MatChipsModule, ChipListboxHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipListboxHarnessTest);
@@ -119,6 +118,8 @@ describe('MatChipListboxHarness', () => {
       }
     </mat-chip-listbox>
   `,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class ChipListboxHarnessTest {
   isMultiple = false;

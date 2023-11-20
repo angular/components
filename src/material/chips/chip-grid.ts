@@ -80,6 +80,7 @@ export class MatChipGridChange {
   providers: [{provide: MatFormFieldControl, useExisting: MatChipGrid}],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatChipGrid
   extends MatChipSet

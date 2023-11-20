@@ -11,8 +11,7 @@ describe('MatChipRowHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipRowHarnessTest],
+      imports: [MatChipsModule, ChipRowHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipRowHarnessTest);
@@ -42,6 +41,8 @@ describe('MatChipRowHarness', () => {
       <input [matChipInputFor]="grid" />
     </mat-chip-grid>
   `,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class ChipRowHarnessTest {
   editable = false;

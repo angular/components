@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import {MatChip} from './chip';
 import {MAT_CHIP, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MatChipAction} from './chip-action';
 
 /** Event object emitted by MatChipOption when selected or deselected. */
 export class MatChipSelectionChange {
@@ -76,6 +77,8 @@ export class MatChipSelectionChange {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatChipAction],
 })
 export class MatChipOption extends MatChip implements OnInit {
   /** Default chip options. */
