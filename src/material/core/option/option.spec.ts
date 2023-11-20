@@ -13,8 +13,7 @@ import {MatOption, MatOptionModule, MAT_OPTION_PARENT_COMPONENT} from './index';
 describe('MatOption component', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatOptionModule],
-      declarations: [BasicOption],
+      imports: [MatOptionModule, BasicOption],
     }).compileComponents();
   }));
 
@@ -215,8 +214,7 @@ describe('MatOption component', () => {
     beforeEach(waitForAsync(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatOptionModule],
-        declarations: [InsideGroup],
+        imports: [MatOptionModule, InsideGroup],
         providers: [
           {
             provide: MAT_OPTION_PARENT_COMPONENT,
@@ -245,6 +243,8 @@ describe('MatOption component', () => {
 
 @Component({
   template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`,
+  standalone: true,
+  imports: [MatOptionModule],
 })
 class BasicOption {
   disabled: boolean;
@@ -257,5 +257,7 @@ class BasicOption {
       <mat-option>Option</mat-option>
     </mat-optgroup>
   `,
+  standalone: true,
+  imports: [MatOptionModule],
 })
 class InsideGroup {}
