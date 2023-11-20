@@ -134,6 +134,7 @@ export class ContentObserver implements OnDestroy {
 @Directive({
   selector: '[cdkObserveContent]',
   exportAs: 'cdkObserveContent',
+  standalone: true,
 })
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
   /** Event emitted for each change in the element's content. */
@@ -203,8 +204,8 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 }
 
 @NgModule({
+  imports: [CdkObserveContent],
   exports: [CdkObserveContent],
-  declarations: [CdkObserveContent],
   providers: [MutationObserverFactory],
 })
 export class ObserversModule {}
