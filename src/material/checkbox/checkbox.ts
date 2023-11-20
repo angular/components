@@ -91,6 +91,8 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatCheckbox implements AfterViewInit, ControlValueAccessor, FocusableOption {
   /** Focuses the checkbox. */
