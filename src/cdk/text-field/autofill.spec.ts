@@ -22,8 +22,7 @@ describe('AutofillMonitor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TextFieldModule],
-      declarations: [Inputs],
+      imports: [TextFieldModule, Inputs],
     }).compileComponents();
   });
 
@@ -191,8 +190,7 @@ describe('cdkAutofill', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TextFieldModule],
-      declarations: [InputWithCdkAutofilled],
+      imports: [TextFieldModule, InputWithCdkAutofilled],
     }).compileComponents();
   });
 
@@ -222,6 +220,8 @@ describe('cdkAutofill', () => {
     <input #input2>
     <input #input3>
   `,
+  standalone: true,
+  imports: [TextFieldModule],
 })
 class Inputs {
   // Cast to `any` so we can stub out some methods in the tests.
@@ -232,6 +232,8 @@ class Inputs {
 
 @Component({
   template: `<input #input cdkAutofill>`,
+  standalone: true,
+  imports: [TextFieldModule],
 })
 class InputWithCdkAutofilled {
   // Cast to `any` so we can stub out some methods in the tests.
