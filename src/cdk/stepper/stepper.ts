@@ -105,6 +105,7 @@ export interface StepperOptions {
   template: '<ng-template><ng-content></ng-content></ng-template>',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
@@ -232,6 +233,7 @@ export class CdkStep implements OnChanges {
 @Directive({
   selector: '[cdkStepper]',
   exportAs: 'cdkStepper',
+  standalone: true,
 })
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   /** Emits when the component is destroyed. */
