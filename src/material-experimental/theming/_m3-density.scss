@@ -22,6 +22,9 @@ $_density-tokens: (
   (mdc, circular-progress): (),
   (mdc, elevated-card): (),
   (mdc, filled-text-field): (),
+  (mdc, icon-button): (
+    state-layer-size: (48px, 44px, 40px, 36px, 32px, 28px),
+  ),
   (mdc, linear-progress): (),
   (mdc, list): (
     list-item-one-line-container-height: (48px, 44px, 40px, 36px, 32px, 24px),
@@ -48,6 +51,7 @@ $_density-tokens: (
   (mat, form-fild): (),
   (mat, grid-list): (),
   (mat, icon): (),
+  (mat, icon-button): (),
   (mat, menu): (),
   (mat, optgroup): (),
   (mat, option): (),

@@ -193,6 +193,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, icon-button),
+      mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, linear-progress),
       mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
       $token-slots
@@ -273,6 +278,11 @@
     _namespace-tokens(
       (mat, icon),
       custom-tokens.icon($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, icon-button),
+      custom-tokens.icon-button($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(

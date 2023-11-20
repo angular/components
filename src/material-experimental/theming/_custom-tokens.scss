@@ -96,6 +96,23 @@
   );
 }
 
+/// Generates custom tokens for the mat-icon-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-icon-button
+@function icon-button($systems, $exclude-hardcoded) {
+  @return (
+    state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, on-surface-variant),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  );
+}
+
 /// Generates custom tokens for the mat-menu.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

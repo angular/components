@@ -41,6 +41,7 @@ html {
   @include mat.divider-theme($light-theme);
   @include mat.form-field-theme($light-theme);
   @include mat.grid-list-theme($light-theme);
+  @include mat.icon-button-theme($light-theme);
   @include mat.icon-theme($light-theme);
   @include mat.input-theme($light-theme);
   @include mat.list-theme($light-theme);
@@ -76,6 +77,7 @@ html {
   @include mat.divider-color($dark-theme);
   @include mat.form-field-color($dark-theme);
   @include mat.grid-list-color($dark-theme);
+  @include mat.icon-button-color($dark-theme);
   @include mat.icon-color($dark-theme);
   @include mat.input-color($dark-theme);
   @include mat.list-color($dark-theme);
@@ -110,6 +112,7 @@ html {
     @include mat.divider-density($scale-theme);
     @include mat.form-field-density($scale-theme);
     @include mat.grid-list-density($scale-theme);
+    @include mat.icon-button-density($scale-theme);
     @include mat.icon-density($scale-theme);
     @include mat.input-density($scale-theme);
     @include mat.list-density($scale-theme);
