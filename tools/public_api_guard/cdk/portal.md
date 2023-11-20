@@ -46,7 +46,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
 export class CdkPortal extends TemplatePortal {
     constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortal, "[cdkPortal]", ["cdkPortal"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortal, "[cdkPortal]", ["cdkPortal"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkPortal, never>;
 }
@@ -68,7 +68,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     get portal(): Portal<any> | null;
     set portal(portal: Portal<any> | null | undefined | '');
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortalOutlet, "[cdkPortalOutlet]", ["cdkPortalOutlet"], { "portal": { "alias": "cdkPortalOutlet"; "required": false; }; }, { "attached": "attached"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortalOutlet, "[cdkPortalOutlet]", ["cdkPortalOutlet"], { "portal": { "alias": "cdkPortalOutlet"; "required": false; }; }, { "attached": "attached"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkPortalOutlet, never>;
 }
@@ -129,7 +129,7 @@ export type PortalHost = PortalOutlet;
 // @public @deprecated (undocumented)
 export class PortalHostDirective extends CdkPortalOutlet {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<PortalHostDirective, "[cdkPortalHost], [portalHost]", ["cdkPortalHost"], { "portal": { "alias": "cdkPortalHost"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<PortalHostDirective, "[cdkPortalHost], [portalHost]", ["cdkPortalHost"], { "portal": { "alias": "cdkPortalHost"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<PortalHostDirective, never>;
 }
@@ -148,7 +148,7 @@ export class PortalModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<PortalModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<PortalModule, [typeof CdkPortal, typeof CdkPortalOutlet, typeof TemplatePortalDirective, typeof PortalHostDirective], never, [typeof CdkPortal, typeof CdkPortalOutlet, typeof TemplatePortalDirective, typeof PortalHostDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<PortalModule, never, [typeof CdkPortal, typeof CdkPortalOutlet, typeof TemplatePortalDirective, typeof PortalHostDirective], [typeof CdkPortal, typeof CdkPortalOutlet, typeof TemplatePortalDirective, typeof PortalHostDirective]>;
 }
 
 // @public
@@ -180,7 +180,7 @@ export class TemplatePortal<C = any> extends Portal<EmbeddedViewRef<C>> {
 // @public @deprecated (undocumented)
 export class TemplatePortalDirective extends CdkPortal {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<TemplatePortalDirective, "[cdk-portal], [portal]", ["cdkPortal"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<TemplatePortalDirective, "[cdk-portal], [portal]", ["cdkPortal"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<TemplatePortalDirective, never>;
 }
