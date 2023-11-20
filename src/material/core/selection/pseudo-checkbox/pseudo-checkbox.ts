@@ -50,6 +50,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
     '[class.mat-pseudo-checkbox-full]': 'appearance === "full"',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
+  standalone: true,
 })
 export class MatPseudoCheckbox {
   /** Display state of the checkbox. */

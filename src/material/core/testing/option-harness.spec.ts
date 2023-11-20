@@ -16,8 +16,7 @@ describe('MatOptionHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatOptionModule],
-      declarations: [OptionHarnessTest],
+      imports: [MatOptionModule, OptionHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OptionHarnessTest);
@@ -113,6 +112,8 @@ describe('MatOptionHarness', () => {
     <mat-option>Plain option</mat-option>
     <mat-option disabled>Disabled option</mat-option>
   `,
+  standalone: true,
+  imports: [MatOptionModule],
 })
 class OptionHarnessTest implements MatOptionParentComponent {
   @ViewChildren(MatOption) options: QueryList<{setActiveStyles(): void}>;
