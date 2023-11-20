@@ -1,4 +1,4 @@
-import {dispatchMouseEvent} from '../../cdk/testing/private';
+import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
@@ -14,8 +14,11 @@ import {
 describe('MatButtonToggle with forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
-      declarations: [
+      imports: [
+        MatButtonToggleModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
         ButtonToggleGroupWithNgModel,
         ButtonToggleGroupWithFormControl,
         ButtonToggleGroupWithIndirectDescendantToggles,
@@ -310,8 +313,8 @@ describe('MatButtonToggle with forms', () => {
 describe('MatButtonToggle without forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatButtonToggleModule],
-      declarations: [
+      imports: [
+        MatButtonToggleModule,
         ButtonTogglesInsideButtonToggleGroup,
         ButtonTogglesInsideButtonToggleGroupMultiple,
         FalsyButtonTogglesInsideButtonToggleGroupMultiple,
@@ -969,6 +972,8 @@ describe('MatButtonToggle without forms', () => {
     <mat-button-toggle value="test3">Test3</mat-button-toggle>
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonTogglesInsideButtonToggleGroup {
   isGroupDisabled: boolean = false;
@@ -991,6 +996,8 @@ class ButtonTogglesInsideButtonToggleGroup {
     }
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
 })
 class ButtonToggleGroupWithNgModel {
   groupName = 'group-name';
@@ -1012,6 +1019,8 @@ class ButtonToggleGroupWithNgModel {
     <mat-button-toggle value="sugar">Sugar</mat-button-toggle>
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonTogglesInsideButtonToggleGroupMultiple {
   isGroupDisabled: boolean = false;
@@ -1027,6 +1036,8 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
     <mat-button-toggle>Sugar</mat-button-toggle>
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   value: ('' | number | null | undefined | boolean)[] = [0];
@@ -1037,6 +1048,8 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   template: `
   <mat-button-toggle>Yes</mat-button-toggle>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class StandaloneButtonToggle {}
 
@@ -1047,6 +1060,8 @@ class StandaloneButtonToggle {}
     <mat-button-toggle value="green">Value Green</mat-button-toggle>
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleGroupWithInitialValue {
   lastEvent: MatButtonToggleChange;
@@ -1060,6 +1075,8 @@ class ButtonToggleGroupWithInitialValue {
     <mat-button-toggle value="blue">Value Blue</mat-button-toggle>
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
 })
 class ButtonToggleGroupWithFormControl {
   control = new FormControl('');
@@ -1076,6 +1093,8 @@ class ButtonToggleGroupWithFormControl {
       }
     </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
 })
 class ButtonToggleGroupWithIndirectDescendantToggles {
   control = new FormControl('');
@@ -1084,12 +1103,16 @@ class ButtonToggleGroupWithIndirectDescendantToggles {
 /** Simple test component with an aria-label set. */
 @Component({
   template: `<mat-button-toggle aria-label="Super effective"></mat-button-toggle>`,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
 @Component({
   template: `<mat-button-toggle aria-labelledby="some-id"></mat-button-toggle>`,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithAriaLabelledby {}
 
@@ -1101,6 +1124,8 @@ class ButtonToggleWithAriaLabelledby {}
       }
     </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class RepeatedButtonTogglesWithPreselectedValue {
   @ViewChild(MatButtonToggleGroup) toggleGroup: MatButtonToggleGroup;
@@ -1112,11 +1137,15 @@ class RepeatedButtonTogglesWithPreselectedValue {
 
 @Component({
   template: `<mat-button-toggle tabindex="3"></mat-button-toggle>`,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithTabindex {}
 
 @Component({
   template: `<mat-button-toggle name="custom-name"></mat-button-toggle>`,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithStaticName {}
 
@@ -1127,6 +1156,8 @@ class ButtonToggleWithStaticName {}
       <mat-button-toggle value="2" checked>Two</mat-button-toggle>
     </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithStaticChecked {
   @ViewChild(MatButtonToggleGroup) group: MatButtonToggleGroup;
@@ -1137,6 +1168,8 @@ class ButtonToggleWithStaticChecked {
   template: `
     <mat-button-toggle aria-label="Toggle me" aria-labelledby="something"></mat-button-toggle>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithStaticAriaAttributes {}
 
@@ -1148,6 +1181,8 @@ class ButtonToggleWithStaticAriaAttributes {}
     }
   </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
 })
 class ButtonToggleGroupWithFormControlAndDynamicButtons {
   @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;

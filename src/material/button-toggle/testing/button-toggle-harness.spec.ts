@@ -11,8 +11,7 @@ describe('MatButtonToggleHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatButtonToggleModule],
-      declarations: [ButtonToggleHarnessTest],
+      imports: [MatButtonToggleModule, ButtonToggleHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonToggleHarnessTest);
@@ -143,6 +142,8 @@ describe('MatButtonToggleHarness', () => {
         appearance="legacy">Second</mat-button-toggle>
       <span id="second-label">Second toggle</span>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleHarnessTest {
   disabled = true;
