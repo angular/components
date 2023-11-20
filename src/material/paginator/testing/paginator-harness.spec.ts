@@ -13,8 +13,7 @@ describe('MatPaginatorHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatPaginatorModule, NoopAnimationsModule],
-      declarations: [PaginatorHarnessTest],
+      imports: [MatPaginatorModule, NoopAnimationsModule, PaginatorHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaginatorHarnessTest);
@@ -138,6 +137,8 @@ describe('MatPaginatorHarness', () => {
       [pageIndex]="pageIndex">
     </mat-paginator>
   `,
+  standalone: true,
+  imports: [MatPaginatorModule],
 })
 class PaginatorHarnessTest {
   length = 500;
