@@ -7,6 +7,7 @@ When including the CDK's `BidiModule`, components can inject `Directionality` to
 text direction (RTL or LTR);
 
 #### Example
+
 ```ts
 @Component({ ... })
 export class MyWidget implements OnDestroy {
@@ -32,12 +33,14 @@ export class MyWidget implements OnDestroy {
 ```
 
 ### The `Dir` directive
+
 The `BidiModule` also includes a directive that matches any elements with a `dir` attribute. This
 directive has the same API as Directionality and provides itself _as_ `Directionality`. By doing
 this, any component that injects `Directionality` will get the closest ancestor layout direction
 context.
 
 ### Interpreting the `auto` value
+
 The CDK also supports the native `auto` value for the `dir` attribute, however there's a difference
 in how it is interpreted. Some parts of the CDK, like overlays and keyboard navigation, need to know
 if the element is in an RTL or LTR layout in order to work correctly. For performance reasons, we
