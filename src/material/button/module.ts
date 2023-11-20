@@ -13,7 +13,18 @@ import {MatFabAnchor, MatFabButton, MatMiniFabAnchor, MatMiniFabButton} from './
 import {MatIconAnchor, MatIconButton} from './icon-button';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule],
+  imports: [
+    MatCommonModule,
+    MatRippleModule,
+    MatAnchor,
+    MatButton,
+    MatIconAnchor,
+    MatMiniFabAnchor,
+    MatMiniFabButton,
+    MatIconButton,
+    MatFabAnchor,
+    MatFabButton,
+  ],
   exports: [
     MatAnchor,
     MatButton,
@@ -24,16 +35,6 @@ import {MatIconAnchor, MatIconButton} from './icon-button';
     MatFabAnchor,
     MatFabButton,
     MatCommonModule,
-  ],
-  declarations: [
-    MatAnchor,
-    MatButton,
-    MatIconAnchor,
-    MatMiniFabAnchor,
-    MatMiniFabButton,
-    MatIconButton,
-    MatFabAnchor,
-    MatFabButton,
   ],
 })
 export class MatButtonModule {}
