@@ -21,6 +21,7 @@ import {MatListBase} from './list-base';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatActionList}],
+  standalone: true,
 })
 export class MatActionList extends MatListBase {
   // An navigation list is considered interactive, but does not extend the interactive list
