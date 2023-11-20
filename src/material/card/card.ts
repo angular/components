@@ -46,6 +46,7 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatCard {
   @Input() appearance: MatCardAppearance;
@@ -67,6 +68,7 @@ export class MatCard {
 @Directive({
   selector: `mat-card-title, [mat-card-title], [matCardTitle]`,
   host: {'class': 'mat-mdc-card-title'},
+  standalone: true,
 })
 export class MatCardTitle {}
 
@@ -81,6 +83,7 @@ export class MatCardTitle {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-title-group'},
+  standalone: true,
 })
 export class MatCardTitleGroup {}
 
@@ -94,6 +97,7 @@ export class MatCardTitleGroup {}
 @Directive({
   selector: 'mat-card-content',
   host: {'class': 'mat-mdc-card-content'},
+  standalone: true,
 })
 export class MatCardContent {}
 
@@ -107,6 +111,7 @@ export class MatCardContent {}
 @Directive({
   selector: `mat-card-subtitle, [mat-card-subtitle], [matCardSubtitle]`,
   host: {'class': 'mat-mdc-card-subtitle'},
+  standalone: true,
 })
 export class MatCardSubtitle {}
 
@@ -124,6 +129,7 @@ export class MatCardSubtitle {}
     'class': 'mat-mdc-card-actions mdc-card__actions',
     '[class.mat-mdc-card-actions-align-end]': 'align === "end"',
   },
+  standalone: true,
 })
 export class MatCardActions {
   // TODO(jelbourn): deprecate `align` in favor of `actionPosition` or `actionAlignment`
@@ -155,6 +161,7 @@ export class MatCardActions {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-header'},
+  standalone: true,
 })
 export class MatCardHeader {}
 
@@ -168,6 +175,7 @@ export class MatCardHeader {}
 @Directive({
   selector: 'mat-card-footer',
   host: {'class': 'mat-mdc-card-footer'},
+  standalone: true,
 })
 export class MatCardFooter {}
 
@@ -187,6 +195,7 @@ export class MatCardFooter {}
 @Directive({
   selector: '[mat-card-image], [matCardImage]',
   host: {'class': 'mat-mdc-card-image mdc-card__media'},
+  standalone: true,
 })
 export class MatCardImage {
   // TODO(jelbourn): support `.mdc-card__media--square` and `.mdc-card__media--16-9`.
@@ -196,6 +205,7 @@ export class MatCardImage {
 @Directive({
   selector: '[mat-card-sm-image], [matCardImageSmall]',
   host: {'class': 'mat-mdc-card-sm-image mdc-card__media'},
+  standalone: true,
 })
 export class MatCardSmImage {}
 
@@ -203,6 +213,7 @@ export class MatCardSmImage {}
 @Directive({
   selector: '[mat-card-md-image], [matCardImageMedium]',
   host: {'class': 'mat-mdc-card-md-image mdc-card__media'},
+  standalone: true,
 })
 export class MatCardMdImage {}
 
@@ -210,6 +221,7 @@ export class MatCardMdImage {}
 @Directive({
   selector: '[mat-card-lg-image], [matCardImageLarge]',
   host: {'class': 'mat-mdc-card-lg-image mdc-card__media'},
+  standalone: true,
 })
 export class MatCardLgImage {}
 
@@ -217,6 +229,7 @@ export class MatCardLgImage {}
 @Directive({
   selector: '[mat-card-xl-image], [matCardImageXLarge]',
   host: {'class': 'mat-mdc-card-xl-image mdc-card__media'},
+  standalone: true,
 })
 export class MatCardXlImage {}
 
@@ -232,5 +245,6 @@ export class MatCardXlImage {}
 @Directive({
   selector: '[mat-card-avatar], [matCardAvatar]',
   host: {'class': 'mat-mdc-card-avatar'},
+  standalone: true,
 })
 export class MatCardAvatar {}
