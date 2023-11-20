@@ -44,6 +44,7 @@ import {
   MAT_SLIDER,
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
+import {MatSliderVisualThumb} from './slider-thumb';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
@@ -71,6 +72,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
+  standalone: true,
+  imports: [MatSliderVisualThumb],
 })
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** The active portion of the slider track. */
