@@ -21,8 +21,7 @@ describe('LiveAnnouncer', () => {
   describe('with default element', () => {
     beforeEach(() =>
       TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp, TestModal],
+        imports: [A11yModule, TestApp, TestModal],
       }),
     );
 
@@ -129,7 +128,6 @@ describe('LiveAnnouncer', () => {
 
       TestBed.resetTestingModule().configureTestingModule({
         imports: [A11yModule],
-        declarations: [TestApp],
       });
 
       const extraElement = document.createElement('div');
@@ -226,8 +224,7 @@ describe('LiveAnnouncer', () => {
       customLiveElement = document.createElement('div');
 
       return TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp],
+        imports: [A11yModule, TestApp],
         providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
@@ -250,8 +247,7 @@ describe('LiveAnnouncer', () => {
   describe('with a default options', () => {
     beforeEach(() => {
       return TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp],
+        imports: [A11yModule, TestApp],
         providers: [
           {
             provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
@@ -299,15 +295,13 @@ describe('CdkAriaLive', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [DivWithCdkAriaLive],
+      imports: [A11yModule, DivWithCdkAriaLive],
       providers: [
         {
           provide: MutationObserverFactory,
           useValue: {
             create: (callback: Function) => {
               mutationCallbacks.push(callback);
-
               return {
                 observe: () => {},
                 disconnect: () => {},
@@ -395,7 +389,11 @@ function getLiveElement(): Element {
   return document.body.querySelector('.cdk-live-announcer-element')!;
 }
 
-@Component({template: `<button (click)="announceText('Test')">Announce</button>`})
+@Component({
+  template: `<button (click)="announceText('Test')">Announce</button>`,
+  standalone: true,
+  imports: [A11yModule],
+})
 class TestApp {
   constructor(public live: LiveAnnouncer) {}
 
@@ -404,7 +402,12 @@ class TestApp {
   }
 }
 
-@Component({template: '', host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'}})
+@Component({
+  template: '',
+  host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'},
+  standalone: true,
+  imports: [A11yModule],
+})
 class TestModal {
   ariaOwns: string | null = null;
 }
@@ -414,6 +417,8 @@ class TestModal {
     <div
       [cdkAriaLive]="politeness ? politeness : null"
       [cdkAriaLiveDuration]="duration">{{content}}</div>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class DivWithCdkAriaLive {
   politeness = 'polite';
