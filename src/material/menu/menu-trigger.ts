@@ -53,6 +53,13 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-menu-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -90,6 +97,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
     '(keydown)': '_handleKeydown($event)',
   },
   exportAs: 'matMenuTrigger',
+  standalone: true,
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _portal: TemplatePortal;
