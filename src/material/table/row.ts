@@ -14,6 +14,7 @@ import {
   CdkRow,
   CdkRowDef,
   CdkNoDataRow,
+  CdkCellOutlet,
 } from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 
@@ -28,6 +29,7 @@ const ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
   selector: '[matHeaderRowDef]',
   providers: [{provide: CdkHeaderRowDef, useExisting: MatHeaderRowDef}],
   inputs: ['columns: matHeaderRowDef', 'sticky: matHeaderRowDefSticky'],
+  standalone: true,
 })
 export class MatHeaderRowDef extends CdkHeaderRowDef {}
 
@@ -39,6 +41,7 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {}
   selector: '[matFooterRowDef]',
   providers: [{provide: CdkFooterRowDef, useExisting: MatFooterRowDef}],
   inputs: ['columns: matFooterRowDef', 'sticky: matFooterRowDefSticky'],
+  standalone: true,
 })
 export class MatFooterRowDef extends CdkFooterRowDef {}
 
@@ -51,6 +54,7 @@ export class MatFooterRowDef extends CdkFooterRowDef {}
   selector: '[matRowDef]',
   providers: [{provide: CdkRowDef, useExisting: MatRowDef}],
   inputs: ['columns: matRowDefColumns', 'when: matRowDefWhen'],
+  standalone: true,
 })
 export class MatRowDef<T> extends CdkRowDef<T> {}
 
@@ -68,6 +72,8 @@ export class MatRowDef<T> extends CdkRowDef<T> {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matHeaderRow',
   providers: [{provide: CdkHeaderRow, useExisting: MatHeaderRow}],
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class MatHeaderRow extends CdkHeaderRow {}
 
@@ -85,6 +91,8 @@ export class MatHeaderRow extends CdkHeaderRow {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matFooterRow',
   providers: [{provide: CdkFooterRow, useExisting: MatFooterRow}],
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class MatFooterRow extends CdkFooterRow {}
 
@@ -102,6 +110,8 @@ export class MatFooterRow extends CdkFooterRow {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class MatRow extends CdkRow {}
 
@@ -109,6 +119,7 @@ export class MatRow extends CdkRow {}
 @Directive({
   selector: 'ng-template[matNoDataRow]',
   providers: [{provide: CdkNoDataRow, useExisting: MatNoDataRow}],
+  standalone: true,
 })
 export class MatNoDataRow extends CdkNoDataRow {
   override _contentClassName = 'mat-mdc-no-data-row';

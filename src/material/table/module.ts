@@ -59,8 +59,7 @@ const EXPORTED_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, CdkTableModule],
+  imports: [MatCommonModule, CdkTableModule, ...EXPORTED_DECLARATIONS],
   exports: [MatCommonModule, EXPORTED_DECLARATIONS],
-  declarations: EXPORTED_DECLARATIONS,
 })
 export class MatTableModule {}
