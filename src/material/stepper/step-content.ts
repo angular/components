@@ -13,6 +13,7 @@ import {Directive, TemplateRef} from '@angular/core';
  */
 @Directive({
   selector: 'ng-template[matStepContent]',
+  standalone: true,
 })
 export class MatStepContent {
   constructor(public _template: TemplateRef<any>) {}

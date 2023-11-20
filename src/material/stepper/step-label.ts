@@ -11,5 +11,6 @@ import {CdkStepLabel} from '@angular/cdk/stepper';
 
 @Directive({
   selector: '[matStepLabel]',
+  standalone: true,
 })
 export class MatStepLabel extends CdkStepLabel {}

@@ -23,7 +23,9 @@ import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
 import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
-import {ThemePalette} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
+import {MatIcon} from '@angular/material/icon';
+import {NgTemplateOutlet} from '@angular/common';
 
 @Component({
   selector: 'mat-step-header',
@@ -36,6 +38,8 @@ import {ThemePalette} from '@angular/material/core';
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatRipple, NgTemplateOutlet, MatIcon],
 })
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
   private _intlSubscription: Subscription;
