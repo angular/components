@@ -64,7 +64,6 @@ const EXPORTED_DECLARATIONS = [
 
 @NgModule({
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
-  imports: [ScrollingModule],
+  imports: [ScrollingModule, ...EXPORTED_DECLARATIONS],
 })
 export class CdkTableModule {}

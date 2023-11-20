@@ -28,7 +28,10 @@ export interface CellDef {
  * Cell definition for a CDK table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[cdkCellDef]'})
+@Directive({
+  selector: '[cdkCellDef]',
+  standalone: true,
+})
 export class CdkCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -37,7 +40,10 @@ export class CdkCellDef implements CellDef {
  * Header cell definition for a CDK table.
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkHeaderCellDef]'})
+@Directive({
+  selector: '[cdkHeaderCellDef]',
+  standalone: true,
+})
 export class CdkHeaderCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -46,7 +52,10 @@ export class CdkHeaderCellDef implements CellDef {
  * Footer cell definition for a CDK table.
  * Captures the template of a column's footer cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkFooterCellDef]'})
+@Directive({
+  selector: '[cdkFooterCellDef]',
+  standalone: true,
+})
 export class CdkFooterCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
@@ -65,6 +74,7 @@ const _CdkColumnDefBase: CanStickCtor & typeof CdkColumnDefBase =
   selector: '[cdkColumnDef]',
   inputs: ['sticky'],
   providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
+  standalone: true,
 })
 export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   /** Unique name for this column. */
@@ -162,6 +172,7 @@ export class BaseCdkCell {
     'class': 'cdk-header-cell',
     'role': 'columnheader',
   },
+  standalone: true,
 })
 export class CdkHeaderCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
@@ -175,6 +186,7 @@ export class CdkHeaderCell extends BaseCdkCell {
   host: {
     'class': 'cdk-footer-cell',
   },
+  standalone: true,
 })
 export class CdkFooterCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
@@ -193,6 +205,7 @@ export class CdkFooterCell extends BaseCdkCell {
   host: {
     'class': 'cdk-cell',
   },
+  standalone: true,
 })
 export class CdkCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {

@@ -93,6 +93,7 @@ const _CdkHeaderRowDefBase: CanStickCtor & typeof CdkHeaderRowDefBase =
 @Directive({
   selector: '[cdkHeaderRowDef]',
   inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
+  standalone: true,
 })
 export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
   constructor(
@@ -123,6 +124,7 @@ const _CdkFooterRowDefBase: CanStickCtor & typeof CdkFooterRowDefBase =
 @Directive({
   selector: '[cdkFooterRowDef]',
   inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
+  standalone: true,
 })
 export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
   constructor(
@@ -148,6 +150,7 @@ export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, O
 @Directive({
   selector: '[cdkRowDef]',
   inputs: ['columns: cdkRowDefColumns', 'when: cdkRowDefWhen'],
+  standalone: true,
 })
 export class CdkRowDef<T> extends BaseRowDef {
   /**
@@ -228,7 +231,10 @@ export interface CdkCellOutletMultiRowContext<T> {
  * Outlet for rendering cells inside of a row or header row.
  * @docs-private
  */
-@Directive({selector: '[cdkCellOutlet]'})
+@Directive({
+  selector: '[cdkCellOutlet]',
+  standalone: true,
+})
 export class CdkCellOutlet implements OnDestroy {
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkCellDef[];
@@ -270,6 +276,8 @@ export class CdkCellOutlet implements OnDestroy {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class CdkHeaderRow {}
 
@@ -285,6 +293,8 @@ export class CdkHeaderRow {}
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class CdkFooterRow {}
 
@@ -300,12 +310,15 @@ export class CdkFooterRow {}
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CdkCellOutlet],
 })
 export class CdkRow {}
 
 /** Row that can be used to display a message when no data is shown in the table. */
 @Directive({
   selector: 'ng-template[cdkNoDataRow]',
+  standalone: true,
 })
 export class CdkNoDataRow {
   _contentClassName = 'cdk-no-data-row';
