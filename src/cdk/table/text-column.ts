@@ -17,7 +17,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
+import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell} from './cell';
 import {CdkTable} from './table';
 import {
   getTableTextColumnMissingParentTableError,
@@ -54,6 +54,8 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCellDef, CdkCell],
 })
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
