@@ -18,21 +18,22 @@ import {
 import {MatGridList} from './grid-list';
 
 @NgModule({
-  imports: [MatLineModule, MatCommonModule],
+  imports: [
+    MatLineModule,
+    MatCommonModule,
+    MatGridList,
+    MatGridTile,
+    MatGridTileText,
+    MatGridTileHeaderCssMatStyler,
+    MatGridTileFooterCssMatStyler,
+    MatGridAvatarCssMatStyler,
+  ],
   exports: [
     MatGridList,
     MatGridTile,
     MatGridTileText,
     MatLineModule,
     MatCommonModule,
-    MatGridTileHeaderCssMatStyler,
-    MatGridTileFooterCssMatStyler,
-    MatGridAvatarCssMatStyler,
-  ],
-  declarations: [
-    MatGridList,
-    MatGridTile,
-    MatGridTileText,
     MatGridTileHeaderCssMatStyler,
     MatGridTileFooterCssMatStyler,
     MatGridAvatarCssMatStyler,
