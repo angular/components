@@ -1,51 +1,82 @@
+@use 'sass:map';
 @use '../tokens/m2/mat/option' as tokens-mat-option;
 @use '../tokens/token-utils';
 @use '../style/sass-utils';
-
 @use '../theming/theming';
 @use '../theming/inspection';
 @use '../typography/typography';
 
-@mixin base($theme) {}
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {}
+}
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-option.$prefix,
-      tokens-mat-option.get-color-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-option.$prefix,
+        tokens-mat-option.get-color-tokens($theme));
+    }
 
-  .mat-accent {
-    @include token-utils.create-token-values(tokens-mat-option.$prefix,
-      tokens-mat-option.get-color-tokens($theme, accent));
-  }
+    .mat-accent {
+      @include token-utils.create-token-values(tokens-mat-option.$prefix,
+        tokens-mat-option.get-color-tokens($theme, accent));
+    }
 
-  .mat-warn {
-    @include token-utils.create-token-values(tokens-mat-option.$prefix,
-      tokens-mat-option.get-color-tokens($theme, warn));
+    .mat-warn {
+      @include token-utils.create-token-values(tokens-mat-option.$prefix,
+        tokens-mat-option.get-color-tokens($theme, warn));
+    }
   }
 }
 
 @mixin typography($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-option.$prefix,
-      tokens-mat-option.get-typography-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-option.$prefix,
+        tokens-mat-option.get-typography-tokens($theme));
+    }
   }
 }
 
 @mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-option') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+        tokens-mat-option.$prefix, map.get($tokens, tokens-mat-option.$prefix));
   }
 }
