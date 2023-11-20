@@ -39,8 +39,7 @@ describe('Overlay directives', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule],
-      declarations: [ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
+      imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
         {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
         {
@@ -723,6 +722,8 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector">
     <p>Menu content</p>
   </ng-template>`,
+  standalone: true,
+  imports: [OverlayModule],
 })
 class ConnectedOverlayDirectiveTest {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
@@ -763,6 +764,8 @@ class ConnectedOverlayDirectiveTest {
   template: `
   <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,
+  standalone: true,
+  imports: [OverlayModule],
 })
 class ConnectedOverlayPropertyInitOrder {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;

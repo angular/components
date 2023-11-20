@@ -11,8 +11,7 @@ describe('GlobalPositonStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule],
-      declarations: [BlankPortal],
+      imports: [OverlayModule, PortalModule, BlankPortal],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}],
     });
 
@@ -459,5 +458,9 @@ describe('GlobalPositonStrategy', () => {
   });
 });
 
-@Component({template: ''})
+@Component({
+  template: '',
+  standalone: true,
+  imports: [OverlayModule, PortalModule],
+})
 class BlankPortal {}

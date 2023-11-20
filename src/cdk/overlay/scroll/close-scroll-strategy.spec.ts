@@ -15,8 +15,7 @@ describe('CloseScrollStrategy', () => {
     scrollPosition = 0;
 
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule],
-      declarations: [MozarellaMsg],
+      imports: [OverlayModule, PortalModule, MozarellaMsg],
       providers: [
         {
           provide: ScrollDispatcher,
@@ -147,5 +146,9 @@ describe('CloseScrollStrategy', () => {
 });
 
 /** Simple component that we can attach to the overlay. */
-@Component({template: '<p>Mozarella</p>'})
+@Component({
+  template: '<p>Mozarella</p>',
+  standalone: true,
+  imports: [OverlayModule, PortalModule],
+})
 class MozarellaMsg {}

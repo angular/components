@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MockNgZone, dispatchFakeEvent} from '../testing/private';
-import {ComponentPortal, PortalModule, TemplatePortal, CdkPortal} from '@angular/cdk/portal';
+import {ComponentPortal, TemplatePortal, CdkPortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
@@ -46,8 +46,7 @@ describe('Overlay', () => {
   function setup(imports: Type<unknown>[] = []) {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, ...imports],
-      declarations: [PizzaMsg, TestComponentWithTemplatePortals],
+      imports: [OverlayModule, ...imports],
       providers: [
         {
           provide: Directionality,
@@ -1120,11 +1119,16 @@ describe('Overlay', () => {
 @Component({
   selector: 'pizza',
   template: '<p>Pizza</p>',
+  standalone: true,
 })
 class PizzaMsg {}
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
-@Component({template: `<ng-template cdk-portal>Cake</ng-template>`})
+@Component({
+  template: `<ng-template cdkPortal>Cake</ng-template>`,
+  standalone: true,
+  imports: [CdkPortal],
+})
 class TestComponentWithTemplatePortals {
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 
