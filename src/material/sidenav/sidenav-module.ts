@@ -12,10 +12,9 @@ import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
 
 @NgModule({
-  imports: [MatCommonModule, CdkScrollableModule],
-  exports: [
-    CdkScrollableModule,
+  imports: [
     MatCommonModule,
+    CdkScrollableModule,
     MatDrawer,
     MatDrawerContainer,
     MatDrawerContent,
@@ -23,7 +22,9 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
     MatSidenavContainer,
     MatSidenavContent,
   ],
-  declarations: [
+  exports: [
+    CdkScrollableModule,
+    MatCommonModule,
     MatDrawer,
     MatDrawerContainer,
     MatDrawerContent,

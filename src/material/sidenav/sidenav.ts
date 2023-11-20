@@ -47,6 +47,7 @@ import {ScrollDispatcher, CdkScrollable} from '@angular/cdk/scrolling';
       useExisting: MatSidenavContent,
     },
   ],
+  standalone: true,
 })
 export class MatSidenavContent extends MatDrawerContent {
   constructor(
@@ -82,6 +83,8 @@ export class MatSidenavContent extends MatDrawerContent {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CdkScrollable],
 })
 export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
@@ -139,6 +142,8 @@ export class MatSidenav extends MatDrawer {
       useExisting: MatSidenavContainer,
     },
   ],
+  standalone: true,
+  imports: [MatSidenavContent],
 })
 export class MatSidenavContainer extends MatDrawerContainer {
   @ContentChildren(MatSidenav, {
