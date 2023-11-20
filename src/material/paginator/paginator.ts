@@ -22,8 +22,11 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
-import {MatFormFieldAppearance} from '@angular/material/form-field';
-import {HasInitialized, mixinInitialized, ThemePalette} from '@angular/material/core';
+import {MatFormField, MatFormFieldAppearance} from '@angular/material/form-field';
+import {HasInitialized, MatOption, mixinInitialized, ThemePalette} from '@angular/material/core';
+import {MatSelect} from '@angular/material/select';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
 import {Subscription} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
 
@@ -109,6 +112,8 @@ let nextUniqueId = 0;
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
 export class MatPaginator
   extends _MatPaginatorMixinBase
