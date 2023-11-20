@@ -1,6 +1,5 @@
 import {TestBed} from '@angular/core/testing';
 import {MapDirectionsResponse, MapDirectionsService} from './map-directions-service';
-import {GoogleMapsModule} from '../google-maps-module';
 import {
   createDirectionsServiceConstructorSpy,
   createDirectionsServiceSpy,
@@ -12,10 +11,6 @@ describe('MapDirectionsService', () => {
   let directionsServiceSpy: jasmine.SpyObj<google.maps.DirectionsService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-    });
-
     directionsServiceSpy = createDirectionsServiceSpy();
     directionsServiceConstructorSpy =
       createDirectionsServiceConstructorSpy(directionsServiceSpy).and.callThrough();

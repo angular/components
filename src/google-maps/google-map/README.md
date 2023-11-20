@@ -8,14 +8,12 @@ The `GoogleMap` component wraps the [`google.maps.Map` class](https://developers
 // google-maps-demo.module.ts
 
 import {NgModule} from '@angular/core';
-import {GoogleMapsModule} from '@angular/google-maps';
+import {GoogleMap} from '@angular/google-maps';
 
 import {GoogleMapDemo} from './google-map-demo';
 
 @NgModule({
-  imports: [
-    GoogleMapsModule,
-  ],
+  imports: [GoogleMap],
   declarations: [GoogleMapDemo],
 })
 export class GoogleMapDemoModule {

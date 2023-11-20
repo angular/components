@@ -9,14 +9,22 @@
 import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {
-  GoogleMapsModule,
+  GoogleMap,
+  MapBicyclingLayer,
   MapCircle,
+  MapDirectionsRenderer,
   MapDirectionsService,
+  MapGroundOverlay,
+  MapHeatmapLayer,
   MapInfoWindow,
+  MapKmlLayer,
   MapMarker,
+  MapMarkerClusterer,
   MapPolygon,
   MapPolyline,
   MapRectangle,
+  MapTrafficLayer,
+  MapTransitLayer,
 } from '@angular/google-maps';
 
 const POLYLINE_PATH: google.maps.LatLngLiteral[] = [
@@ -52,7 +60,24 @@ let apiLoadingPromise: Promise<unknown> | null = null;
   templateUrl: 'google-map-demo.html',
   styleUrls: ['google-map-demo.css'],
   standalone: true,
-  imports: [CommonModule, GoogleMapsModule],
+  imports: [
+    CommonModule,
+    GoogleMap,
+    MapBicyclingLayer,
+    MapCircle,
+    MapDirectionsRenderer,
+    MapGroundOverlay,
+    MapHeatmapLayer,
+    MapInfoWindow,
+    MapKmlLayer,
+    MapMarker,
+    MapMarkerClusterer,
+    MapPolygon,
+    MapPolyline,
+    MapRectangle,
+    MapTrafficLayer,
+    MapTransitLayer,
+  ],
 })
 export class GoogleMapDemo {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;

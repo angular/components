@@ -1,6 +1,5 @@
 import {TestBed} from '@angular/core/testing';
 import {MapGeocoderResponse, MapGeocoder} from './map-geocoder';
-import {GoogleMapsModule} from '../google-maps-module';
 import {createGeocoderConstructorSpy, createGeocoderSpy} from '../testing/fake-google-map-utils';
 
 describe('MapGeocoder', () => {
@@ -9,10 +8,6 @@ describe('MapGeocoder', () => {
   let geocoderSpy: jasmine.SpyObj<google.maps.Geocoder>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-    });
-
     geocoderSpy = createGeocoderSpy();
     geocoderConstructorSpy = createGeocoderConstructorSpy(geocoderSpy).and.callThrough();
     geocoder = TestBed.inject(MapGeocoder);

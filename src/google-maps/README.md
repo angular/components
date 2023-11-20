@@ -21,7 +21,7 @@ method to make sure that the component doesn't load until after the API has load
 // google-maps-demo.module.ts
 
 import { NgModule } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
@@ -33,7 +33,7 @@ import { GoogleMapsDemoComponent } from './google-maps-demo.component';
   ],
   imports: [
     CommonModule,
-    GoogleMapsModule,
+    GoogleMap,
     HttpClientModule,
     HttpClientJsonpModule,
   ],

@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -10,13 +9,15 @@ import {
   createTrafficLayerSpy,
 } from '../testing/fake-google-map-utils';
 
+import {MapTrafficLayer} from './map-traffic-layer';
+
 describe('MapTrafficLayer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
   const trafficLayerOptions: google.maps.TrafficLayerOptions = {autoRefresh: false};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
+      imports: [GoogleMap, MapTrafficLayer],
       declarations: [TestApp],
     });
   }));

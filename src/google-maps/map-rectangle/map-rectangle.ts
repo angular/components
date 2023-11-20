@@ -24,6 +24,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-rectangle',
   exportAs: 'mapRectangle',
+  standalone: true,
 })
 export class MapRectangle implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -134,7 +135,10 @@ export class MapRectangle implements OnInit, OnDestroy {
   @Output() readonly rectangleRightclick: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
 
-  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
+  constructor(
+    private readonly _map: GoogleMap,
+    private readonly _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {
