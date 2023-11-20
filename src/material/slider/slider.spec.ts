@@ -8,7 +8,7 @@
 
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '../../cdk/testing/private';
+import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -38,8 +38,8 @@ describe('MDC-based MatSlider', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
-      declarations: [component],
       providers: [...providers],
+      declarations: [component],
     }).compileComponents();
     platform = TestBed.inject(Platform);
     return TestBed.createComponent<T>(component);
