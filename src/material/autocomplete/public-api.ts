@@ -10,3 +10,6 @@ export * from './module';
 export * from './autocomplete';
 export * from './autocomplete-origin';
 export * from './autocomplete-trigger';
+
+// Re-export these since they're required to be used together with `mat-autocomplete`.
+export {MatOption, MatOptgroup} from '@angular/material/core';

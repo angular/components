@@ -12,7 +12,7 @@ import {
   dispatchMouseEvent,
   MockNgZone,
   typeInElement,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -72,8 +72,8 @@ describe('MDC-based MatAutocomplete', () => {
         NoopAnimationsModule,
         OverlayModule,
       ],
-      declarations: [component],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}, ...providers],
+      declarations: [component],
     });
 
     TestBed.compileComponents();
