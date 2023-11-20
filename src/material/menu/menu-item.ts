@@ -23,6 +23,7 @@ import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
 import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
+import {MatRipple} from '@angular/material/core';
 
 /**
  * Single item inside a `mat-menu`. Provides the menu item styling and accessibility treatment.
@@ -44,6 +45,8 @@ import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   /** ARIA role for the menu item. */

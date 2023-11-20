@@ -33,6 +33,7 @@ export const MAT_MENU_CONTENT = new InjectionToken<MatMenuContent>('MatMenuConte
 @Directive({
   selector: 'ng-template[matMenuContent]',
   providers: [{provide: MAT_MENU_CONTENT, useExisting: MatMenuContent}],
+  standalone: true,
 })
 export class MatMenuContent implements OnDestroy {
   private _portal: TemplatePortal<any>;

@@ -2736,13 +2736,13 @@ describe('MatMenu default overrides', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
-      declarations: [SimpleMenu, FakeIcon],
       providers: [
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
           useValue: {overlapTrigger: true, xPosition: 'before', yPosition: 'above'},
         },
       ],
+      declarations: [SimpleMenu, FakeIcon],
     }).compileComponents();
   }));
 
@@ -2786,7 +2786,9 @@ const SIMPLE_MENU_TEMPLATE = `
   </mat-menu>
 `;
 
-@Component({template: SIMPLE_MENU_TEMPLATE})
+@Component({
+  template: SIMPLE_MENU_TEMPLATE,
+})
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
