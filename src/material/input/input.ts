@@ -77,6 +77,7 @@ let nextUniqueId = 0;
     '(input)': '_onInput()',
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
+  standalone: true,
 })
 export class MatInput
   implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck
