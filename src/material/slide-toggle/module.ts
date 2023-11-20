@@ -13,14 +13,18 @@ import {MatSlideToggleRequiredValidator} from './slide-toggle-required-validator
 
 /** This module is used by both original and MDC-based slide-toggle implementations. */
 @NgModule({
+  imports: [MatSlideToggleRequiredValidator],
   exports: [MatSlideToggleRequiredValidator],
-  declarations: [MatSlideToggleRequiredValidator],
 })
 export class _MatSlideToggleRequiredValidatorModule {}
 
 @NgModule({
-  imports: [_MatSlideToggleRequiredValidatorModule, MatCommonModule, MatRippleModule],
+  imports: [
+    _MatSlideToggleRequiredValidatorModule,
+    MatCommonModule,
+    MatRippleModule,
+    MatSlideToggle,
+  ],
   exports: [_MatSlideToggleRequiredValidatorModule, MatSlideToggle, MatCommonModule],
-  declarations: [MatSlideToggle],
 })
 export class MatSlideToggleModule {}

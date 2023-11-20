@@ -1,5 +1,5 @@
 import {BidiModule, Direction} from '@angular/cdk/bidi';
-import {dispatchFakeEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {
   ComponentFixture,
@@ -19,8 +19,9 @@ import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 describe('MDC-based MatSlideToggle without forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, BidiModule],
-      declarations: [
+      imports: [
+        MatSlideToggleModule,
+        BidiModule,
         SlideToggleBasic,
         SlideToggleCheckedAndDisabledAttr,
         SlideToggleWithTabindexAttr,
@@ -421,8 +422,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       'action configuration',
     fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatSlideToggleModule],
-        declarations: [SlideToggleBasic],
+        imports: [MatSlideToggleModule, SlideToggleBasic],
         providers: [
           {
             provide: MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
@@ -464,8 +464,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
   it('should be able to change the default color', fakeAsync(() => {
     TestBed.resetTestingModule().configureTestingModule({
-      imports: [MatSlideToggleModule],
-      declarations: [SlideToggleWithForm],
+      imports: [MatSlideToggleModule, SlideToggleWithForm],
       providers: [{provide: MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS, useValue: {color: 'warn'}}],
     });
     const fixture = TestBed.createComponent(SlideToggleWithForm);
@@ -487,8 +486,10 @@ describe('MDC-based MatSlideToggle without forms', () => {
 describe('MDC-based MatSlideToggle with forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
-      declarations: [
+      imports: [
+        MatSlideToggleModule,
+        FormsModule,
+        ReactiveFormsModule,
         SlideToggleWithForm,
         SlideToggleWithModel,
         SlideToggleWithFormControl,
@@ -814,6 +815,8 @@ describe('MDC-based MatSlideToggle with forms', () => {
                      (click)="onSlideClick($event)">
       <span>Test Slide Toggle</span>
     </mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleBasic {
   isDisabled: boolean = false;
@@ -846,6 +849,8 @@ class SlideToggleBasic {
       <mat-slide-toggle name="slide" ngModel [required]="isRequired">Required</mat-slide-toggle>
       <button type="submit"></button>
     </form>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 class SlideToggleWithForm {
   isSubmitted: boolean = false;
@@ -855,6 +860,8 @@ class SlideToggleWithForm {
 @Component({
   template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"
                                [checked]="isChecked"></mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 class SlideToggleWithModel {
   modelValue = false;
@@ -864,6 +871,8 @@ class SlideToggleWithModel {
 
 @Component({
   template: `<mat-slide-toggle checked disabled>Label</mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleCheckedAndDisabledAttr {}
 
@@ -872,18 +881,26 @@ class SlideToggleCheckedAndDisabledAttr {}
     <mat-slide-toggle [formControl]="formControl">
       <span>Test Slide Toggle</span>
     </mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 class SlideToggleWithFormControl {
   formControl = new FormControl(false);
 }
 
-@Component({template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`})
+@Component({
+  template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
+})
 class SlideToggleWithTabindexAttr {
   disabled = false;
 }
 
 @Component({
   template: `<mat-slide-toggle>{{label}}</mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleWithoutLabel {
   label: string;
@@ -891,6 +908,8 @@ class SlideToggleWithoutLabel {
 
 @Component({
   template: `<mat-slide-toggle [(ngModel)]="checked" (change)="onChange()"></mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 class SlideToggleWithModelAndChangeEvent {
   checked: boolean;
@@ -899,12 +918,16 @@ class SlideToggleWithModelAndChangeEvent {
 
 @Component({
   template: `<mat-slide-toggle><some-text></some-text></mat-slide-toggle>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleProjectedLabel {}
 
 @Component({
   selector: 'some-text',
   template: `<span>{{text}}</span>`,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class TextBindingComponent {
   text: string = 'Some text';
@@ -914,5 +937,7 @@ class TextBindingComponent {
   template: `
     <mat-slide-toggle aria-label="Slide toggle" aria-labelledby="something"></mat-slide-toggle>
   `,
+  standalone: true,
+  imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleWithStaticAriaAttributes {}
