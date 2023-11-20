@@ -19,6 +19,7 @@ import {MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens
     'role': 'img',
   },
   providers: [{provide: MAT_CHIP_AVATAR, useExisting: MatChipAvatar}],
+  standalone: true,
 })
 export class MatChipAvatar {}
 
@@ -31,6 +32,7 @@ export class MatChipAvatar {}
     'aria-hidden': 'true',
   },
   providers: [{provide: MAT_CHIP_TRAILING_ICON, useExisting: MatChipTrailingIcon}],
+  standalone: true,
 })
 export class MatChipTrailingIcon extends MatChipAction {
   /**
@@ -68,6 +70,7 @@ export class MatChipTrailingIcon extends MatChipAction {
     '[attr.aria-hidden]': 'null',
   },
   providers: [{provide: MAT_CHIP_REMOVE, useExisting: MatChipRemove}],
+  standalone: true,
 })
 export class MatChipRemove extends MatChipAction {
   override _isPrimary = false;

@@ -34,6 +34,7 @@ import {MAT_CHIP} from './tokens';
     '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
   },
+  standalone: true,
 })
 export class MatChipAction {
   /** Whether the action is interactive. */

@@ -32,6 +32,7 @@ import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_CHIP} from './tokens';
+import {MatChipAction} from './chip-action';
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
 export interface MatChipEditedEvent extends MatChipEvent {
@@ -76,6 +77,8 @@ export interface MatChipEditedEvent extends MatChipEvent {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatChipAction, MatChipEditInput],
 })
 export class MatChipRow extends MatChip implements AfterViewInit {
   protected override basicChipAttrName = 'mat-basic-chip-row';

@@ -5,7 +5,7 @@ import {
   dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -29,8 +29,7 @@ describe('MDC-based Row Chips', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [SingleChip],
+      imports: [MatChipsModule, SingleChip],
       providers: [
         {
           provide: Directionality,
@@ -401,6 +400,8 @@ describe('MDC-based Row Chips', () => {
         </div>
       }
     </mat-chip-grid>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class SingleChip {
   @ViewChild(MatChipGrid) chipList: MatChipGrid;

@@ -48,6 +48,7 @@ import {MatChipAction} from './chip-action';
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatChipSet implements AfterViewInit, OnDestroy {
   /** Index of the last destroyed chip that had focus. */

@@ -517,14 +517,17 @@ describe('MDC-based MatChipListbox', () => {
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'false']);
 
         primaryActions[2].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'false', 'true']);
 
         primaryActions[0].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'false', 'false']);
       }));
 
@@ -552,18 +555,22 @@ describe('MDC-based MatChipListbox', () => {
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'false']);
 
         primaryActions[2].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'true']);
 
         primaryActions[0].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'true', 'true']);
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'false', 'true']);
       }));
     });
@@ -843,11 +850,11 @@ describe('MDC-based MatChipListbox', () => {
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
-      declarations: [component],
       providers: [
         {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
         {provide: Directionality, useValue: directionality},
       ],
+      declarations: [component],
     }).compileComponents();
 
     fixture = TestBed.createComponent<T>(component);
