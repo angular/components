@@ -12,8 +12,7 @@ describe('radio harness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatRadioModule, ReactiveFormsModule],
-      declarations: [MultipleRadioButtonsHarnessTest],
+      imports: [MatRadioModule, ReactiveFormsModule, MultipleRadioButtonsHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultipleRadioButtonsHarnessTest);
@@ -295,6 +294,8 @@ describe('radio harness', () => {
       <mat-radio-button [value]="false" [name]="thirdGroupButtonName"></mat-radio-button>
     </mat-radio-group>
   `,
+  standalone: true,
+  imports: [MatRadioModule, ReactiveFormsModule],
 })
 class MultipleRadioButtonsHarnessTest {
   values = ['opt1', 'opt2', 'opt3'];
