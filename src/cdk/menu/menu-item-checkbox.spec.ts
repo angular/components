@@ -14,8 +14,7 @@ describe('MenuItemCheckbox', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [SingleCheckboxButton],
+      imports: [CdkMenuModule, SingleCheckboxButton],
       providers: [
         {provide: CDK_MENU, useClass: CdkMenu},
         {provide: MENU_STACK, useClass: MenuStack},
@@ -100,5 +99,7 @@ describe('MenuItemCheckbox', () => {
 
 @Component({
   template: `<button cdkMenuItemCheckbox>Click me!</button>`,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class SingleCheckboxButton {}

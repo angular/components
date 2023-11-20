@@ -26,8 +26,7 @@ describe('CdkScrollable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      declarations: [ScrollableViewport],
+      imports: [ScrollingModule, ScrollableViewport],
     }).compileComponents();
   }));
 
@@ -248,6 +247,8 @@ describe('CdkScrollable', () => {
     }
   `,
   ],
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class ScrollableViewport {
   @Input() dir: Direction;

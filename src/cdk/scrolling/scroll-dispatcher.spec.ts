@@ -13,8 +13,7 @@ import {dispatchFakeEvent} from '../testing/private';
 describe('ScrollDispatcher', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      declarations: [ScrollingComponent, NestedScrollingComponent],
+      imports: [ScrollingModule, ScrollingComponent, NestedScrollingComponent],
     });
 
     TestBed.compileComponents();
@@ -286,6 +285,8 @@ describe('ScrollDispatcher', () => {
 /** Simple component that contains a large div and can be scrolled. */
 @Component({
   template: `<div #scrollingElement cdkScrollable style="height: 9999px"></div>`,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class ScrollingComponent {
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
@@ -303,6 +304,8 @@ class ScrollingComponent {
     </div>
     <div id="scrollable-2" cdkScrollable></div>
   `,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class NestedScrollingComponent {
   @ViewChild('interestingElement') interestingElement: ElementRef<HTMLElement>;

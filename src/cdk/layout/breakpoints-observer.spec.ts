@@ -183,7 +183,10 @@ export class FakeMediaQueryList {
   /** The callback for change events. */
   private _listeners: ((mql: MediaQueryListEvent) => void)[] = [];
 
-  constructor(public matches: boolean, public media: string) {}
+  constructor(
+    public matches: boolean,
+    public media: string,
+  ) {}
 
   /** Toggles the matches state and "emits" a change event. */
   setMatches(matches: boolean) {

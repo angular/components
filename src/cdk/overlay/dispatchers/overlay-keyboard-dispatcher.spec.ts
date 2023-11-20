@@ -13,8 +13,7 @@ describe('OverlayKeyboardDispatcher', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule],
-      declarations: [TestComponent],
+      imports: [OverlayModule, TestComponent],
     });
 
     inject(
@@ -203,5 +202,7 @@ describe('OverlayKeyboardDispatcher', () => {
 
 @Component({
   template: 'Hello',
+  standalone: true,
+  imports: [OverlayModule],
 })
 class TestComponent {}

@@ -72,7 +72,10 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    */
   readonly scroll: Subject<Event> = new Subject<Event>();
 
-  constructor(private _ngZone: NgZone, @Inject(DOCUMENT) _document: any) {
+  constructor(
+    private _ngZone: NgZone,
+    @Inject(DOCUMENT) _document: any,
+  ) {
     this._document = _document;
   }
 

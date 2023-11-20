@@ -16,7 +16,10 @@ describe('SharedResizeObserver', () => {
    * test flakines caused by browsers that invoke the callbacks with inconsistent timings.
    */
   class MockResizeObserver implements ResizeObserver {
-    constructor(private _callback: ResizeObserverCallback, options?: ResizeObserverOptions) {
+    constructor(
+      private _callback: ResizeObserverCallback,
+      options?: ResizeObserverOptions,
+    ) {
       currentObservers.set(options?.box || 'content-box', this);
     }
 

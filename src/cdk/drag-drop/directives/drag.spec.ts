@@ -52,7 +52,6 @@ describe('CdkDrag', () => {
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [DragDropModule, CdkScrollableModule],
-      declarations: [componentType, PassthroughComponent, ...extraDeclarations],
       providers: [
         {
           provide: CDK_DRAG_CONFIG,
@@ -66,6 +65,7 @@ describe('CdkDrag', () => {
         },
         ...providers,
       ],
+      declarations: [PassthroughComponent, componentType, ...extraDeclarations],
     });
 
     if (encapsulation != null) {
