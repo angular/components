@@ -9,7 +9,7 @@
 import {AnimationEvent} from '@angular/animations';
 import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
@@ -96,6 +96,8 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 export class MatExpansionPanel
   extends CdkAccordionItem
@@ -261,5 +263,6 @@ export class MatExpansionPanel
   host: {
     class: 'mat-action-row',
   },
+  standalone: true,
 })
 export class MatExpansionPanelActionRow {}

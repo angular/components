@@ -61,6 +61,7 @@ import {
     '(click)': '_toggle()',
     '(keydown)': '_keydown($event)',
   },
+  standalone: true,
 })
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
   private _parentChangeSubscription = Subscription.EMPTY;
@@ -229,6 +230,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   host: {
     class: 'mat-expansion-panel-header-description',
   },
+  standalone: true,
 })
 export class MatExpansionPanelDescription {}
 
@@ -240,5 +242,6 @@ export class MatExpansionPanelDescription {}
   host: {
     class: 'mat-expansion-panel-header-title',
   },
+  standalone: true,
 })
 export class MatExpansionPanelTitle {}

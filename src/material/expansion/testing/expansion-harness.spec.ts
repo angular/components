@@ -13,8 +13,7 @@ describe('MatExpansionHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatExpansionModule, NoopAnimationsModule],
-      declarations: [ExpansionHarnessTestComponent],
+      imports: [MatExpansionModule, NoopAnimationsModule, ExpansionHarnessTestComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpansionHarnessTestComponent);
@@ -321,6 +320,8 @@ function getActiveElementTag() {
 
     <div class="test-content-harness">Outside of expansion panel</div>
   `,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class ExpansionHarnessTestComponent {
   panel1Expanded = false;
