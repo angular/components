@@ -14,8 +14,7 @@ describe('MatInputHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatInputModule, FormsModule],
-      declarations: [InputHarnessTest],
+      imports: [NoopAnimationsModule, MatInputModule, FormsModule, InputHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InputHarnessTest);
@@ -266,6 +265,8 @@ describe('MatInputHarness', () => {
       <input matNativeControl placeholder="Color control" id="colorControl" type="color">
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatInputModule, FormsModule],
 })
 class InputHarnessTest {
   inputType = 'number';

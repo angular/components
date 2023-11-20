@@ -12,12 +12,17 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/material/form-field';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/material/form-field';
 import * as i4 from '@angular/cdk/text-field';
 import { InjectionToken } from '@angular/core';
+import { MatError } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatHint } from '@angular/material/form-field';
+import { MatLabel } from '@angular/material/form-field';
+import { MatPrefix } from '@angular/material/form-field';
+import { MatSuffix } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -33,6 +38,12 @@ export function getMatInputUnsupportedTypeError(type: string): Error;
 export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
+
+export { MatError }
+
+export { MatFormField }
+
+export { MatHint }
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
@@ -110,7 +121,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     get value(): string;
     set value(value: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }]>;
 }
@@ -122,8 +133,14 @@ export class MatInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, [typeof i1.MatInput], [typeof i2.MatCommonModule, typeof i3.MatFormFieldModule], [typeof i1.MatInput, typeof i3.MatFormFieldModule, typeof i4.TextFieldModule, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof i1.MatCommonModule, typeof i2.MatFormFieldModule, typeof i3.MatInput], [typeof i3.MatInput, typeof i2.MatFormFieldModule, typeof i4.TextFieldModule, typeof i1.MatCommonModule]>;
 }
+
+export { MatLabel }
+
+export { MatPrefix }
+
+export { MatSuffix }
 
 // (No @packageDocumentation comment for this package)
 
