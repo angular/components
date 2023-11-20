@@ -404,6 +404,7 @@ export class FocusTrapFactory {
 @Directive({
   selector: '[cdkTrapFocus]',
   exportAs: 'cdkTrapFocus',
+  standalone: true,
 })
 export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
   /** Underlying FocusTrap instance. */
