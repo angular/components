@@ -13,8 +13,7 @@ describe('Observe content directive', () => {
   describe('basic usage', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ObserversModule],
-        declarations: [ComponentWithTextContent, ComponentWithChildTextContent],
+        imports: [ObserversModule, ComponentWithTextContent, ComponentWithChildTextContent],
       });
 
       TestBed.compileComponents();
@@ -89,15 +88,13 @@ describe('Observe content directive', () => {
       callbacks = [];
 
       TestBed.configureTestingModule({
-        imports: [ObserversModule],
-        declarations: [ComponentWithDebouncedListener],
+        imports: [ObserversModule, ComponentWithDebouncedListener],
         providers: [
           {
             provide: MutationObserverFactory,
             useValue: {
               create: function (callback: Function) {
                 callbacks.push(callback);
-
                 return {
                   observe: () => {},
                   disconnect: () => {},
@@ -135,15 +132,13 @@ describe('ContentObserver injectable', () => {
       callbacks = [];
 
       TestBed.configureTestingModule({
-        imports: [ObserversModule],
-        declarations: [UnobservedComponentWithTextContent],
+        imports: [ObserversModule, UnobservedComponentWithTextContent],
         providers: [
           {
             provide: MutationObserverFactory,
             useValue: {
               create: function (callback: Function) {
                 callbacks.push(callback);
-
                 return {
                   observe: () => {},
                   disconnect: () => {},
@@ -212,6 +207,8 @@ describe('ContentObserver injectable', () => {
       (cdkObserveContent)="doSomething()"
       [cdkObserveContentDisabled]="disabled">{{text}}</div>
   `,
+  standalone: true,
+  imports: [ObserversModule],
 })
 class ComponentWithTextContent {
   text = '';
@@ -219,7 +216,11 @@ class ComponentWithTextContent {
   doSomething() {}
 }
 
-@Component({template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`})
+@Component({
+  template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`,
+  standalone: true,
+  imports: [ObserversModule],
+})
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
@@ -227,6 +228,8 @@ class ComponentWithChildTextContent {
 
 @Component({
   template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`,
+  standalone: true,
+  imports: [ObserversModule],
 })
 class ComponentWithDebouncedListener {
   debounce = 500;
@@ -235,6 +238,8 @@ class ComponentWithDebouncedListener {
 
 @Component({
   template: `<div #contentEl>{{text}}</div>`,
+  standalone: true,
+  imports: [ObserversModule],
 })
 class UnobservedComponentWithTextContent {
   @ViewChild('contentEl') contentEl: ElementRef;
