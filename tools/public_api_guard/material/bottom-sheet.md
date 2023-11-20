@@ -19,9 +19,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusTrapFactory } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/dialog';
-import * as i3 from '@angular/material/core';
-import * as i4 from '@angular/cdk/portal';
+import * as i1 from '@angular/cdk/dialog';
+import * as i2 from '@angular/material/core';
+import * as i3 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { InteractivityChecker } from '@angular/cdk/a11y';
@@ -97,7 +97,7 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     // (undocumented)
     _onAnimationStart(event: AnimationEvent_2): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatBottomSheetContainer, "mat-bottom-sheet-container", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatBottomSheetContainer, "mat-bottom-sheet-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatBottomSheetContainer, [null, null, { optional: true; }, null, null, null, null, null, null, null]>;
 }
@@ -109,7 +109,7 @@ export class MatBottomSheetModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatBottomSheetModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBottomSheetModule, [typeof i1.MatBottomSheetContainer], [typeof i2.DialogModule, typeof i3.MatCommonModule, typeof i4.PortalModule], [typeof i1.MatBottomSheetContainer, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBottomSheetModule, never, [typeof i1.DialogModule, typeof i2.MatCommonModule, typeof i3.PortalModule, typeof i4.MatBottomSheetContainer], [typeof i4.MatBottomSheetContainer, typeof i2.MatCommonModule]>;
 }
 
 // @public
