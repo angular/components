@@ -24,11 +24,11 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/cdk/stepper';
-import * as i11 from '@angular/material/icon';
-import * as i7 from '@angular/material/core';
-import * as i8 from '@angular/common';
-import * as i9 from '@angular/cdk/portal';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/common';
+import * as i3 from '@angular/cdk/portal';
+import * as i4 from '@angular/cdk/stepper';
+import * as i5 from '@angular/material/icon';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
@@ -65,7 +65,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     _portal: TemplatePortal;
     stepLabel: MatStepLabel;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStep, "mat-step", ["matStep"], { "color": { "alias": "color"; "required": false; }; }, {}, ["stepLabel", "_lazyContent"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStep, "mat-step", ["matStep"], { "color": { "alias": "color"; "required": false; }; }, {}, ["stepLabel", "_lazyContent"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStep, [null, { skipSelf: true; }, null, { optional: true; }]>;
 }
@@ -76,7 +76,7 @@ export class MatStepContent {
     // (undocumented)
     _template: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepContent, "ng-template[matStepContent]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepContent, "ng-template[matStepContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepContent, never>;
 }
@@ -110,7 +110,7 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     _stringLabel(): string | null;
     _templateLabel(): MatStepLabel | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepHeader, "mat-step-header", never, { "state": { "alias": "state"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "iconOverrides": { "alias": "iconOverrides"; "required": false; }; "index": { "alias": "index"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "active": { "alias": "active"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepHeader, "mat-step-header", never, { "state": { "alias": "state"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "iconOverrides": { "alias": "iconOverrides"; "required": false; }; "index": { "alias": "index"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "active": { "alias": "active"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepHeader, never>;
 }
@@ -118,7 +118,7 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
 // @public (undocumented)
 export class MatStepLabel extends CdkStepLabel {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepLabel, "[matStepLabel]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepLabel, "[matStepLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepLabel, never>;
 }
@@ -146,7 +146,7 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     readonly steps: QueryList<MatStep>;
     _steps: QueryList<MatStep>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, [{ optional: true; }, null, null]>;
 }
@@ -164,7 +164,7 @@ export class MatStepperIcon {
     // (undocumented)
     templateRef: TemplateRef<MatStepperIconContext>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperIcon, "ng-template[matStepperIcon]", never, { "name": { "alias": "matStepperIcon"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperIcon, "ng-template[matStepperIcon]", never, { "name": { "alias": "matStepperIcon"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepperIcon, never>;
 }
@@ -195,13 +195,13 @@ export class MatStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, [typeof i1.MatStep, typeof i2.MatStepLabel, typeof i1.MatStepper, typeof i3.MatStepperNext, typeof i3.MatStepperPrevious, typeof i4.MatStepHeader, typeof i5.MatStepperIcon, typeof i6.MatStepContent], [typeof i7.MatCommonModule, typeof i8.CommonModule, typeof i9.PortalModule, typeof i10.CdkStepperModule, typeof i11.MatIconModule, typeof i7.MatRippleModule], [typeof i7.MatCommonModule, typeof i1.MatStep, typeof i2.MatStepLabel, typeof i1.MatStepper, typeof i3.MatStepperNext, typeof i3.MatStepperPrevious, typeof i4.MatStepHeader, typeof i5.MatStepperIcon, typeof i6.MatStepContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i3.PortalModule, typeof i4.CdkStepperModule, typeof i5.MatIconModule, typeof i1.MatRippleModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent], [typeof i1.MatCommonModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent]>;
 }
 
 // @public
 export class MatStepperNext extends CdkStepperNext {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperNext, "button[matStepperNext]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperNext, "button[matStepperNext]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepperNext, never>;
 }
@@ -209,7 +209,7 @@ export class MatStepperNext extends CdkStepperNext {
 // @public
 export class MatStepperPrevious extends CdkStepperPrevious {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperPrevious, "button[matStepperPrevious]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepperPrevious, "button[matStepperPrevious]", never, { "type": { "alias": "type"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepperPrevious, never>;
 }

@@ -15,7 +15,11 @@ import {
   STEP_STATE,
   CdkStep,
 } from '@angular/cdk/stepper';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
@@ -1791,8 +1795,8 @@ function createComponent<T>(
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
     imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule, ...imports],
-    declarations: [component],
     providers: [{provide: Directionality, useFactory: () => dir}, ...providers],
+    declarations: [component],
   });
 
   if (encapsulation != null) {
