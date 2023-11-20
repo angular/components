@@ -69,6 +69,7 @@ export class MatSelectionListChange {
     {provide: SELECTION_LIST, useExisting: MatSelectionList},
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatSelectionList
   extends MatListBase
@@ -143,7 +144,10 @@ export class MatSelectionList
   /** View to model callback that should be called if the list or its options lost focus. */
   _onTouched: () => void = () => {};
 
-  constructor(public _element: ElementRef<HTMLElement>, private _ngZone: NgZone) {
+  constructor(
+    public _element: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {
     super();
     this._isNonInteractive = false;
   }
