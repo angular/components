@@ -21,10 +21,10 @@ If your video is found at https://www.youtube.com/watch?v=PRQCAL_RMVo, then your
 ```typescript
 // example-module.ts
 import {NgModule, Component, OnInit} from '@angular/core';
-import {YouTubePlayerModule} from '@angular/youtube-player';
+import {YouTubePlayer} from '@angular/youtube-player';
 
 @NgModule({
-  imports: [YouTubePlayerModule],
+  imports: [YouTubePlayer],
   declarations: [YoutubePlayerExample],
 })
 export class YoutubePlayerExampleModule {

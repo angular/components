@@ -60,6 +60,7 @@ interface PendingPlayerState {
   selector: 'youtube-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
   // This div is *replaced* by the YouTube player embed.
   template: '<div #youtubeContainer></div>',
 })

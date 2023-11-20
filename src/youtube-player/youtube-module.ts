@@ -13,7 +13,7 @@ import {YouTubePlayer} from './youtube-player';
 const COMPONENTS = [YouTubePlayer];
 
 @NgModule({
-  declarations: COMPONENTS,
+  imports: COMPONENTS,
   exports: COMPONENTS,
 })
 export class YouTubePlayerModule {}

@@ -1,6 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {YouTubePlayerModule} from './youtube-module';
 import {YouTubePlayer, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT} from './youtube-player';
 import {createFakeYtNamespace} from './fake-youtube-player';
 import {Subscription} from 'rxjs';
@@ -23,7 +22,7 @@ describe('YoutubePlayer', () => {
     events = fake.events;
 
     TestBed.configureTestingModule({
-      imports: [YouTubePlayerModule],
+      imports: [YouTubePlayer],
       declarations: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
     });
 

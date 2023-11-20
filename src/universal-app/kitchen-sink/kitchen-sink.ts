@@ -37,7 +37,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSortModule} from '@angular/material/sort';
 import {MatStepperModule} from '@angular/material/stepper';
-import {YouTubePlayerModule} from '@angular/youtube-player';
+import {YouTubePlayer} from '@angular/youtube-player';
 import {GoogleMapsModule} from '@angular/google-maps';
 import {Observable, of as observableOf} from 'rxjs';
 
@@ -106,7 +106,7 @@ export class TestEntryComponent {}
     DragDropModule,
 
     // Other modules
-    YouTubePlayerModule,
+    YouTubePlayer,
     GoogleMapsModule,
   ],
 })
