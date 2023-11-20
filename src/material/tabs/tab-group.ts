@@ -29,11 +29,15 @@ import {
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette, MatRipple} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
-import {FocusOrigin} from '@angular/cdk/a11y';
+import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {MatTabBody} from './tab-body';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {NgClass} from '@angular/common';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -76,6 +80,16 @@ export type MatTabHeaderPosition = 'above' | 'below';
     '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
     '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
+  standalone: true,
+  imports: [
+    MatTabHeader,
+    MatTabLabelWrapper,
+    CdkMonitorFocus,
+    NgClass,
+    MatRipple,
+    CdkPortalOutlet,
+    MatTabBody,
+  ],
 })
 export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
   /**

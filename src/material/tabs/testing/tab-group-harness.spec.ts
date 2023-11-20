@@ -13,8 +13,7 @@ describe('MatTabGroupHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatTabsModule, NoopAnimationsModule],
-      declarations: [TabGroupHarnessTest],
+      imports: [MatTabsModule, NoopAnimationsModule, TabGroupHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TabGroupHarnessTest);
@@ -175,6 +174,8 @@ describe('MatTabGroupHarness', () => {
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabGroupHarnessTest {
   isDisabled = false;

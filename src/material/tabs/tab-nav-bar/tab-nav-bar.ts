@@ -30,6 +30,7 @@ import {
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
+  MatRipple,
   RippleConfig,
   RippleGlobalOptions,
   RippleTarget,
@@ -45,6 +46,7 @@ import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
+import {CdkObserveContent} from '@angular/cdk/observers';
 
 // Increasing integer for generating unique ids for tab nav components.
 let nextUniqueId = 0;
@@ -73,6 +75,8 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav
   extends MatPaginatedTabHeader
@@ -256,6 +260,8 @@ const _MatTabLinkMixinBase = mixinInkBarItem(
     '(focus)': '_handleFocus()',
     '(keydown)': '_handleKeydown($event)',
   },
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatTabLink
   extends _MatTabLinkMixinBase
@@ -418,6 +424,7 @@ export class MatTabLink
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */

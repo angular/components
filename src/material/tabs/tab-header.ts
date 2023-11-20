@@ -32,6 +32,8 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatInkBar} from './ink-bar';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {MatRipple} from '@angular/material/core';
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
@@ -54,6 +56,8 @@ import {MatPaginatedTabHeader} from './paginated-tab-header';
     '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-mdc-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   },
+  standalone: true,
+  imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabHeader
   extends MatPaginatedTabHeader

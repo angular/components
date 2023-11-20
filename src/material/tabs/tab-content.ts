@@ -19,6 +19,7 @@ export const MAT_TAB_CONTENT = new InjectionToken<MatTabContent>('MatTabContent'
 @Directive({
   selector: '[matTabContent]',
   providers: [{provide: MAT_TAB_CONTENT, useExisting: MatTabContent}],
+  standalone: true,
 })
 export class MatTabContent {
   constructor(/** Content for the tab. */ public template: TemplateRef<any>) {}
