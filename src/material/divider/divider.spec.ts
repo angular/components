@@ -8,8 +8,7 @@ describe('MatDivider', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDividerModule],
-      declarations: [MatDividerTestComponent],
+      imports: [MatDividerModule, MatDividerTestComponent],
     });
 
     TestBed.compileComponents();
@@ -65,6 +64,8 @@ describe('MatDivider', () => {
 
 @Component({
   template: `<mat-divider [vertical]="vertical" [inset]="inset"></mat-divider>`,
+  standalone: true,
+  imports: [MatDividerModule],
 })
 class MatDividerTestComponent {
   vertical: boolean;

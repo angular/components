@@ -6,7 +6,7 @@
 
 import { BooleanInput } from '@angular/cdk/coercion';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
+import * as i1 from '@angular/material/core';
 
 // @public (undocumented)
 export class MatDivider {
@@ -15,7 +15,7 @@ export class MatDivider {
     get vertical(): boolean;
     set vertical(value: BooleanInput);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatDivider, "mat-divider", never, { "vertical": { "alias": "vertical"; "required": false; }; "inset": { "alias": "inset"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatDivider, "mat-divider", never, { "vertical": { "alias": "vertical"; "required": false; }; "inset": { "alias": "inset"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDivider, never>;
 }
@@ -27,7 +27,7 @@ export class MatDividerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDividerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDividerModule, [typeof i1.MatDivider], [typeof i2.MatCommonModule], [typeof i1.MatDivider, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDividerModule, never, [typeof i1.MatCommonModule, typeof i2.MatDivider], [typeof i2.MatDivider, typeof i1.MatCommonModule]>;
 }
 
 // (No @packageDocumentation comment for this package)
