@@ -36,6 +36,7 @@ import {
   host: {
     'class': 'mat-tree-node',
   },
+  standalone: true,
 })
 export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
   /** Whether the node is disabled. */
@@ -76,6 +77,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   selector: '[matTreeNodeDef]',
   inputs: ['when: matTreeNodeDefWhen'],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
+  standalone: true,
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
@@ -95,6 +97,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   host: {
     'class': 'mat-nested-tree-node',
   },
+  standalone: true,
 })
 export class MatNestedTreeNode<T, K = T>
   extends CdkNestedTreeNode<T, K>
