@@ -14,8 +14,13 @@ describe('MatBadge', () => {
 
     beforeEach(fakeAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatBadgeModule],
-        declarations: [BadgeOnInteractiveElement, PreExistingBadge, NestedBadge, BadgeOnTemplate],
+        imports: [
+          MatBadgeModule,
+          BadgeOnInteractiveElement,
+          PreExistingBadge,
+          NestedBadge,
+          BadgeOnTemplate,
+        ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(BadgeOnInteractiveElement);
@@ -227,8 +232,7 @@ describe('MatBadge', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatBadgeModule],
-        declarations: [BadgeOnNonInteractiveElement],
+        imports: [MatBadgeModule, BadgeOnNonInteractiveElement],
       }).compileComponents();
 
       fixture = TestBed.createComponent(BadgeOnNonInteractiveElement);
@@ -287,6 +291,8 @@ describe('MatBadge', () => {
       home
     </button>
   `,
+  standalone: true,
+  imports: [MatBadgeModule],
 })
 class BadgeOnInteractiveElement {
   @ViewChild(MatBadge) badgeInstance: MatBadge;
@@ -300,7 +306,11 @@ class BadgeOnInteractiveElement {
   badgeDisabled = false;
 }
 
-@Component({template: '<span matBadge="7" [matBadgeDescription]="description">Hello</span>'})
+@Component({
+  template: '<span matBadge="7" [matBadgeDescription]="description">Hello</span>',
+  standalone: true,
+  imports: [MatBadgeModule],
+})
 class BadgeOnNonInteractiveElement {
   description = '';
 }
@@ -312,6 +322,8 @@ class BadgeOnNonInteractiveElement {
       <div class="mat-badge-content">Pre-existing badge</div>
     </span>
   `,
+  standalone: true,
+  imports: [MatBadgeModule],
 })
 class PreExistingBadge {}
 
@@ -322,11 +334,15 @@ class PreExistingBadge {}
       <span matBadge="Hi">Something</span>
     </span>
   `,
+  standalone: true,
+  imports: [MatBadgeModule],
 })
 class NestedBadge {}
 
 @Component({
   template: `
     <ng-template matBadge="1">Notifications</ng-template>`,
+  standalone: true,
+  imports: [MatBadgeModule],
 })
 class BadgeOnTemplate {}
