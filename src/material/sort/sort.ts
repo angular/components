@@ -76,6 +76,7 @@ const _MatSortBase = mixinInitialized(class {});
   host: {
     'class': 'mat-sort',
   },
+  standalone: true,
 })
 export class MatSort extends _MatSortBase implements HasInitialized, OnChanges, OnDestroy, OnInit {
   /** Collection of all registered sortables that this directive manages. */
