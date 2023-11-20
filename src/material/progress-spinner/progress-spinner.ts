@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -86,6 +87,8 @@ const BASE_STROKE_WIDTH = 10;
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [NgTemplateOutlet],
 })
 export class MatProgressSpinner {
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
