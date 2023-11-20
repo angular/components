@@ -40,9 +40,6 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     A11yModule,
     PortalModule,
     MatCommonModule,
-  ],
-  exports: [
-    CdkScrollableModule,
     MatCalendar,
     MatCalendarBody,
     MatDatepicker,
@@ -62,7 +59,8 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerCancel,
     MatDatepickerApply,
   ],
-  declarations: [
+  exports: [
+    CdkScrollableModule,
     MatCalendar,
     MatCalendarBody,
     MatDatepicker,

@@ -74,7 +74,7 @@ export interface _MatFormFieldPartial {
 }
 
 /** Base class for datepicker inputs. */
-@Directive()
+@Directive({standalone: true})
 export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection<S>>
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy, Validator
 {

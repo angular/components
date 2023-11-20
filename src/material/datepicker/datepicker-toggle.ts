@@ -22,7 +22,7 @@ import {
   ViewChild,
   booleanAttribute,
 } from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
@@ -30,6 +30,7 @@ import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 /** Can be used to override the icon of a `matDatepickerToggle`. */
 @Directive({
   selector: '[matDatepickerToggleIcon]',
+  standalone: true,
 })
 export class MatDatepickerToggleIcon {}
 
@@ -53,6 +54,8 @@ export class MatDatepickerToggleIcon {}
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconButton],
 })
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
   private _stateChanges = Subscription.EMPTY;
