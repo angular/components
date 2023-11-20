@@ -51,7 +51,7 @@ import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -140,7 +140,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.mat-mdc-form-field-label-always-float]': '_shouldAlwaysFloat()',
     '[class.mat-mdc-form-field-has-icon-prefix]': '_hasIconPrefix',
     '[class.mat-mdc-form-field-has-icon-suffix]': '_hasIconSuffix',
-
     // Note that these classes reuse the same names as the non-MDC version, because they can be
     // considered a public API since custom form controls may use them to style themselves.
     // See https://github.com/angular/components/pull/20502#discussion_r486124901.
@@ -168,6 +167,14 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
   providers: [
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
+  ],
+  standalone: true,
+  imports: [
+    MatFormFieldFloatingLabel,
+    MatFormFieldNotchedOutline,
+    NgTemplateOutlet,
+    MatFormFieldLineRipple,
+    MatHint,
   ],
 })
 export class MatFormField

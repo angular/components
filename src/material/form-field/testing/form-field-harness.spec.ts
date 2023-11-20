@@ -35,8 +35,8 @@ describe('MatFormFieldHarness', () => {
         MatSelectModule,
         MatNativeDateModule,
         MatDatepickerModule,
+        FormFieldHarnessTest,
       ],
-      declarations: [FormFieldHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);
@@ -347,6 +347,16 @@ describe('MatFormFieldHarness', () => {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatSelectModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+  ],
 })
 class FormFieldHarnessTest {
   requiredControl = new FormControl('Initial value', [Validators.required]);

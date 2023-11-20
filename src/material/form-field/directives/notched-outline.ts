@@ -34,6 +34,7 @@ import {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {
   /** Whether the notch should be opened. */
@@ -41,7 +42,10 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
 
   @ViewChild('notch') _notch: ElementRef;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {}
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {}
 
   ngAfterViewInit(): void {
     const label = this._elementRef.nativeElement.querySelector<HTMLElement>('.mdc-floating-label');
