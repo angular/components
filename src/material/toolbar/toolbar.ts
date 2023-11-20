@@ -25,6 +25,7 @@ import {
   selector: 'mat-toolbar-row',
   exportAs: 'matToolbarRow',
   host: {'class': 'mat-toolbar-row'},
+  standalone: true,
 })
 export class MatToolbarRow {}
 
@@ -41,6 +42,7 @@ export class MatToolbarRow {}
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class MatToolbar implements AfterViewInit {
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.

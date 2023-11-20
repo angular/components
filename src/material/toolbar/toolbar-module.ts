@@ -11,8 +11,7 @@ import {MatCommonModule} from '@angular/material/core';
 import {MatToolbar, MatToolbarRow} from './toolbar';
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatToolbar, MatToolbarRow],
   exports: [MatToolbar, MatToolbarRow, MatCommonModule],
-  declarations: [MatToolbar, MatToolbarRow],
 })
 export class MatToolbarModule {}
