@@ -7,8 +7,11 @@
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
 @use './mat/menu' as tokens-mat-menu;
+@use './mat/option' as tokens-mat-option;
+@use './mat/optgroup' as tokens-mat-optgroup;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
+@use './mat/select' as tokens-mat-select;
 @use './mat/sidenav' as tokens-mat-sidenav;
 @use './mat/slide-toggle' as tokens-mat-slide-toggle;
 @use './mat/slider' as tokens-mat-slider;
@@ -87,8 +90,11 @@
       _get-tokens-for-module($theme, tokens-mat-grid-list),
       _get-tokens-for-module($theme, tokens-mat-icon),
       _get-tokens-for-module($theme, tokens-mat-menu),
+      _get-tokens-for-module($theme, tokens-mat-optgroup),
+      _get-tokens-for-module($theme, tokens-mat-option),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
+      _get-tokens-for-module($theme, tokens-mat-select),
       _get-tokens-for-module($theme, tokens-mat-sidenav),
       _get-tokens-for-module($theme, tokens-mat-slide-toggle),
       _get-tokens-for-module($theme, tokens-mat-slider),
