@@ -20,6 +20,7 @@ import {Directive, Inject, Optional, ViewContainerRef} from '@angular/core';
       useExisting: MatTreeNodeOutlet,
     },
   ],
+  standalone: true,
 })
 export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
   constructor(
