@@ -22,8 +22,7 @@ describe('YoutubePlayer', () => {
     events = fake.events;
 
     TestBed.configureTestingModule({
-      imports: [YouTubePlayer],
-      declarations: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
+      imports: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
     });
 
     TestBed.compileComponents();
@@ -552,6 +551,8 @@ describe('YoutubePlayer', () => {
 /** Test component that contains a YouTubePlayer. */
 @Component({
   selector: 'test-app',
+  standalone: true,
+  imports: [YouTubePlayer],
   template: `
     @if (visible) {
       <youtube-player #player [videoId]="videoId" [width]="width" [height]="height"
@@ -588,6 +589,8 @@ class TestApp {
 }
 
 @Component({
+  standalone: true,
+  imports: [YouTubePlayer],
   template: `
     <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"></youtube-player>
   `,
@@ -597,6 +600,8 @@ class StaticStartEndSecondsApp {
 }
 
 @Component({
+  standalone: true,
+  imports: [YouTubePlayer],
   template: `<youtube-player [videoId]="videoId"></youtube-player>`,
 })
 class NoEventsApp {
