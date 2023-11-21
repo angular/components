@@ -183,6 +183,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, dialog),
+      mdc-tokens.md-comp-dialog-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, elevated-card),
       mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
       $token-slots
