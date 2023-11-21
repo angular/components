@@ -188,8 +188,23 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, fab),
+      mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, extended-fab),
+      mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, filled-text-field),
       mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, icon-button),
+      mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -261,6 +276,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, fab),
+      custom-tokens.fab($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, form-field),
       custom-tokens.form-field($systems, $exclude-hardcoded),
       $token-slots
@@ -273,6 +293,11 @@
     _namespace-tokens(
       (mat, icon),
       custom-tokens.icon($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, icon-button),
+      custom-tokens.icon-button($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(

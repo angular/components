@@ -3,9 +3,11 @@
 @use '../../style/sass-utils';
 @use './mat/card' as tokens-mat-card;
 @use './mat/divider' as tokens-mat-divider;
+@use './mat/fab' as tokens-mat-fab;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
+@use './mat/icon-button' as tokens-mat-icon-button;
 @use './mat/menu' as tokens-mat-menu;
 @use './mat/option' as tokens-mat-option;
 @use './mat/optgroup' as tokens-mat-optgroup;
@@ -27,6 +29,8 @@
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
 @use './mdc/elevated-card' as tokens-mdc-elevated-card;
+@use './mdc/extended-fab' as tokens-mdc-extended-fab;
+@use './mdc/fab' as tokens-mdc-fab;
 @use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
@@ -86,9 +90,11 @@
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-divider),
+      _get-tokens-for-module($theme, tokens-mat-fab),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
       _get-tokens-for-module($theme, tokens-mat-icon),
+      _get-tokens-for-module($theme, tokens-mat-icon-button),
       _get-tokens-for-module($theme, tokens-mat-menu),
       _get-tokens-for-module($theme, tokens-mat-optgroup),
       _get-tokens-for-module($theme, tokens-mat-option),
@@ -110,6 +116,8 @@
       _get-tokens-for-module($theme, tokens-mdc-circular-progress),
       _get-tokens-for-module($theme, tokens-mdc-dialog),
       _get-tokens-for-module($theme, tokens-mdc-elevated-card),
+      _get-tokens-for-module($theme, tokens-mdc-extended-fab),
+      _get-tokens-for-module($theme, tokens-mdc-fab),
       _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
       _get-tokens-for-module($theme, tokens-mdc-icon-button),
       _get-tokens-for-module($theme, tokens-mdc-linear-progress),
