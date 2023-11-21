@@ -20,8 +20,7 @@ describe('MapDirectionsRenderer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapDirectionsRenderer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -132,6 +131,8 @@ describe('MapDirectionsRenderer', () => {
                                         (directionsChanged)="handleDirectionsChanged()">
                </map-directions-renderer>
              </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapDirectionsRenderer],
 })
 class TestApp {
   @ViewChild(MapDirectionsRenderer) directionsRenderer: MapDirectionsRenderer;

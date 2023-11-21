@@ -22,8 +22,7 @@ describe('MapGroundOverlay', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapGroundOverlay],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -163,6 +162,8 @@ describe('MapGroundOverlay', () => {
                                     (mapClick)="handleClick()">
                 </map-ground-overlay>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapGroundOverlay],
 })
 class TestApp {
   @ViewChild(MapGroundOverlay) groundOverlay: MapGroundOverlay;
