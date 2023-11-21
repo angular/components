@@ -49,6 +49,7 @@ html {
   @include mat.menu-theme($light-theme);
   @include mat.optgroup-theme($light-theme);
   @include mat.option-theme($light-theme);
+  @include mat.paginator-theme($light-theme);
   @include mat.progress-bar-theme($light-theme);
   @include mat.progress-spinner-theme($light-theme);
   @include mat.radio-theme($light-theme);
@@ -86,6 +87,7 @@ html {
   @include mat.menu-color($dark-theme);
   @include mat.optgroup-color($dark-theme);
   @include mat.option-color($dark-theme);
+  @include mat.paginator-color($dark-theme);
   @include mat.progress-bar-color($dark-theme);
   @include mat.progress-spinner-color($dark-theme);
   @include mat.radio-color($dark-theme);
@@ -122,6 +124,7 @@ html {
     @include mat.menu-density($scale-theme);
     @include mat.optgroup-density($scale-theme);
     @include mat.option-density($scale-theme);
+    @include mat.paginator-density($scale-theme);
     @include mat.progress-bar-density($scale-theme);
     @include mat.progress-spinner-density($scale-theme);
     @include mat.radio-density($scale-theme);
