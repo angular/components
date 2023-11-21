@@ -3,6 +3,7 @@
 @use '../../style/sass-utils';
 @use './mat/card' as tokens-mat-card;
 @use './mat/divider' as tokens-mat-divider;
+@use './mat/expansion' as tokens-mat-expansion;
 @use './mat/fab' as tokens-mat-fab;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
@@ -90,6 +91,7 @@
   @return sass-utils.deep-merge-all(
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-divider),
+      _get-tokens-for-module($theme, tokens-mat-expansion),
       _get-tokens-for-module($theme, tokens-mat-fab),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
