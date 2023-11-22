@@ -78,6 +78,9 @@ $_density-tokens: (
   (mat, slider): (),
   (mat, snack-bar): (),
   (mat, sort): (),
+  (mat, standard-button-toggle): (
+    height: (40px, 40px, 40px, 36px, 24px),
+  ),
   (mat, stepper): (
     header-height: (72px, 68px, 64px, 60px, 42px),
   ),
