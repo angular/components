@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
@@ -5,30 +6,62 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/autocomplete' as tokens-mat-autocomplete;
 
-@mixin base($theme) {}
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {}
+}
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
-      tokens-mat-autocomplete.get-color-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
+        tokens-mat-autocomplete.get-color-tokens($theme));
+    }
   }
 }
 
-@mixin typography($theme) {}
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {}
+}
 
-@mixin density($theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
+}
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-autocomplete') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+        tokens-mat-autocomplete.$prefix, map.get($tokens, tokens-mat-autocomplete.$prefix));
   }
 }
