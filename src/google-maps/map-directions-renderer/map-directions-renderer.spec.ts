@@ -117,12 +117,14 @@ describe('MapDirectionsRenderer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-directions-renderer [options]="options"
-                                        [directions]="directions"
-                                        (directionsChanged)="handleDirectionsChanged()">
-               </map-directions-renderer>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-directions-renderer
+        [options]="options"
+        [directions]="directions"
+        (directionsChanged)="handleDirectionsChanged()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapDirectionsRenderer],
 })

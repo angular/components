@@ -40,10 +40,11 @@ describe('MapTrafficLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-traffic-layer [autoRefresh]="autoRefresh">
-                </map-traffic-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-traffic-layer [autoRefresh]="autoRefresh" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapTrafficLayer],
 })

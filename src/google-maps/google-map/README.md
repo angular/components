@@ -33,13 +33,13 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="moveMap($event)"
-            (mapMousemove)="move($event)">
-</google-map>
+<google-map 
+  height="400px"
+  width="750px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="moveMap($event)"
+  (mapMousemove)="move($event)" />
 
 <div>Latitude: {{display?.lat}}</div>
 <div>Longitude: {{display?.lng}}</div>

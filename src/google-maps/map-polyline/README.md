@@ -29,10 +29,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-polyline [path]="vertices"></map-polyline>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-polyline [path]="vertices" />
 </google-map>
 ```

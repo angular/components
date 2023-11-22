@@ -59,7 +59,7 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
   exportAs: 'mapMarkerClusterer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  template: '<ng-content></ng-content>',
+  template: '<ng-content />',
   encapsulation: ViewEncapsulation.None,
 })
 export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {

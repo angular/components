@@ -148,9 +148,9 @@ describe('MapHeatmapLayer', () => {
   selector: 'test-app',
   template: `
     <google-map>
-      <map-heatmap-layer [data]="data" [options]="options">
-      </map-heatmap-layer>
-    </google-map>`,
+      <map-heatmap-layer [data]="data" [options]="options" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapHeatmapLayer],
 })

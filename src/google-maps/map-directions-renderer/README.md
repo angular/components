@@ -49,12 +49,9 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
   @if (directionsResults$ | async; as directionsResults) {
-    <map-directions-renderer [directions]="directionsResults"></map-directions-renderer>
+    <map-directions-renderer [directions]="directionsResults" />
   }
 </google-map>
 ```

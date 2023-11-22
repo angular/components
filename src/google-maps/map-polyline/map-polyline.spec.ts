@@ -142,13 +142,15 @@ describe('MapPolyline', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-polyline [options]="options"
-                              [path]="path"
-                              (polylineClick)="handleClick()"
-                              (polylineRightclick)="handleRightclick()">
-                </map-polyline>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-polyline
+        [options]="options"
+        [path]="path"
+        (polylineClick)="handleClick()"
+        (polylineRightclick)="handleRightclick()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapPolyline],
 })

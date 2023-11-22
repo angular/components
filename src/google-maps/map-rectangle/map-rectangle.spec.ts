@@ -135,14 +135,16 @@ describe('MapRectangle', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-rectangle [options]="options"
-                               [bounds]="bounds"
-                               (boundsChanged)="handleBoundsChange()"
-                               (rectangleClick)="handleClick()"
-                               (rectangleRightclick)="handleRightclick()">
-                </map-rectangle>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-rectangle
+        [options]="options"
+        [bounds]="bounds"
+        (boundsChanged)="handleBoundsChange()"
+        (rectangleClick)="handleClick()"
+        (rectangleRightclick)="handleRightclick()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapRectangle],
 })

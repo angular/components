@@ -245,13 +245,13 @@ describe('MapInfoWindow', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-info-window [position]="position"
-                                [options]="options"
-                                (closeclick)="handleClose()">
-                 test content
-               </map-info-window>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-info-window [position]="position" [options]="options" (closeclick)="handleClose()">
+        test content
+      </map-info-window>
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapInfoWindow],
 })

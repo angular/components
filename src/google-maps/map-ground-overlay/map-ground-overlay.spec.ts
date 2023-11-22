@@ -146,14 +146,16 @@ describe('MapGroundOverlay', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-ground-overlay [url]="url"
-                                    [bounds]="bounds"
-                                    [clickable]="clickable"
-                                    [opacity]="opacity"
-                                    (mapClick)="handleClick()">
-                </map-ground-overlay>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-ground-overlay
+        [url]="url"
+        [bounds]="bounds"
+        [clickable]="clickable"
+        [opacity]="opacity"
+        (mapClick)="handleClick()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapGroundOverlay],
 })

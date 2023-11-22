@@ -387,17 +387,19 @@ describe('GoogleMap', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map [height]="height"
-                         [width]="width"
-                         [center]="center"
-                         [zoom]="zoom"
-                         [options]="options"
-                         [mapTypeId]="mapTypeId"
-                         (mapClick)="handleClick($event)"
-                         (centerChanged)="handleCenterChanged()"
-                         (mapRightclick)="handleRightclick($event)"
-                         (mapInitialized)="mapInitializedSpy($event)">
-            </google-map>`,
+  template: `
+    <google-map
+      [height]="height"
+      [width]="width"
+      [center]="center"
+      [zoom]="zoom"
+      [options]="options"
+      [mapTypeId]="mapTypeId"
+      (mapClick)="handleClick($event)"
+      (centerChanged)="handleCenterChanged()"
+      (mapRightclick)="handleRightclick($event)"
+      (mapInitialized)="mapInitializedSpy($event)" />
+  `,
   standalone: true,
   imports: [GoogleMap],
 })

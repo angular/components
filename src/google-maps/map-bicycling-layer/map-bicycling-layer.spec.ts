@@ -38,9 +38,11 @@ describe('MapBicyclingLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-bicycling-layer></map-bicycling-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-bicycling-layer />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapBicyclingLayer],
 })

@@ -139,13 +139,15 @@ describe('MapKmlLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-kml-layer [options]="options"
-                               [url]="url"
-                               (kmlClick)="handleClick()"
-                               (statusChanged)="handleStatusChange()">
-                </map-kml-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-kml-layer
+        [options]="options"
+        [url]="url"
+        (kmlClick)="handleClick()"
+        (statusChanged)="handleStatusChange()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapKmlLayer],
 })

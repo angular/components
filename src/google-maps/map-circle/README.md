@@ -26,11 +26,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-circle [center]="circleCenter"
-              [radius]="radius"></map-circle>
-</google-map>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-circle [center]="circleCenter" [radius]="radius" />
+</google-map> 
 ```

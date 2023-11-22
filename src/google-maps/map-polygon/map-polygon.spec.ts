@@ -141,13 +141,16 @@ describe('MapPolygon', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-polygon [options]="options"
-                              [paths]="paths"
-                              (polygonClick)="handleClick()"
-                              (polygonRightclick)="handleRightclick()">
-                </map-polygon>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-polygon
+        [options]="options"
+        [paths]="paths"
+        (polygonClick)="handleClick()"
+        (polygonRightclick)="handleRightclick()">
+      </map-polygon>
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapPolygon],
 })

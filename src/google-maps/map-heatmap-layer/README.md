@@ -62,6 +62,6 @@ export class GoogleMapDemo {
 ```html
 <!-- google-map-demo.component.html -->
 <google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
-  <map-heatmap-layer [data]="heatmapData" [options]="heatmapOptions"></map-heatmap-layer>
+  <map-heatmap-layer [data]="heatmapData" [options]="heatmapOptions" />
 </google-map>
 ```

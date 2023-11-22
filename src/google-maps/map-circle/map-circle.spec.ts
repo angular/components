@@ -150,15 +150,16 @@ describe('MapCircle', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-circle [options]="options"
-                            [center]="center"
-                            [radius]="radius"
-                            (centerChanged)="handleCenterChange()"
-                            (circleClick)="handleClick()"
-                            (circleRightclick)="handleRightclick()">
-                </map-circle>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-circle
+        [options]="options"
+        [center]="center"
+        [radius]="radius"
+        (centerChanged)="handleCenterChange()"
+        (circleClick)="handleClick()"
+        (circleRightclick)="handleRightclick()" />
+    </google-map>`,
   standalone: true,
   imports: [GoogleMap, MapCircle],
 })

@@ -38,9 +38,11 @@ describe('MapTransitLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-transit-layer></map-transit-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-transit-layer />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapTransitLayer],
 })

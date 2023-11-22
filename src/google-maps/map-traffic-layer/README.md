@@ -23,10 +23,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-traffic-layer [autoRefresh]="false"></map-traffic-layer>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-traffic-layer [autoRefresh]="false" />
 </google-map>
 ```

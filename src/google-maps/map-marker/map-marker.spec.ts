@@ -212,18 +212,20 @@ describe('MapMarker', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-marker [title]="title"
-                           [position]="position"
-                           [label]="label"
-                           [clickable]="clickable"
-                           [options]="options"
-                           [icon]="icon"
-                           [visible]="visible"
-                           (mapClick)="handleClick()"
-                           (positionChanged)="handlePositionChanged()">
-               </map-marker>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-marker
+        [title]="title"
+        [position]="position"
+        [label]="label"
+        [clickable]="clickable"
+        [options]="options"
+        [icon]="icon"
+        [visible]="visible"
+        (mapClick)="handleClick()"
+        (positionChanged)="handlePositionChanged()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapMarker],
 })
