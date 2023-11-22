@@ -40,6 +40,18 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     isMuted(): boolean;
     mute(): void;
     // (undocumented)
+    static ngAcceptInputType_disableCookies: unknown;
+    // (undocumented)
+    static ngAcceptInputType_endSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_height: unknown;
+    // (undocumented)
+    static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
+    // (undocumented)
+    static ngAcceptInputType_startSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_width: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
@@ -56,7 +68,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;
-    showBeforeIframeApiLoads: boolean | undefined;
+    showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
     // (undocumented)
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
