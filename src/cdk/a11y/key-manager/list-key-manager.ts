@@ -63,10 +63,10 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (_items instanceof QueryList) {
       this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) => {
+        const itemArray = newItems.toArray();
+        this._typeahead?.setItems(itemArray);
         if (this._activeItem) {
-          const itemArray = newItems.toArray();
           const newIndex = itemArray.indexOf(this._activeItem);
-          this._typeahead?.setItems(itemArray);
 
           if (newIndex > -1 && newIndex !== this._activeItemIndex) {
             this._activeItemIndex = newIndex;

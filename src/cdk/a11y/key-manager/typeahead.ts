@@ -36,6 +36,15 @@ export class Typeahead<T extends TypeaheadItem> {
       this._skipPredicateFn = config.skipPredicate;
     }
 
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      initialItems.length &&
+      initialItems.some(item => typeof item.getLabel !== 'function')
+    ) {
+      console.error('failed', initialItems);
+      throw new Error('KeyManager items in typeahead mode must implement the `getLabel` method.');
+    }
+
     this.setItems(initialItems);
     this._setupKeyHandler(typeAheadInterval);
   }
@@ -51,14 +60,6 @@ export class Typeahead<T extends TypeaheadItem> {
   }
 
   setItems(items: T[]) {
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      items.length &&
-      items.some(item => typeof item.getLabel !== 'function')
-    ) {
-      throw new Error('KeyManager items in typeahead mode must implement the `getLabel` method.');
-    }
-
     this._items = items;
   }
 
@@ -79,13 +80,12 @@ export class Typeahead<T extends TypeaheadItem> {
     return this._pressedLetters.length > 0;
   }
 
-  // TODO: find a better name?
+  /** Resets the currently stored sequence of typed letters. */
   reset(): void {
     this._pressedLetters = [];
   }
 
   private _setupKeyHandler(typeAheadInterval: number) {
-    // TODO: handle unsubscription
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
     // with that string and select it.
