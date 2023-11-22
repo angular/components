@@ -19,21 +19,15 @@ Follow the following instructions for setting up the YouTube player component:
 If your video is found at https://www.youtube.com/watch?v=PRQCAL_RMVo, then your video id is `PRQCAL_RMVo`.
 
 ```typescript
-// example-module.ts
-import {NgModule, Component, OnInit} from '@angular/core';
+// example-component.ts
+import {Component, OnInit} from '@angular/core';
 import {YouTubePlayer} from '@angular/youtube-player';
-
-@NgModule({
-  imports: [YouTubePlayer],
-  declarations: [YoutubePlayerExample],
-})
-export class YoutubePlayerExampleModule {
-}
 
 let apiLoaded = false;
 
-// example-component.ts
 @Component({
+  standalone: true,
+  imports: [YouTubePlayer],
   template: '<youtube-player videoId="PRQCAL_RMVo"></youtube-player>',
   selector: 'youtube-player-example',
 })
