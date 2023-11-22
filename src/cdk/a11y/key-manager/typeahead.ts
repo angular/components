@@ -1,6 +1,14 @@
-import {Subject, Subscription} from 'rxjs';
-import {A, Z, ZERO, NINE} from '@angular/cdk/keycodes';
-import {debounceTime, filter, map, take, tap} from 'rxjs/operators';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {A, NINE, Z, ZERO} from '@angular/cdk/keycodes';
+import {Subject, Observable} from 'rxjs';
+import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 
@@ -24,7 +32,7 @@ export class Typeahead<T extends TypeaheadItem> {
   private _skipPredicateFn?: (item: T) => boolean | undefined;
 
   private readonly _selectedItem = new Subject<T>();
-  readonly selectedItem = this._selectedItem.asObservable();
+  readonly selectedItem: Observable<T> = this._selectedItem;
 
   constructor(initialItems: T[], config?: TypeaheadConfig<T>) {
     const typeAheadInterval =
@@ -41,7 +49,6 @@ export class Typeahead<T extends TypeaheadItem> {
       initialItems.length &&
       initialItems.some(item => typeof item.getLabel !== 'function')
     ) {
-      console.error('failed', initialItems);
       throw new Error('KeyManager items in typeahead mode must implement the `getLabel` method.');
     }
 
