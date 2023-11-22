@@ -2,6 +2,9 @@
 @use '../../style/checkbox-common';
 @use '../../style/private';
 @use '../../style/variables';
+@use '../../tokens/token-utils';
+@use '../../tokens/m2/mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
+@use '../../tokens/m2/mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
 @use './pseudo-checkbox-common';
 
 .mat-pseudo-checkbox {
@@ -51,10 +54,48 @@
   box-sizing: content-box;
 }
 
+.mat-pseudo-checkbox-minimal {
+  @include token-utils.use-tokens(tokens-mat-minimal-pseudo-checkbox.$prefix,
+    tokens-mat-minimal-pseudo-checkbox.get-token-slots()) {
+    &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+      &::after {
+        @include token-utils.create-token-slot(color, selected-checkmark-color);
+      }
+
+      &.mat-pseudo-checkbox-disabled::after {
+        @include token-utils.create-token-slot(color, disabled-selected-checkmark-color);
+      }
+    }
+  }
+}
+
 .mat-pseudo-checkbox-full {
-  border: checkbox-common.$border-width solid;
-  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
-    border-color: transparent;
+  @include token-utils.use-tokens(tokens-mat-full-pseudo-checkbox.$prefix,
+    tokens-mat-full-pseudo-checkbox.get-token-slots()) {
+    @include token-utils.create-token-slot(border-color, unselected-icon-color);
+    border-width: checkbox-common.$border-width;
+    border-style: solid;
+
+    &.mat-pseudo-checkbox-disabled {
+      @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
+    }
+
+    &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+      @include token-utils.create-token-slot(background-color, selected-icon-color);
+      border-color: transparent;
+
+      &::after {
+        @include token-utils.create-token-slot(color, selected-checkmark-color);
+      }
+
+      &.mat-pseudo-checkbox-disabled {
+        @include token-utils.create-token-slot(background-color, disabled-selected-icon-color);
+
+        &::after {
+          @include token-utils.create-token-slot(color, disabled-selected-checkmark-color);
+        }
+      }
+    }
   }
 }
 
