@@ -26,6 +26,9 @@ import {
   AfterViewInit,
   booleanAttribute,
   numberAttribute,
+  InjectionToken,
+  inject,
+  CSP_NONCE,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPattern} from 'rxjs';
@@ -36,6 +39,19 @@ declare global {
     YT: typeof YT | undefined;
     onYouTubeIframeAPIReady: (() => void) | undefined;
   }
+}
+
+/** Injection token used to configure the `YouTubePlayer`. */
+export const YOUTUBE_PLAYER_CONFIG = new InjectionToken<YouTubePlayerConfig>(
+  'YOUTUBE_PLAYER_CONFIG',
+);
+
+/** Object that can be used to configure the `YouTubePlayer`. */
+export interface YouTubePlayerConfig {
+  /**
+   * Whether to load the YouTube iframe API automatically. Defaults to `true`.
+   */
+  loadApi?: boolean;
 }
 
 export const DEFAULT_PLAYER_WIDTH = 640;
@@ -53,6 +69,7 @@ interface PendingPlayerState {
   seek?: {seconds: number; allowSeekAhead: boolean};
 }
 
+/** Coercion function for time values. */
 function coerceTime(value: number | undefined): number | undefined {
   return value == null ? value : numberAttribute(value, 0);
 }
@@ -79,6 +96,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   private _pendingPlayerState: PendingPlayerState | undefined;
   private readonly _destroyed = new Subject<void>();
   private readonly _playerChanges = new BehaviorSubject<YT.Player | undefined>(undefined);
+  private readonly _nonce = inject(CSP_NONCE, {optional: true});
 
   /** YouTube Video ID to view */
   @Input()
@@ -127,6 +145,10 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   @Input({transform: booleanAttribute})
   disableCookies: boolean = false;
 
+  /** Whether to automatically load the YouTube iframe API. Defaults to `true`. */
+  @Input({transform: booleanAttribute})
+  loadApi: boolean;
+
   /**
    * Whether the iframe will attempt to load regardless of the status of the api on the
    * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
@@ -161,6 +183,8 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     private _ngZone: NgZone,
     @Inject(PLATFORM_ID) platformId: Object,
   ) {
+    const config = inject(YOUTUBE_PLAYER_CONFIG, {optional: true});
+    this.loadApi = config?.loadApi ?? true;
     this._isBrowser = isPlatformBrowser(platformId);
   }
 
@@ -171,7 +195,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     if (!window.YT || !window.YT.Player) {
-      if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (this.loadApi) {
+        loadApi(this._nonce);
+      } else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw new Error(
           'Namespace YT not found, cannot construct embedded youtube player. ' +
             'Please install the YouTube Player API Reference for iframe Embeds: ' +
@@ -561,4 +587,42 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       takeUntil(this._destroyed),
     );
   }
+}
+
+let apiLoaded = false;
+
+/** Loads the YouTube API from a specified URL only once. */
+function loadApi(nonce: string | null): void {
+  if (apiLoaded) {
+    return;
+  }
+
+  // We can use `document` directly here, because this logic doesn't run outside the browser.
+  const url = 'https://www.youtube.com/iframe_api';
+  const script = document.createElement('script');
+  const callback = (event: Event) => {
+    script.removeEventListener('load', callback);
+    script.removeEventListener('error', callback);
+
+    if (event.type === 'error') {
+      apiLoaded = false;
+
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error(`Failed to load YouTube API from ${url}`);
+      }
+    }
+  };
+  script.addEventListener('load', callback);
+  script.addEventListener('error', callback);
+  (script as any).src = url;
+  script.async = true;
+
+  if (nonce) {
+    script.nonce = nonce;
+  }
+
+  // Set this immediately to true so we don't start loading another script
+  // while this one is pending. If loading fails, we'll flip it back to false.
+  apiLoaded = true;
+  document.body.appendChild(script);
 }
