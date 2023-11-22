@@ -14,7 +14,6 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {YouTubePlayer} from '@angular/youtube-player';
@@ -56,7 +55,7 @@ const VIDEOS: Video[] = [
   templateUrl: 'youtube-player-demo.html',
   styleUrls: ['youtube-player-demo.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
+  imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   @ViewChild('demoYouTubePlayer') demoYouTubePlayer: ElementRef<HTMLDivElement>;
@@ -70,8 +69,6 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   disableCookies = false;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this._loadApi();
-
     this.selectedVideo = VIDEOS[0];
   }
 
@@ -120,15 +117,5 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
     };
 
     this._selectedVideoId = undefined;
-  }
-
-  private _loadApi() {
-    if (!window.YT) {
-      // We don't need to wait for the API to load since the
-      // component is set up to wait for it automatically.
-      const script = document.createElement('script');
-      script.src = 'https://www.youtube.com/iframe_api';
-      document.body.appendChild(script);
-    }
   }
 }

@@ -1,11 +1,25 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {YouTubePlayer, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT} from './youtube-player';
+import {Component, Provider, ViewChild} from '@angular/core';
+import {
+  YouTubePlayer,
+  DEFAULT_PLAYER_WIDTH,
+  DEFAULT_PLAYER_HEIGHT,
+  YOUTUBE_PLAYER_CONFIG,
+} from './youtube-player';
 import {createFakeYtNamespace} from './fake-youtube-player';
 import {Subscription} from 'rxjs';
 
 const VIDEO_ID = 'a12345';
 const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
+const TEST_PROVIDERS: Provider[] = [
+  {
+    provide: YOUTUBE_PLAYER_CONFIG,
+    useValue: {
+      // Disable API loading in tests since we don't want to pull in any additional scripts.
+      loadApi: false,
+    },
+  },
+];
 
 describe('YoutubePlayer', () => {
   let playerCtorSpy: jasmine.Spy;
@@ -20,12 +34,6 @@ describe('YoutubePlayer', () => {
     playerSpy = fake.playerSpy;
     window.YT = fake.namespace;
     events = fake.events;
-
-    TestBed.configureTestingModule({
-      imports: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
-    });
-
-    TestBed.compileComponents();
   }));
 
   describe('API ready', () => {
@@ -553,6 +561,7 @@ describe('YoutubePlayer', () => {
   selector: 'test-app',
   standalone: true,
   imports: [YouTubePlayer],
+  providers: TEST_PROVIDERS,
   template: `
     @if (visible) {
       <youtube-player #player [videoId]="videoId" [width]="width" [height]="height"
@@ -564,8 +573,7 @@ describe('YoutubePlayer', () => {
         (playbackQualityChange)="onPlaybackQualityChange($event)"
         (playbackRateChange)="onPlaybackRateChange($event)"
         (error)="onError($event)"
-        (apiChange)="onApiChange($event)">
-      </youtube-player>
+        (apiChange)="onApiChange($event)"/>
     }
   `,
 })
@@ -591,8 +599,9 @@ class TestApp {
 @Component({
   standalone: true,
   imports: [YouTubePlayer],
+  providers: TEST_PROVIDERS,
   template: `
-    <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"></youtube-player>
+    <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"/>
   `,
 })
 class StaticStartEndSecondsApp {
@@ -602,7 +611,8 @@ class StaticStartEndSecondsApp {
 @Component({
   standalone: true,
   imports: [YouTubePlayer],
-  template: `<youtube-player [videoId]="videoId"></youtube-player>`,
+  providers: TEST_PROVIDERS,
+  template: `<youtube-player [videoId]="videoId"/>`,
 })
 class NoEventsApp {
   @ViewChild(YouTubePlayer) player: YouTubePlayer;
