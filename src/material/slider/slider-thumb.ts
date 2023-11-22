@@ -116,6 +116,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
       input.addEventListener('pointerdown', this._onDragStart);
       input.addEventListener('pointerup', this._onDragEnd);
       input.addEventListener('pointerleave', this._onMouseLeave);
+      input.addEventListener('pointercancel', this._onDragEnd);
       input.addEventListener('focus', this._onFocus);
       input.addEventListener('blur', this._onBlur);
     });
@@ -127,6 +128,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     input.removeEventListener('pointerdown', this._onDragStart);
     input.removeEventListener('pointerup', this._onDragEnd);
     input.removeEventListener('pointerleave', this._onMouseLeave);
+    input.removeEventListener('pointercancel', this._onDragEnd);
     input.removeEventListener('focus', this._onFocus);
     input.removeEventListener('blur', this._onBlur);
   }
