@@ -50,6 +50,10 @@ $_density-tokens: (
   // Custom Angular Material tokens
   (mat, card): (),
   (mat, divider): (),
+  (mat, expansion): (
+    header-collapsed-state-height: (48px, 44px, 40px, 36px),
+    header-expanded-state-height: (64px, 60px, 56px, 48px),
+  ),
   (mat, fab): (),
   (mat, form-fild): (),
   (mat, grid-list): (),

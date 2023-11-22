@@ -286,6 +286,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, expansion),
+      custom-tokens.expansion($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, grid-list),
       custom-tokens.grid-list($systems, $exclude-hardcoded),
       $token-slots
