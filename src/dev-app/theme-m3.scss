@@ -38,6 +38,7 @@ $dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark)
 html {
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
+  @include mat.dialog-theme($light-theme);
   @include mat.divider-theme($light-theme);
   @include mat.form-field-theme($light-theme);
   @include mat.grid-list-theme($light-theme);
@@ -73,6 +74,7 @@ html {
 
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
+  @include mat.dialog-color($dark-theme);
   @include mat.divider-color($dark-theme);
   @include mat.form-field-color($dark-theme);
   @include mat.grid-list-color($dark-theme);
@@ -107,6 +109,7 @@ html {
   .demo-density-#{$scale} {
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
+    @include mat.dialog-density($scale-theme);
     @include mat.divider-density($scale-theme);
     @include mat.form-field-density($scale-theme);
     @include mat.grid-list-density($scale-theme);
