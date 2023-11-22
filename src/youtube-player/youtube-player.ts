@@ -24,6 +24,8 @@ import {
   OnChanges,
   SimpleChanges,
   AfterViewInit,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPattern} from 'rxjs';
@@ -49,6 +51,10 @@ interface PendingPlayerState {
   volume?: number;
   muted?: boolean;
   seek?: {seconds: number; allowSeekAhead: boolean};
+}
+
+function coerceTime(value: number | undefined): number | undefined {
+  return value == null ? value : numberAttribute(value, 0);
 }
 
 /**
@@ -79,31 +85,31 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   videoId: string | undefined;
 
   /** Height of video player */
-  @Input()
+  @Input({transform: numberAttribute})
   get height(): number {
     return this._height;
   }
   set height(height: number | undefined) {
-    this._height = height || DEFAULT_PLAYER_HEIGHT;
+    this._height = height == null || isNaN(height) ? DEFAULT_PLAYER_HEIGHT : height;
   }
   private _height = DEFAULT_PLAYER_HEIGHT;
 
   /** Width of video player */
-  @Input()
+  @Input({transform: numberAttribute})
   get width(): number {
     return this._width;
   }
   set width(width: number | undefined) {
-    this._width = width || DEFAULT_PLAYER_WIDTH;
+    this._width = width == null || isNaN(width) ? DEFAULT_PLAYER_WIDTH : width;
   }
   private _width = DEFAULT_PLAYER_WIDTH;
 
   /** The moment when the player is supposed to start playing */
-  @Input()
+  @Input({transform: coerceTime})
   startSeconds: number | undefined;
 
   /** The moment when the player is supposed to stop playing */
-  @Input()
+  @Input({transform: coerceTime})
   endSeconds: number | undefined;
 
   /** The suggested quality of the player */
@@ -118,7 +124,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   playerVars: YT.PlayerVars | undefined;
 
   /** Whether cookies inside the player have been disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   disableCookies: boolean = false;
 
   /**
@@ -126,7 +132,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
    * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
    * set on the global window.
    */
-  @Input() showBeforeIframeApiLoads: boolean | undefined;
+  @Input({transform: booleanAttribute}) showBeforeIframeApiLoads: boolean = false;
 
   /** Outputs are direct proxies from the player itself. */
   @Output() readonly ready: Observable<YT.PlayerEvent> =
