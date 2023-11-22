@@ -9,6 +9,7 @@
 @use './mat/menu' as tokens-mat-menu;
 @use './mat/option' as tokens-mat-option;
 @use './mat/optgroup' as tokens-mat-optgroup;
+@use './mat/paginator' as tokens-mat-paginator;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/select' as tokens-mat-select;
@@ -92,6 +93,7 @@
       _get-tokens-for-module($theme, tokens-mat-menu),
       _get-tokens-for-module($theme, tokens-mat-optgroup),
       _get-tokens-for-module($theme, tokens-mat-option),
+      _get-tokens-for-module($theme, tokens-mat-paginator),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-select),

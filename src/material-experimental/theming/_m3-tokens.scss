@@ -296,6 +296,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, paginator),
+      custom-tokens.paginator($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, radio),
       custom-tokens.radio($systems, $exclude-hardcoded),
       $token-slots

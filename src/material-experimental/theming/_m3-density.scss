@@ -52,6 +52,9 @@ $_density-tokens: (
   (mat, menu): (),
   (mat, optgroup): (),
   (mat, option): (),
+  (mat, paginator): (
+    container-size: (56px, 52px, 48px, 40px),
+  ),
   (mat, radio): (),
   (mat, ripple): (),
   (mat, select): (),
