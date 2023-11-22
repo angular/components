@@ -24,7 +24,9 @@ dev-app {
 // Base theme configuration for our M3 theme.
 $m3-base-config: (
   color: (
-    primary: matx.$m3-green-palette
+    primary: matx.$m3-green-palette,
+    secondary: matx.$m3-blue-palette,
+    tertiary: matx.$m3-yellow-palette,
   ),
 );
 
@@ -38,6 +40,7 @@ $dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark)
 html {
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
+  @include mat.datepicker-theme($light-theme);
   @include mat.dialog-theme($light-theme);
   @include mat.divider-theme($light-theme);
   @include mat.expansion-theme($light-theme);
@@ -78,6 +81,7 @@ html {
 
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
+  @include mat.datepicker-color($dark-theme);
   @include mat.dialog-color($dark-theme);
   @include mat.divider-color($dark-theme);
   @include mat.expansion-color($dark-theme);
@@ -117,6 +121,7 @@ html {
   .demo-density-#{$scale} {
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
+    @include mat.datepicker-density($scale-theme);
     @include mat.dialog-density($scale-theme);
     @include mat.divider-density($scale-theme);
     @include mat.expansion-density($scale-theme);

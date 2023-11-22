@@ -276,6 +276,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, datepicker),
+      custom-tokens.datepicker($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, divider),
       custom-tokens.divider($systems, $exclude-hardcoded),
       $token-slots
