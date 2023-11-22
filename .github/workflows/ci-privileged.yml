@@ -26,7 +26,7 @@ jobs:
       CI_RUNNER_NUMBER: ${{ github.run_id }}
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@deec58560a3b4e9d3acf75bbce0ae7f9ab969f98
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@8d620dd288dcde4cb2122afb4eddad246ceae780
         with:
           cache-node-modules: true
           # Checking out the pull request commit is intended here as we need to run the changed code tests.
@@ -34,7 +34,7 @@ jobs:
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@deec58560a3b4e9d3acf75bbce0ae7f9ab969f98
+        uses: angular/dev-infra/github-actions/bazel/setup@8d620dd288dcde4cb2122afb4eddad246ceae780
       - name: Run tests on Saucelabs
         run: ./scripts/circleci/run-saucelabs-tests.sh
 
@@ -48,7 +48,7 @@ jobs:
       CI_RUNNER_NUMBER: ${{ github.run_id }}
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@deec58560a3b4e9d3acf75bbce0ae7f9ab969f98
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@8d620dd288dcde4cb2122afb4eddad246ceae780
         with:
           cache-node-modules: true
           # Checking out the pull request commit is intended here as we need to run the changed code tests.
@@ -56,6 +56,6 @@ jobs:
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@deec58560a3b4e9d3acf75bbce0ae7f9ab969f98
+        uses: angular/dev-infra/github-actions/bazel/setup@8d620dd288dcde4cb2122afb4eddad246ceae780
       - name: Run tests on Browserstack
         run: ./scripts/circleci/run-browserstack-tests.sh
