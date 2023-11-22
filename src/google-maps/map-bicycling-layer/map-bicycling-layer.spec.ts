@@ -16,8 +16,7 @@ describe('MapBicyclingLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapBicyclingLayer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -50,5 +49,7 @@ describe('MapBicyclingLayer', () => {
   template: `<google-map>
                 <map-bicycling-layer></map-bicycling-layer>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapBicyclingLayer],
 })
 class TestApp {}

@@ -17,10 +17,13 @@ Additional information can be found by looking at [Marker Clustering](https://de
 ```typescript
 // google-map-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapMarker, MapMarkerClusterer} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap, MapMarker, MapMarkerClusterer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};

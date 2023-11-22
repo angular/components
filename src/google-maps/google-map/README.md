@@ -5,27 +5,15 @@ The `GoogleMap` component wraps the [`google.maps.Map` class](https://developers
 ## Example
 
 ```typescript
-// google-maps-demo.module.ts
-
-import {NgModule} from '@angular/core';
-import {GoogleMap} from '@angular/google-maps';
-
-import {GoogleMapDemo} from './google-map-demo';
-
-@NgModule({
-  imports: [GoogleMap],
-  declarations: [GoogleMapDemo],
-})
-export class GoogleMapDemoModule {
-}
-
-
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap],
 })
 export class GoogleMapDemo {
 

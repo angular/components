@@ -21,8 +21,7 @@ describe('MapRectangle', () => {
     rectangleBounds = {east: 30, north: 15, west: 10, south: -5};
     rectangleOptions = {bounds: rectangleBounds, strokeColor: 'grey', strokeOpacity: 0.8};
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapRectangle],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -149,6 +148,8 @@ describe('MapRectangle', () => {
                                (rectangleRightclick)="handleRightclick()">
                 </map-rectangle>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapRectangle],
 })
 class TestApp {
   @ViewChild(MapRectangle) rectangle: MapRectangle;

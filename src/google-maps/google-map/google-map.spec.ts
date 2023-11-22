@@ -25,8 +25,7 @@ describe('GoogleMap', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -409,6 +408,8 @@ describe('GoogleMap', () => {
                          (mapRightclick)="handleRightclick($event)"
                          (mapInitialized)="mapInitializedSpy($event)">
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap],
 })
 class TestApp {
   @ViewChild(GoogleMap) map: GoogleMap;

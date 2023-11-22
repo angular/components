@@ -9,11 +9,13 @@ To display the `MapInfoWindow`, it must be a child of a `GoogleMap` component, a
 ```typescript
 // google-maps-demo.component.ts
 import {Component, ViewChild} from '@angular/core';
-import {MapInfoWindow, MapMarker} from '@angular/google-maps';
+import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap, MapInfoWindow, MapMarker],
 })
 export class GoogleMapDemo {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;

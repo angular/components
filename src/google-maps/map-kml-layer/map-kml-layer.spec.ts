@@ -24,8 +24,7 @@ describe('MapKmlLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapKmlLayer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -155,6 +154,8 @@ describe('MapKmlLayer', () => {
                                (statusChanged)="handleStatusChange()">
                 </map-kml-layer>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapKmlLayer],
 })
 class TestApp {
   @ViewChild(MapKmlLayer) kmlLayer: MapKmlLayer;

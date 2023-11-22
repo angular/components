@@ -25,8 +25,7 @@ describe('MapPolygon', () => {
     ];
     polygonOptions = {paths: polygonPath, strokeColor: 'grey', strokeOpacity: 0.8};
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapPolygon],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -154,6 +153,8 @@ describe('MapPolygon', () => {
                               (polygonRightclick)="handleRightclick()">
                 </map-polygon>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapPolygon],
 })
 class TestApp {
   @ViewChild(MapPolygon) polygon: MapPolygon;

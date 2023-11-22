@@ -28,8 +28,7 @@ describe('MapCircle', () => {
       strokeOpacity: 0.8,
     };
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapCircle],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -165,6 +164,8 @@ describe('MapCircle', () => {
                             (circleRightclick)="handleRightclick()">
                 </map-circle>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapCircle],
 })
 class TestApp {
   @ViewChild(MapCircle) circle: MapCircle;

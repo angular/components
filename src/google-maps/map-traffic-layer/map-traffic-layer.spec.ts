@@ -17,8 +17,7 @@ describe('MapTrafficLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapTrafficLayer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -53,6 +52,8 @@ describe('MapTrafficLayer', () => {
                 <map-traffic-layer [autoRefresh]="autoRefresh">
                 </map-traffic-layer>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapTrafficLayer],
 })
 class TestApp {
   autoRefresh?: boolean;

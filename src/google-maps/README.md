@@ -21,25 +21,13 @@ method to make sure that the component doesn't load until after the API has load
 // google-maps-demo.module.ts
 
 import { NgModule } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
 
 import { GoogleMapsDemoComponent } from './google-maps-demo.component';
 
 @NgModule({
-  declarations: [
-    GoogleMapsDemoComponent,
-  ],
-  imports: [
-    CommonModule,
-    GoogleMap,
-    HttpClientModule,
-    HttpClientJsonpModule,
-  ],
-  exports: [
-    GoogleMapsDemoComponent,
-  ],
+  imports: [GoogleMapsDemoComponent],
+  providers: [provideHttpClient(withJsonpSupport())]
 })
 export class GoogleMapsDemoModule {}
 
@@ -48,12 +36,15 @@ export class GoogleMapsDemoModule {}
 
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { GoogleMap } from '@angular/google-maps';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'google-maps-demo',
   templateUrl: './google-maps-demo.component.html',
+  standalone: true,
+  imports: [GoogleMap]
 })
 export class GoogleMapsDemoComponent {
   apiLoaded: Observable<boolean>;

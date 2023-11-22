@@ -19,8 +19,7 @@ describe('MapHeatmapLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapHeatmapLayer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -159,6 +158,8 @@ describe('MapHeatmapLayer', () => {
       <map-heatmap-layer [data]="data" [options]="options">
       </map-heatmap-layer>
     </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapHeatmapLayer],
 })
 class TestApp {
   @ViewChild(MapHeatmapLayer) heatmap: MapHeatmapLayer;

@@ -16,8 +16,7 @@ describe('MapTransitLayer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapTransitLayer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -50,5 +49,7 @@ describe('MapTransitLayer', () => {
   template: `<google-map>
                 <map-transit-layer></map-transit-layer>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapTransitLayer],
 })
 class TestApp {}

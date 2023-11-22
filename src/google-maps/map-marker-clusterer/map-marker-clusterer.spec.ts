@@ -30,8 +30,7 @@ describe('MapMarkerClusterer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapMarker, MapMarkerClusterer],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -336,6 +335,8 @@ describe('MapMarkerClusterer', () => {
                 }
                </map-marker-clusterer>
              </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapMarker, MapMarkerClusterer],
 })
 class TestApp {
   @ViewChild(MapMarkerClusterer) markerClusterer: MapMarkerClusterer;

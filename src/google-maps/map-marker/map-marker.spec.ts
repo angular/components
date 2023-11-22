@@ -15,8 +15,7 @@ describe('MapMarker', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapMarker],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -233,6 +232,8 @@ describe('MapMarker', () => {
                            (positionChanged)="handlePositionChanged()">
                </map-marker>
              </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapMarker],
 })
 class TestApp {
   @ViewChild(MapMarker) marker: MapMarker;

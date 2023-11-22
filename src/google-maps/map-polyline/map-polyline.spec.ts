@@ -29,8 +29,7 @@ describe('MapPolyline', () => {
       strokeOpacity: 0.8,
     };
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapPolyline],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -155,6 +154,8 @@ describe('MapPolyline', () => {
                               (polylineRightclick)="handleRightclick()">
                 </map-polyline>
             </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapPolyline],
 })
 class TestApp {
   @ViewChild(MapPolyline) polyline: MapPolyline;

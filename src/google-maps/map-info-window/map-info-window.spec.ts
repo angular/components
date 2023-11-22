@@ -18,8 +18,7 @@ describe('MapInfoWindow', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMap, MapInfoWindow],
-      declarations: [TestApp],
+      imports: [TestApp],
     });
   }));
 
@@ -261,6 +260,8 @@ describe('MapInfoWindow', () => {
                  test content
                </map-info-window>
              </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapInfoWindow],
 })
 class TestApp {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
