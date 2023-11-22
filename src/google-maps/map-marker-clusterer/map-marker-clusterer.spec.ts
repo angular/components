@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {MapMarker} from '../map-marker/map-marker';
@@ -28,15 +28,7 @@ describe('MapMarkerClusterer', () => {
 
   const anyMarkerMatcher = jasmine.any(Object) as unknown as google.maps.Marker;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
 

@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -18,7 +18,7 @@ describe('MapCircle', () => {
   let circleRadius: number;
   let circleOptions: google.maps.CircleOptions;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     circleCenter = {lat: 30, lng: 15};
     circleRadius = 15;
     circleOptions = {
@@ -27,14 +27,9 @@ describe('MapCircle', () => {
       strokeColor: 'grey',
       strokeOpacity: 0.8,
     };
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
+  });
 
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });

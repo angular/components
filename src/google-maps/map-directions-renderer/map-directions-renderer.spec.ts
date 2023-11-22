@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MapDirectionsRenderer} from './map-directions-renderer';
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -18,15 +18,7 @@ const DEFAULT_DIRECTIONS: google.maps.DirectionsResult = {
 describe('MapDirectionsRenderer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
