@@ -40,15 +40,16 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-map-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="addMarker($event)">
-  <map-marker-clusterer [imagePath]="markerClustererImagePath">
-    @for (position of markerPositions; track position) {
-      <map-marker [position]="position"></map-marker>
-    }
-  </map-marker-clusterer>
+<google-map 
+  height="400px"
+  width="750px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="addMarker($event)">
+    <map-marker-clusterer [imagePath]="markerClustererImagePath">
+      @for (position of markerPositions; track position) {
+        <map-marker [position]="position" />
+      }
+    </map-marker-clusterer>
 </google-map>
 ```

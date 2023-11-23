@@ -36,17 +36,15 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="addMarker($event)">
-
-  @for (position of markerPositions; track position) {
-    <map-marker #marker="mapMarker"
-                [position]="position"
-                (mapClick)="openInfoWindow(marker)"></map-marker>
-  }
-  <map-info-window>Info Window content</map-info-window>
+<google-map 
+  height="400px"
+  width="750px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="addMarker($event)">
+    @for (position of markerPositions; track position) {
+      <map-marker #marker="mapMarker" [position]="position" (mapClick)="openInfoWindow(marker)" />
+    }
+    <map-info-window>Info Window content</map-info-window>
 </google-map>
 ```

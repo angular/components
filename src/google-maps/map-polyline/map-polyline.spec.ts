@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -17,7 +17,7 @@ describe('MapPolyline', () => {
   let polylinePath: google.maps.LatLngLiteral[];
   let polylineOptions: google.maps.PolylineOptions;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     polylinePath = [
       {lat: 25, lng: 26},
       {lat: 26, lng: 27},
@@ -28,14 +28,9 @@ describe('MapPolyline', () => {
       strokeColor: 'grey',
       strokeOpacity: 0.8,
     };
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
+  });
 
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -147,13 +142,15 @@ describe('MapPolyline', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-polyline [options]="options"
-                              [path]="path"
-                              (polylineClick)="handleClick()"
-                              (polylineRightclick)="handleRightclick()">
-                </map-polyline>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-polyline
+        [options]="options"
+        [path]="path"
+        (polylineClick)="handleClick()"
+        (polylineRightclick)="handleRightclick()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapPolyline],
 })

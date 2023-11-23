@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 
@@ -17,14 +17,7 @@ describe('MapHeatmapLayer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
   let latLngSpy: jasmine.SpyObj<google.maps.LatLng>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     latLngSpy = createLatLngSpy();
     createMapConstructorSpy(mapSpy).and.callThrough();
@@ -155,9 +148,9 @@ describe('MapHeatmapLayer', () => {
   selector: 'test-app',
   template: `
     <google-map>
-      <map-heatmap-layer [data]="data" [options]="options">
-      </map-heatmap-layer>
-    </google-map>`,
+      <map-heatmap-layer [data]="data" [options]="options" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapHeatmapLayer],
 })

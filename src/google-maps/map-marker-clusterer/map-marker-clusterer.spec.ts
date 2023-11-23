@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {MapMarker} from '../map-marker/map-marker';
@@ -28,15 +28,7 @@ describe('MapMarkerClusterer', () => {
 
   const anyMarkerMatcher = jasmine.any(Object) as unknown as google.maps.Marker;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
 
@@ -302,39 +294,42 @@ describe('MapMarkerClusterer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-marker-clusterer [ariaLabelFn]="ariaLabelFn"
-                                     [averageCenter]="averageCenter"
-                                     [batchSize]="batchSize"
-                                     [batchSizeIE]="batchSizeIE"
-                                     [calculator]="calculator"
-                                     [clusterClass]="clusterClass"
-                                     [enableRetinaIcons]="enableRetinaIcons"
-                                     [gridSize]="gridSize"
-                                     [ignoreHidden]="ignoreHidden"
-                                     [imageExtension]="imageExtension"
-                                     [imagePath]="imagePath"
-                                     [imageSizes]="imageSizes"
-                                     [maxZoom]="maxZoom"
-                                     [minimumClusterSize]="minimumClusterSize"
-                                     [styles]="styles"
-                                     [title]="title"
-                                     [zIndex]="zIndex"
-                                     [zoomOnClick]="zoomOnClick"
-                                     [options]="options"
-                                     (clusteringbegin)="onClusteringBegin()"
-                                     (clusterClick)="onClusterClick()">
-                 @if (state === 'state1') {
-                  <map-marker></map-marker>
-                }
-                 @if (state === 'state1' || state === 'state2') {
-                  <map-marker></map-marker>
-                }
-                 @if (state === 'state2') {
-                  <map-marker></map-marker>
-                }
-               </map-marker-clusterer>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-marker-clusterer
+        [ariaLabelFn]="ariaLabelFn"
+        [averageCenter]="averageCenter"
+        [batchSize]="batchSize"
+        [batchSizeIE]="batchSizeIE"
+        [calculator]="calculator"
+        [clusterClass]="clusterClass"
+        [enableRetinaIcons]="enableRetinaIcons"
+        [gridSize]="gridSize"
+        [ignoreHidden]="ignoreHidden"
+        [imageExtension]="imageExtension"
+        [imagePath]="imagePath"
+        [imageSizes]="imageSizes"
+        [maxZoom]="maxZoom"
+        [minimumClusterSize]="minimumClusterSize"
+        [styles]="styles"
+        [title]="title"
+        [zIndex]="zIndex"
+        [zoomOnClick]="zoomOnClick"
+        [options]="options"
+        (clusteringbegin)="onClusteringBegin()"
+        (clusterClick)="onClusterClick()">
+          @if (state === 'state1') {
+            <map-marker />
+          }
+          @if (state === 'state1' || state === 'state2') {
+            <map-marker />
+          }
+          @if (state === 'state2') {
+            <map-marker />
+          }
+      </map-marker-clusterer>
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapMarker, MapMarkerClusterer],
 })

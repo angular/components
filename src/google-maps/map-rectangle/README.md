@@ -30,10 +30,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-rectangle [bounds]="bounds"></map-rectangle>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-rectangle [bounds]="bounds" />
 </google-map>
 ```

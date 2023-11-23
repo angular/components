@@ -29,13 +29,14 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-map-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="addMarker($event)">
-  @for (position of markerPositions; track position) {
-    <map-marker [position]="position" [options]="markerOptions"></map-marker>
-  }
+<google-map 
+  height="400px"
+  width="750px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="addMarker($event)">
+    @for (position of markerPositions; track position) {
+      <map-marker [position]="position" [options]="markerOptions" />
+    }
 </google-map>
 ```

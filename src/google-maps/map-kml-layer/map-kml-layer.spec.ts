@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -22,15 +22,7 @@ const DEFAULT_KML_OPTIONS: google.maps.KmlLayerOptions = {
 describe('MapKmlLayer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -147,13 +139,15 @@ describe('MapKmlLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-kml-layer [options]="options"
-                               [url]="url"
-                               (kmlClick)="handleClick()"
-                               (statusChanged)="handleStatusChange()">
-                </map-kml-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-kml-layer
+        [options]="options"
+        [url]="url"
+        (kmlClick)="handleClick()"
+        (statusChanged)="handleStatusChange()" />
+    </google-map>
+  `,
   standalone: true,
   imports: [GoogleMap, MapKmlLayer],
 })

@@ -25,10 +25,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-kml-layer [url]="kmlUrl"></map-kml-layer>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-kml-layer [url]="kmlUrl" />
 </google-map>
 ```

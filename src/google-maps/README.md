@@ -67,7 +67,7 @@ export class GoogleMapsDemoComponent {
 <!-- google-maps-demo.component.html -->
 
 @if (apiLoaded | async) {
-  <google-map></google-map>
+  <google-map />
 }
 ```
 
@@ -101,7 +101,7 @@ of the most common options. For example, the Google Maps component could have it
 in with a google.maps.MapOptions object:
 
 ```html
-<google-map [options]="options"></google-map>
+<google-map [options]="options" />
 ```
 
 ```typescript
@@ -114,8 +114,7 @@ options: google.maps.MapOptions = {
 It can also have individual options set for some of the most common options:
 
 ```html
-<google-map [center]="center"
-            [zoom]="zoom"></google-map>
+<google-map [center]="center" [zoom]="zoom" />
 ```
 
 ```typescript
