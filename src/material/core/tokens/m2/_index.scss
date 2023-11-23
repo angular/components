@@ -1,6 +1,9 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../style/sass-utils';
+@use './mat/autocomplete' as tokens-mat-autocomplete;
+@use './mat/badge' as tokens-mat-badge;
+@use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
 @use './mat/card' as tokens-mat-card;
 @use './mat/datepicker' as tokens-mat-datepicker;
 @use './mat/divider' as tokens-mat-divider;
@@ -91,6 +94,9 @@
 ///     )
 @function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
+      _get-tokens-for-module($theme, tokens-mat-autocomplete),
+      _get-tokens-for-module($theme, tokens-mat-badge),
+      _get-tokens-for-module($theme, tokens-mat-bottom-sheet),
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-datepicker),
       _get-tokens-for-module($theme, tokens-mat-divider),
