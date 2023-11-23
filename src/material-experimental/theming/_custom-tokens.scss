@@ -35,6 +35,49 @@
   );
 }
 
+/// Generates custom tokens for the mdc-chip. (MDC has a chip component, but they
+/// seem to have made up the tokens rather than using ones generated from the token database,
+/// therefore we need a custom token function for it).
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mdc-chip
+@function chip($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    _generate-typography-tokens($systems, label-text, label-large),
+    (
+      container-shape: _hardcode((
+        family: rounded,
+        radius: 8px,
+      ), $exclude-hardcoded),
+      with-avatar-avatar-size: _hardcode(24px, $exclude-hardcoded),
+      elevated-container-color: map.get($systems, md-sys-color, surface-container-low),
+      elevated-disabled-container-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: 0.12,
+      ),
+      label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-label-text-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: 0.38,
+      ),
+      with-icon-icon-size: _hardcode(18px, $exclude-hardcoded),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      with-icon-disabled-icon-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: 0.38,
+      ),
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      with-trailing-icon-trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      with-trailing-icon-disabled-trailing-icon-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: 0.38,
+      ),
+      focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ),
+  );
+}
+
 /// Generates custom tokens for the mat-datepicker.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
