@@ -361,6 +361,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, standard-button-toggle),
+      custom-tokens.button-toggle($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, stepper),
       custom-tokens.stepper($systems, $exclude-hardcoded),
       $token-slots

@@ -22,6 +22,7 @@
 @use './mat/slider' as tokens-mat-slider;
 @use './mat/snack-bar' as tokens-mat-snack-bar;
 @use './mat/sort' as tokens-mat-sort;
+@use './mat/standard-button-toggle' as tokens-mat-button-toggle;
 @use './mat/stepper' as tokens-mat-stepper;
 @use './mat/tab-header' as tokens-mat-tab-header;
 @use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
@@ -92,6 +93,7 @@
       _get-tokens-for-module($theme, tokens-mat-autocomplete),
       _get-tokens-for-module($theme, tokens-mat-badge),
       _get-tokens-for-module($theme, tokens-mat-bottom-sheet),
+      _get-tokens-for-module($theme, tokens-mat-button-toggle),
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-datepicker),
       _get-tokens-for-module($theme, tokens-mat-divider),

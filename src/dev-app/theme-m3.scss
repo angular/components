@@ -41,6 +41,7 @@ html {
   @include mat.autocomplete-theme($light-theme);
   @include mat.badge-theme($light-theme);
   @include mat.bottom-sheet-theme($light-theme);
+  @include mat.button-toggle-theme($light-theme);
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
   @include mat.datepicker-theme($light-theme);
@@ -82,6 +83,7 @@ html {
   @include mat.autocomplete-color($dark-theme);
   @include mat.badge-color($dark-theme);
   @include mat.bottom-sheet-color($dark-theme);
+  @include mat.button-toggle-color($dark-theme);
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
   @include mat.datepicker-color($dark-theme);
@@ -122,6 +124,7 @@ html {
     @include mat.autocomplete-density($scale-theme);
     @include mat.badge-density($scale-theme);
     @include mat.bottom-sheet-density($scale-theme);
+    @include mat.button-toggle-density($scale-theme);
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
     @include mat.datepicker-density($scale-theme);
