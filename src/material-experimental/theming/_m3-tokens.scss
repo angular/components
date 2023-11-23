@@ -256,6 +256,21 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, autocomplete),
+      custom-tokens.autocomplete($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, badge),
+      custom-tokens.badge($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, bottom-sheet),
+      custom-tokens.bottom-sheet($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, card),
       custom-tokens.card($systems, $exclude-hardcoded),
       $token-slots

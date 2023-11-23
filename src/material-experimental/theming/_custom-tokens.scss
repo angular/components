@@ -21,6 +21,52 @@
   @return $result;
 }
 
+/// Generates custom tokens for the mat-autocomplete.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-autocomplete
+@function autocomplete($systems, $exclude-hardcoded) {
+  @return (
+    background-color: map.get($systems, md-sys-color, surface-container),
+  );
+}
+
+/// Generates custom tokens for the mat-badge.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-badge
+@function badge($systems, $exclude-hardcoded) {
+  @return (
+    background-color: map.get($systems, md-sys-color, error),
+    text-color: map.get($systems, md-sys-color, on-error),
+    disabled-state-background-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, error),
+      $alpha: 0.38,
+    ),
+    disabled-state-text-color: map.get($systems, md-sys-color, on-error),
+    text-font: map.get($systems, md-sys-typescale, label-small-font),
+    text-size: map.get($systems, md-sys-typescale, label-small-size),
+    text-weight: map.get($systems, md-sys-typescale, label-small-weight),
+    small-size-text-size: _hardcode(0, $exclude-hardcoded),
+    large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
+  );
+}
+
+/// Generates custom tokens for the mat-bottom-sheet.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-bottom-sheet
+@function bottom-sheet($systems, $exclude-hardcoded) {
+  @return mat.private-merge-all(
+    _generate-typography-tokens($systems, container-text, body-large),
+    (
+      container-shape: _hardcode(28px, $exclude-hardcoded),
+      container-text-color: map.get($systems, md-sys-color, on-surface),
+      container-background-color: map.get($systems, md-sys-color, surface-container-low),
+    ),
+  );
+}
+
 /// Generates custom tokens for the mat-card.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
