@@ -74,8 +74,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     get appearance(): MatFormFieldAppearance;
     set appearance(value: MatFormFieldAppearance);
     color: ThemePalette;
-    get _control(): MatFormFieldControl<any>;
-    set _control(value: MatFormFieldControl<any>);
+    get _control(): MatFormFieldControl_2<any>;
+    set _control(value: MatFormFieldControl_2<any>);
     // (undocumented)
     _elementRef: ElementRef;
     // (undocumented)
@@ -86,7 +86,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     set floatLabel(value: FloatLabelType);
     _forceDisplayInfixLabel(): boolean | 0;
     // (undocumented)
-    _formFieldControl: MatFormFieldControl<any>;
+    _formFieldControl: MatFormFieldControl_2<any>;
     getConnectedOverlayOrigin(): ElementRef;
     _getDisplayedMessages(): 'error' | 'hint';
     getLabelId(): string | null;
