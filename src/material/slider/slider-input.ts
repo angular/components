@@ -484,7 +484,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     if (this._slider._isRtl) {
       return (1 - this.percentage) * this._slider._cachedWidth;
     }
-    return this.percentage * this._slider._cachedWidth;
+    const tickMarkOffset = 3; // The spaces before & after the start & end tick marks.
+    return this.percentage * (this._slider._cachedWidth - tickMarkOffset * 2) + tickMarkOffset;
   }
 
   _calcTranslateXByPointerEvent(event: PointerEvent): number {
