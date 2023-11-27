@@ -60,10 +60,8 @@
 @mixin density($theme) {
   @include option-theme.density($theme);
   @include optgroup-theme.density($theme);
+  @include pseudo-checkbox-theme.density($theme);
   @include ripple-theme.density($theme);
-
-  // TODO(mmalerba): add density mixins for these.
-  // @include pseudo-checkbox-theme.density($theme);
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
