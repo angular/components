@@ -1442,7 +1442,7 @@ describe('MDC-based MatSlider', () => {
   });
 });
 
-const SLIDER_STYLES = ['.mat-mdc-slider { width: 306px; }'];
+const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
 
 @Component({
   template: `
