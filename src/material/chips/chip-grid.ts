@@ -248,10 +248,10 @@ export class MatChipGrid
 
   /** Whether the chip grid is in an error state. */
   get errorState() {
-    return this._errorStateTracker.errorState;
+    return this._errorStateTracker.isInErrorState;
   }
   set errorState(value: boolean) {
-    this._errorStateTracker.errorState = value;
+    this._errorStateTracker.isInErrorState = value;
   }
 
   constructor(
@@ -394,7 +394,7 @@ export class MatChipGrid
 
   /** Refreshes the error state of the chip grid. */
   updateErrorState() {
-    this._errorStateTracker.updateErrorState();
+    this._errorStateTracker.recalculateErrorState();
   }
 
   /** When blurred, mark the field as touched when focus moved outside the chip grid. */

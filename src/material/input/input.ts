@@ -242,10 +242,10 @@ export class MatInput
 
   /** Whether the input is in an error state. */
   get errorState() {
-    return this._errorStateTracker.errorState;
+    return this._errorStateTracker.isInErrorState;
   }
   set errorState(value: boolean) {
-    this._errorStateTracker.errorState = value;
+    this._errorStateTracker.isInErrorState = value;
   }
 
   protected _neverEmptyInputTypes = [
@@ -370,7 +370,7 @@ export class MatInput
 
   /** Refreshes the error state of the input. */
   updateErrorState() {
-    this._errorStateTracker.updateErrorState();
+    this._errorStateTracker.recalculateErrorState();
   }
 
   /** Callback for the cases where the focused state of the input changes. */

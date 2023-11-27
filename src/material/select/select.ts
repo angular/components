@@ -528,10 +528,10 @@ export class MatSelect
 
   /** Whether the select is in an error state. */
   get errorState() {
-    return this._errorStateTracker.errorState;
+    return this._errorStateTracker.isInErrorState;
   }
   set errorState(value: boolean) {
-    this._errorStateTracker.errorState = value;
+    this._errorStateTracker.isInErrorState = value;
   }
 
   /**
@@ -901,7 +901,7 @@ export class MatSelect
 
   /** Refreshes the error state of the select. */
   updateErrorState() {
-    this._errorStateTracker.updateErrorState();
+    this._errorStateTracker.recalculateErrorState();
   }
 
   /** Whether the element is in RTL mode. */

@@ -43,7 +43,7 @@ export interface HasErrorState {
  */
 export class _ErrorStateTracker {
   /** Whether the tracker is currently in an error state. */
-  errorState = false;
+  isInErrorState = false;
 
   /** User-defined matcher for the error state. */
   matcher: ErrorStateMatcher;
@@ -57,8 +57,8 @@ export class _ErrorStateTracker {
   ) {}
 
   /** Updates the error state based on the provided error state matcher. */
-  updateErrorState() {
-    const oldState = this.errorState;
+  recalculateErrorState() {
+    const oldState = this.isInErrorState;
     const parent = this._parentFormGroup || this._parentForm;
     const matcher = this.matcher || this._defaultMatcher;
     const control = this.ngControl ? (this.ngControl.control as AbstractControl) : null;
@@ -68,7 +68,7 @@ export class _ErrorStateTracker {
       typeof matcher?.isErrorState === 'function' ? matcher.isErrorState(control, parent) : false;
 
     if (newState !== oldState) {
-      this.errorState = newState;
+      this.isInErrorState = newState;
       this._stateChanges.next();
     }
   }
@@ -89,10 +89,10 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(
 
     /** Whether the component is in an error state. */
     get errorState() {
-      return this._getTracker().errorState;
+      return this._getTracker().isInErrorState;
     }
     set errorState(value: boolean) {
-      this._getTracker().errorState = value;
+      this._getTracker().isInErrorState = value;
     }
 
     /** An object used to control the error state of the component. */
@@ -105,7 +105,7 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(
 
     /** Updates the error state based on the provided error state matcher. */
     updateErrorState() {
-      this._getTracker().updateErrorState();
+      this._getTracker().recalculateErrorState();
     }
 
     private _getTracker() {

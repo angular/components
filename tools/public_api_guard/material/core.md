@@ -136,11 +136,11 @@ export class ErrorStateMatcher {
 // @public
 export class _ErrorStateTracker {
     constructor(_defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
-    errorState: boolean;
+    isInErrorState: boolean;
     matcher: ErrorStateMatcher;
     // (undocumented)
     ngControl: NgControl | null;
-    updateErrorState(): void;
+    recalculateErrorState(): void;
 }
 
 // @public
