@@ -24,6 +24,7 @@ import {FLEX_PROVIDERS} from './constants';
     ...FLEX_PROVIDERS,
     {provide: ColumnResize, useExisting: CdkDefaultEnabledColumnResizeFlex},
   ],
+  standalone: true,
 })
 export class CdkDefaultEnabledColumnResizeFlex extends ColumnResize {
   constructor(
