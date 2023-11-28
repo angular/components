@@ -1,3 +1,4 @@
+import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
 import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
@@ -12,8 +13,7 @@ describe('CdkSelection', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkSelectionModule],
-      declarations: [ListWithMultiSelection],
+      imports: [CdkSelectionModule, ListWithMultiSelection],
     }).compileComponents();
   }));
 
@@ -239,8 +239,7 @@ describe('CdkSelection with multiple = false', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkSelectionModule],
-      declarations: [ListWithSingleSelection],
+      imports: [CdkSelectionModule, ListWithSingleSelection],
     }).compileComponents();
   }));
 
@@ -305,8 +304,7 @@ describe('cdkSelectionColumn', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, CdkTableModule],
-      declarations: [MultiSelectTableWithSelectionColumn],
+      imports: [CdkSelectionModule, CdkTableModule, MultiSelectTableWithSelectionColumn],
     }).compileComponents();
   }));
 
@@ -400,8 +398,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, CdkTableModule],
-      declarations: [SingleSelectTableWithSelectionColumn],
+      imports: [CdkSelectionModule, CdkTableModule, SingleSelectTableWithSelectionColumn],
     }).compileComponents();
   }));
 
@@ -454,6 +451,8 @@ describe('cdkSelectionColumn with multiple = false', () => {
         </li>
       }
     </ul>`,
+  standalone: true,
+  imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithMultiSelection {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -519,6 +518,8 @@ class ListWithMultiSelection {
         </li>
       }
     </ul>`,
+  standalone: true,
+  imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithSingleSelection {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -561,6 +562,8 @@ class ListWithSingleSelection {
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
     `,
+  standalone: true,
+  imports: [CdkSelectionModule, CdkTableModule],
 })
 class MultiSelectTableWithSelectionColumn {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
@@ -627,6 +630,8 @@ class MultiSelectTableWithSelectionColumn {
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
     `,
+  standalone: true,
+  imports: [CdkSelectionModule, CdkTableModule],
 })
 class SingleSelectTableWithSelectionColumn {
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
