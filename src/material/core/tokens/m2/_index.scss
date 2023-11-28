@@ -30,6 +30,7 @@
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/tree' as tokens-mat-tree;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
+@use './mdc/chip' as tokens-mdc-chip;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
 @use './mdc/elevated-card' as tokens-mdc-elevated-card;
@@ -119,6 +120,7 @@
       _get-tokens-for-module($theme, tokens-mat-toolbar),
       _get-tokens-for-module($theme, tokens-mat-tree),
       _get-tokens-for-module($theme, tokens-mdc-checkbox),
+      _get-tokens-for-module($theme, tokens-mdc-chip),
       _get-tokens-for-module($theme, tokens-mdc-circular-progress),
       _get-tokens-for-module($theme, tokens-mdc-dialog),
       _get-tokens-for-module($theme, tokens-mdc-elevated-card),
