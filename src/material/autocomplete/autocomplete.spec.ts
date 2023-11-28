@@ -2573,7 +2573,9 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('Oregon');
       expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
-      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy)
+        .withContext(`Expected optionSelections to emit deselect previous and select new options.`)
+        .toHaveBeenCalledTimes(2);
 
       subscription.unsubscribe();
     }));
@@ -2605,7 +2607,9 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('Oregon');
       expect(stateCtrl.value).toEqual({code: 'OR', name: 'Oregon'});
-      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy)
+        .withContext(`Expected optionSelections to emit deselect previous and select new options.`)
+        .toHaveBeenCalledTimes(2);
 
       subscription.unsubscribe();
     }));
@@ -2672,7 +2676,9 @@ describe('MDC-based MatAutocomplete', () => {
 
       expect(input.value).toBe('');
       expect(stateCtrl.value).toBe(null);
-      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy)
+        .withContext(`Expected optionSelections to emit deselected option.`)
+        .toHaveBeenCalledTimes(1);
 
       subscription.unsubscribe();
     }));
