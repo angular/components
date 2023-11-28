@@ -16,10 +16,6 @@ import {
   CdkEditOpen,
 } from './table-directives';
 import {CdkEditControl, CdkEditRevert, CdkEditClose} from './lens-directives';
-import {
-  DefaultPopoverEditPositionStrategyFactory,
-  PopoverEditPositionStrategyFactory,
-} from './popover-edit-position-strategy-factory';
 
 const EXPORTED_DECLARATIONS = [
   CdkPopoverEdit,
@@ -33,14 +29,7 @@ const EXPORTED_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [OverlayModule],
+  imports: [OverlayModule, ...EXPORTED_DECLARATIONS],
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
-  providers: [
-    {
-      provide: PopoverEditPositionStrategyFactory,
-      useClass: DefaultPopoverEditPositionStrategyFactory,
-    },
-  ],
 })
 export class CdkPopoverEditModule {}
