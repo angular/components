@@ -26,7 +26,6 @@ import {
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
-  PortalModule,
   TemplatePortal,
 } from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
@@ -54,7 +53,7 @@ let uniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   animations: [matSnackBarAnimations.snackBarState],
   standalone: true,
-  imports: [PortalModule],
+  imports: [CdkPortalOutlet],
   host: {
     'class': 'mdc-snackbar mat-mdc-snack-bar-container mdc-snackbar--open',
     '[@state]': '_animationState',
