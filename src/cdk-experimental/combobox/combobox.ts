@@ -58,6 +58,7 @@ export const CDK_COMBOBOX = new InjectionToken<CdkCombobox>('CDK_COMBOBOX');
     '[attr.tabindex]': '_getTabIndex()',
   },
   providers: [{provide: CDK_COMBOBOX, useExisting: CdkCombobox}],
+  standalone: true,
 })
 export class CdkCombobox<T = unknown> implements OnDestroy {
   @Input('cdkComboboxTriggerFor')
