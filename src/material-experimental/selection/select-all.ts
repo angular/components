@@ -23,5 +23,6 @@ import {Directive} from '@angular/core';
   selector: '[matSelectAll]',
   exportAs: 'matSelectAll',
   providers: [{provide: CdkSelectAll, useExisting: MatSelectAll}],
+  standalone: true,
 })
 export class MatSelectAll<T> extends CdkSelectAll<T> {}
