@@ -44,6 +44,7 @@ html {
   @include mat.button-toggle-theme($light-theme);
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
+  @include mat.chips-theme($light-theme);
   @include mat.datepicker-theme($light-theme);
   @include mat.dialog-theme($light-theme);
   @include mat.divider-theme($light-theme);
@@ -89,6 +90,7 @@ html {
   @include mat.button-toggle-color($dark-theme);
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
+  @include mat.chips-color($dark-theme);
   @include mat.datepicker-color($dark-theme);
   @include mat.dialog-color($dark-theme);
   @include mat.divider-color($dark-theme);
@@ -133,6 +135,7 @@ html {
     @include mat.button-toggle-density($scale-theme);
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
+    @include mat.chips-density($scale-theme);
     @include mat.datepicker-density($scale-theme);
     @include mat.dialog-density($scale-theme);
     @include mat.divider-density($scale-theme);

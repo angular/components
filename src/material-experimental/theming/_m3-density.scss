@@ -19,6 +19,9 @@ $_density-tokens: (
   (mdc, checkbox): (
     state-layer-size: (40px, 36px, 32px, 28px),
   ),
+  (mdc, chip): (
+    container-height: (32px, 28px, 24px),
+  ),
   (mdc, circular-progress): (),
   (mdc, dialog): (),
   (mdc, elevated-card): (),

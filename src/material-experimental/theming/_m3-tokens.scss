@@ -178,6 +178,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, chip),
+      custom-tokens.chip($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, circular-progress),
       mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
       $token-slots
