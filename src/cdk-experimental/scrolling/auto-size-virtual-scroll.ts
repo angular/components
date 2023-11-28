@@ -462,6 +462,7 @@ export function _autoSizeVirtualScrollStrategyFactory(autoSizeDir: CdkAutoSizeVi
       deps: [forwardRef(() => CdkAutoSizeVirtualScroll)],
     },
   ],
+  standalone: true,
 })
 export class CdkAutoSizeVirtualScroll implements OnChanges {
   /**
