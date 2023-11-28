@@ -36,6 +36,7 @@ export type PopoverEditClickOutBehavior = 'close' | 'submit' | 'noop';
     '(document:click)': 'handlePossibleClickOut($event)',
     '(keydown)': '_handleKeydown($event)',
   },
+  standalone: true,
 })
 export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
   protected readonly destroyed = new Subject<void>();
@@ -60,7 +61,10 @@ export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
    */
   ignoreSubmitUnlessValid = true;
 
-  constructor(protected readonly elementRef: ElementRef, readonly editRef: EditRef<FormValue>) {}
+  constructor(
+    protected readonly elementRef: ElementRef,
+    readonly editRef: EditRef<FormValue>,
+  ) {}
 
   ngOnInit(): void {
     this.editRef.init(this.preservedFormValue);
@@ -140,9 +144,10 @@ export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
 @Directive({
   selector: 'button[cdkEditRevert]',
   host: {
-    'type': 'button', // Prevents accidental form submits.
+    'type': 'button',
     '(click)': 'revertEdit()',
   },
+  standalone: true,
 })
 export class CdkEditRevert<FormValue> {
   /** Type of the button. Defaults to `button` to avoid accident form submits. */
@@ -163,6 +168,7 @@ export class CdkEditRevert<FormValue> {
     '(keydown.enter)': 'closeEdit()',
     '(keydown.space)': 'closeEdit()',
   },
+  standalone: true,
 })
 export class CdkEditClose<FormValue> {
   constructor(

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FocusTrap} from '@angular/cdk/a11y';
-import {OverlayRef, PositionStrategy} from '@angular/cdk/overlay';
+import {OverlayRef, OverlaySizeConfig, PositionStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
@@ -63,6 +63,7 @@ const MOUSE_MOVE_THROTTLE_TIME_MS = 10;
 @Directive({
   selector: 'table[editable], cdk-table[editable], mat-table[editable]',
   providers: [EditEventDispatcher, EditServices],
+  standalone: true,
 })
 export class CdkEditable implements AfterViewInit, OnDestroy {
   protected readonly destroyed = new Subject<void>();
@@ -175,6 +176,7 @@ const POPOVER_EDIT_INPUTS = [
   selector: '[cdkPopoverEdit]:not([cdkPopoverEditTabOut])',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
+  standalone: true,
 })
 export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   /** The edit lens template shown over the cell on edit. */
@@ -337,19 +339,52 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   }
 
   private _getPositionStrategy(): PositionStrategy {
-    return this.services.positionFactory.positionStrategyForCells(this._getOverlayCells());
+    const cells = this._getOverlayCells();
+    return this.services.overlay
+      .position()
+      .flexibleConnectedTo(cells[0])
+      .withGrowAfterOpen()
+      .withPush()
+      .withViewportMargin(16)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ]);
   }
 
   private _updateOverlaySize(): void {
-    this.overlayRef!.updateSize(
-      this.services.positionFactory.sizeConfigForCells(this._getOverlayCells()),
-    );
+    this.overlayRef!.updateSize(this._sizeConfigForCells(this._getOverlayCells()));
   }
 
   private _maybeReturnFocusToCell(): void {
     if (closest(document.activeElement, EDIT_PANE_SELECTOR) === this.overlayRef!.overlayElement) {
       this.elementRef.nativeElement!.focus();
     }
+  }
+
+  private _sizeConfigForCells(cells: HTMLElement[]): OverlaySizeConfig {
+    if (cells.length === 0) {
+      return {};
+    }
+
+    if (cells.length === 1) {
+      return {width: cells[0].getBoundingClientRect().width};
+    }
+
+    let firstCell, lastCell;
+    if (this.services.directionality.value === 'ltr') {
+      firstCell = cells[0];
+      lastCell = cells[cells.length - 1];
+    } else {
+      lastCell = cells[0];
+      firstCell = cells[cells.length - 1];
+    }
+
+    return {width: lastCell.getBoundingClientRect().right - firstCell.getBoundingClientRect().left};
   }
 }
 
@@ -362,6 +397,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   selector: '[cdkPopoverEdit][cdkPopoverEditTabOut]',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
+  standalone: true,
 })
 export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
   protected override focusTrap?: FocusEscapeNotifier = undefined;
@@ -399,6 +435,7 @@ export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
  */
 @Directive({
   selector: '[cdkRowHoverContent]',
+  standalone: true,
 })
 export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
   protected readonly destroyed = new Subject<void>();
@@ -495,6 +532,7 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
   host: {
     '(click)': 'openEdit($event)',
   },
+  standalone: true,
 })
 export class CdkEditOpen {
   constructor(
