@@ -21,6 +21,7 @@ let nextId = 0;
     'tabindex': '-1',
     '(focus)': 'focusFirstElement()',
   },
+  standalone: true,
 })
 export class CdkComboboxPopup<T = unknown> implements OnInit {
   @Input()
