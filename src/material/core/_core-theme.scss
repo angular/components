@@ -54,16 +54,14 @@
   @include option-theme.typography($theme);
   @include optgroup-theme.typography($theme);
   @include pseudo-checkbox-theme.typography($theme);
-  // TODO(mmalerba): add typography mixin for this.
-  // @include ripple-theme.typography($config);
+  @include ripple-theme.typography($theme);
 }
 
 @mixin density($theme) {
   @include option-theme.density($theme);
   @include optgroup-theme.density($theme);
-  // TODO(mmalerba): add density mixins for these.
-  // @include ripple-theme.density($density-scale);
-  // @include pseudo-checkbox-theme.density($density-scale);
+  @include pseudo-checkbox-theme.density($theme);
+  @include ripple-theme.density($theme);
 }
 
 // Mixin that renders all of the core styles that depend on the theme.

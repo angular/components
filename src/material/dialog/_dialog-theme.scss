@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '../core/style/sass-utils';
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
@@ -5,39 +6,69 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 
-
 @mixin base($theme) {
-  // Add default values for tokens not related to color, typography, or density.
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-unthemable-tokens());
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    // Add default values for tokens not related to color, typography, or density.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-unthemable-tokens());
+    }
   }
 }
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-color-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-color-tokens($theme));
+    }
   }
 }
 
 @mixin typography($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-typography-tokens($theme));
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-typography-tokens($theme));
+    }
   }
 }
 
-@mixin density($theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
+}
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-dialog') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include mdc-dialog-theme.theme(map.get($tokens, tokens-mdc-dialog.$prefix));
   }
 }

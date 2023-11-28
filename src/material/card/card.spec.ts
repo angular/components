@@ -6,8 +6,7 @@ import {MatCard, MAT_CARD_CONFIG} from './card';
 describe('MDC-based MatCard', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatCardModule],
-      declarations: [component],
+      imports: [MatCardModule, component],
       providers,
     }).compileComponents();
 
@@ -49,6 +48,8 @@ describe('MDC-based MatCard', () => {
 
 @Component({
   template: '<mat-card></mat-card>',
+  standalone: true,
+  imports: [MatCard],
 })
 class BasicCard {
   @ViewChild(MatCard) card: MatCard;

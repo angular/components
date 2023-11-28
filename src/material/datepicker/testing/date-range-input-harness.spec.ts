@@ -4,7 +4,13 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatNativeDateModule} from '@angular/material/core';
 import {FormsModule} from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatDatepickerModule,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendarHarness} from './calendar-harness';
 import {
@@ -19,8 +25,13 @@ describe('matDateRangeInputHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, MatDatepickerModule, FormsModule],
-      declarations: [DateRangeInputHarnessTest],
+      imports: [
+        NoopAnimationsModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        FormsModule,
+        DateRangeInputHarnessTest,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateRangeInputHarnessTest);
@@ -249,6 +260,15 @@ describe('matDateRangeInputHarness', () => {
       <input matEndDate>
     </mat-date-range-input>
   `,
+  standalone: true,
+  imports: [
+    MatNativeDateModule,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatDateRangePicker,
+    FormsModule,
+  ],
 })
 class DateRangeInputHarnessTest {
   startDate: Date | null = null;

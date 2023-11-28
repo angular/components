@@ -28,10 +28,13 @@ More information: https://developers.google.com/maps/documentation/javascript/he
 ```typescript
 // google-map-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapHeatmapLayer} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap, MapHeatmapLayer],
 })
 export class GoogleMapDemo {
   center = {lat: 37.774546, lng: -122.433523};
@@ -59,6 +62,6 @@ export class GoogleMapDemo {
 ```html
 <!-- google-map-demo.component.html -->
 <google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
-  <map-heatmap-layer [data]="heatmapData" [options]="heatmapOptions"></map-heatmap-layer>
+  <map-heatmap-layer [data]="heatmapData" [options]="heatmapOptions" />
 </google-map>
 ```

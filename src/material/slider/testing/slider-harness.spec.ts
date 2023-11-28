@@ -21,8 +21,7 @@ describe('MDC-based MatSliderHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSliderModule],
-      declarations: [SliderHarnessTest],
+      imports: [MatSliderModule, SliderHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SliderHarnessTest);
@@ -203,6 +202,8 @@ describe('MDC-based MatSliderHarness', () => {
       <input [value]="rangeSliderEndValue" matSliderEndThumb>
     </mat-slider>
   `,
+  standalone: true,
+  imports: [MatSliderModule],
 })
 class SliderHarnessTest {
   singleSliderDisabled = false;

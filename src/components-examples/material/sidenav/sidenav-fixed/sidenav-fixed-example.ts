@@ -6,7 +6,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material/input';
-import {NgIf} from '@angular/common';
 
 /** @title Fixed sidenav */
 @Component({
@@ -15,7 +14,6 @@ import {NgIf} from '@angular/common';
   styleUrls: ['sidenav-fixed-example.css'],
   standalone: true,
   imports: [
-    NgIf,
     MatToolbarModule,
     MatSidenavModule,
     FormsModule,

@@ -14,15 +14,22 @@ import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
 import {Direction} from '@angular/cdk/bidi';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 
 describe('MatDrawer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSidenavModule, A11yModule, NoopAnimationsModule, CommonModule],
-      declarations: [
+      imports: [
+        MatSidenavModule,
+        A11yModule,
+        NoopAnimationsModule,
+        CommonModule,
         BasicTestApp,
         DrawerContainerNoDrawerTestApp,
         DrawerSetToOpenedFalse,
@@ -500,8 +507,7 @@ describe('MatDrawer', () => {
     it('should not throw when a two-way binding is toggled quickly while animating', fakeAsync(() => {
       TestBed.resetTestingModule()
         .configureTestingModule({
-          imports: [MatSidenavModule, BrowserAnimationsModule],
-          declarations: [DrawerOpenBinding],
+          imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
         })
         .compileComponents();
 
@@ -830,8 +836,10 @@ describe('MatDrawer', () => {
 describe('MatDrawerContainer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSidenavModule, A11yModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatSidenavModule,
+        A11yModule,
+        NoopAnimationsModule,
         DrawerContainerTwoDrawerTestApp,
         DrawerDelayed,
         DrawerSetToOpenedTrue,
@@ -953,8 +961,7 @@ describe('MatDrawerContainer', () => {
   it('should not animate when the sidenav is open on load', fakeAsync(() => {
     TestBed.resetTestingModule()
       .configureTestingModule({
-        imports: [MatSidenavModule, BrowserAnimationsModule],
-        declarations: [DrawerSetToOpenedTrue],
+        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
       })
       .compileComponents();
 
@@ -1135,7 +1142,11 @@ describe('MatDrawerContainer', () => {
 });
 
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */
-@Component({template: `<mat-drawer-container></mat-drawer-container>`})
+@Component({
+  template: `<mat-drawer-container></mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
+})
 class DrawerContainerNoDrawerTestApp {}
 
 /** Test component that contains an MatDrawerContainer and 2 MatDrawer in the same position. */
@@ -1145,6 +1156,8 @@ class DrawerContainerNoDrawerTestApp {}
       <mat-drawer position="start"></mat-drawer>
       <mat-drawer position="end"></mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerTwoDrawerTestApp {
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
@@ -1172,6 +1185,8 @@ class DrawerContainerTwoDrawerTestApp {
         <circle cx="50" cy="50" r="50"/>
       </svg>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class BasicTestApp {
   openCount = 0;
@@ -1216,6 +1231,8 @@ class BasicTestApp {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerSetToOpenedFalse {}
 
@@ -1226,6 +1243,8 @@ class DrawerSetToOpenedFalse {}
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerSetToOpenedTrue {
   openCallback = jasmine.createSpy('open callback');
@@ -1238,6 +1257,8 @@ class DrawerSetToOpenedTrue {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerOpenBinding {
   isOpen = false;
@@ -1249,6 +1270,8 @@ class DrawerOpenBinding {
       <mat-drawer #drawer1 [position]="drawer1Position"></mat-drawer>
       <mat-drawer #drawer2 [position]="drawer2Position"></mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerDynamicPosition {
   drawer1Position = 'start';
@@ -1265,6 +1288,8 @@ class DrawerDynamicPosition {
       </mat-drawer>
       <input type="text" class="input2"/>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerWithFocusableElements {
   mode: string = 'over';
@@ -1278,15 +1303,21 @@ class DrawerWithFocusableElements {
         <button disabled>Not focusable</button>
       </mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class DrawerWithoutFocusableElements {}
 
 @Component({
   template: `
     <mat-drawer-container>
-      <mat-drawer *ngIf="showDrawer" #drawer mode="side">Drawer</mat-drawer>
+      @if (showDrawer) {
+        <mat-drawer #drawer mode="side">Drawer</mat-drawer>
+      }
     </mat-drawer-container>
   `,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDelayed {
   @ViewChild(MatDrawer) drawer: MatDrawer;
@@ -1296,8 +1327,12 @@ class DrawerDelayed {
 @Component({
   template: `
     <mat-drawer-container [dir]="direction">
-      <mat-drawer *ngIf="renderDrawer" [mode]="mode" style="width:100px"></mat-drawer>
+      @if (renderDrawer) {
+        <mat-drawer [mode]="mode" style="width:100px"></mat-drawer>
+      }
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerStateChangesTestApp {
   @ViewChild(MatDrawer) drawer: MatDrawer;
@@ -1316,6 +1351,8 @@ class DrawerContainerStateChangesTestApp {
         <div [style.width.px]="fillerWidth" style="height: 200px; background: red;"></div>
       </mat-drawer>
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule],
 })
 class AutosizeDrawer {
   @ViewChild(MatDrawer) drawer: MatDrawer;
@@ -1330,20 +1367,24 @@ class AutosizeDrawer {
       <mat-drawer-content>Content</mat-drawer-content>
     </mat-drawer-container>
   `,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerWithContent {
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
 }
 
 @Component({
-  // Note that we need the `ng-container` with the `ngSwitch` so that
-  // there's a directive between the container and the drawer.
+  // Note that we need the `@if` so that there's an embedded
+  // view between the container and the drawer.
   template: `
     <mat-drawer-container #container>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-drawer #drawer>Drawer</mat-drawer>
-      </ng-container>
+      }
     </mat-drawer-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class IndirectDescendantDrawer {
   @ViewChild('container') container: MatDrawerContainer;
@@ -1361,6 +1402,8 @@ class IndirectDescendantDrawer {
       </mat-drawer-content>
     </mat-drawer-container>
   `,
+  standalone: true,
+  imports: [MatSidenavModule, A11yModule, CommonModule],
 })
 class NestedDrawerContainers {
   @ViewChild('outerContainer') outerContainer: MatDrawerContainer;

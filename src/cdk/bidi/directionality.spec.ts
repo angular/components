@@ -10,8 +10,8 @@ describe('Directionality', () => {
     fakeDocument = {body: {}, documentElement: {}};
 
     TestBed.configureTestingModule({
-      imports: [BidiModule],
-      declarations: [
+      imports: [
+        BidiModule,
         ElementWithDir,
         ElementWithPredefinedAutoDir,
         InjectsDirectionality,
@@ -157,12 +157,25 @@ describe('Directionality', () => {
   });
 });
 
+/** Test component with Dir directive. */
+@Component({
+  selector: 'injects-directionality',
+  template: `<div></div>`,
+  standalone: true,
+  imports: [BidiModule],
+})
+class InjectsDirectionality {
+  constructor(public dir: Directionality) {}
+}
+
 @Component({
   template: `
     <div [dir]="direction" (dirChange)="changeCount = changeCount + 1">
       <injects-directionality></injects-directionality>
     </div>
   `,
+  standalone: true,
+  imports: [Dir, InjectsDirectionality],
 })
 class ElementWithDir {
   @ViewChild(Dir) dir: Dir;
@@ -172,6 +185,8 @@ class ElementWithDir {
 
 @Component({
   template: '<div dir="auto"></div>',
+  standalone: true,
+  imports: [Dir],
 })
 class ElementWithPredefinedAutoDir {
   @ViewChild(Dir) dir: Dir;
@@ -179,18 +194,11 @@ class ElementWithPredefinedAutoDir {
 
 @Component({
   template: '<div dir="RTL"></div>',
+  standalone: true,
+  imports: [Dir],
 })
 class ElementWithPredefinedUppercaseDir {
   @ViewChild(Dir) dir: Dir;
-}
-
-/** Test component with Dir directive. */
-@Component({
-  selector: 'injects-directionality',
-  template: `<div></div>`,
-})
-class InjectsDirectionality {
-  constructor(public dir: Directionality) {}
 }
 
 interface FakeDocument {

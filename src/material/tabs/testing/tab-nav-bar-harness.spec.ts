@@ -12,8 +12,7 @@ describe('MatTabNavBarHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatTabsModule, NoopAnimationsModule],
-      declarations: [TabNavBarHarnessTest],
+      imports: [MatTabsModule, NoopAnimationsModule, TabNavBarHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TabNavBarHarnessTest);
@@ -112,6 +111,8 @@ describe('MatTabNavBarHarness', () => {
       Tab content
     </mat-tab-nav-panel>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabNavBarHarnessTest {
   activeLink = 0;

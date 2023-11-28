@@ -15,9 +15,9 @@ import {Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {ErrorStateMatcher, MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from './datepicker-module';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {MatDateRangeInput} from './date-range-input';
@@ -26,11 +26,7 @@ import {MatStartDate, MatEndDate} from './date-range-input-parts';
 import {Subscription} from 'rxjs';
 
 describe('MatDateRangeInput', () => {
-  function createComponent<T>(
-    component: Type<T>,
-    declarations: Type<any>[] = [],
-    providers: Provider[] = [],
-  ): ComponentFixture<T> {
+  function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -40,9 +36,9 @@ describe('MatDateRangeInput', () => {
         NoopAnimationsModule,
         ReactiveFormsModule,
         MatNativeDateModule,
+        component,
       ],
       providers,
-      declarations: [component, ...declarations],
     });
 
     return TestBed.createComponent(component);
@@ -818,16 +814,12 @@ describe('MatDateRangeInput', () => {
     class RTL extends Directionality {
       override readonly value = 'rtl';
     }
-    const fixture = createComponent(
-      StandardRangePicker,
-      [],
-      [
-        {
-          provide: Directionality,
-          useFactory: () => new RTL(null),
-        },
-      ],
-    );
+    const fixture = createComponent(StandardRangePicker, [
+      {
+        provide: Directionality,
+        useFactory: () => new RTL(null),
+      },
+    ]);
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance;
 
@@ -1156,6 +1148,16 @@ describe('MatDateRangeInput', () => {
         #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatFormField,
+    MatLabel,
+    MatDateRangePicker,
+    ReactiveFormsModule,
+  ],
 })
 class StandardRangePicker {
   @ViewChild('start') start: ElementRef<HTMLInputElement>;
@@ -1189,6 +1191,8 @@ class StandardRangePicker {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoStart {}
 
@@ -1202,6 +1206,8 @@ class RangePickerNoStart {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoEnd {}
 
@@ -1216,6 +1222,15 @@ class RangePickerNoEnd {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatFormField,
+    MatDateRangePicker,
+    FormsModule,
+  ],
 })
 class RangePickerNgModel {
   @ViewChild(MatStartDate, {read: NgModel}) startModel: NgModel;
@@ -1254,6 +1269,8 @@ class RangePickerNgModel {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoLabel {
   @ViewChild('start') start: ElementRef<HTMLInputElement>;
@@ -1269,6 +1286,7 @@ class RangePickerNoLabel {
       multi: true,
     },
   ],
+  standalone: true,
 })
 class CustomValidator implements Validator {
   validate = jasmine.createSpy('validate spy').and.returnValue(null);
@@ -1285,6 +1303,16 @@ class CustomValidator implements Validator {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatFormField,
+    MatDateRangePicker,
+    CustomValidator,
+    FormsModule,
+  ],
 })
 class RangePickerWithCustomValidator {
   @ViewChild(CustomValidator) validator: CustomValidator;
@@ -1305,6 +1333,8 @@ class RangePickerWithCustomValidator {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerErrorStateMatcher {
   @ViewChild(MatStartDate) startInput: MatStartDate<Date>;

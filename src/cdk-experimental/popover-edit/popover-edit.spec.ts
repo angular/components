@@ -1,7 +1,7 @@
 import {DataSource} from '@angular/cdk/collections';
 import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
 import {CdkTableModule} from '@angular/cdk/table';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
@@ -194,18 +194,20 @@ abstract class BaseTestComponent {
       ${WEIGHT_EDIT_TEMPLATE}
     </ng-template>
 
-    <tr *ngFor="let element of elements">
-      <td> just a cell </td>
+    @for (element of elements; track element) {
+      <tr>
+        <td> just a cell </td>
 
-      <td ${POPOVER_EDIT_DIRECTIVE_NAME}
-          [cdkPopoverEditContext]="element">
-        ${CELL_TEMPLATE}
-      </td>
+        <td ${POPOVER_EDIT_DIRECTIVE_NAME}
+            [cdkPopoverEditContext]="element">
+          ${CELL_TEMPLATE}
+        </td>
 
-      <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-        {{element.weight}}
-      </td>
-    </tr>
+        <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
+          {{element.weight}}
+        </td>
+      </tr>
+    }
   </table>
   `,
 })
@@ -220,25 +222,27 @@ class VanillaTableOutOfCell extends BaseTestComponent {
 @Component({
   template: `
   <table #table editable [dir]="direction">
-    <tr *ngFor="let element of elements">
-      <td> just a cell </td>
+    @for (element of elements; track element) {
+      <tr>
+        <td> just a cell </td>
 
-      <td ${POPOVER_EDIT_DIRECTIVE_NAME}>
-        ${CELL_TEMPLATE}
+        <td ${POPOVER_EDIT_DIRECTIVE_NAME}>
+          ${CELL_TEMPLATE}
 
-        <ng-template #nameEdit>
-          ${NAME_EDIT_TEMPLATE}
-        </ng-template>
-      </td>
+          <ng-template #nameEdit>
+            ${NAME_EDIT_TEMPLATE}
+          </ng-template>
+        </td>
 
-      <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-        {{element.weight}}
+        <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
+          {{element.weight}}
 
-        <ng-template #weightEdit>
-          ${WEIGHT_EDIT_TEMPLATE}
-        </ng-template>
-      </td>
-    </tr>
+          <ng-template #weightEdit>
+            ${WEIGHT_EDIT_TEMPLATE}
+          </ng-template>
+        </td>
+      </tr>
+    }
   </table>
   `,
 })

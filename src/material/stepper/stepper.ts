@@ -39,7 +39,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {Subject, Subscription} from 'rxjs';
 import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
@@ -52,6 +52,7 @@ import {
 } from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
+import {NgTemplateOutlet} from '@angular/common';
 
 @Component({
   selector: 'mat-step',
@@ -63,6 +64,8 @@ import {MatStepContent} from './step-content';
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
   private _isSelected = Subscription.EMPTY;
@@ -148,6 +151,8 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgTemplateOutlet, MatStepHeader],
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */

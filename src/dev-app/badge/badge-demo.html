@@ -54,9 +54,9 @@
 
   <div class="demo-badge">
     <h3>Text</h3>
-    <span [matBadge]="badgeContent" matBadgeOverlap="false" *ngIf="visible">
-      Hello
-    </span>
+    @if (visible) {
+      <span [matBadge]="badgeContent" matBadgeOverlap="false">Hello</span>
+    }
 
     <span matBadge="11111" matBadgeOverlap="false">
       Hello

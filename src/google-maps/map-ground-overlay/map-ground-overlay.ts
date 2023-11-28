@@ -24,6 +24,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-ground-overlay',
   exportAs: 'mapGroundOverlay',
+  standalone: true,
 })
 export class MapGroundOverlay implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -81,7 +82,10 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   @Output() readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
 
-  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
+  constructor(
+    private readonly _map: GoogleMap,
+    private readonly _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

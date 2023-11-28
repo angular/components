@@ -13,8 +13,8 @@ import {
   QueryList,
   AfterContentInit,
   OnDestroy,
+  booleanAttribute,
 } from '@angular/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkAccordion} from '@angular/cdk/accordion';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {startWith} from 'rxjs/operators';
@@ -45,6 +45,7 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
     // way for the harness to detect if multiple panel support is enabled.
     '[class.mat-accordion-multi]': 'this.multi',
   },
+  standalone: true,
 })
 export class MatAccordion
   extends CdkAccordion
@@ -60,14 +61,8 @@ export class MatAccordion
   _headers: QueryList<MatExpansionPanelHeader>;
 
   /** Whether the expansion indicator should be hidden. */
-  @Input()
-  get hideToggle(): boolean {
-    return this._hideToggle;
-  }
-  set hideToggle(show: BooleanInput) {
-    this._hideToggle = coerceBooleanProperty(show);
-  }
-  private _hideToggle: boolean = false;
+  @Input({transform: booleanAttribute})
+  hideToggle: boolean = false;
 
   /**
    * Display mode used for all expansion panels in the accordion. Currently two display

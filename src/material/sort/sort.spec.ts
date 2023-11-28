@@ -5,7 +5,7 @@ import {
   createMouseEvent,
   dispatchMouseEvent,
   wrappedErrorMessage,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -35,8 +35,11 @@ describe('MatSort', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-        declarations: [
+        imports: [
+          MatSortModule,
+          MatTableModule,
+          CdkTableModule,
+          NoopAnimationsModule,
           SimpleMatSortApp,
           CdkTableMatSortApp,
           MatTableMatSortApp,
@@ -507,8 +510,13 @@ describe('MatSort', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-        declarations: [MatSortWithoutExplicitInputs],
+        imports: [
+          MatSortModule,
+          MatTableModule,
+          CdkTableModule,
+          NoopAnimationsModule,
+          MatSortWithoutExplicitInputs,
+        ],
         providers: [
           {
             provide: MAT_SORT_DEFAULT_OPTIONS,
@@ -541,8 +549,13 @@ describe('MatSort', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatSortModule, MatTableModule, CdkTableModule, NoopAnimationsModule],
-        declarations: [MatSortWithoutInputs],
+        imports: [
+          MatSortModule,
+          MatTableModule,
+          CdkTableModule,
+          NoopAnimationsModule,
+          MatSortWithoutInputs,
+        ],
         providers: [
           {
             provide: MAT_SORT_DEFAULT_OPTIONS,
@@ -648,6 +661,8 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class SimpleMatSortApp {
   latestSortEvent: Sort;
@@ -728,6 +743,8 @@ class FakeDataSource extends DataSource<any> {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class CdkTableMatSortApp {
   @ViewChild(MatSort) matSort: MatSort;
@@ -758,6 +775,8 @@ class CdkTableMatSortApp {
       <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
     </mat-table>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatTableMatSortApp {
   @ViewChild(MatSort) matSort: MatSort;
@@ -768,6 +787,8 @@ class MatTableMatSortApp {
 
 @Component({
   template: `<div mat-sort-header="a"> A </div>`,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortHeaderMissingMatSortApp {}
 
@@ -778,6 +799,8 @@ class MatSortHeaderMissingMatSortApp {}
       <div mat-sort-header="duplicateId"> A </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortDuplicateMatSortableIdsApp {}
 
@@ -787,6 +810,8 @@ class MatSortDuplicateMatSortableIdsApp {}
       <div mat-sort-header> A </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortableMissingIdApp {}
 
@@ -796,6 +821,8 @@ class MatSortableMissingIdApp {}
       <div mat-sort-header="a"> A </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortableInvalidDirection {}
 
@@ -810,6 +837,8 @@ class MatSortableInvalidDirection {}
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutExplicitInputs {
   latestSortEvent: Sort;
@@ -843,6 +872,8 @@ class MatSortWithoutExplicitInputs {
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithArrowPosition {
   arrowPosition?: 'before' | 'after';
@@ -862,6 +893,8 @@ class MatSortWithArrowPosition {
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutInputs {
   @ViewChild(MatSort) matSort: MatSort;

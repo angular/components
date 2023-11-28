@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createGroundOverlayConstructorSpy,
   createGroundOverlaySpy,
@@ -21,16 +20,7 @@ describe('MapGroundOverlay', () => {
   const opacity = 0.5;
   const groundOverlayOptions: google.maps.GroundOverlayOptions = {clickable, opacity};
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -156,14 +146,18 @@ describe('MapGroundOverlay', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-ground-overlay [url]="url"
-                                    [bounds]="bounds"
-                                    [clickable]="clickable"
-                                    [opacity]="opacity"
-                                    (mapClick)="handleClick()">
-                </map-ground-overlay>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-ground-overlay
+        [url]="url"
+        [bounds]="bounds"
+        [clickable]="clickable"
+        [opacity]="opacity"
+        (mapClick)="handleClick()" />
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapGroundOverlay],
 })
 class TestApp {
   @ViewChild(MapGroundOverlay) groundOverlay: MapGroundOverlay;

@@ -15,8 +15,7 @@ export * from './ripple-ref';
 export * from './ripple-renderer';
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatRipple],
   exports: [MatRipple, MatCommonModule],
-  declarations: [MatRipple],
 })
 export class MatRippleModule {}

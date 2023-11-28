@@ -7,8 +7,7 @@ import {MatChip, MatChipSet, MatChipsModule} from './index';
 describe('MDC-based MatChipSet', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule, CommonModule],
-      declarations: [BasicChipSet, IndirectDescendantsChipSet],
+      imports: [MatChipsModule, CommonModule, BasicChipSet, IndirectDescendantsChipSet],
     });
 
     TestBed.compileComponents();
@@ -109,11 +108,13 @@ describe('MDC-based MatChipSet', () => {
 @Component({
   template: `
       <mat-chip-set>
-        <mat-chip *ngFor="let i of chips">
-          {{name}} {{i + 1}}
-        </mat-chip>
+        @for (i of chips; track i) {
+          <mat-chip>{{name}} {{i + 1}}</mat-chip>
+        }
       </mat-chip-set>
   `,
+  standalone: true,
+  imports: [MatChipsModule, CommonModule],
 })
 class BasicChipSet {
   name: string = 'Test';
@@ -123,12 +124,14 @@ class BasicChipSet {
 @Component({
   template: `
     <mat-chip-set>
-      <ng-container [ngSwitch]="true">
-        <mat-chip *ngFor="let i of chips">
-          {{name}} {{i + 1}}
-        </mat-chip>
-      </ng-container>
+      @if (true) {
+        @for (i of chips; track i) {
+          <mat-chip>{{name}} {{i + 1}}</mat-chip>
+        }
+      }
     </mat-chip-set>
   `,
+  standalone: true,
+  imports: [MatChipsModule, CommonModule],
 })
 class IndirectDescendantsChipSet extends BasicChipSet {}

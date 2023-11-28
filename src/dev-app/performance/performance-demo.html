@@ -36,10 +36,14 @@
         <th mat-header-cell *matHeaderCellDef>No.</th>
         <td mat-cell *matCellDef="let item">{{ item.index }}</td>
         <td mat-footer-cell *matFooterCellDef>
-          <ng-container *ngIf="allSamples.length">
+          @if (allSamples.length) {
+
             <strong>Average render time</strong>
-          </ng-container>
-          <ng-container *ngIf="!allSamples.length"> No data yet </ng-container>
+          
+}
+          @if (!allSamples.length) {
+ No data yet 
+}
         </td>
       </ng-container>
 
@@ -65,26 +69,32 @@
   ></mat-paginator>
 </div>
 
+@if (allSamples.length) {
 <button
   color="accent"
   mat-button
   (click)="clearMetrics()"
   [disabled]="isRunningBenchmark"
   style="margin-right: 32px"
-  *ngIf="allSamples.length"
+ 
 >
   Clear Metrics
 </button>
+}
 
 <button color="primary" mat-raised-button (click)="runBenchmark()" [disabled]="isRunningBenchmark">
   Run Benchmark
 </button>
 
-<ng-container *ngIf="show">
-  <ng-container *ngFor="let _ of componentArray">
+@if (show) {
+
+  @for (_ of componentArray; track _) {
+  
     <mat-form-field>
       <mat-label>Input</mat-label>
       <input matInput />
     </mat-form-field>
-  </ng-container>
-</ng-container>
+  
+}
+
+}

@@ -19,14 +19,16 @@ import {MatSelectionColumn} from './selection-column';
 import {MatRowSelection} from './row-selection';
 
 @NgModule({
-  imports: [CommonModule, MatTableModule, MatCheckboxModule],
-  exports: [MatSelectAll, MatSelection, MatSelectionToggle, MatSelectionColumn, MatRowSelection],
-  declarations: [
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatCheckboxModule,
     MatSelectAll,
     MatSelection,
     MatSelectionToggle,
     MatSelectionColumn,
     MatRowSelection,
   ],
+  exports: [MatSelectAll, MatSelection, MatSelectionToggle, MatSelectionColumn, MatRowSelection],
 })
 export class MatSelectionModule {}

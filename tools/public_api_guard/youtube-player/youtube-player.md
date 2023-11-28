@@ -9,11 +9,15 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+
+// @public
+export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
@@ -38,7 +42,22 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     get height(): number;
     set height(height: number | undefined);
     isMuted(): boolean;
+    loadApi: boolean;
     mute(): void;
+    // (undocumented)
+    static ngAcceptInputType_disableCookies: unknown;
+    // (undocumented)
+    static ngAcceptInputType_endSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_height: unknown;
+    // (undocumented)
+    static ngAcceptInputType_loadApi: unknown;
+    // (undocumented)
+    static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
+    // (undocumented)
+    static ngAcceptInputType_startSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_width: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -56,7 +75,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;
-    showBeforeIframeApiLoads: boolean | undefined;
+    showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
     // (undocumented)
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
@@ -68,9 +87,14 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+}
+
+// @public
+export interface YouTubePlayerConfig {
+    loadApi?: boolean;
 }
 
 // @public (undocumented)
@@ -80,7 +104,7 @@ export class YouTubePlayerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, [typeof i1.YouTubePlayer], never, [typeof i1.YouTubePlayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof i1.YouTubePlayer], [typeof i1.YouTubePlayer]>;
 }
 
 // (No @packageDocumentation comment for this package)

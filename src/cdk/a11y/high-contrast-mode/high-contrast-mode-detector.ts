@@ -13,7 +13,7 @@ import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
 /** Set of possible high-contrast mode backgrounds. */
-export const enum HighContrastMode {
+export enum HighContrastMode {
   NONE,
   BLACK_ON_WHITE,
   WHITE_ON_BLACK,
@@ -49,7 +49,10 @@ export class HighContrastModeDetector implements OnDestroy {
   private _document: Document;
   private _breakpointSubscription: Subscription;
 
-  constructor(private _platform: Platform, @Inject(DOCUMENT) document: any) {
+  constructor(
+    private _platform: Platform,
+    @Inject(DOCUMENT) document: any,
+  ) {
     this._document = document;
 
     this._breakpointSubscription = inject(BreakpointObserver)

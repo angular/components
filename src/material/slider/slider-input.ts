@@ -7,12 +7,7 @@
  */
 
 import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
-import {
+  booleanAttribute,
   ChangeDetectorRef,
   Directive,
   ElementRef,
@@ -22,6 +17,7 @@ import {
   Inject,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   Output,
 } from '@angular/core';
@@ -85,22 +81,24 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
     MAT_SLIDER_THUMB_VALUE_ACCESSOR,
     {provide: MAT_SLIDER_THUMB, useExisting: MatSliderThumb},
   ],
+  standalone: true,
 })
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
-  @Input()
+  @Input({transform: numberAttribute})
   get value(): number {
-    return coerceNumberProperty(this._hostElement.value);
+    return numberAttribute(this._hostElement.value, 0);
   }
-  set value(v: NumberInput) {
-    const val = coerceNumberProperty(v).toString();
+  set value(value: number) {
+    value = isNaN(value) ? 0 : value;
+    const stringValue = value + '';
     if (!this._hasSetInitialValue) {
-      this._initialValue = val;
+      this._initialValue = stringValue;
       return;
     }
     if (this._isActive) {
       return;
     }
-    this._hostElement.value = val;
+    this._hostElement.value = stringValue;
     this._updateThumbUIByValue();
     this._slider._onValueChange(this);
     this._cdr.detectChanges();
@@ -144,36 +142,36 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   /** @docs-private */
   get min(): number {
-    return coerceNumberProperty(this._hostElement.min);
+    return numberAttribute(this._hostElement.min, 0);
   }
-  set min(v: NumberInput) {
-    this._hostElement.min = coerceNumberProperty(v).toString();
+  set min(v: number) {
+    this._hostElement.min = v + '';
     this._cdr.detectChanges();
   }
 
   /** @docs-private */
   get max(): number {
-    return coerceNumberProperty(this._hostElement.max);
+    return numberAttribute(this._hostElement.max, 0);
   }
-  set max(v: NumberInput) {
-    this._hostElement.max = coerceNumberProperty(v).toString();
+  set max(v: number) {
+    this._hostElement.max = v + '';
     this._cdr.detectChanges();
   }
 
   get step(): number {
-    return coerceNumberProperty(this._hostElement.step);
+    return numberAttribute(this._hostElement.step, 0);
   }
-  set step(v: NumberInput) {
-    this._hostElement.step = coerceNumberProperty(v).toString();
+  set step(v: number) {
+    this._hostElement.step = v + '';
     this._cdr.detectChanges();
   }
 
   /** @docs-private */
   get disabled(): boolean {
-    return coerceBooleanProperty(this._hostElement.disabled);
+    return booleanAttribute(this._hostElement.disabled);
   }
-  set disabled(v: BooleanInput) {
-    this._hostElement.disabled = coerceBooleanProperty(v);
+  set disabled(v: boolean) {
+    this._hostElement.disabled = v;
     this._cdr.detectChanges();
 
     if (this._slider.disabled !== this.disabled) {
@@ -583,6 +581,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR,
     {provide: MAT_SLIDER_RANGE_THUMB, useExisting: MatSliderRangeThumb},
   ],
+  standalone: true,
 })
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
   /** @docs-private */

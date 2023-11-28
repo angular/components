@@ -7,11 +7,9 @@
       [formControl]="languageCtrl"
       aria-labelledby="example-language-label"
       class="example-listbox">
-    <li *ngFor="let language of languages"
-        [cdkOption]="language"
-        class="example-option">
-      {{language}}
-    </li>
+    @for (language of languages; track language) {
+      <li [cdkOption]="language" class="example-option">{{language}}</li>
+    }
   </ul>
   <!-- #enddocregion listbox -->
 </div>

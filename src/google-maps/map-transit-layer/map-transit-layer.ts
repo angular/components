@@ -21,6 +21,7 @@ import {MapBaseLayer} from '../map-base-layer';
 @Directive({
   selector: 'map-transit-layer',
   exportAs: 'mapTransitLayer',
+  standalone: true,
 })
 export class MapTransitLayer extends MapBaseLayer {
   /**

@@ -12,6 +12,7 @@ import {MatDatepicker} from './datepicker';
 describe('MatDatepickerActions', () => {
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
+      declarations: [component],
       imports: [
         CommonModule,
         FormsModule,
@@ -22,7 +23,6 @@ describe('MatDatepickerActions', () => {
         ReactiveFormsModule,
         MatNativeDateModule,
       ],
-      declarations: [component],
     });
 
     return TestBed.createComponent(component);
@@ -292,10 +292,12 @@ describe('MatDatepickerActions', () => {
           [formControl]="control"
           (dateChange)="onDateChange()">
       <mat-datepicker #picker [touchUi]="touchUi" [startAt]="startAt">
-        <mat-datepicker-actions *ngIf="renderActions">
-          <button mat-button class="cancel" matDatepickerCancel>Cancel</button>
-          <button mat-raised-button class="apply" matDatepickerApply>Apply</button>
-        </mat-datepicker-actions>
+        @if (renderActions) {
+          <mat-datepicker-actions>
+            <button mat-button class="cancel" matDatepickerCancel>Cancel</button>
+            <button mat-raised-button class="apply" matDatepickerApply>Apply</button>
+          </mat-datepicker-actions>
+        }
       </mat-datepicker>
     </mat-form-field>
   `,

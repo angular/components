@@ -58,7 +58,8 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
   selector: 'map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  standalone: true,
+  template: '<ng-content />',
   encapsulation: ViewEncapsulation.None,
 })
 export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
@@ -206,7 +207,10 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
    */
   markerClusterer?: MarkerClustererInstance;
 
-  constructor(private readonly _googleMap: GoogleMap, private readonly _ngZone: NgZone) {
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private readonly _ngZone: NgZone,
+  ) {
     this._canInitialize = this._googleMap._isBrowser;
   }
 

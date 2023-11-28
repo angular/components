@@ -8,8 +8,14 @@ import {CommonModule} from '@angular/common';
 describe('MatSidenav', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSidenavModule, NoopAnimationsModule, CommonModule],
-      declarations: [SidenavWithFixedPosition, IndirectDescendantSidenav, NestedSidenavContainers],
+      imports: [
+        MatSidenavModule,
+        NoopAnimationsModule,
+        CommonModule,
+        SidenavWithFixedPosition,
+        IndirectDescendantSidenav,
+        NestedSidenavContainers,
+      ],
     });
 
     TestBed.compileComponents();
@@ -97,6 +103,8 @@ describe('MatSidenav', () => {
         Some content.
       </mat-sidenav-content>
     </mat-sidenav-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, CommonModule],
 })
 class SidenavWithFixedPosition {
   fixed = true;
@@ -105,15 +113,17 @@ class SidenavWithFixedPosition {
 }
 
 @Component({
-  // Note that we need the `ng-container` with the `ngSwitch` so that
-  // there's a directive between the container and the sidenav.
+  // Note that we need the `@if` so that there's an embedded
+  // view between the container and the sidenav.
   template: `
     <mat-sidenav-container #container>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-sidenav #sidenav>Sidenav.</mat-sidenav>
-      </ng-container>
+      }
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
+  standalone: true,
+  imports: [MatSidenavModule, CommonModule],
 })
 class IndirectDescendantSidenav {
   @ViewChild('container') container: MatSidenavContainer;
@@ -131,6 +141,8 @@ class IndirectDescendantSidenav {
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
+  standalone: true,
+  imports: [MatSidenavModule, CommonModule],
 })
 class NestedSidenavContainers {
   @ViewChild('outerContainer') outerContainer: MatSidenavContainer;

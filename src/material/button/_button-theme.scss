@@ -168,6 +168,12 @@
   @include mdc-helpers.using-mdc-typography($theme) {
     @include mdc-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
   }
+
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-unelevated-button {
+    line-height: inherit;
+  }
 }
 
 @mixin density($theme) {

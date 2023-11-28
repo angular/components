@@ -12,8 +12,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule],
-      declarations: [TestComponent],
+      imports: [OverlayModule, TestComponent],
     });
 
     inject(
@@ -406,5 +405,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 
 @Component({
   template: 'Hello',
+  standalone: true,
+  imports: [OverlayModule],
 })
 class TestComponent {}

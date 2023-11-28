@@ -23,6 +23,7 @@ import {GoogleMap} from '../google-map/google-map';
 @Directive({
   selector: 'map-traffic-layer',
   exportAs: 'mapTrafficLayer',
+  standalone: true,
 })
 export class MapTrafficLayer implements OnInit, OnDestroy {
   private readonly _autoRefresh = new BehaviorSubject<boolean>(true);
@@ -43,7 +44,10 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
     this._autoRefresh.next(autoRefresh);
   }
 
-  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
+  constructor(
+    private readonly _map: GoogleMap,
+    private readonly _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

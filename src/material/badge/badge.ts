@@ -58,6 +58,7 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
     '[class.mat-badge-hidden]': 'hidden || !content',
     '[class.mat-badge-disabled]': 'disabled',
   },
+  standalone: true,
 })
 export class MatBadge implements OnInit, OnDestroy {
   /** The color of the badge. Can be `primary`, `accent`, or `warn`. */

@@ -13,7 +13,9 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   template: `
       <h2>List of {{title}}</h2>
       <ul>
-        <li *ngFor="let item of items">{{item}}</li>
+        @for (item of items; track item) {
+          <li>{{item}}</li>
+        }
       </ul>`,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

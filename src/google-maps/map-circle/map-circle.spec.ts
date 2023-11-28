@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createCircleConstructorSpy,
   createCircleSpy,
@@ -19,7 +18,7 @@ describe('MapCircle', () => {
   let circleRadius: number;
   let circleOptions: google.maps.CircleOptions;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     circleCenter = {lat: 30, lng: 15};
     circleRadius = 15;
     circleOptions = {
@@ -28,15 +27,9 @@ describe('MapCircle', () => {
       strokeColor: 'grey',
       strokeOpacity: 0.8,
     };
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
+  });
 
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -157,15 +150,18 @@ describe('MapCircle', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-circle [options]="options"
-                            [center]="center"
-                            [radius]="radius"
-                            (centerChanged)="handleCenterChange()"
-                            (circleClick)="handleClick()"
-                            (circleRightclick)="handleRightclick()">
-                </map-circle>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-circle
+        [options]="options"
+        [center]="center"
+        [radius]="radius"
+        (centerChanged)="handleCenterChange()"
+        (circleClick)="handleClick()"
+        (circleRightclick)="handleRightclick()" />
+    </google-map>`,
+  standalone: true,
+  imports: [GoogleMap, MapCircle],
 })
 class TestApp {
   @ViewChild(MapCircle) circle: MapCircle;

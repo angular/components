@@ -11,7 +11,7 @@ import {CdkAccordion} from './accordion';
 import {CdkAccordionItem} from './accordion-item';
 
 @NgModule({
+  imports: [CdkAccordion, CdkAccordionItem],
   exports: [CdkAccordion, CdkAccordionItem],
-  declarations: [CdkAccordion, CdkAccordionItem],
 })
 export class CdkAccordionModule {}

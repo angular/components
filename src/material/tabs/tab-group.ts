@@ -23,41 +23,24 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
-import {
-  CanColor,
-  CanDisableRipple,
-  mixinColor,
-  mixinDisableRipple,
-  ThemePalette,
-} from '@angular/material/core';
+import {ThemePalette, MatRipple} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
-import {FocusOrigin} from '@angular/cdk/a11y';
+import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {MatTabBody} from './tab-body';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {NgClass} from '@angular/common';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
-
-// Boilerplate for applying mixins to MatTabGroup.
-/** @docs-private */
-const _MatTabGroupMixinBase = mixinColor(
-  mixinDisableRipple(
-    class {
-      constructor(public _elementRef: ElementRef) {}
-    },
-  ),
-  'primary',
-);
 
 /** @docs-private */
 export interface MatTabGroupBaseHeader {
@@ -82,7 +65,6 @@ export type MatTabHeaderPosition = 'above' | 'below';
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  inputs: ['color', 'disableRipple'],
   providers: [
     {
       provide: MAT_TAB_GROUP,
@@ -92,16 +74,24 @@ export type MatTabHeaderPosition = 'above' | 'below';
   host: {
     'ngSkipHydration': '',
     'class': 'mat-mdc-tab-group',
+    '[class]': '"mat-" + (color || "primary")',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
     '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
     '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
+  standalone: true,
+  imports: [
+    MatTabHeader,
+    MatTabLabelWrapper,
+    CdkMonitorFocus,
+    NgClass,
+    MatRipple,
+    CdkPortalOutlet,
+    MatTabBody,
+  ],
 })
-export class MatTabGroup
-  extends _MatTabGroupMixinBase
-  implements AfterContentInit, AfterContentChecked, OnDestroy, CanColor, CanDisableRipple
-{
+export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
@@ -128,49 +118,37 @@ export class MatTabGroup
   /** Subscription to changes in the tab labels. */
   private _tabLabelSubscription = Subscription.EMPTY;
 
-  /** Whether the ink bar should fit its width to the size of the tab label content. */
+  /** Theme color of the tab group. */
   @Input()
+  color: ThemePalette;
+
+  /** Whether the ink bar should fit its width to the size of the tab label content. */
+  @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
     return this._fitInkBarToContent;
   }
-  set fitInkBarToContent(v: BooleanInput) {
-    this._fitInkBarToContent = coerceBooleanProperty(v);
+  set fitInkBarToContent(value: boolean) {
+    this._fitInkBarToContent = value;
     this._changeDetectorRef.markForCheck();
   }
   private _fitInkBarToContent = false;
 
   /** Whether tabs should be stretched to fill the header. */
-  @Input('mat-stretch-tabs')
-  get stretchTabs(): boolean {
-    return this._stretchTabs;
-  }
-  set stretchTabs(v: BooleanInput) {
-    this._stretchTabs = coerceBooleanProperty(v);
-  }
-  private _stretchTabs = true;
+  @Input({alias: 'mat-stretch-tabs', transform: booleanAttribute})
+  stretchTabs: boolean = true;
 
   /** Whether the tab group should grow to the size of the active tab. */
-  @Input()
-  get dynamicHeight(): boolean {
-    return this._dynamicHeight;
-  }
-
-  set dynamicHeight(value: BooleanInput) {
-    this._dynamicHeight = coerceBooleanProperty(value);
-  }
-
-  private _dynamicHeight: boolean = false;
+  @Input({transform: booleanAttribute})
+  dynamicHeight: boolean = false;
 
   /** The index of the active tab. */
-  @Input()
+  @Input({transform: numberAttribute})
   get selectedIndex(): number | null {
     return this._selectedIndex;
   }
-
-  set selectedIndex(value: NumberInput) {
-    this._indexToSelect = coerceNumberProperty(value, null);
+  set selectedIndex(value: number) {
+    this._indexToSelect = isNaN(value) ? null : value;
   }
-
   private _selectedIndex: number | null = null;
 
   /** Position of the tab header. */
@@ -181,11 +159,10 @@ export class MatTabGroup
   get animationDuration(): string {
     return this._animationDuration;
   }
-
-  set animationDuration(value: NumberInput) {
-    this._animationDuration = /^\d+$/.test(value + '') ? value + 'ms' : (value as string);
+  set animationDuration(value: string | number) {
+    const stringValue = value + '';
+    this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
   }
-
   private _animationDuration: string;
 
   /**
@@ -194,13 +171,13 @@ export class MatTabGroup
    * The `tabindex` will be removed automatically for inactive tabs.
    * Read more at https://www.w3.org/TR/wai-aria-practices/examples/tabs/tabs-2/tabs.html
    */
-  @Input()
+  @Input({transform: numberAttribute})
   get contentTabIndex(): number | null {
     return this._contentTabIndex;
   }
 
-  set contentTabIndex(value: NumberInput) {
-    this._contentTabIndex = coerceNumberProperty(value, null);
+  set contentTabIndex(value: number) {
+    this._contentTabIndex = isNaN(value) ? null : value;
   }
 
   private _contentTabIndex: number | null;
@@ -209,32 +186,20 @@ export class MatTabGroup
    * Whether pagination should be disabled. This can be used to avoid unnecessary
    * layout recalculations if it's known that pagination won't be required.
    */
-  @Input()
-  get disablePagination(): boolean {
-    return this._disablePagination;
-  }
+  @Input({transform: booleanAttribute})
+  disablePagination: boolean = false;
 
-  set disablePagination(value: BooleanInput) {
-    this._disablePagination = coerceBooleanProperty(value);
-  }
-
-  private _disablePagination: boolean = false;
+  /** Whether ripples in the tab group are disabled. */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
 
   /**
    * By default tabs remove their content from the DOM while it's off-screen.
    * Setting this to `true` will keep it in the DOM which will prevent elements
    * like iframes and videos from reloading next time it comes back into the view.
    */
-  @Input()
-  get preserveContent(): boolean {
-    return this._preserveContent;
-  }
-
-  set preserveContent(value: BooleanInput) {
-    this._preserveContent = coerceBooleanProperty(value);
-  }
-
-  private _preserveContent: boolean = false;
+  @Input({transform: booleanAttribute})
+  preserveContent: boolean = false;
 
   /** Background color of the tab group. */
   @Input()
@@ -273,12 +238,11 @@ export class MatTabGroup
   private _groupId: number;
 
   constructor(
-    elementRef: ElementRef,
+    readonly _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
   ) {
-    super(elementRef);
     this._groupId = nextId++;
     this.animationDuration =
       defaultConfig && defaultConfig.animationDuration ? defaultConfig.animationDuration : '500ms';
@@ -288,7 +252,9 @@ export class MatTabGroup
         : false;
     this.dynamicHeight =
       defaultConfig && defaultConfig.dynamicHeight != null ? defaultConfig.dynamicHeight : false;
-    this.contentTabIndex = defaultConfig?.contentTabIndex ?? null;
+    if (defaultConfig?.contentTabIndex != null) {
+      this.contentTabIndex = defaultConfig.contentTabIndex;
+    }
     this.preserveContent = !!defaultConfig?.preserveContent;
     this.fitInkBarToContent =
       defaultConfig && defaultConfig.fitInkBarToContent != null
@@ -502,7 +468,7 @@ export class MatTabGroup
    * height property is true.
    */
   _setTabBodyWrapperHeight(tabHeight: number): void {
-    if (!this._dynamicHeight || !this._tabBodyWrapperHeight) {
+    if (!this.dynamicHeight || !this._tabBodyWrapperHeight) {
       return;
     }
 

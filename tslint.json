@@ -68,11 +68,11 @@
     "lifecycle-hook-interface": true,
     "require-breaking-change-version": true,
     "no-nested-ternary": true,
-    "prefer-const-enum": true,
-    "no-lifecycle-invocation": [true, "**/!(*.spec).ts"],
+    "prefer-plain-enum": true,
+    "no-lifecycle-invocation": [true, ["**/*.spec.ts"]],
     "lightweight-tokens": [
       true,
-      ["src/**/!(*.spec).ts"],
+      ["**/*.spec.ts"],
       // Directionality is always used in Angular Material and therefore does not
       // need a lightweight token. Date Adapter is not very significant and does not
       // need a dedicated token.
@@ -120,18 +120,29 @@
           }
         }
       },
-      "src/!(e2e-app|components-examples|universal-app|dev-app)/**/!(*.spec).ts"
+      [
+        // Internal code that doesn't need to follow the same standards.
+        "**/+(e2e-app|components-examples|universal-app|dev-app|integration)/**",
+        "**/*.spec.ts"
+      ]
     ],
     "require-license-banner": [
       true,
-      "src/!(e2e-app|components-examples|universal-app)/**/!(*.spec).ts"
+      [
+        // Internal files that don't need license banners.
+        "**/+(e2e-app|components-examples|universal-app|dev-app|integration|tools|scripts)/**",
+        "**/*.spec.ts"
+      ]
     ],
     "no-cross-entry-point-relative-imports": [
       true,
-      "src/!(e2e-app|components-examples|universal-app|dev-app)/**/!(*.spec).ts",
-      "!src/+(cdk|material)/schematics/**/*",
-      "!src/cdk/testing/+(private|tests)/**/*",
-      "!src/google-maps/testing/**/*"
+      [
+        // Files that we don't publish to npm so the relative imports don't matter.
+        "**/+(dev-app|components-examples|schematics|tools)/**",
+        "**/google-maps/testing/**",
+        "**/cdk/testing/+(tests|private)/**",
+        "**/*.spec.ts"
+      ]
     ],
     "file-name-casing": [
       true,

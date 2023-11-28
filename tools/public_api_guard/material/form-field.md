@@ -14,9 +14,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i10 from '@angular/material/core';
-import * as i11 from '@angular/common';
-import * as i12 from '@angular/cdk/observers';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/common';
+import * as i3 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -59,7 +59,7 @@ export class MatError {
     // (undocumented)
     id: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatError, "mat-error, [matError]", never, { "id": { "alias": "id"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatError, "mat-error, [matError]", never, { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatError, [{ attribute: "aria-live"; }, null]>;
 }
@@ -74,8 +74,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     get appearance(): MatFormFieldAppearance;
     set appearance(value: MatFormFieldAppearance);
     color: ThemePalette;
-    get _control(): MatFormFieldControl<any>;
-    set _control(value: MatFormFieldControl<any>);
+    get _control(): MatFormFieldControl_2<any>;
+    set _control(value: MatFormFieldControl_2<any>);
     // (undocumented)
     _elementRef: ElementRef;
     // (undocumented)
@@ -86,7 +86,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     set floatLabel(value: FloatLabelType);
     _forceDisplayInfixLabel(): boolean | 0;
     // (undocumented)
-    _formFieldControl: MatFormFieldControl<any>;
+    _formFieldControl: MatFormFieldControl_2<any>;
     getConnectedOverlayOrigin(): ElementRef;
     _getDisplayedMessages(): 'error' | 'hint';
     getLabelId(): string | null;
@@ -148,7 +148,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _textPrefixContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChildNonStatic", "_labelChildStatic", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChildNonStatic", "_labelChildStatic", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, [null, null, null, null, null, { optional: true; }, { optional: true; }, null]>;
 }
@@ -201,7 +201,7 @@ export class MatFormFieldModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatFormFieldModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, [typeof i1.MatFormField, typeof i2.MatLabel, typeof i3.MatError, typeof i4.MatHint, typeof i5.MatPrefix, typeof i6.MatSuffix, typeof i7.MatFormFieldFloatingLabel, typeof i8.MatFormFieldNotchedOutline, typeof i9.MatFormFieldLineRipple], [typeof i10.MatCommonModule, typeof i11.CommonModule, typeof i12.ObserversModule], [typeof i1.MatFormField, typeof i2.MatLabel, typeof i4.MatHint, typeof i3.MatError, typeof i5.MatPrefix, typeof i6.MatSuffix, typeof i10.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i3.ObserversModule, typeof i4.MatFormField, typeof i5.MatLabel, typeof i6.MatError, typeof i7.MatHint, typeof i8.MatPrefix, typeof i9.MatSuffix], [typeof i4.MatFormField, typeof i5.MatLabel, typeof i7.MatHint, typeof i6.MatError, typeof i8.MatPrefix, typeof i9.MatSuffix, typeof i1.MatCommonModule]>;
 }
 
 // @public
@@ -209,7 +209,7 @@ export class MatHint {
     align: 'start' | 'end';
     id: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHint, "mat-hint", never, { "align": { "alias": "align"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHint, "mat-hint", never, { "align": { "alias": "align"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatHint, never>;
 }
@@ -217,7 +217,7 @@ export class MatHint {
 // @public
 export class MatLabel {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLabel, "mat-label", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLabel, "mat-label", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLabel, never>;
 }
@@ -229,7 +229,7 @@ export class MatPrefix {
     // (undocumented)
     set _isTextSelector(value: '');
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, { "_isTextSelector": { "alias": "matTextPrefix"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, { "_isTextSelector": { "alias": "matTextPrefix"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPrefix, never>;
 }
@@ -241,7 +241,7 @@ export class MatSuffix {
     // (undocumented)
     set _isTextSelector(value: '');
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, { "_isTextSelector": { "alias": "matTextSuffix"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, { "_isTextSelector": { "alias": "matTextSuffix"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSuffix, never>;
 }

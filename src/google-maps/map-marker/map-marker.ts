@@ -42,6 +42,7 @@ export const DEFAULT_MARKER_OPTIONS = {
 @Directive({
   selector: 'map-marker',
   exportAs: 'mapMarker',
+  standalone: true,
 })
 export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -270,7 +271,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    */
   marker?: google.maps.Marker;
 
-  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

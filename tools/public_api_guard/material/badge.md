@@ -7,8 +7,8 @@
 import { AriaDescriber } from '@angular/cdk/a11y';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@angular/material/core';
+import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -44,7 +44,7 @@ export class MatBadge implements OnInit, OnDestroy {
     position: MatBadgePosition;
     size: MatBadgeSize;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatBadge, "[matBadge]", never, { "color": { "alias": "matBadgeColor"; "required": false; }; "overlap": { "alias": "matBadgeOverlap"; "required": false; }; "disabled": { "alias": "matBadgeDisabled"; "required": false; }; "position": { "alias": "matBadgePosition"; "required": false; }; "content": { "alias": "matBadge"; "required": false; }; "description": { "alias": "matBadgeDescription"; "required": false; }; "size": { "alias": "matBadgeSize"; "required": false; }; "hidden": { "alias": "matBadgeHidden"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatBadge, "[matBadge]", never, { "color": { "alias": "matBadgeColor"; "required": false; }; "overlap": { "alias": "matBadgeOverlap"; "required": false; }; "disabled": { "alias": "matBadgeDisabled"; "required": false; }; "position": { "alias": "matBadgePosition"; "required": false; }; "content": { "alias": "matBadge"; "required": false; }; "description": { "alias": "matBadgeDescription"; "required": false; }; "size": { "alias": "matBadgeSize"; "required": false; }; "hidden": { "alias": "matBadgeHidden"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatBadge, [null, null, null, null, { optional: true; }]>;
 }
@@ -56,7 +56,7 @@ export class MatBadgeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatBadgeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBadgeModule, [typeof i1.MatBadge], [typeof i2.A11yModule, typeof i3.MatCommonModule], [typeof i1.MatBadge, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBadgeModule, never, [typeof i1.A11yModule, typeof i2.MatCommonModule, typeof i3.MatBadge], [typeof i3.MatBadge, typeof i2.MatCommonModule]>;
 }
 
 // @public

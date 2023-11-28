@@ -82,13 +82,13 @@ export class MatListItemHarness extends MatListItemHarnessBase {
 }
 
 // @public
-export const enum MatListItemSection {
+export enum MatListItemSection {
     // (undocumented)
     CONTENT = ".mdc-list-item__content"
 }
 
 // @public
-export const enum MatListItemType {
+export enum MatListItemType {
     // (undocumented)
     ONE_LINE_ITEM = 0,
     // (undocumented)

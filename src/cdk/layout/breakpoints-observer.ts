@@ -46,7 +46,10 @@ export class BreakpointObserver implements OnDestroy {
   /** A subject for all other observables to takeUntil based on. */
   private readonly _destroySubject = new Subject<void>();
 
-  constructor(private _mediaMatcher: MediaMatcher, private _zone: NgZone) {}
+  constructor(
+    private _mediaMatcher: MediaMatcher,
+    private _zone: NgZone,
+  ) {}
 
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {

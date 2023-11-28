@@ -8,7 +8,7 @@
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** Possible positions of a slider thumb. */
-export const enum ThumbPosition {
+export enum ThumbPosition {
   START,
   END,
 }

@@ -15,8 +15,8 @@ describe('MDC-based MatChip', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [
+      imports: [
+        MatChipsModule,
         BasicChip,
         SingleChip,
         BasicChipWithStaticTabindex,
@@ -185,15 +185,19 @@ describe('MDC-based MatChip', () => {
 @Component({
   template: `
     <mat-chip-set>
-      <div *ngIf="shouldShow">
-        <mat-chip [removable]="removable"
-                 [color]="color" [disabled]="disabled"
-                 (destroyed)="chipDestroy($event)"
-                 (removed)="chipRemove($event)" [value]="value" [disableRipple]="rippleDisabled">
-          {{name}}
-        </mat-chip>
-      </div>
+      @if (shouldShow) {
+        <div>
+          <mat-chip [removable]="removable"
+                  [color]="color" [disabled]="disabled"
+                  (destroyed)="chipDestroy($event)"
+                  (removed)="chipRemove($event)" [value]="value" [disableRipple]="rippleDisabled">
+            {{name}}
+          </mat-chip>
+        </div>
+      }
     </mat-chip-set>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class SingleChip {
   @ViewChild(MatChipSet) chipList: MatChipSet;
@@ -211,16 +215,22 @@ class SingleChip {
 
 @Component({
   template: `<mat-basic-chip>Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChip {}
 
 @Component({
   template: `<mat-basic-chip role="button" tabindex="3">Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChipWithStaticTabindex {}
 
 @Component({
   template: `<mat-basic-chip role="button" [tabIndex]="tabindex">Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChipWithBoundTabindex {
   tabindex = 12;

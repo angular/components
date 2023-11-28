@@ -11,8 +11,7 @@ import {MatCommonModule} from '@angular/material/core';
 import {MatDivider} from './divider';
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatDivider],
   exports: [MatDivider, MatCommonModule],
-  declarations: [MatDivider],
 })
 export class MatDividerModule {}

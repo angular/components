@@ -15,6 +15,7 @@ import {
   ElementRef,
   forwardRef,
   Host,
+  inject,
   Inject,
   InjectionToken,
   Input,
@@ -82,6 +83,13 @@ export function getMatAutocompleteMissingPanelError(): Error {
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-autocomplete-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -118,6 +126,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   },
   exportAs: 'matAutocompleteTrigger',
   providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR],
+  standalone: true,
 })
 export class MatAutocompleteTrigger
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
@@ -506,6 +515,18 @@ export class MatAutocompleteTrigger
 
       if (!value) {
         this._clearPreviousSelectedOption(null, false);
+      } else if (this.panelOpen && !this.autocomplete.requireSelection) {
+        // Note that we don't reset this when `requireSelection` is enabled,
+        // because the option will be reset when the panel is closed.
+        const selectedOption = this.autocomplete.options?.find(option => option.selected);
+
+        if (selectedOption) {
+          const display = this.autocomplete.displayWith?.(selectedOption) ?? selectedOption.value;
+
+          if (value !== display) {
+            selectedOption.deselect(false);
+          }
+        }
       }
 
       if (this._canOpen() && this._document.activeElement === event.target) {
@@ -600,7 +621,6 @@ export class MatAutocompleteTrigger
                 //   of the available options,
                 // - if a valid string is entered after an invalid one.
                 if (this.panelOpen) {
-                  this._captureValueOnAttach();
                   this._emitOpened();
                 } else {
                   this.autocomplete.closed.emit();
@@ -626,11 +646,6 @@ export class MatAutocompleteTrigger
     this.autocomplete.opened.emit();
   }
 
-  /** Intended to be called when the panel is attached. Captures the current value of the input. */
-  private _captureValueOnAttach() {
-    this._valueOnAttach = this._element.nativeElement.value;
-  }
-
   /** Destroys the autocomplete suggestion panel. */
   private _destroyPanel(): void {
     if (this._overlayRef) {
@@ -645,6 +660,10 @@ export class MatAutocompleteTrigger
       this.autocomplete && this.autocomplete.displayWith
         ? this.autocomplete.displayWith(value)
         : value;
+
+    if (value == null) {
+      this._clearPreviousSelectedOption(null, false);
+    }
 
     // Simply falling back to an empty string if the display value is falsy does not work properly.
     // The display value can also be the number zero and shouldn't fall back to an empty string.
@@ -738,6 +757,7 @@ export class MatAutocompleteTrigger
 
     if (overlayRef && !overlayRef.hasAttached()) {
       overlayRef.attach(this._portal);
+      this._valueOnAttach = this._element.nativeElement.value;
       this._closingActionsSubscription = this._subscribeToClosingActions();
     }
 
@@ -747,7 +767,6 @@ export class MatAutocompleteTrigger
     this.autocomplete._setColor(this._formField?.color);
     this._updatePanelState();
     this._applyModalPanelOwnership();
-    this._captureValueOnAttach();
 
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.

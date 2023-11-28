@@ -12,7 +12,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -52,8 +52,9 @@ describe('MDC-based MatTooltip', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTooltipModule, OverlayModule],
-      declarations: [
+      imports: [
+        MatTooltipModule,
+        OverlayModule,
         BasicTooltipDemo,
         ScrollableTooltipDemo,
         OnPushTooltipDemo,
@@ -171,8 +172,7 @@ describe('MDC-based MatTooltip', () => {
     it('should be able to override the default show and hide delays', fakeAsync(() => {
       TestBed.resetTestingModule()
         .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule],
-          declarations: [BasicTooltipDemo],
+          imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
           providers: [
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -1533,14 +1533,15 @@ describe('MDC-based MatTooltip', () => {
 @Component({
   selector: 'app',
   template: `
-    <button #button
-            *ngIf="showButton"
-            [matTooltip]="message"
-            [matTooltipPosition]="position"
-            [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass }"
-            [matTooltipTouchGestures]="touchGestures">
-      Button
-    </button>`,
+    @if (showButton) {
+      <button #button
+        [matTooltip]="message"
+        [matTooltipPosition]="position"
+        [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass }"
+        [matTooltipTouchGestures]="touchGestures">Button</button>
+    }`,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class BasicTooltipDemo {
   position: string = 'below';
@@ -1557,12 +1558,14 @@ class BasicTooltipDemo {
   template: `
     <div cdkScrollable style="padding: 100px; margin: 300px;
                                height: 200px; width: 200px; overflow: auto;">
-      <button *ngIf="showButton" style="margin-bottom: 600px"
+      @if (showButton) {
+        <button style="margin-bottom: 600px"
               [matTooltip]="message"
-              [matTooltipPosition]="position">
-        Button
-      </button>
+              [matTooltipPosition]="position">Button</button>
+      }
     </div>`,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {
   position: string = 'below';
@@ -1590,6 +1593,8 @@ class ScrollableTooltipDemo {
       Button
     </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class OnPushTooltipDemo {
   position: string = 'below';
@@ -1599,10 +1604,12 @@ class OnPushTooltipDemo {
 @Component({
   selector: 'app',
   template: `
-    <button *ngFor="let tooltip of tooltips"
-            [matTooltip]="tooltip">
-      Button {{tooltip}}
-    </button>`,
+    @for (tooltip of tooltips; track tooltip) {
+      <button [matTooltip]="tooltip">Button {{tooltip}}</button>
+    }
+  `,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class DynamicTooltipsDemo {
   tooltips: string[] = [];
@@ -1610,6 +1617,8 @@ class DynamicTooltipsDemo {
 
 @Component({
   template: `<button [matTooltip]="message" [attr.aria-label]="message">Click me</button>`,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class DataBoundAriaLabelTooltip {
   message = 'Hello there';
@@ -1627,6 +1636,8 @@ class DataBoundAriaLabelTooltip {
       matTooltip="Another thing"
       [matTooltipTouchGestures]="touchGestures"></textarea>
   `,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnTextFields {
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
@@ -1642,6 +1653,8 @@ class TooltipOnTextFields {
       matTooltip="Drag me"
       [matTooltipTouchGestures]="touchGestures"></button>
   `,
+  standalone: true,
+  imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnDraggableElement {
   @ViewChild('button') button: ElementRef;

@@ -58,6 +58,8 @@ export const yearsPerRow = 4;
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatCalendarBody],
 })
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   private _rerenderSubscription = Subscription.EMPTY;

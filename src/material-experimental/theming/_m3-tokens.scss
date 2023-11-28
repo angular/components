@@ -65,7 +65,7 @@
 /// @param {String} $prefix The key prefix used to name the tokens
 /// @return {Map} A set of tokens for the given palette
 @function _generate-palette-tokens($palette, $prefix) {
-  $palette: map.remove($palette, neutral-variant);
+  $palette: map.remove($palette, neutral, neutral-variant);
   $result: ();
   @each $hue, $value in $palette {
     $result: map.set($result, '#{$prefix}#{$hue}', $value);
@@ -78,16 +78,15 @@
 /// @param {Map} $primary The primary palette
 /// @param {Map} $secondary The secondary palette
 /// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $neutral The neutral palette
 /// @param {Map} $error The error palette
 /// @return {Map} A set of `md-ref-palette` tokens
-@function _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error) {
+@function _generate-ref-palette-tokens($primary, $secondary, $tertiary, $error) {
   @return mat.private-merge-all(
       (black: #000, white: #fff),
       _generate-palette-tokens($primary, primary),
       _generate-palette-tokens($secondary, secondary),
       _generate-palette-tokens($tertiary, tertiary),
-      _generate-palette-tokens($neutral, neutral),
+      _generate-palette-tokens(map.get($primary, neutral), neutral),
       _generate-palette-tokens(map.get($primary, neutral-variant), neutral-variant),
       _generate-palette-tokens($error, error),
   );
@@ -168,82 +167,259 @@
   // TODO(mmalerba): Fill in remaining tokens.
   $result: mat.private-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
-      (
-          (mdc, theme): map.get($systems, md-sys-color),
-          (mdc, typography): map.get($systems, md-sys-typescale),
-      ),
-      // Get the official MDC component tokens
-      _namespace-tokens(
-            (mdc, checkbox),
-          _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, elevated-card),
-          mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, outlined-card),
-          mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, slider),
-          mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, snackbar),
-          mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
-          $token-slots,
-      ),
-      _namespace-tokens(
-            (mdc, plain-tooltip),
-          mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, circular-progress),
-          mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, radio),
-          mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mdc, linear-progress),
-          mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
-          $token-slots),
-      // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
-      // values.
-      _namespace-tokens(
-            (mat, card),
-          custom-tokens.card($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, toolbar),
-          custom-tokens.toolbar($systems, $exclude-hardcoded),
-          $token-slots,
-      ),
-      _namespace-tokens(
-            (mat, slider),
-          custom-tokens.slider($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, snack-bar),
-          custom-tokens.snack-bar($systems, $exclude-hardcoded),
-          $token-slots
-      ),
-      _namespace-tokens(
-            (mat, radio),
-          custom-tokens.radio($systems, $exclude-hardcoded),
-          $token-slots
-      ),
+    (
+      (mdc, theme): map.get($systems, md-sys-color),
+      (mdc, typography): map.get($systems, md-sys-typescale),
+    ),
+    // Get the official MDC component tokens
+    _namespace-tokens(
+      (mdc, checkbox),
+      _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, circular-progress),
+      mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, dialog),
+      mdc-tokens.md-comp-dialog-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, elevated-card),
+      mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, fab),
+      mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, extended-fab),
+      mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, filled-text-field),
+      mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, icon-button),
+      mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, linear-progress),
+      mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, list),
+      mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, outlined-card),
+      mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, outlined-text-field),
+      mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, plain-tooltip),
+      mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, radio),
+      mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, slider),
+      mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, snackbar),
+      mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
+      $token-slots,
+    ),
+    _namespace-tokens(
+      (mdc, switch),
+      mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, tab),
+      mdc-tokens.md-comp-secondary-navigation-tab-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+
+    // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
+    // values.
+    _namespace-tokens(
+      (mdc, tab-indicator),
+      custom-tokens.tab-indicator($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, autocomplete),
+      custom-tokens.autocomplete($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, badge),
+      custom-tokens.badge($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, bottom-sheet),
+      custom-tokens.bottom-sheet($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, card),
+      custom-tokens.card($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, datepicker),
+      custom-tokens.datepicker($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, divider),
+      custom-tokens.divider($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, fab),
+      custom-tokens.fab($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, form-field),
+      custom-tokens.form-field($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, expansion),
+      custom-tokens.expansion($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, grid-list),
+      custom-tokens.grid-list($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, icon),
+      custom-tokens.icon($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, icon-button),
+      custom-tokens.icon-button($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, menu),
+      custom-tokens.menu($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, optgroup),
+      custom-tokens.optgroup($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, option),
+      custom-tokens.option($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, paginator),
+      custom-tokens.paginator($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, radio),
+      custom-tokens.radio($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, ripple),
+      custom-tokens.ripple($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, select),
+      custom-tokens.select($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, sidenav),
+      custom-tokens.sidenav($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, slide-toggle),
+      custom-tokens.slide-toggle($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, slider),
+      custom-tokens.slider($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, snack-bar),
+      custom-tokens.snack-bar($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, sort),
+      custom-tokens.sort($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, standard-button-toggle),
+      custom-tokens.button-toggle($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, stepper),
+      custom-tokens.stepper($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, tab-header),
+      custom-tokens.tab-header($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, table),
+      custom-tokens.table($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, toolbar),
+      custom-tokens.toolbar($systems, $exclude-hardcoded),
+      $token-slots,
+    ),
+    _namespace-tokens(
+      (mat, tree),
+      custom-tokens.tree($systems, $exclude-hardcoded),
+      $token-slots
+    ),
   );
 
   // Strip out tokens that are systemized by our made up density system.
@@ -263,20 +439,20 @@
 /// @param {Map} $primary The primary palette
 /// @param {Map} $secondary The secondary palette
 /// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $neutral The neutral palette
 /// @param {Map} $error The error palette
 /// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $secondary, $tertiary, $neutral, $error) {
+@function generate-color-tokens($type, $primary, $secondary, $tertiary, $error) {
   $ref: (
-    md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $neutral, $error)
+    md-ref-palette: _generate-ref-palette-tokens($primary, $secondary, $tertiary, $error)
   );
   $sys-color: if($type == dark,
     mdc-tokens.md-sys-color-values-dark($ref),
     mdc-tokens.md-sys-color-values-light($ref));
-  @return _generate-tokens((
+  @return _generate-tokens(map.merge($ref, (
     md-sys-color: $sys-color,
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
-  ));
+    md-sys-state: mdc-tokens.md-sys-state-values(),
+  )));
 }
 
 /// Generates a set of namespaced color tokens for all components.

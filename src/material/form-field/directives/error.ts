@@ -26,6 +26,7 @@ export const MAT_ERROR = new InjectionToken<MatError>('MatError');
     '[id]': 'id',
   },
   providers: [{provide: MAT_ERROR, useExisting: MatError}],
+  standalone: true,
 })
 export class MatError {
   @Input() id: string = `mat-mdc-error-${nextUniqueId++}`;

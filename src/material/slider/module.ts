@@ -13,8 +13,14 @@ import {MatSliderVisualThumb} from './slider-thumb';
 import {MatSliderThumb, MatSliderRangeThumb} from './slider-input';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule],
+  imports: [
+    MatCommonModule,
+    MatRippleModule,
+    MatSlider,
+    MatSliderThumb,
+    MatSliderRangeThumb,
+    MatSliderVisualThumb,
+  ],
   exports: [MatSlider, MatSliderThumb, MatSliderRangeThumb],
-  declarations: [MatSlider, MatSliderThumb, MatSliderRangeThumb, MatSliderVisualThumb],
 })
 export class MatSliderModule {}

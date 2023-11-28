@@ -56,8 +56,9 @@ export const DEFAULT_WIDTH = '500px';
 @Component({
   selector: 'google-map',
   exportAs: 'googleMap',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<div class="map-container"></div><ng-content></ng-content>',
+  template: '<div class="map-container"></div><ng-content />',
   encapsulation: ViewEncapsulation.None,
 })
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {

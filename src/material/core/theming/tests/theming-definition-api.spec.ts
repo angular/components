@@ -129,12 +129,12 @@ describe('theming definition api', () => {
         }
       `);
       const vars = getRootVars(css);
-      expect(vars['token-surface']).toBe('#1c1b1f');
+      expect(vars['token-surface']).toBe('#1c1c17');
       expect(vars['token-primary']).toBe('#cdcd00');
-      expect(vars['token-secondary']).toBe('#ffb95c');
+      expect(vars['token-secondary']).toBe('#ffb787');
       expect(vars['token-tertiary']).toBe('#ffb4a8');
       expect(vars['palette-primary']).toBe('#7b7b00');
-      expect(vars['palette-secondary']).toBe('#a66a00');
+      expect(vars['palette-secondary']).toBe('#bc5d00');
       expect(vars['palette-tertiary']).toBe('#ef0000');
       expect(vars['type']).toBe('dark');
     });

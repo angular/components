@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -18,22 +17,16 @@ describe('MapPolygon', () => {
   let polygonPath: google.maps.LatLngLiteral[];
   let polygonOptions: google.maps.PolygonOptions;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     polygonPath = [
       {lat: 25, lng: 26},
       {lat: 26, lng: 27},
       {lat: 30, lng: 34},
     ];
     polygonOptions = {paths: polygonPath, strokeColor: 'grey', strokeOpacity: 0.8};
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
+  });
 
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -148,13 +141,18 @@ describe('MapPolygon', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-polygon [options]="options"
-                              [paths]="paths"
-                              (polygonClick)="handleClick()"
-                              (polygonRightclick)="handleRightclick()">
-                </map-polygon>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-polygon
+        [options]="options"
+        [paths]="paths"
+        (polygonClick)="handleClick()"
+        (polygonRightclick)="handleRightclick()">
+      </map-polygon>
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapPolygon],
 })
 class TestApp {
   @ViewChild(MapPolygon) polygon: MapPolygon;

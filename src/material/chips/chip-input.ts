@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -19,6 +18,7 @@ import {
   OnDestroy,
   Optional,
   Output,
+  booleanAttribute,
 } from '@angular/core';
 import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
@@ -68,6 +68,7 @@ let nextUniqueId = 0;
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
   },
+  standalone: true,
 })
 export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
   /** Used to prevent focus moving to chips while user is holding backspace */
@@ -92,14 +93,8 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
-  @Input('matChipInputAddOnBlur')
-  get addOnBlur(): boolean {
-    return this._addOnBlur;
-  }
-  set addOnBlur(value: BooleanInput) {
-    this._addOnBlur = coerceBooleanProperty(value);
-  }
-  _addOnBlur: boolean = false;
+  @Input({alias: 'matChipInputAddOnBlur', transform: booleanAttribute})
+  addOnBlur: boolean = false;
 
   /**
    * The list of key codes that will trigger a chipEnd event.
@@ -120,12 +115,12 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   @Input() id: string = `mat-mdc-chip-list-input-${nextUniqueId++}`;
 
   /** Whether the input is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled || (this._chipGrid && this._chipGrid.disabled);
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
   }
   private _disabled: boolean = false;
 

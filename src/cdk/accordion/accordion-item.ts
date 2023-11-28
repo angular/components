@@ -37,6 +37,7 @@ let nextId = 0;
     // registering to the same accordion.
     {provide: CDK_ACCORDION, useValue: undefined},
   ],
+  standalone: true,
 })
 export class CdkAccordionItem implements OnDestroy {
   /** Subscription to openAll/closeAll events. */

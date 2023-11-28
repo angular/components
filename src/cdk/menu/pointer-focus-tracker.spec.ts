@@ -19,7 +19,7 @@ describe('FocusMouseManger', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MultiElementWithConditionalComponent, MockWrapper],
+      imports: [MultiElementWithConditionalComponent, MockWrapper],
     }).compileComponents();
   }));
 
@@ -98,6 +98,7 @@ describe('FocusMouseManger', () => {
 @Component({
   selector: 'wrapper',
   template: `<ng-content></ng-content>`,
+  standalone: true,
 })
 class MockWrapper implements FocusableElement {
   constructor(readonly _elementRef: ElementRef<HTMLElement>) {}
@@ -108,9 +109,13 @@ class MockWrapper implements FocusableElement {
     <div>
       <wrapper>First</wrapper>
       <wrapper>Second</wrapper>
-      <wrapper *ngIf="showThird">Third</wrapper>
+      @if (showThird) {
+        <wrapper>Third</wrapper>
+      }
     </div>
   `,
+  standalone: true,
+  imports: [MockWrapper],
 })
 class MultiElementWithConditionalComponent implements AfterViewInit {
   /** Whether the third element should be displayed. */

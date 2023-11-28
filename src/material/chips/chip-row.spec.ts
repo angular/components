@@ -5,7 +5,7 @@ import {
   dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -29,8 +29,7 @@ describe('MDC-based Row Chips', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [SingleChip],
+      imports: [MatChipsModule, SingleChip],
       providers: [
         {
           provide: Directionality,
@@ -384,19 +383,25 @@ describe('MDC-based Row Chips', () => {
 @Component({
   template: `
     <mat-chip-grid #chipGrid>
-      <div *ngIf="shouldShow">
-        <mat-chip-row [removable]="removable"
-                 [color]="color" [disabled]="disabled" [editable]="editable"
-                 (destroyed)="chipDestroy($event)"
-                 (removed)="chipRemove($event)" (edited)="chipEdit($event)"
-                 [aria-label]="ariaLabel" [aria-description]="ariaDescription">
-          {{name}}
-          <button matChipRemove>x</button>
-          <span *ngIf="useCustomEditInput" class="projected-edit-input" matChipEditInput></span>
-        </mat-chip-row>
-        <input matInput [matChipInputFor]="chipGrid" #chipInput>
-      </div>
+      @if (shouldShow) {
+        <div>
+          <mat-chip-row [removable]="removable"
+                  [color]="color" [disabled]="disabled" [editable]="editable"
+                  (destroyed)="chipDestroy($event)"
+                  (removed)="chipRemove($event)" (edited)="chipEdit($event)"
+                  [aria-label]="ariaLabel" [aria-description]="ariaDescription">
+            {{name}}
+            <button matChipRemove>x</button>
+            @if (useCustomEditInput) {
+              <span class="projected-edit-input" matChipEditInput></span>
+            }
+          </mat-chip-row>
+          <input matInput [matChipInputFor]="chipGrid" #chipInput>
+        </div>
+      }
     </mat-chip-grid>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class SingleChip {
   @ViewChild(MatChipGrid) chipList: MatChipGrid;

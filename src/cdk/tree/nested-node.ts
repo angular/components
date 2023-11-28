@@ -32,7 +32,6 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
 @Directive({
   selector: 'cdk-nested-tree-node',
   exportAs: 'cdkNestedTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [
     {provide: CdkTreeNode, useExisting: CdkNestedTreeNode},
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode},
@@ -40,6 +39,7 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
   host: {
     'class': 'cdk-nested-tree-node',
   },
+  standalone: true,
 })
 export class CdkNestedTreeNode<T, K = T>
   extends CdkTreeNode<T, K>

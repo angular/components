@@ -95,13 +95,15 @@
       <h4>With Events</h4>
 
       <mat-chip-set>
-        <mat-chip highlighted="true" color="warn" *ngIf="visible"
-                 (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
-          With Events
-          <button matChipRemove aria-label="Remove chip">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip>
+        @if (visible) {
+          <mat-chip highlighted="true" color="warn"
+                  (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
+            With Events
+            <button matChipRemove aria-label="Remove chip">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
       </mat-chip-set>
       <div>{{message}}</div>
 
@@ -122,19 +124,27 @@
       <h4>Single selection</h4>
 
       <mat-chip-listbox multiple="false" [disabled]="disabledListboxes">
-        <mat-chip-option *ngFor="let shirtSize of shirtSizes" [disabled]="shirtSize.disabled">
-          {{shirtSize.label}}
-          <mat-chip-avatar *ngIf="listboxesWithAvatar">{{shirtSize.avatar}}</mat-chip-avatar>
-        </mat-chip-option>
+        @for (shirtSize of shirtSizes; track shirtSize) {
+            <mat-chip-option [disabled]="shirtSize.disabled">
+              {{shirtSize.label}}
+              @if (listboxesWithAvatar) {
+                <mat-chip-avatar>{{shirtSize.avatar}}</mat-chip-avatar>
+              }
+            </mat-chip-option>
+          }
       </mat-chip-listbox>
 
       <h4>Multi selection</h4>
 
       <mat-chip-listbox multiple="true" [disabled]="disabledListboxes">
-        <mat-chip-option *ngFor="let hint of restaurantHints" [selected]="hint.selected">
-          <mat-chip-avatar *ngIf="listboxesWithAvatar">{{hint.avatar}}</mat-chip-avatar>
-          {{hint.label}}
-        </mat-chip-option>
+        @for (hint of restaurantHints; track hint) {
+          <mat-chip-option [selected]="hint.selected">
+            @if (listboxesWithAvatar) {
+              <mat-chip-avatar>{{hint.avatar}}</mat-chip-avatar>
+            }
+            {{hint.label}}
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
 
     </mat-card-content>
@@ -163,15 +173,17 @@
       <mat-form-field class="demo-has-chip-list">
         <mat-label>New Contributor...</mat-label>
         <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
-          <mat-chip-row *ngFor="let person of people"
-                   [editable]="editable"
-                   (removed)="remove(person)"
-                   (edited)="edit(person, $event)">
-            {{person.name}}
-            <button matChipRemove aria-label="Remove contributor">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
+          @for (person of people; track person) {
+            <mat-chip-row
+              [editable]="editable"
+              (removed)="remove(person)"
+              (edited)="edit(person, $event)">
+              {{person.name}}
+              <button matChipRemove aria-label="Remove contributor">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
           <input [disabled]="disableInputs"
                  [matChipInputFor]="chipGrid1"
                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -185,12 +197,14 @@
       <mat-form-field>
         <mat-label>New Contributor...</mat-label>
         <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
-          <mat-chip-row *ngFor="let person of people" (removed)="remove(person)">
-            {{person.name}}
-            <button matChipRemove aria-label="Remove contributor">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
+          @for (person of people; track person) {
+            <mat-chip-row (removed)="remove(person)">
+              {{person.name}}
+              <button matChipRemove aria-label="Remove contributor">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
         </mat-chip-grid>
         <input [matChipInputFor]="chipGrid2"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -221,32 +235,30 @@
       </p>
 
       <mat-chip-set class="mat-mdc-chip-set-stacked">
-        <mat-chip *ngFor="let aColor of availableColors" highlighted="true"
-                  [color]="aColor.color">
-          {{aColor.name}}
-        </mat-chip>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip highlighted="true" [color]="aColor.color">{{aColor.name}}</mat-chip>
+        }
       </mat-chip-set>
 
       <h4>NgModel with multi selection</h4>
 
       <mat-chip-listbox [multiple]="true" [(ngModel)]="selectedColors">
-        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name">
-          {{aColor.name}}
-        </mat-chip-option>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip-option [color]="aColor.color" [value]="aColor.name">{{aColor.name}}</mat-chip-option>
+        }
       </mat-chip-listbox>
 
       The selected colors are
-      <span *ngFor="let color of selectedColors; let isLast=last">
-        {{color}}{{isLast ? '' : ', '}}</span>.
+      @for (color of selectedColors; track color; let isLast = $last) {
+        <span>{{color}}{{isLast ? '' : ', '}}</span>
+      }
 
       <h4>NgModel with single selection</h4>
 
       <mat-chip-listbox [(ngModel)]="selectedColor">
-        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name">
-          {{aColor.name}}
-        </mat-chip-option>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip-option [color]="aColor.color" [value]="aColor.name">{{aColor.name}}</mat-chip-option>
+        }
       </mat-chip-listbox>
 
       The selected color is {{selectedColor}}.
@@ -254,21 +266,22 @@
       <h4>Single selection without checkmark selection indicator.</h4>
 
       <mat-chip-listbox [(ngModel)]="selectedColor" [hideSingleSelectionIndicator]="true">
-        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name">
-          {{aColor.name}}
-        </mat-chip-option>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip-option [color]="aColor.color" [value]="aColor.name">{{aColor.name}}</mat-chip-option>
+        }
       </mat-chip-listbox>
 
       <h4>Single selection with decorative icons.</h4>
 
       <mat-chip-listbox [(ngModel)]="selectedColor" [hideSingleSelectionIndicator]="true">
-        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name">
-          <mat-icon matChipAvatar>home</mat-icon>
-          {{aColor.name}}
-          <mat-icon matChipTrailingIcon>star</mat-icon>
-        </mat-chip-option>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip-option [color]="aColor.color"
+                  [value]="aColor.name">
+            <mat-icon matChipAvatar>home</mat-icon>
+            {{aColor.name}}
+            <mat-icon matChipTrailingIcon>star</mat-icon>
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
 
       The selected color is {{selectedColor}}.
@@ -276,11 +289,13 @@
       <h4>Single selection with stacked appearance.</h4>
 
       <mat-chip-listbox [(ngModel)]="selectedColor" class="mat-mdc-chip-set-stacked">
-        <mat-chip-option *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name">
-          {{aColor.name}}
-          <mat-icon matChipTrailingIcon>star</mat-icon>
-        </mat-chip-option>
+        @for (aColor of availableColors; track aColor) {
+          <mat-chip-option [color]="aColor.color"
+                  [value]="aColor.name">
+            {{aColor.name}}
+            <mat-icon matChipTrailingIcon>star</mat-icon>
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
 
       The selected color is {{selectedColor}}.

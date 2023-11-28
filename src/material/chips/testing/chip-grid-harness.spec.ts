@@ -12,8 +12,7 @@ describe('MatChipGridHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatChipsModule, ReactiveFormsModule],
-      declarations: [ChipGridHarnessTest],
+      imports: [MatChipsModule, ReactiveFormsModule, ChipGridHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipGridHarnessTest);
@@ -132,6 +131,8 @@ describe('MatChipGridHarness', () => {
       <input [matChipInputFor]="grid"/>
     </mat-chip-grid>
   `,
+  standalone: true,
+  imports: [MatChipsModule, ReactiveFormsModule],
 })
 class ChipGridHarnessTest {
   control = new FormControl('value', [Validators.required]);

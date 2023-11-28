@@ -16,9 +16,13 @@ import {GoogleMap} from './google-map/google-map';
 @Directive({
   selector: 'map-base-layer',
   exportAs: 'mapBaseLayer',
+  standalone: true,
 })
 export class MapBaseLayer implements OnInit, OnDestroy {
-  constructor(protected readonly _map: GoogleMap, protected readonly _ngZone: NgZone) {}
+  constructor(
+    protected readonly _map: GoogleMap,
+    protected readonly _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

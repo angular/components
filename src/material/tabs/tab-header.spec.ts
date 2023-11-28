@@ -1,4 +1,4 @@
-import {Direction} from '@angular/cdk/bidi';
+import {Dir, Direction} from '@angular/cdk/bidi';
 import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {PortalModule} from '@angular/cdk/portal';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
@@ -8,7 +8,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
   createMouseEvent,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {
@@ -31,8 +31,16 @@ describe('MDC-based MatTabHeader', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MatRippleModule, ScrollingModule, ObserversModule],
-      declarations: [MatTabHeader, MatTabLabelWrapper, SimpleTabHeaderApp],
+      imports: [
+        CommonModule,
+        PortalModule,
+        MatRippleModule,
+        ScrollingModule,
+        ObserversModule,
+        MatTabHeader,
+        MatTabLabelWrapper,
+        SimpleTabHeaderApp,
+      ],
       providers: [ViewportRuler],
     });
 
@@ -723,12 +731,11 @@ interface Tab {
                (indexFocused)="focusedIndex = $event"
                (selectFocusedIndex)="selectedIndex = $event"
                [disablePagination]="disablePagination">
-      <div matTabLabelWrapper class="label-content" style="min-width: 30px; width: 30px"
-           *ngFor="let tab of tabs; let i = index"
+      @for (tab of tabs; track tab; let i = $index) {
+        <div matTabLabelWrapper class="label-content" style="min-width: 30px; width: 30px"
            [disabled]="!!tab.disabled"
-           (click)="selectedIndex = i">
-         {{tab.label}}
-      </div>
+           (click)="selectedIndex = i">{{tab.label}}</div>
+      }
     </mat-tab-header>
   </div>
   `,
@@ -739,6 +746,8 @@ interface Tab {
     }
   `,
   ],
+  standalone: true,
+  imports: [Dir, MatTabHeader, MatTabLabelWrapper],
 })
 class SimpleTabHeaderApp {
   disableRipple: boolean = false;

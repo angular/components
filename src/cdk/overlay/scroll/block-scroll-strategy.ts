@@ -22,7 +22,10 @@ export class BlockScrollStrategy implements ScrollStrategy {
   private _isEnabled = false;
   private _document: Document;
 
-  constructor(private _viewportRuler: ViewportRuler, document: any) {
+  constructor(
+    private _viewportRuler: ViewportRuler,
+    document: any,
+  ) {
     this._document = document;
   }
 

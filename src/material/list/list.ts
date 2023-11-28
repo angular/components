@@ -26,6 +26,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatListBase, MatListItemBase} from './list-base';
 import {MatListItemLine, MatListItemMeta, MatListItemTitle} from './list-item-sections';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CdkObserveContent} from '@angular/cdk/observers';
 
 /**
  * Injection token that can be used to inject instances of `MatList`. It serves as
@@ -45,6 +46,7 @@ export const MAT_LIST = new InjectionToken<MatList>('MatList');
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatList}],
+  standalone: true,
 })
 export class MatList extends MatListBase {}
 
@@ -63,6 +65,8 @@ export class MatList extends MatListBase {}
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CdkObserveContent],
 })
 export class MatListItem extends MatListItemBase {
   @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;

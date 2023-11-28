@@ -46,7 +46,7 @@ export class CdkAutofill implements OnDestroy, OnInit {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAutofill, "[cdkAutofill]", never, {}, { "cdkAutofill": "cdkAutofill"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAutofill, "[cdkAutofill]", never, {}, { "cdkAutofill": "cdkAutofill"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkAutofill, never>;
 }
@@ -80,7 +80,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     _setMaxHeight(): void;
     _setMinHeight(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTextareaAutosize, "textarea[cdkTextareaAutosize]", ["cdkTextareaAutosize"], { "minRows": { "alias": "cdkAutosizeMinRows"; "required": false; }; "maxRows": { "alias": "cdkAutosizeMaxRows"; "required": false; }; "enabled": { "alias": "cdkTextareaAutosize"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTextareaAutosize, "textarea[cdkTextareaAutosize]", ["cdkTextareaAutosize"], { "minRows": { "alias": "cdkAutosizeMinRows"; "required": false; }; "maxRows": { "alias": "cdkAutosizeMaxRows"; "required": false; }; "enabled": { "alias": "cdkTextareaAutosize"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTextareaAutosize, [null, null, null, { optional: true; }]>;
 }
@@ -92,7 +92,7 @@ export class TextFieldModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<TextFieldModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<TextFieldModule, [typeof i1.CdkAutofill, typeof i2.CdkTextareaAutosize], never, [typeof i1.CdkAutofill, typeof i2.CdkTextareaAutosize]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<TextFieldModule, never, [typeof i1.CdkAutofill, typeof i2.CdkTextareaAutosize], [typeof i1.CdkAutofill, typeof i2.CdkTextareaAutosize]>;
 }
 
 // (No @packageDocumentation comment for this package)

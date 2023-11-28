@@ -16,7 +16,10 @@ describe('SharedResizeObserver', () => {
    * test flakines caused by browsers that invoke the callbacks with inconsistent timings.
    */
   class MockResizeObserver implements ResizeObserver {
-    constructor(private _callback: ResizeObserverCallback, options?: ResizeObserverOptions) {
+    constructor(
+      private _callback: ResizeObserverCallback,
+      options?: ResizeObserverOptions,
+    ) {
       currentObservers.set(options?.box || 'content-box', this);
     }
 
@@ -48,7 +51,7 @@ describe('SharedResizeObserver', () => {
     originalResizeObserver = ResizeObserver;
     window.ResizeObserver = MockResizeObserver;
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
     });
     fixture = TestBed.createComponent(TestComponent);
     fixture.detectChanges();
@@ -135,6 +138,7 @@ describe('SharedResizeObserver', () => {
     <div #el1></div>
     <div #el2></div>
   `,
+  standalone: true,
 })
 export class TestComponent {
   @ViewChild('el1') el1: ElementRef<Element>;

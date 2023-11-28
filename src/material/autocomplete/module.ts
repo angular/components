@@ -19,7 +19,15 @@ import {
 import {MatAutocompleteOrigin} from './autocomplete-origin';
 
 @NgModule({
-  imports: [OverlayModule, MatOptionModule, MatCommonModule, CommonModule],
+  imports: [
+    OverlayModule,
+    MatOptionModule,
+    MatCommonModule,
+    CommonModule,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatAutocompleteOrigin,
+  ],
   exports: [
     CdkScrollableModule,
     MatAutocomplete,
@@ -28,7 +36,6 @@ import {MatAutocompleteOrigin} from './autocomplete-origin';
     MatAutocompleteTrigger,
     MatAutocompleteOrigin,
   ],
-  declarations: [MatAutocomplete, MatAutocompleteTrigger, MatAutocompleteOrigin],
   providers: [MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatAutocompleteModule {}

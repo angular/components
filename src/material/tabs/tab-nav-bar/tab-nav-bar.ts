@@ -10,6 +10,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -19,6 +20,7 @@ import {
   Inject,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   Optional,
   QueryList,
@@ -27,13 +29,8 @@ import {
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
-  CanDisable,
-  CanDisableRipple,
-  HasTabIndex,
   MAT_RIPPLE_GLOBAL_OPTIONS,
-  mixinDisabled,
-  mixinDisableRipple,
-  mixinTabIndex,
+  MatRipple,
   RippleConfig,
   RippleGlobalOptions,
   RippleTarget,
@@ -44,12 +41,12 @@ import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
 import {MatInkBar, mixinInkBarItem} from '../ink-bar';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
+import {CdkObserveContent} from '@angular/cdk/observers';
 
 // Increasing integer for generating unique ids for tab nav components.
 let nextUniqueId = 0;
@@ -61,7 +58,6 @@ let nextUniqueId = 0;
 @Component({
   selector: '[mat-tab-nav-bar]',
   exportAs: 'matTabNavBar, matTabNav',
-  inputs: ['color'],
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
   host: {
@@ -79,39 +75,36 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav
   extends MatPaginatedTabHeader
   implements AfterContentChecked, AfterContentInit, OnDestroy, AfterViewInit
 {
   /** Whether the ink bar should fit its width to the size of the tab label content. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
     return this._fitInkBarToContent.value;
   }
-  set fitInkBarToContent(v: BooleanInput) {
-    this._fitInkBarToContent.next(coerceBooleanProperty(v));
+  set fitInkBarToContent(value: boolean) {
+    this._fitInkBarToContent.next(value);
     this._changeDetectorRef.markForCheck();
   }
   _fitInkBarToContent = new BehaviorSubject(false);
 
   /** Whether tabs should be stretched to fill the header. */
-  @Input('mat-stretch-tabs')
-  get stretchTabs(): boolean {
-    return this._stretchTabs;
-  }
-  set stretchTabs(v: BooleanInput) {
-    this._stretchTabs = coerceBooleanProperty(v);
-  }
-  private _stretchTabs = true;
+  @Input({alias: 'mat-stretch-tabs', transform: booleanAttribute})
+  stretchTabs: boolean = true;
 
   @Input()
   get animationDuration(): string {
     return this._animationDuration;
   }
 
-  set animationDuration(value: NumberInput) {
-    this._animationDuration = /^\d+$/.test(value + '') ? value + 'ms' : (value as string);
+  set animationDuration(value: string | number) {
+    const stringValue = value + '';
+    this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
   }
 
   private _animationDuration: string;
@@ -139,16 +132,8 @@ export class MatTabNav
   private _backgroundColor: ThemePalette;
 
   /** Whether the ripple effect is disabled or not. */
-  @Input()
-  get disableRipple(): boolean {
-    return this._disableRipple;
-  }
-
-  set disableRipple(value: BooleanInput) {
-    this._disableRipple = coerceBooleanProperty(value);
-  }
-
-  private _disableRipple: boolean = false;
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
 
   /** Theme color of the nav bar. */
   @Input() color: ThemePalette = 'primary';
@@ -245,15 +230,9 @@ export class MatTabNav
 
 // Boilerplate for applying mixins to MatTabLink.
 const _MatTabLinkMixinBase = mixinInkBarItem(
-  mixinTabIndex(
-    mixinDisableRipple(
-      mixinDisabled(
-        class {
-          elementRef: ElementRef;
-        },
-      ),
-    ),
-  ),
+  class {
+    elementRef: ElementRef;
+  },
 );
 
 /**
@@ -262,7 +241,7 @@ const _MatTabLinkMixinBase = mixinInkBarItem(
 @Component({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
-  inputs: ['disabled', 'disableRipple', 'tabIndex', 'active', 'id'],
+  inputs: ['active', 'id'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',
@@ -281,17 +260,12 @@ const _MatTabLinkMixinBase = mixinInkBarItem(
     '(focus)': '_handleFocus()',
     '(keydown)': '_handleKeydown($event)',
   },
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatTabLink
   extends _MatTabLinkMixinBase
-  implements
-    AfterViewInit,
-    OnDestroy,
-    CanDisable,
-    CanDisableRipple,
-    HasTabIndex,
-    RippleTarget,
-    FocusableOption
+  implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption
 {
   private readonly _destroyed = new Subject<void>();
 
@@ -299,19 +273,30 @@ export class MatTabLink
   protected _isActive: boolean = false;
 
   /** Whether the link is active. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get active(): boolean {
     return this._isActive;
   }
 
-  set active(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._isActive) {
-      this._isActive = newValue;
+  set active(value: boolean) {
+    if (value !== this._isActive) {
+      this._isActive = value;
       this._tabNavBar.updateActiveLink();
     }
   }
+
+  /** Whether the tab link is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
+
+  /** Whether ripples are disabled on the tab link. */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
+
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number = 0;
 
   /**
    * Ripple configuration for ripples that are launched on pointer down. The ripple config
@@ -419,7 +404,7 @@ export class MatTabLink
     if (this._tabNavBar.tabPanel) {
       return this._isActive && !this.disabled ? 0 : -1;
     } else {
-      return this.tabIndex;
+      return this.disabled ? -1 : this.tabIndex;
     }
   }
 }
@@ -439,6 +424,7 @@ export class MatTabLink
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */

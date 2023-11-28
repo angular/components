@@ -54,6 +54,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
     '(keydown)': '_onKeydown($event)',
   },
   exportAs: 'matDatepickerInput',
+  standalone: true,
 })
 export class MatDatepickerInput<D>
   extends MatDatepickerInputBase<D | null, D>

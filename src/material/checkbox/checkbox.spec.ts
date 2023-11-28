@@ -1,4 +1,4 @@
-import {dispatchFakeEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
@@ -10,15 +10,15 @@ import {
   MatCheckbox,
   MatCheckboxChange,
   MatCheckboxModule,
+  MatCheckboxRequiredValidator,
 } from './index';
 
 describe('MDC-based MatCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
-  function createComponent<T>(componentType: Type<T>, extraDeclarations: Type<any>[] = []) {
+  function createComponent<T>(componentType: Type<T>) {
     TestBed.configureTestingModule({
-      imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
-      declarations: [componentType, ...extraDeclarations],
+      imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -526,8 +526,7 @@ describe('MDC-based MatCheckbox', () => {
       beforeEach(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
-          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
-          declarations: [SingleCheckbox],
+          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
           providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}],
         });
 
@@ -558,8 +557,7 @@ describe('MDC-based MatCheckbox', () => {
       beforeEach(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
-          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
-          declarations: [SingleCheckbox],
+          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
           providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}],
         });
 
@@ -1022,8 +1020,7 @@ describe('MatCheckboxDefaultOptions', () => {
   describe('when MAT_CHECKBOX_DEFAULT_OPTIONS overridden', () => {
     function configure(defaults: MatCheckboxDefaultOptions) {
       TestBed.configureTestingModule({
-        imports: [MatCheckboxModule, FormsModule],
-        declarations: [SingleCheckbox, SingleCheckbox],
+        imports: [MatCheckboxModule, FormsModule, SingleCheckbox, SingleCheckbox],
         providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: defaults}],
       });
 
@@ -1078,6 +1075,8 @@ describe('MatCheckboxDefaultOptions', () => {
       Simple checkbox
     </mat-checkbox>
   </div>`,
+  standalone: true,
+  imports: [MatCheckbox],
 })
 class SingleCheckbox {
   labelPos: 'before' | 'after' = 'after';
@@ -1100,6 +1099,8 @@ class SingleCheckbox {
 @Component({
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
                            [disabled]="isDisabled">Be good</mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox, MatCheckboxRequiredValidator, FormsModule],
 })
 class CheckboxWithNgModel {
   isGood: boolean = false;
@@ -1110,6 +1111,8 @@ class CheckboxWithNgModel {
 @Component({
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</mat-checkbox>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
 
@@ -1119,6 +1122,8 @@ class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
     <mat-checkbox>Option 1</mat-checkbox>
     <mat-checkbox>Option 2</mat-checkbox>
   `,
+  standalone: true,
+  imports: [MatCheckbox],
 })
 class MultipleCheckboxes {}
 
@@ -1129,6 +1134,8 @@ class MultipleCheckboxes {}
         [tabIndex]="customTabIndex"
         [disabled]="isDisabled">
     </mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
 })
 class CheckboxWithTabIndex {
   customTabIndex: number = 7;
@@ -1136,46 +1143,78 @@ class CheckboxWithTabIndex {
 }
 
 /** Simple test component with an aria-label set. */
-@Component({template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
-@Component({template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithAriaLabelledby {}
 
 /** Simple test component with an aria-describedby set. */
 @Component({
   template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
 })
 class CheckboxWithAriaDescribedby {}
 
 /** Simple test component with name attribute */
-@Component({template: `<mat-checkbox name="test-name"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox name="test-name"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithNameAttribute {}
 
 /** Simple test component with change event */
-@Component({template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithChangeEvent {
   lastEvent: MatCheckboxChange;
 }
 
 /** Test component with reactive forms */
-@Component({template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox, ReactiveFormsModule],
+})
 class CheckboxWithFormControl {
   formControl = new FormControl(false);
 }
 
 /** Test component without label */
-@Component({template: `<mat-checkbox>{{ label }}</mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox>{{ label }}</mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithoutLabel {
   label: string;
 }
 
 /** Test component with the native tabindex attribute. */
-@Component({template: `<mat-checkbox tabindex="5"></mat-checkbox>`})
+@Component({
+  template: `<mat-checkbox tabindex="5"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
+})
 class CheckboxWithTabindexAttr {}
 
 @Component({
   template: `<mat-checkbox aria-label="Checkbox" aria-labelledby="something"></mat-checkbox>`,
+  standalone: true,
+  imports: [MatCheckbox],
 })
 class CheckboxWithStaticAriaAttributes {}

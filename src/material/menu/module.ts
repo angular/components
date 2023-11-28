@@ -17,7 +17,16 @@ import {MatMenuContent} from './menu-content';
 import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-trigger';
 
 @NgModule({
-  imports: [CommonModule, MatRippleModule, MatCommonModule, OverlayModule],
+  imports: [
+    CommonModule,
+    MatRippleModule,
+    MatCommonModule,
+    OverlayModule,
+    MatMenu,
+    MatMenuItem,
+    MatMenuContent,
+    MatMenuTrigger,
+  ],
   exports: [
     CdkScrollableModule,
     MatMenu,
@@ -26,7 +35,6 @@ import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-
     MatMenuContent,
     MatMenuTrigger,
   ],
-  declarations: [MatMenu, MatMenuItem, MatMenuContent, MatMenuTrigger],
   providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatMenuModule {}

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW, hasModifierKey, ModifierKey} from '@angular/cdk/keycodes';
 import {
   Directive,
@@ -20,6 +19,7 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
+  booleanAttribute,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -74,7 +74,7 @@ export interface _MatFormFieldPartial {
 }
 
 /** Base class for datepicker inputs. */
-@Directive()
+@Directive({standalone: true})
 export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection<S>>
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy, Validator
 {
@@ -92,12 +92,12 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   protected _model: MatDateSelectionModel<S, D> | undefined;
 
   /** Whether the datepicker-input is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return !!this._disabled || this._parentDisabled();
   }
-  set disabled(value: BooleanInput) {
-    const newValue = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    const newValue = value;
     const element = this._elementRef.nativeElement;
 
     if (this._disabled !== newValue) {

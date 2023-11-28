@@ -22,8 +22,7 @@ describe('MenuStack', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [MultiMenuWithSubmenu],
+      imports: [CdkMenuModule, MultiMenuWithSubmenu],
     }).compileComponents();
   }));
 
@@ -101,6 +100,8 @@ describe('MenuStack', () => {
       </ng-template>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MultiMenuWithSubmenu {
   @ViewChild(CdkMenuBar) menuBar: CdkMenuBar;

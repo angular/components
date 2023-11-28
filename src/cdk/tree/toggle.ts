@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, Input} from '@angular/core';
+import {Directive, Input, booleanAttribute} from '@angular/core';
 
 import {CdkTree, CdkTreeNode} from './tree';
 
@@ -19,19 +18,17 @@ import {CdkTree, CdkTreeNode} from './tree';
   host: {
     '(click)': '_toggle($event)',
   },
+  standalone: true,
 })
 export class CdkTreeNodeToggle<T, K = T> {
   /** Whether expand/collapse the node recursively. */
-  @Input('cdkTreeNodeToggleRecursive')
-  get recursive(): boolean {
-    return this._recursive;
-  }
-  set recursive(value: BooleanInput) {
-    this._recursive = coerceBooleanProperty(value);
-  }
-  protected _recursive = false;
+  @Input({alias: 'cdkTreeNodeToggleRecursive', transform: booleanAttribute})
+  recursive: boolean = false;
 
-  constructor(protected _tree: CdkTree<T, K>, protected _treeNode: CdkTreeNode<T, K>) {}
+  constructor(
+    protected _tree: CdkTree<T, K>,
+    protected _treeNode: CdkTreeNode<T, K>,
+  ) {}
 
   _toggle(event: Event): void {
     this.recursive

@@ -20,8 +20,10 @@ import {
 } from './expansion-panel-header';
 
 @NgModule({
-  imports: [MatCommonModule, CdkAccordionModule, PortalModule],
-  exports: [
+  imports: [
+    MatCommonModule,
+    CdkAccordionModule,
+    PortalModule,
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelActionRow,
@@ -30,7 +32,7 @@ import {
     MatExpansionPanelDescription,
     MatExpansionPanelContent,
   ],
-  declarations: [
+  exports: [
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelActionRow,

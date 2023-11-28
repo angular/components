@@ -26,7 +26,7 @@ export interface CalendarHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export const enum CalendarView {
+export enum CalendarView {
     // (undocumented)
     MONTH = 0,
     // (undocumented)

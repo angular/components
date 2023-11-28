@@ -4,16 +4,9 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanColor } from '@angular/material/core';
-import { CanDisable } from '@angular/material/core';
-import { CanDisableRipple } from '@angular/material/core';
-import { CanUpdateErrorState } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
@@ -23,9 +16,8 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
-import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i11 from '@angular/material/core';
+import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -61,8 +53,8 @@ export const MAT_CHIP_TRAILING_ICON: InjectionToken<unknown>;
 export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
-export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, DoCheck, HasTabIndex, OnDestroy {
-    constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
+export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
+    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
     protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
@@ -73,25 +65,38 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     protected basicChipAttrName: string;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
+    color?: string | null;
     readonly destroyed: EventEmitter<MatChipEvent>;
+    disabled: boolean;
+    disableRipple: boolean;
     // (undocumented)
     protected _document: Document;
+    // (undocumented)
+    _elementRef: ElementRef<HTMLElement>;
     focus(): void;
     _getActions(): MatChipAction[];
     _getSourceAction(target: Node): MatChipAction | undefined;
+    _getTabIndex(): number | null;
     _handleKeydown(event: KeyboardEvent): void;
     _handlePrimaryActionInteraction(): void;
     // (undocumented)
     _hasFocus(): boolean;
     _hasTrailingIcon(): boolean;
-    get highlighted(): boolean;
-    set highlighted(value: BooleanInput);
-    // (undocumented)
-    protected _highlighted: boolean;
+    highlighted: boolean;
     id: string;
     _isBasicChip: boolean;
     _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disableRipple: unknown;
+    // (undocumented)
+    static ngAcceptInputType_highlighted: unknown;
+    // (undocumented)
+    static ngAcceptInputType_removable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -107,10 +112,7 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     readonly _onBlur: Subject<MatChipEvent>;
     readonly _onFocus: Subject<MatChipEvent>;
     primaryAction: MatChipAction;
-    get removable(): boolean;
-    set removable(value: BooleanInput);
-    // (undocumented)
-    protected _removable: boolean;
+    removable: boolean;
     remove(): void;
     readonly removed: EventEmitter<MatChipEvent>;
     removeIcon: MatChipRemove;
@@ -119,13 +121,14 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
     set ripple(v: MatRipple);
     _rippleLoader: MatRippleLoader;
     role: string | null;
+    tabIndex: number;
     trailingIcon: MatChipTrailingIcon;
     get value(): any;
     set value(value: any);
     // (undocumented)
     protected _value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "role": { "alias": "role"; "required": false; }; "id": { "alias": "id"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaDescription": { "alias": "aria-description"; "required": false; }; "value": { "alias": "value"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "highlighted": { "alias": "highlighted"; "required": false; }; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon", "_allLeadingIcons", "_allTrailingIcons", "_allRemoveIcons"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "role": { "alias": "role"; "required": false; }; "id": { "alias": "id"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaDescription": { "alias": "aria-description"; "required": false; }; "value": { "alias": "value"; "required": false; }; "color": { "alias": "color"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "highlighted": { "alias": "highlighted"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon", "_allLeadingIcons", "_allTrailingIcons", "_allRemoveIcons"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -133,7 +136,7 @@ export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit,
 // @public
 export class MatChipAvatar {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipAvatar, "mat-chip-avatar, [matChipAvatar]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipAvatar, "mat-chip-avatar, [matChipAvatar]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipAvatar, never>;
 }
@@ -155,7 +158,7 @@ export class MatChipEditInput {
     // (undocumented)
     setValue(value: string): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipEditInput, "span[matChipEditInput]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipEditInput, "span[matChipEditInput]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipEditInput, never>;
 }
@@ -166,7 +169,7 @@ export interface MatChipEvent {
 }
 
 // @public
-export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentInit, AfterViewInit, CanUpdateErrorState, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
+export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
     protected _allowFocusEscape(): void;
     _blur(): void;
@@ -179,9 +182,12 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     // (undocumented)
     protected _defaultRole: string;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     get empty(): boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     focus(): void;
     get focused(): boolean;
     // (undocumented)
@@ -189,9 +195,15 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     _handleKeydown(event: KeyboardEvent): void;
     get id(): string;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -207,12 +219,14 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
     get required(): boolean;
-    set required(value: BooleanInput);
+    set required(value: boolean);
     // (undocumented)
     protected _required: boolean | undefined;
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
+    readonly stateChanges: Subject<void>;
+    updateErrorState(): void;
     get value(): any;
     set value(value: any);
     // (undocumented)
@@ -220,7 +234,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipGrid, "mat-chip-grid", never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["_chips"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipGrid, "mat-chip-grid", never, { "disabled": { "alias": "disabled"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["_chips"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipGrid, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }
@@ -237,17 +251,14 @@ export class MatChipGridChange {
 // @public
 export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
     constructor(_elementRef: ElementRef<HTMLInputElement>, defaultOptions: MatChipsDefaultOptions, formField?: MatFormField);
-    get addOnBlur(): boolean;
-    set addOnBlur(value: BooleanInput);
-    // (undocumented)
-    _addOnBlur: boolean;
+    addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
     get chipGrid(): MatChipGrid;
     set chipGrid(value: MatChipGrid);
     clear(): void;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement>;
     _emitChipEnd(event?: KeyboardEvent): void;
@@ -261,6 +272,10 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     _keydown(event?: KeyboardEvent): void;
     _keyup(event: KeyboardEvent): void;
     // (undocumented)
+    static ngAcceptInputType_addOnBlur: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnChanges(): void;
@@ -273,7 +288,7 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     // (undocumented)
     setDescribedByIds(ids: string[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, [null, null, { optional: true; }]>;
 }
@@ -300,23 +315,28 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     protected _defaultRole: string;
     focus(): void;
     get hideSingleSelectionIndicator(): boolean;
-    set hideSingleSelectionIndicator(value: BooleanInput);
+    set hideSingleSelectionIndicator(value: boolean);
     // (undocumented)
     _keydown(event: KeyboardEvent): void;
     get multiple(): boolean;
-    set multiple(value: BooleanInput);
+    set multiple(value: boolean);
+    // (undocumented)
+    static ngAcceptInputType_hideSingleSelectionIndicator: unknown;
+    // (undocumented)
+    static ngAcceptInputType_multiple: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
+    // (undocumented)
+    static ngAcceptInputType_selectable: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     _onChange: (value: any) => void;
     _onTouched: () => void;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
-    get required(): boolean;
-    set required(value: BooleanInput);
-    // (undocumented)
-    protected _required: boolean;
+    required: boolean;
     get selectable(): boolean;
-    set selectable(value: BooleanInput);
+    set selectable(value: boolean);
     // (undocumented)
     protected _selectable: boolean;
     get selected(): MatChipOption[] | MatChipOption;
@@ -329,7 +349,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, OnDe
     protected _value: any;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "tabIndex": { "alias": "tabIndex"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "required": { "alias": "required"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "change": "change"; }, ["_chips"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipListbox, "mat-chip-listbox", never, { "multiple": { "alias": "multiple"; "required": false; }; "ariaOrientation": { "alias": "aria-orientation"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "required": { "alias": "required"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, { "change": "change"; }, ["_chips"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipListbox, never>;
 }
@@ -356,21 +376,25 @@ export class MatChipOption extends MatChip implements OnInit {
     // (undocumented)
     _hasLeadingGraphic(): boolean;
     // (undocumented)
+    static ngAcceptInputType_selectable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_selected: unknown;
+    // (undocumented)
     ngOnInit(): void;
     select(): void;
     get selectable(): boolean;
-    set selectable(value: BooleanInput);
+    set selectable(value: boolean);
     // (undocumented)
     protected _selectable: boolean;
     get selected(): boolean;
-    set selected(value: BooleanInput);
+    set selected(value: boolean);
     readonly selectionChange: EventEmitter<MatChipSelectionChange>;
     selectViaInteraction(): void;
     // (undocumented)
     _setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean): void;
     toggleSelected(isUserInput?: boolean): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipOption, "mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]", never, { "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectionChange": "selectionChange"; }, never, ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipOption, "mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]", never, { "selectable": { "alias": "selectable"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectionChange": "selectionChange"; }, never, ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipOption, never>;
 }
@@ -384,7 +408,7 @@ export class MatChipRemove extends MatChipAction {
     // (undocumented)
     _isPrimary: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipRemove, "[matChipRemove]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipRemove, "[matChipRemove]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRemove, never>;
 }
@@ -411,7 +435,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     // (undocumented)
     _isRippleDisabled(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "[matChipEditInput]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "[matChipEditInput]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRow, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -434,7 +458,7 @@ export class MatChipSelectionChange {
 }
 
 // @public
-export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, HasTabIndex, OnDestroy {
+export class MatChipSet implements AfterViewInit, OnDestroy {
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality);
     protected _allowFocusEscape(): void;
     // (undocumented)
@@ -447,7 +471,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, H
     protected _defaultRole: string;
     protected _destroyed: Subject<void>;
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean;
     // (undocumented)
@@ -461,6 +485,10 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, H
     protected _isValidIndex(index: number): boolean;
     protected _keyManager: FocusKeyManager<MatChipAction>;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -469,8 +497,9 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterViewInit, H
     set role(value: string | null);
     protected _skipPredicate(action: MatChipAction): boolean;
     protected _syncChipsState(): void;
+    tabIndex: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipSet, "mat-chip-set", never, { "disabled": { "alias": "disabled"; "required": false; }; "role": { "alias": "role"; "required": false; }; }, {}, ["_chips"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipSet, "mat-chip-set", never, { "disabled": { "alias": "disabled"; "required": false; }; "role": { "alias": "role"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["_chips"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipSet, [null, null, { optional: true; }]>;
 }
@@ -482,7 +511,7 @@ export class MatChipsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatChipsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatChipsModule, [typeof i1.MatChipAction, typeof i2.MatChip, typeof i3.MatChipAvatar, typeof i4.MatChipEditInput, typeof i5.MatChipGrid, typeof i6.MatChipInput, typeof i7.MatChipListbox, typeof i8.MatChipOption, typeof i3.MatChipRemove, typeof i9.MatChipRow, typeof i10.MatChipSet, typeof i3.MatChipTrailingIcon], [typeof i11.MatCommonModule, typeof i11.MatRippleModule], [typeof i11.MatCommonModule, typeof i2.MatChip, typeof i3.MatChipAvatar, typeof i4.MatChipEditInput, typeof i5.MatChipGrid, typeof i6.MatChipInput, typeof i7.MatChipListbox, typeof i8.MatChipOption, typeof i3.MatChipRemove, typeof i9.MatChipRow, typeof i10.MatChipSet, typeof i3.MatChipTrailingIcon]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatChipsModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatChipAction, typeof i3.MatChip, typeof i4.MatChipAvatar, typeof i5.MatChipEditInput, typeof i6.MatChipGrid, typeof i7.MatChipInput, typeof i8.MatChipListbox, typeof i9.MatChipOption, typeof i4.MatChipRemove, typeof i10.MatChipRow, typeof i11.MatChipSet, typeof i4.MatChipTrailingIcon], [typeof i1.MatCommonModule, typeof i3.MatChip, typeof i4.MatChipAvatar, typeof i5.MatChipEditInput, typeof i6.MatChipGrid, typeof i7.MatChipInput, typeof i8.MatChipListbox, typeof i9.MatChipOption, typeof i4.MatChipRemove, typeof i10.MatChipRow, typeof i11.MatChipSet, typeof i4.MatChipTrailingIcon]>;
 }
 
 // @public
@@ -501,7 +530,7 @@ export class MatChipTrailingIcon extends MatChipAction {
     // (undocumented)
     _isPrimary: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipTrailingIcon, "mat-chip-trailing-icon, [matChipTrailingIcon]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipTrailingIcon, "mat-chip-trailing-icon, [matChipTrailingIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipTrailingIcon, never>;
 }

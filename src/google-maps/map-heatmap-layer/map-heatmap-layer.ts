@@ -28,6 +28,7 @@ export type HeatmapData =
 @Directive({
   selector: 'map-heatmap-layer',
   exportAs: 'mapHeatmapLayer',
+  standalone: true,
 })
 export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   /**
@@ -57,7 +58,10 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
    */
   heatmap?: google.maps.visualization.HeatmapLayer;
 
-  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

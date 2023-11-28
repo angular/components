@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as Lint from 'tslint';
 import ts from 'typescript';
 import minimatch from 'minimatch';
@@ -28,9 +27,8 @@ class Walker extends Lint.RuleWalker {
 
   constructor(sourceFile: ts.SourceFile, options: Lint.IOptions) {
     super(sourceFile, options);
-    const fileGlobs = options.ruleArguments;
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
-    this._enabled = fileGlobs.some(p => minimatch(relativeFilePath, p));
+    const fileGlobs: string[] = options.ruleArguments[0];
+    this._enabled = !fileGlobs.some(p => minimatch(sourceFile.fileName, p));
   }
 
   override visitPropertyAccessExpression(node: ts.PropertyAccessExpression) {

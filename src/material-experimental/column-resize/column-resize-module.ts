@@ -21,7 +21,7 @@ import {MatColumnResizeOverlayHandle} from './overlay-handle';
 const ENTRY_COMMON_COMPONENTS = [MatColumnResizeOverlayHandle];
 
 @NgModule({
-  declarations: ENTRY_COMMON_COMPONENTS,
+  imports: [...ENTRY_COMMON_COMPONENTS],
   exports: ENTRY_COMMON_COMPONENTS,
 })
 export class MatColumnResizeCommonModule {}
@@ -29,8 +29,8 @@ export class MatColumnResizeCommonModule {}
 const IMPORTS = [MatCommonModule, OverlayModule, MatColumnResizeCommonModule];
 
 @NgModule({
-  imports: IMPORTS,
-  declarations: [
+  imports: [
+    ...IMPORTS,
     MatDefaultEnabledColumnResize,
     MatDefaultEnabledColumnResizeFlex,
     MatDefaultResizable,
@@ -40,8 +40,7 @@ const IMPORTS = [MatCommonModule, OverlayModule, MatColumnResizeCommonModule];
 export class MatDefaultEnabledColumnResizeModule {}
 
 @NgModule({
-  imports: IMPORTS,
-  declarations: [MatColumnResize, MatColumnResizeFlex, MatResizable],
+  imports: [...IMPORTS, MatColumnResize, MatColumnResizeFlex, MatResizable],
   exports: [MatColumnResize, MatColumnResizeFlex, MatResizable],
 })
 export class MatColumnResizeModule {}

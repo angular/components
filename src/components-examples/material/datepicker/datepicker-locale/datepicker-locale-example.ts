@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {
   MAT_MOMENT_DATE_FORMATS,
   MomentDateAdapter,
@@ -6,7 +6,7 @@ import {
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDatepickerModule, MatDatepickerIntl} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import 'moment/locale/ja';
@@ -34,15 +34,26 @@ import 'moment/locale/fr';
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
 })
-export class DatepickerLocaleExample {
+export class DatepickerLocaleExample implements OnInit {
   constructor(
     private _adapter: DateAdapter<any>,
+    private _intl: MatDatepickerIntl,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {}
+
+  ngOnInit() {
+    this.updateCloseButtonLabel('カレンダーを閉じる');
+  }
 
   french() {
     this._locale = 'fr';
     this._adapter.setLocale(this._locale);
+    this.updateCloseButtonLabel('Fermer le calendrier');
+  }
+
+  updateCloseButtonLabel(label: string) {
+    this._intl.closeCalendarLabel = label;
+    this._intl.changes.next();
   }
 
   getDateFormatString(): string {

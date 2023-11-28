@@ -7,8 +7,9 @@ import {MatToolbarModule} from './index';
 describe('MatToolbar', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatToolbarModule, CommonModule],
-      declarations: [
+      imports: [
+        MatToolbarModule,
+        CommonModule,
         ToolbarSingleRow,
         ToolbarMultipleRows,
         ToolbarMixedRowModes,
@@ -109,6 +110,8 @@ describe('MatToolbar', () => {
       <span>First Row</span>
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarSingleRow {
   toolbarColor: string;
@@ -121,6 +124,8 @@ class ToolbarSingleRow {
       <mat-toolbar-row>Second Row</mat-toolbar-row>
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMultipleRows {}
 
@@ -128,9 +133,13 @@ class ToolbarMultipleRows {}
   template: `
     <mat-toolbar>
       First Row
-      <mat-toolbar-row *ngIf="showToolbarRow">Second Row</mat-toolbar-row>
+      @if (showToolbarRow) {
+        <mat-toolbar-row>Second Row</mat-toolbar-row>
+      }
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMixedRowModes {
   showToolbarRow: boolean = true;
@@ -140,11 +149,13 @@ class ToolbarMixedRowModes {
   // The ng-container is there so we have a node with a directive between the toolbar and the rows.
   template: `
     <mat-toolbar>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-toolbar-row>First Row</mat-toolbar-row>
         <mat-toolbar-row>Second Row</mat-toolbar-row>
-      </ng-container>
+      }
     </mat-toolbar>
   `,
+  standalone: true,
+  imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMultipleIndirectRows {}

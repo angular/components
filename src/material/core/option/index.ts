@@ -14,9 +14,8 @@ import {MatOption} from './option';
 import {MatOptgroup} from './optgroup';
 
 @NgModule({
-  imports: [MatRippleModule, MatCommonModule, MatPseudoCheckboxModule],
+  imports: [MatRippleModule, MatCommonModule, MatPseudoCheckboxModule, MatOption, MatOptgroup],
   exports: [MatOption, MatOptgroup],
-  declarations: [MatOption, MatOptgroup],
 })
 export class MatOptionModule {}
 

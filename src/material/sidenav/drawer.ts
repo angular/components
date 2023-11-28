@@ -111,6 +111,7 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
       useExisting: MatDrawerContent,
     },
   ],
+  standalone: true,
 })
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   constructor(
@@ -155,6 +156,8 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CdkScrollable],
 })
 export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
   private _focusTrap: FocusTrap;
@@ -648,6 +651,8 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
       useExisting: MatDrawerContainer,
     },
   ],
+  standalone: true,
+  imports: [MatDrawerContent],
 })
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
   /** All drawers in the container. Includes drawers from inside nested containers. */

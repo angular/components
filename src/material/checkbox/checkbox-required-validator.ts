@@ -15,6 +15,8 @@ export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   multi: true,
 };
 
+// TODO(crisbeto): this should be deprecated and moved into `MatCheckbox`.
+
 /**
  * Validator for Material checkbox's required attribute in template-driven checkbox.
  * Current CheckboxRequiredValidator only work with `input type=checkbox` and does not
@@ -24,5 +26,6 @@ export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   selector: `mat-checkbox[required][formControlName],
              mat-checkbox[required][formControl], mat-checkbox[required][ngModel]`,
   providers: [MAT_CHECKBOX_REQUIRED_VALIDATOR],
+  standalone: true,
 })
 export class MatCheckboxRequiredValidator extends CheckboxRequiredValidator {}

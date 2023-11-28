@@ -13,9 +13,8 @@ import {MAT_SORT_HEADER_INTL_PROVIDER} from './sort-header-intl';
 import {MatCommonModule} from '@angular/material/core';
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatSort, MatSortHeader],
   exports: [MatSort, MatSortHeader],
-  declarations: [MatSort, MatSortHeader],
   providers: [MAT_SORT_HEADER_INTL_PROVIDER],
 })
 export class MatSortModule {}

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
@@ -13,7 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   templateUrl: 'snack-bar-component-example.html',
   styleUrls: ['snack-bar-component-example.css'],
   standalone: true,
-  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatSnackBarModule],
+  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarComponentExample {
   durationInSeconds = 5;

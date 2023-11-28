@@ -15,8 +15,13 @@ describe('MatDatepickerInputHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, MatDatepickerModule, FormsModule],
-      declarations: [DatepickerInputHarnessTest],
+      imports: [
+        NoopAnimationsModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        FormsModule,
+        DatepickerInputHarnessTest,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatepickerInputHarnessTest);
@@ -194,6 +199,8 @@ describe('MatDatepickerInputHarness', () => {
     <mat-datepicker #picker [touchUi]="touchUi"></mat-datepicker>
     <input id="no-datepicker" matDatepicker>
   `,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule, FormsModule],
 })
 class DatepickerInputHarnessTest {
   date: Date | null = null;

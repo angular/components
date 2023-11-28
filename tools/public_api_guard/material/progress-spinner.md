@@ -4,15 +4,11 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
-import { CanColor } from '@angular/material/core';
-import { _Constructor } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
+import * as i1 from '@angular/common';
 import * as i3 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
@@ -22,24 +18,34 @@ export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpi
 export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
 
 // @public (undocumented)
-export class MatProgressSpinner extends _MatProgressSpinnerBase implements CanColor {
-    constructor(elementRef: ElementRef<HTMLElement>, animationMode: string, defaults?: MatProgressSpinnerDefaultOptions);
+export class MatProgressSpinner {
+    constructor(_elementRef: ElementRef<HTMLElement>, animationMode: string, defaults?: MatProgressSpinnerDefaultOptions);
     _circleRadius(): number;
     _circleStrokeWidth(): number;
+    get color(): string | null | undefined;
+    set color(value: string | null | undefined);
     _determinateCircle: ElementRef<HTMLElement>;
     get diameter(): number;
-    set diameter(size: NumberInput);
+    set diameter(size: number);
+    // (undocumented)
+    readonly _elementRef: ElementRef<HTMLElement>;
     mode: ProgressSpinnerMode;
+    // (undocumented)
+    static ngAcceptInputType_diameter: unknown;
+    // (undocumented)
+    static ngAcceptInputType_strokeWidth: unknown;
+    // (undocumented)
+    static ngAcceptInputType_value: unknown;
     _noopAnimations: boolean;
     _strokeCircumference(): number;
     _strokeDashOffset(): number | null;
     get strokeWidth(): number;
-    set strokeWidth(value: NumberInput);
+    set strokeWidth(value: number);
     get value(): number;
-    set value(v: NumberInput);
+    set value(v: number);
     _viewBox(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressSpinner, "mat-progress-spinner, mat-spinner", ["matProgressSpinner"], { "color": { "alias": "color"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "value": { "alias": "value"; "required": false; }; "diameter": { "alias": "diameter"; "required": false; }; "strokeWidth": { "alias": "strokeWidth"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressSpinner, "mat-progress-spinner, mat-spinner", ["matProgressSpinner"], { "color": { "alias": "color"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "value": { "alias": "value"; "required": false; }; "diameter": { "alias": "diameter"; "required": false; }; "strokeWidth": { "alias": "strokeWidth"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressSpinner, [null, { optional: true; }, null]>;
 }
@@ -59,7 +65,7 @@ export class MatProgressSpinnerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressSpinnerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner], [typeof i2.CommonModule], [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, never, [typeof i1.CommonModule, typeof i2.MatProgressSpinner, typeof i2.MatProgressSpinner], [typeof i2.MatProgressSpinner, typeof i2.MatProgressSpinner, typeof i3.MatCommonModule]>;
 }
 
 // @public @deprecated (undocumented)

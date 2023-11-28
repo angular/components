@@ -273,7 +273,7 @@ describe('theming inspection api', () => {
             color: mat.get-theme-color($theme, primary-container);
           }
         `),
-      ).toMatch('color: #f0dbff;');
+      ).toMatch('color: #ecdcff;');
     });
 
     it('should error on invalid color role', () => {
@@ -295,7 +295,7 @@ describe('theming inspection api', () => {
             color: mat.get-theme-color($theme, tertiary, 20);
           }
         `),
-      ).toMatch('color: #4a0080;');
+      ).toMatch('color: #42008a;');
     });
 
     it('should error on invalid color palette', () => {

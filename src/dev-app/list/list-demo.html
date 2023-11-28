@@ -11,45 +11,57 @@
 
     <mat-list>
       <div mat-subheader>Items</div>
-      <mat-list-item *ngFor="let item of items">
-        {{item}}
-      </mat-list-item>
+      @for (item of items; track item) {
+        <mat-list-item>{{item}}</mat-list-item>
+      }
     </mat-list>
 
     <mat-list>
-      <mat-list-item *ngFor="let contact of contacts">
-        <div matListItemTitle>{{contact.name}}</div>
-        <div matListItemLine *ngIf="thirdLine">extra line</div>
-        <div matListItemLine>{{contact.headline}}</div>
-      </mat-list-item>
+      @for (contact of contacts; track contact) {
+        <mat-list-item>
+          <div matListItemTitle>{{contact.name}}</div>
+          @if (thirdLine) {
+            <div matListItemLine>extra line</div>
+          }
+          <div matListItemLine>{{contact.headline}}</div>
+        </mat-list-item>
+      }
     </mat-list>
 
     <mat-list>
       <div mat-subheader>Today</div>
-      <mat-list-item *ngFor="let message of messages; last as last">
-        <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
-        <div matListItemTitle>{{message.from}}</div>
-        <div matListItemLine>
-          <span>{{message.subject}} -- </span>
-          <span>{{message.message}}</span>
-        </div>
-        <mat-divider inset *ngIf="!last"></mat-divider>
-      </mat-list-item>
+      @for (message of messages; track message) {
+        <mat-list-item>
+          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
+          <div matListItemTitle>{{message.from}}</div>
+          <div matListItemLine>
+            <span>{{message.subject}} -- </span>
+            <span>{{message.message}}</span>
+          </div>
+          @if (!$last) {
+            <mat-divider inset></mat-divider>
+          }
+        </mat-list-item>
+      }
       <mat-divider></mat-divider>
-      <mat-list-item *ngFor="let message of messages">
-        <div matListItemTitle>{{message.from}}</div>
-        <div matListItemLine>{{message.subject}}</div>
-        <div matListItemLine>{{message.message}}</div>
-      </mat-list-item>
+      @for (message of messages; track message) {
+        <mat-list-item>
+          <div matListItemTitle>{{message.from}}</div>
+          <div matListItemLine>{{message.subject}}</div>
+          <div matListItemLine>{{message.message}}</div>
+        </mat-list-item>
+      }
     </mat-list>
 
     <mat-list>
-      <mat-list-item *ngFor="let link of links">
-        <span matListItemTitle>{{ link.name }}</span>
-        <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
-          <mat-icon>info</mat-icon>
-        </button>
-      </mat-list-item>
+      @for (link of links; track link) {
+        <mat-list-item>
+          <span matListItemTitle>{{ link.name }}</span>
+          <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
+            <mat-icon>info</mat-icon>
+          </button>
+        </mat-list-item>
+      }
     </mat-list>
   </div>
 
@@ -57,61 +69,71 @@
     <h2>Dense lists</h2>
     <mat-list dense>
       <div mat-subheader>Items</div>
-      <mat-list-item *ngFor="let item of items">
-        {{item}}
-      </mat-list-item>
+      @for (item of items; track item) {
+        <mat-list-item>{{item}}</mat-list-item>
+      }
     </mat-list>
 
     <mat-list dense>
-      <mat-list-item *ngFor="let contact of contacts">
-        <div matListItemTitle>{{contact.name}}</div>
-        <div matListItemLine>{{contact.headline}}</div>
-      </mat-list-item>
+      @for (contact of contacts; track contact) {
+        <mat-list-item>
+          <div matListItemTitle>{{contact.name}}</div>
+          <div matListItemLine>{{contact.headline}}</div>
+        </mat-list-item>
+      }
     </mat-list>
 
     <mat-list dense>
       <div mat-subheader>Today</div>
-      <mat-list-item *ngFor="let message of messages">
-        <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
-        <div matListItemTitle>{{message.from}}</div>
-        <div matListItemLine>{{message.subject}}</div>
-        <div matListItemLine>{{message.message}}</div>
-      </mat-list-item>
+      @for (message of messages; track message) {
+        <mat-list-item>
+          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
+          <div matListItemTitle>{{message.from}}</div>
+          <div matListItemLine>{{message.subject}}</div>
+          <div matListItemLine>{{message.message}}</div>
+        </mat-list-item>
+      }
     </mat-list>
 
     <mat-list dense>
-      <mat-list-item *ngFor="let link of links">
-        <span matListItemTitle>{{ link.name }}</span>
-        <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
-          <mat-icon class="material-icons">info</mat-icon>
-        </button>
-      </mat-list-item>
+      @for (link of links; track link) {
+        <mat-list-item>
+          <span matListItemTitle>{{ link.name }}</span>
+          <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
+            <mat-icon class="material-icons">info</mat-icon>
+          </button>
+        </mat-list-item>
+      }
     </mat-list>
   </div>
   <div>
     <h2>Nav lists</h2>
     <mat-nav-list>
-      <a mat-list-item *ngFor="let link of links" [href]="link.href" [activated]="isActivated(link.href)">
-        {{ link.name }}
-      </a>
+      @for (link of links; track link) {
+        <a mat-list-item [href]="link.href" [activated]="isActivated(link.href)">
+          {{ link.name }}
+        </a>
+      }
     </mat-nav-list>
-    <div *ngIf="infoClicked">
-      More info!
-    </div>
+    @if (infoClicked) {
+      <div>More info!</div>
+    }
     <mat-nav-list>
-      <a mat-list-item *ngFor="let link of links; last as last" [href]="link.href" [activated]="isActivated(link.href)">
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <span matListItemTitle>{{ link.name }}</span>
-      </a>
+      @for (link of links; track link; let last = $last) {
+        <a mat-list-item [href]="link.href" [activated]="isActivated(link.href)">
+          <mat-icon matListItemIcon>folder</mat-icon>
+          <span matListItemTitle>{{ link.name }}</span>
+        </a>
+      }
     </mat-nav-list>
   </div>
 
   <div>
     <h2>Action list</h2>
     <mat-action-list>
-      <button mat-list-item *ngFor="let link of links" (click)="alertItem(link.name)">
-        {{link.name}}
-      </button>
+      @for (link of links; track link) {
+        <button mat-list-item (click)="alertItem(link.name)">{{link.name}}</button>
+      }
     </mat-action-list>
   </div>
 
@@ -228,10 +250,12 @@
     <h2>Line alignment</h2>
 
     <mat-list>
-      <mat-list-item *ngFor="let link of links">
-        <span matListItemTitle>{{ link.name }}</span>
-        <span>Unscoped content</span>
-      </mat-list-item>
+      @for (link of links; track link) {
+        <mat-list-item>
+          <span matListItemTitle>{{ link.name }}</span>
+          <span>Unscoped content</span>
+        </mat-list-item>
+      }
     </mat-list>
 
     <mat-selection-list>

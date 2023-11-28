@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NgFor, JsonPipe} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 
@@ -10,7 +10,7 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   templateUrl: 'cdk-listbox-template-forms-example.html',
   styleUrls: ['cdk-listbox-template-forms-example.css'],
   standalone: true,
-  imports: [CdkListbox, FormsModule, NgFor, CdkOption, JsonPipe],
+  imports: [CdkListbox, FormsModule, CdkOption, JsonPipe],
 })
 export class CdkListboxTemplateFormsExample {
   toppings = ['Extra Cheese', 'Mushrooms', 'Pepperoni', 'Sausage'];

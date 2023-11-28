@@ -14,8 +14,12 @@ describe('MatDatepickerToggleHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatNativeDateModule, MatDatepickerModule],
-      declarations: [DatepickerToggleHarnessTest],
+      imports: [
+        NoopAnimationsModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        DatepickerToggleHarnessTest,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatepickerToggleHarnessTest);
@@ -83,6 +87,8 @@ describe('MatDatepickerToggleHarness', () => {
 
     <mat-datepicker-toggle id="no-calendar"></mat-datepicker-toggle>
   `,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class DatepickerToggleHarnessTest {
   touchUi = false;

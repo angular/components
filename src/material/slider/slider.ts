@@ -7,15 +7,10 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -26,6 +21,7 @@ import {
   Inject,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   Optional,
   QueryList,
@@ -33,13 +29,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  CanDisableRipple,
-  MAT_RIPPLE_GLOBAL_OPTIONS,
-  mixinColor,
-  mixinDisableRipple,
-  RippleGlobalOptions,
-} from '@angular/material/core';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
 import {
@@ -54,21 +44,12 @@ import {
   MAT_SLIDER,
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
+import {MatSliderVisualThumb} from './slider-thumb';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
 // 2. tab to disable checkbox
 // 3. without ending drag, disable the slider
-
-// Boilerplate for applying mixins to MatSlider.
-const _MatSliderMixinBase = mixinColor(
-  mixinDisableRipple(
-    class {
-      constructor(public _elementRef: ElementRef<HTMLElement>) {}
-    },
-  ),
-  'primary',
-);
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -80,6 +61,7 @@ const _MatSliderMixinBase = mixinColor(
   styleUrls: ['slider.css'],
   host: {
     'class': 'mat-mdc-slider mdc-slider',
+    '[class]': '"mat-" + (color || "primary")',
     '[class.mdc-slider--range]': '_isRange',
     '[class.mdc-slider--disabled]': 'disabled',
     '[class.mdc-slider--discrete]': 'discrete',
@@ -89,13 +71,11 @@ const _MatSliderMixinBase = mixinColor(
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  inputs: ['color', 'disableRipple'],
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
+  standalone: true,
+  imports: [MatSliderVisualThumb],
 })
-export class MatSlider
-  extends _MatSliderMixinBase
-  implements AfterViewInit, CanDisableRipple, OnDestroy, _MatSlider
-{
+export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** The active portion of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
@@ -110,12 +90,12 @@ export class MatSlider
   _inputs: QueryList<_MatSliderRangeThumb>;
 
   /** Whether the slider is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(v: BooleanInput) {
-    this._disabled = coerceBooleanProperty(v);
+  set disabled(v: boolean) {
+    this._disabled = v;
     const endInput = this._getInput(_MatThumb.END);
     const startInput = this._getInput(_MatThumb.START);
 
@@ -129,38 +109,40 @@ export class MatSlider
   private _disabled: boolean = false;
 
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get discrete(): boolean {
     return this._discrete;
   }
-  set discrete(v: BooleanInput) {
-    this._discrete = coerceBooleanProperty(v);
+  set discrete(v: boolean) {
+    this._discrete = v;
     this._updateValueIndicatorUIs();
   }
   private _discrete: boolean = false;
 
   /** Whether the slider displays tick marks along the slider track. */
-  @Input()
-  get showTickMarks(): boolean {
-    return this._showTickMarks;
-  }
-  set showTickMarks(v: BooleanInput) {
-    this._showTickMarks = coerceBooleanProperty(v);
-  }
-  private _showTickMarks: boolean = false;
+  @Input({transform: booleanAttribute})
+  showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
-  @Input()
+  @Input({transform: numberAttribute})
   get min(): number {
     return this._min;
   }
-  set min(v: NumberInput) {
-    const min = coerceNumberProperty(v, this._min);
+  set min(v: number) {
+    const min = isNaN(v) ? this._min : v;
     if (this._min !== min) {
       this._updateMin(min);
     }
   }
   private _min: number = 0;
+
+  /** Palette color of the slider. */
+  @Input()
+  color: ThemePalette;
+
+  /** Whether ripples are disabled in the slider. */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
 
   private _updateMin(min: number): void {
     const prevMin = this._min;
@@ -212,12 +194,12 @@ export class MatSlider
   }
 
   /** The maximum value that the slider can have. */
-  @Input()
+  @Input({transform: numberAttribute})
   get max(): number {
     return this._max;
   }
-  set max(v: NumberInput) {
-    const max = coerceNumberProperty(v, this._max);
+  set max(v: number) {
+    const max = isNaN(v) ? this._max : v;
     if (this._max !== max) {
       this._updateMax(max);
     }
@@ -274,12 +256,12 @@ export class MatSlider
   }
 
   /** The values at which the thumb will snap. */
-  @Input()
+  @Input({transform: numberAttribute})
   get step(): number {
     return this._step;
   }
-  set step(v: NumberInput) {
-    const step = coerceNumberProperty(v, this._step);
+  set step(v: number) {
+    const step = isNaN(v) ? this._step : v;
     if (this._step !== step) {
       this._updateStep(step);
     }
@@ -410,14 +392,13 @@ export class MatSlider
   constructor(
     readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
-    elementRef: ElementRef<HTMLElement>,
+    readonly _elementRef: ElementRef<HTMLElement>,
     @Optional() readonly _dir: Directionality,
     @Optional()
     @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
     readonly _globalRippleOptions?: RippleGlobalOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
   ) {
-    super(elementRef);
     this._noopAnimations = animationMode === 'NoopAnimations';
     this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
     this._isRtl = this._dir.value === 'rtl';

@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
-import {MatDialog, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 
 /**
@@ -10,7 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrls: ['dialog-animations-example.css'],
   templateUrl: 'dialog-animations-example.html',
   standalone: true,
-  imports: [MatButtonModule, MatDialogModule],
+  imports: [MatButtonModule],
 })
 export class DialogAnimationsExample {
   constructor(public dialog: MatDialog) {}
@@ -28,7 +35,7 @@ export class DialogAnimationsExample {
   selector: 'dialog-animations-example-dialog',
   templateUrl: 'dialog-animations-example-dialog.html',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
 })
 export class DialogAnimationsExampleDialog {
   constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>) {}

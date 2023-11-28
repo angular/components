@@ -4,10 +4,7 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterContentInit } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanDisable } from '@angular/material/core';
 import { CdkNestedTreeNode } from '@angular/cdk/tree';
 import { CdkTree } from '@angular/cdk/tree';
 import { CdkTreeNode } from '@angular/cdk/tree';
@@ -16,16 +13,13 @@ import { CdkTreeNodeOutlet } from '@angular/cdk/tree';
 import { CdkTreeNodePadding } from '@angular/cdk/tree';
 import { CdkTreeNodeToggle } from '@angular/cdk/tree';
 import { CollectionViewer } from '@angular/cdk/collections';
-import { _Constructor } from '@angular/material/core';
 import { DataSource } from '@angular/cdk/collections';
 import { ElementRef } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { HasTabIndex } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i6 from '@angular/cdk/tree';
-import * as i7 from '@angular/material/core';
+import * as i1 from '@angular/cdk/tree';
+import * as i2 from '@angular/material/core';
 import { IterableDiffers } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -35,8 +29,9 @@ import { ViewContainerRef } from '@angular/core';
 // @public
 export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, differs: IterableDiffers, tabIndex: string);
-    get disabled(): boolean;
-    set disabled(value: BooleanInput);
+    disabled: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -48,7 +43,7 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> impleme
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNestedTreeNode<any, any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "node": { "alias": "matNestedTreeNode"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNestedTreeNode<any, any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "node": { "alias": "matNestedTreeNode"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatNestedTreeNode<any, any>, [null, null, null, { attribute: "tabindex"; }]>;
 }
@@ -58,7 +53,7 @@ export class MatTree<T, K = T> extends CdkTree<T, K> {
     // (undocumented)
     _nodeOutlet: MatTreeNodeOutlet;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTree<any, any>, "mat-tree", ["matTree"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTree<any, any>, "mat-tree", ["matTree"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTree<any, any>, never>;
 }
@@ -101,7 +96,7 @@ export class MatTreeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTreeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTreeModule, [typeof i1.MatNestedTreeNode, typeof i1.MatTreeNodeDef, typeof i2.MatTreeNodePadding, typeof i3.MatTreeNodeToggle, typeof i4.MatTree, typeof i1.MatTreeNode, typeof i5.MatTreeNodeOutlet], [typeof i6.CdkTreeModule, typeof i7.MatCommonModule], [typeof i7.MatCommonModule, typeof i1.MatNestedTreeNode, typeof i1.MatTreeNodeDef, typeof i2.MatTreeNodePadding, typeof i3.MatTreeNodeToggle, typeof i4.MatTree, typeof i1.MatTreeNode, typeof i5.MatTreeNodeOutlet]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTreeModule, never, [typeof i1.CdkTreeModule, typeof i2.MatCommonModule, typeof i3.MatNestedTreeNode, typeof i3.MatTreeNodeDef, typeof i4.MatTreeNodePadding, typeof i5.MatTreeNodeToggle, typeof i6.MatTree, typeof i3.MatTreeNode, typeof i7.MatTreeNodeOutlet], [typeof i2.MatCommonModule, typeof i3.MatNestedTreeNode, typeof i3.MatTreeNodeDef, typeof i4.MatTreeNodePadding, typeof i5.MatTreeNodeToggle, typeof i6.MatTree, typeof i3.MatTreeNode, typeof i7.MatTreeNodeOutlet]>;
 }
 
 // @public
@@ -115,14 +110,20 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
 }
 
 // @public
-export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K> implements CanDisable, HasTabIndex, OnInit, OnDestroy {
+export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, tabIndex: string);
+    disabled: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    tabIndex: number;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNode<any, any>, "mat-tree-node", ["matTreeNode"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNode<any, any>, "mat-tree-node", ["matTreeNode"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNode<any, any>, [null, null, { attribute: "tabindex"; }]>;
 }
@@ -132,7 +133,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     // (undocumented)
     data: T;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeDef<any>, "[matTreeNodeDef]", never, { "when": { "alias": "matTreeNodeDefWhen"; "required": false; }; "data": { "alias": "matTreeNode"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeDef<any>, "[matTreeNodeDef]", never, { "when": { "alias": "matTreeNodeDefWhen"; "required": false; }; "data": { "alias": "matTreeNode"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNodeDef<any>, never>;
 }
@@ -145,7 +146,7 @@ export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeOutlet, "[matTreeNodeOutlet]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeOutlet, "[matTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNodeOutlet, [null, { optional: true; }]>;
 }
@@ -155,9 +156,11 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
     get indent(): number | string;
     set indent(indent: number | string);
     get level(): number;
-    set level(value: NumberInput);
+    set level(value: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodePadding<any, any>, "[matTreeNodePadding]", never, { "level": { "alias": "matTreeNodePadding"; "required": false; }; "indent": { "alias": "matTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, false, never>;
+    static ngAcceptInputType_level: unknown;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodePadding<any, any>, "[matTreeNodePadding]", never, { "level": { "alias": "matTreeNodePadding"; "required": false; }; "indent": { "alias": "matTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNodePadding<any, any>, never>;
 }
@@ -165,7 +168,7 @@ export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
 // @public
 export class MatTreeNodeToggle<T, K = T> extends CdkTreeNodeToggle<T, K> {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeToggle<any, any>, "[matTreeNodeToggle]", never, { "recursive": { "alias": "matTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTreeNodeToggle<any, any>, "[matTreeNodeToggle]", never, { "recursive": { "alias": "matTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTreeNodeToggle<any, any>, never>;
 }

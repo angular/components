@@ -83,9 +83,9 @@
 <h1>Dynamic Exclusive Selection</h1>
 <section>
   <mat-button-toggle-group name="pies" [(ngModel)]="favoritePie" [vertical]="isVertical">
-    <mat-button-toggle *ngFor="let pie of pieOptions" [value]="pie">
-      {{pie}}
-    </mat-button-toggle>
+    @for (pie of pieOptions; track pie) {
+      <mat-button-toggle [value]="pie">{{pie}}</mat-button-toggle>
+    }
   </mat-button-toggle-group>
   <p>Your favorite type of pie is: {{favoritePie}}</p>
 </section>

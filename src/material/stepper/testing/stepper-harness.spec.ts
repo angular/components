@@ -16,8 +16,7 @@ describe('MatStepperHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [StepperHarnessTest],
+      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule, StepperHarnessTest],
       providers: [
         {
           provide: STEPPER_GLOBAL_OPTIONS,
@@ -302,6 +301,8 @@ describe('MatStepperHarness', () => {
       </mat-step>
     </mat-stepper>
   `,
+  standalone: true,
+  imports: [MatStepperModule, ReactiveFormsModule],
 })
 class StepperHarnessTest {
   oneGroup = new FormGroup({

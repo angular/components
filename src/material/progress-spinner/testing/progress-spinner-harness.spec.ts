@@ -11,8 +11,7 @@ describe('MatProgressSpinnerHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule],
-      declarations: [ProgressSpinnerHarnessTest],
+      imports: [MatProgressSpinnerModule, ProgressSpinnerHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProgressSpinnerHarnessTest);
@@ -27,18 +26,16 @@ describe('MatProgressSpinnerHarness', () => {
 
   it('should get the value', async () => {
     fixture.componentInstance.value = 50;
-    const [determinate, indeterminate, impliedIndeterminate] = await loader.getAllHarnesses(
-      MatProgressSpinnerHarness,
-    );
+    const [determinate, indeterminate, impliedIndeterminate] =
+      await loader.getAllHarnesses(MatProgressSpinnerHarness);
     expect(await determinate.getValue()).toBe(50);
     expect(await indeterminate.getValue()).toBe(null);
     expect(await impliedIndeterminate.getValue()).toBe(null);
   });
 
   it('should get the mode', async () => {
-    const [determinate, indeterminate, impliedIndeterminate] = await loader.getAllHarnesses(
-      MatProgressSpinnerHarness,
-    );
+    const [determinate, indeterminate, impliedIndeterminate] =
+      await loader.getAllHarnesses(MatProgressSpinnerHarness);
     expect(await determinate.getMode()).toBe('determinate');
     expect(await indeterminate.getMode()).toBe('indeterminate');
     expect(await impliedIndeterminate.getMode()).toBe('indeterminate');
@@ -51,6 +48,8 @@ describe('MatProgressSpinnerHarness', () => {
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     <mat-spinner></mat-spinner>
   `,
+  standalone: true,
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerHarnessTest {
   value: number;

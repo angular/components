@@ -10,8 +10,7 @@ describe('AriaDescriber', () => {
 
   function createFixture(providers: Provider[] = []) {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [TestApp],
+      imports: [A11yModule, TestApp],
       providers: [AriaDescriber, ...providers],
     }).compileComponents();
 
@@ -401,6 +400,8 @@ function expectMessage(el: Element, message: string) {
     <div id="description-with-existing-id">Hello</div>
     <div description-without-id>Hey</div>
   `,
+  standalone: true,
+  imports: [A11yModule],
 })
 class TestApp {
   @ViewChild('element1') _element1: ElementRef<HTMLElement>;

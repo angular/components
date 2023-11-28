@@ -1,5 +1,6 @@
 import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';<% if(standalone) { %>
+import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -26,7 +27,8 @@ import { map, shareReplay } from 'rxjs/operators';
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    AsyncPipe,
   ]<% } %>
 })
 export class <%= classify(name) %>Component {

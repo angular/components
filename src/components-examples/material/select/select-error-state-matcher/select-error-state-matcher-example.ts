@@ -9,7 +9,6 @@ import {
 } from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
-import {NgIf} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -26,14 +25,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'select-error-state-matcher-example',
   templateUrl: 'select-error-state-matcher-example.html',
   standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgIf,
-    MatInputModule,
-  ],
+  imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectErrorStateMatcherExample {
   selected = new FormControl('valid', [Validators.required, Validators.pattern('valid')]);

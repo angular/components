@@ -1,5 +1,5 @@
 import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -25,8 +25,10 @@ import {
 describe('MDC-based MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, CommonModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatTabsModule,
+        CommonModule,
+        NoopAnimationsModule,
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,
         BindedTabsTestApp,
@@ -996,8 +998,12 @@ describe('MDC-based MatTabGroup', () => {
 describe('nested MatTabGroup with enabled animations', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [NestedTabs, TabsWithCustomAnimationDuration],
+      imports: [
+        MatTabsModule,
+        BrowserAnimationsModule,
+        NestedTabs,
+        TabsWithCustomAnimationDuration,
+      ],
     });
 
     TestBed.compileComponents();
@@ -1034,8 +1040,7 @@ describe('MatTabGroup with ink bar fit to content', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [TabGroupWithInkBarFitToContent],
+      imports: [MatTabsModule, BrowserAnimationsModule, TabGroupWithInkBarFitToContent],
     });
 
     TestBed.compileComponents();
@@ -1077,8 +1082,7 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [SimpleTabsTestApp],
+      imports: [MatTabsModule, BrowserAnimationsModule, SimpleTabsTestApp],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1132,6 +1136,8 @@ describe('MatTabNavBar with a default config', () => {
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class SimpleTabsTestApp {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1158,12 +1164,16 @@ class SimpleTabsTestApp {
         (focusChange)="handleFocus($event)"
         (selectedTabChange)="handleSelection($event)"
         [disablePagination]="disablePagination">
-      <mat-tab *ngFor="let tab of tabs">
-        <ng-template mat-tab-label>{{tab.label}}</ng-template>
-        {{tab.content}}
-      </mat-tab>
+      @for (tab of tabs; track tab) {
+        <mat-tab>
+          <ng-template mat-tab-label>{{tab.label}}</ng-template>
+          {{tab.content}}
+        </mat-tab>
+      }
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class SimpleDynamicTabsTestApp {
   tabs = [
@@ -1186,11 +1196,13 @@ class SimpleDynamicTabsTestApp {
 @Component({
   template: `
     <mat-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
-      <mat-tab *ngFor="let tab of tabs" label="{{tab.label}}">
-        {{tab.content}}
-      </mat-tab>
+      @for (tab of tabs; track tab) {
+        <mat-tab label="{{tab.label}}">{{tab.content}}</mat-tab>
+      }
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class BindedTabsTestApp {
   tabs = [
@@ -1225,6 +1237,8 @@ class BindedTabsTestApp {
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class DisabledTabsTestApp {
   @ViewChildren(MatTab) tabs: QueryList<MatTab>;
@@ -1234,12 +1248,16 @@ class DisabledTabsTestApp {
 @Component({
   template: `
     <mat-tab-group class="tab-group">
-      <mat-tab *ngFor="let tab of tabs | async">
-        <ng-template mat-tab-label>{{ tab.label }}</ng-template>
-        {{ tab.content }}
-      </mat-tab>
+      @for (tab of tabs | async; track tab) {
+        <mat-tab>
+          <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+          {{ tab.content }}
+        </mat-tab>
+      }
    </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class AsyncTabsTestApp implements OnInit {
   private _tabs = [
@@ -1266,6 +1284,8 @@ class AsyncTabsTestApp implements OnInit {
     <mat-tab label="Legumes"> <p #legumes>Peanuts</p> </mat-tab>
   </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabGroupWithSimpleApi {
   preserveContent = false;
@@ -1287,6 +1307,8 @@ class TabGroupWithSimpleApi {
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class NestedTabs {
   @ViewChildren(MatTabGroup) groups: QueryList<MatTabGroup>;
@@ -1305,6 +1327,8 @@ class NestedTabs {
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TemplateTabs {}
 
@@ -1314,6 +1338,8 @@ class TemplateTabs {}
     <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
   </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabGroupWithAriaInputs {
   ariaLabel: string;
@@ -1327,8 +1353,12 @@ class TabGroupWithAriaInputs {
       <mat-tab label="Vegetables"> Broccoli, spinach </mat-tab>
     </mat-tab-group>
 
-    <div *ngIf="pizza.isActive">pizza is active</div>
+    @if (pizza.isActive) {
+      <div>pizza is active</div>
+    }
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabGroupWithIsActiveBinding {}
 
@@ -1339,18 +1369,22 @@ class TabGroupWithIsActiveBinding {}
       <mat-tab label="Two">Tab two content</mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {}
 
 @Component({
   template: `
     <mat-tab-group>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-tab label="One">Tab one content</mat-tab>
         <mat-tab label="Two">Tab two content</mat-tab>
-      </ng-container>
+      }
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabGroupWithIndirectDescendantTabs {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1363,6 +1397,8 @@ class TabGroupWithIndirectDescendantTabs {
       <mat-tab label="Two">Tab two content</mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabGroupWithInkBarFitToContent {
   fitInkBarToContent = true;
@@ -1384,6 +1420,8 @@ class TabGroupWithInkBarFitToContent {
       </ng-container>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabGroupWithSpaceAbove {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1406,6 +1444,8 @@ class TabGroupWithSpaceAbove {
       <mat-tab label="Parent 3">Parent 3</mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class NestedTabGroupWithLabel {}
 
@@ -1421,6 +1461,8 @@ class NestedTabGroupWithLabel {}
       </mat-tab>
     </mat-tab-group>
   `,
+  standalone: true,
+  imports: [MatTabsModule, CommonModule],
 })
 class TabsWithClassesTestApp {
   labelClassList?: string | string[];

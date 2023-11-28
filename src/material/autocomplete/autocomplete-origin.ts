@@ -15,6 +15,7 @@ import {Directive, ElementRef} from '@angular/core';
 @Directive({
   selector: '[matAutocompleteOrigin]',
   exportAs: 'matAutocompleteOrigin',
+  standalone: true,
 })
 export class MatAutocompleteOrigin {
   constructor(

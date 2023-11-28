@@ -80,14 +80,14 @@ describe('MenuItem', () => {
       let fixture: ComponentFixture<T>;
 
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [componentClass, MatIcon],
+        imports: [CdkMenuModule, MatIcon],
         providers: [
           {provide: CDK_MENU, useClass: CdkMenu},
           {provide: MENU_STACK, useClass: MenuStack},
           // View engine can't figure out the ElementRef to inject so we need to provide a fake
           {provide: ElementRef, useValue: new ElementRef<null>(null)},
         ],
+        declarations: [componentClass],
       }).compileComponents();
 
       fixture = TestBed.createComponent(componentClass);
@@ -196,5 +196,7 @@ class MenuItemWithMultipleNestings {
 @Component({
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MatIcon {}

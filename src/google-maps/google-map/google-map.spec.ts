@@ -1,8 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {GoogleMapsModule} from '../google-maps-module';
 import {createMapConstructorSpy, createMapSpy} from '../testing/fake-google-map-utils';
 import {DEFAULT_HEIGHT, DEFAULT_OPTIONS, DEFAULT_WIDTH, GoogleMap} from './google-map';
 
@@ -23,17 +22,6 @@ const testPosition: google.maps.LatLngLiteral = {
 describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
-  beforeEach(() => {
-    TestBed.compileComponents();
-  });
 
   afterEach(() => {
     (window.google as any) = undefined;
@@ -399,17 +387,21 @@ describe('GoogleMap', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map [height]="height"
-                         [width]="width"
-                         [center]="center"
-                         [zoom]="zoom"
-                         [options]="options"
-                         [mapTypeId]="mapTypeId"
-                         (mapClick)="handleClick($event)"
-                         (centerChanged)="handleCenterChanged()"
-                         (mapRightclick)="handleRightclick($event)"
-                         (mapInitialized)="mapInitializedSpy($event)">
-            </google-map>`,
+  template: `
+    <google-map
+      [height]="height"
+      [width]="width"
+      [center]="center"
+      [zoom]="zoom"
+      [options]="options"
+      [mapTypeId]="mapTypeId"
+      (mapClick)="handleClick($event)"
+      (centerChanged)="handleCenterChanged()"
+      (mapRightclick)="handleRightclick($event)"
+      (mapInitialized)="mapInitializedSpy($event)" />
+  `,
+  standalone: true,
+  imports: [GoogleMap],
 })
 class TestApp {
   @ViewChild(GoogleMap) map: GoogleMap;

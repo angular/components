@@ -32,6 +32,7 @@ import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
+import {MatRipple} from '@angular/material/core';
 
 /** @docs-private */
 export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR = {
@@ -75,6 +76,8 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValueAccessor {
   private _onChange = (_: any) => {};

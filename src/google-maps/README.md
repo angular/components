@@ -21,25 +21,13 @@ method to make sure that the component doesn't load until after the API has load
 // google-maps-demo.module.ts
 
 import { NgModule } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
 
 import { GoogleMapsDemoComponent } from './google-maps-demo.component';
 
 @NgModule({
-  declarations: [
-    GoogleMapsDemoComponent,
-  ],
-  imports: [
-    CommonModule,
-    GoogleMapsModule,
-    HttpClientModule,
-    HttpClientJsonpModule,
-  ],
-  exports: [
-    GoogleMapsDemoComponent,
-  ],
+  imports: [GoogleMapsDemoComponent],
+  providers: [provideHttpClient(withJsonpSupport())]
 })
 export class GoogleMapsDemoModule {}
 
@@ -48,18 +36,21 @@ export class GoogleMapsDemoModule {}
 
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { GoogleMap } from '@angular/google-maps';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'google-maps-demo',
   templateUrl: './google-maps-demo.component.html',
+  standalone: true,
+  imports: [GoogleMap]
 })
 export class GoogleMapsDemoComponent {
   apiLoaded: Observable<boolean>;
 
   constructor(httpClient: HttpClient) {
-    // If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization` library 
+    // If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization` library
     // when loading the Google Maps API. To do so, you can add `&libraries=visualization` to the script URL:
     // https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization
 
@@ -75,9 +66,9 @@ export class GoogleMapsDemoComponent {
 ```html
 <!-- google-maps-demo.component.html -->
 
-<div *ngIf="apiLoaded | async">
-  <google-map></google-map>
-</div>
+@if (apiLoaded | async) {
+  <google-map />
+}
 ```
 
 ## Components
@@ -110,7 +101,7 @@ of the most common options. For example, the Google Maps component could have it
 in with a google.maps.MapOptions object:
 
 ```html
-<google-map [options]="options"></google-map>
+<google-map [options]="options" />
 ```
 
 ```typescript
@@ -123,8 +114,7 @@ options: google.maps.MapOptions = {
 It can also have individual options set for some of the most common options:
 
 ```html
-<google-map [center]="center"
-            [zoom]="zoom"></google-map>
+<google-map [center]="center" [zoom]="zoom" />
 ```
 
 ```typescript

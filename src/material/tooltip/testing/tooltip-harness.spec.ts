@@ -12,8 +12,7 @@ describe('MatTooltipHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatTooltipModule, NoopAnimationsModule],
-      declarations: [TooltipHarnessTest],
+      imports: [MatTooltipModule, NoopAnimationsModule, TooltipHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TooltipHarnessTest);
@@ -68,6 +67,8 @@ describe('MatTooltipHarness', () => {
     <button matTooltip='Static message' id='two'>Trigger 2</button>
     <button matTooltip='Disabled Tooltip' [matTooltipDisabled]='true' id='three'>Trigger 3</button>
   `,
+  standalone: true,
+  imports: [MatTooltipModule],
 })
 class TooltipHarnessTest {
   message = 'Tooltip message';

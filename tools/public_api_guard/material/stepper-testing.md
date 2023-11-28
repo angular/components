@@ -66,7 +66,7 @@ export interface StepperHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export const enum StepperOrientation {
+export enum StepperOrientation {
     // (undocumented)
     HORIZONTAL = 0,
     // (undocumented)

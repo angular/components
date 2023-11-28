@@ -7,8 +7,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 describe('MDC-based MatTestDialogOpener', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTestDialogOpenerModule, NoopAnimationsModule],
-      declarations: [ExampleComponent],
+      imports: [MatTestDialogOpenerModule, NoopAnimationsModule, ExampleComponent],
     });
 
     TestBed.compileComponents();
@@ -61,6 +60,7 @@ interface ExampleDialogResult {
     Data: {{data}}
     <button id="close-btn" (click)="close()">Close</button>
   `,
+  standalone: true,
 })
 class ExampleComponent {
   constructor(

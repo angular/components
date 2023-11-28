@@ -32,7 +32,7 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     readonly _openCloseAllActions: Subject<boolean>;
     readonly _stateChanges: Subject<SimpleChanges>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordion, "cdk-accordion, [cdkAccordion]", ["cdkAccordion"], { "multi": { "alias": "multi"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordion, "cdk-accordion, [cdkAccordion]", ["cdkAccordion"], { "multi": { "alias": "multi"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkAccordion, never>;
 }
@@ -61,7 +61,7 @@ export class CdkAccordionItem implements OnDestroy {
     readonly opened: EventEmitter<void>;
     toggle(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordionItem, "cdk-accordion-item, [cdkAccordionItem]", ["cdkAccordionItem"], { "expanded": { "alias": "expanded"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "destroyed": "destroyed"; "expandedChange": "expandedChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordionItem, "cdk-accordion-item, [cdkAccordionItem]", ["cdkAccordionItem"], { "expanded": { "alias": "expanded"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "destroyed": "destroyed"; "expandedChange": "expandedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkAccordionItem, [{ optional: true; skipSelf: true; }, null, null]>;
 }
@@ -73,7 +73,7 @@ export class CdkAccordionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<CdkAccordionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkAccordionModule, [typeof i1.CdkAccordion, typeof i2.CdkAccordionItem], never, [typeof i1.CdkAccordion, typeof i2.CdkAccordionItem]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkAccordionModule, never, [typeof i1.CdkAccordion, typeof i2.CdkAccordionItem], [typeof i1.CdkAccordion, typeof i2.CdkAccordionItem]>;
 }
 
 // (No @packageDocumentation comment for this package)

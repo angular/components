@@ -12,8 +12,7 @@ describe('MatSortHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [SortHarnessTest],
+      imports: [MatSortModule, NoopAnimationsModule, SortHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SortHarnessTest);
@@ -127,15 +126,19 @@ describe('MatSortHarness', () => {
         <th mat-sort-header="protein">Protein</th>
       </tr>
 
-      <tr *ngFor="let dessert of sortedData">
-        <td>{{dessert.name}}</td>
-        <td>{{dessert.calories}}</td>
-        <td>{{dessert.fat}}</td>
-        <td>{{dessert.carbs}}</td>
-        <td>{{dessert.protein}}</td>
-      </tr>
+      @for (dessert of sortedData; track dessert) {
+        <tr>
+          <td>{{dessert.name}}</td>
+          <td>{{dessert.calories}}</td>
+          <td>{{dessert.fat}}</td>
+          <td>{{dessert.carbs}}</td>
+          <td>{{dessert.protein}}</td>
+        </tr>
+      }
     </table>
   `,
+  standalone: true,
+  imports: [MatSortModule],
 })
 class SortHarnessTest {
   disableThirdHeader = false;

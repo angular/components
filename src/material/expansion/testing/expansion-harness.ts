@@ -14,7 +14,7 @@ import {
 import {ExpansionPanelHarnessFilters} from './expansion-harness-filters';
 
 /** Selectors for the various `mat-expansion-panel` sections that may contain user content. */
-export const enum MatExpansionPanelSection {
+export enum MatExpansionPanelSection {
   HEADER = '.mat-expansion-panel-header',
   TITLE = '.mat-expansion-panel-header-title',
   DESCRIPTION = '.mat-expansion-panel-header-description',
