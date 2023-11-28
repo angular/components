@@ -27,6 +27,7 @@ import {CdkSelection} from './selection';
 @Directive({
   selector: '[cdkSelectionToggle]',
   exportAs: 'cdkSelectionToggle',
+  standalone: true,
 })
 export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   /** The value that is associated with the toggle */

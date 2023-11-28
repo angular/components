@@ -26,6 +26,7 @@ import {CdkSelection} from './selection';
 @Directive({
   selector: '[cdkSelectAll]',
   exportAs: 'cdkSelectAll',
+  standalone: true,
 })
 export class CdkSelectAll<T> implements OnDestroy, OnInit {
   /**
