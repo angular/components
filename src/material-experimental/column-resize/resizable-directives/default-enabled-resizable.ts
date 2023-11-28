@@ -40,6 +40,7 @@ import {AbstractMatResizable, RESIZABLE_HOST_BINDINGS, RESIZABLE_INPUTS} from '.
   selector: 'mat-header-cell:not([disableResize]), th[mat-header-cell]:not([disableResize])',
   host: RESIZABLE_HOST_BINDINGS,
   inputs: RESIZABLE_INPUTS,
+  standalone: true,
 })
 export class MatDefaultResizable extends AbstractMatResizable {
   protected readonly document: Document;

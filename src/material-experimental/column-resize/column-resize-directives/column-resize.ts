@@ -24,6 +24,7 @@ import {AbstractMatColumnResize, TABLE_HOST_BINDINGS, TABLE_PROVIDERS} from './c
   selector: 'table[mat-table][columnResize]',
   host: TABLE_HOST_BINDINGS,
   providers: [...TABLE_PROVIDERS, {provide: ColumnResize, useExisting: MatColumnResize}],
+  standalone: true,
 })
 export class MatColumnResize extends AbstractMatColumnResize {
   constructor(
