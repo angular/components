@@ -36,6 +36,7 @@ function removeIcons(element: Element) {
     '[attr.aria-disabled]': 'disabled || null',
   },
   providers: [{provide: CdkMenuItem, useExisting: MatMenuBarItem}],
+  standalone: true,
 })
 export class MatMenuBarItem extends CdkMenuItem {
   override getLabel(): string {
