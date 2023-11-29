@@ -50,6 +50,7 @@ ng_test_library(
     ),
     deps = [
         ":tree",
+        "//src/cdk/a11y",
         "//src/cdk/tree",
         "@npm//rxjs",
     ],

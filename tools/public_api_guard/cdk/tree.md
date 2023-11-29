@@ -77,7 +77,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 
 // @public
 export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
-    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality, _elementRef: ElementRef<HTMLElement>);
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality);
     childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     collapse(dataNode: T): void;
     collapseAll(): void;
@@ -88,7 +88,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     expandAll(): void;
     expandDescendants(dataNode: T): void;
     expansionKey?: (dataNode: T) => K;
-    _focusInitialTreeItem(): void;
     _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
     _getDirectChildren(dataNode: T): Observable<T[]>;
     _getLevel(node: T): number | undefined;
@@ -117,7 +116,6 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     _sendKeydownToKeyManager(event: KeyboardEvent): void;
     _setNodeTypeIfUnset(nodeType: 'flat' | 'nested'): void;
-    _setTabIndex(): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
     trackBy: TrackByFunction<T>;
@@ -196,11 +194,10 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');
     // (undocumented)
-    _setTabFocusable(): void;
-    // (undocumented)
-    _setTabUnfocusable(): void;
+    protected _tabindex: number | null;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
+    unfocus(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, true, never>;
     // (undocumented)

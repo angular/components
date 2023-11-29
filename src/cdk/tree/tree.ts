@@ -60,7 +60,6 @@ import {
 import {distinctUntilChanged, 
   concatMap,
   map,
-  pairwise,
   reduce,
   startWith,
   switchMap,
@@ -110,7 +109,6 @@ type RenderingData<T> =
     'class': 'cdk-tree',
     'role': 'tree',
     '(keydown)': '_sendKeydownToKeyManager($event)',
-    '(focus)': '_focusInitialTreeItem()',
   },
   encapsulation: ViewEncapsulation.None,
   // The "OnPush" status for the `CdkTree` component is effectively a noop, so we are removing it.
@@ -266,7 +264,6 @@ export class CdkTree<T, K = T>
     private _differs: IterableDiffers,
     private _changeDetectorRef: ChangeDetectorRef,
     private _dir: Directionality,
-    private _elementRef: ElementRef<HTMLElement>,
   ) {}
 
   ngAfterContentInit() {
@@ -317,23 +314,6 @@ export class CdkTree<T, K = T>
   _setNodeTypeIfUnset(nodeType: 'flat' | 'nested') {
     if (this._nodeType.value === null) {
       this._nodeType.next(nodeType);
-    }
-  }
-
-  /**
-   * Sets the tabIndex on the host element.
-   *
-   * NB: we don't set this as a host binding since children being activated
-   * (e.g. on user click) doesn't trigger this component's change detection.
-   */
-  _setTabIndex() {
-    // If the `TreeKeyManager` has no active item, then we know that we need to focus the initial
-    // item when the tree is focused. We set the tabindex to be `0` so that we can capture
-    // the focus event and redirect it. Otherwise, we unset it.
-    if (!this._keyManager.getActiveItem()) {
-      this._elementRef.nativeElement.setAttribute('tabindex', '0');
-    } else {
-      this._elementRef.nativeElement.removeAttribute('tabindex');
     }
   }
 
@@ -475,18 +455,6 @@ export class CdkTree<T, K = T>
     };
 
     this._keyManager = this._keyManagerFactory(items, keyManagerOptions);
-
-    this._keyManager.change
-      .pipe(startWith(null), pairwise(), takeUntil(this._onDestroy))
-      .subscribe(([prev, next]) => {
-        prev?._setTabUnfocusable();
-        next?._setTabFocusable();
-      });
-
-    this._keyManager.change.pipe(startWith(null), takeUntil(this._onDestroy)).subscribe(() => {
-      // refresh the tabindex when the active item changes.
-      this._setTabIndex();
-    });
   }
 
   private _initializeDataDiffer() {
@@ -867,14 +835,6 @@ export class CdkTree<T, K = T>
     this._keyManager.onKeydown(event);
   }
 
-  /** `focus` event handler; this focuses the initial item if there isn't already one available. */
-  _focusInitialTreeItem() {
-    if (this._keyManager.getActiveItem()) {
-      return;
-    }
-    this._keyManager.onInitialFocus();
-  }
-
   /** Gets all nested descendants of a given node. */
   private _getDescendants(dataNode: T): Observable<T[]> {
     if (this.treeControl) {
@@ -1143,7 +1103,7 @@ export class CdkTree<T, K = T>
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
-    'tabindex': '-1',
+    '[tabindex]': '_tabindex',
     'role': 'treeitem',
     '(click)': '_focusItem()',
     '(focus)': '_focusItem()',
@@ -1151,6 +1111,8 @@ export class CdkTree<T, K = T>
   standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
+  protected _tabindex: number | null = -1;
+
   _changeDetectorRef = inject(ChangeDetectorRef);
 
   /**
@@ -1331,7 +1293,17 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
+    this._tabindex = 0;
     this._elementRef.nativeElement.focus();
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /** Defocus this data node. */
+  unfocus(): void {
+    this._tabindex = -1;
+
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Emits an activation event. Implemented for TreeKeyManagerItem. */
@@ -1354,14 +1326,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     if (this.isExpandable) {
       this._tree.expand(this._data);
     }
-  }
-
-  _setTabFocusable() {
-    this._elementRef.nativeElement.setAttribute('tabindex', '0');
-  }
-
-  _setTabUnfocusable() {
-    this._elementRef.nativeElement.setAttribute('tabindex', '-1');
   }
 
   _focusItem() {

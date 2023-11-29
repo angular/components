@@ -51,7 +51,7 @@ function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
     '(click)': '_focusItem()',
-    'tabindex': '_getTabindexAttribute()',
+    '[tabindex]': '_getTabindexAttribute()',
   },
   standalone: true,
 })
@@ -66,15 +66,16 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
    */
   @Input({
     transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+    alias: 'tabIndex',
   })
-  get tabIndex(): number {
-    return this.isDisabled ? -1 : this._tabIndex;
+  get tabIndexInputBinding(): number {
+    return this._tabIndexInputBinding;
   }
-  set tabIndex(value: number) {
+  set tabIndexInputBinding(value: number) {
     // If the specified tabIndex value is null or undefined, fall back to the default value.
-    this._tabIndex = value;
+    this._tabIndexInputBinding = value;
   }
-  private _tabIndex: number;
+  private _tabIndexInputBinding: number;
 
   /**
    * The default tabindex of the tree node.
@@ -88,9 +89,9 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
 
   protected _getTabindexAttribute() {
     if (isNoopTreeKeyManager(this._tree._keyManager)) {
-      return this.tabIndex;
+      return this.tabIndexInputBinding;
     }
-    return -1;
+    return this._tabindex;
   }
 
   /**
@@ -122,7 +123,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   ) {
     super(elementRef, tree);
 
-    this.tabIndex = Number(tabIndex) || this.defaultTabIndex;
+    this.tabIndexInputBinding = Number(tabIndex) || this.defaultTabIndex;
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091

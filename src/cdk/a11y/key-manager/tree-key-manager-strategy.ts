@@ -39,6 +39,11 @@ export interface TreeKeyManagerItem {
    * Focuses the item. This should provide some indication to the user that this item is focused.
    */
   focus(): void;
+
+  /**
+   * Unfocus the item. This should remove the focus state.
+   */
+  unfocus(): void;
 }
 
 /**
@@ -99,14 +104,6 @@ export interface TreeKeyManagerStrategy<T extends TreeKeyManagerItem> {
 
   /** The currently active item. */
   getActiveItem(): T | null;
-
-  /**
-   * Called the first time the Tree component is focused. This method will only be called once over
-   * the lifetime of the Tree component.
-   *
-   * Intended to be used to focus the first item in the tree.
-   */
-  onInitialFocus(): void;
 
   /**
    * Focus the provided item by index.

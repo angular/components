@@ -16,12 +16,12 @@ import {
   CdkTreeFlatChildrenAccessorExample,
   CdkTreeComplexExample,
   CdkTreeCustomKeyManagerExample,
-  CdkTreeLegacyKeyboardInterfaceExample,
 } from '@angular/components-examples/cdk/tree';
 import {
   TreeDynamicExample,
   TreeFlatOverviewExample,
   TreeHarnessExample,
+  TreeLegacyKeyboardInterfaceExample,
   TreeLoadmoreExample,
   TreeNestedOverviewExample,
 } from '@angular/components-examples/material/tree';
@@ -48,7 +48,6 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeNestedExample,
     CdkTreeFlatChildrenAccessorExample,
     CdkTreeFlatLevelAccessorExample,
-    CdkTreeLegacyKeyboardInterfaceExample,
     CdkTreeNestedChildrenAccessorExample,
     CdkTreeNestedLevelAccessorExample,
     CdkTreeComplexExample,
@@ -57,6 +56,7 @@ import {MatTreeModule} from '@angular/material/tree';
     TreeDynamicExample,
     TreeFlatOverviewExample,
     TreeHarnessExample,
+    TreeLegacyKeyboardInterfaceExample,
     TreeLoadmoreExample,
     TreeNestedOverviewExample,
     MatButtonModule,

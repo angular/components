@@ -428,9 +428,11 @@ describe('MatTree', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
-          .withContext('aria-expanded attributes')
-          .toEqual([null, null, null]);
+        expect(
+          getNodes(treeElement)
+            .map(x => `${x.getAttribute('aria-expanded')}`)
+            .join(', '),
+        ).toEqual('null, null, null');
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -443,9 +445,13 @@ describe('MatTree', () => {
 
         // NB: only four elements are present here; children are not present
         // in DOM unless the parent node is expanded.
-        expect(getNodeAttributes(getNodes(treeElement), 'aria-expanded'))
+        expect(
+          getNodes(treeElement)
+            .map(x => `${x.getAttribute('aria-expanded')}`)
+            .join(', '),
+        )
           .withContext('aria-expanded attributes')
-          .toEqual([null, 'true', 'false', null]);
+          .toEqual('null, true, false, null');
       });
 
       it('should expand/collapse the node', () => {
@@ -560,39 +566,41 @@ describe('MatTree', () => {
     });
 
     describe('focus management', () => {
-      it('the tree is tabbable when no element is active', () => {
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
-      });
-
-      it('the tree is not tabbable when an element is active', () => {
-        // activate the second child by clicking on it
-        nodes[1].click();
-
-        expect(treeElement.getAttribute('tabindex')).toBe(null);
-      });
-
       it('sets tabindex on the latest activated item, with all others "-1"', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        fixture.detectChanges();
 
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
+          '-1, 0, -1, -1, -1, -1',
+        );
 
         // activate the first child by clicking on it
         nodes[0].click();
+        fixture.detectChanges();
 
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
+          '0, -1, -1, -1, -1, -1',
+        );
       });
 
       it('maintains tabindex when component is blurred', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
+          '-1, 0, -1, -1, -1, -1',
+        );
 
         expect(document.activeElement).toBe(nodes[1]);
         // blur the currently active element (which we just checked is the above node)
         nodes[1].blur();
+        fixture.detectChanges();
 
-        expect(treeElement.getAttribute('tabindex')).toBe(null);
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
+          '-1, 0, -1, -1, -1, -1',
+        );
       });
 
       it('ignores clicks on disabled items', () => {
@@ -600,30 +608,11 @@ describe('MatTree', () => {
         fixture.detectChanges();
 
         // attempt to click on the first child
-        nodes[0].click();
+        nodes[1].click();
 
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
-        expect(getNodeAttributes(nodes, 'tabindex')).toEqual(['-1', '-1', '-1', '-1', '-1', '-1']);
-      });
-
-      describe('when no item is currently active', () => {
-        it('redirects focus to the first item when the tree is focused', () => {
-          treeElement.focus();
-
-          fixture.detectChanges();
-
-          expect(document.activeElement).toEqual(nodes[0]);
-        });
-
-        it('redirects focus to the first non-disabled item when the tree is focused', () => {
-          underlyingDataSource.data[0].isDisabled = true;
-          fixture.detectChanges();
-
-          treeElement.focus();
-          fixture.detectChanges();
-
-          expect(document.activeElement).toEqual(nodes[1]);
-        });
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
+          '0, -1, -1, -1, -1, -1',
+        );
       });
     });
 
@@ -633,27 +622,22 @@ describe('MatTree', () => {
       });
 
       it('sets the treeitem role on all nodes', () => {
-        expect(getNodeAttributes(nodes, 'role')).toEqual([
-          'treeitem',
-          'treeitem',
-          'treeitem',
-          'treeitem',
-          'treeitem',
-          'treeitem',
-        ]);
+        expect(nodes.map(x => x.getAttribute('role')).join(', ')).toEqual(
+          'treeitem, treeitem, treeitem, treeitem, treeitem, treeitem',
+        );
       });
 
       it('sets aria attributes for tree nodes', () => {
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'false', 'false', null, null, null]);
-        expect(getNodeAttributes(nodes, 'aria-level'))
+        expect(nodes.map(x => x.getAttribute('aria-level')))
           .withContext('aria-level attributes')
           .toEqual(['1', '1', '2', '3', '3', '1']);
-        expect(getNodeAttributes(nodes, 'aria-posinset'))
+        expect(nodes.map(x => x.getAttribute('aria-posinset')))
           .withContext('aria-posinset attributes')
           .toEqual(['1', '2', '1', '1', '2', '3']);
-        expect(getNodeAttributes(nodes, 'aria-setsize'))
+        expect(nodes.map(x => x.getAttribute('aria-setsize')))
           .withContext('aria-setsize attributes')
           .toEqual(['3', '3', '1', '2', '2', '3']);
       });
@@ -661,13 +645,13 @@ describe('MatTree', () => {
       it('changes aria-expanded status when expanded or collapsed', () => {
         tree.expand(underlyingDataSource.data[1]);
         fixture.detectChanges();
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'true', 'false', null, null, null]);
 
         tree.collapse(underlyingDataSource.data[1]);
         fixture.detectChanges();
-        expect(getNodeAttributes(nodes, 'aria-expanded'))
+        expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'false', 'false', null, null, null]);
       });
@@ -858,10 +842,6 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));
   }
-}
-
-function getNodeAttributes(nodes: HTMLElement[], attribute: string) {
-  return nodes.map(node => node.getAttribute(attribute));
 }
 
 @Component({

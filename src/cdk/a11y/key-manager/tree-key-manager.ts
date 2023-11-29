@@ -53,11 +53,13 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   private readonly _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
 
+  // Keep tree items focusable when disabled. Align with
+  // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols.
   /**
    * Predicate function that can be used to check whether an item should be skipped
-   * by the key manager. By default, disabled items are skipped.
+   * by the key manager.
    */
-  private _skipPredicateFn = (item: T) => this._isItemDisabled(item);
+  private _skipPredicateFn = (_item: T) => false;
 
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
@@ -66,6 +68,29 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   private _pressedLetters: string[] = [];
 
   private _items: T[] = [];
+
+  private _hasInitialFocused = false;
+
+  private _initialFocus() {
+    if (this._hasInitialFocused) {
+      return;
+    }
+
+    if (!this._items.length) {
+      return;
+    }
+
+    let focusIndex = 0;
+    for (let i = 0; i < this._items.length; i++) {
+      if (!this._skipPredicateFn(this._items[i]) && !this._isItemDisabled(this._items[i])) {
+        focusIndex = i;
+        break;
+      }
+    }
+
+    this.focusItem(focusIndex);
+    this._hasInitialFocused = true;
+  }
 
   constructor(items: Observable<T[]> | QueryList<T> | T[], config: TreeKeyManagerOptions<T>) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
@@ -76,14 +101,17 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       items.changes.subscribe((newItems: QueryList<T>) => {
         this._items = newItems.toArray();
         this._updateActiveItemIndex(this._items);
+        this._initialFocus();
       });
     } else if (isObservable(items)) {
       items.subscribe(newItems => {
         this._items = newItems;
         this._updateActiveItemIndex(newItems);
+        this._initialFocus();
       });
     } else {
       this._items = items;
+      this._initialFocus();
     }
 
     if (typeof config.activationFollowsFocus === 'boolean') {
@@ -188,14 +216,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     return this._activeItem;
   }
 
-  /**
-   * Focus the initial element; this is intended to be called when the tree is focused for
-   * the first time.
-   */
-  onInitialFocus(): void {
-    this._focusFirstItem();
-  }
-
   /** Focus the first available item. */
   private _focusFirstItem(): void {
     this.focusItem(this._findNextAvailableItemIndex(-1));
@@ -245,14 +265,18 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       return;
     }
 
+    const previousActiveItem = this._activeItem;
     this._activeItem = activeItem ?? null;
     this._activeItemIndex = index;
+
+    this._activeItem?.focus();
+    previousActiveItem?.unfocus();
 
     if (options.emitChangeEvent) {
       // Emit to `change` stream as required by TreeKeyManagerStrategy interface.
       this.change.next(this._activeItem);
     }
-    this._activeItem?.focus();
+
     if (this._activationFollowsFocus) {
       this._activateCurrentItem();
     }
@@ -364,10 +388,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     if (!this._isCurrentItemExpanded()) {
       this._activeItem.expand();
     } else {
-      const children = this._activeItem.getChildren();
-
-      const children2 = isObservable(children) ? children : observableOf(children);
-
       coerceObservable(this._activeItem.getChildren())
         .pipe(take(1))
         .subscribe(children => {
