@@ -6,14 +6,12 @@ import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
 import {MainComponentHarness} from './harnesses/main-component-harness';
-import {TestComponentsModule} from './test-components-module';
 import {TestMainComponent} from './test-main-component';
 
 describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({imports: [TestComponentsModule]}).compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(TestMainComponent);
   });
 
@@ -38,9 +36,10 @@ describe('TestbedHarnessEnvironment', () => {
       });
 
       it('should be able to load harness through document root loader', async () => {
-        const documentRootHarnesses = await TestbedHarnessEnvironment.documentRootLoader(
-          fixture,
-        ).getAllHarnesses(FakeOverlayHarness);
+        const documentRootHarnesses =
+          await TestbedHarnessEnvironment.documentRootLoader(fixture).getAllHarnesses(
+            FakeOverlayHarness,
+          );
         const fixtureHarnesses = await loader.getAllHarnesses(FakeOverlayHarness);
         expect(fixtureHarnesses.length).toBe(0);
         expect(documentRootHarnesses.length).toBe(1);

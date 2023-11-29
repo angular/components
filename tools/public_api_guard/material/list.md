@@ -104,7 +104,7 @@ export class _MatListItemGraphicBase {
     // (undocumented)
     _listOption: ListOption;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatListItemGraphicBase, never, never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatListItemGraphicBase, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatListItemGraphicBase, [{ optional: true; }]>;
 }

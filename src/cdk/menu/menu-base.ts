@@ -47,6 +47,7 @@ let nextId = 0;
     '(focusin)': 'menuStack.setHasFocus(true)',
     '(focusout)': 'menuStack.setHasFocus(false)',
   },
+  standalone: true,
 })
 export abstract class CdkMenuBase
   extends CdkMenuGroup

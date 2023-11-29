@@ -69,6 +69,7 @@ export class MatListItemMeta {}
     '[class.mdc-list-item__start]': '_isAlignedAtStart()',
     '[class.mdc-list-item__end]': '!_isAlignedAtStart()',
   },
+  standalone: true,
 })
 export class _MatListItemGraphicBase {
   constructor(@Optional() @Inject(LIST_OPTION) public _listOption: ListOption) {}
