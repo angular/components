@@ -35,6 +35,7 @@ import {DOCUMENT} from '@angular/common';
     'rows': '1',
     '(input)': '_noopInputHandler()',
   },
+  standalone: true,
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */

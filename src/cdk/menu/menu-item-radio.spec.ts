@@ -17,8 +17,7 @@ describe('MenuItemRadio', () => {
   beforeEach(waitForAsync(() => {
     selectionDispatcher = new UniqueSelectionDispatcher();
     TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [SimpleRadioButton],
+      imports: [CdkMenuModule, SimpleRadioButton],
       providers: [
         {provide: UniqueSelectionDispatcher, useValue: selectionDispatcher},
         {provide: CDK_MENU, useClass: CdkMenu},
@@ -94,5 +93,7 @@ describe('MenuItemRadio', () => {
 
 @Component({
   template: `<button cdkMenuItemRadio>Click me!</button>`,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class SimpleRadioButton {}

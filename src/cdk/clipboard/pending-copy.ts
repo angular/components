@@ -22,7 +22,10 @@
 export class PendingCopy {
   private _textarea: HTMLTextAreaElement | undefined;
 
-  constructor(text: string, private readonly _document: Document) {
+  constructor(
+    text: string,
+    private readonly _document: Document,
+  ) {
     const textarea = (this._textarea = this._document.createElement('textarea'));
     const styles = textarea.style;
 

@@ -15,8 +15,8 @@ describe('MDC-based MatChip', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [
+      imports: [
+        MatChipsModule,
         BasicChip,
         SingleChip,
         BasicChipWithStaticTabindex,
@@ -196,6 +196,8 @@ describe('MDC-based MatChip', () => {
         </div>
       }
     </mat-chip-set>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class SingleChip {
   @ViewChild(MatChipSet) chipList: MatChipSet;
@@ -213,16 +215,22 @@ class SingleChip {
 
 @Component({
   template: `<mat-basic-chip>Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChip {}
 
 @Component({
   template: `<mat-basic-chip role="button" tabindex="3">Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChipWithStaticTabindex {}
 
 @Component({
   template: `<mat-basic-chip role="button" [tabIndex]="tabindex">Hello</mat-basic-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class BasicChipWithBoundTabindex {
   tabindex = 12;

@@ -5,7 +5,7 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -44,8 +44,8 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
@@ -672,8 +672,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithSelectedOption],
+        imports: [MatListModule, SelectionListWithSelectedOption],
       });
 
       TestBed.compileComponents();
@@ -711,8 +710,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SingleSelectionListWithSelectedOption],
+        imports: [MatListModule, SingleSelectionListWithSelectedOption],
       });
 
       TestBed.compileComponents();
@@ -749,8 +747,7 @@ describe('MDC-based MatSelectionList without forms', () => {
       const matListConfig: MatListConfig = {hideSingleSelectionIndicator: true};
 
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SingleSelectionListWithSelectedOption],
+        imports: [MatListModule, SingleSelectionListWithSelectedOption],
         providers: [{provide: MAT_LIST_CONFIG, useValue: matListConfig}],
       });
 
@@ -785,8 +782,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithDisabledOption],
+        imports: [MatListModule, SelectionListWithDisabledOption],
       });
 
       TestBed.compileComponents();
@@ -833,8 +829,8 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
@@ -930,8 +926,8 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
@@ -960,8 +956,7 @@ describe('MDC-based MatSelectionList without forms', () => {
   describe('with list item elements', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithAvatar, SelectionListWithIcon],
+        imports: [MatListModule, SelectionListWithAvatar, SelectionListWithIcon],
       }).compileComponents();
     }));
 
@@ -1089,8 +1084,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithListOptions],
+        imports: [MatListModule, SelectionListWithListOptions],
       }).compileComponents();
 
       fixture = TestBed.createComponent(SelectionListWithListOptions);
@@ -1214,8 +1208,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [ListOptionWithTwoWayBinding],
+        imports: [MatListModule, ListOptionWithTwoWayBinding],
       }).compileComponents();
 
       fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
@@ -1248,8 +1241,10 @@ describe('MDC-based MatSelectionList without forms', () => {
 describe('MDC-based MatSelectionList with forms', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatListModule, FormsModule, ReactiveFormsModule],
-      declarations: [
+      imports: [
+        MatListModule,
+        FormsModule,
+        ReactiveFormsModule,
         SelectionListWithModel,
         SelectionListWithFormControl,
         SelectionListWithPreselectedOption,
@@ -1731,6 +1726,8 @@ describe('MDC-based MatSelectionList with forms', () => {
       </mat-list-option>
     }
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithListOptions {
   showLastOption = true;
@@ -1758,6 +1755,8 @@ class SelectionListWithListOptions {
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithCheckboxPositionAfter {}
 
@@ -1777,6 +1776,8 @@ class SelectionListWithCheckboxPositionAfter {}
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithListDisabled {
   disabled: boolean = true;
@@ -1788,6 +1789,8 @@ class SelectionListWithListDisabled {
     <mat-list-option [disabled]="disableItem">Item</mat-list-option>
   </mat-selection-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithDisabledOption {
   disableItem: boolean = false;
@@ -1801,6 +1804,8 @@ class SelectionListWithDisabledOption {
     <mat-list-option [selected]="true">Pre-selected - Item #3</mat-list-option>
     <mat-list-option>Not selected - Item #4</mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithSelectedOption {}
 
@@ -1810,6 +1815,8 @@ class SelectionListWithSelectedOption {}
     <mat-list-option>Not selected - Item #1</mat-list-option>
     <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SingleSelectionListWithSelectedOption {}
 
@@ -1818,6 +1825,8 @@ class SingleSelectionListWithSelectedOption {}
   <mat-selection-list>
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
@@ -1830,6 +1839,8 @@ class SelectionListWithSelectedOptionAndValue {
       Inbox
     </mat-list-option>
   </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithOnlyOneOption {}
 
@@ -1843,6 +1854,8 @@ class SelectionListWithOnlyOneOption {}
         <mat-list-option [value]="option">{{option}}</mat-list-option>
       }
     </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
@@ -1864,6 +1877,8 @@ class SelectionListWithModel {
       </mat-selection-list>
     }
   `,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithFormControl {
   formControl = new FormControl([] as string[]);
@@ -1877,6 +1892,8 @@ class SelectionListWithFormControl {
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOption {
   selectedOptions: string[];
@@ -1888,6 +1905,8 @@ class SelectionListWithPreselectedOption {
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
@@ -1902,6 +1921,8 @@ class SelectionListWithPreselectedOptionAndModel {
       }
     </mat-selection-list>
   `,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedFormControlOnPush {
   opts = ['opt1', 'opt2', 'opt3'];
@@ -1915,6 +1936,8 @@ class SelectionListWithPreselectedFormControlOnPush {
         <mat-list-option [value]="option">{{option.label}}</mat-list-option>
       }
     </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
@@ -1936,6 +1959,8 @@ class SelectionListWithCustomComparator {
       </mat-list-option>
     </mat-selection-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithAvatar {
   togglePosition: MatListOptionTogglePosition | undefined;
@@ -1950,6 +1975,8 @@ class SelectionListWithAvatar {
       </mat-list-option>
     </mat-selection-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithIcon {
   togglePosition: MatListOptionTogglePosition | undefined;
@@ -1964,6 +1991,8 @@ class SelectionListWithIcon {
         <mat-list-option [value]="2">Two</mat-list-option>
       }
     </mat-selection-list>`,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListWithIndirectChildOptions {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
@@ -1975,6 +2004,8 @@ class SelectionListWithIndirectChildOptions {
     <mat-list-option [(selected)]="selected">Item</mat-list-option>
   </mat-selection-list>
 `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class ListOptionWithTwoWayBinding {
   selected = false;

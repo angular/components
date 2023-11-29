@@ -37,7 +37,6 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 
 @Component({
   selector: 'mat-tab',
-
   // Note that usually we'd go through a bit more trouble and set up another class so that
   // the inlined template of `MatTab` isn't duplicated, however the template is small enough
   // that creating the extra class will generate more code than just duplicating the template.
@@ -47,6 +46,7 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatTab}],
+  standalone: true,
 })
 export class MatTab implements OnInit, OnChanges, OnDestroy {
   /** whether the tab is disabled. */

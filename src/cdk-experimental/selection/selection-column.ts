@@ -20,6 +20,9 @@ import {
 } from '@angular/core';
 
 import {CdkSelection} from './selection';
+import {AsyncPipe} from '@angular/common';
+import {CdkSelectionToggle} from './selection-toggle';
+import {CdkSelectAll} from './select-all';
 
 /**
  * Column that adds row selecting checkboxes and a select-all checkbox if `cdkSelectionMultiple` is
@@ -54,6 +57,15 @@ import {CdkSelection} from './selection';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    CdkColumnDef,
+    CdkHeaderCellDef,
+    CdkSelectAll,
+    CdkCellDef,
+    CdkSelectionToggle,
+    AsyncPipe,
+  ],
 })
 export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   /** Column name that should be used to reference this column. */

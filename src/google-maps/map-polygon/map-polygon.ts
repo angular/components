@@ -24,6 +24,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-polygon',
   exportAs: 'mapPolygon',
+  standalone: true,
 })
 export class MapPolygon implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -127,7 +128,10 @@ export class MapPolygon implements OnInit, OnDestroy {
   @Output() readonly polygonRightclick: Observable<google.maps.PolyMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.PolyMouseEvent>('rightclick');
 
-  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
+  constructor(
+    private readonly _map: GoogleMap,
+    private readonly _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

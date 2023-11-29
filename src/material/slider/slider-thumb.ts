@@ -46,6 +46,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER_VISUAL_THUMB, useExisting: MatSliderVisualThumb}],
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */

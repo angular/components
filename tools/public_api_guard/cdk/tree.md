@@ -70,7 +70,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
     nodeOutlet: QueryList<CdkTreeNodeOutlet>;
     protected updateChildrenNodes(children?: T[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkNestedTreeNode<any, any>, never>;
 }
@@ -127,7 +127,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
         end: number;
     }>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; }, {}, ["_nodeDefs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; }, {}, ["_nodeDefs"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTree<any, any>, never>;
 }
@@ -139,7 +139,7 @@ export class CdkTreeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<CdkTreeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkTreeModule, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet], never, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkTreeModule, never, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet], [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet]>;
 }
 
 // @public
@@ -199,7 +199,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     protected _tree: CdkTree<T, K>;
     unfocus(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNode<any, any>, never>;
 }
@@ -211,7 +211,7 @@ export class CdkTreeNodeDef<T> {
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeDef<any>, "[cdkTreeNodeDef]", never, { "when": { "alias": "cdkTreeNodeDefWhen"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeDef<any>, "[cdkTreeNodeDef]", never, { "when": { "alias": "cdkTreeNodeDefWhen"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeDef<any>, never>;
 }
@@ -224,7 +224,7 @@ export class CdkTreeNodeOutlet {
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeOutlet, "[cdkTreeNodeOutlet]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeOutlet, "[cdkTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeOutlet, [null, { optional: true; }]>;
 }
@@ -260,7 +260,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
     // (undocumented)
     _setPadding(forceChange?: boolean): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodePadding<any, any>, "[cdkTreeNodePadding]", never, { "level": { "alias": "cdkTreeNodePadding"; "required": false; }; "indent": { "alias": "cdkTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodePadding<any, any>, "[cdkTreeNodePadding]", never, { "level": { "alias": "cdkTreeNodePadding"; "required": false; }; "indent": { "alias": "cdkTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodePadding<any, any>, [null, null, null, { optional: true; }]>;
 }
@@ -278,7 +278,7 @@ export class CdkTreeNodeToggle<T, K = T> {
     // (undocumented)
     protected _treeNode: CdkTreeNode<T, K>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeToggle<any, any>, "[cdkTreeNodeToggle]", never, { "recursive": { "alias": "cdkTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeToggle<any, any>, "[cdkTreeNodeToggle]", never, { "recursive": { "alias": "cdkTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeToggle<any, any>, never>;
 }

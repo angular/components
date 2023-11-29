@@ -29,8 +29,9 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
@@ -77,6 +78,13 @@ export function getMatTooltipInvalidPositionError(position: string) {
 /** Injection token that determines the scroll handling while a tooltip is visible. */
 export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-tooltip-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
+    },
+  },
 );
 
 /** @docs-private */
@@ -174,6 +182,7 @@ const MAX_WIDTH = 200;
     'class': 'mat-mdc-tooltip-trigger',
     '[class.mat-mdc-tooltip-disabled]': 'disabled',
   },
+  standalone: true,
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
   _overlayRef: OverlayRef | null;
@@ -893,6 +902,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
   },
+  standalone: true,
+  imports: [NgClass],
 })
 export class TooltipComponent implements OnDestroy {
   /* Whether the tooltip text overflows to multiple lines */

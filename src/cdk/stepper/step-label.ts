@@ -10,6 +10,7 @@ import {Directive, TemplateRef} from '@angular/core';
 
 @Directive({
   selector: '[cdkStepLabel]',
+  standalone: true,
 })
 export class CdkStepLabel {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}

@@ -7,7 +7,7 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-} from '../../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatTabsModule} from '../module';
@@ -24,8 +24,12 @@ describe('MDC-based MatTabNavBar', () => {
     globalRippleOptions = {};
 
     TestBed.configureTestingModule({
-      imports: [MatTabsModule],
-      declarations: [SimpleTabNavBarTestApp, TabLinkWithNgIf, TabBarWithInactiveTabsOnInit],
+      imports: [
+        MatTabsModule,
+        SimpleTabNavBarTestApp,
+        TabLinkWithNgIf,
+        TabBarWithInactiveTabsOnInit,
+      ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
@@ -469,8 +473,7 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [TabLinkWithNgIf],
+      imports: [MatTabsModule, BrowserAnimationsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
 
@@ -494,8 +497,7 @@ describe('MatTabNavBar with a default config', () => {
 describe('MatTabNavBar with enabled animations', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule],
-      declarations: [TabsWithCustomAnimationDuration],
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithCustomAnimationDuration],
     });
 
     TestBed.compileComponents();
@@ -536,6 +538,8 @@ describe('MatTabNavBar with enabled animations', () => {
     </nav>
     <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class SimpleTabNavBarTestApp {
   @ViewChild(MatTabNav) tabNavBar: MatTabNav;
@@ -560,6 +564,8 @@ class SimpleTabNavBarTestApp {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabLinkWithNgIf {
   isDestroyed = false;
@@ -574,6 +580,8 @@ class TabLinkWithNgIf {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabBarWithInactiveTabsOnInit {
   tabs = [0, 1, 2];
@@ -588,6 +596,8 @@ class TabBarWithInactiveTabsOnInit {
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,
+  standalone: true,
+  imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {
   links = ['First', 'Second', 'Third'];

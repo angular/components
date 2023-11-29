@@ -89,8 +89,10 @@ describe('OverlayContainer', () => {
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
-  template: `<ng-template cdk-portal>Cake</ng-template>`,
+  template: `<ng-template cdkPortal>Cake</ng-template>`,
   providers: [Overlay],
+  standalone: true,
+  imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
@@ -99,7 +101,6 @@ class TestComponentWithTemplatePortals {
 }
 
 @NgModule({
-  imports: [OverlayModule, PortalModule],
-  declarations: [TestComponentWithTemplatePortals],
+  imports: [OverlayModule, PortalModule, TestComponentWithTemplatePortals],
 })
 class OverlayTestModule {}

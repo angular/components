@@ -10,3 +10,13 @@ export {MatInput} from './input';
 export {MatInputModule} from './module';
 export * from './input-value-accessor';
 export * from './input-errors';
+
+// Re-provide these for convenience since they used to be provided implicitly.
+export {
+  MatFormField,
+  MatLabel,
+  MatHint,
+  MatError,
+  MatPrefix,
+  MatSuffix,
+} from '@angular/material/form-field';

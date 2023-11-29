@@ -21,6 +21,7 @@ import {MapBaseLayer} from '../map-base-layer';
 @Directive({
   selector: 'map-bicycling-layer',
   exportAs: 'mapBicyclingLayer',
+  standalone: true,
 })
 export class MapBicyclingLayer extends MapBaseLayer {
   /**

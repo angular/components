@@ -8,7 +8,11 @@ import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
 } from './index';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {DOWN_ARROW, UP_ARROW, HOME, END} from '@angular/cdk/keycodes';
 import {FocusMonitor} from '@angular/cdk/a11y';
 
@@ -17,8 +21,9 @@ describe('MatAccordion', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, MatExpansionModule],
-      declarations: [
+      imports: [
+        BrowserAnimationsModule,
+        MatExpansionModule,
         AccordionWithHideToggle,
         AccordionWithTogglePosition,
         NestedPanel,
@@ -310,6 +315,8 @@ describe('MatAccordion', () => {
       </mat-expansion-panel>
     }
   </mat-accordion>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class SetOfItems {
   @ViewChild(MatAccordion) accordion: MatAccordion;
@@ -337,6 +344,8 @@ class SetOfItems {
       Content 1
     </mat-expansion-panel>
   </mat-accordion>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class NestedAccordions {
   @ViewChildren(MatExpansionPanelHeader) headers: QueryList<MatExpansionPanelHeader>;
@@ -355,6 +364,8 @@ class NestedAccordions {
       </mat-expansion-panel>
     </mat-expansion-panel>
   </mat-accordion>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class NestedPanel {
   @ViewChild('outerPanel') outerPanel: MatExpansionPanel;
@@ -369,6 +380,8 @@ class NestedPanel {
       <p>Content</p>
     </mat-expansion-panel>
   </mat-accordion>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class AccordionWithHideToggle {
   hideToggle = false;
@@ -382,6 +395,8 @@ class AccordionWithHideToggle {
       <p>Content</p>
     </mat-expansion-panel>
   </mat-accordion>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class AccordionWithTogglePosition {
   togglePosition = 'after';

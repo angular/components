@@ -20,7 +20,6 @@ import {
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
-  PortalModule,
   TemplatePortal,
 } from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -56,7 +55,7 @@ export function throwDialogContentAlreadyAttachedError() {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [PortalModule],
+  imports: [CdkPortalOutlet],
   host: {
     'class': 'cdk-dialog-container',
     'tabindex': '-1',

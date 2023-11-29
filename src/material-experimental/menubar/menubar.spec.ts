@@ -12,8 +12,7 @@ describe('MatMenuBar', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuBarModule],
-      declarations: [SimpleMatMenuBar],
+      imports: [MatMenuBarModule, SimpleMatMenuBar],
     }).compileComponents();
   }));
 
@@ -56,6 +55,8 @@ describe('MatMenuBar', () => {
       <mat-menubar-item id="second"></mat-menubar-item>
     </mat-menubar>
   `,
+  standalone: true,
+  imports: [MatMenuBarModule],
 })
 class SimpleMatMenuBar {
   @ViewChild(CdkMenuBar) matMenubar: MatMenuBar;

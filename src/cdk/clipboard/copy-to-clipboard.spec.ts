@@ -14,6 +14,8 @@ const COPY_CONTENT = 'copy content';
     [cdkCopyToClipboard]="content"
     [cdkCopyToClipboardAttempts]="attempts"
     (cdkCopyToClipboardCopied)="copied($event)"></button>`,
+  standalone: true,
+  imports: [ClipboardModule],
 })
 class CopyToClipboardHost {
   content = '';
@@ -27,8 +29,7 @@ describe('CdkCopyToClipboard', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CopyToClipboardHost],
-      imports: [ClipboardModule],
+      imports: [ClipboardModule, CopyToClipboardHost],
     });
 
     TestBed.compileComponents();

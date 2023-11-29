@@ -27,7 +27,7 @@ import {MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field'
 import {ThemePalette, DateAdapter} from '@angular/material/core';
 import {NgControl, ControlContainer, Validators} from '@angular/forms';
 import {Subject, merge, Subscription} from 'rxjs';
-import {FocusOrigin} from '@angular/cdk/a11y';
+import {FocusOrigin, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {
   MatStartDate,
   MatEndDate,
@@ -65,6 +65,8 @@ let nextUniqueId = 0;
     {provide: MatFormFieldControl, useExisting: MatDateRangeInput},
     {provide: MAT_DATE_RANGE_INPUT_PARENT, useExisting: MatDateRangeInput},
   ],
+  standalone: true,
+  imports: [CdkMonitorFocus],
 })
 export class MatDateRangeInput<D>
   implements

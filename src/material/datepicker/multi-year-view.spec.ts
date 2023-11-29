@@ -9,7 +9,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -23,11 +23,10 @@ describe('MatMultiYearView', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule],
-      declarations: [
+      imports: [
+        MatNativeDateModule,
         MatCalendarBody,
         MatMultiYearView,
-
         // Test components.
         StandardMultiYearView,
         MultiYearViewWithDateFilter,
@@ -395,6 +394,8 @@ describe('MatMultiYearView', () => {
   template: `
     <mat-multi-year-view [(activeDate)]="date" [(selected)]="selected"
                          (yearSelected)="selectedYear=$event"></mat-multi-year-view>`,
+  standalone: true,
+  imports: [MatMultiYearView],
 })
 class StandardMultiYearView {
   date = new Date(2017, JAN, 1);
@@ -412,6 +413,8 @@ class StandardMultiYearView {
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-multi-year-view>
     `,
+  standalone: true,
+  imports: [MatMultiYearView],
 })
 class MultiYearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -427,6 +430,8 @@ class MultiYearViewWithDateFilter {
     <mat-multi-year-view [(activeDate)]="activeDate" [minDate]="minDate" [maxDate]="maxDate">
     </mat-multi-year-view>
     `,
+  standalone: true,
+  imports: [MatMultiYearView],
 })
 class MultiYearViewWithMinMaxDate {
   activeDate = new Date(2019, JAN, 1);
@@ -438,6 +443,8 @@ class MultiYearViewWithMinMaxDate {
   template: `
     <mat-multi-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-multi-year-view>
   `,
+  standalone: true,
+  imports: [MatMultiYearView],
 })
 class MultiYearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

@@ -5,29 +5,15 @@ The `GoogleMap` component wraps the [`google.maps.Map` class](https://developers
 ## Example
 
 ```typescript
-// google-maps-demo.module.ts
-
-import {NgModule} from '@angular/core';
-import {GoogleMapsModule} from '@angular/google-maps';
-
-import {GoogleMapDemo} from './google-map-demo';
-
-@NgModule({
-  imports: [
-    GoogleMapsModule,
-  ],
-  declarations: [GoogleMapDemo],
-})
-export class GoogleMapDemoModule {
-}
-
-
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap],
 })
 export class GoogleMapDemo {
 
@@ -47,13 +33,13 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="moveMap($event)"
-            (mapMousemove)="move($event)">
-</google-map>
+<google-map 
+  height="400px"
+  width="750px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="moveMap($event)"
+  (mapMousemove)="move($event)" />
 
 <div>Latitude: {{display?.lat}}</div>
 <div>Longitude: {{display?.lng}}</div>

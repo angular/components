@@ -14,8 +14,7 @@ import {HighContrastModeDetector} from './high-contrast-mode/high-contrast-mode-
 import {CdkAriaLive} from './live-announcer/live-announcer';
 
 @NgModule({
-  imports: [ObserversModule],
-  declarations: [CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
+  imports: [ObserversModule, CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
   exports: [CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
 })
 export class A11yModule {

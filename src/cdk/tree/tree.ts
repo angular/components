@@ -102,12 +102,13 @@ type RenderingData<T> =
     '(keydown)': '_sendKeydownToKeyManager($event)',
   },
   encapsulation: ViewEncapsulation.None,
-
   // The "OnPush" status for the `CdkTree` component is effectively a noop, so we are removing it.
   // The view for `CdkTree` consists entirely of templates declared in other views. As they are
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
   implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
@@ -1096,6 +1097,7 @@ export class CdkTree<T, K = T>
     '(click)': '_focusItem()',
     '(focus)': '_focusItem()',
   },
+  standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   protected _tabindex: number | null = -1;

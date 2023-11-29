@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as Lint from 'tslint';
 import ts from 'typescript';
 import minimatch from 'minimatch';
@@ -69,15 +68,13 @@ class Walker extends Lint.RuleWalker {
   constructor(sourceFile: ts.SourceFile, options: Lint.IOptions) {
     super(sourceFile, options);
 
-    // Globs that are used to determine which files to lint.
-    const fileGlobs = options.ruleArguments.slice(1) || [];
-
-    // Relative path for the current TypeScript source file.
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
+    // Globs that are used to determine which files to exclude from linting.
+    const fileGlobs: string[] = options.ruleArguments[1] || [];
 
     this._rules = this._generateRules(options.ruleArguments[0]);
     this._enabled =
-      Object.keys(this._rules).length > 0 && fileGlobs.some(p => minimatch(relativeFilePath, p));
+      Object.keys(this._rules).length > 0 &&
+      !fileGlobs.some(p => minimatch(sourceFile.fileName, p));
   }
 
   override visitClassDeclaration(node: ts.ClassDeclaration) {

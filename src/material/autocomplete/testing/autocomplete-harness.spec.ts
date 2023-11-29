@@ -12,8 +12,7 @@ describe('MatAutocompleteHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatAutocompleteModule],
-      declarations: [AutocompleteHarnessTest],
+      imports: [NoopAnimationsModule, MatAutocompleteModule, AutocompleteHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AutocompleteHarnessTest);
@@ -177,6 +176,8 @@ describe('MatAutocompleteHarness', () => {
     <input id="prefilled" [matAutocomplete]="autocomplete" value="Prefilled value">
     <input id="grouped" [matAutocomplete]="groupedAutocomplete">
   `,
+  standalone: true,
+  imports: [MatAutocompleteModule],
 })
 class AutocompleteHarnessTest {
   states = [

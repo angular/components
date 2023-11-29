@@ -12,8 +12,7 @@ describe('MatSlideToggleHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, ReactiveFormsModule],
-      declarations: [SlideToggleHarnessTest],
+      imports: [MatSlideToggleModule, ReactiveFormsModule, SlideToggleHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SlideToggleHarnessTest);
@@ -177,6 +176,8 @@ describe('MatSlideToggleHarness', () => {
       </mat-slide-toggle>
       <span id="second-label">Second slide-toggle</span>
   `,
+  standalone: true,
+  imports: [MatSlideToggleModule, ReactiveFormsModule],
 })
 class SlideToggleHarnessTest {
   ctrl = new FormControl(true);

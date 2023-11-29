@@ -13,8 +13,7 @@ describe('MatMenuHarness', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatMenuModule, NoopAnimationsModule],
-        declarations: [MenuHarnessTest],
+        imports: [MatMenuModule, NoopAnimationsModule, MenuHarnessTest],
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuHarnessTest);
@@ -94,8 +93,7 @@ describe('MatMenuHarness', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatMenuModule, NoopAnimationsModule],
-        declarations: [NestedMenuHarnessTest],
+        imports: [MatMenuModule, NoopAnimationsModule, NestedMenuHarnessTest],
       }).compileComponents();
 
       fixture = TestBed.createComponent(NestedMenuHarnessTest);
@@ -165,6 +163,8 @@ describe('MatMenuHarness', () => {
         <menu mat-menu-item>Account</menu>
       </mat-menu>
   `,
+  standalone: true,
+  imports: [MatMenuModule],
 })
 class MenuHarnessTest {}
 
@@ -190,6 +190,8 @@ class MenuHarnessTest {}
         <button mat-menu-item (click)="lastClickedLeaf = 3">Leaf Item 3</button>
       </mat-menu>
   `,
+  standalone: true,
+  imports: [MatMenuModule],
 })
 class NestedMenuHarnessTest {
   lastClickedLeaf = 0;

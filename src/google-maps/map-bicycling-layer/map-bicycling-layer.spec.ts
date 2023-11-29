@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createBicyclingLayerConstructorSpy,
   createBicyclingLayerSpy,
@@ -10,19 +9,12 @@ import {
   createMapSpy,
 } from '../testing/fake-google-map-utils';
 
+import {MapBicyclingLayer} from './map-bicycling-layer';
+
 describe('MapBicyclingLayer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -46,8 +38,12 @@ describe('MapBicyclingLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-bicycling-layer></map-bicycling-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-bicycling-layer />
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapBicyclingLayer],
 })
 class TestApp {}

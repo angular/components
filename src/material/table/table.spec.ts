@@ -17,8 +17,11 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 describe('MDC-based MatTable', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        NoopAnimationsModule,
         MatTableApp,
         MatTableWithWhenRowApp,
         ArrayDataSourceMatTableApp,
@@ -707,6 +710,8 @@ class FakeDataSource extends DataSource<TestData> {
       <tr mat-footer-row *matFooterRowDef="columnsToRender"></tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -741,6 +746,8 @@ class MatTableApp {
       </tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -794,6 +801,8 @@ class NativeHtmlTableApp {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NestedTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -812,6 +821,8 @@ class NestedTableApp {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class StickyTableApp {
   dataSource = new FakeDataSource();
@@ -839,6 +850,8 @@ class StickyTableApp {
       <tr mat-footer-row *matFooterRowDef="['column_a']"></tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
@@ -876,6 +889,8 @@ class MatTableWithWhenRowApp {
 
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class ArrayDataSourceMatTableApp implements AfterViewInit {
   underlyingDataSource = new FakeDataSource();
@@ -928,6 +943,8 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithSortApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -979,6 +996,8 @@ class MatTableWithSortApp implements OnInit {
 
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithPaginatorApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -1020,6 +1039,8 @@ class MatTableWithPaginatorApp implements OnInit {
       </ng-container>
     </table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class TableWithNgContainerRow {
   dataSource: FakeDataSource | null = new FakeDataSource();
@@ -1057,6 +1078,8 @@ class TableWithNgContainerRow {
       <mat-footer-row *matFooterRowDef="columnsToRender"></mat-footer-row>
     </mat-table>
   `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatFlexTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();

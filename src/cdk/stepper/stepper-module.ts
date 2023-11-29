@@ -14,9 +14,8 @@ import {CdkStepHeader} from './step-header';
 import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
-  imports: [BidiModule],
-  exports: [CdkStep, CdkStepper, CdkStepHeader, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
-  declarations: [
+  imports: [
+    BidiModule,
     CdkStep,
     CdkStepper,
     CdkStepHeader,
@@ -24,5 +23,6 @@ import {BidiModule} from '@angular/cdk/bidi';
     CdkStepperNext,
     CdkStepperPrevious,
   ],
+  exports: [CdkStep, CdkStepper, CdkStepHeader, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
 })
 export class CdkStepperModule {}

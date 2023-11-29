@@ -1,7 +1,5 @@
 import ts from 'typescript';
 import minimatch from 'minimatch';
-
-import * as path from 'path';
 import * as Lint from 'tslint';
 
 /** Arguments this rule supports. */
@@ -43,10 +41,7 @@ export class Rule extends Lint.Rules.TypedRule {
  * for which lightweight tokens are suitable (for optimized tree shaking).
  */
 function checkSourceFileForLightweightTokens(ctx: Context, typeChecker: ts.TypeChecker): void {
-  // Relative path for the current TypeScript source file. This allows for
-  // relative globs being used in the rule options.
-  const relativeFilePath = path.relative(process.cwd(), ctx.sourceFile.fileName);
-  const [enabledFilesGlobs] = ctx.options;
+  const [disabledFileGlobs] = ctx.options;
   const visitNode = (node: ts.Node) => {
     if (ts.isClassDeclaration(node)) {
       checkClassDeclarationForLightweightToken(node, ctx, typeChecker);
@@ -55,7 +50,7 @@ function checkSourceFileForLightweightTokens(ctx: Context, typeChecker: ts.TypeC
     }
   };
 
-  if (enabledFilesGlobs.some(g => minimatch(relativeFilePath, g))) {
+  if (!disabledFileGlobs.some(g => minimatch(ctx.sourceFile.fileName, g))) {
     ts.forEachChild(ctx.sourceFile, visitNode);
   }
 }

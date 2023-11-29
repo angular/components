@@ -12,8 +12,9 @@ import {yearsPerPage} from './multi-year-view';
 describe('MatCalendarHeader', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule],
-      declarations: [
+      imports: [
+        MatNativeDateModule,
+        MatDatepickerModule,
         // Test components.
         StandardCalendar,
         CalendarWithMinMaxDate,
@@ -383,6 +384,8 @@ describe('MatCalendarHeader', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class StandardCalendar {
   selected: Date;
@@ -399,6 +402,8 @@ class StandardCalendar {
       [maxDate]="maxDate">
     </mat-calendar>
   `,
+  standalone: true,
+  imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class CalendarWithMinMaxDate {
   startAt = new Date(2018, JAN, 1);

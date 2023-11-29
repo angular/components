@@ -1007,11 +1007,11 @@ describe('MDC-based MatChipGrid', () => {
         MatInputModule,
         animationsModule,
       ],
-      declarations: [component],
       providers: [
         {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
         {provide: Directionality, useValue: directionality},
       ],
+      declarations: [component],
     }).compileComponents();
 
     const fixture = TestBed.createComponent<T>(component);

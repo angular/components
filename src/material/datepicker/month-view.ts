@@ -65,6 +65,8 @@ const DAYS_PER_WEEK = 7;
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatCalendarBody],
 })
 export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   private _rerenderSubscription = Subscription.EMPTY;

@@ -12,8 +12,7 @@ import {MatMenuBar} from './menubar';
 import {MatMenuBarItem} from './menubar-item';
 
 @NgModule({
-  imports: [CdkMenuModule],
+  imports: [CdkMenuModule, MatMenuBar, MatMenuBarItem],
   exports: [MatMenuBar, MatMenuBarItem],
-  declarations: [MatMenuBar, MatMenuBarItem],
 })
 export class MatMenuBarModule {}

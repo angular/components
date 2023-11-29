@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MapDirectionsRenderer} from './map-directions-renderer';
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createDirectionsRendererConstructorSpy,
   createDirectionsRendererSpy,
@@ -19,16 +18,7 @@ const DEFAULT_DIRECTIONS: google.maps.DirectionsResult = {
 describe('MapDirectionsRenderer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -127,12 +117,16 @@ describe('MapDirectionsRenderer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-directions-renderer [options]="options"
-                                        [directions]="directions"
-                                        (directionsChanged)="handleDirectionsChanged()">
-               </map-directions-renderer>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-directions-renderer
+        [options]="options"
+        [directions]="directions"
+        (directionsChanged)="handleDirectionsChanged()" />
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapDirectionsRenderer],
 })
 class TestApp {
   @ViewChild(MapDirectionsRenderer) directionsRenderer: MapDirectionsRenderer;

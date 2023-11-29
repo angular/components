@@ -12,8 +12,7 @@ describe('MDC-based MatChipEditInput', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipEditInputContainer],
+      imports: [MatChipsModule, ChipEditInputContainer],
     });
 
     TestBed.compileComponents();
@@ -45,5 +44,7 @@ describe('MDC-based MatChipEditInput', () => {
 
 @Component({
   template: `<mat-chip><span matChipEditInput></span></mat-chip>`,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class ChipEditInputContainer {}

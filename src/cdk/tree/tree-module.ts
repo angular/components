@@ -25,7 +25,7 @@ const EXPORTED_DECLARATIONS = [
 ];
 
 @NgModule({
+  imports: EXPORTED_DECLARATIONS,
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
 })
 export class CdkTreeModule {}

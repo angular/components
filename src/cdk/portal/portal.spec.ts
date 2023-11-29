@@ -24,8 +24,9 @@ import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 describe('Portals', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [PortalModule, CommonModule],
-      declarations: [
+      imports: [
+        PortalModule,
+        CommonModule,
         PortalTestApp,
         UnboundPortalTestApp,
         ArbitraryViewContainerRefComponent,
@@ -742,6 +743,8 @@ class ChocolateInjector {
 @Component({
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
+  standalone: true,
+  imports: [PortalModule, CommonModule],
 })
 class PizzaMsg {
   constructor(@Optional() public snack: Chocolate) {}
@@ -753,6 +756,7 @@ class PizzaMsg {
  */
 @Directive({
   selector: '[savesParentNodeOnInit]',
+  standalone: true,
 })
 class SaveParentNodeOnInit implements AfterViewInit {
   parentOnViewInit: HTMLElement;
@@ -774,6 +778,8 @@ class SaveParentNodeOnInit implements AfterViewInit {
       <div savesParentNodeOnInit></div>
     </ng-template>
   `,
+  standalone: true,
+  imports: [SaveParentNodeOnInit],
 })
 class ArbitraryViewContainerRefComponent {
   @ViewChild('template') template: TemplateRef<any>;
@@ -795,12 +801,12 @@ class ArbitraryViewContainerRefComponent {
 
   <ng-container #alternateContainer></ng-container>
 
-  <ng-template cdk-portal>Cake</ng-template>
+  <ng-template cdkPortal>Cake</ng-template>
 
-  <div *cdk-portal>Pie</div>
-  <ng-template cdk-portal let-data> {{fruit}} - {{ data?.status }}! <pizza-msg></pizza-msg></ng-template>
+  <div *cdkPortal>Pie</div>
+  <ng-template cdkPortal let-data> {{fruit}} - {{ data?.status }}! <pizza-msg></pizza-msg></ng-template>
 
-  <ng-template cdk-portal>
+  <ng-template cdkPortal>
     <ul>
       @for (fruitName of fruits; track fruitName) {
         <li> {{fruitName}} </li>
@@ -816,6 +822,8 @@ class ArbitraryViewContainerRefComponent {
     </div>
   </div>
   `,
+  standalone: true,
+  imports: [CdkPortal, CdkPortalOutlet, PizzaMsg],
 })
 class PortalTestApp {
   @ViewChildren(CdkPortal) portals: QueryList<CdkPortal>;
@@ -859,6 +867,8 @@ class PortalTestApp {
       <ng-template cdkPortalOutlet></ng-template>
     </div>
   `,
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 class UnboundPortalTestApp {
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;

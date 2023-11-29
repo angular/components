@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkComboboxModule} from './combobox-module';
 import {CdkCombobox} from './combobox';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '../../cdk/testing/private';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox/combobox-popup';
 
@@ -25,8 +25,7 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle],
+        imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));
 
@@ -189,8 +188,7 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle],
+        imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));
 
@@ -260,8 +258,7 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle],
+        imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));
 
@@ -385,6 +382,8 @@ describe('Combobox', () => {
       <button id="applyButton" (click)="toggleCombobox.updateAndClose(input.value)">Apply</button>
     </div>
   </ng-template>`,
+  standalone: true,
+  imports: [CdkComboboxModule],
 })
 class ComboboxToggle {
   @ViewChild('input') inputElement: ElementRef<HTMLInputElement>;

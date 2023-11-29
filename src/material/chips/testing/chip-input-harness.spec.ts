@@ -12,8 +12,7 @@ describe('MatChipInputHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [ChipInputHarnessTest],
+      imports: [MatChipsModule, ChipInputHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipInputHarnessTest);
@@ -94,6 +93,8 @@ describe('MatChipInputHarness', () => {
       <input [matChipInputFor]="grid2" disabled />
     </mat-chip-grid>
   `,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class ChipInputHarnessTest {
   required = false;

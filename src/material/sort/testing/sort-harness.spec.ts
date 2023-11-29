@@ -12,8 +12,7 @@ describe('MatSortHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [SortHarnessTest],
+      imports: [MatSortModule, NoopAnimationsModule, SortHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SortHarnessTest);
@@ -138,6 +137,8 @@ describe('MatSortHarness', () => {
       }
     </table>
   `,
+  standalone: true,
+  imports: [MatSortModule],
 })
 class SortHarnessTest {
   disableThirdHeader = false;

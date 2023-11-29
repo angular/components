@@ -21,12 +21,14 @@ Using the `MapDirectionsService` requires the Directions API to be enabled in Go
 
 ```typescript
 // google-maps-demo.component.ts
-import {MapDirectionsService} from '@angular/google-maps';
 import {Component} from '@angular/core';
+import {GoogleMap, MapDirectionsRenderer, MapDirectionsService} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  standalone: true,
+  imports: [GoogleMap, MapDirectionsRenderer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -47,12 +49,9 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
   @if (directionsResults$ | async; as directionsResults) {
-    <map-directions-renderer [directions]="directionsResults"></map-directions-renderer>
+    <map-directions-renderer [directions]="directionsResults" />
   }
 </google-map>
 ```

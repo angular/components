@@ -46,8 +46,7 @@ describe('MenuBar', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarRadioGroup],
+        imports: [CdkMenuModule, MenuBarRadioGroup],
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuBarRadioGroup);
@@ -107,8 +106,7 @@ describe('MenuBar', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MultiMenuWithSubmenu],
+          imports: [CdkMenuModule, MultiMenuWithSubmenu],
         }).compileComponents();
       }));
 
@@ -532,8 +530,7 @@ describe('MenuBar', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MultiMenuWithSubmenu],
+          imports: [CdkMenuModule, MultiMenuWithSubmenu],
         }).compileComponents();
       }));
 
@@ -660,8 +657,7 @@ describe('MenuBar', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithCheckboxes],
+          imports: [CdkMenuModule, MenuWithCheckboxes],
         }).compileComponents();
       }));
 
@@ -727,8 +723,7 @@ describe('MenuBar', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [MenuWithRadioButtons],
+          imports: [CdkMenuModule, MenuWithRadioButtons],
         }).compileComponents();
       }));
 
@@ -783,8 +778,7 @@ describe('MenuBar', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarWithMenusAndInlineMenu],
+        imports: [CdkMenuModule, MenuBarWithMenusAndInlineMenu],
       }).compileComponents();
     }));
 
@@ -903,8 +897,7 @@ describe('MenuBar', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MultiMenuWithSubmenu],
+        imports: [CdkMenuModule, MultiMenuWithSubmenu],
       }).compileComponents();
     }));
 
@@ -1123,6 +1116,8 @@ describe('MenuBar', () => {
       </li>
     </ul>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuBarRadioGroup {}
 
@@ -1157,6 +1152,8 @@ class MenuBarRadioGroup {}
       </ng-template>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MultiMenuWithSubmenu {
   clickEmitter = new EventEmitter<void>();
@@ -1182,6 +1179,8 @@ class MultiMenuWithSubmenu {
       </ng-template>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuWithCheckboxes {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
@@ -1208,6 +1207,8 @@ class MenuWithCheckboxes {
       </ng-template>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuWithRadioButtons {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
@@ -1240,6 +1241,8 @@ class MenuWithRadioButtons {
       <button #inline_menu_item cdkMenuItem></button>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuBarWithMenusAndInlineMenu {
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;

@@ -46,7 +46,10 @@ const listenerOptions = normalizePassiveListenerOptions({passive: true});
 export class AutofillMonitor implements OnDestroy {
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
-  constructor(private _platform: Platform, private _ngZone: NgZone) {}
+  constructor(
+    private _platform: Platform,
+    private _ngZone: NgZone,
+  ) {}
 
   /**
    * Monitor for changes in the autofill state of the given input element.
@@ -143,6 +146,7 @@ export class AutofillMonitor implements OnDestroy {
 /** A directive that can be used to monitor the autofill state of an input. */
 @Directive({
   selector: '[cdkAutofill]',
+  standalone: true,
 })
 export class CdkAutofill implements OnDestroy, OnInit {
   /** Emits when the autofill state of the element changes. */

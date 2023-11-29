@@ -2,25 +2,52 @@
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
 
-@mixin base($theme) {}
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {}
+}
 
-@mixin color($theme) {}
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {}
+}
 
-@mixin typography($theme) {}
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {}
+}
 
-@mixin density($theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
+}
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-input') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }
+
+@mixin _theme-from-tokens($tokens) {}

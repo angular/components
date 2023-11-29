@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -10,20 +9,13 @@ import {
   createTrafficLayerSpy,
 } from '../testing/fake-google-map-utils';
 
+import {MapTrafficLayer} from './map-traffic-layer';
+
 describe('MapTrafficLayer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
   const trafficLayerOptions: google.maps.TrafficLayerOptions = {autoRefresh: false};
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy).and.callThrough();
   });
@@ -48,10 +40,13 @@ describe('MapTrafficLayer', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-                <map-traffic-layer [autoRefresh]="autoRefresh">
-                </map-traffic-layer>
-            </google-map>`,
+  template: `
+    <google-map>
+      <map-traffic-layer [autoRefresh]="autoRefresh" />
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapTrafficLayer],
 })
 class TestApp {
   autoRefresh?: boolean;

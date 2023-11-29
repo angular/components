@@ -10,8 +10,7 @@ describe('MatMenuBarItem', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuBarModule, CdkMenuModule],
-      declarations: [SimpleMenuBarItem],
+      imports: [MatMenuBarModule, CdkMenuModule, SimpleMenuBarItem],
     }).compileComponents();
   }));
 
@@ -63,6 +62,8 @@ describe('MatMenuBarItem', () => {
       </div>
     </ng-template>
   `,
+  standalone: true,
+  imports: [MatMenuBarModule, CdkMenuModule],
 })
 class SimpleMenuBarItem {
   @ViewChild(CdkMenuItem) menubarItem: MatMenuBarItem;

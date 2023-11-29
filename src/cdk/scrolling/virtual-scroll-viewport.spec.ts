@@ -37,8 +37,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [FixedSizeVirtualScroll],
+        imports: [ScrollingModule, FixedSizeVirtualScroll],
       }).compileComponents();
     }));
 
@@ -850,8 +849,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [FixedSizeVirtualScrollWithRtlDirection],
+        imports: [ScrollingModule, FixedSizeVirtualScrollWithRtlDirection],
       }).compileComponents();
 
       fixture = TestBed.createComponent(FixedSizeVirtualScrollWithRtlDirection);
@@ -951,8 +949,7 @@ describe('CdkVirtualScrollViewport', () => {
   describe('with no VirtualScrollStrategy', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [VirtualScrollWithNoStrategy],
+        imports: [ScrollingModule, VirtualScrollWithNoStrategy],
       }).compileComponents();
     });
 
@@ -970,8 +967,11 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [VirtualScrollWithItemInjectingViewContainer, InjectsViewContainer],
+        imports: [
+          ScrollingModule,
+          VirtualScrollWithItemInjectingViewContainer,
+          InjectsViewContainer,
+        ],
       }).compileComponents();
     }));
 
@@ -1005,8 +1005,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule, CommonModule],
-        declarations: [DelayedInitializationVirtualScroll],
+        imports: [ScrollingModule, CommonModule, DelayedInitializationVirtualScroll],
       }).compileComponents();
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
       testComponent = fixture.componentInstance;
@@ -1035,8 +1034,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule, CommonModule],
-        declarations: [VirtualScrollWithAppendOnly],
+        imports: [ScrollingModule, CommonModule, VirtualScrollWithAppendOnly],
       }).compileComponents();
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);
       testComponent = fixture.componentInstance;
@@ -1114,8 +1112,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [VirtualScrollWithCustomScrollingElement],
+        imports: [ScrollingModule, VirtualScrollWithCustomScrollingElement],
       }).compileComponents();
     }));
 
@@ -1152,8 +1149,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [VirtualScrollWithScrollableWindow],
+        imports: [ScrollingModule, VirtualScrollWithScrollableWindow],
       }).compileComponents();
     }));
 
@@ -1179,8 +1175,7 @@ describe('CdkVirtualScrollViewport', () => {
 
   it('should be able to query for a virtual scroll viewport as a CdkScrollable', () => {
     TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      declarations: [VirtualScrollableQuery],
+      imports: [ScrollingModule, VirtualScrollableQuery],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(VirtualScrollableQuery);
@@ -1256,6 +1251,8 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1322,6 +1319,8 @@ class FixedSizeVirtualScroll {
   `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class FixedSizeVirtualScrollWithRtlDirection {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1367,6 +1366,8 @@ class FixedSizeVirtualScrollWithRtlDirection {
     }
   `,
   ],
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class VirtualScrollWithNoStrategy {
   items = [];
@@ -1374,6 +1375,7 @@ class VirtualScrollWithNoStrategy {
 
 @Directive({
   selector: '[injects-view-container]',
+  standalone: true,
 })
 class InjectsViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
@@ -1407,6 +1409,8 @@ class InjectsViewContainer {
   `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class VirtualScrollWithItemInjectingViewContainer {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1446,6 +1450,8 @@ class VirtualScrollWithItemInjectingViewContainer {
   `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule, CommonModule],
 })
 class DelayedInitializationVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1485,6 +1491,8 @@ class DelayedInitializationVirtualScroll {
   `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule, CommonModule],
 })
 class VirtualScrollWithAppendOnly {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1528,6 +1536,8 @@ class VirtualScrollWithAppendOnly {
     `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class VirtualScrollWithCustomScrollingElement {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1570,6 +1580,8 @@ class VirtualScrollWithCustomScrollingElement {
     `,
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class VirtualScrollWithScrollableWindow {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1581,6 +1593,8 @@ class VirtualScrollWithScrollableWindow {
 
 @Component({
   template: '<cdk-virtual-scroll-viewport itemSize="50"></cdk-virtual-scroll-viewport>',
+  standalone: true,
+  imports: [ScrollingModule],
 })
 class VirtualScrollableQuery {
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;

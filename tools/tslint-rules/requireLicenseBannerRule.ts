@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as Lint from 'tslint';
 import minimatch from 'minimatch';
 import ts from 'typescript';
@@ -38,13 +37,10 @@ class RequireLicenseBannerWalker extends Lint.RuleWalker {
     super(sourceFile, options);
 
     // Globs that are used to determine which files to lint.
-    const fileGlobs = options.ruleArguments;
-
-    // Relative path for the current TypeScript source file.
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
+    const fileGlobs: string[] = options.ruleArguments[0];
 
     // Whether the file should be checked at all.
-    this._enabled = fileGlobs.some(p => minimatch(relativeFilePath, p));
+    this._enabled = !fileGlobs.some(p => minimatch(sourceFile.fileName, p));
   }
 
   override visitSourceFile(sourceFile: ts.SourceFile) {

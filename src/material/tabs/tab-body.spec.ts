@@ -17,8 +17,15 @@ describe('MDC-based MatTabBody', () => {
   beforeEach(waitForAsync(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule],
-      declarations: [MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
+      imports: [
+        CommonModule,
+        PortalModule,
+        MatRippleModule,
+        NoopAnimationsModule,
+        MatTabBody,
+        MatTabBodyPortal,
+        SimpleTabBodyApp,
+      ],
       providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
     });
 
@@ -182,8 +189,8 @@ describe('MDC-based MatTabBody', () => {
           MatRippleModule,
           NoopAnimationsModule,
           ScrollingModule,
+          SimpleTabBodyApp,
         ],
-        declarations: [MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
       })
       .compileComponents();
 
@@ -201,6 +208,8 @@ describe('MDC-based MatTabBody', () => {
     <ng-template>Tab Body Content</ng-template>
     <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
   `,
+  standalone: true,
+  imports: [CommonModule, PortalModule, MatRippleModule, MatTabBody],
 })
 class SimpleTabBodyApp implements AfterContentInit {
   content: TemplatePortal;

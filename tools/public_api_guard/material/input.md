@@ -4,23 +4,25 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterViewInit } from '@angular/core';
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { _Constructor } from '@angular/material/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/material/form-field';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/material/form-field';
 import * as i4 from '@angular/cdk/text-field';
 import { InjectionToken } from '@angular/core';
+import { MatError } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatHint } from '@angular/material/form-field';
+import { MatLabel } from '@angular/material/form-field';
+import { MatPrefix } from '@angular/material/form-field';
+import { MatSuffix } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -37,9 +39,15 @@ export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
 
+export { MatError }
+
+export { MatFormField }
+
+export { MatHint }
+
 // @public (undocumented)
-export class MatInput extends _MatInputBase implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState {
-    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
+export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
+    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
     autofilled: boolean;
     controlType: string;
     protected _dirtyCheckNativeValue(): void;
@@ -50,7 +58,10 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
     get empty(): boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     focus(options?: FocusOptions): void;
     _focusChanged(isFocused: boolean): void;
     focused: boolean;
@@ -73,6 +84,8 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     protected _neverEmptyInputTypes: string[];
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -102,12 +115,13 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     protected _type: string;
     // (undocumented)
     protected _uid: string;
+    updateErrorState(): void;
     userAriaDescribedBy: string;
     protected _validateType(): void;
     get value(): string;
     set value(value: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }]>;
 }
@@ -119,8 +133,14 @@ export class MatInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, [typeof i1.MatInput], [typeof i2.MatCommonModule, typeof i3.MatFormFieldModule], [typeof i1.MatInput, typeof i3.MatFormFieldModule, typeof i4.TextFieldModule, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof i1.MatCommonModule, typeof i2.MatFormFieldModule, typeof i3.MatInput], [typeof i3.MatInput, typeof i2.MatFormFieldModule, typeof i4.TextFieldModule, typeof i1.MatCommonModule]>;
 }
+
+export { MatLabel }
+
+export { MatPrefix }
+
+export { MatSuffix }
 
 // (No @packageDocumentation comment for this package)
 

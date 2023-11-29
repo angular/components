@@ -21,7 +21,6 @@ import {
 } from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
-import {MatBottomSheetModule} from './bottom-sheet-module';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
 
 /** Injection token that can be used to specify default bottom sheet options. */
@@ -32,7 +31,7 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomShee
 /**
  * Service to trigger Material Design bottom sheets.
  */
-@Injectable({providedIn: MatBottomSheetModule})
+@Injectable({providedIn: 'root'})
 export class MatBottomSheet implements OnDestroy {
   private _bottomSheetRefAtThisLevel: MatBottomSheetRef<any> | null = null;
   private _dialog: Dialog;

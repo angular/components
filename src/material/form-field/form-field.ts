@@ -46,12 +46,12 @@ import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {matFormFieldAnimations} from './form-field-animations';
-import {MatFormFieldControl} from './form-field-control';
+import {MatFormFieldControl as _MatFormFieldControl} from './form-field-control';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -118,6 +118,16 @@ const DEFAULT_SUBSCRIPT_SIZING: SubscriptSizing = 'fixed';
  */
 const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
 
+/**
+ * Despite `MatFormFieldControl` being an abstract class, most of our usages enforce its shape
+ * using `implements` instead of `extends`. This appears to be problematic when Closure compiler
+ * is configured to use type information to rename properties, because it can't figure out which
+ * class properties are coming from. This interface seems to work around the issue while preserving
+ * our type safety (alternative being using `any` everywhere).
+ * @docs-private
+ */
+interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
+
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   selector: 'mat-form-field',
@@ -130,7 +140,6 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
     '[class.mat-mdc-form-field-label-always-float]': '_shouldAlwaysFloat()',
     '[class.mat-mdc-form-field-has-icon-prefix]': '_hasIconPrefix',
     '[class.mat-mdc-form-field-has-icon-suffix]': '_hasIconSuffix',
-
     // Note that these classes reuse the same names as the non-MDC version, because they can be
     // considered a public API since custom form controls may use them to style themselves.
     // See https://github.com/angular/components/pull/20502#discussion_r486124901.
@@ -159,6 +168,14 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
   ],
+  standalone: true,
+  imports: [
+    MatFormFieldFloatingLabel,
+    MatFormFieldNotchedOutline,
+    NgTemplateOutlet,
+    MatFormFieldLineRipple,
+    MatHint,
+  ],
 })
 export class MatFormField
   implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
@@ -172,7 +189,7 @@ export class MatFormField
 
   @ContentChild(MatLabel) _labelChildNonStatic: MatLabel | undefined;
   @ContentChild(MatLabel, {static: true}) _labelChildStatic: MatLabel | undefined;
-  @ContentChild(MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
+  @ContentChild(_MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
   @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
   @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
   @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren: QueryList<MatError>;

@@ -11,8 +11,7 @@ import {MatCommonModule} from '@angular/material/core';
 import {MatIcon} from './icon';
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatIcon],
   exports: [MatIcon, MatCommonModule],
-  declarations: [MatIcon],
 })
 export class MatIconModule {}

@@ -11,8 +11,7 @@ import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatButtonToggle, MatButtonToggleGroup} from './button-toggle';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule],
+  imports: [MatCommonModule, MatRippleModule, MatButtonToggleGroup, MatButtonToggle],
   exports: [MatCommonModule, MatButtonToggleGroup, MatButtonToggle],
-  declarations: [MatButtonToggleGroup, MatButtonToggle],
 })
 export class MatButtonToggleModule {}

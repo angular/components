@@ -19,6 +19,7 @@ export const MAT_PREFIX = new InjectionToken<MatPrefix>('MatPrefix');
 @Directive({
   selector: '[matPrefix], [matIconPrefix], [matTextPrefix]',
   providers: [{provide: MAT_PREFIX, useExisting: MatPrefix}],
+  standalone: true,
 })
 export class MatPrefix {
   @Input('matTextPrefix')

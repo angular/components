@@ -1,7 +1,7 @@
+@use 'sass:map';
 @use '@material/fab/fab' as mdc-fab;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
-
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
@@ -13,12 +13,17 @@
 @use '../core/typography/typography';
 
 @mixin base($theme) {
-  // Add default values for tokens not related to color, typography, or density.
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-fab-theme.theme(tokens-mdc-fab.get-unthemable-tokens());
-    @include mdc-extended-fab-theme.theme(
-      tokens-mdc-extended-fab.get-unthemable-tokens()
-    );
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    // Add default values for tokens not related to color, typography, or density.
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-fab-theme.theme(tokens-mdc-fab.get-unthemable-tokens());
+      @include mdc-extended-fab-theme.theme(
+          tokens-mdc-extended-fab.get-unthemable-tokens()
+      );
+    }
   }
 }
 
@@ -38,51 +43,79 @@
 }
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include _fab-variant($theme, null);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include _fab-variant($theme, null);
 
-    .mat-mdc-fab,
-    .mat-mdc-mini-fab {
-      &.mat-primary {
-        @include _fab-variant($theme, primary);
-      }
+      .mat-mdc-fab,
+      .mat-mdc-mini-fab {
+        &.mat-primary {
+          @include _fab-variant($theme, primary);
+        }
 
-      &.mat-accent {
-        @include _fab-variant($theme, accent);
-      }
+        &.mat-accent {
+          @include _fab-variant($theme, accent);
+        }
 
-      &.mat-warn {
-        @include _fab-variant($theme, warn);
+        &.mat-warn {
+          @include _fab-variant($theme, warn);
+        }
       }
     }
   }
 }
 
 @mixin typography($theme) {
-  @include mdc-helpers.using-mdc-typography($theme) {
-    @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
+  @else {
+    @include mdc-helpers.using-mdc-typography($theme) {
+      @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
+    }
 
-  $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($theme);
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-extended-fab-theme.theme($typography-tokens);
+    $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($theme);
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-extended-fab-theme.theme($typography-tokens);
+    }
   }
 }
 
 @mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {}
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include mdc-extended-fab-theme.theme(map.get($tokens, tokens-mdc-extended-fab.$prefix));
+    @include mdc-fab-theme.theme(map.get($tokens, tokens-mdc-fab.$prefix));
+    @include token-utils.create-token-values(
+        tokens-mat-fab.$prefix, map.get($tokens, tokens-mat-fab.$prefix));
   }
 }

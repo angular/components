@@ -99,7 +99,6 @@ describe('MDC-based MatSelect', () => {
         NoopAnimationsModule,
         OverlayModule,
       ],
-      declarations: declarations,
       providers: [
         {provide: Directionality, useFactory: () => (dir = {value: 'ltr', change: EMPTY})},
         {
@@ -110,6 +109,7 @@ describe('MDC-based MatSelect', () => {
         },
         ...providers,
       ],
+      declarations: declarations,
     }).compileComponents();
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
@@ -2868,8 +2868,8 @@ describe('MDC-based MatSelect', () => {
           FormsModule,
           NoopAnimationsModule,
         ],
-        declarations: [FloatLabelSelect],
         providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}],
+        declarations: [FloatLabelSelect],
       });
 
       const fixture = TestBed.createComponent(FloatLabelSelect);

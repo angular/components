@@ -179,5 +179,8 @@ export class TileCoordinator {
  * @docs-private
  */
 export class TilePosition {
-  constructor(public row: number, public col: number) {}
+  constructor(
+    public row: number,
+    public col: number,
+  ) {}
 }

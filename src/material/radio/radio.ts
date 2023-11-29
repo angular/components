@@ -32,7 +32,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -102,6 +102,7 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
     'role': 'radiogroup',
     'class': 'mat-mdc-radio-group',
   },
+  standalone: true,
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
   /** Selected value for the radio group. */
@@ -368,6 +369,8 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;

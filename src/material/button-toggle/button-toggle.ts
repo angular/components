@@ -33,6 +33,7 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -112,6 +113,7 @@ export class MatButtonToggleChange {
     '[class.mat-button-toggle-group-appearance-standard]': 'appearance === "standard"',
   },
   exportAs: 'matButtonToggleGroup',
+  standalone: true,
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
   private _multiple = false;
@@ -398,6 +400,8 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     '(focus)': 'focus()',
     'role': 'presentation',
   },
+  standalone: true,
+  imports: [MatRipple],
 })
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _checked = false;

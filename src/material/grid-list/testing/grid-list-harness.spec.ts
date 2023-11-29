@@ -13,8 +13,7 @@ describe('MatGridListHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatGridListModule, NoopAnimationsModule],
-      declarations: [GridListHarnessTest],
+      imports: [MatGridListModule, NoopAnimationsModule, GridListHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GridListHarnessTest);
@@ -183,6 +182,8 @@ describe('MatGridListHarness', () => {
       </mat-grid-tile>
     </mat-grid-list>
   `,
+  standalone: true,
+  imports: [MatGridListModule],
 })
 class GridListHarnessTest {
   firstTileText = 'One';

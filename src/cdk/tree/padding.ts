@@ -21,6 +21,7 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
  */
 @Directive({
   selector: '[cdkTreeNodePadding]',
+  standalone: true,
 })
 export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   /** Current padding value applied to the element. Used to avoid unnecessarily hitting the DOM. */

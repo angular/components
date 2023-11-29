@@ -11,8 +11,7 @@ describe('MatButtonToggleGroupHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatButtonToggleModule],
-      declarations: [ButtonToggleGroupHarnessTest],
+      imports: [MatButtonToggleModule, ButtonToggleGroupHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonToggleGroupHarnessTest);
@@ -82,6 +81,8 @@ describe('MatButtonToggleGroupHarness', () => {
       <mat-button-toggle value="2">Two</mat-button-toggle>
     </mat-button-toggle-group>
   `,
+  standalone: true,
+  imports: [MatButtonToggleModule],
 })
 class ButtonToggleGroupHarnessTest {
   disabled = false;

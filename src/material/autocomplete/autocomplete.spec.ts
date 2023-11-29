@@ -12,7 +12,7 @@ import {
   dispatchMouseEvent,
   MockNgZone,
   typeInElement,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -72,8 +72,8 @@ describe('MDC-based MatAutocomplete', () => {
         NoopAnimationsModule,
         OverlayModule,
       ],
-      declarations: [component],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}, ...providers],
+      declarations: [component],
     });
 
     TestBed.compileComponents();
@@ -705,6 +705,65 @@ describe('MDC-based MatAutocomplete', () => {
     }).not.toThrow();
   });
 
+  it('should clear the selected option if it no longer matches the input text while typing', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(false);
+  }));
+
+  it('should not clear the selected option if it no longer matches the input text while typing with requireSelection', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.componentInstance.requireSelection = true;
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+  }));
+
   describe('forms integration', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
@@ -845,6 +904,33 @@ describe('MDC-based MatAutocomplete', () => {
       tick();
 
       expect(input.value).withContext(`Expected input value to be empty after reset.`).toEqual('');
+    }));
+
+    it('should clear the previous selection when reactive form field is reset programmatically', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      const clickedOption = options[0];
+      const option = fixture.componentInstance.options.first;
+
+      clickedOption.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(option.selected).toBe(true);
+
+      fixture.componentInstance.stateCtrl.reset();
+      tick();
+
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual(null);
+      expect(option.selected).toBe(false);
     }));
 
     it('should disable input in view when disabled programmatically', () => {

@@ -91,6 +91,8 @@ export interface MatChipEvent {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_CHIP, useExisting: MatChip}],
+  standalone: true,
+  imports: [MatChipAction],
 })
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
   protected _document: Document;

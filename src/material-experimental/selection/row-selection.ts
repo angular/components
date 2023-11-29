@@ -24,6 +24,7 @@ import {Input, Directive} from '@angular/core';
   },
   providers: [{provide: CdkRowSelection, useExisting: MatRowSelection}],
   inputs: ['index: matRowSelectionIndex'],
+  standalone: true,
 })
 export class MatRowSelection<T> extends CdkRowSelection<T> {
   /** The value that is associated with the row */

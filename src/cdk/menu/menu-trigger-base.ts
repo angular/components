@@ -34,6 +34,7 @@ export const MENU_TRIGGER = new InjectionToken<CdkMenuTriggerBase>('cdk-menu-tri
     '[attr.aria-controls]': 'childMenu?.id',
     '[attr.data-cdk-menu-stack-id]': 'menuStack.id',
   },
+  standalone: true,
 })
 export abstract class CdkMenuTriggerBase implements OnDestroy {
   /** The DI injector for this component. */

@@ -23,8 +23,7 @@ describe('CdkTableScrollContainer', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule, CdkTableScrollContainerModule],
-      declarations: [componentType, ...declarations],
+      imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -275,6 +274,8 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
     </div>
   `,
+  standalone: true,
+  imports: [CdkTableModule, CdkTableScrollContainerModule],
   styles: [
     `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {

@@ -37,6 +37,7 @@ import {CdkTree, CdkTreeNode} from './tree';
   host: {
     'class': 'cdk-nested-tree-node',
   },
+  standalone: true,
 })
 export class CdkNestedTreeNode<T, K = T>
   extends CdkTreeNode<T, K>
