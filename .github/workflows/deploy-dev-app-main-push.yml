@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@390968287fc378d3b46977649c50e2b5a372d4f2
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@f00131a6ab074797904b905c6a7637af1ce7ce80
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@390968287fc378d3b46977649c50e2b5a372d4f2
+        uses: angular/dev-infra/github-actions/bazel/setup@f00131a6ab074797904b905c6a7637af1ce7ce80
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@390968287fc378d3b46977649c50e2b5a372d4f2
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@f00131a6ab074797904b905c6a7637af1ce7ce80
 
       - name: Building dev-app
         run: |
