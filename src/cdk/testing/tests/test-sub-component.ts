@@ -19,6 +19,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
       </ul>`,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class TestSubComponent {
   @Input() title: string;

@@ -97,13 +97,15 @@
             "!styles": ".*",
             "!moduleId": ".*",
             "changeDetection": "\\.OnPush$",
-            "encapsulation": "\\.None$"
+            "encapsulation": "\\.None$",
+            "standalone": "^true$"
           }
         },
         "Directive": {
           "argument": 0,
           "properties": {
-            "!host": "\\[class\\]"
+            "!host": "\\[class\\]",
+            "standalone": "^true$"
           }
         },
         "NgModule": {

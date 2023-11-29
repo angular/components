@@ -9,6 +9,16 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
+  selector: 'test-sub-shadow-boundary',
+  template: '<div class="in-the-shadows">Shadow 2</div>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: true,
+})
+export class TestSubShadowBoundary {}
+
+@Component({
   selector: 'test-shadow-boundary',
   template: `
     <div class="in-the-shadows">Shadow 1</div>
@@ -17,14 +27,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: true,
+  imports: [TestSubShadowBoundary],
 })
 export class TestShadowBoundary {}
-
-@Component({
-  selector: 'test-sub-shadow-boundary',
-  template: '<div class="in-the-shadows">Shadow 2</div>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // tslint:disable-next-line:validate-decorators
-  encapsulation: ViewEncapsulation.ShadowDom,
-})
-export class TestSubShadowBoundary {}

@@ -8,7 +8,7 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,12 +19,16 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {TestShadowBoundary} from './test-shadow-boundary';
+import {TestSubComponent} from './test-sub-component';
 
 @Component({
   selector: 'test-main',
   templateUrl: 'test-main-component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [TestShadowBoundary, TestSubComponent, FormsModule, ReactiveFormsModule],
 })
 export class TestMainComponent implements OnDestroy {
   username: string;
@@ -54,7 +58,10 @@ export class TestMainComponent implements OnDestroy {
 
   private _fakeOverlayElement: HTMLElement;
 
-  constructor(private _cdr: ChangeDetectorRef, private _zone: NgZone) {
+  constructor(
+    private _cdr: ChangeDetectorRef,
+    private _zone: NgZone,
+  ) {
     this.username = 'Yi';
     this.counter = 0;
     this.asyncCounter = 0;
