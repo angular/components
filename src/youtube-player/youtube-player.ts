@@ -23,16 +23,18 @@ import {
   PLATFORM_ID,
   OnChanges,
   SimpleChanges,
-  AfterViewInit,
   booleanAttribute,
   numberAttribute,
   InjectionToken,
   inject,
   CSP_NONCE,
+  ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPattern} from 'rxjs';
 import {takeUntil, switchMap} from 'rxjs/operators';
+import {PlaceholderImageQuality, YouTubePlayerPlaceholder} from './youtube-player-placeholder';
 
 declare global {
   interface Window {
@@ -48,10 +50,24 @@ export const YOUTUBE_PLAYER_CONFIG = new InjectionToken<YouTubePlayerConfig>(
 
 /** Object that can be used to configure the `YouTubePlayer`. */
 export interface YouTubePlayerConfig {
-  /**
-   * Whether to load the YouTube iframe API automatically. Defaults to `true`.
-   */
+  /** Whether to load the YouTube iframe API automatically. Defaults to `true`. */
   loadApi?: boolean;
+
+  /**
+   * By default the player shows a placeholder image instead of loading the YouTube API which
+   * improves the initial page load performance. Use this option to disable the placeholder loading
+   * behavior globally. Defaults to `false`.
+   */
+  disablePlaceholder?: boolean;
+
+  /** Accessible label for the play button inside of the placeholder. */
+  placeholderButtonLabel?: string;
+
+  /**
+   * Quality of the displayed placeholder image. Defaults to `standard`,
+   * because not all video have a high-quality placeholder.
+   */
+  placeholderImageQuality?: PlaceholderImageQuality;
 }
 
 export const DEFAULT_PLAYER_WIDTH = 640;
@@ -84,8 +100,22 @@ function coerceTime(value: number | undefined): number | undefined {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  // This div is *replaced* by the YouTube player embed.
-  template: '<div #youtubeContainer></div>',
+  imports: [YouTubePlayerPlaceholder],
+  template: `
+    @if (_shouldShowPlaceholder()) {
+      <youtube-player-placeholder
+        [videoId]="videoId!"
+        [width]="width"
+        [height]="height"
+        [isLoading]="_isLoading"
+        [buttonLabel]="placeholderButtonLabel"
+        [quality]="placeholderImageQuality"
+        (click)="_load(true)"/>
+    }
+    <div [style.display]="_shouldShowPlaceholder() ? 'none' : ''">
+      <div #youtubeContainer></div>
+    </div>
+  `,
 })
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   /** Whether we're currently rendering inside a browser. */
@@ -97,6 +127,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   private readonly _destroyed = new Subject<void>();
   private readonly _playerChanges = new BehaviorSubject<YT.Player | undefined>(undefined);
   private readonly _nonce = inject(CSP_NONCE, {optional: true});
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  protected _isLoading = false;
+  protected _hasPlaceholder = true;
 
   /** YouTube Video ID to view */
   @Input()
@@ -150,11 +183,27 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   loadApi: boolean;
 
   /**
+   * By default the player shows a placeholder image instead of loading the YouTube API which
+   * improves the initial page load performance. This input allows for the behavior to be disabled.
+   */
+  @Input({transform: booleanAttribute})
+  disablePlaceholder: boolean = false;
+
+  /**
    * Whether the iframe will attempt to load regardless of the status of the api on the
    * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
    * set on the global window.
    */
   @Input({transform: booleanAttribute}) showBeforeIframeApiLoads: boolean = false;
+
+  /** Accessible label for the play button inside of the placeholder. */
+  @Input() placeholderButtonLabel: string;
+
+  /**
+   * Quality of the displayed placeholder image. Defaults to `standard`,
+   * because not all video have a high-quality placeholder.
+   */
+  @Input() placeholderImageQuality: PlaceholderImageQuality;
 
   /** Outputs are direct proxies from the player itself. */
   @Output() readonly ready: Observable<YT.PlayerEvent> =
@@ -185,40 +234,19 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   ) {
     const config = inject(YOUTUBE_PLAYER_CONFIG, {optional: true});
     this.loadApi = config?.loadApi ?? true;
+    this.disablePlaceholder = !!config?.disablePlaceholder;
+    this.placeholderButtonLabel = config?.placeholderButtonLabel || 'Play video';
+    this.placeholderImageQuality = config?.placeholderImageQuality || 'standard';
     this._isBrowser = isPlatformBrowser(platformId);
   }
 
   ngAfterViewInit() {
-    // Don't do anything if we're not in a browser environment.
-    if (!this._isBrowser) {
-      return;
-    }
-
-    if (!window.YT || !window.YT.Player) {
-      if (this.loadApi) {
-        loadApi(this._nonce);
-      } else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-        throw new Error(
-          'Namespace YT not found, cannot construct embedded youtube player. ' +
-            'Please install the YouTube Player API Reference for iframe Embeds: ' +
-            'https://developers.google.com/youtube/iframe_api_reference',
-        );
-      }
-
-      this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
-
-      window.onYouTubeIframeAPIReady = () => {
-        this._existingApiReadyCallback?.();
-        this._ngZone.run(() => this._createPlayer());
-      };
-    } else {
-      this._createPlayer();
-    }
+    this._conditionallyLoad();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this._shouldRecreatePlayer(changes)) {
-      this._createPlayer();
+      this._conditionallyLoad();
     } else if (this._player) {
       if (changes['width'] || changes['height']) {
         this._setSize();
@@ -424,6 +452,64 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     return this._player ? this._player.getVideoEmbedCode() : '';
   }
 
+  /**
+   * Loads the YouTube API and sets up the player.
+   * @param playVideo Whether to automatically play the video once the player is loaded.
+   */
+  protected _load(playVideo: boolean) {
+    // Don't do anything if we're not in a browser environment.
+    if (!this._isBrowser) {
+      return;
+    }
+
+    if (!window.YT || !window.YT.Player) {
+      if (this.loadApi) {
+        this._isLoading = true;
+        loadApi(this._nonce);
+      } else if (this.showBeforeIframeApiLoads && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        throw new Error(
+          'Namespace YT not found, cannot construct embedded youtube player. ' +
+            'Please install the YouTube Player API Reference for iframe Embeds: ' +
+            'https://developers.google.com/youtube/iframe_api_reference',
+        );
+      }
+
+      this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
+
+      window.onYouTubeIframeAPIReady = () => {
+        this._existingApiReadyCallback?.();
+        this._ngZone.run(() => this._createPlayer(playVideo));
+      };
+    } else {
+      this._createPlayer(playVideo);
+    }
+  }
+
+  /** Loads the player depending on the internal state of the component. */
+  private _conditionallyLoad() {
+    // If the placeholder isn't shown anymore, we have to trigger a load.
+    if (!this._shouldShowPlaceholder()) {
+      this._load(false);
+    } else if (this.playerVars?.autoplay === 1) {
+      // If it's an autoplaying video, we have to hide the placeholder and start playing.
+      this._load(true);
+    }
+  }
+
+  /** Whether to show the placeholder element. */
+  protected _shouldShowPlaceholder(): boolean {
+    if (this.disablePlaceholder) {
+      return false;
+    }
+
+    // Since we don't load the API on the server, we show the placeholder permanently.
+    if (!this._isBrowser) {
+      return true;
+    }
+
+    return this._hasPlaceholder && !!this.videoId && !this._player;
+  }
+
   /** Gets an object that should be used to store the temporary API state. */
   private _getPendingState(): PendingPlayerState {
     if (!this._pendingPlayerState) {
@@ -438,12 +524,19 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
    * requires the YouTube player to be recreated.
    */
   private _shouldRecreatePlayer(changes: SimpleChanges): boolean {
-    const change = changes['videoId'] || changes['playerVars'] || changes['disableCookies'];
+    const change =
+      changes['videoId'] ||
+      changes['playerVars'] ||
+      changes['disableCookies'] ||
+      changes['disablePlaceholder'];
     return !!change && !change.isFirstChange();
   }
 
-  /** Creates a new YouTube player and destroys the existing one. */
-  private _createPlayer() {
+  /**
+   * Creates a new YouTube player and destroys the existing one.
+   * @param playVideo Whether to play the video once it loads.
+   */
+  private _createPlayer(playVideo: boolean) {
     this._player?.destroy();
     this._pendingPlayer?.destroy();
 
@@ -462,30 +555,38 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
           host: this.disableCookies ? 'https://www.youtube-nocookie.com' : undefined,
           width: this.width,
           height: this.height,
-          playerVars: this.playerVars,
+          // Calling `playVideo` on load doesn't appear to actually play
+          // the video so we need to trigger it through `playerVars` instead.
+          playerVars: playVideo ? {...(this.playerVars || {}), autoplay: 1} : this.playerVars,
         }),
     );
 
     const whenReady = () => {
       // Only assign the player once it's ready, otherwise YouTube doesn't expose some APIs.
-      this._player = player;
-      this._pendingPlayer = undefined;
-      player.removeEventListener('onReady', whenReady);
-      this._playerChanges.next(player);
-      this._setSize();
-      this._setQuality();
+      this._ngZone.run(() => {
+        this._isLoading = false;
+        this._hasPlaceholder = false;
+        this._player = player;
+        this._pendingPlayer = undefined;
+        player.removeEventListener('onReady', whenReady);
+        this._playerChanges.next(player);
+        this._setSize();
+        this._setQuality();
 
-      if (this._pendingPlayerState) {
-        this._applyPendingPlayerState(player, this._pendingPlayerState);
-        this._pendingPlayerState = undefined;
-      }
+        if (this._pendingPlayerState) {
+          this._applyPendingPlayerState(player, this._pendingPlayerState);
+          this._pendingPlayerState = undefined;
+        }
 
-      // Only cue the player when it either hasn't started yet or it's cued,
-      // otherwise cuing it can interrupt a player with autoplay enabled.
-      const state = player.getPlayerState();
-      if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.CUED || state == null) {
-        this._cuePlayer();
-      }
+        // Only cue the player when it either hasn't started yet or it's cued,
+        // otherwise cuing it can interrupt a player with autoplay enabled.
+        const state = player.getPlayerState();
+        if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.CUED || state == null) {
+          this._cuePlayer();
+        }
+
+        this._changeDetectorRef.markForCheck();
+      });
     };
 
     this._pendingPlayer = player;

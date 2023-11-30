@@ -16,37 +16,60 @@ import {
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
-import {YouTubePlayer} from '@angular/youtube-player';
+import {PlaceholderImageQuality, YouTubePlayer} from '@angular/youtube-player';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 interface Video {
   id: string;
   name: string;
   isPlaylist?: boolean;
+  autoplay?: boolean;
+  placeholderQuality: PlaceholderImageQuality;
 }
 
 const VIDEOS: Video[] = [
   {
-    id: 'PRQCAL_RMVo',
-    name: 'Instructional',
+    id: 'hsUxJjY-PRg',
+    name: 'Control Flow',
+    placeholderQuality: 'high',
   },
   {
     id: 'O0xx5SvjmnU',
     name: 'Angular Conf',
+    placeholderQuality: 'high',
   },
   {
     id: 'invalidname',
     name: 'Invalid',
+    placeholderQuality: 'high',
   },
   {
     id: 'PLOa5YIicjJ-XCGXwnEmMmpHHCn11gUgvL',
     name: 'Angular Forms Playlist',
     isPlaylist: true,
+    placeholderQuality: 'high',
   },
   {
     id: 'PLOa5YIicjJ-VpOOoLczAGTLEEznZ2JEa6',
     name: 'Angular Router Playlist',
     isPlaylist: true,
+    placeholderQuality: 'high',
+  },
+  {
+    id: 'PXNp4LENMPA',
+    name: 'Angular.dev (autoplay)',
+    autoplay: true,
+    placeholderQuality: 'high',
+  },
+  {
+    id: 'txqiwrbYGrs',
+    name: 'David after dentist (only standard quality placeholder)',
+    placeholderQuality: 'low',
+  },
+  {
+    id: 'EwTZ2xpQwpA',
+    name: 'Chocolate rain (only low quality placeholder)',
+    placeholderQuality: 'low',
   },
 ];
 
@@ -67,6 +90,8 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   videoWidth: number | undefined;
   videoHeight: number | undefined;
   disableCookies = false;
+  disablePlaceholder = false;
+  placeholderQuality: PlaceholderImageQuality;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.selectedVideo = VIDEOS[0];
@@ -102,11 +127,12 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
 
   set selectedVideo(value: Video | undefined) {
     this._selectedVideo = value;
+    this.placeholderQuality = value?.placeholderQuality || 'standard';
 
     // If the video is a playlist, don't send a video id, and prepare playerVars instead
 
     if (!value?.isPlaylist) {
-      this._playerVars = undefined;
+      this._playerVars = value?.autoplay ? {autoplay: 1} : undefined;
       this._selectedVideoId = value?.id;
       return;
     }

@@ -8,3 +8,4 @@
 
 export * from './youtube-module';
 export {YouTubePlayer, YOUTUBE_PLAYER_CONFIG, YouTubePlayerConfig} from './youtube-player';
+export {PlaceholderImageQuality} from './youtube-player-placeholder';
