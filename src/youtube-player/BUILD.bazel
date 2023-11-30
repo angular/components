@@ -4,6 +4,7 @@ load(
     "ng_package",
     "ng_test_library",
     "ng_web_test_suite",
+    "sass_binary",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -17,6 +18,9 @@ ng_module(
             "fake-youtube-player.ts",
         ],
     ),
+    assets = [
+        ":youtube_player_placeholder_scss",
+    ],
     deps = [
         "//src:dev_mode_types",
         "@npm//@angular/common",
@@ -24,6 +28,11 @@ ng_module(
         "@npm//@types/youtube",
         "@npm//rxjs",
     ],
+)
+
+sass_binary(
+    name = "youtube_player_placeholder_scss",
+    src = "youtube-player-placeholder.scss",
 )
 
 ng_package(

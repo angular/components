@@ -17,6 +17,9 @@ import { OnDestroy } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 // @public
+export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
+
+// @public
 export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 // @public
@@ -25,6 +28,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
     disableCookies: boolean;
+    disablePlaceholder: boolean;
     endSeconds: number | undefined;
     // (undocumented)
     readonly error: Observable<YT.OnErrorEvent>;
@@ -39,13 +43,20 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     getVideoLoadedFraction(): number;
     getVideoUrl(): string;
     getVolume(): number;
+    // (undocumented)
+    protected _hasPlaceholder: boolean;
     get height(): number;
     set height(height: number | undefined);
+    // (undocumented)
+    protected _isLoading: boolean;
     isMuted(): boolean;
+    protected _load(playVideo: boolean): void;
     loadApi: boolean;
     mute(): void;
     // (undocumented)
     static ngAcceptInputType_disableCookies: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disablePlaceholder: unknown;
     // (undocumented)
     static ngAcceptInputType_endSeconds: number | undefined;
     // (undocumented)
@@ -65,6 +76,8 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     pauseVideo(): void;
+    placeholderButtonLabel: string;
+    placeholderImageQuality: PlaceholderImageQuality;
     // (undocumented)
     readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
     // (undocumented)
@@ -75,6 +88,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;
+    protected _shouldShowPlaceholder(): boolean;
     showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
     // (undocumented)
@@ -87,14 +101,17 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
 }
 
 // @public
 export interface YouTubePlayerConfig {
+    disablePlaceholder?: boolean;
     loadApi?: boolean;
+    placeholderButtonLabel?: string;
+    placeholderImageQuality?: PlaceholderImageQuality;
 }
 
 // @public (undocumented)
