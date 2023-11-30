@@ -49,7 +49,6 @@ $prefix: (mdc, outlined-button);
     with-icon-focus-icon-color: null,
     with-icon-pressed-icon-color: null,
     with-icon-disabled-icon-color: null,
-    label-text-transform: null,
   );
 }
 
@@ -86,7 +85,8 @@ $prefix: (mdc, outlined-button);
     label-text-font: inspection.get-theme-typography($theme, button, font-family),
     label-text-size: inspection.get-theme-typography($theme, button, font-size),
     label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+    label-text-transform: none,
   );
 }
 

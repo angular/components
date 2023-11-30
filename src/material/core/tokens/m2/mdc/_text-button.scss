@@ -42,7 +42,6 @@ $prefix: (mdc, text-button);
     focus-ring-color: null,
     focus-ring-offset: null,
     keep-touch-target: false,
-    label-text-transform: null
   );
 }
 
@@ -72,7 +71,8 @@ $prefix: (mdc, text-button);
     label-text-font: inspection.get-theme-typography($theme, button, font-family),
     label-text-size: inspection.get-theme-typography($theme, button, font-size),
     label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+    label-text-transform: none,
   );
 }
 

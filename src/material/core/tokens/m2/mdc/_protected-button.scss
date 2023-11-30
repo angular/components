@@ -33,7 +33,6 @@ $prefix: (mdc, protected-button);
     disabled-container-elevation: null,
     focus-container-elevation: null,
     pressed-container-elevation: null,
-    label-text-transform: null,
     with-icon-icon-size: null,
     focus-label-text-color: null,
     hover-label-text-color: null,
@@ -80,7 +79,8 @@ $prefix: (mdc, protected-button);
     label-text-font: inspection.get-theme-typography($theme, button, font-family),
     label-text-size: inspection.get-theme-typography($theme, button, font-size),
     label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+    label-text-transform: none,
   );
 }
 
