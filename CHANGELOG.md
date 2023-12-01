@@ -1,3 +1,31 @@
+<a name="17.0.2"></a>
+# 17.0.2 "sand-salmon" (2023-12-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4938722fa](https://github.com/angular/components/commit/4938722fafed08babd108a51736b1a714ca72a70) | fix | **autocomplete:** clear selected option if it is removed while typing ([#28146](https://github.com/angular/components/pull/28146)) |
+| [381037818](https://github.com/angular/components/commit/38103781893fc234777aa4dc15965c0efab06ae1) | fix | **button:** fix flat button line-height ([#28090](https://github.com/angular/components/pull/28090)) |
+| [5f789f79d](https://github.com/angular/components/commit/5f789f79db85c42d4f69a051cb0031090d141ccb) | fix | **button:** fix outlined button line-height ([#28092](https://github.com/angular/components/pull/28092)) |
+| [d45f4967a](https://github.com/angular/components/commit/d45f4967a4aa8dac6e122c4213fc38f75b561125) | fix | **button:** fix text button line-height ([#28091](https://github.com/angular/components/pull/28091)) |
+| [04ceccf21](https://github.com/angular/components/commit/04ceccf21da00e04869270fd0579539ddde8ddd4) | fix | **core:** prevent ng update schematic from checking node_modules ([#28152](https://github.com/angular/components/pull/28152)) |
+| [c2a812967](https://github.com/angular/components/commit/c2a812967ccabd2d4012eb8e079df9f0bd3f2e14) | fix | **tooltip:** increase specificity of non-interactive styles ([#28180](https://github.com/angular/components/pull/28180)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3d118c67a](https://github.com/angular/components/commit/3d118c67a56cd8cfeeb80a9701749e8e31e564c3) | feat | **theming:** add M3 autocomplete, badge, and bottom-sheet support ([#28177](https://github.com/angular/components/pull/28177)) |
+| [950ca90b7](https://github.com/angular/components/commit/950ca90b7b73e0a22de512559f36e75554c48fc7) | feat | **theming:** add M3 button-toggle support ([#28179](https://github.com/angular/components/pull/28179)) |
+| [ee6894f3e](https://github.com/angular/components/commit/ee6894f3e2f53b3923a571556581f001529b0396) | feat | **theming:** add M3 chips support ([#28183](https://github.com/angular/components/pull/28183)) |
+| [86c55d004](https://github.com/angular/components/commit/86c55d0042e4a9d95df5a52a1fc5d7d13dabedaf) | feat | **theming:** add M3 datepicker support ([#28166](https://github.com/angular/components/pull/28166)) |
+| [4424c0b21](https://github.com/angular/components/commit/4424c0b217838f947978adb65855e69d57ea8328) | feat | **theming:** add M3 dialog support ([#28163](https://github.com/angular/components/pull/28163)) |
+| [61401f57a](https://github.com/angular/components/commit/61401f57a9219b8226bb0fa82cd487a301e7da64) | feat | **theming:** add M3 grid-list support ([#28131](https://github.com/angular/components/pull/28131)) |
+| [cd0f36ac3](https://github.com/angular/components/commit/cd0f36ac3c6878e66c757d3d6b1cae05994fef0a) | feat | **theming:** add M3 icon support ([#28126](https://github.com/angular/components/pull/28126)) |
+| [5bf3ab4b6](https://github.com/angular/components/commit/5bf3ab4b6b8c81361651a78357cc375e54922b89) | feat | **theming:** add M3 menu & divider support ([#28144](https://github.com/angular/components/pull/28144)) |
+| [1abf88008](https://github.com/angular/components/commit/1abf88008a42f5427d8653883bf0f49361609df5) | feat | **theming:** add M3 paginator support ([#28164](https://github.com/angular/components/pull/28164)) |
+| [750d95faa](https://github.com/angular/components/commit/750d95faa7a5960431d8199a0c301f14b6d7de50) | feat | **theming:** add M3 select, option, and optgroup support ([#28148](https://github.com/angular/components/pull/28148)) |
+| [662bbb4b2](https://github.com/angular/components/commit/662bbb4b2c465a011d55a4b266ec7e2c2a818104) | feat | **theming:** add M3 sidenav support ([#28125](https://github.com/angular/components/pull/28125)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.0-next.1"></a>
 # 17.1.0-next.1 "titanium-tortoise" (2023-12-01)
 ### material
