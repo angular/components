@@ -1,3 +1,39 @@
+<a name="17.1.0-next.1"></a>
+# 17.1.0-next.1 "titanium-tortoise" (2023-12-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cf868a508](https://github.com/angular/components/commit/cf868a5089a4c9eaddd4a55fd18b952fb96d5c19) | fix | **autocomplete:** clear selected option if it is removed while typing ([#28146](https://github.com/angular/components/pull/28146)) |
+| [a6582b510](https://github.com/angular/components/commit/a6582b51082955cec4c61f04d1407ff02c749c88) | fix | **button:** fix flat button line-height ([#28090](https://github.com/angular/components/pull/28090)) |
+| [6b2f03be3](https://github.com/angular/components/commit/6b2f03be33ed0b2fc3329a14217f18e7a8590b31) | fix | **button:** fix outlined button line-height ([#28092](https://github.com/angular/components/pull/28092)) |
+| [8fb5b6b41](https://github.com/angular/components/commit/8fb5b6b413f7a80d41d3052b7c4703451767d1f1) | fix | **button:** fix text button line-height ([#28091](https://github.com/angular/components/pull/28091)) |
+| [da692b13c](https://github.com/angular/components/commit/da692b13c89b5355068033a1e78a88ce19823b35) | fix | **core:** prevent ng update schematic from checking node_modules ([#28152](https://github.com/angular/components/pull/28152)) |
+| [9e4389015](https://github.com/angular/components/commit/9e438901555eaedc6617dd241ffabe391cba3b64) | fix | **form-field:** work around closure compiler issue ([#28185](https://github.com/angular/components/pull/28185)) |
+| [96fe7b3f3](https://github.com/angular/components/commit/96fe7b3f3fd663560943ddf051b1b160834111e1) | fix | **tooltip:** increase specificity of non-interactive styles ([#28180](https://github.com/angular/components/pull/28180)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e0414b19c](https://github.com/angular/components/commit/e0414b19c132ecdd26b49b133e323f80960f1159) | feat | automatically load youtube api |
+| [381a65f33](https://github.com/angular/components/commit/381a65f33d87c885235d2076297f092d6c218bae) | feat | coerce inputs |
+| [b7c47c302](https://github.com/angular/components/commit/b7c47c3025d430c738175f0e7e84d37c6311d8fd) | feat | improve initial load performance using a placeholder image ([#28207](https://github.com/angular/components/pull/28207)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85c658f74](https://github.com/angular/components/commit/85c658f7454859903d521b6ececa374227027914) | feat | **theming:** add M3 autocomplete, badge, and bottom-sheet support ([#28177](https://github.com/angular/components/pull/28177)) |
+| [d12bd7fde](https://github.com/angular/components/commit/d12bd7fde6eb5502e200d21a42ecd4acd2bd579b) | feat | **theming:** add M3 button-toggle support ([#28179](https://github.com/angular/components/pull/28179)) |
+| [02db80dcc](https://github.com/angular/components/commit/02db80dcc089fb7767c925b9d93abf98f258488b) | feat | **theming:** add M3 chips support ([#28183](https://github.com/angular/components/pull/28183)) |
+| [0943eca03](https://github.com/angular/components/commit/0943eca0385846f0088e065890b9954e816b9b45) | feat | **theming:** add M3 datepicker support ([#28166](https://github.com/angular/components/pull/28166)) |
+| [7a1cd4243](https://github.com/angular/components/commit/7a1cd4243201c12bd3713c39789785549b6b9a62) | feat | **theming:** add M3 dialog support ([#28163](https://github.com/angular/components/pull/28163)) |
+| [cf6ab1c1d](https://github.com/angular/components/commit/cf6ab1c1d0a30c1a77efe878d1f15bb4207ec31e) | feat | **theming:** add M3 expansion support ([#28159](https://github.com/angular/components/pull/28159)) |
+| [4d50c3857](https://github.com/angular/components/commit/4d50c38579f5a3a8d85b3f192ca6567bbcdcf8de) | feat | **theming:** add M3 icon support ([#28126](https://github.com/angular/components/pull/28126)) |
+| [2963b7aac](https://github.com/angular/components/commit/2963b7aaca3d91fe62f592707ca764f818a5877e) | feat | **theming:** add M3 icon-button & fab support ([#28157](https://github.com/angular/components/pull/28157)) |
+| [f2d5644f6](https://github.com/angular/components/commit/f2d5644f62eef429643850f64657585375a03422) | feat | **theming:** add M3 menu & divider support ([#28144](https://github.com/angular/components/pull/28144)) |
+| [2cb7adae7](https://github.com/angular/components/commit/2cb7adae779ec5a03b27367b3697d726da98dfea) | feat | **theming:** add M3 paginator support ([#28164](https://github.com/angular/components/pull/28164)) |
+| [0f3a55f47](https://github.com/angular/components/commit/0f3a55f479fabc56e361088510ba0a5f987163c3) | feat | **theming:** add M3 select, option, and optgroup support ([#28148](https://github.com/angular/components/pull/28148)) |
+| [603f5501a](https://github.com/angular/components/commit/603f5501a37874d68de199adfc573071628b6424) | feat | **theming:** add M3 sidenav support ([#28125](https://github.com/angular/components/pull/28125)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.0-next.0"></a>
 # 17.1.0-next.0 "metal-watch" (2023-11-16)
 ### material
