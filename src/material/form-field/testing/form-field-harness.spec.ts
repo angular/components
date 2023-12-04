@@ -16,7 +16,7 @@ import {
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MatOption} from '@angular/material/core';
 import {
   MatDateRangeInput,
   MatDateRangePicker,
@@ -377,6 +377,7 @@ describe('MatFormFieldHarness', () => {
     MatSelect,
     MatStartDate,
     MatSuffix,
+    MatOption,
   ],
 })
 class FormFieldHarnessTest {
