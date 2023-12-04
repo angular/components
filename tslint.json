@@ -51,7 +51,7 @@
     "no-namespace": true,
     "jsdoc-format": [true, "check-multiline-start"],
     "no-duplicate-imports": true,
-    "await-promise": [true, "PromiseLike"],
+    "await-promise": [true, "PromiseLike", "ElementArrayFinder"],
     "array-type": [true, "array"],
 
     // RxJS

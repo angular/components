@@ -369,8 +369,8 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
         # TODO: Consider adding the legacy patches when testing Saucelabs/Browserstack with Bazel.
         # CLI loads the legacy patches conditionally for ES5 legacy browsers. See:
         # https://github.com/angular/angular-cli/blob/277bad3895cbce6de80aa10a05c349b10d9e09df/packages/angular_devkit/build_angular/src/angular-cli-files/models/webpack-configs/common.ts#L141
-        "@npm//:node_modules/zone.js/dist/zone-evergreen.js",
-        "@npm//:node_modules/zone.js/dist/zone-testing.js",
+        "@npm//:node_modules/zone.js/bundles/zone.umd.js",
+        "@npm//:node_modules/zone.js/bundles/zone-testing.umd.js",
         "@npm//:node_modules/reflect-metadata/Reflect.js",
     ] + kwargs.pop("bootstrap", [])
 

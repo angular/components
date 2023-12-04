@@ -1141,6 +1141,16 @@ class FocusableRadioButton {
 }
 
 @Component({
+  selector: 'transcluding-wrapper',
+  template: `
+    <div><ng-content></ng-content></div>
+  `,
+  standalone: true,
+  imports: [MatRadioModule, FormsModule, ReactiveFormsModule, CommonModule],
+})
+class TranscludingWrapper {}
+
+@Component({
   template: `
   <mat-radio-group name="group" [(ngModel)]="modelValue">
     @for (option of options; track option) {
@@ -1151,7 +1161,7 @@ class FocusableRadioButton {
   </mat-radio-group>
   `,
   standalone: true,
-  imports: [MatRadioModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatRadioModule, FormsModule, ReactiveFormsModule, CommonModule, TranscludingWrapper],
 })
 class InterleavedRadioGroup {
   modelValue = 'strawberry';
@@ -1161,16 +1171,6 @@ class InterleavedRadioGroup {
     {label: 'Strawberry', value: 'strawberry'},
   ];
 }
-
-@Component({
-  selector: 'transcluding-wrapper',
-  template: `
-    <div><ng-content></ng-content></div>
-  `,
-  standalone: true,
-  imports: [MatRadioModule, FormsModule, ReactiveFormsModule, CommonModule],
-})
-class TranscludingWrapper {}
 
 @Component({
   template: `<mat-radio-button tabindex="5"></mat-radio-button>`,
