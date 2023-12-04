@@ -2,7 +2,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
-import {Component, ElementRef} from '@angular/core';
+import {Component, ElementRef, InjectionToken, inject} from '@angular/core';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
@@ -55,6 +55,7 @@ import {
   MapTransitLayer,
 } from '@angular/google-maps';
 import {Observable, of as observableOf} from 'rxjs';
+import {DOCUMENT} from '@angular/common';
 
 export class TableDataSource extends DataSource<any> {
   connect(): Observable<any> {
@@ -63,6 +64,8 @@ export class TableDataSource extends DataSource<any> {
 
   disconnect() {}
 }
+
+export const AUTOMATED_KITCHEN_SINK = new InjectionToken<boolean>('AUTOMATED_KITCHEN_SINK');
 
 @Component({
   template: `<button>Do the thing</button>`,
@@ -148,22 +151,43 @@ export class KitchenSink {
   /** Data used to render a virtual scrolling list. */
   virtualScrollData = Array(10000).fill(50);
 
+  /** Whether the kitchen sink is running as a part of an automated test or for local debugging. */
+  isAutomated: boolean;
+
   constructor(
-    snackBar: MatSnackBar,
-    dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private _dialog: MatDialog,
     viewportRuler: ViewportRuler,
     focusMonitor: FocusMonitor,
     elementRef: ElementRef<HTMLElement>,
-    bottomSheet: MatBottomSheet,
+    private _bottomSheet: MatBottomSheet,
   ) {
+    this.isAutomated = inject(AUTOMATED_KITCHEN_SINK, {optional: true}) ?? true;
     focusMonitor.focusVia(elementRef, 'program');
-    snackBar.open('Hello there');
-    dialog.open(TestEntryComponent);
-    bottomSheet.open(TestEntryComponent);
 
     // Do a sanity check on the viewport ruler.
     viewportRuler.getViewportRect();
     viewportRuler.getViewportSize();
     viewportRuler.getViewportScrollPosition();
+
+    // Only open overlays when automation is enabled since they can prevent debugging.
+    if (this.isAutomated) {
+      inject(DOCUMENT).body.classList.add('test-automated');
+      this.openSnackbar();
+      this.openDialog();
+      this.openBottomSheet();
+    }
+  }
+
+  openSnackbar() {
+    this._snackBar.open('Hello there');
+  }
+
+  openDialog() {
+    this._dialog.open(TestEntryComponent);
+  }
+
+  openBottomSheet() {
+    this._bottomSheet.open(TestEntryComponent);
   }
 }

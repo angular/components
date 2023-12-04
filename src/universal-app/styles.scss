@@ -14,10 +14,28 @@ mat.$theme-legacy-inspection-api-compatibility: false;
 $candy-app-primary: mat.define-palette(mat.$indigo-palette);
 $candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $candy-app-theme: mat.define-light-theme((
-    color: (primary: $candy-app-primary, accent: $candy-app-accent),
-    typography: mat.define-typography-config(),
-    density: 0
+  color: (primary: $candy-app-primary, accent: $candy-app-accent),
+  typography: mat.define-typography-config(),
+  density: 0
 ));
 
 // Include the default theme styles.
 @include mat.all-component-themes($candy-app-theme);
+@include mat.typography-hierarchy($candy-app-theme);
+
+body.test-automated {
+  // Make sure bottom sheet doesn't obscure components.
+  padding-bottom: 80px;
+
+  // Hide the overlay so hover styles can be tested,
+  // but show a message so we can see that the overlay is there.
+  .cdk-overlay-backdrop {
+    bottom: 100vh !important;
+  }
+
+  .cdk-overlay-backdrop::after {
+    content: 'OVERLAY ACTIVE';
+    background: lime;
+  }
+}
+
