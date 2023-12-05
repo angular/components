@@ -10,7 +10,6 @@ import {
   MatCheckbox,
   MatCheckboxChange,
   MatCheckboxModule,
-  MatCheckboxRequiredValidator,
 } from './index';
 
 describe('MDC-based MatCheckbox', () => {
@@ -1100,7 +1099,7 @@ class SingleCheckbox {
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
                            [disabled]="isDisabled">Be good</mat-checkbox>`,
   standalone: true,
-  imports: [MatCheckbox, MatCheckboxRequiredValidator, FormsModule],
+  imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModel {
   isGood: boolean = false;

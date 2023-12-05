@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
@@ -12,14 +13,18 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/material/core';
+import * as i3 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
+import { OnChanges } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { ValidationErrors } from '@angular/forms';
+import { Validator } from '@angular/forms';
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
 
 // @public
@@ -28,11 +33,11 @@ export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOpti
 // @public
 export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public (undocumented)
-export class MatCheckbox implements AfterViewInit, ControlValueAccessor, FocusableOption {
+export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
     protected _animationClasses: {
         uncheckedToChecked: string;
@@ -87,6 +92,8 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
     _onBlur(): void;
     // (undocumented)
     _onInputClick(): void;
@@ -101,6 +108,8 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: any): void;
+    // (undocumented)
+    registerOnValidatorChange(fn: () => void): void;
     required: boolean;
     // @deprecated
     ripple: MatRipple;
@@ -108,6 +117,8 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
     setDisabledState(isDisabled: boolean): void;
     tabIndex: number;
     toggle(): void;
+    // (undocumented)
+    validate(control: AbstractControl<boolean>): ValidationErrors | null;
     value: string;
     // (undocumented)
     writeValue(value: any): void;
@@ -139,10 +150,10 @@ export class MatCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCheckboxModule, never, [typeof i2.MatCommonModule, typeof i2.MatRippleModule, typeof _MatCheckboxRequiredValidatorModule, typeof i3.MatCheckbox], [typeof i3.MatCheckbox, typeof i2.MatCommonModule, typeof _MatCheckboxRequiredValidatorModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCheckboxModule, never, [typeof i2.MatCheckbox, typeof i3.MatCommonModule], [typeof i2.MatCheckbox, typeof i3.MatCommonModule]>;
 }
 
-// @public
+// @public @deprecated
 export class MatCheckboxRequiredValidator extends CheckboxRequiredValidator {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatCheckboxRequiredValidator, "mat-checkbox[required][formControlName],             mat-checkbox[required][formControl], mat-checkbox[required][ngModel]", never, {}, {}, never, never, true, never>;
@@ -150,7 +161,7 @@ export class MatCheckboxRequiredValidator extends CheckboxRequiredValidator {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckboxRequiredValidator, never>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export class _MatCheckboxRequiredValidatorModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatCheckboxRequiredValidatorModule, never>;
