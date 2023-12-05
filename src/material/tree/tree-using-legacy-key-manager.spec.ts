@@ -1,9 +1,10 @@
 import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {of} from 'rxjs';
-import {MatTree} from './tree';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTreeModule} from './tree-module';
 import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
+import {DOWN_ARROW} from '@angular/cdk/keycodes';
+import {createKeyboardEvent} from '@angular/cdk/testing/private';
 
 describe('MatTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleMatTreeApp>;
@@ -19,7 +20,7 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
     fixture.detectChanges();
   });
 
-  describe('when nodes do not have a tabindex set', () => {
+  describe('when nodes have default options', () => {
     it('Should render tabindex attribute of 0', () => {
       const treeItems = fixture.componentInstance.treeNodes;
 
@@ -30,10 +31,12 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
   });
 
   describe('when nodes have TabIndex Input binding of 42', () => {
-    it('Should render tabindex attribute of 42.', () => {
+    beforeEach(() => {
       fixture.componentInstance.tabIndexInputBinding = 42;
       fixture.detectChanges();
+    });
 
+    it('Should render tabindex attribute of 42.', () => {
       const treeItems = fixture.componentInstance.treeNodes;
 
       expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
@@ -43,15 +46,38 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
   });
 
   describe('when nodes have tabindex attribute binding of 2', () => {
-    it('should render tabindex attribute of 2', () => {
+    beforeEach(() => {
       fixture.componentInstance.tabindexAttributeBinding = '2';
       fixture.detectChanges();
+    });
 
+    it('should render tabindex attribute of 2', () => {
       const treeItems = fixture.componentInstance.treeNodes;
 
       expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
         .withContext('tabindex of tree nodes')
         .toEqual('2, 2, 2');
+    });
+  });
+
+  describe('when pressing down arrow key', () => {
+    beforeEach(() => {
+      const treeElement = fixture.componentInstance.tree.nativeElement;
+
+      treeElement.dispatchEvent(createKeyboardEvent('keydown', DOWN_ARROW, 'down'));
+      fixture.detectChanges();
+    });
+
+    it('should not change the active element', () => {
+      expect(document.activeElement).toEqual(document.body);
+    });
+
+    it('should not change the tabindex of tree nodes', () => {
+      const treeItems = fixture.componentInstance.treeNodes;
+
+      expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
+        .withContext('tabindex of tree nodes')
+        .toEqual('0, 0, 0');
     });
   });
 });
@@ -63,7 +89,7 @@ class MinimalTestData {
 
 @Component({
   template: `
-    <mat-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
       <mat-tree-node #node *matTreeNodeDef="let node"
                      [tabIndex]="tabIndexInputBinding" tabindex="{{tabindexAttributeBinding}}">
         {{node.name}}
@@ -86,6 +112,6 @@ class SimpleMatTreeApp {
   /** Value passed to tabindex attribute binding of each tree node. Null by default. */
   tabindexAttributeBinding: string | null = null;
 
-  @ViewChild(MatTree) tree: MatTree<MinimalTestData>;
+  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
   @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
 }
