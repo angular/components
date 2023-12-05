@@ -132,16 +132,14 @@ export class CdkTree<T, K = T>
   private _parents: Map<K, T | null> = new Map<K, T | null>();
 
   /**
-   * The internal node groupings for each node; we use this to determine where
-   * a particular node is within each group. This allows us to compute the
-   * correct aria attribute values.
+   * Nodes grouped into each set, which is a list of nodes displayed together in the DOM.
    *
-   * The structure of this is that:
-   * - the outer index is the level
-   * - the inner index is the parent node for this particular group. If there is no parent node, we
-   *   use `null`.
+   * Lookup key is the parent of a set. Root nodes have key of null.
+   *
+   * Values is a 'set' of tree nodes. Each tree node maps to a treeitem element. Sets are in the
+   * order that it is rendered. Each set maps directly to aria-posinset and aria-setsize attributes.
    */
-  private _groups: Map<K | null, T[]> = new Map<K | null, T[]>();
+  private _ariaSets: Map<K | null, T[]> = new Map<K | null, T[]>();
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -500,10 +498,10 @@ export class CdkTree<T, K = T>
           this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex!);
-          const group = this._getNodeGroup(item.item);
+          const set = this._getAriaSet(item.item);
           const key = this._getExpansionKey(item.item);
-          group.splice(
-            group.findIndex(groupItem => this._getExpansionKey(groupItem) === key),
+          set.splice(
+            set.findIndex(groupItem => this._getExpansionKey(groupItem) === key),
             1,
           );
         } else {
@@ -784,8 +782,8 @@ export class CdkTree<T, K = T>
    * This is intended to be used for `aria-setsize`.
    */
   _getSetSize(dataNode: T) {
-    const group = this._getNodeGroup(dataNode);
-    return group.length;
+    const set = this._getAriaSet(dataNode);
+    return set.length;
   }
 
   /**
@@ -794,9 +792,9 @@ export class CdkTree<T, K = T>
    * This is intended to be used for `aria-posinset`.
    */
   _getPositionInSet(dataNode: T) {
-    const group = this._getNodeGroup(dataNode);
+    const set = this._getAriaSet(dataNode);
     const key = this._getExpansionKey(dataNode);
-    return group.findIndex(node => this._getExpansionKey(node) === key) + 1;
+    return set.findIndex(node => this._getExpansionKey(node) === key) + 1;
   }
 
   /** Given a CdkTreeNode, gets the node that renders that node's parent's data. */
@@ -902,12 +900,12 @@ export class CdkTree<T, K = T>
     return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
   }
 
-  private _getNodeGroup(node: T) {
+  private _getAriaSet(node: T) {
     const key = this._getExpansionKey(node);
     const parent = this._parents.get(key);
     const parentKey = parent ? this._getExpansionKey(parent) : null;
-    const group = this._groups.get(parentKey);
-    return group ?? [node];
+    const set = this._ariaSets.get(parentKey);
+    return set ?? [node];
   }
 
   /**
@@ -963,7 +961,7 @@ export class CdkTree<T, K = T>
           children.pipe(
             take(1),
             tap(childNodes => {
-              this._groups.set(parentKey, [...(childNodes ?? [])]);
+              this._ariaSets.set(parentKey, [...(childNodes ?? [])]);
               for (const child of childNodes ?? []) {
                 const childKey = this._getExpansionKey(child);
                 this._parents.set(childKey, node);
@@ -1006,7 +1004,7 @@ export class CdkTree<T, K = T>
     // nested.
     if (this.childrenAccessor && nodeType === 'flat') {
       // This flattens children into a single array.
-      this._groups.set(null, [...nodes]);
+      this._ariaSets.set(null, [...nodes]);
       return this._flattenNestedNodesWithExpansion(nodes).pipe(
         map(flattenedNodes => ({
           renderNodes: flattenedNodes,
@@ -1039,7 +1037,7 @@ export class CdkTree<T, K = T>
     } else {
       // For nested nodes, we still need to perform the node flattening in order
       // to maintain our caches for various tree operations.
-      this._groups.set(null, [...nodes]);
+      this._ariaSets.set(null, [...nodes]);
       return this._flattenNestedNodesWithExpansion(nodes).pipe(
         map(flattenedNodes => ({
           renderNodes: nodes,
@@ -1065,7 +1063,7 @@ export class CdkTree<T, K = T>
     }
 
     this._parents.clear();
-    this._groups.clear();
+    this._ariaSets.clear();
 
     for (let index = 0; index < flattenedNodes.length; index++) {
       const dataNode = flattenedNodes[index];
@@ -1075,9 +1073,9 @@ export class CdkTree<T, K = T>
       this._parents.set(key, parent);
       const parentKey = parent ? this._getExpansionKey(parent) : null;
 
-      const group = this._groups.get(parentKey) ?? [];
+      const group = this._ariaSets.get(parentKey) ?? [];
       group.splice(index, 0, dataNode);
-      this._groups.set(parentKey, group);
+      this._ariaSets.set(parentKey, group);
     }
   }
 }

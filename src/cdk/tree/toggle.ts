@@ -12,9 +12,6 @@ import {CdkTree, CdkTreeNode} from './tree';
 
 /**
  * Node toggle to expand and collapse the node.
- *
- * CdkTreeNodeToggle is intended only to be used on native button elements, elements with button role,
- * or elements with treeitem role.
  */
 @Directive({
   selector: '[cdkTreeNodeToggle]',
