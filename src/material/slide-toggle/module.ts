@@ -7,11 +7,14 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatSlideToggle} from './slide-toggle';
 import {MatSlideToggleRequiredValidator} from './slide-toggle-required-validator';
 
-/** This module is used by both original and MDC-based slide-toggle implementations. */
+/**
+ * @deprecated No longer used, `MatSlideToggle` implements required validation directly.
+ * @breaking-change 19.0.0
+ */
 @NgModule({
   imports: [MatSlideToggleRequiredValidator],
   exports: [MatSlideToggleRequiredValidator],
@@ -19,12 +22,7 @@ import {MatSlideToggleRequiredValidator} from './slide-toggle-required-validator
 export class _MatSlideToggleRequiredValidatorModule {}
 
 @NgModule({
-  imports: [
-    _MatSlideToggleRequiredValidatorModule,
-    MatCommonModule,
-    MatRippleModule,
-    MatSlideToggle,
-  ],
-  exports: [_MatSlideToggleRequiredValidatorModule, MatSlideToggle, MatCommonModule],
+  imports: [MatSlideToggle, MatCommonModule],
+  exports: [MatSlideToggle, MatCommonModule],
 })
 export class MatSlideToggleModule {}
