@@ -420,8 +420,8 @@ export class MatAutocompleteTrigger
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
+    this._updateMarkedSelection(value);
     Promise.resolve(null).then(() => {
-      this._updateMarkedSelection(value);
       this._assignOptionValue(value);
     });
   }
