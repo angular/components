@@ -87,6 +87,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     radioGroup: MatRadioGroup;
     get required(): boolean;
     set required(value: boolean);
+    _rippleTrigger: ElementRef<HTMLElement>;
     protected _setDisabled(value: boolean): void;
     tabIndex: number;
     get value(): any;

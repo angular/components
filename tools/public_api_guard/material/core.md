@@ -218,6 +218,15 @@ export type MatDateFormats = {
 export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 // @public
+export class _MatInternalFormField {
+    labelPosition: 'before' | 'after';
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<_MatInternalFormField, "div[mat-internal-form-field]", never, { "labelPosition": { "alias": "labelPosition"; "required": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatInternalFormField, never>;
+}
+
+// @public
 export class MatLine {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatLine, "[mat-line], [matLine]", never, {}, {}, never, never, true, never>;

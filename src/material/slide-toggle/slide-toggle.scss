@@ -2,9 +2,7 @@
 @use '@material/animation' as mdc-animation;
 @use '@material/switch/switch' as mdc-switch;
 @use '@material/switch/switch-theme' as mdc-switch-theme;
-@use '@material/form-field' as mdc-form-field;
 @use '@material/ripple' as mdc-ripple;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/tokens/m2/mdc/switch' as m2-mdc-switch;
@@ -14,7 +12,6 @@
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   $mdc-switch-token-slots: m2-mdc-switch.get-token-slots();
 
-  @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-base-styles-query);
   // Add the MDC switch static styles.
   @include mdc-switch.static-styles-without-ripple();
 

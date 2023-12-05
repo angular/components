@@ -32,7 +32,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatRipple, ThemePalette} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple, ThemePalette} from '@angular/material/core';
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -370,7 +370,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatRipple],
+  imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
@@ -524,6 +524,10 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
 
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+
+  /** Trigger elements for the ripple events. */
+  @ViewChild('formField', {read: ElementRef, static: true})
+  _rippleTrigger: ElementRef<HTMLElement>;
 
   /** Whether animations are disabled. */
   _noopAnimations: boolean;

@@ -1,6 +1,4 @@
-<div class="mdc-form-field"
-     [class.mdc-form-field--align-end]="labelPosition == 'before'"
-     (click)="_preventBubblingFromLabel($event)">
+<div mat-internal-form-field [labelPosition]="labelPosition" (click)="_preventBubblingFromLabel($event)">
   <div #checkbox class="mdc-checkbox">
     <!-- Render this element first so the input is on top. -->
     <div class="mat-mdc-checkbox-touch-target" (click)="_onTouchTargetClick()"></div>
