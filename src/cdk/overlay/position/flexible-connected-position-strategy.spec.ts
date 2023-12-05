@@ -2000,6 +2000,31 @@ describe('FlexibleConnectedPositionStrategy', () => {
       expect(Math.floor(overlayRect.top)).toBe(viewportMargin);
     });
 
+    it('should calculate the right offset correctly with a viewport margin', async () => {
+      const viewportMargin = 5;
+      const right = 20;
+
+      originElement.style.right = `${right}px`;
+      originElement.style.top = `200px`;
+
+      positionStrategy
+        .withFlexibleDimensions()
+        .withPush(false)
+        .withViewportMargin(viewportMargin)
+        .withPositions([
+          {
+            originX: 'end',
+            originY: 'top',
+            overlayX: 'end',
+            overlayY: 'bottom',
+          },
+        ]);
+
+      attachOverlay({positionStrategy});
+
+      expect(overlayRef.hostElement.style.right).toBe(`${right}px`);
+    });
+
     it('should center flexible overlay with push on a scrolled page', () => {
       const veryLargeElement = document.createElement('div');
 
