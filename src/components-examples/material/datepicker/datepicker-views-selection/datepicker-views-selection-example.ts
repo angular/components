@@ -60,7 +60,7 @@ export class DatepickerViewsSelectionExample {
   date = new FormControl(moment());
 
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.date.value!;
+    const ctrlValue = this.date.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
     this.date.setValue(ctrlValue);
