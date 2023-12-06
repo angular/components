@@ -5,7 +5,7 @@ This component provides a simple Angular wrapper around the
 File any bugs against the [angular/components repo](https://github.com/angular/components/issues).
 
 ## Installation
-To install, run `npm install @angular/youtube-player`.
+To install, run `ng add @angular/youtube-player`.
 
 ## Usage
 Import the component either by adding the `YouTubePlayerModule` to your app or  by importing

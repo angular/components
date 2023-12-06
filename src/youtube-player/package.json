@@ -26,5 +26,6 @@
     "rxjs": "0.0.0-RXJS"
   },
   "sideEffects": false,
+  "schematics": "./schematics/collection.json",
   "ng-update": {}
 }
