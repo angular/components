@@ -14,17 +14,13 @@ import {
   LEFT_ARROW,
   RIGHT_ARROW,
   TAB,
-  A,
-  Z,
-  ZERO,
-  NINE,
   hasModifierKey,
   HOME,
   END,
   PAGE_UP,
   PAGE_DOWN,
 } from '@angular/cdk/keycodes';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {Typeahead} from './typeahead';
 
 /** This interface is for items that can be passed to a ListKeyManager. */
 export interface ListKeyManagerOption {
@@ -46,7 +42,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
   private _activeItem: T | null = null;
   private _wrap = false;
-  private readonly _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
   private _itemChangesSubscription?: Subscription;
   private _vertical = true;
@@ -54,6 +49,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
   private _homeAndEnd = false;
   private _pageUpAndDown = {enabled: false, delta: 10};
+  private _typeahead?: Typeahead<T>;
 
   /**
    * Predicate function that can be used to check whether an item should be skipped
@@ -61,21 +57,20 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   private _skipPredicateFn = (item: T) => item.disabled;
 
-  // Buffer for the letters that the user has pressed when the typeahead option is turned on.
-  private _pressedLetters: string[] = [];
-
   constructor(private _items: QueryList<T> | T[]) {
     // We allow for the items to be an array because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (_items instanceof QueryList) {
       this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) => {
+        const itemArray = newItems.toArray();
+        this._typeahead?.setItems(itemArray);
         if (this._activeItem) {
-          const itemArray = newItems.toArray();
           const newIndex = itemArray.indexOf(this._activeItem);
 
           if (newIndex > -1 && newIndex !== this._activeItemIndex) {
             this._activeItemIndex = newIndex;
+            this._typeahead?.setCurrentSelectedItemIndex(newIndex);
           }
         }
       });
@@ -144,53 +139,24 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
   withTypeAhead(debounceInterval: number = 200): this {
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      this._items.length &&
-      this._items.some(item => typeof item.getLabel !== 'function')
-    ) {
-      throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
-    }
-
     this._typeaheadSubscription.unsubscribe();
 
-    // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
-    // and convert those letters back into a string. Afterwards find the first item that starts
-    // with that string and select it.
-    this._typeaheadSubscription = this._letterKeyStream
-      .pipe(
-        tap(letter => this._pressedLetters.push(letter)),
-        debounceTime(debounceInterval),
-        filter(() => this._pressedLetters.length > 0),
-        map(() => this._pressedLetters.join('')),
-      )
-      .subscribe(inputString => {
-        const items = this._getItemsArray();
+    const items = this._getItemsArray();
+    this._typeahead = new Typeahead(items, {
+      debounceInterval: typeof debounceInterval === 'number' ? debounceInterval : undefined,
+      skipPredicate: item => this._skipPredicateFn(item),
+    });
 
-        // Start at 1 because we want to start searching at the item immediately
-        // following the current active item.
-        for (let i = 1; i < items.length + 1; i++) {
-          const index = (this._activeItemIndex + i) % items.length;
-          const item = items[index];
-
-          if (
-            !this._skipPredicateFn(item) &&
-            item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0
-          ) {
-            this.setActiveItem(index);
-            break;
-          }
-        }
-
-        this._pressedLetters = [];
-      });
+    this._typeaheadSubscription = this._typeahead.selectedItem.subscribe(item => {
+      this.setActiveItem(item);
+    });
 
     return this;
   }
 
   /** Cancels the current typeahead sequence. */
   cancelTypeahead(): this {
-    this._pressedLetters = [];
+    this._typeahead?.reset();
     return this;
   }
 
@@ -322,13 +288,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
       default:
         if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
-          // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-          // otherwise fall back to resolving alphanumeric characters via the keyCode.
-          if (event.key && event.key.length === 1) {
-            this._letterKeyStream.next(event.key.toLocaleUpperCase());
-          } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-            this._letterKeyStream.next(String.fromCharCode(keyCode));
-          }
+          this._typeahead?.handleKey(event);
         }
 
         // Note that we return here, in order to avoid preventing
@@ -336,7 +296,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return;
     }
 
-    this._pressedLetters = [];
+    this._typeahead?.reset();
     event.preventDefault();
   }
 
@@ -352,7 +312,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Gets whether the user is currently typing into the manager using the typeahead feature. */
   isTyping(): boolean {
-    return this._pressedLetters.length > 0;
+    return !!this._typeahead && this._typeahead.isTyping();
   }
 
   /** Sets the active item to the first enabled item in the list. */
@@ -397,16 +357,16 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // Explicitly check for `null` and `undefined` because other falsy values are valid.
     this._activeItem = activeItem == null ? null : activeItem;
     this._activeItemIndex = index;
+    this._typeahead?.setCurrentSelectedItemIndex(index);
   }
 
   /** Cleans up the key manager. */
   destroy() {
     this._typeaheadSubscription.unsubscribe();
     this._itemChangesSubscription?.unsubscribe();
-    this._letterKeyStream.complete();
+    this._typeahead?.destroy();
     this.tabOut.complete();
     this.change.complete();
-    this._pressedLetters = [];
   }
 
   /**
