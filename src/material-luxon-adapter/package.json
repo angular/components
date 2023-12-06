@@ -26,5 +26,6 @@
       "@angular/material-luxon-adapter"
     ]
   },
+  "schematics": "./schematics/collection.json",
   "sideEffects": false
 }
