@@ -6,7 +6,7 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 
 ## Installation
 
-To install, run `npm install @angular/google-maps`.
+To install, run `ng add @angular/google-maps`.
 
 ## Getting the API Key
 

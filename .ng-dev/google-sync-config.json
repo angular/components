@@ -24,6 +24,7 @@
     "src/**/*spec.ts",
     "src/cdk/schematics/**/*",
     "src/material/schematics/**/*",
+    "src/google-maps/schematics/**/*",
     "src/cdk/testing/testbed/zone-types.d.ts",
     "src/material/_theming.scss",
     "src/material/index.ts",
