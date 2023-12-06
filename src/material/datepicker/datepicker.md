@@ -161,7 +161,7 @@ that point.
 
 <!-- example(datepicker-filter) -->
 
-In this example the user cannot select any date that falls on a Saturday or Sunday, but all of the 
+In this example the user cannot select any date that falls on a Saturday or Sunday, but all of the
 dates which fall on other days of the week are selectable.
 
 Each validation property has a different error that can be checked:
@@ -336,7 +336,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatDateFnsModule` (installed via `@angular/material-date-fns-adapter`)
+`MatDateFnsModule` (installed via `ng add @angular/material-date-fns-adapter`)
 
 <table>
   <tbody>
@@ -359,7 +359,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatLuxonDateModule` (installed via `@angular/material-luxon-adapter`)
+`MatLuxonDateModule` (installed via `ng add @angular/material-luxon-adapter`)
 
 <table>
   <tbody>
@@ -382,7 +382,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatMomentDateModule` (installed via `@angular/material-moment-adapter`)
+`MatMomentDateModule` (installed via `ng add @angular/material-moment-adapter`)
 
 <table>
   <tbody>
