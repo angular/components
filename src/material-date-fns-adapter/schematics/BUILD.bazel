@@ -1,0 +1,34 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "pkg_npm", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+copy_to_bin(
+    name = "schematics_assets",
+    srcs = glob(["**/*.json"]),
+)
+
+ts_library(
+    name = "schematics",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
+    devmode_module = "commonjs",
+    prodmode_module = "commonjs",
+    deps = [
+        "@npm//@angular-devkit/schematics",
+        "@npm//@types/node",
+    ],
+)
+
+# This package is intended to be combined into the main @angular/material-date-fns-adapter package as a dep.
+pkg_npm(
+    name = "npm_package",
+    deps = [
+        ":schematics",
+        ":schematics_assets",
+    ],
+)

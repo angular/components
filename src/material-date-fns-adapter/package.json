@@ -26,5 +26,6 @@
       "@angular/material-date-fns-adapter"
     ]
   },
+  "schematics": "./schematics/collection.json",
   "sideEffects": false
 }
