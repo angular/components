@@ -1,10 +1,11 @@
 @use 'sass:map';
 @use '@material/switch/switch-theme' as mdc-switch-theme;
-@use '@material/form-field' as mdc-form-field;
+@use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/m2/mat/slide-toggle' as tokens-mat-slide-toggle;
 @use '../core/tokens/token-utils';
@@ -31,8 +32,8 @@
     @include mdc-helpers.using-mdc-theme($theme) {
       // Add values for MDC slide toggles tokens
       .mat-mdc-slide-toggle {
-        @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
         @include mdc-switch-theme.theme($mdc-switch-color-tokens);
+        @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
 
         // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
         .mdc-switch--disabled + label {
@@ -62,10 +63,10 @@
     $mdc-switch-typography-tokens: tokens-mdc-switch.get-typography-tokens($theme);
     $mat-slide-toggle-typography-tokens: tokens-mat-slide-toggle.get-typography-tokens($theme);
 
-    //Add values for MDC slide toggle tokens
+    // Add values for MDC slide toggle tokens
     .mat-mdc-slide-toggle {
-      @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
       @include mdc-switch-theme.theme($mdc-switch-typography-tokens);
+      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
       @include token-utils.create-token-values(
           tokens-mat-slide-toggle.$prefix,
           $mat-slide-toggle-typography-tokens

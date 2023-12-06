@@ -35,7 +35,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {MatRipple} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusableOption} from '@angular/cdk/a11y';
 import {
@@ -112,7 +112,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatRipple],
+  imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
   implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption

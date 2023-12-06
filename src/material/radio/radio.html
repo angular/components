@@ -1,5 +1,4 @@
-<div class="mdc-form-field" #formField
-     [class.mdc-form-field--align-end]="labelPosition == 'before'">
+<div mat-internal-form-field [labelPosition]="labelPosition" #formField>
   <div class="mdc-radio" [class.mdc-radio--disabled]="disabled">
     <!-- Render this element first so the input is on top. -->
     <div class="mat-mdc-radio-touch-target" (click)="_onTouchTargetClick($event)"></div>
@@ -19,7 +18,7 @@
       <div class="mdc-radio__inner-circle"></div>
     </div>
     <div mat-ripple class="mat-radio-ripple mat-mdc-focus-indicator"
-         [matRippleTrigger]="formField"
+         [matRippleTrigger]="_rippleTrigger.nativeElement"
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleCentered]="true">
       <div class="mat-ripple-element mat-radio-persistent-ripple"></div>

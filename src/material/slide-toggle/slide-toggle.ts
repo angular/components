@@ -41,7 +41,7 @@ import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
-import {MatRipple} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated Will stop being exported.
@@ -96,7 +96,7 @@ let nextUniqueId = 0;
     },
   ],
   standalone: true,
-  imports: [MatRipple],
+  imports: [MatRipple, _MatInternalFormField],
 })
 export class MatSlideToggle
   implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator

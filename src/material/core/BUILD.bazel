@@ -23,6 +23,7 @@ ng_module(
         ":selection/pseudo-checkbox/pseudo-checkbox.css",
         ":option/option.css",
         ":option/optgroup.css",
+        ":internal-form-field/internal-form-field.css",
     ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
@@ -85,6 +86,12 @@ sass_binary(
 sass_binary(
     name = "optgroup_scss",
     src = "option/optgroup.scss",
+    deps = [":core_scss_lib"],
+)
+
+sass_binary(
+    name = "internal_form_field_scss",
+    src = "internal-form-field/internal-form-field.scss",
     deps = [":core_scss_lib"],
 )
 

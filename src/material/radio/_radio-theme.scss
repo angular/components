@@ -1,12 +1,13 @@
 @use 'sass:map';
 @use '@material/radio/radio-theme' as mdc-radio-theme;
-@use '@material/form-field' as mdc-form-field;
+@use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
+@use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 
@@ -28,13 +29,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
   @else {
-    @include mdc-helpers.using-mdc-theme($theme) {
-      .mat-mdc-radio-button {
-        @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-theme-styles-query);
-      }
-    }
-
     .mat-mdc-radio-button {
+      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
+
       &.mat-primary {
         @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
         @include token-utils.create-token-values(tokens-mat-radio.$prefix,
@@ -66,9 +63,7 @@
     }
 
     .mat-mdc-radio-button {
-      @include mdc-helpers.using-mdc-typography($theme) {
-        @include mdc-form-field.core-styles($query: mdc-helpers.$mdc-typography-styles-query);
-      }
+      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
     }
   }
 }
