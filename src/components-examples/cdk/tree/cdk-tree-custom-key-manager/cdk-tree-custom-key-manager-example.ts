@@ -151,6 +151,10 @@ export class VimTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyM
     }
   }
 
+  destroy() {
+    this.change.complete();
+  }
+
   /** Stream that emits any time the focused item changes. */
   readonly change = new Subject<T | null>();
 

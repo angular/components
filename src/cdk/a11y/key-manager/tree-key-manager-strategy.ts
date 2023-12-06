@@ -93,6 +93,11 @@ export interface TreeKeyManagerStrategy<T extends TreeKeyManagerItem> {
   readonly change: Subject<T | null>;
 
   /**
+   * Cleans up the key manager.
+   */
+  destroy(): void;
+
+  /**
    * Handles a keyboard event on the tree.
    *
    * @param event Keyboard event that represents the user interaction with the tree.

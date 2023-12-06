@@ -16,22 +16,17 @@ import {
   SPACE,
   TAB,
   UP_ARROW,
-  A,
-  Z,
-  ZERO,
-  NINE,
 } from '@angular/cdk/keycodes';
 import {InjectionToken, QueryList} from '@angular/core';
-import {of as observableOf, isObservable, Observable, Subject, Subscription} from 'rxjs';
-import {debounceTime, filter, map, take, tap} from 'rxjs/operators';
+import {Observable, Subject, Subscription, isObservable, of as observableOf} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {
   TreeKeyManagerFactory,
   TreeKeyManagerItem,
   TreeKeyManagerOptions,
   TreeKeyManagerStrategy,
 } from './tree-key-manager-strategy';
-
-const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
+import {Typeahead} from './typeahead';
 
 function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
   if (!isObservable(data)) {
@@ -50,8 +45,6 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   private _activeItem: T | null = null;
   private _activationFollowsFocus = false;
   private _horizontal: 'ltr' | 'rtl' = 'ltr';
-  private readonly _letterKeyStream = new Subject<string>();
-  private _typeaheadSubscription = Subscription.EMPTY;
 
   // Keep tree items focusable when disabled. Align with
   // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols.
@@ -64,10 +57,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
 
-  /** Buffer for the letters that the user has pressed when the typeahead option is turned on. */
-  private _pressedLetters: string[] = [];
-
   private _items: T[] = [];
+
+  private _typeahead?: Typeahead<T>;
+  private _typeaheadSubscription = Subscription.EMPTY;
 
   private _hasInitialFocused = false;
 
@@ -100,12 +93,14 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       this._items = items.toArray();
       items.changes.subscribe((newItems: QueryList<T>) => {
         this._items = newItems.toArray();
+        this._typeahead?.setItems(this._items);
         this._updateActiveItemIndex(this._items);
         this._initialFocus();
       });
     } else if (isObservable(items)) {
       items.subscribe(newItems => {
         this._items = newItems;
+        this._typeahead?.setItems(newItems);
         this._updateActiveItemIndex(newItems);
         this._initialFocus();
       });
@@ -127,17 +122,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       this._trackByFn = config.trackBy;
     }
     if (typeof config.typeAheadDebounceInterval !== 'undefined') {
-      const typeAheadInterval =
-        typeof config.typeAheadDebounceInterval === 'number'
-          ? config.typeAheadDebounceInterval
-          : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS;
-
-      this._setTypeAhead(typeAheadInterval);
+      this._setTypeAhead(config.typeAheadDebounceInterval);
     }
   }
 
   /** Stream that emits any time the focused item changes. */
   readonly change = new Subject<T | null>();
+
+  /** Cleans up the key manager. */
+  destroy() {
+    this._typeaheadSubscription.unsubscribe();
+    this._typeahead?.destroy();
+    this.change.complete();
+  }
 
   /**
    * Handles a keyboard event on the tree.
@@ -188,21 +185,14 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
           break;
         }
 
-        // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-        // otherwise fall back to resolving alphanumeric characters via the keyCode.
-        if (event.key && event.key.length === 1) {
-          this._letterKeyStream.next(event.key.toLocaleUpperCase());
-        } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-          this._letterKeyStream.next(String.fromCharCode(keyCode));
-        }
-
-        // NB: return here, in order to avoid preventing the default action of non-navigational
+        this._typeahead?.handleKey(event);
+        // Return here, in order to avoid preventing the default action of non-navigational
         // keys or resetting the buffer of pressed letters.
         return;
     }
 
     // Reset the typeahead since the user has used a navigational key.
-    this._pressedLetters = [];
+    this._typeahead?.reset();
     event.preventDefault();
   }
 
@@ -268,6 +258,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     const previousActiveItem = this._activeItem;
     this._activeItem = activeItem ?? null;
     this._activeItemIndex = index;
+    this._typeahead?.setCurrentSelectedItemIndex(index);
 
     this._activeItem?.focus();
     previousActiveItem?.unfocus();
@@ -294,50 +285,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
     if (newIndex > -1 && newIndex !== this._activeItemIndex) {
       this._activeItemIndex = newIndex;
+      this._typeahead?.setCurrentSelectedItemIndex(newIndex);
     }
   }
 
-  private _setTypeAhead(debounceInterval: number) {
-    this._typeaheadSubscription.unsubscribe();
+  private _setTypeAhead(debounceInterval: number | boolean) {
+    this._typeahead = new Typeahead(this._items, {
+      debounceInterval: typeof debounceInterval === 'number' ? debounceInterval : undefined,
+      skipPredicate: item => this._skipPredicateFn(item),
+    });
 
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      this._items.length &&
-      this._items.some(item => typeof item.getLabel !== 'function')
-    ) {
-      throw new Error(
-        'TreeKeyManager items in typeahead mode must implement the `getLabel` method.',
-      );
-    }
-
-    // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
-    // and convert those letters back into a string. Afterwards find the first item that starts
-    // with that string and select it.
-    this._typeaheadSubscription = this._letterKeyStream
-      .pipe(
-        tap(letter => this._pressedLetters.push(letter)),
-        debounceTime(debounceInterval),
-        filter(() => this._pressedLetters.length > 0),
-        map(() => this._pressedLetters.join('').toLocaleUpperCase()),
-      )
-      .subscribe(inputString => {
-        // Start at 1 because we want to start searching at the item immediately
-        // following the current active item.
-        for (let i = 1; i < this._items.length + 1; i++) {
-          const index = (this._activeItemIndex + i) % this._items.length;
-          const item = this._items[index];
-
-          if (
-            !this._skipPredicateFn(item) &&
-            item.getLabel?.().toLocaleUpperCase().trim().indexOf(inputString) === 0
-          ) {
-            this.focusItem(index);
-            break;
-          }
-        }
-
-        this._pressedLetters = [];
-      });
+    this._typeaheadSubscription = this._typeahead.selectedItem.subscribe(item => {
+      this.focusItem(item);
+    });
   }
 
   private _findNextAvailableItemIndex(startingIndex: number) {
