@@ -52,21 +52,20 @@ export interface TreeKeyManagerItem {
 export interface TreeKeyManagerOptions<T extends TreeKeyManagerItem> {
   /**
    * If true, then the key manager will call `activate` in addition to calling `focus` when a
-   * particular item is focused. By default, this is false.
+   * particular item is focused.
    */
-  activationFollowsFocus?: boolean;
+  shouldActivationFollowFocus?: boolean;
 
   /**
    * The direction in which the tree items are laid out horizontally. This influences which key
-   * will be interpreted as expand or collapse. Defaults to 'ltr'.
+   * will be interpreted as expand or collapse.
    */
   horizontalOrientation?: 'rtl' | 'ltr';
 
   /**
-   * Sets the predicate function that determines which items should be skipped by the tree key
-   * manager. By default, disabled items are skipped.
+   * If provided, navigation "skips" over items that pass the given predicate.
    *
-   * If the item is to be skipped, this function should return false.
+   * If the item is to be skipped, predicate function should return false.
    */
   skipPredicate?: (item: T) => boolean;
 

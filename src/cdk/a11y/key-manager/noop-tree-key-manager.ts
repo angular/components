@@ -22,6 +22,13 @@ import {
 /**
  * @docs-private
  *
+ * Opt-out of Tree of key manager behavior.
+ *
+ * When provided, Tree has same focus management behavior as before TreeKeyManager was introduced.
+ *  - Tree does not respond to keyboard interaction
+ *  - Tree node allows tabindex to be set by Input binding
+ *  - Tree node allows tabindex to be set by attribute binding
+ *
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
@@ -62,6 +69,13 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
 /**
  * @docs-private
  *
+ * Opt-out of Tree of key manager behavior.
+ *
+ * When provided, Tree has same focus management behavior as before TreeKeyManager was introduced.
+ *  - Tree does not respond to keyboard interaction
+ *  - Tree node allows tabindex to be set by Input binding
+ *  - Tree node allows tabindex to be set by attribute binding
+ *
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
@@ -75,6 +89,13 @@ export function NOOP_TREE_KEY_MANAGER_FACTORY<
 
 /**
  * @docs-private
+ *
+ * Opt-out of Tree of key manager behavior.
+ *
+ * When provided, Tree has same focus management behavior as before TreeKeyManager was introduced.
+ *  - Tree does not respond to keyboard interaction
+ *  - Tree node allows tabindex to be set by Input binding
+ *  - Tree node allows tabindex to be set by attribute binding
  *
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
