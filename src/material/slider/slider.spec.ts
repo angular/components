@@ -59,7 +59,16 @@ describe('MDC-based MatSlider', () => {
     expect(input.min).withContext('min').toBe(min);
     expect(input.max).withContext('max').toBe(max);
     expect(input.value).withContext('value').toBe(value);
-    expect(input.translateX).withContext('translateX').toBeCloseTo(translateX, 0.1);
+
+    // Note: This ±6 is here to account for the slight shift of the slider
+    // thumb caused by the tick marks being 3px away from the track start
+    // and end.
+    //
+    // This check is meant to ensure the "ideal" estimate is within 3px of the
+    // actual slider thumb position.
+    expect(input.translateX - 6 < translateX && input.translateX + 6 > translateX)
+      .withContext(`translateX: ${input.translateX} should be close to ${translateX}`)
+      .toBeTrue();
     if (step !== undefined) {
       expect(input.step).withContext('step').toBe(step);
     }

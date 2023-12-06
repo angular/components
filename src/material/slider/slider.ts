@@ -872,8 +872,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _updateTickMarkUINonRange(step: number): void {
     const value = this._getValue();
-    let numActive = Math.max(Math.round((value - this.min) / step), 0);
-    let numInactive = Math.max(Math.round((this.max - value) / step), 0);
+    let numActive = Math.max(Math.floor((value - this.min) / step), 0);
+    let numInactive = Math.max(Math.floor((this.max - value) / step), 0);
     this._isRtl ? numActive++ : numInactive++;
 
     this._tickMarks = Array(numActive)
