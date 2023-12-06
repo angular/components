@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Installs the Angular YouTube Player",
+      "factory": "./ng-add/index",
+      "hidden": true
+    }
+  }
+}
