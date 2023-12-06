@@ -43,8 +43,8 @@ function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
 export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
   private _activeItemIndex = -1;
   private _activeItem: T | null = null;
-  private _activationFollowsFocus = false;
-  private _horizontal: 'ltr' | 'rtl' = 'ltr';
+  private _shouldActivationFollowFocus = false;
+  private _horizontalOrientation: 'ltr' | 'rtl' = 'ltr';
 
   // Keep tree items focusable when disabled. Align with
   // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols.
@@ -85,6 +85,14 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     this._hasInitialFocused = true;
   }
 
+  /**
+   *
+   * @param items List of TreeKeyManager options. Can be synchronous or asynchronous.
+   * @param config Optional configuration options. By default, use 'ltr' horizontal orientation. By
+   * default, do not skip any nodes. By default, key manager only calls `focus` method when items
+   * are focused and does not call `activate`. If `typeaheadDefaultInterval` is `true`, use a
+   * default interval of 200ms.
+   */
   constructor(items: Observable<T[]> | QueryList<T> | T[], config: TreeKeyManagerOptions<T>) {
     // We allow for the items to be an array or Observable because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
@@ -109,11 +117,11 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       this._initialFocus();
     }
 
-    if (typeof config.activationFollowsFocus === 'boolean') {
-      this._activationFollowsFocus = config.activationFollowsFocus;
+    if (typeof config.shouldActivationFollowFocus === 'boolean') {
+      this._shouldActivationFollowFocus = config.shouldActivationFollowFocus;
     }
     if (config.horizontalOrientation) {
-      this._horizontal = config.horizontalOrientation;
+      this._horizontalOrientation = config.horizontalOrientation;
     }
     if (config.skipPredicate) {
       this._skipPredicateFn = config.skipPredicate;
@@ -157,11 +165,15 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
         break;
 
       case RIGHT_ARROW:
-        this._horizontal === 'rtl' ? this._collapseCurrentItem() : this._expandCurrentItem();
+        this._horizontalOrientation === 'rtl'
+          ? this._collapseCurrentItem()
+          : this._expandCurrentItem();
         break;
 
       case LEFT_ARROW:
-        this._horizontal === 'rtl' ? this._expandCurrentItem() : this._collapseCurrentItem();
+        this._horizontalOrientation === 'rtl'
+          ? this._expandCurrentItem()
+          : this._collapseCurrentItem();
         break;
 
       case HOME:
@@ -264,11 +276,10 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     previousActiveItem?.unfocus();
 
     if (options.emitChangeEvent) {
-      // Emit to `change` stream as required by TreeKeyManagerStrategy interface.
       this.change.next(this._activeItem);
     }
 
-    if (this._activationFollowsFocus) {
+    if (this._shouldActivationFollowFocus) {
       this._activateCurrentItem();
     }
   }
