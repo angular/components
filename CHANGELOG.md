@@ -1,3 +1,12 @@
+<a name="17.0.3"></a>
+# 17.0.3 "opal-kaleidoscope" (2023-12-07)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e9519c3e73](https://github.com/angular/components/commit/e9519c3e73f3e064bfca62c9d7872dcf57aa60dc) | fix | **slider:** fix tick mark precision ([#28193](https://github.com/angular/components/pull/28193)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.2"></a>
 # 17.0.2 "sand-salmon" (2023-12-01)
 ### material
