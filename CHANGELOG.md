@@ -1,3 +1,38 @@
+<a name="17.1.0-next.2"></a>
+# 17.1.0-next.2 "moss-cathedral" (2023-12-07)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ec86cf88ee](https://github.com/angular/components/commit/ec86cf88ee8def16b906a893245fe564db9b0b33) | fix | **checkbox:** move required validation into component |
+| [c2c818ceeb](https://github.com/angular/components/commit/c2c818ceeb3231128e4ec3d7b9a67b5460368230) | fix | **slide-toggle:** move required validation into component |
+| [f3b0616f3c](https://github.com/angular/components/commit/f3b0616f3cb2b9f70f955a6a7ba5142a6be7d676) | fix | **slider:** fix tick mark precision ([#28193](https://github.com/angular/components/pull/28193)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [338aa184ae](https://github.com/angular/components/commit/338aa184aee83c2b7c450c7272897e4417bccb79) | fix | error when added through ng add |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [62ca3ede70](https://github.com/angular/components/commit/62ca3ede70bb87e212fcf5f88b1e9cb8a1660d92) | fix | error when added through ng add |
+### material-moment-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [eca50162a7](https://github.com/angular/components/commit/eca50162a7d3367f2028fcaa75f9b08e58109f8b) | fix | error when added through ng add |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [91b646717d](https://github.com/angular/components/commit/91b646717d9836215ff839fafcf148ded677006e) | fix | error when added through ng add |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2da9f6bc32](https://github.com/angular/components/commit/2da9f6bc32d48fcb72d447e665ce592114aa1cf5) | fix | error when added through ng add |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [997bf75f9f](https://github.com/angular/components/commit/997bf75f9fb20c4b67f02c94baf128edd7eb007c) | fix | consolidate and tokenize internal form field ([#28236](https://github.com/angular/components/pull/28236)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.3"></a>
 # 17.0.3 "opal-kaleidoscope" (2023-12-07)
 ### material
