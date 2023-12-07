@@ -343,6 +343,14 @@ $mat-tab-animation-duration: 500ms !default;
   flex-grow: 1;
   overflow: hidden;
   z-index: 1;
+  border-bottom-style: solid;
+  @include token-utils.use-tokens(
+      tokens-mat-tab-header.$prefix,
+      tokens-mat-tab-header.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(border-bottom-width, divider-height);
+    @include token-utils.create-token-slot(border-bottom-color, divider-color);
+  }
 }
 
 @mixin paginated-tab-header-with-background($header-selector, $tab-selector) {
