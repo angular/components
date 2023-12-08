@@ -1,4 +1,3 @@
-@use '@material/button/button' as mdc-button;
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
@@ -19,7 +18,7 @@
 @use '../core/tokens/m2/mat/protected-button' as tokens-mat-protected-button;
 @use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 @use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
-
+@use '../core/style/sass-utils';
 
 @mixin _text-button-variant($theme, $palette) {
   $mdc-tokens: if($palette,
@@ -165,15 +164,16 @@
 }
 
 @mixin typography($theme) {
-  @include mdc-helpers.using-mdc-typography($theme) {
-    @include mdc-button.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-  }
+  @include sass-utils.current-selector-or-root() {
+    $text-typography-tokens: tokens-mdc-text-button.get-typography-tokens($theme);
+    $filled-typography-tokens: tokens-mdc-filled-button.get-typography-tokens($theme);
+    $outlined-typography-tokens: tokens-mdc-outlined-button.get-typography-tokens($theme);
+    $protected-typography-tokens: tokens-mdc-protected-button.get-typography-tokens($theme);
 
-  .mat-mdc-button,
-  .mat-mdc-raised-button,
-  .mat-mdc-outlined-button,
-  .mat-mdc-unelevated-button {
-    line-height: inherit;
+    @include mdc-button-text-theme.theme($text-typography-tokens);
+    @include mdc-button-filled-theme.theme($filled-typography-tokens);
+    @include mdc-button-outlined-theme.theme($outlined-typography-tokens);
+    @include mdc-button-protected-theme.theme($protected-typography-tokens);
   }
 }
 

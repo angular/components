@@ -49,12 +49,6 @@ $prefix: (mdc, outlined-button);
     with-icon-focus-icon-color: null,
     with-icon-pressed-icon-color: null,
     with-icon-disabled-icon-color: null,
-
-    label-text-size: null,
-    label-text-font: null,
-    label-text-weight: null,
-    label-text-tracking: null,
-    label-text-transform: null
   );
 }
 
@@ -87,7 +81,13 @@ $prefix: (mdc, outlined-button);
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return ();
+  @return (
+    label-text-font: inspection.get-theme-typography($theme, button, font-family),
+    label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
+    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+    label-text-transform: none,
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
