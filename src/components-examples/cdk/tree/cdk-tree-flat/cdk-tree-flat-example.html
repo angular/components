@@ -10,7 +10,7 @@
   </cdk-tree-node>
   <!-- This is the tree node template for expandable nodes -->
   <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding
-                 cdkTreeNodeToggle
+                 cdkTreeNodeToggle [cdkTreeNodeTypeaheadLabel]="node.name"
                  [style.display]="shouldRender(node) ? 'flex' : 'none'"
                  [isDisabled]="!shouldRender(node)"
                  (expandedChange)="node.isExpanded = $event"

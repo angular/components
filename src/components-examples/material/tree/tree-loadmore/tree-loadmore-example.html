@@ -7,7 +7,7 @@
 
   <!-- expandable node -->
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
-                 (expandedChange)="loadChildren(node)">
+                 (expandedChange)="loadChildren(node)" [cdkTreeNodeTypeaheadLabel]="node.name">
     <button mat-icon-button
             [attr.aria-label]="'Toggle ' + node.name"
             matTreeNodeToggle>

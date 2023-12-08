@@ -9,6 +9,7 @@
   <!-- This is the tree node template for expandable nodes -->
   <cdk-nested-tree-node #treeNode="cdkNestedTreeNode"
       cdkTreeNodeToggle
+      [cdkTreeNodeTypeaheadLabel]="node.name"
       *cdkTreeNodeDef="let node; when: hasChild"
       isExpandable
       class="example-tree-node">
