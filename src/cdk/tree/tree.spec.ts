@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {
   Component,
   ErrorHandler,
@@ -15,14 +15,16 @@ import {
   EventEmitter,
   ViewChildren,
   QueryList,
+  ElementRef,
 } from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Directionality, Direction} from '@angular/cdk/bidi';
-import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
+import {combineLatest, BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
+import {B, C, T} from '../keycodes';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
@@ -1286,6 +1288,91 @@ describe('CdkTree', () => {
       });
     });
   });
+
+  describe('typeahead', () => {
+    describe('Tree with default configuration', () => {
+      let fixture: ComponentFixture<FlatTreeWithThreeNodes>;
+      let component: FlatTreeWithThreeNodes;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([FlatTreeWithThreeNodes]);
+        fixture = TestBed.createComponent(FlatTreeWithThreeNodes);
+        fixture.detectChanges();
+
+        component = fixture.componentInstance;
+      });
+      describe(`when pressing 'b'`, () => {
+        beforeEach(fakeAsync(() => {
+          component.tree.nativeElement.dispatchEvent(createKeyboardEvent('keydown', B));
+          fixture.detectChanges();
+          tick(1000);
+        }));
+
+        it('focuses banana', () => {
+          expect(document.activeElement)
+            .withContext('expecting banana to be focused')
+            .toBe(component.treeNodes.get(1)?.nativeElement!);
+        });
+      });
+    });
+
+    describe('Tree with cdkTreeNodeTypeaheadlabel Input binding', () => {
+      let fixture: ComponentFixture<TypeaheadLabelFlatTreeWithThreeNodes>;
+      let component: TypeaheadLabelFlatTreeWithThreeNodes;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([TypeaheadLabelFlatTreeWithThreeNodes]);
+        fixture = TestBed.createComponent(TypeaheadLabelFlatTreeWithThreeNodes);
+        fixture.detectChanges();
+
+        component = fixture.componentInstance;
+      });
+
+      describe(`when pressing 'b'`, () => {
+        beforeEach(fakeAsync(() => {
+          component.tree.nativeElement.dispatchEvent(createKeyboardEvent('keydown', B));
+          fixture.detectChanges();
+          tick(1000);
+        }));
+
+        it('focuses banana', fakeAsync(() => {
+          component.tree.nativeElement.dispatchEvent(createKeyboardEvent('keydown', B));
+          fixture.detectChanges();
+          tick(1000);
+
+          expect(document.activeElement)
+            .withContext('expecting banana to be focused')
+            .toBe(component.treeNodes.get(1)?.nativeElement!);
+        }));
+      });
+
+      describe(`when pressing 'c'`, () => {
+        beforeEach(fakeAsync(() => {
+          component.tree.nativeElement.dispatchEvent(createKeyboardEvent('keydown', C));
+          fixture.detectChanges();
+          tick(1000);
+        }));
+        it('does not move focus', () => {
+          expect(document.activeElement)
+            .withContext('expecting document body to be focused')
+            .toBe(document.body);
+        });
+      });
+
+      describe(`when pressing 't'`, () => {
+        beforeEach(fakeAsync(() => {
+          component.tree.nativeElement.dispatchEvent(createKeyboardEvent('keydown', T));
+          fixture.detectChanges();
+          tick(1000);
+        }));
+        it('focuses focuses cherry', () => {
+          expect(document.activeElement)
+            .withContext('expecting cherry to be focused')
+            .toBe(component.treeNodes.get(2)?.nativeElement!);
+        });
+      });
+    });
+  });
 });
 
 export class TestData {
@@ -1872,4 +1959,59 @@ class NestedCdkTreeAppWithTrackBy {
   }
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+class MinimalTestData {
+  constructor(
+    public name: string,
+    public typeaheadLabel: string | null = null,
+  ) {}
+  children: MinimalTestData[] = [];
+}
+
+@Component({
+  template: `
+    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+      <cdk-tree-node #node *cdkTreeNodeDef="let node"
+                     [cdkTreeNodeTypeaheadLabel]="node.typeaheadLabel">
+        {{node.name}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+})
+class TypeaheadLabelFlatTreeWithThreeNodes {
+  isExpandable = (node: MinimalTestData) => node.children.length > 0;
+  getChildren = (node: MinimalTestData) => node.children;
+
+  dataSource = of([
+    new MinimalTestData('apple'),
+    new MinimalTestData('banana'),
+    new MinimalTestData('cherry', 'typeahead'),
+  ]);
+
+  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+}
+
+@Component({
+  template: `
+    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+      <cdk-tree-node #node *cdkTreeNodeDef="let node">
+        {{node.name}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+})
+class FlatTreeWithThreeNodes {
+  isExpandable = (node: MinimalTestData) => node.children.length > 0;
+  getChildren = (node: MinimalTestData) => node.children;
+
+  dataSource = of([
+    new MinimalTestData('apple'),
+    new MinimalTestData('banana'),
+    new MinimalTestData('cherry'),
+  ]);
+
+  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
 }

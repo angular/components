@@ -1169,6 +1169,16 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    */
   @Input({transform: booleanAttribute}) isDisabled: boolean;
 
+  /**
+   * The text used to locate this item during typeahead. If not specified, the `textContent` will
+   * will be used.
+   */
+  @Input('cdkTreeNodeTypeaheadLabel') typeaheadLabel: string | null;
+
+  getLabel(): string {
+    return this.typeaheadLabel || this._elementRef.nativeElement.textContent?.trim() || '';
+  }
+
   /** This emits when the node has been programatically activated or activated by keyboard. */
   @Output()
   readonly activation: EventEmitter<T> = new EventEmitter<T>();

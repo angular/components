@@ -10,6 +10,7 @@
     <cdk-tree-node
         *cdkTreeNodeDef="let node"
         cdkTreeNodePadding
+        [cdkTreeNodeTypeaheadLabel]="node.raw.name"
         [isExpandable]="node.isExpandable()"
         (expandedChange)="onExpand(node, $event)">
       <!-- Spinner when node is loading children; this replaces the expand button. -->

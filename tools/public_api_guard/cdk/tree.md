@@ -172,6 +172,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     // (undocumented)
     getChildren(): CdkTreeNode<T, K>[] | Observable<CdkTreeNode<T, K>[]>;
     // (undocumented)
+    getLabel(): string;
+    // (undocumented)
     getParent(): CdkTreeNode<T, K> | null;
     _getPositionInSet(): number;
     _getSetSize(): number;
@@ -202,9 +204,10 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     protected _tabindex: number | null;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
+    typeaheadLabel: string | null;
     unfocus(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNode<any, any>, "cdk-tree-node", ["cdkTreeNode"], { "role": { "alias": "role"; "required": false; }; "isExpandable": { "alias": "isExpandable"; "required": false; }; "isExpanded": { "alias": "isExpanded"; "required": false; }; "isDisabled": { "alias": "isDisabled"; "required": false; }; "typeaheadLabel": { "alias": "cdkTreeNodeTypeaheadLabel"; "required": false; }; }, { "activation": "activation"; "expandedChange": "expandedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNode<any, any>, never>;
 }
