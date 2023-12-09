@@ -146,6 +146,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
+    this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
   }
 
   /** Focuses the button. */
