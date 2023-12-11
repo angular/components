@@ -38,5 +38,6 @@ export class TabGroupDynamicExample {
 
   removeTab(index: number) {
     this.tabs.splice(index, 1);
+    this.selected.setValue(index);
   }
 }
