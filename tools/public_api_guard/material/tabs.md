@@ -266,6 +266,7 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     set animationDuration(value: NumberInput);
     // (undocumented)
     _animationMode?: string | undefined;
+    // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     get contentTabIndex(): number | null;
