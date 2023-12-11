@@ -74,7 +74,6 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-orientation]': 'ariaOrientation',
-    'ngSkipHydration': '',
     '[class.mat-mdc-chip-list-disabled]': 'disabled',
     '[class.mat-mdc-chip-list-required]': 'required',
     '(focus)': 'focus()',
