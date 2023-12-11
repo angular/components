@@ -41,6 +41,8 @@ const matRippleDisabled = 'mat-ripple-loader-disabled';
  *
  * This service allows us to avoid eagerly creating & attaching MatRipples.
  * It works by creating & attaching a ripple only when a component is first interacted with.
+ *
+ * @docs-private
  */
 @Injectable({providedIn: 'root'})
 export class MatRippleLoader implements OnDestroy {
@@ -49,6 +51,7 @@ export class MatRippleLoader implements OnDestroy {
   private _globalRippleOptions = inject(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
+  private _hosts = new Map<HTMLElement, MatRipple>();
 
   constructor() {
     this._ngZone.runOutsideAngular(() => {
@@ -59,6 +62,12 @@ export class MatRippleLoader implements OnDestroy {
   }
 
   ngOnDestroy() {
+    const hosts = this._hosts.keys();
+
+    for (const host of hosts) {
+      this.destroyRipple(host);
+    }
+
     for (const event of rippleInteractionEvents) {
       this._document?.removeEventListener(event, this._onInteraction, eventListenerOptions);
     }
@@ -98,15 +107,13 @@ export class MatRippleLoader implements OnDestroy {
 
   /** Returns the ripple instance for the given host element. */
   getRipple(host: HTMLElement): MatRipple | undefined {
-    if ((host as any).matRipple) {
-      return (host as any).matRipple;
-    }
-    return this.createRipple(host);
+    const ripple = this._hosts.get(host);
+    return ripple || this._createRipple(host);
   }
 
   /** Sets the disabled state on the ripple instance corresponding to the given host element. */
   setDisabled(host: HTMLElement, disabled: boolean): void {
-    const ripple = (host as any).matRipple as MatRipple | undefined;
+    const ripple = this._hosts.get(host);
 
     // If the ripple has already been instantiated, just disable it.
     if (ripple) {
@@ -134,19 +141,24 @@ export class MatRippleLoader implements OnDestroy {
 
     const element = eventTarget.closest(`[${matRippleUninitialized}]`);
     if (element) {
-      this.createRipple(element as HTMLElement);
+      this._createRipple(element as HTMLElement);
     }
   };
 
   /** Creates a MatRipple and appends it to the given element. */
-  createRipple(host: HTMLElement): MatRipple | undefined {
+  private _createRipple(host: HTMLElement): MatRipple | undefined {
     if (!this._document) {
       return;
     }
 
+    const existingRipple = this._hosts.get(host);
+    if (existingRipple) {
+      return existingRipple;
+    }
+
     // Create the ripple element.
     host.querySelector('.mat-ripple')?.remove();
-    const rippleEl = this._document!.createElement('span');
+    const rippleEl = this._document.createElement('span');
     rippleEl.classList.add('mat-ripple', host.getAttribute(matRippleClassName)!);
     host.append(rippleEl);
 
@@ -166,8 +178,19 @@ export class MatRippleLoader implements OnDestroy {
     return ripple;
   }
 
-  attachRipple(host: Element, ripple: MatRipple): void {
+  attachRipple(host: HTMLElement, ripple: MatRipple): void {
     host.removeAttribute(matRippleUninitialized);
-    (host as any).matRipple = ripple;
+    this._hosts.set(host, ripple);
+  }
+
+  destroyRipple(host: HTMLElement) {
+    const ripple = this._hosts.get(host);
+
+    if (ripple) {
+      // Since this directive is created manually, it needs to be destroyed manually too.
+      // tslint:disable-next-line:no-lifecycle-invocation
+      ripple.ngOnDestroy();
+      this._hosts.delete(host);
+    }
   }
 }
