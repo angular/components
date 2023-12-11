@@ -52,6 +52,9 @@ export interface MatTabGroupBaseHeader {
 /** Possible positions for the tab header. */
 export type MatTabHeaderPosition = 'above' | 'below';
 
+/** Boolean constant that determines whether the tab group supports the `backgroundColor` input */
+const ENABLE_BACKGROUND_INPUT = true;
+
 /**
  * Material design tab-group component. Supports basic tab pairs (label + content) and includes
  * animated ink-bar, keyboard navigation, and screen reader.
@@ -201,13 +204,21 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   @Input({transform: booleanAttribute})
   preserveContent: boolean = false;
 
-  /** Background color of the tab group. */
+  /**
+   * Background color of the tab group.
+   * @deprecated The background color should be customized through Sass theming APIs.
+   * @breaking-change 20.0.0 Remove this input
+   */
   @Input()
   get backgroundColor(): ThemePalette {
     return this._backgroundColor;
   }
 
   set backgroundColor(value: ThemePalette) {
+    if (!ENABLE_BACKGROUND_INPUT) {
+      throw new Error(`mat-tab-group background color must be set through the Sass theming API`);
+    }
+
     const classList: DOMTokenList = this._elementRef.nativeElement.classList;
 
     classList.remove('mat-tabs-with-background', `mat-background-${this.backgroundColor}`);
