@@ -79,6 +79,13 @@ let datepickerUid = 0;
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-datepicker-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /** @docs-private */
@@ -333,10 +340,11 @@ export interface MatDatepickerPanel<
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<
-  C extends MatDatepickerControl<D>,
-  S,
-  D = ExtractDateTypeFromSelection<S>,
-> implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
+    C extends MatDatepickerControl<D>,
+    S,
+    D = ExtractDateTypeFromSelection<S>,
+  >
+  implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _scrollStrategy: () => ScrollStrategy;
   private _inputStateChanges = Subscription.EMPTY;
