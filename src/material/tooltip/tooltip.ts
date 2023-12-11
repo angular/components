@@ -29,6 +29,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
@@ -77,6 +78,13 @@ export function getMatTooltipInvalidPositionError(position: string) {
 /** Injection token that determines the scroll handling while a tooltip is visible. */
 export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-tooltip-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
+    },
+  },
 );
 
 /** @docs-private */
