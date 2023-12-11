@@ -257,6 +257,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     set animationDuration(value: string | number);
     // (undocumented)
     _animationMode?: string | undefined;
+    // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
