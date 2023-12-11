@@ -61,6 +61,11 @@
   @include button-base.mat-private-button-disabled {
     @include elevation.elevation(0);
 
+    // Necessary for interactive disabled buttons.
+    &:focus {
+      @include elevation.elevation(0);
+    }
+
     @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
       @include token-utils.create-token-slot(color, disabled-state-foreground-color);
       @include token-utils.create-token-slot(background-color, disabled-state-container-color);
