@@ -3,7 +3,6 @@
 
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/tokens/token-utils';
-@use './form-field-sizing';
 
 @mixin private-form-field-subscript() {
   // Wrapper for the hints and error messages.
@@ -50,7 +49,7 @@
 
   // Spacer used to make sure start and end hints have enough space between them.
   .mat-mdc-form-field-hint-spacer {
-    flex: 1 0 form-field-sizing.$mat-form-field-hint-min-space;
+    flex: 1 0 1em;
   }
 
   // Single error message displayed beneath the form field underline.

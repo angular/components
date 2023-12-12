@@ -52,12 +52,11 @@ sass_binary(
 sass_library(
     name = "form_field_partials",
     srcs = [
-        "_form-field-density.scss",
         "_form-field-focus-overlay.scss",
         "_form-field-high-contrast.scss",
         "_form-field-native-select.scss",
-        "_form-field-sizing.scss",
         "_form-field-subscript.scss",
+        "_mdc-text-field-density-overrides.scss",
         "_mdc-text-field-structure-overrides.scss",
         "_mdc-text-field-textarea-overrides.scss",
         "_user-agent-overrides.scss",
