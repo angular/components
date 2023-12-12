@@ -1,0 +1,40 @@
+// Top spacing of the form-field outline. MDC does not have a variable for this
+// and just hard-codes it into their styles.
+$mat-form-field-outline-top-spacing: 12px;
+
+// Infix stretches to fit the container, but naturally wants to be this wide. We set
+// this in order to have a consistent natural size for the various types of controls
+// that can go in a form field.
+$mat-form-field-default-infix-width: 180px !default;
+
+// Minimum amount of space between start and end hints in the subscript. MDC does not
+// have built-in support for hints.
+$mat-form-field-hint-min-space: 1em !default;
+
+// Vertical spacing of the text-field if there is no label. MDC hard-codes the spacing
+// into their styles, but their spacing variables would not work for our form-field
+// structure anyway. This is because MDC's input elements are larger than the text, and
+// their padding variables are calculated with respect to the vertical empty space of the
+// inputs. We take the explicit numbers provided by the Material Design specification.
+// https://material.io/components/text-fields/#specs
+
+// Vertical spacing of the text-field if there is a label. MDC hard-codes the spacing into
+// their styles, but their spacing variables would not work for our form-field structure anyway.
+// This is because MDC's alignment depends on the input element to expand to full infix height.
+// We allow for arbitrary form controls and support dynamic height, so we manage the control
+// infix alignment through padding on the infix that works for any control. We manually measure
+// spacing as provided by the Material Design specification. The outlined dimensions in the
+// spec section do not match with the text fields shown in the overview or the ones implemented
+// by MDC. Note that we need to account for the input box offset. See above for more context.
+$mat-form-field-with-label-input-padding-top: 24px;
+$mat-form-field-with-label-input-padding-bottom: 8px;
+
+// Vertical spacing of the text-field if there is no label. We manually measure the
+// spacing in the specs. See comment above for padding for text fields with label. The
+// same reasoning applies to the padding for text fields without label.
+$mat-form-field-no-label-padding-bottom: 16px;
+$mat-form-field-no-label-padding-top: 16px;
+
+// The amount of padding between the icon prefix/suffix and the infix.
+// This assumes that the icon will be a 24px square with 12px padding.
+$mat-form-field-icon-prefix-infix-padding: 4px;

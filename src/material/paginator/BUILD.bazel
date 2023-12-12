@@ -35,6 +35,7 @@ sass_library(
     deps = [
         "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
+        "//src/material/form-field:form_field_scss_lib",
     ],
 )
 
