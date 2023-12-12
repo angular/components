@@ -509,6 +509,8 @@
   @return mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
+      divider-color: map.get($systems, md-sys-color, surface-variant),
+      divider-height: 1px,
       disabled-ripple-color: null, // TODO(mmalerba): Figure out correct value.
       pagination-icon-color: map.get($systems, md-sys-color, on-surface),
       inactive-label-text-color: map.get($systems, md-sys-color, on-surface),

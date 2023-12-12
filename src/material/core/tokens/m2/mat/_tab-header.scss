@@ -8,7 +8,12 @@ $prefix: (mat, tab-header);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    // For some period of time, the MDC tabs removed the divider. This has been added back in
+    // and will be present in M3.
+    divider-color: transparent,
+    divider-height: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
