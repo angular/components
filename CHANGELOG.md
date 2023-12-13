@@ -1,3 +1,19 @@
+<a name="17.0.4"></a>
+# 17.0.4 "hematite-house" (2023-12-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9596dccbf](https://github.com/angular/components/commit/9596dccbf4bbc73b0918db4afa1434d9742d0411) | fix | **button:** resolve memory leaks in ripples ([#28254](https://github.com/angular/components/pull/28254)) |
+| [7b183b259](https://github.com/angular/components/commit/7b183b259aab6bcabb36edb924fb45078dc4d071) | fix | **chips:** enable hydration ([#28260](https://github.com/angular/components/pull/28260)) |
+| [fbcd237e5](https://github.com/angular/components/commit/fbcd237e52c5ae0f20c18d672d90b06153888302) | fix | **tabs:** add header divider for m3 ([#28244](https://github.com/angular/components/pull/28244)) |
+| [ac77efd08](https://github.com/angular/components/commit/ac77efd082de220bf9d0d3a75b940e04d24eabbe) | fix | **tabs:** deprecate backgroundColor API ([#28262](https://github.com/angular/components/pull/28262)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0c6f6376](https://github.com/angular/components/commit/c0c6f6376b6857e621a203b3dc68bbec73a3bfce) | fix | add fallback root providers to injection tokens ([#28259](https://github.com/angular/components/pull/28259)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.3"></a>
 # 17.0.3 "opal-kaleidoscope" (2023-12-07)
 ### material
