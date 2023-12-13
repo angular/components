@@ -516,7 +516,8 @@
     value-indicator-caret-display: _hardcode(none, $exclude-hardcoded),
     value-indicator-border-radius: _hardcode(50% 50% 50% 0, $exclude-hardcoded),
     value-indicator-text-transform: _hardcode(rotate(45deg), $exclude-hardcoded),
-    value-indicator-container-transform: _hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded),
+    value-indicator-container-transform:
+      _hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
   );
 }
 
