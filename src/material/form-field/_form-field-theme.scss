@@ -9,7 +9,6 @@
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
-@use './form-field-density';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -85,7 +84,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    @include form-field-density.private-form-field-density($theme);
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
+        tokens-mat-form-field.get-density-tokens($theme));
+    }
   }
 }
 
