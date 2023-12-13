@@ -1,3 +1,17 @@
+<a name="17.1.0-next.3"></a>
+# 17.1.0-next.3 "muscovite-map" (2023-12-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f23d8c1f7](https://github.com/angular/components/commit/f23d8c1f7e828cc1d4d9d08cd6117507f979fcb5) | feat | **button:** add the ability to interact with disabled buttons ([#28242](https://github.com/angular/components/pull/28242)) |
+| [714eac3be](https://github.com/angular/components/commit/714eac3be477768b482b0cf48ed2061b10d1a858) | fix | **button:** remove duplicate typography styles from FAB ([#28258](https://github.com/angular/components/pull/28258)) |
+| [a962bb77f](https://github.com/angular/components/commit/a962bb77f2e68b44e4e3ccf88841f63495661036) | fix | **button:** resolve memory leaks in ripples ([#28254](https://github.com/angular/components/pull/28254)) |
+| [597b822e2](https://github.com/angular/components/commit/597b822e25693734faf4ffc2fb6a0194abac32f0) | fix | **chips:** enable hydration ([#28260](https://github.com/angular/components/pull/28260)) |
+| [cb9c22278](https://github.com/angular/components/commit/cb9c22278f91692a4776d8111bd4a718fe13db34) | fix | **tabs:** add header divider for m3 ([#28244](https://github.com/angular/components/pull/28244)) |
+| [771f1df50](https://github.com/angular/components/commit/771f1df50e38f634a0845c756b809029849a2291) | fix | **tabs:** deprecate backgroundColor API ([#28262](https://github.com/angular/components/pull/28262)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.4"></a>
 # 17.0.4 "hematite-house" (2023-12-13)
 ### material
