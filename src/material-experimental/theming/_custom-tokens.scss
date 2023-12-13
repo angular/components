@@ -510,6 +510,13 @@
 @function slider($systems, $exclude-hardcoded) {
   @return (
     value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
+    value-indicator-padding: _hardcode(0, $exclude-hardcoded),
+    value-indicator-width: _hardcode(28px, $exclude-hardcoded),
+    value-indicator-height: _hardcode(28px, $exclude-hardcoded),
+    value-indicator-caret-display: _hardcode(none, $exclude-hardcoded),
+    value-indicator-border-radius: _hardcode(50% 50% 50% 0, $exclude-hardcoded),
+    value-indicator-text-transform: _hardcode(rotate(45deg), $exclude-hardcoded),
+    value-indicator-container-transform: _hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded),
   );
 }
 

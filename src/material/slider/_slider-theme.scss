@@ -15,6 +15,8 @@
   @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
+      $mat-tokens: tokens-mat-slider.get-unthemable-tokens();
+      @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-tokens);
       @include mdc-slider-theme.theme(tokens-mdc-slider.get-unthemable-tokens());
     }
   }
