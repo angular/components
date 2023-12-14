@@ -334,9 +334,23 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-icon
 @function icon($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     color: _hardcode(inherit, $exclude-hardcoded),
-  );
+  ), (
+    // Color variants:
+    primary: (
+      color: map.get($systems, md-sys-color, primary),
+    ),
+    secondary: (
+      color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-icon-button.
