@@ -52,8 +52,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _hasAnimation: boolean;
     _input: _MatSliderThumb;
     // (undocumented)
-    _inputOffset: number;
-    // (undocumented)
     _inputPadding: number;
     _inputs: QueryList<_MatSliderRangeThumb>;
     _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect): boolean;
@@ -268,6 +266,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     get step(): number;
     set step(v: number);
     thumbPosition: _MatThumb;
+    _tickMarkOffset: number;
     get translateX(): number;
     set translateX(v: number);
     // (undocumented)
