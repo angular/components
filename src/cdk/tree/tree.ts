@@ -23,6 +23,7 @@ import {
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -111,7 +112,13 @@ type RenderingData<T> =
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
-  implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+  implements
+    AfterContentChecked,
+    AfterContentInit,
+    AfterViewInit,
+    CollectionViewer,
+    OnDestroy,
+    OnInit
 {
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -248,6 +255,7 @@ export class CdkTree<T, K = T>
 
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
+  private _viewInit = false;
 
   constructor(
     private _differs: IterableDiffers,
@@ -286,6 +294,10 @@ export class CdkTree<T, K = T>
   ngOnInit() {
     this._checkTreeControlUsage();
     this._initializeDataDiffer();
+  }
+
+  ngAfterViewInit() {
+    this._viewInit = true;
   }
 
   private _updateDefaultNodeDefinition() {
@@ -487,6 +499,17 @@ export class CdkTree<T, K = T>
   ) {
     const changes = dataDiffer.diff(data);
 
+    // Some tree consumers expect change detection to propagate to nodes
+    // even when the array itself hasn't changed; we explicitly detect changes
+    // anyways in order for nodes to update their data.
+    //
+    // However, if change detection is called while the component's view is
+    // still initing, then the order of child views initing will be incorrect;
+    // to prevent this, we only exit early if the view hasn't initialized yet.
+    if (!changes && !this._viewInit) {
+      return;
+    }
+
     changes?.forEachOperation(
       (
         item: IterableChangeRecord<T>,
@@ -510,9 +533,6 @@ export class CdkTree<T, K = T>
       },
     );
 
-    // Some tree consumers expect change detection to propagate to nodes
-    // even when the array itself hasn't changed; we explicitly detect changes
-    // anyways in order for nodes to update their data.
     this._changeDetectorRef.detectChanges();
   }
 

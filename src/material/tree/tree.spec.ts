@@ -604,11 +604,12 @@ describe('MatTree', () => {
       });
 
       it('ignores clicks on disabled items', () => {
-        underlyingDataSource.data[0].isDisabled = true;
+        underlyingDataSource.data[1].isDisabled = true;
         fixture.detectChanges();
 
         // attempt to click on the first child
         nodes[1].click();
+        fixture.detectChanges();
 
         expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual(
           '0, -1, -1, -1, -1, -1',
