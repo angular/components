@@ -14,5 +14,5 @@ export interface MatListConfig {
   hideSingleSelectionIndicator?: boolean;
 }
 
-/** Injection token that can be used to provide the default options the list module. */
+/** Injection token that can be used to provide the default options for the list module. */
 export const MAT_LIST_CONFIG = new InjectionToken<MatListConfig>('MAT_LIST_CONFIG');
