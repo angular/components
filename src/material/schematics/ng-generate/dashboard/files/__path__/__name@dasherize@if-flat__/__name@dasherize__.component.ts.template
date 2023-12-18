@@ -1,6 +1,7 @@
 import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';<% if(standalone) { %>
+import { AsyncPipe } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +22,7 @@ import { MatCardModule } from '@angular/material/card';<% } %>
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
   standalone: true,
   imports: [
+    AsyncPipe,
     MatGridListModule,
     MatMenuModule,
     MatIconModule,
