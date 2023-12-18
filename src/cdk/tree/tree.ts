@@ -449,7 +449,9 @@ export class CdkTree<T, K = T>
   }
 
   private _initializeDataDiffer() {
-    this._dataDiffer = this._differs.find([]).create(this.trackBy);
+    // Provide a default trackBy based on `_getExpansionKey` if one isn't provided.
+    const trackBy = this.trackBy ?? ((_index: number, item: T) => this._getExpansionKey(item));
+    this._dataDiffer = this._differs.find([]).create(trackBy);
   }
 
   private _checkTreeControlUsage() {
@@ -484,11 +486,8 @@ export class CdkTree<T, K = T>
     parentData?: T,
   ) {
     const changes = dataDiffer.diff(data);
-    if (!changes) {
-      return;
-    }
 
-    changes.forEachOperation(
+    changes?.forEachOperation(
       (
         item: IterableChangeRecord<T>,
         adjustedPreviousIndex: number | null,
@@ -511,6 +510,9 @@ export class CdkTree<T, K = T>
       },
     );
 
+    // Some tree consumers expect change detection to propagate to nodes
+    // even when the array itself hasn't changed; we explicitly detect changes
+    // anyways in order for nodes to update their data.
     this._changeDetectorRef.detectChanges();
   }
 
@@ -682,12 +684,12 @@ export class CdkTree<T, K = T>
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
   _getLevelAccessor() {
-    return this.treeControl?.getLevel ?? this.levelAccessor;
+    return this.treeControl?.getLevel?.bind(this.treeControl) ?? this.levelAccessor;
   }
 
   /** Children accessor, used for compatibility between the old Tree and new Tree */
   _getChildrenAccessor() {
-    return this.treeControl?.getChildren ?? this.childrenAccessor;
+    return this.treeControl?.getChildren?.bind(this.treeControl) ?? this.childrenAccessor;
   }
 
   /**
