@@ -36,18 +36,26 @@ export class MapDirectionsService {
    */
   route(request: google.maps.DirectionsRequest): Observable<MapDirectionsResponse> {
     return new Observable(observer => {
-      // Initialize the `DirectionsService` lazily since the Google Maps API may
-      // not have been loaded when the provider is instantiated.
-      if (!this._directionsService) {
-        this._directionsService = new google.maps.DirectionsService();
-      }
-
-      this._directionsService.route(request, (result, status) => {
-        this._ngZone.run(() => {
-          observer.next({result: result || undefined, status});
-          observer.complete();
+      this._getService().then(service => {
+        service.route(request, (result, status) => {
+          this._ngZone.run(() => {
+            observer.next({result: result || undefined, status});
+            observer.complete();
+          });
         });
       });
     });
+  }
+
+  private async _getService(): Promise<google.maps.DirectionsService> {
+    if (!this._directionsService) {
+      const serviceConstructor =
+        google.maps.DirectionsService ||
+        ((await google.maps.importLibrary('routes')) as google.maps.RoutesLibrary)
+          .DirectionsService;
+      this._directionsService = new serviceConstructor();
+    }
+
+    return this._directionsService;
   }
 }

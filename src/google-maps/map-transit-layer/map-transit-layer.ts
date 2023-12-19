@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive} from '@angular/core';
+import {Directive, EventEmitter, Output} from '@angular/core';
 
 import {MapBaseLayer} from '../map-base-layer';
 
@@ -31,19 +31,25 @@ export class MapTransitLayer extends MapBaseLayer {
    */
   transitLayer?: google.maps.TransitLayer;
 
-  protected override _initializeObject() {
-    this.transitLayer = new google.maps.TransitLayer();
+  /** Event emitted when the transit layer is initialized. */
+  @Output() readonly transitLayerInitialized: EventEmitter<google.maps.TransitLayer> =
+    new EventEmitter<google.maps.TransitLayer>();
+
+  protected override async _initializeObject() {
+    const layerConstructor =
+      google.maps.TransitLayer ||
+      ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).TransitLayer;
+    this.transitLayer = new layerConstructor();
+    this.transitLayerInitialized.emit(this.transitLayer);
   }
 
-  protected override _setMap() {
+  protected override _setMap(map: google.maps.Map) {
     this._assertLayerInitialized();
-    this.transitLayer.setMap(this._map.googleMap!);
+    this.transitLayer.setMap(map);
   }
 
   protected override _unsetMap() {
-    if (this.transitLayer) {
-      this.transitLayer.setMap(null);
-    }
+    this.transitLayer?.setMap(null);
   }
 
   private _assertLayerInitialized(): asserts this is {transitLayer: google.maps.TransitLayer} {

@@ -9,7 +9,7 @@ describe('MapGeocoder', () => {
 
   beforeEach(() => {
     geocoderSpy = createGeocoderSpy();
-    geocoderConstructorSpy = createGeocoderConstructorSpy(geocoderSpy).and.callThrough();
+    geocoderConstructorSpy = createGeocoderConstructorSpy(geocoderSpy);
     geocoder = TestBed.inject(MapGeocoder);
   });
 

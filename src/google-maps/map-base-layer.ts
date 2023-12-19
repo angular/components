@@ -26,11 +26,11 @@ export class MapBaseLayer implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._map._isBrowser) {
-      this._ngZone.runOutsideAngular(() => {
-        this._initializeObject();
+      this._ngZone.runOutsideAngular(async () => {
+        const map = await this._map._resolveMap();
+        await this._initializeObject();
+        this._setMap(map);
       });
-      this._assertInitialized();
-      this._setMap();
     }
   }
 
@@ -38,16 +38,7 @@ export class MapBaseLayer implements OnInit, OnDestroy {
     this._unsetMap();
   }
 
-  private _assertInitialized() {
-    if (!this._map.googleMap) {
-      throw Error(
-        'Cannot access Google Map information before the API has been initialized. ' +
-          'Please wait for the API to load before trying to interact with it.',
-      );
-    }
-  }
-
-  protected _initializeObject() {}
-  protected _setMap() {}
+  protected async _initializeObject() {}
+  protected _setMap(_map: google.maps.Map) {}
   protected _unsetMap() {}
 }

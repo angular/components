@@ -9,7 +9,16 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, OnDestroy, OnInit, Output, NgZone, inject} from '@angular/core';
+import {
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  NgZone,
+  inject,
+  EventEmitter,
+} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -135,6 +144,10 @@ export class MapRectangle implements OnInit, OnDestroy {
   @Output() readonly rectangleRightclick: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
 
+  /** Event emitted when the rectangle is initialized. */
+  @Output() readonly rectangleInitialized: EventEmitter<google.maps.Rectangle> =
+    new EventEmitter<google.maps.Rectangle>();
+
   constructor(
     private readonly _map: GoogleMap,
     private readonly _ngZone: NgZone,
@@ -148,16 +161,20 @@ export class MapRectangle implements OnInit, OnDestroy {
           // Create the object outside the zone so its events don't trigger change detection.
           // We'll bring it back in inside the `MapEventManager` only for the events that the
           // user has subscribed to.
-          this._ngZone.runOutsideAngular(() => {
-            this.rectangle = new google.maps.Rectangle(options);
+          this._ngZone.runOutsideAngular(async () => {
+            const map = await this._map._resolveMap();
+            const rectangleConstructor =
+              google.maps.Rectangle ||
+              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Rectangle;
+            this.rectangle = new rectangleConstructor(options);
+            this._assertInitialized();
+            this.rectangle.setMap(map);
+            this._eventManager.setTarget(this.rectangle);
+            this.rectangleInitialized.emit(this.rectangle);
+            this._watchForOptionsChanges();
+            this._watchForBoundsChanges();
           });
-          this._assertInitialized();
-          this.rectangle.setMap(this._map.googleMap!);
-          this._eventManager.setTarget(this.rectangle);
         });
-
-      this._watchForOptionsChanges();
-      this._watchForBoundsChanges();
     }
   }
 
@@ -165,9 +182,7 @@ export class MapRectangle implements OnInit, OnDestroy {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.rectangle) {
-      this.rectangle.setMap(null);
-    }
+    this.rectangle?.setMap(null);
   }
 
   /**
@@ -236,12 +251,6 @@ export class MapRectangle implements OnInit, OnDestroy {
 
   private _assertInitialized(): asserts this is {rectangle: google.maps.Rectangle} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._map.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.rectangle) {
         throw Error(
           'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
