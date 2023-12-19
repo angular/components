@@ -11,6 +11,7 @@
 
 import {
   Directive,
+  EventEmitter,
   Input,
   NgZone,
   OnChanges,
@@ -66,6 +67,10 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   readonly directionsChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('directions_changed');
 
+  /** Event emitted when the directions renderer is initialized. */
+  @Output() readonly directionsRendererInitialized: EventEmitter<google.maps.DirectionsRenderer> =
+    new EventEmitter<google.maps.DirectionsRenderer>();
+
   /** The underlying google.maps.DirectionsRenderer object. */
   directionsRenderer?: google.maps.DirectionsRenderer;
 
@@ -79,12 +84,18 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
       // Create the object outside the zone so its events don't trigger change detection.
       // We'll bring it back in inside the `MapEventManager` only for the events that the
       // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.directionsRenderer = new google.maps.DirectionsRenderer(this._combineOptions());
+      this._ngZone.runOutsideAngular(async () => {
+        const map = await this._googleMap._resolveMap();
+        const rendererConstructor =
+          google.maps.DirectionsRenderer ||
+          ((await google.maps.importLibrary('routes')) as google.maps.RoutesLibrary)
+            .DirectionsRenderer;
+        this.directionsRenderer = new rendererConstructor(this._combineOptions());
+        this._assertInitialized();
+        this.directionsRenderer.setMap(map);
+        this._eventManager.setTarget(this.directionsRenderer);
+        this.directionsRendererInitialized.emit(this.directionsRenderer);
       });
-      this._assertInitialized();
-      this.directionsRenderer.setMap(this._googleMap.googleMap!);
-      this._eventManager.setTarget(this.directionsRenderer);
     }
   }
 
@@ -102,9 +113,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this._eventManager.destroy();
-    if (this.directionsRenderer) {
-      this.directionsRenderer.setMap(null);
-    }
+    this.directionsRenderer?.setMap(null);
   }
 
   /**
@@ -147,12 +156,6 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     directionsRenderer: google.maps.DirectionsRenderer;
   } {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.directionsRenderer) {
         throw Error(
           'Cannot interact with a Google Map Directions Renderer before it has been ' +

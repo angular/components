@@ -123,7 +123,7 @@ export class GoogleMapDemo {
   };
 
   isGroundOverlayDisplayed = false;
-  hasLoaded: boolean;
+  hasLoaded = false;
   groundOverlayImages = [
     {
       title: 'Red logo',
@@ -284,24 +284,14 @@ export class GoogleMapDemo {
   }
 
   private _loadApi() {
-    this.hasLoaded = !!window.google?.maps;
-
     if (this.hasLoaded) {
       return;
     }
 
     if (!apiLoadingPromise) {
-      // Key can be set through the `GOOGLE_MAPS_KEY` environment variable.
-      const apiKey: string | undefined = (window as any).GOOGLE_MAPS_KEY;
-
-      apiLoadingPromise = Promise.all([
-        this._loadScript(
-          `https://maps.googleapis.com/maps/api/js?libraries=visualization${
-            apiKey ? `&key=${apiKey}` : ''
-          }`,
-        ),
-        this._loadScript('https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js'),
-      ]);
+      apiLoadingPromise = this._loadScript(
+        'https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js',
+      );
     }
 
     apiLoadingPromise.then(

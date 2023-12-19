@@ -9,7 +9,16 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, OnDestroy, OnInit, Output, NgZone, inject} from '@angular/core';
+import {
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  NgZone,
+  inject,
+  EventEmitter,
+} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -128,6 +137,10 @@ export class MapPolygon implements OnInit, OnDestroy {
   @Output() readonly polygonRightclick: Observable<google.maps.PolyMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.PolyMouseEvent>('rightclick');
 
+  /** Event emitted when the polygon is initialized. */
+  @Output() readonly polygonInitialized: EventEmitter<google.maps.Polygon> =
+    new EventEmitter<google.maps.Polygon>();
+
   constructor(
     private readonly _map: GoogleMap,
     private readonly _ngZone: NgZone,
@@ -141,16 +154,20 @@ export class MapPolygon implements OnInit, OnDestroy {
           // Create the object outside the zone so its events don't trigger change detection.
           // We'll bring it back in inside the `MapEventManager` only for the events that the
           // user has subscribed to.
-          this._ngZone.runOutsideAngular(() => {
-            this.polygon = new google.maps.Polygon(options);
+          this._ngZone.runOutsideAngular(async () => {
+            const map = await this._map._resolveMap();
+            const polygonConstructor =
+              google.maps.Polygon ||
+              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Polygon;
+            this.polygon = new polygonConstructor(options);
+            this._assertInitialized();
+            this.polygon.setMap(map);
+            this._eventManager.setTarget(this.polygon);
+            this.polygonInitialized.emit(this.polygon);
+            this._watchForOptionsChanges();
+            this._watchForPathChanges();
           });
-          this._assertInitialized();
-          this.polygon.setMap(this._map.googleMap!);
-          this._eventManager.setTarget(this.polygon);
         });
-
-      this._watchForOptionsChanges();
-      this._watchForPathChanges();
     }
   }
 
@@ -158,9 +175,7 @@ export class MapPolygon implements OnInit, OnDestroy {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.polygon) {
-      this.polygon.setMap(null);
-    }
+    this.polygon?.setMap(null);
   }
 
   /**
@@ -234,12 +249,6 @@ export class MapPolygon implements OnInit, OnDestroy {
 
   private _assertInitialized(): asserts this is {polygon: google.maps.Polygon} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._map.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.polygon) {
         throw Error(
           'Cannot interact with a Google Map Polygon before it has been ' +

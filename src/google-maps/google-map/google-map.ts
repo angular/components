@@ -29,6 +29,7 @@ import {
 import {isPlatformBrowser} from '@angular/common';
 import {Observable} from 'rxjs';
 import {MapEventManager} from '../map-event-manager';
+import {take} from 'rxjs/operators';
 
 interface GoogleMapsWindow extends Window {
   gm_authFailure?: () => void;
@@ -307,15 +308,19 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // Create the object outside the zone so its events don't trigger change detection.
       // We'll bring it back in inside the `MapEventManager` only for the events that the
       // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.googleMap = new google.maps.Map(this._mapEl, this._combineOptions());
+      this._ngZone.runOutsideAngular(async () => {
+        const mapConstructor =
+          google.maps.Map ||
+          ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Map;
+        this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
+        this._eventManager.setTarget(this.googleMap);
+        this.mapInitialized.emit(this.googleMap);
       });
-      this._eventManager.setTarget(this.googleMap);
-      this.mapInitialized.emit(this.googleMap);
     }
   }
 
   ngOnDestroy() {
+    this.mapInitialized.complete();
     this._eventManager.destroy();
 
     if (this._isBrowser) {
@@ -481,6 +486,11 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null> {
     this._assertInitialized();
     return this.googleMap.overlayMapTypes;
+  }
+
+  /** Returns a promise that resolves when the map has been initialized. */
+  async _resolveMap(): Promise<google.maps.Map> {
+    return this.googleMap || this.mapInitialized.pipe(take(1)).toPromise();
   }
 
   private _setSize() {

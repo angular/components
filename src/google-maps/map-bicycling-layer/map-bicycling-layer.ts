@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive} from '@angular/core';
+import {Directive, EventEmitter, Output} from '@angular/core';
 
 import {MapBaseLayer} from '../map-base-layer';
 
@@ -31,19 +31,25 @@ export class MapBicyclingLayer extends MapBaseLayer {
    */
   bicyclingLayer?: google.maps.BicyclingLayer;
 
-  protected override _initializeObject() {
-    this.bicyclingLayer = new google.maps.BicyclingLayer();
+  /** Event emitted when the bicycling layer is initialized. */
+  @Output() readonly bicyclingLayerInitialized: EventEmitter<google.maps.BicyclingLayer> =
+    new EventEmitter<google.maps.BicyclingLayer>();
+
+  protected override async _initializeObject() {
+    const layerConstructor =
+      google.maps.BicyclingLayer ||
+      ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).BicyclingLayer;
+    this.bicyclingLayer = new layerConstructor();
+    this.bicyclingLayerInitialized.emit(this.bicyclingLayer);
   }
 
-  protected override _setMap() {
+  protected override _setMap(map: google.maps.Map) {
     this._assertLayerInitialized();
-    this.bicyclingLayer.setMap(this._map.googleMap!);
+    this.bicyclingLayer.setMap(map);
   }
 
   protected override _unsetMap() {
-    if (this.bicyclingLayer) {
-      this.bicyclingLayer.setMap(null);
-    }
+    this.bicyclingLayer?.setMap(null);
   }
 
   private _assertLayerInitialized(): asserts this is {bicyclingLayer: google.maps.BicyclingLayer} {

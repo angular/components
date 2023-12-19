@@ -5,24 +5,6 @@ a heatmap layer on the map when it is a content child of a `GoogleMap` component
 this directive offers an `options` input as well as a convenience input for passing in the `data`
 that is shown on the heatmap.
 
-## Requirements
-
-In order to render a heatmap, the Google Maps JavaScript API has to be loaded with the
-`visualization` library. To load the library, you have to add `&libraries=visualization` to the
-script that loads the Google Maps API. E.g.
-
-**Before:**
-```html
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-```
-
-**After:**
-```html
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
-```
-
-More information: https://developers.google.com/maps/documentation/javascript/heatmaplayer
-
 ## Example
 
 ```typescript

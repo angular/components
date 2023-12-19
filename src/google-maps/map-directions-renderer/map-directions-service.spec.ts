@@ -12,8 +12,7 @@ describe('MapDirectionsService', () => {
 
   beforeEach(() => {
     directionsServiceSpy = createDirectionsServiceSpy();
-    directionsServiceConstructorSpy =
-      createDirectionsServiceConstructorSpy(directionsServiceSpy).and.callThrough();
+    directionsServiceConstructorSpy = createDirectionsServiceConstructorSpy(directionsServiceSpy);
     mapDirectionsService = TestBed.inject(MapDirectionsService);
   });
 
