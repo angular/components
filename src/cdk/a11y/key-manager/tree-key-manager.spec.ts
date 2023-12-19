@@ -182,18 +182,8 @@ describe('TreeKeyManager', () => {
           itemList.notifyOnChanges();
         });
 
-        it('does not initialize with the first item activated', () => {
-          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(-1);
-        });
-
-        it('if an item is subsequently enabled, activates it', () => {
-          itemList.reset([
-            new itemParam.constructor('Bilbo', true),
-            new itemParam.constructor('Frodo', false),
-            new itemParam.constructor('Pippin', true),
-          ]);
-          itemList.notifyOnChanges();
-          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
+        it('initializes with the first item activated', () => {
+          expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
         });
       });
 

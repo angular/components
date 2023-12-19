@@ -73,16 +73,12 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
       return;
     }
 
-    let focusIndex = -1;
+    let focusIndex = 0;
     for (let i = 0; i < this._items.length; i++) {
       if (!this._skipPredicateFn(this._items[i]) && !this._isItemDisabled(this._items[i])) {
         focusIndex = i;
         break;
       }
-    }
-
-    if (focusIndex === -1) {
-      return;
     }
 
     this.focusItem(focusIndex);
