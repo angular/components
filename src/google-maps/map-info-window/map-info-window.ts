@@ -26,6 +26,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
@@ -122,7 +123,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
           this._ngZone.runOutsideAngular(async () => {
             const infoWindowConstructor =
               google.maps.InfoWindow ||
-              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).InfoWindow;
+              (await importLibrary<google.maps.InfoWindow>('maps', 'InfoWindow'));
             this.infoWindow = new infoWindowConstructor(options);
             this._eventManager.setTarget(this.infoWindow);
             this.infoWindowInitialized.emit(this.infoWindow);

@@ -24,6 +24,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Circle via the Google Maps JavaScript API.
@@ -180,8 +181,7 @@ export class MapCircle implements OnInit, OnDestroy {
         this._ngZone.runOutsideAngular(async () => {
           const map = await this._map._resolveMap();
           const circleConstructor =
-            google.maps.Circle ||
-            ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Circle;
+            google.maps.Circle || (await importLibrary<google.maps.Circle>('maps', 'Circle'));
           this.circle = new circleConstructor(options);
           this._assertInitialized();
           this.circle.setMap(map);

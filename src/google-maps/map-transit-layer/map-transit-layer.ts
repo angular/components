@@ -12,6 +12,7 @@
 import {Directive, EventEmitter, Output} from '@angular/core';
 
 import {MapBaseLayer} from '../map-base-layer';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Transit Layer via the Google Maps JavaScript API.
@@ -38,7 +39,7 @@ export class MapTransitLayer extends MapBaseLayer {
   protected override async _initializeObject() {
     const layerConstructor =
       google.maps.TransitLayer ||
-      ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).TransitLayer;
+      (await importLibrary<google.maps.TransitLayer>('maps', 'TransitLayer'));
     this.transitLayer = new layerConstructor();
     this.transitLayerInitialized.emit(this.transitLayer);
   }

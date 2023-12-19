@@ -24,6 +24,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Polyline via the Google Maps JavaScript API.
@@ -156,7 +157,7 @@ export class MapPolyline implements OnInit, OnDestroy {
             const map = await this._map._resolveMap();
             const polylineConstructor =
               google.maps.Polyline ||
-              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Polyline;
+              (await importLibrary<google.maps.Polyline>('maps', 'Polyline'));
             this.polyline = new polylineConstructor(options);
             this._assertInitialized();
             this.polyline.setMap(map);

@@ -14,6 +14,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Traffic Layer via the Google Maps JavaScript API.
@@ -62,7 +63,7 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
             const map = await this._map._resolveMap();
             const layerConstructor =
               google.maps.TrafficLayer ||
-              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).TrafficLayer;
+              (await importLibrary<google.maps.TrafficLayer>('maps', 'TrafficLayer'));
             this.trafficLayer = new layerConstructor(options);
             this._assertInitialized();
             this.trafficLayer.setMap(map);

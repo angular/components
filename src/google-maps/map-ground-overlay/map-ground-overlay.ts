@@ -24,6 +24,7 @@ import {takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Ground Overlay via the Google Maps JavaScript API.
@@ -123,7 +124,7 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
           const map = await this._map._resolveMap();
           const overlayConstructor =
             google.maps.GroundOverlay ||
-            ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).GroundOverlay;
+            (await importLibrary<google.maps.GroundOverlay>('maps', 'GroundOverlay'));
           this.groundOverlay = new overlayConstructor(this._url.getValue(), bounds, {
             clickable: this.clickable,
             opacity: this._opacity.value,

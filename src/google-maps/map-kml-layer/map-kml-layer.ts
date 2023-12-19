@@ -24,6 +24,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps KML Layer via the Google Maps JavaScript API.
@@ -100,7 +101,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
             const map = await this._map._resolveMap();
             const layerConstructor =
               google.maps.KmlLayer ||
-              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).KmlLayer;
+              (await importLibrary<google.maps.KmlLayer>('maps', 'KmlLayer'));
             this.kmlLayer = new layerConstructor(options);
             this._assertInitialized();
             this.kmlLayer.setMap(map);
