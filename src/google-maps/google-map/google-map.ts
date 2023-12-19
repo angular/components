@@ -30,6 +30,7 @@ import {isPlatformBrowser} from '@angular/common';
 import {Observable} from 'rxjs';
 import {MapEventManager} from '../map-event-manager';
 import {take} from 'rxjs/operators';
+import {importLibrary} from '../import-library';
 
 interface GoogleMapsWindow extends Window {
   gm_authFailure?: () => void;
@@ -310,8 +311,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // user has subscribed to.
       this._ngZone.runOutsideAngular(async () => {
         const mapConstructor =
-          google.maps.Map ||
-          ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Map;
+          google.maps.Map || (await importLibrary<google.maps.Map>('maps', 'Map'));
         this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
         this._eventManager.setTarget(this.googleMap);
         this.mapInitialized.emit(this.googleMap);

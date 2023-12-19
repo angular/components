@@ -12,6 +12,7 @@
 import {Directive, EventEmitter, Output} from '@angular/core';
 
 import {MapBaseLayer} from '../map-base-layer';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Bicycling Layer via the Google Maps JavaScript API.
@@ -38,7 +39,7 @@ export class MapBicyclingLayer extends MapBaseLayer {
   protected override async _initializeObject() {
     const layerConstructor =
       google.maps.BicyclingLayer ||
-      ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).BicyclingLayer;
+      (await importLibrary<google.maps.BicyclingLayer>('maps', 'BicyclingLayer'));
     this.bicyclingLayer = new layerConstructor();
     this.bicyclingLayerInitialized.emit(this.bicyclingLayer);
   }

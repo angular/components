@@ -24,6 +24,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Polygon via the Google Maps JavaScript API.
@@ -157,8 +158,7 @@ export class MapPolygon implements OnInit, OnDestroy {
           this._ngZone.runOutsideAngular(async () => {
             const map = await this._map._resolveMap();
             const polygonConstructor =
-              google.maps.Polygon ||
-              ((await google.maps.importLibrary('maps')) as google.maps.MapsLibrary).Polygon;
+              google.maps.Polygon || (await importLibrary<google.maps.Polygon>('maps', 'Polygon'));
             this.polygon = new polygonConstructor(options);
             this._assertInitialized();
             this.polygon.setMap(map);

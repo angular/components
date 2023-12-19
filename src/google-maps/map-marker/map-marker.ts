@@ -27,6 +27,7 @@ import {take} from 'rxjs/operators';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {importLibrary} from '../import-library';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -293,8 +294,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     this._ngZone.runOutsideAngular(async () => {
       const map = await this._googleMap._resolveMap();
       const markerConstructor =
-        google.maps.Marker ||
-        ((await google.maps.importLibrary('marker')) as google.maps.MarkerLibrary).Marker;
+        google.maps.Marker || (await importLibrary<google.maps.Marker>('marker', 'Marker'));
 
       this.marker = new markerConstructor(this._combineOptions());
       this._assertInitialized();
