@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:list';
 @use 'sass:meta';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
@@ -243,7 +244,14 @@
     )
   ));
 
-  // TODO(crisbeto): also needs to fix the container-shape here.
+  $container-shape: map.get($tokens, container-shape);
+
+  // The M2 token slots define a single `container-shape` slot while the M3 tokens provide a list
+  // of shapes (e.g. top/bottom/left/right). Extract the first value so it matches the expected
+  // token slot in M2.
+  @if meta.type-of($container-shape) == 'list' {
+    $tokens: map.set($tokens, container-shape, list.nth($container-shape, 1));
+  }
 
   @return $tokens;
 }
