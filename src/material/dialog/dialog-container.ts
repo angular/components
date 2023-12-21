@@ -16,10 +16,13 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  Injector,
   NgZone,
   OnDestroy,
   Optional,
   ViewEncapsulation,
+  afterNextRender,
+  inject,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -89,6 +92,7 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly _injector = inject(Injector);
 
   constructor(
     elementRef: ElementRef,
@@ -148,10 +152,20 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     } else {
       this._hostElement.classList.add(OPEN_CLASS);
       // Note: We could immediately finish the dialog opening here with noop animations,
-      // but we defer until next tick so that consumers can subscribe to `afterOpened`.
+      // but we defer until after render so that consumers can subscribe to `afterOpened`.
       // Executing this immediately would mean that `afterOpened` emits synchronously
       // on `dialog.open` before the consumer had a change to subscribe to `afterOpened`.
-      Promise.resolve().then(() => this._finishDialogOpen());
+      //
+      // Waiting until afterNextRender is required because we need the dialog content to be
+      // rendered before attempting to set focus.
+      //
+      // We use `queueMicrotask` in `afterNextRender` because at the moment, `afterNextRender`
+      // runs after every ChangeDetectorRef.detectChanges, which would still trigger before a
+      // dialog component gets rendered. Instead, `afterNextRender` needs to run at the end of
+      // `ApplicationRef.tick` (https://github.com/angular/angular/issues/53232).
+      afterNextRender(() => queueMicrotask(() => this._finishDialogOpen()), {
+        injector: this._injector,
+      });
     }
   }
 

@@ -1091,13 +1091,23 @@ describe('MDC-based MatDialog', () => {
     'should recapture focus to the first element that matches the css selector when ' +
       'clicking on the backdrop with autoFocus set to a css selector',
     fakeAsync(() => {
-      dialog.open(ContentElementDialog, {
-        disableClose: true,
-        viewContainerRef: testViewContainerRef,
-        autoFocus: 'button',
+      viewContainerFixture.autoDetectChanges();
+      TestBed.inject(NgZone).run(() => {
+        // Queueing a microtask prevents synchronous change detection after zone.run
+        // This test wants to verify that the focus waits for change detection.
+        // Causing a synchronous change detection does not effectively test the
+        // async wait code. This behavior is more similar to what happens in
+        // an application where a dialog is opened after async work or in response
+        // to an interaction.
+        queueMicrotask(() => {
+          dialog.open(ContentElementDialog, {
+            disableClose: true,
+            viewContainerRef: testViewContainerRef,
+            autoFocus: 'button',
+          });
+        });
       });
 
-      viewContainerFixture.detectChanges();
       flushMicrotasks();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -1111,7 +1121,6 @@ describe('MDC-based MatDialog', () => {
 
       firstButton.blur(); // Programmatic clicks might not move focus so we simulate it.
       backdrop.click();
-      viewContainerFixture.detectChanges();
       flush();
 
       expect(document.activeElement)
@@ -2193,6 +2202,8 @@ class PizzaMsg {
       <h1 mat-dialog-title>This is the third title</h1>
     }
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
+    <!-- Added control flow to render during update pass instead of on create -->
+    @if (true) {
     <mat-dialog-actions align="end">
       <button mat-dialog-close>Close</button>
       <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
@@ -2203,6 +2214,7 @@ class PizzaMsg {
       <div mat-dialog-close>Should not close</div>
       <button class="with-submit" type="submit" mat-dialog-close>Should have submit</button>
     </mat-dialog-actions>
+    }
   `,
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
