@@ -677,7 +677,7 @@ export class MatFormField
     // is because `transformX` does not change based on the page directionality.
     const negate = this._dir.value === 'rtl' ? '-1' : '1';
     const prefixWidth = `${iconPrefixContainerWidth + textPrefixContainerWidth}px`;
-    const labelOffset = `var(--mat-mdc-form-field-label-offset-x, 0px)`;
+    const labelOffset = `25%`;
     const labelHorizontalOffset = `calc(${negate} * (${prefixWidth} + ${labelOffset}))`;
 
     // Update the translateX of the floating label to account for the prefix container,
