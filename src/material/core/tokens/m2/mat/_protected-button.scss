@@ -27,6 +27,9 @@ $prefix: (mat, protected-button);
     // Color of the element that shows the hover, focus and pressed states.
     state-layer-color: $on-surface,
 
+    // Color of the element that shows the hover, focus and pressed states while disabled.
+    disabled-state-layer-color: $on-surface,
+
     // Color of the ripple element.
     ripple-color: rgba($on-surface, 0.1),
 

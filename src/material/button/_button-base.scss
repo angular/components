@@ -68,12 +68,17 @@
       @include token-utils.create-token-slot(background-color, state-layer-color);
     }
 
+    &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
+      @include token-utils.create-token-slot(background-color, disabled-state-layer-color);
+    }
+
     &:hover .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
     }
 
     &.cdk-program-focused,
-    &.cdk-keyboard-focused {
+    &.cdk-keyboard-focused,
+    &.mat-mdc-button-disabled-interactive:focus {
       .mat-mdc-button-persistent-ripple::before {
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
       }
@@ -91,10 +96,17 @@
 // and note that having pointer-events may have unintended side-effects, e.g. allowing the user
 // to click the target underneath the button.
 @mixin mat-private-button-disabled() {
-  &[disabled] {
+  // `[disabled]` shouldn't be necessary, but we keep it to maintain
+  // compatibility with apps setting it through host bindings.
+  &[disabled],
+  &.mat-mdc-button-disabled {
     cursor: default;
     pointer-events: none;
     @content;
+  }
+
+  &.mat-mdc-button-disabled-interactive {
+    pointer-events: auto;
   }
 }
 

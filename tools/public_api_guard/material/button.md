@@ -19,6 +19,9 @@ import { Platform } from '@angular/cdk/platform';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
+export const MAT_BUTTON_CONFIG: InjectionToken<MatButtonConfig>;
+
+// @public
 export const MAT_FAB_DEFAULT_OPTIONS: InjectionToken<MatFabDefaultOptions>;
 
 // @public
@@ -40,6 +43,11 @@ export class MatButton extends MatButtonBase {
     static ɵcmp: i0.ɵɵComponentDeclaration<MatButton, "    button[mat-button], button[mat-raised-button], button[mat-flat-button],    button[mat-stroked-button]  ", ["matButton"], {}, {}, never, [".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])", "*", ".material-icons[iconPositionEnd], mat-icon[iconPositionEnd], [matButtonIcon][iconPositionEnd]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatButton, [null, null, null, { optional: true; }]>;
+}
+
+// @public
+export interface MatButtonConfig {
+    disabledInteractive?: boolean;
 }
 
 // @public (undocumented)

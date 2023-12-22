@@ -1,8 +1,6 @@
 @use 'sass:map';
-@use '@material/fab/fab' as mdc-fab;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -73,13 +71,8 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
-    @include mdc-helpers.using-mdc-typography($theme) {
-      @include mdc-fab.without-ripple($query: mdc-helpers.$mdc-typography-styles-query);
-    }
-
-    $typography-tokens: tokens-mdc-extended-fab.get-typography-tokens($theme);
     @include sass-utils.current-selector-or-root() {
-      @include mdc-extended-fab-theme.theme($typography-tokens);
+      @include mdc-extended-fab-theme.theme(tokens-mdc-extended-fab.get-typography-tokens($theme));
     }
   }
 }

@@ -726,6 +726,10 @@ export class MatSelect
 
   /** Opens the overlay panel. */
   open(): void {
+    if (!this._canOpen()) {
+      return;
+    }
+
     // It's important that we read this as late as possible, because doing so earlier will
     // return a different element since it's based on queries in the form field which may
     // not have run yet. Also this needs to be assigned before we measure the overlay width.
@@ -734,15 +738,12 @@ export class MatSelect
     }
 
     this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
+    this._applyModalPanelOwnership();
+    this._panelOpen = true;
+    this._keyManager.withHorizontalOrientation(null);
+    this._highlightCorrectOption();
+    this._changeDetectorRef.markForCheck();
 
-    if (this._canOpen()) {
-      this._applyModalPanelOwnership();
-
-      this._panelOpen = true;
-      this._keyManager.withHorizontalOrientation(null);
-      this._highlightCorrectOption();
-      this._changeDetectorRef.markForCheck();
-    }
     // Required for the MDC form field to pick up when the overlay has been opened.
     this.stateChanges.next();
   }
@@ -819,10 +820,9 @@ export class MatSelect
       this._keyManager.withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
       this._changeDetectorRef.markForCheck();
       this._onTouched();
+      // Required for the MDC form field to pick up when the overlay has been closed.
+      this.stateChanges.next();
     }
-
-    // Required for the MDC form field to pick up when the overlay has been closed.
-    this.stateChanges.next();
   }
 
   /**

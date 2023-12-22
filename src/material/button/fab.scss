@@ -1,6 +1,7 @@
 @use '@material/fab' as mdc-fab;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
+@use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
@@ -17,17 +18,19 @@
   $mdc-fab-token-slots: tokens-mdc-fab.get-token-slots();
   $mdc-extended-fab-token-slots: tokens-mdc-extended-fab.get-token-slots();
 
-  // Add the MDC fab static styles.
-  @include mdc-fab.static-styles();
+  // Note: it's important to pass the query here, otherwise MDC generates
+  // some unnecessary typography styles for the extended FAB.
+  @include mdc-fab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
 
-  // Add default values for tokens that aren't outputted by the theming API.
   .mat-mdc-fab, .mat-mdc-mini-fab {
-    // Add the official slots for the MDC fab.
     @include mdc-fab-theme.theme-styles($mdc-fab-token-slots);
   }
 
   .mat-mdc-extended-fab {
-    // Add the official slots for the MDC fab.
+    // Before tokens MDC included the font smoothing automatically, but with
+    // tokens it doesn't. We add it since it can cause tiny differences in
+    // screenshot tests and it generally looks better.
+    @include mdc-typography.smooth-font();
     @include mdc-extended-fab-theme.theme-styles($mdc-extended-fab-token-slots);
   }
 }
@@ -57,6 +60,11 @@
 
   @include button-base.mat-private-button-disabled {
     @include elevation.elevation(0);
+
+    // Necessary for interactive disabled buttons.
+    &:focus {
+      @include elevation.elevation(0);
+    }
 
     @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
       @include token-utils.create-token-slot(color, disabled-state-foreground-color);

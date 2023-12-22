@@ -7,10 +7,10 @@ import { <% if(standalone) { %>CdkDrag, CdkDropList, <% } %>CdkDragDrop, moveIte
     <%= indentTextContent(resolvedFiles.template, 4) %>
   `,<% } else { %>
   templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
-  styles: [`
+  styles: `
     <%= indentTextContent(resolvedFiles.stylesheet, 4) %>
-  `]<% } else { %>
-  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
+  `<% } else { %>
+  styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
   standalone: true,
