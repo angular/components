@@ -21,6 +21,7 @@ sass_library(
     name = "theming_scss_lib",
     srcs = MATERIAL_EXPERIMENTAL_SCSS_LIBS + [
         "//src/material-experimental/theming:theming_scss_lib",
+        "//src/material-experimental/theming-next:theming_next_scss_lib",
     ],
 )
 

@@ -102,7 +102,7 @@ export class DevAppLayout {
   ];
 
   /** List of possible global density scale values. */
-  private _densityScales = [0, -1, -2, -3, -4, 'minimum', 'maximum'];
+  private _densityScales = [0, -1, -2, -3, 'minimum', 'maximum'];
 
   constructor(
     private _element: ElementRef<HTMLElement>,

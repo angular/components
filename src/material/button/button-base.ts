@@ -14,7 +14,6 @@ import {
   Directive,
   ElementRef,
   inject,
-  InjectionToken,
   Input,
   NgZone,
   numberAttribute,
@@ -23,21 +22,9 @@ import {
 } from '@angular/core';
 import {MatRipple, MatRippleLoader} from '@angular/material/core';
 
-/** Object that can be used to configure the default options for the button component. */
-export interface MatButtonConfig {
-  /** Whether disabled buttons should be interactive. */
-  disabledInteractive?: boolean;
-}
-
-/** Injection token that can be used to provide the default options the button component. */
-export const MAT_BUTTON_CONFIG = new InjectionToken<MatButtonConfig>('MAT_BUTTON_CONFIG');
-
 /** Shared host configuration for all buttons */
 export const MAT_BUTTON_HOST = {
-  '[attr.disabled]': '_getDisabledAttribute()',
-  '[attr.aria-disabled]': '_getAriaDisabled()',
-  '[class.mat-mdc-button-disabled]': 'disabled',
-  '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
+  '[attr.disabled]': 'disabled || null',
   '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   // MDC automatically applies the primary theme color to the button, but we want to support
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
@@ -121,7 +108,6 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   }
   private _disableRipple: boolean = false;
 
-  /** Whether the button is disabled. */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
@@ -132,36 +118,18 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   }
   private _disabled: boolean = false;
 
-  /** `aria-disabled` value of the button. */
-  @Input({transform: booleanAttribute, alias: 'aria-disabled'})
-  ariaDisabled: boolean | undefined;
-
-  /**
-   * Natively disabled buttons prevent focus and any pointer events from reaching the button.
-   * In some scenarios this might not be desirable, because it can prevent users from finding out
-   * why the button is disabled (e.g. via tooltip).
-   *
-   * Enabling this input will change the button so that it is styled to be disabled and will be
-   * marked as `aria-disabled`, but it will allow the button to receive events and focus.
-   *
-   * Note that by enabling this, you need to set the `tabindex` yourself if the button isn't
-   * meant to be tabbable and you have to prevent the button action (e.g. form submissions).
-   */
-  @Input({transform: booleanAttribute})
-  disabledInteractive: boolean;
-
   constructor(
     public _elementRef: ElementRef,
     public _platform: Platform,
     public _ngZone: NgZone,
     public _animationMode?: string,
   ) {
-    const config = inject(MAT_BUTTON_CONFIG, {optional: true});
-    const element = _elementRef.nativeElement;
-    const classList = (element as HTMLElement).classList;
+    this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
+      className: 'mat-mdc-button-ripple',
+    });
 
-    this.disabledInteractive = config?.disabledInteractive ?? false;
-    this._rippleLoader?.configureRipple(element, {className: 'mat-mdc-button-ripple'});
+    const element = this._elementRef.nativeElement;
+    const classList = (element as HTMLElement).classList;
 
     // For each of the variant selectors that is present in the button's host
     // attributes, add the correct corresponding MDC classes.
@@ -178,28 +146,15 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
-    this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
   }
 
   /** Focuses the button. */
-  focus(origin: FocusOrigin = 'program', options?: FocusOptions): void {
-    if (origin) {
-      this._focusMonitor.focusVia(this._elementRef.nativeElement, origin, options);
+  focus(_origin: FocusOrigin = 'program', options?: FocusOptions): void {
+    if (_origin) {
+      this._focusMonitor.focusVia(this._elementRef.nativeElement, _origin, options);
     } else {
       this._elementRef.nativeElement.focus(options);
     }
-  }
-
-  protected _getAriaDisabled() {
-    if (this.ariaDisabled != null) {
-      return this.ariaDisabled;
-    }
-
-    return this.disabled && this.disabledInteractive ? true : null;
-  }
-
-  protected _getDisabledAttribute() {
-    return this.disabledInteractive || !this.disabled ? null : true;
   }
 
   private _updateRippleDisabled(): void {
@@ -212,16 +167,14 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
 /** Shared host configuration for buttons using the `<a>` tag. */
 export const MAT_ANCHOR_HOST = {
-  '[attr.disabled]': '_getDisabledAttribute()',
-  '[class.mat-mdc-button-disabled]': 'disabled',
-  '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
+  '[attr.disabled]': 'disabled || null',
   '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
 
   // Note that we ignore the user-specified tabindex when it's disabled for
   // consistency with the `mat-button` applied on native buttons where even
   // though they have an index, they're not tabbable.
-  '[attr.tabindex]': 'disabled && !disabledInteractive ? -1 : tabIndex',
-  '[attr.aria-disabled]': '_getDisabledAttribute()',
+  '[attr.tabindex]': 'disabled ? -1 : tabIndex',
+  '[attr.aria-disabled]': 'disabled.toString()',
   // MDC automatically applies the primary theme color to the button, but we want to support
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
   // select and style this "theme".
@@ -266,8 +219,4 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
       event.stopImmediatePropagation();
     }
   };
-
-  protected override _getAriaDisabled() {
-    return this.ariaDisabled == null ? this.disabled : this.ariaDisabled;
-  }
 }

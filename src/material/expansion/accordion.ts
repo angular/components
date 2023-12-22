@@ -32,6 +32,7 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
 @Directive({
   selector: 'mat-accordion',
   exportAs: 'matAccordion',
+  inputs: ['multi'],
   providers: [
     {
       provide: MAT_ACCORDION,

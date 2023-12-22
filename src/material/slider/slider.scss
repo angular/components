@@ -94,26 +94,13 @@ $mat-slider-horizontal-margin: 8px !default;
     }
 
     // Add slots for custom Angular Material slider tokens.
-    @include token-utils.use-tokens(m2-mat-slider.$prefix, m2-mat-slider.get-token-slots()) {
-      .mdc-slider__value-indicator-container {
-        @include token-utils.create-token-slot(transform, value-indicator-container-transform);
-      }
-
+    @include token-utils.use-tokens(
+      m2-mat-slider.$prefix,
+      m2-mat-slider.get-token-slots()
+    ) {
       .mdc-slider__value-indicator {
-        @include token-utils.create-token-slot(width, value-indicator-width);
-        @include token-utils.create-token-slot(height, value-indicator-height);
-        @include token-utils.create-token-slot(padding, value-indicator-padding);
+        // There's no token to control this opacity so we have to do it ourselves.
         @include token-utils.create-token-slot(opacity, value-indicator-opacity);
-        @include token-utils.create-token-slot(border-radius, value-indicator-border-radius);
-
-        &::before {
-          @include token-utils.create-token-slot(display, value-indicator-caret-display);
-        }
-      }
-
-      .mdc-slider__value-indicator-text {
-        @include token-utils.create-token-slot(width, value-indicator-width);
-        @include token-utils.create-token-slot(transform, value-indicator-text-transform);
       }
     }
 
@@ -153,10 +140,6 @@ $mat-slider-horizontal-margin: 8px !default;
     // the word-break of the value indicator.
     .mdc-slider__value-indicator {
       word-break: normal;
-    }
-
-    .mdc-slider__value-indicator-text {
-      text-align: center;
     }
   }
   // In the MDC slider the focus indicator is inside the thumb.

@@ -22,7 +22,6 @@ import {
   Input,
   booleanAttribute,
   numberAttribute,
-  Output,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -129,12 +128,11 @@ export abstract class MatPaginatedTabHeader
   disablePagination: boolean = false;
 
   /** The index of the active tab. */
-  @Input({transform: numberAttribute})
   get selectedIndex(): number {
     return this._selectedIndex;
   }
-  set selectedIndex(v: number) {
-    const value = isNaN(v) ? 0 : v;
+  set selectedIndex(v: unknown) {
+    const value = numberAttribute(v, 0);
 
     if (this._selectedIndex != value) {
       this._selectedIndexChanged = true;
@@ -148,10 +146,10 @@ export abstract class MatPaginatedTabHeader
   private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
-  @Output() readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
+  readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when a label is focused. */
-  @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
+  readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(
     protected _elementRef: ElementRef<HTMLElement>,

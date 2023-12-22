@@ -15,6 +15,7 @@
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use './form-field-sizing';
 @use './form-field-subscript';
 @use './form-field-focus-overlay';
 @use './form-field-high-contrast';
@@ -22,7 +23,6 @@
 @use './user-agent-overrides';
 @use './mdc-text-field-textarea-overrides';
 @use './mdc-text-field-structure-overrides';
-@use './mdc-text-field-density-overrides';
 
 // Includes the structural styles of the components that the form field is composed of.
 @mixin _static-styles($query) {
@@ -57,7 +57,6 @@
 // MDC text-field overwrites.
 @include mdc-text-field-textarea-overrides.private-text-field-textarea-overrides();
 @include mdc-text-field-structure-overrides.private-text-field-structure-overrides();
-@include mdc-text-field-density-overrides.private-text-field-density-overrides();
 
 // Include the subscript, focus-overlay, native select and high-contrast styles.
 @include form-field-subscript.private-form-field-subscript();
@@ -65,10 +64,6 @@
 @include form-field-native-select.private-form-field-native-select();
 @include form-field-high-contrast.private-form-field-high-contrast();
 @include user-agent-overrides.private-form-field-user-agent-overrides();
-
-// The amount of padding between the icon prefix/suffix and the infix.
-// This assumes that the icon will be a 24px square with 12px padding.
-$_icon-prefix-infix-padding: 4px;
 
 // Host element of the form-field. It contains the mdc-text-field wrapper
 // and the subscript wrapper.
@@ -149,11 +144,11 @@ $_icon-prefix-infix-padding: 4px;
 // icons, and therefore can't rely on MDC for these styles.
 .mat-mdc-form-field-icon-prefix,
 [dir='rtl'] .mat-mdc-form-field-icon-suffix {
-  padding: 0 $_icon-prefix-infix-padding 0 0;
+  padding: 0 form-field-sizing.$mat-form-field-icon-prefix-infix-padding 0 0;
 }
 .mat-mdc-form-field-icon-suffix,
 [dir='rtl'] .mat-mdc-form-field-icon-prefix {
-  padding: 0 0 0 $_icon-prefix-infix-padding;
+  padding: 0 0 0 form-field-sizing.$mat-form-field-icon-prefix-infix-padding;
 }
 
 .mat-mdc-form-field-icon-prefix,
@@ -183,12 +178,7 @@ $_icon-prefix-infix-padding: 4px;
 .mat-mdc-form-field-infix {
   flex: auto;
   min-width: 0;
-
-  // Infix stretches to fit the container, but naturally wants to be this wide. We set
-  // this in order to have a consistent natural size for the various types of controls
-  // that can go in a form field.
-  width: 180px;
-
+  width: form-field-sizing.$mat-form-field-default-infix-width;
   // Needed so that the floating label does not overlap with prefixes or suffixes.
   position: relative;
   box-sizing: border-box;

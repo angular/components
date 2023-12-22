@@ -402,14 +402,13 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 export class MatRippleLoader implements OnDestroy {
     constructor();
     // (undocumented)
-    attachRipple(host: HTMLElement, ripple: MatRipple): void;
+    attachRipple(host: Element, ripple: MatRipple): void;
     configureRipple(host: HTMLElement, config: {
         className?: string;
         centered?: boolean;
         disabled?: boolean;
     }): void;
-    // (undocumented)
-    destroyRipple(host: HTMLElement): void;
+    createRipple(host: HTMLElement): MatRipple | undefined;
     getRipple(host: HTMLElement): MatRipple | undefined;
     // (undocumented)
     ngOnDestroy(): void;

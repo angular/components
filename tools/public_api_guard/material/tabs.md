@@ -116,8 +116,6 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     static ngAcceptInputType_disablePagination: unknown;
     // (undocumented)
-    static ngAcceptInputType_selectedIndex: unknown;
-    // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -136,7 +134,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     };
     _scrollToLabel(labelIndex: number): void;
     get selectedIndex(): number;
-    set selectedIndex(v: number);
+    set selectedIndex(v: unknown);
     readonly selectFocusedIndex: EventEmitter<number>;
     _setTabFocus(tabIndex: number): void;
     _showPaginationControls: boolean;
@@ -150,7 +148,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     updatePagination(): void;
     _updateTabScrollPosition(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPaginatedTabHeader, never, never, { "disablePagination": { "alias": "disablePagination"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPaginatedTabHeader, never, never, { "disablePagination": { "alias": "disablePagination"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginatedTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -259,7 +257,6 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     set animationDuration(value: string | number);
     // (undocumented)
     _animationMode?: string | undefined;
-    // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
@@ -359,7 +356,7 @@ export class MatTabHeader extends MatPaginatedTabHeader implements AfterContentC
     // (undocumented)
     _tabListInner: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, ["_items"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["_items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
 }
@@ -440,7 +437,7 @@ export class MatTabLink extends _MatTabLinkMixinBase implements AfterViewInit, O
     // (undocumented)
     tabIndex: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, [null, null, { optional: true; }, { attribute: "tabindex"; }, null, { optional: true; }]>;
 }

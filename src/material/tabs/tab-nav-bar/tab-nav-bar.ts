@@ -241,6 +241,7 @@ const _MatTabLinkMixinBase = mixinInkBarItem(
 @Component({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
+  inputs: ['active', 'id'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',

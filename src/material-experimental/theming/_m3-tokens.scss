@@ -1,6 +1,4 @@
 @use 'sass:map';
-@use 'sass:list';
-@use 'sass:meta';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
 @use './m3-density';
@@ -112,36 +110,6 @@
   );
 }
 
-/// At the time of writing, some color tokens (e.g. disabled state) are defined as a solid color
-/// token and a separate opacity token. This function applies the opacity to the color and drops the
-/// opacity key from the map. Can be removed once b/213331407 is resolved.
-/// @param {Map} $tokens The map of tokens currently being generated
-/// @param {Map} $all-tokens A map of all tokens, including hardcoded values
-/// @param {List} $pairs Pairs of color token names and their opacities. Should be in the shape of
-/// `((color: 'color-key', opacity: 'opacity-key'))`.
-/// @return {Map} The initial tokens with the combined color values.
-@function _combine-color-tokens($tokens, $opacity-lookup, $pairs) {
-  $result: $tokens;
-
-  @each $pair in $pairs {
-    $color-key: map.get($pair, color);
-    $opacity-key: map.get($pair, opacity);
-    $color: map.get($tokens, $color-key);
-    $opacity: map.get($opacity-lookup, $opacity-key);
-
-    @if meta.type-of($color) == 'color' {
-      @if meta.type-of($opacity) != 'number' {
-        @error 'Cannot find valid opacity value for color token "#{$color-key}"';
-      }
-
-      $result: map.remove($result, $opacity-key);
-      $result: map.set($result, $color-key, rgba($color, $opacity));
-    }
-  }
-
-  @return $result;
-}
-
 /// Renames the official checkbox tokens to match the names actually used in MDC's code (which are
 /// different). This is a temporary workaround until MDC updates to use the correct names for the
 /// tokens.
@@ -165,138 +133,6 @@
     unselected-pressed-outline-color: unselected-pressed-icon-color
   );
   @return _rename-map-keys($tokens, $rename-keys);
-}
-
-/// Fixes inconsistent values in the text field color tokens. Applies to both filled and outlined
-/// variants.
-/// @param {Map} $initial-tokens Map of text field tokens currently being generated.
-/// @param {Map} $all-tokens Map of all text field tokens, including hardcoded values.
-/// This is necessary in order to do opacity lookups.
-/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-text-field-color-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
-    (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
-    ),
-    (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
-    ),
-    (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
-    ),
-    (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
-    ),
-    (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
-    ),
-    (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
-    ),
-    (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
-    )
-  ));
-}
-
-
-/// Fixes inconsistent values in the filled text field tokens so that they can produce valid
-/// styles.
-/// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
-/// @param {Map} $all-tokens Map of all filled text field tokens, including hardcoded values.
-/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-filled-text-field-tokens($initial-tokens, $all-tokens) {
-  $tokens: _combine-color-tokens($initial-tokens, $all-tokens, (
-    (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
-    ),
-    (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
-    ),
-    (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
-    ),
-    (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
-    ),
-    (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
-    ),
-    (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
-    ),
-    (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
-    )
-  ));
-
-  $container-shape: map.get($tokens, container-shape);
-
-  // The M2 token slots define a single `container-shape` slot while the M3 tokens provide a list
-  // of shapes (e.g. top/bottom/left/right). Extract the first value so it matches the expected
-  // token slot in M2.
-  @if meta.type-of($container-shape) == 'list' {
-    $tokens: map.set($tokens, container-shape, list.nth($container-shape, 1));
-  }
-
-  @return $tokens;
-}
-
-/// Fixes inconsistent values in the outlined text field tokens so that they can produce valid
-/// styles.
-/// @param {Map} $initial-tokens Map of outlined text field tokens currently being generated.
-/// @param {Map} $all-tokens Map of all outlined text field tokens, including hardcoded values.
-/// This is necessary in order to do opacity lookups.
-/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-outlined-text-field-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
-    (
-      color: 'disabled-outline-color',
-      opacity: 'disabled-outline-opacity'
-    ),
-    (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
-    ),
-    (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
-    ),
-    (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
-    ),
-    (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
-    ),
-    (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
-    ),
-    (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
-    ),
-    (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
-    )
-  ));
 }
 
 /// Generates a set of namespaced tokens for all components.
@@ -373,12 +209,7 @@
     ),
     _namespace-tokens(
       (mdc, filled-text-field),
-      _fix-filled-text-field-tokens(
-        mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-filled-text-field-values($systems, false)
-      ),
+      mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -403,12 +234,7 @@
     ),
     _namespace-tokens(
       (mdc, outlined-text-field),
-      _fix-outlined-text-field-tokens(
-        mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-outlined-text-field-values($systems, false),
-      ),
+      mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(

@@ -81,6 +81,8 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  inputs: ['disabled', 'expanded'],
+  outputs: ['opened', 'closed', 'expandedChange'],
   animations: [matExpansionAnimations.bodyExpansion],
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering

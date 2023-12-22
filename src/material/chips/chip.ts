@@ -298,7 +298,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
-    this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
     this._actionChanges?.unsubscribe();
     this.destroyed.emit({chip: this});
     this.destroyed.complete();

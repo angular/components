@@ -70,6 +70,7 @@ let nextUniqueId = 0;
   selector: 'mat-slide-toggle',
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
+  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
   host: {
     'class': 'mat-mdc-slide-toggle',
     '[id]': 'id',

@@ -1,0 +1,9 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "theming_next_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = ["//src/material:sass_lib"],
+)

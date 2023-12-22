@@ -131,6 +131,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   exportAs: 'matStepper, matVerticalStepper, matHorizontalStepper',
   templateUrl: 'stepper.html',
   styleUrls: ['stepper.css'],
+  inputs: ['selectedIndex'],
   host: {
     '[class.mat-stepper-horizontal]': 'orientation === "horizontal"',
     '[class.mat-stepper-vertical]': 'orientation === "vertical"',

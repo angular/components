@@ -79,7 +79,7 @@
         @include token-utils.create-token-slot(background-color, disabled-container-color);
 
         // Since we're still doing elevation through the theme, we need additional specificity here.
-        &.mat-mdc-button-disabled {
+        &[disabled] {
           box-shadow: none;
         }
       }

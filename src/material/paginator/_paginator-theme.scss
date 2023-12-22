@@ -1,12 +1,12 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
-@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
+@use '../form-field/form-field-density';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -51,17 +51,16 @@
         tokens-mat-paginator.get-density-tokens($theme));
     }
 
+    // TODO: this should be done through tokens once the form field has been switched over.
     .mat-mdc-paginator {
       // We need the form field to be narrower in order to fit into the paginator,
       // so we set its density to be -4 or denser.
       @if ((meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
          $density-scale == maximum) {
-        @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
-          tokens-mat-form-field.get-density-tokens((density: -4)));
+        @include form-field-density.private-form-field-density(-4);
       }
       @else {
-        @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
-          tokens-mat-form-field.get-density-tokens((density: $density-scale)));
+        @include form-field-density.private-form-field-density($density-scale);
       }
     }
   }
