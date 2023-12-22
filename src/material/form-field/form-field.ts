@@ -683,10 +683,7 @@ export class MatFormField
     // Update the translateX of the floating label to account for the prefix container,
     // but allow the CSS to override this setting via a CSS variable when the label is
     // floating.
-    floatingLabel.style.transform = `var(
-        --mat-mdc-form-field-label-transform,
-        ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
-    )`;
+    floatingLabel.style.transform = `translateX(25%) translateY(-50%)`;
   }
 
   /** Checks whether the form field is attached to the DOM. */
