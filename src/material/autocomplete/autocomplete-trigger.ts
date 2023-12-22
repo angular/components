@@ -406,7 +406,9 @@ export class MatAutocompleteTrigger
         // If we're in the Shadow DOM, the event target will be the shadow root, so we have to
         // fall back to check the first element in the path of the click event.
         const clickTarget = _getEventTarget<HTMLElement>(event)!;
-        const formField = this._formField ? this._formField._elementRef.nativeElement : null;
+        const formField = this._formField
+          ? this._formField.getConnectedOverlayOrigin().nativeElement
+          : null;
         const customOrigin = this.connectedTo ? this.connectedTo.elementRef.nativeElement : null;
 
         return (
