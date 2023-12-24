@@ -77,12 +77,7 @@ export class DragAndDropDemo {
     }
   }
 
-  constrainPosition(
-    {x, y}: Point,
-    _dragRef: DragRef,
-    _dimensions: ClientRect,
-    pickup: Point,
-  ): Point {
+  constrainPosition({x, y}: Point, _dragRef: DragRef, _dimensions: DOMRect, pickup: Point): Point {
     // Just returning the original top left corner to not modify position
     x -= pickup.x;
     y -= pickup.y;

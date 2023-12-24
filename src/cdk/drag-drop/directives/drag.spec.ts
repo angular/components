@@ -567,7 +567,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -610,7 +610,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -1007,7 +1007,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;

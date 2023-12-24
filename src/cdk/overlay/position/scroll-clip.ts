@@ -9,8 +9,8 @@
 // TODO(jelbourn): move this to live with the rest of the scrolling code
 // TODO(jelbourn): someday replace this with IntersectionObservers
 
-/** Equivalent of `ClientRect` without some of the properties we don't care about. */
-type Dimensions = Omit<ClientRect, 'x' | 'y' | 'toJSON'>;
+/** Equivalent of `DOMRect` without some of the properties we don't care about. */
+type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
 /**
  * Gets whether an element is scrolled outside of view by any of its parent scrolling containers.
