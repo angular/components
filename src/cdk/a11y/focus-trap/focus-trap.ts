@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {Platform, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
@@ -21,6 +21,7 @@ import {
   SimpleChanges,
   OnChanges,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
@@ -415,10 +416,12 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   /** Whether the focus trap is active. */
   @Input({alias: 'cdkTrapFocus', transform: booleanAttribute})
   get enabled(): boolean {
-    return this.focusTrap.enabled;
+    return this.focusTrap?.enabled || false;
   }
   set enabled(value: boolean) {
-    this.focusTrap.enabled = value;
+    if (this.focusTrap) {
+      this.focusTrap.enabled = value;
+    }
   }
 
   /**
@@ -436,11 +439,15 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
      */
     @Inject(DOCUMENT) _document: any,
   ) {
-    this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
+    const platform = inject(Platform);
+
+    if (platform.isBrowser) {
+      this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
+    }
   }
 
   ngOnDestroy() {
-    this.focusTrap.destroy();
+    this.focusTrap?.destroy();
 
     // If we stored a previously focused element when using autoCapture, return focus to that
     // element now that the trapped region is being destroyed.
@@ -451,7 +458,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   }
 
   ngAfterContentInit() {
-    this.focusTrap.attachAnchors();
+    this.focusTrap?.attachAnchors();
 
     if (this.autoCapture) {
       this._captureFocus();
@@ -459,7 +466,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   }
 
   ngDoCheck() {
-    if (!this.focusTrap.hasAttached()) {
+    if (this.focusTrap && !this.focusTrap.hasAttached()) {
       this.focusTrap.attachAnchors();
     }
   }
@@ -471,7 +478,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
       autoCaptureChange &&
       !autoCaptureChange.firstChange &&
       this.autoCapture &&
-      this.focusTrap.hasAttached()
+      this.focusTrap?.hasAttached()
     ) {
       this._captureFocus();
     }
@@ -479,6 +486,6 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
 
   private _captureFocus() {
     this._previouslyFocusedElement = _getFocusedElementPierceShadowDom();
-    this.focusTrap.focusInitialElementWhenReady();
+    this.focusTrap?.focusInitialElementWhenReady();
   }
 }

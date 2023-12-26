@@ -449,7 +449,7 @@
 
 <h2>Focus trap</h2>
 
-<div cdkTrapFocus cdkTrapFocusAutoCapture>
+<div cdkTrapFocus [cdkTrapFocusAutoCapture]="isAutomated">
   <button>Oh no, I'm trapped!</button>
 </div>
 

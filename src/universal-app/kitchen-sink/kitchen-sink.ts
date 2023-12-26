@@ -1,4 +1,4 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
@@ -107,6 +107,7 @@ export class TestEntryComponent {}
     // CDK Modules
     CdkTableModule,
     DragDropModule,
+    A11yModule,
 
     // Other modules
     YouTubePlayerModule,
