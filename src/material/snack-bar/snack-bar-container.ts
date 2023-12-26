@@ -191,6 +191,9 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   enter(): void {
     if (!this._destroyed) {
       this._animationState = 'visible';
+      // _animationState lives in host bindings and `detectChanges` does not refresh host bindings
+      // so we have to call `markForCheck` to ensure the host view is refreshed eventually.
+      this._changeDetectorRef.markForCheck();
       this._changeDetectorRef.detectChanges();
       this._screenReaderAnnounce();
     }
@@ -205,6 +208,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       // where multiple snack bars are opened in quick succession (e.g. two consecutive calls to
       // `MatSnackBar.open`).
       this._animationState = 'hidden';
+      this._changeDetectorRef.markForCheck();
 
       // Mark this element with an 'exit' attribute to indicate that the snackbar has
       // been dismissed and will soon be removed from the DOM. This is used by the snackbar
