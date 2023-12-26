@@ -120,23 +120,19 @@ export class MatDialogTitle implements OnInit, OnDestroy {
       Promise.resolve().then(() => {
         // Note: we null check the queue, because there are some internal
         // tests that are mocking out `MatDialogRef` incorrectly.
-        this._dialogRef._containerInstance?._ariaLabelledByQueue?.push(this.id);
+        this._dialogRef._containerInstance?._addAriaLabelledBy?.(this.id);
       });
     }
   }
 
   ngOnDestroy() {
-    // Note: we null check the queue, because there are some internal
+    // Note: we null check because there are some internal
     // tests that are mocking out `MatDialogRef` incorrectly.
-    const queue = this._dialogRef?._containerInstance?._ariaLabelledByQueue;
+    const instance = this._dialogRef?._containerInstance;
 
-    if (queue) {
+    if (instance) {
       Promise.resolve().then(() => {
-        const index = queue.indexOf(this.id);
-
-        if (index > -1) {
-          queue.splice(index, 1);
-        }
+        instance._removeAriaLabelledBy?.(this.id);
       });
     }
   }

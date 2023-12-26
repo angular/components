@@ -14,7 +14,6 @@ import {OverlayRef} from '@angular/cdk/overlay';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -77,7 +76,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     ngZone: NgZone,
     overlayRef: OverlayRef,
     breakpointObserver: BreakpointObserver,
-    private _changeDetectorRef: ChangeDetectorRef,
     focusMonitor?: FocusMonitor,
   ) {
     super(
