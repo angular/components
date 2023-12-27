@@ -15,10 +15,11 @@ const ID_DELIMITER = ' ';
  */
 export function addAriaReferencedId(el: Element, attr: `aria-${string}`, id: string) {
   const ids = getAriaReferenceIds(el, attr);
-  if (ids.some(existingId => existingId.trim() == id.trim())) {
+  id = id.trim();
+  if (ids.some(existingId => existingId.trim() === id)) {
     return;
   }
-  ids.push(id.trim());
+  ids.push(id);
 
   el.setAttribute(attr, ids.join(ID_DELIMITER));
 }
@@ -29,7 +30,8 @@ export function addAriaReferencedId(el: Element, attr: `aria-${string}`, id: str
  */
 export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: string) {
   const ids = getAriaReferenceIds(el, attr);
-  const filteredIds = ids.filter(val => val != id.trim());
+  id = id.trim();
+  const filteredIds = ids.filter(val => val !== id);
 
   if (filteredIds.length) {
     el.setAttribute(attr, filteredIds.join(ID_DELIMITER));
@@ -44,5 +46,6 @@ export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: 
  */
 export function getAriaReferenceIds(el: Element, attr: string): string[] {
   // Get string array of all individual ids (whitespace delimited) in the attribute value
-  return (el.getAttribute(attr) || '').match(/\S+/g) || [];
+  const attrValue = el.getAttribute(attr);
+  return attrValue?.match(/\S+/g) ?? [];
 }
