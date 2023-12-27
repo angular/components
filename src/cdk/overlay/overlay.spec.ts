@@ -17,7 +17,7 @@ import {
   Type,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {MockNgZone, dispatchFakeEvent} from '../testing/private';
+import {dispatchFakeEvent} from '../testing/private';
 import {ComponentPortal, TemplatePortal, CdkPortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
@@ -40,7 +40,6 @@ describe('Overlay', () => {
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
   let dir: Direction;
-  let zone: MockNgZone;
   let mockLocation: SpyLocation;
 
   function setup(imports: Type<unknown>[] = []) {
@@ -55,10 +54,6 @@ describe('Overlay', () => {
             Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
             return fakeDirectionality;
           },
-        },
-        {
-          provide: NgZone,
-          useFactory: () => (zone = new MockNgZone()),
         },
         {
           provide: Location,
@@ -404,7 +399,6 @@ describe('Overlay', () => {
       .toBeTruthy();
 
     viewContainerFixture.detectChanges();
-    zone.simulateZoneExit();
 
     expect(overlayRef.hostElement.parentElement)
       .withContext('Expected host element to have been removed once the zone stabilizes.')
@@ -510,7 +504,6 @@ describe('Overlay', () => {
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
@@ -533,7 +526,6 @@ describe('Overlay', () => {
         .toBeTruthy();
 
       overlayRef.detach();
-      zone.simulateZoneExit();
       tick();
 
       overlayRef.attach(componentPortal);
@@ -573,7 +565,6 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
@@ -606,7 +597,6 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
@@ -889,7 +879,6 @@ describe('Overlay', () => {
 
       overlayRef.detach();
       dispatchFakeEvent(backdrop, 'transitionend');
-      zone.simulateZoneExit();
       viewContainerFixture.detectChanges();
 
       backdrop.click();
@@ -947,7 +936,6 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
-      zone.simulateZoneExit();
       viewContainerFixture.detectChanges();
       expect(pane.classList).not.toContain('custom-panel-class', 'Expected class to be removed');
 
@@ -971,13 +959,13 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
-      viewContainerFixture.detectChanges();
-
-      expect(pane.classList)
-        .withContext('Expected class not to be removed immediately')
-        .toContain('custom-panel-class');
-
-      zone.simulateZoneExit();
+      // Stable emits after zone.run
+      TestBed.inject(NgZone).run(() => {
+        viewContainerFixture.detectChanges();
+        expect(pane.classList)
+          .withContext('Expected class not to be removed immediately')
+          .toContain('custom-panel-class');
+      });
 
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')
@@ -1061,7 +1049,6 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
@@ -1095,7 +1082,6 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
