@@ -455,6 +455,7 @@ export class DropListRef<T = any> {
         [verticalScrollDirection, horizontalScrollDirection] = getElementScrollDirections(
           element as HTMLElement,
           position.clientRect,
+          this._sortStrategy.direction,
           pointerX,
           pointerY,
         );
@@ -746,12 +747,14 @@ function getHorizontalScrollDirection(clientRect: DOMRect, pointerX: number) {
  * assuming that the user's pointer is already within it scrollable region.
  * @param element Element for which we should calculate the scroll direction.
  * @param clientRect Bounding client rectangle of the element.
+ * @param direction Layout direction of the drop list.
  * @param pointerX Position of the user's pointer along the x axis.
  * @param pointerY Position of the user's pointer along the y axis.
  */
 function getElementScrollDirections(
   element: HTMLElement,
   clientRect: DOMRect,
+  direction: Direction,
   pointerX: number,
   pointerY: number,
 ): [AutoScrollVerticalDirection, AutoScrollHorizontalDirection] {
@@ -779,12 +782,23 @@ function getElementScrollDirections(
   if (computedHorizontal) {
     const scrollLeft = element.scrollLeft;
 
-    if (computedHorizontal === AutoScrollHorizontalDirection.LEFT) {
-      if (scrollLeft > 0) {
+    if (direction === 'rtl') {
+      if (computedHorizontal === AutoScrollHorizontalDirection.RIGHT) {
+        // In RTL `scrollLeft` will be negative when scrolled.
+        if (scrollLeft < 0) {
+          horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+        }
+      } else if (element.scrollWidth + scrollLeft > element.clientWidth) {
         horizontalScrollDirection = AutoScrollHorizontalDirection.LEFT;
       }
-    } else if (element.scrollWidth - scrollLeft > element.clientWidth) {
-      horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+    } else {
+      if (computedHorizontal === AutoScrollHorizontalDirection.LEFT) {
+        if (scrollLeft > 0) {
+          horizontalScrollDirection = AutoScrollHorizontalDirection.LEFT;
+        }
+      } else if (element.scrollWidth - scrollLeft > element.clientWidth) {
+        horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+      }
     }
   }
 
