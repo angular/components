@@ -734,8 +734,10 @@ class Chocolate {
 class ChocolateInjector {
   constructor(public parentInjector: Injector) {}
 
-  get(token: any) {
-    return token === Chocolate ? new Chocolate() : this.parentInjector.get<any>(token);
+  get(token: any, notFoundValue?: any) {
+    return token === Chocolate
+      ? new Chocolate()
+      : this.parentInjector.get<any>(token, notFoundValue);
   }
 }
 
