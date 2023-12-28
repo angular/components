@@ -55,12 +55,12 @@ export abstract class ResizeStrategy {
 
       this.styleScheduler.schedule(() => {
         tableElement.style.width = coerceCssPixelValue(tableWidth + this._pendingResizeDelta!);
-
         this._pendingResizeDelta = null;
       });
 
       this.styleScheduler.scheduleEnd(() => {
         this.table.updateStickyColumnStyles();
+        this.styleScheduler.flushAfterRender();
       });
     }
 
