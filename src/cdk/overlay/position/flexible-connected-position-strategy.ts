@@ -41,8 +41,8 @@ export type FlexibleConnectedPositionStrategyOrigin =
       height?: number;
     });
 
-/** Equivalent of `ClientRect` without some of the properties we don't care about. */
-type Dimensions = Omit<ClientRect, 'x' | 'y' | 'toJSON'>;
+/** Equivalent of `DOMRect` without some of the properties we don't care about. */
+type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -768,7 +768,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     } else if (position.overlayY === 'bottom') {
       // Overlay is opening "upward" and thus is bound by the top viewport edge. We need to add
       // the viewport margin back in, because the viewport rect is narrowed down to remove the
-      // margin, whereas the `origin` position is calculated based on its `ClientRect`.
+      // margin, whereas the `origin` position is calculated based on its `DOMRect`.
       bottom = viewport.height - origin.y + this._viewportMargin * 2;
       height = viewport.height - bottom + this._viewportMargin;
     } else {
@@ -1155,7 +1155,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     }
   }
 
-  /** Returns the ClientRect of the current origin. */
+  /** Returns the DOMRect of the current origin. */
   private _getOriginRect(): Dimensions {
     const origin = this._origin;
 
@@ -1273,9 +1273,9 @@ function getPixelValue(input: number | string | null | undefined): number | null
 }
 
 /**
- * Gets a version of an element's bounding `ClientRect` where all the values are rounded down to
+ * Gets a version of an element's bounding `DOMRect` where all the values are rounded down to
  * the nearest pixel. This allows us to account for the cases where there may be sub-pixel
- * deviations in the `ClientRect` returned by the browser (e.g. when zoomed in with a percentage
+ * deviations in the `DOMRect` returned by the browser (e.g. when zoomed in with a percentage
  * size, see #21350).
  */
 function getRoundedBoundingClientRect(clientRect: Dimensions): Dimensions {
