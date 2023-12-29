@@ -94,24 +94,39 @@ export class MapKmlLayer implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(async () => {
-            const map = await this._map._resolveMap();
-            const layerConstructor =
-              google.maps.KmlLayer ||
-              (await importLibrary<google.maps.KmlLayer>('maps', 'KmlLayer'));
-            this.kmlLayer = new layerConstructor(options);
-            this._assertInitialized();
-            this.kmlLayer.setMap(map);
-            this._eventManager.setTarget(this.kmlLayer);
-            this.kmlLayerInitialized.emit(this.kmlLayer);
-            this._watchForOptionsChanges();
-            this._watchForUrlChanges();
-          });
+          if (google.maps.KmlLayer && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.KmlLayer, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.KmlLayer>('maps', 'KmlLayer'),
+              ]).then(([map, layerConstructor]) => {
+                this._initialize(map, layerConstructor, options);
+              });
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    layerConstructor: typeof google.maps.KmlLayer,
+    options: google.maps.KmlLayerOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.kmlLayer = new layerConstructor(options);
+      this._assertInitialized();
+      this.kmlLayer.setMap(map);
+      this._eventManager.setTarget(this.kmlLayer);
+      this.kmlLayerInitialized.emit(this.kmlLayer);
+      this._watchForOptionsChanges();
+      this._watchForUrlChanges();
+    });
   }
 
   ngOnDestroy() {

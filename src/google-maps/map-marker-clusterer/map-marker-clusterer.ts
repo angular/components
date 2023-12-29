@@ -221,30 +221,30 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
   ngOnInit() {
     if (this._canInitialize) {
-      this._ngZone.runOutsideAngular(async () => {
-        const map = await this._googleMap._resolveMap();
+      this._ngZone.runOutsideAngular(() => {
+        this._googleMap._resolveMap().then(map => {
+          if (
+            typeof MarkerClusterer !== 'function' &&
+            (typeof ngDevMode === 'undefined' || ngDevMode)
+          ) {
+            throw Error(
+              'MarkerClusterer class not found, cannot construct a marker cluster. ' +
+                'Please install the MarkerClustererPlus library: ' +
+                'https://github.com/googlemaps/js-markerclustererplus',
+            );
+          }
 
-        if (
-          typeof MarkerClusterer !== 'function' &&
-          (typeof ngDevMode === 'undefined' || ngDevMode)
-        ) {
-          throw Error(
-            'MarkerClusterer class not found, cannot construct a marker cluster. ' +
-              'Please install the MarkerClustererPlus library: ' +
-              'https://github.com/googlemaps/js-markerclustererplus',
-          );
-        }
+          // Create the object outside the zone so its events don't trigger change detection.
+          // We'll bring it back in inside the `MapEventManager` only for the events that the
+          // user has subscribed to.
+          this.markerClusterer = this._ngZone.runOutsideAngular(() => {
+            return new MarkerClusterer(map, [], this._combineOptions());
+          });
 
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        this.markerClusterer = this._ngZone.runOutsideAngular(() => {
-          return new MarkerClusterer(map, [], this._combineOptions());
+          this._assertInitialized();
+          this._eventManager.setTarget(this.markerClusterer);
+          this.markerClustererInitialized.emit(this.markerClusterer);
         });
-
-        this._assertInitialized();
-        this._eventManager.setTarget(this.markerClusterer);
-        this.markerClustererInitialized.emit(this.markerClusterer);
       });
     }
   }
@@ -476,43 +476,44 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   private _watchForMarkerChanges() {
     this._assertInitialized();
 
-    this._ngZone.runOutsideAngular(async () => {
-      const initialMarkers: google.maps.Marker[] = [];
-      const markers = await this._getInternalMarkers(this._markers);
-      for (const marker of markers) {
-        this._currentMarkers.add(marker);
-        initialMarkers.push(marker);
-      }
-      this.markerClusterer.addMarkers(initialMarkers);
+    this._ngZone.runOutsideAngular(() => {
+      this._getInternalMarkers(this._markers).then(markers => {
+        const initialMarkers: google.maps.Marker[] = [];
+        for (const marker of markers) {
+          this._currentMarkers.add(marker);
+          initialMarkers.push(marker);
+        }
+        this.markerClusterer.addMarkers(initialMarkers);
+      });
     });
 
     this._markers.changes
       .pipe(takeUntil(this._destroy))
       .subscribe((markerComponents: MapMarker[]) => {
         this._assertInitialized();
-        this._ngZone.runOutsideAngular(async () => {
-          const newMarkers = new Set<google.maps.Marker>(
-            await this._getInternalMarkers(markerComponents),
-          );
-          const markersToAdd: google.maps.Marker[] = [];
-          const markersToRemove: google.maps.Marker[] = [];
-          for (const marker of Array.from(newMarkers)) {
-            if (!this._currentMarkers.has(marker)) {
-              this._currentMarkers.add(marker);
-              markersToAdd.push(marker);
+        this._ngZone.runOutsideAngular(() => {
+          this._getInternalMarkers(markerComponents).then(markers => {
+            const newMarkers = new Set(markers);
+            const markersToAdd: google.maps.Marker[] = [];
+            const markersToRemove: google.maps.Marker[] = [];
+            for (const marker of Array.from(newMarkers)) {
+              if (!this._currentMarkers.has(marker)) {
+                this._currentMarkers.add(marker);
+                markersToAdd.push(marker);
+              }
             }
-          }
-          for (const marker of Array.from(this._currentMarkers)) {
-            if (!newMarkers.has(marker)) {
-              markersToRemove.push(marker);
+            for (const marker of Array.from(this._currentMarkers)) {
+              if (!newMarkers.has(marker)) {
+                markersToRemove.push(marker);
+              }
             }
-          }
-          this.markerClusterer.addMarkers(markersToAdd, true);
-          this.markerClusterer.removeMarkers(markersToRemove, true);
-          this.markerClusterer.repaint();
-          for (const marker of markersToRemove) {
-            this._currentMarkers.delete(marker);
-          }
+            this.markerClusterer.addMarkers(markersToAdd, true);
+            this.markerClusterer.removeMarkers(markersToRemove, true);
+            this.markerClusterer.repaint();
+            for (const marker of markersToRemove) {
+              this._currentMarkers.delete(marker);
+            }
+          });
         });
       });
   }

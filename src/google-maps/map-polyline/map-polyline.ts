@@ -150,24 +150,39 @@ export class MapPolyline implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(async () => {
-            const map = await this._map._resolveMap();
-            const polylineConstructor =
-              google.maps.Polyline ||
-              (await importLibrary<google.maps.Polyline>('maps', 'Polyline'));
-            this.polyline = new polylineConstructor(options);
-            this._assertInitialized();
-            this.polyline.setMap(map);
-            this._eventManager.setTarget(this.polyline);
-            this.polylineInitialized.emit(this.polyline);
-            this._watchForOptionsChanges();
-            this._watchForPathChanges();
-          });
+          if (google.maps.Polyline && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.Polyline, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.Polyline>('maps', 'Polyline'),
+              ]).then(([map, polylineConstructor]) => {
+                this._initialize(map, polylineConstructor, options);
+              });
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    polylineConstructor: typeof google.maps.Polyline,
+    options: google.maps.PolygonOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.polyline = new polylineConstructor(options);
+      this._assertInitialized();
+      this.polyline.setMap(map);
+      this._eventManager.setTarget(this.polyline);
+      this.polylineInitialized.emit(this.polyline);
+      this._watchForOptionsChanges();
+      this._watchForPathChanges();
+    });
   }
 
   ngOnDestroy() {

@@ -7,9 +7,8 @@
  */
 
 /** Imports a Google Maps library. */
-export async function importLibrary<T>(name: string, symbol: string): Promise<T> {
+export function importLibrary<T>(name: string, symbol: string): Promise<T> {
   // TODO(crisbeto): needs to cast to `any` to avoid some internal limitations around typings.
   // Should be cleaned up eventually.
-  const library = await (window as any).google.maps.importLibrary(name);
-  return library[symbol];
+  return (window as any).google.maps.importLibrary(name).then((library: any) => library[symbol]);
 }

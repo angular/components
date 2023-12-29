@@ -143,7 +143,7 @@ export interface MapAnchorPoint {
 export class MapBaseLayer implements OnInit, OnDestroy {
     constructor(_map: GoogleMap, _ngZone: NgZone);
     // (undocumented)
-    protected _initializeObject(): Promise<void>;
+    protected _initializeObject(): void;
     // (undocumented)
     protected readonly _map: GoogleMap;
     // (undocumented)
@@ -153,7 +153,7 @@ export class MapBaseLayer implements OnInit, OnDestroy {
     // (undocumented)
     protected readonly _ngZone: NgZone;
     // (undocumented)
-    protected _setMap(_map: google.maps.Map): void;
+    protected _setMap(): void;
     // (undocumented)
     protected _unsetMap(): void;
     // (undocumented)
@@ -163,15 +163,13 @@ export class MapBaseLayer implements OnInit, OnDestroy {
 }
 
 // @public
-export class MapBicyclingLayer extends MapBaseLayer {
+export class MapBicyclingLayer implements OnInit, OnDestroy {
     bicyclingLayer?: google.maps.BicyclingLayer;
     readonly bicyclingLayerInitialized: EventEmitter<google.maps.BicyclingLayer>;
     // (undocumented)
-    protected _initializeObject(): Promise<void>;
+    ngOnDestroy(): void;
     // (undocumented)
-    protected _setMap(map: google.maps.Map): void;
-    // (undocumented)
-    protected _unsetMap(): void;
+    ngOnInit(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapBicyclingLayer, "map-bicycling-layer", ["mapBicyclingLayer"], {}, { "bicyclingLayerInitialized": "bicyclingLayerInitialized"; }, never, never, true, never>;
     // (undocumented)
@@ -687,15 +685,13 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
 }
 
 // @public
-export class MapTransitLayer extends MapBaseLayer {
+export class MapTransitLayer implements OnInit, OnDestroy {
     // (undocumented)
-    protected _initializeObject(): Promise<void>;
+    ngOnDestroy(): void;
     // (undocumented)
-    protected _setMap(map: google.maps.Map): void;
+    ngOnInit(): void;
     transitLayer?: google.maps.TransitLayer;
     readonly transitLayerInitialized: EventEmitter<google.maps.TransitLayer>;
-    // (undocumented)
-    protected _unsetMap(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, { "transitLayerInitialized": "transitLayerInitialized"; }, never, never, true, never>;
     // (undocumented)

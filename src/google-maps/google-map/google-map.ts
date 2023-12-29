@@ -309,14 +309,24 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // Create the object outside the zone so its events don't trigger change detection.
       // We'll bring it back in inside the `MapEventManager` only for the events that the
       // user has subscribed to.
-      this._ngZone.runOutsideAngular(async () => {
-        const mapConstructor =
-          google.maps.Map || (await importLibrary<google.maps.Map>('maps', 'Map'));
-        this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
-        this._eventManager.setTarget(this.googleMap);
-        this.mapInitialized.emit(this.googleMap);
-      });
+      if (google.maps.Map) {
+        this._initialize(google.maps.Map);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          importLibrary<typeof google.maps.Map>('maps', 'Map').then(mapConstructor =>
+            this._initialize(mapConstructor),
+          );
+        });
+      }
     }
+  }
+
+  private _initialize(mapConstructor: typeof google.maps.Map) {
+    this._ngZone.runOutsideAngular(() => {
+      this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
+      this._eventManager.setTarget(this.googleMap);
+      this.mapInitialized.emit(this.googleMap);
+    });
   }
 
   ngOnDestroy() {
@@ -489,8 +499,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
 
   /** Returns a promise that resolves when the map has been initialized. */
-  async _resolveMap(): Promise<google.maps.Map> {
-    return this.googleMap || this.mapInitialized.pipe(take(1)).toPromise();
+  _resolveMap(): Promise<google.maps.Map> {
+    return this.googleMap
+      ? Promise.resolve(this.googleMap)
+      : this.mapInitialized.pipe(take(1)).toPromise();
   }
 
   private _setSize() {

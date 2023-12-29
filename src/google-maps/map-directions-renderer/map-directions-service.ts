@@ -48,14 +48,21 @@ export class MapDirectionsService {
     });
   }
 
-  private async _getService(): Promise<google.maps.DirectionsService> {
+  private _getService(): Promise<google.maps.DirectionsService> {
     if (!this._directionsService) {
-      const serviceConstructor =
-        google.maps.DirectionsService ||
-        (await importLibrary<google.maps.DirectionsService>('routes', 'DirectionsService'));
-      this._directionsService = new serviceConstructor();
+      if (google.maps.DirectionsService) {
+        this._directionsService = new google.maps.DirectionsService();
+      } else {
+        return importLibrary<typeof google.maps.DirectionsService>(
+          'routes',
+          'DirectionsService',
+        ).then(serviceConstructor => {
+          this._directionsService = new serviceConstructor();
+          return this._directionsService;
+        });
+      }
     }
 
-    return this._directionsService;
+    return Promise.resolve(this._directionsService);
   }
 }

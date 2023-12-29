@@ -82,21 +82,35 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(async () => {
-        const map = await this._googleMap._resolveMap();
-        const rendererConstructor =
-          google.maps.DirectionsRenderer ||
-          (await importLibrary<google.maps.DirectionsRenderer>('routes', 'DirectionsRenderer'));
-        this.directionsRenderer = new rendererConstructor(this._combineOptions());
-        this._assertInitialized();
-        this.directionsRenderer.setMap(map);
-        this._eventManager.setTarget(this.directionsRenderer);
-        this.directionsRendererInitialized.emit(this.directionsRenderer);
-      });
+      if (google.maps.DirectionsRenderer && this._googleMap.googleMap) {
+        this._initialize(this._googleMap.googleMap, google.maps.DirectionsRenderer);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          Promise.all([
+            this._googleMap._resolveMap(),
+            importLibrary<typeof google.maps.DirectionsRenderer>('routes', 'DirectionsRenderer'),
+          ]).then(([map, rendererConstructor]) => {
+            this._initialize(map, rendererConstructor);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    rendererConstructor: typeof google.maps.DirectionsRenderer,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.directionsRenderer = new rendererConstructor(this._combineOptions());
+      this._assertInitialized();
+      this.directionsRenderer.setMap(map);
+      this._eventManager.setTarget(this.directionsRenderer);
+      this.directionsRendererInitialized.emit(this.directionsRenderer);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

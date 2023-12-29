@@ -44,14 +44,20 @@ export class MapGeocoder {
     });
   }
 
-  private async _getGeocoder(): Promise<google.maps.Geocoder> {
+  private _getGeocoder(): Promise<google.maps.Geocoder> {
     if (!this._geocoder) {
-      const geocoderConstructor =
-        google.maps.Geocoder ||
-        (await importLibrary<google.maps.Geocoder>('geocoding', 'Geocoder'));
-      this._geocoder = new geocoderConstructor();
+      if (google.maps.Geocoder) {
+        this._geocoder = new google.maps.Geocoder();
+      } else {
+        return importLibrary<typeof google.maps.Geocoder>('geocoding', 'Geocoder').then(
+          geocoderConstructor => {
+            this._geocoder = new geocoderConstructor();
+            return this._geocoder;
+          },
+        );
+      }
     }
 
-    return this._geocoder;
+    return Promise.resolve(this._geocoder);
   }
 }

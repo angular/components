@@ -117,21 +117,33 @@ export class MapInfoWindow implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(async () => {
-            const infoWindowConstructor =
-              google.maps.InfoWindow ||
-              (await importLibrary<google.maps.InfoWindow>('maps', 'InfoWindow'));
-            this.infoWindow = new infoWindowConstructor(options);
-            this._eventManager.setTarget(this.infoWindow);
-            this.infoWindowInitialized.emit(this.infoWindow);
-            this._watchForOptionsChanges();
-            this._watchForPositionChanges();
-          });
+          if (google.maps.InfoWindow) {
+            this._initialize(google.maps.InfoWindow, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              importLibrary<typeof google.maps.InfoWindow>('maps', 'InfoWindow').then(
+                infoWindowConstructor => this._initialize(infoWindowConstructor, options),
+              );
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    infoWindowConstructor: typeof google.maps.InfoWindow,
+    options: google.maps.InfoWindowOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.infoWindow = new infoWindowConstructor(options);
+      this._eventManager.setTarget(this.infoWindow);
+      this.infoWindowInitialized.emit(this.infoWindow);
+      this._watchForOptionsChanges();
+      this._watchForPositionChanges();
+    });
   }
 
   ngOnDestroy() {
