@@ -152,23 +152,39 @@ export class MapPolygon implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(async () => {
-            const map = await this._map._resolveMap();
-            const polygonConstructor =
-              google.maps.Polygon || (await importLibrary<google.maps.Polygon>('maps', 'Polygon'));
-            this.polygon = new polygonConstructor(options);
-            this._assertInitialized();
-            this.polygon.setMap(map);
-            this._eventManager.setTarget(this.polygon);
-            this.polygonInitialized.emit(this.polygon);
-            this._watchForOptionsChanges();
-            this._watchForPathChanges();
-          });
+          if (google.maps.Polygon && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.Polygon, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.Polygon>('maps', 'Polygon'),
+              ]).then(([map, polygonConstructor]) => {
+                this._initialize(map, polygonConstructor, options);
+              });
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    polygonConstructor: typeof google.maps.Polygon,
+    options: google.maps.PolygonOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.polygon = new polygonConstructor(options);
+      this._assertInitialized();
+      this.polygon.setMap(map);
+      this._eventManager.setTarget(this.polygon);
+      this.polygonInitialized.emit(this.polygon);
+      this._watchForOptionsChanges();
+      this._watchForPathChanges();
+    });
   }
 
   ngOnDestroy() {

@@ -288,14 +288,25 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
       return;
     }
 
+    if (google.maps.Marker && this._googleMap.googleMap) {
+      this._initialize(this._googleMap.googleMap, google.maps.Marker);
+    } else {
+      this._ngZone.runOutsideAngular(() => {
+        Promise.all([
+          this._googleMap._resolveMap(),
+          importLibrary<typeof google.maps.Marker>('marker', 'Marker'),
+        ]).then(([map, markerConstrutor]) => {
+          this._initialize(map, markerConstrutor);
+        });
+      });
+    }
+  }
+
+  private _initialize(map: google.maps.Map, markerConstructor: typeof google.maps.Marker) {
     // Create the object outside the zone so its events don't trigger change detection.
     // We'll bring it back in inside the `MapEventManager` only for the events that the
     // user has subscribed to.
-    this._ngZone.runOutsideAngular(async () => {
-      const map = await this._googleMap._resolveMap();
-      const markerConstructor =
-        google.maps.Marker || (await importLibrary<google.maps.Marker>('marker', 'Marker'));
-
+    this._ngZone.runOutsideAngular(() => {
       this.marker = new markerConstructor(this._combineOptions());
       this._assertInitialized();
       this.marker.setMap(map);
@@ -459,8 +470,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   }
 
   /** Returns a promise that resolves when the marker has been initialized. */
-  async _resolveMarker(): Promise<google.maps.Marker> {
-    return this.marker || this.markerInitialized.pipe(take(1)).toPromise();
+  _resolveMarker(): Promise<google.maps.Marker> {
+    return this.marker
+      ? Promise.resolve(this.marker)
+      : this.markerInitialized.pipe(take(1)).toPromise();
   }
 
   /** Creates a combined options object using the passed-in options and the individual inputs. */

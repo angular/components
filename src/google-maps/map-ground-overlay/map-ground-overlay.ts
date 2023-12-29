@@ -117,32 +117,47 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
           return;
         }
 
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        this._ngZone.runOutsideAngular(async () => {
-          const map = await this._map._resolveMap();
-          const overlayConstructor =
-            google.maps.GroundOverlay ||
-            (await importLibrary<google.maps.GroundOverlay>('maps', 'GroundOverlay'));
-          this.groundOverlay = new overlayConstructor(this._url.getValue(), bounds, {
-            clickable: this.clickable,
-            opacity: this._opacity.value,
+        if (google.maps.GroundOverlay && this._map.googleMap) {
+          this._initialize(this._map.googleMap, google.maps.GroundOverlay, bounds);
+        } else {
+          this._ngZone.runOutsideAngular(() => {
+            Promise.all([
+              this._map._resolveMap(),
+              importLibrary<typeof google.maps.GroundOverlay>('maps', 'GroundOverlay'),
+            ]).then(([map, overlayConstructor]) => {
+              this._initialize(map, overlayConstructor, bounds);
+            });
           });
-          this._assertInitialized();
-          this.groundOverlay.setMap(map);
-          this._eventManager.setTarget(this.groundOverlay);
-          this.groundOverlayInitialized.emit(this.groundOverlay);
-
-          // We only need to set up the watchers once.
-          if (!this._hasWatchers) {
-            this._hasWatchers = true;
-            this._watchForOpacityChanges();
-            this._watchForUrlChanges();
-          }
-        });
+        }
       });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    overlayConstructor: typeof google.maps.GroundOverlay,
+    bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.groundOverlay = new overlayConstructor(this._url.getValue(), bounds, {
+        clickable: this.clickable,
+        opacity: this._opacity.value,
+      });
+      this._assertInitialized();
+      this.groundOverlay.setMap(map);
+      this._eventManager.setTarget(this.groundOverlay);
+      this.groundOverlayInitialized.emit(this.groundOverlay);
+
+      // We only need to set up the watchers once.
+      if (!this._hasWatchers) {
+        this._hasWatchers = true;
+        this._watchForOpacityChanges();
+        this._watchForUrlChanges();
+      }
+    });
   }
 
   ngOnDestroy() {

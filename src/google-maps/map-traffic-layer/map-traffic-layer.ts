@@ -59,19 +59,34 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          this._ngZone.runOutsideAngular(async () => {
-            const map = await this._map._resolveMap();
-            const layerConstructor =
-              google.maps.TrafficLayer ||
-              (await importLibrary<google.maps.TrafficLayer>('maps', 'TrafficLayer'));
-            this.trafficLayer = new layerConstructor(options);
-            this._assertInitialized();
-            this.trafficLayer.setMap(map);
-            this.trafficLayerInitialized.emit(this.trafficLayer);
-            this._watchForAutoRefreshChanges();
-          });
+          if (google.maps.TrafficLayer && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.TrafficLayer, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.TrafficLayer>('maps', 'TrafficLayer'),
+              ]).then(([map, layerConstructor]) => {
+                this._initialize(map, layerConstructor, options);
+              });
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    layerConstructor: typeof google.maps.TrafficLayer,
+    options: google.maps.TrafficLayerOptions,
+  ) {
+    this._ngZone.runOutsideAngular(() => {
+      this.trafficLayer = new layerConstructor(options);
+      this._assertInitialized();
+      this.trafficLayer.setMap(map);
+      this.trafficLayerInitialized.emit(this.trafficLayer);
+      this._watchForAutoRefreshChanges();
+    });
   }
 
   ngOnDestroy() {

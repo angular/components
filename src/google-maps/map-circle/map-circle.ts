@@ -175,23 +175,39 @@ export class MapCircle implements OnInit, OnDestroy {
     this._combineOptions()
       .pipe(take(1))
       .subscribe(options => {
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        this._ngZone.runOutsideAngular(async () => {
-          const map = await this._map._resolveMap();
-          const circleConstructor =
-            google.maps.Circle || (await importLibrary<google.maps.Circle>('maps', 'Circle'));
-          this.circle = new circleConstructor(options);
-          this._assertInitialized();
-          this.circle.setMap(map);
-          this._eventManager.setTarget(this.circle);
-          this.circleInitialized.emit(this.circle);
-          this._watchForOptionsChanges();
-          this._watchForCenterChanges();
-          this._watchForRadiusChanges();
-        });
+        if (google.maps.Circle && this._map.googleMap) {
+          this._initialize(this._map.googleMap, google.maps.Circle, options);
+        } else {
+          this._ngZone.runOutsideAngular(() => {
+            Promise.all([
+              this._map._resolveMap(),
+              importLibrary<typeof google.maps.Circle>('maps', 'Circle'),
+            ]).then(([map, circleConstructor]) => {
+              this._initialize(map, circleConstructor, options);
+            });
+          });
+        }
       });
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    circleConstructor: typeof google.maps.Circle,
+    options: google.maps.CircleOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.circle = new circleConstructor(options);
+      this._assertInitialized();
+      this.circle.setMap(map);
+      this._eventManager.setTarget(this.circle);
+      this.circleInitialized.emit(this.circle);
+      this._watchForOptionsChanges();
+      this._watchForCenterChanges();
+      this._watchForRadiusChanges();
+    });
   }
 
   ngOnDestroy() {

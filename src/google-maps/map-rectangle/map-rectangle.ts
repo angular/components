@@ -159,24 +159,39 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(async () => {
-            const map = await this._map._resolveMap();
-            const rectangleConstructor =
-              google.maps.Rectangle ||
-              (await importLibrary<google.maps.Rectangle>('maps', 'Rectangle'));
-            this.rectangle = new rectangleConstructor(options);
-            this._assertInitialized();
-            this.rectangle.setMap(map);
-            this._eventManager.setTarget(this.rectangle);
-            this.rectangleInitialized.emit(this.rectangle);
-            this._watchForOptionsChanges();
-            this._watchForBoundsChanges();
-          });
+          if (google.maps.Rectangle && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.Rectangle, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.Rectangle>('maps', 'Rectangle'),
+              ]).then(([map, rectangleConstructor]) => {
+                this._initialize(map, rectangleConstructor, options);
+              });
+            });
+          }
         });
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    rectangleConstructor: typeof google.maps.Rectangle,
+    options: google.maps.RectangleOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.rectangle = new rectangleConstructor(options);
+      this._assertInitialized();
+      this.rectangle.setMap(map);
+      this._eventManager.setTarget(this.rectangle);
+      this.rectangleInitialized.emit(this.rectangle);
+      this._watchForOptionsChanges();
+      this._watchForBoundsChanges();
+    });
   }
 
   ngOnDestroy() {

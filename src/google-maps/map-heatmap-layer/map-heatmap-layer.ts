@@ -92,23 +92,37 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
         );
       }
 
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(async () => {
-        const map = await this._googleMap._resolveMap();
-        const heatmapConstructor =
-          google.maps.visualization?.HeatmapLayer ||
-          (await importLibrary<google.maps.visualization.HeatmapLayer>(
-            'visualization',
-            'HeatmapLayer',
-          ));
-        this.heatmap = new heatmapConstructor(this._combineOptions());
-        this._assertInitialized();
-        this.heatmap.setMap(map);
-        this.heatmapInitialized.emit(this.heatmap);
-      });
+      if (google.maps.visualization?.HeatmapLayer && this._googleMap.googleMap) {
+        this._initialize(this._googleMap.googleMap, google.maps.visualization.HeatmapLayer);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          Promise.all([
+            this._googleMap._resolveMap(),
+            importLibrary<typeof google.maps.visualization.HeatmapLayer>(
+              'visualization',
+              'HeatmapLayer',
+            ),
+          ]).then(([map, heatmapConstructor]) => {
+            this._initialize(map, heatmapConstructor);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    heatmapConstructor: typeof google.maps.visualization.HeatmapLayer,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.heatmap = new heatmapConstructor(this._combineOptions());
+      this._assertInitialized();
+      this.heatmap.setMap(map);
+      this.heatmapInitialized.emit(this.heatmap);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
