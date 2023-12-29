@@ -257,18 +257,23 @@
 <h2>Sidenav</h2>
 <mat-sidenav-container>
   <!--
-    TODO: add sample with multiple sidenavs which can be problematic for hydration.
-    Currently blocked on https://github.com/angular/angular/issues/53246
+    Place the end sidenav first to test the behavior where we manually change the DOM order.
   -->
+  <mat-sidenav #endSidenav position="end" mode="push">
+    End sidenav
+    <button (click)="endSidenav.toggle()">Close</button>
+  </mat-sidenav>
+
   <!--
     Only attempt to capture focus when automated, otherwise it makes the page jump around.
    -->
-  <mat-sidenav #sidenav opened [autoFocus]="isAutomated ? 'first-tabbable' : false">
-    On the side
-    <button (click)="sidenav.toggle()">Button for testing focus trapping</button>
+  <mat-sidenav #startSidenav opened [autoFocus]="isAutomated ? 'first-tabbable' : false">
+    Start sidenav
+    <button (click)="startSidenav.toggle()">Button for testing focus trapping</button>
   </mat-sidenav>
   Main content
-  <button (click)="sidenav.toggle()">Click me</button>
+  <button (click)="startSidenav.toggle()">Toggle start</button>
+  <button (click)="endSidenav.toggle()">Toggle end</button>
 </mat-sidenav-container>
 
 <h2>Slide-toggle</h2>
