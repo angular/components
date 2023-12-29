@@ -143,11 +143,11 @@
   tree-base;
 
 // MDC Helpers
-@forward './core/mdc-helpers/mdc-helpers' as private-* show private-using-mdc-theme,
-  private-using-mdc-typography, private-disable-mdc-fallback-declarations,
-  private-typography-config-level-from-mdc, private-if-touch-targets-unsupported,
-  $private-mdc-base-styles-query, $private-mdc-base-styles-without-animation-query,
-  $private-mdc-theme-styles-query, $private-mdc-typography-styles-query;
+@forward './core/mdc-helpers/mdc-helpers' as private-* show
+  private-disable-mdc-fallback-declarations, private-typography-config-level-from-mdc,
+  private-if-touch-targets-unsupported, $private-mdc-base-styles-query,
+  $private-mdc-base-styles-without-animation-query, $private-mdc-theme-styles-query,
+  $private-mdc-typography-styles-query;
 
 // New theming APIs:
 @forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,

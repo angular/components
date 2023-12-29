@@ -3,7 +3,6 @@
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
@@ -29,27 +28,25 @@
     $is-dark: inspection.get-theme-type($theme) == dark;
     $mdc-switch-color-tokens: tokens-mdc-switch.get-color-tokens($theme);
 
-    @include mdc-helpers.using-mdc-theme($theme) {
-      // Add values for MDC slide toggles tokens
-      .mat-mdc-slide-toggle {
-        @include mdc-switch-theme.theme($mdc-switch-color-tokens);
-        @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
+    // Add values for MDC slide toggles tokens
+    .mat-mdc-slide-toggle {
+      @include mdc-switch-theme.theme($mdc-switch-color-tokens);
+      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
 
-        // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
-        .mdc-switch--disabled + label {
-          color: inspection.get-theme-color($theme, foreground, disabled-text);
-        }
+      // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
+      .mdc-switch--disabled + label {
+        color: inspection.get-theme-color($theme, foreground, disabled-text);
+      }
 
-        // Change the color palette related tokens to accent or warn if applicable
-        &.mat-accent {
-          @include mdc-switch-theme.theme(
-              tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent));
-        }
+      // Change the color palette related tokens to accent or warn if applicable
+      &.mat-accent {
+        @include mdc-switch-theme.theme(
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent));
+      }
 
-        &.mat-warn {
-          @include mdc-switch-theme.theme(
-              tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn));
-        }
+      &.mat-warn {
+        @include mdc-switch-theme.theme(
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn));
       }
     }
   }
