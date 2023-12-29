@@ -7,7 +7,7 @@
  */
 
 import {_getEventTarget} from '@angular/cdk/platform';
-import {getMutableClientRect, adjustClientRect} from './client-rect';
+import {getMutableClientRect, adjustDomRect} from './dom-rect';
 
 /** Object holding the scroll position of something. */
 interface ScrollPosition {
@@ -22,7 +22,7 @@ export class ParentPositionTracker {
     Document | HTMLElement,
     {
       scrollPosition: ScrollPosition;
-      clientRect?: ClientRect;
+      clientRect?: DOMRect;
     }
   >();
 
@@ -77,7 +77,7 @@ export class ParentPositionTracker {
     // parents that are inside the element that was scrolled.
     this.positions.forEach((position, node) => {
       if (position.clientRect && target !== node && target.contains(node)) {
-        adjustClientRect(position.clientRect, topDifference, leftDifference);
+        adjustDomRect(position.clientRect, topDifference, leftDifference);
       }
     });
 

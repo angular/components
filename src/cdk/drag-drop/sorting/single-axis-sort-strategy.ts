@@ -12,7 +12,7 @@ import {coerceElement} from '@angular/cdk/coercion';
 import {DragDropRegistry} from '../drag-drop-registry';
 import {moveItemInArray} from '../drag-utils';
 import {combineTransforms} from '../dom/styling';
-import {adjustClientRect, getMutableClientRect, isInsideClientRect} from '../dom/client-rect';
+import {adjustDomRect, getMutableClientRect, isInsideClientRect} from '../dom/dom-rect';
 import {
   DropListSortStrategy,
   DropListSortStrategyItem,
@@ -27,7 +27,7 @@ interface CachedItemPosition<T> {
   /** Instance of the drag item. */
   drag: T;
   /** Dimensions of the item. */
-  clientRect: ClientRect;
+  clientRect: DOMRect;
   /** Amount by which the item has been moved since dragging started. */
   offset: number;
   /** Inline transform that the drag item had when dragging started. */
@@ -146,13 +146,13 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
           `translate3d(${Math.round(sibling.offset)}px, 0, 0)`,
           sibling.initialTransform,
         );
-        adjustClientRect(sibling.clientRect, 0, offset);
+        adjustDomRect(sibling.clientRect, 0, offset);
       } else {
         elementToOffset.style.transform = combineTransforms(
           `translate3d(0, ${Math.round(sibling.offset)}px, 0)`,
           sibling.initialTransform,
         );
-        adjustClientRect(sibling.clientRect, offset, 0);
+        adjustDomRect(sibling.clientRect, offset, 0);
       }
     });
 
@@ -286,7 +286,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
     // we can avoid inconsistent behavior where we might be measuring the element before
     // its position has changed.
     this._itemPositions.forEach(({clientRect}) => {
-      adjustClientRect(clientRect, topDifference, leftDifference);
+      adjustDomRect(clientRect, topDifference, leftDifference);
     });
 
     // We need two loops for this, because we want all of the cached
@@ -327,7 +327,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * @param newPosition Position of the item where the current item should be moved.
    * @param delta Direction in which the user is moving.
    */
-  private _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1 | -1) {
+  private _getItemOffsetPx(currentPosition: DOMRect, newPosition: DOMRect, delta: 1 | -1) {
     const isHorizontal = this.orientation === 'horizontal';
     let itemOffset = isHorizontal
       ? newPosition.left - currentPosition.left
