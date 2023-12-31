@@ -8,7 +8,6 @@
       "type": "string",
       "format": "path",
       "description": "Workspace-relative path to a directory which will be migrated.",
-      "alias": "d",
       "x-prompt": "Limit the migration to a specific directory? (Enter the relative path such as 'src/app/shared' or leave blank for all directories)"
     },
     "components": {
