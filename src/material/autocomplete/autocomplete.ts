@@ -115,7 +115,6 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   exportAs: 'matAutocomplete',
   host: {
     'class': 'mat-mdc-autocomplete',
-    'ngSkipHydration': '',
   },
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],
