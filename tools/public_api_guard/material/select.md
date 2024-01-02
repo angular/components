@@ -126,29 +126,17 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     get multiple(): boolean;
     set multiple(value: boolean);
     // (undocumented)
-    static ngAcceptInputType_disabled:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_disableOptionCentering:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_disableOptionCentering: unknown;
     // (undocumented)
-    static ngAcceptInputType_disableRipple:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
-    static ngAcceptInputType_hideSingleSelectionIndicator:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_hideSingleSelectionIndicator: unknown;
     // (undocumented)
-    static ngAcceptInputType_multiple:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_multiple: unknown;
     // (undocumented)
-    static ngAcceptInputType_required:
-    /** Whether or not the overlay panel is open. */
-    unknown;
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
