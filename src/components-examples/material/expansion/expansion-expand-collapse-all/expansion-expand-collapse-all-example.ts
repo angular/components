@@ -5,7 +5,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {MatNativeDateModule} from '@angular/material/core';
+import {provideNativeDateAdapter} from '@angular/material/core';
 
 /**
  * @title Accordion with expand/collapse all toggles
@@ -15,6 +15,7 @@ import {MatNativeDateModule} from '@angular/material/core';
   templateUrl: 'expansion-expand-collapse-all-example.html',
   styleUrls: ['expansion-expand-collapse-all-example.css'],
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     MatButtonModule,
     MatExpansionModule,
@@ -22,7 +23,6 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,
   ],
 })
 export class ExpansionExpandCollapseAllExample {

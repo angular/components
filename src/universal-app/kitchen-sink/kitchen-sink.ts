@@ -3,7 +3,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
 import {Component, ElementRef, InjectionToken, inject} from '@angular/core';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
+import {MatRippleModule, provideNativeDateAdapter} from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -77,6 +77,7 @@ export class TestEntryComponent {}
   selector: 'kitchen-sink',
   templateUrl: './kitchen-sink.html',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   styles: `
     .universal-viewport {
       height: 100px;
@@ -100,7 +101,6 @@ export class TestEntryComponent {}
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatNativeDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,

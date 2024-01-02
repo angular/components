@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
+import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 
@@ -11,7 +11,8 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'datepicker-harness-example',
   templateUrl: 'datepicker-harness-example.html',
   standalone: true,
-  imports: [MatInputModule, MatDatepickerModule, MatNativeDateModule, FormsModule],
+  providers: [provideNativeDateAdapter()],
+  imports: [MatInputModule, MatDatepickerModule, FormsModule],
 })
 export class DatepickerHarnessExample {
   date: Date | null = null;

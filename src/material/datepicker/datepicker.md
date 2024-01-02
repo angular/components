@@ -1,5 +1,5 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
-the calendar. It is made up of several components, directives and [the date implementation module](#choosing-a-date-implementation-and-date-format-settings) that work together.
+the calendar. It is made up of several components, directives and [the date implementation](#choosing-a-date-implementation-and-date-format-settings) that work together.
 
 <!-- example(datepicker-overview) -->
 
@@ -288,17 +288,14 @@ from `@angular/core`. If you want to override it, you can provide a new value fo
 `MAT_DATE_LOCALE` token:
 
 ```ts
-@NgModule({
-  providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-  ],
-})
-export class MyApp {}
+bootstapApplication(MyApp, {
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
+});
 ```
 
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
-**Note:** if you're using the `MatDateFnsModule`, you have to provide the data object for your
+**Note:** if you're using the `provideDateFnsAdapter`, you have to provide the data object for your
 locale to `MAT_DATE_LOCALE` instead of the locale code, in addition to providing a configuration
 compatible with `date-fns` to `MAT_DATE_FORMATS`. Locale data for `date-fns` can be imported
 from `date-fns/locale`.
@@ -311,9 +308,9 @@ The datepicker was built to be date implementation agnostic. This means that it 
 with a variety of different date implementations. However it also means that developers need to make
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
 
-The easiest way to ensure this is to import one of the provided date modules:
+The easiest way to ensure this is to import one of the provided date adapters:
 
-`MatNativeDateModule`
+`provideNativeDateAdapter` or `MatNativeDateModule`
 
 <table>
   <tbody>
@@ -336,7 +333,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatDateFnsModule` (installed via `ng add @angular/material-date-fns-adapter`)
+`provideDateFnsAdapter` or `MatDateFnsModule` (installed via `ng add @angular/material-date-fns-adapter`)
 
 <table>
   <tbody>
@@ -359,7 +356,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatLuxonDateModule` (installed via `ng add @angular/material-luxon-adapter`)
+`provideLuxonDateAdapter` or `MatLuxonDateModule` (installed via `ng add @angular/material-luxon-adapter`)
 
 <table>
   <tbody>
@@ -382,7 +379,7 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-`MatMomentDateModule` (installed via `ng add @angular/material-moment-adapter`)
+`provideMomentDateAdapter` or `MatMomentDateModule` (installed via `ng add @angular/material-moment-adapter`)
 
 <table>
   <tbody>
@@ -405,20 +402,19 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
-*Please note: `MatNativeDateModule` is based off the functionality available in JavaScript's
+*Please note: `provideNativeDateAdapter` is based off the functionality available in JavaScript's
 native [`Date` object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date).
 Thus it is not suitable for many locales. One of the biggest shortcomings of the native `Date`
 object is the inability to set the parse format. We strongly recommend using an adapter based on
-a more robust formatting and parsing library. You can use the `MomentDateAdapter`
+a more robust formatting and parsing library. You can use `provideMomentDateAdapter`
 or a custom `DateAdapter` that works with the library of your choice.*
 
-These modules include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
+These APIs include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatNativeDateModule],
-})
-export class MyApp {}
+bootstrapApplication(MyApp, {
+  providers: [provideNativeDateAdapter()]
+});
 ```
 
 Because `DateAdapter` is a generic class, `MatDatepicker` and `MatDatepickerInput` also need to be
@@ -435,30 +431,26 @@ export class MyComponent {
 
 <!-- example(datepicker-moment) -->
 
-By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
+By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change
+the default behaviour to parse dates as UTC by passing `useUtc: true` into `provideMomentDateAdapter`
+or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatMomentDateModule],
-  providers: [
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
-  ]
-})
+bootstrapApplication(MyApp, {
+  providers: [provideMomentDateAdapter(undefined, {useUtc: true})]
+});
 ```
 
 By default the `MomentDateAdapter` will parse dates in a
 [forgiving way](https://momentjs.com/guides/#/parsing/forgiving-mode/). This may result in dates
 being parsed incorrectly. You can change the default behaviour to
-[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by providing
-the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `strict: true`.
+[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by `strict: true` to
+`provideMomentDateAdapter` or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatMomentDateModule],
-  providers: [
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}}
-  ]
-})
+bootstrapApplication(MyApp, {
+  providers: [provideMomentDateAdapter(undefined, {strict: true})]
+});
 ```
 
 It is also possible to create your own `DateAdapter` that works with any date format your app
@@ -469,14 +461,12 @@ in your app are formats that can be understood by your date implementation. See
 information about `MAT_DATE_FORMATS`.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule],
+bootstrapApplication(MyApp, {
   providers: [
     {provide: DateAdapter, useClass: MyDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
-  ],
-})
-export class MyApp {}
+  ]
+});
 ```
 
 If you need to work with native `Date` objects, but need custom behavior (for example custom date
@@ -489,51 +479,39 @@ and displaying dates. These formats are passed through to the `DateAdapter` so y
 sure that the format objects you're using are compatible with the `DateAdapter` used in your app.
 
 If you want use one of the `DateAdapters` that ships with Angular Material, but use your own
-`MAT_DATE_FORMATS`, you can import the `NativeDateModule` or `MomentDateModule`. These modules are
-identical to the "Mat"-prefixed versions (`MatNativeDateModule` and `MatMomentDateModule`) except
-they do not include the default formats. For example:
+`MAT_DATE_FORMATS`, you can either pass the formats into the providers function, or provide the
+`MAT_DATE_FORMATS` token yourself. For example:
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, NativeDateModule],
-  providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_NATIVE_DATE_FORMATS},
-  ],
-})
-export class MyApp {}
+bootstrapApplication(MyApp, {
+  providers: [provideNativeDateAdapter(MY_NATIVE_DATE_FORMATS)],
+});
 ```
 
 <!-- example(datepicker-formats) -->
 
-##### MomentDateModule formats
+##### Moment.js formats
 
-To use custom formats with the `MomentDateModule` you can pick from the parse formats documented
-[here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats documented
-[here](https://momentjs.com/docs/#/displaying/format/).
+To use custom formats with the `provideMomentDateAdapter` you can pick from the parse formats
+documented [here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats
+documented [here](https://momentjs.com/docs/#/displaying/format/).
 
 It is also possible to support multiple parse formats. For example:
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MomentDateModule],
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['l', 'LL'],
-        },
-        display: {
-          dateInput: 'L',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
+bootstraApplication(MyApp, {
+  providers: [provideMomentDateAdapter({
+    parse: {
+      dateInput: ['l', 'LL'],
     },
-  ],
-})
-export class MyApp {}
+    display: {
+      dateInput: 'L',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+    },
+  })]
+});
 ```
 
 #### Customizing the calendar header
@@ -554,16 +532,15 @@ detection.
 
 The various text strings used by the datepicker are provided through `MatDatepickerIntl`.
 Localization of these messages can be done by providing a subclass with translated values in your
-application root module.
+app config.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatNativeDateModule],
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MatDatepickerIntl, useClass: MyIntl},
+    provideNativeDateAdapter(),
   ],
-})
-export class MyApp {}
+});
 ```
 
 #### Highlighting specific dates
@@ -662,8 +639,8 @@ In multi-year view:
 #### Error: MatDatepicker: No provider found for DateAdapter/MAT_DATE_FORMATS
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
-The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
-your application's root module. See
+The easiest way to resolve this is to add `provideNativeDateAdapter` or `provideMomentDateAdapter`
+to your app config. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
 

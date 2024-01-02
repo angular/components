@@ -6,8 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {NgModule, Provider} from '@angular/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatDateFormats,
+} from '@angular/material/core';
 import {MAT_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter} from './luxon-date-adapter';
 import {MAT_LUXON_DATE_FORMATS} from './luxon-date-formats';
 
@@ -30,3 +35,16 @@ export class LuxonDateModule {}
   providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS}],
 })
 export class MatLuxonDateModule {}
+
+export function provideLuxonDateAdapter(
+  formats: MatDateFormats = MAT_LUXON_DATE_FORMATS,
+): Provider[] {
+  return [
+    {
+      provide: DateAdapter,
+      useClass: LuxonDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS],
+    },
+    {provide: MAT_DATE_FORMATS, useValue: formats},
+  ];
+}

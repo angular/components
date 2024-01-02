@@ -19,7 +19,7 @@ import {default as _rollupMoment, Moment, MomentFormatSpecification, MomentInput
 
 const moment = _rollupMoment || _moment;
 
-/** Configurable options for {@see MomentDateAdapter}. */
+/** Configurable options for MomentDateAdapter. */
 export interface MatMomentDateAdapterOptions {
   /**
    * When enabled, the dates have to match the format exactly.
@@ -30,7 +30,7 @@ export interface MatMomentDateAdapterOptions {
   /**
    * Turns the use of utc dates on or off.
    * Changing this will change how Angular Material components like DatePicker output dates.
-   * {@default false}
+   * Defaults to `false`.
    */
   useUtc?: boolean;
 }
