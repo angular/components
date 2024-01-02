@@ -1,7 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatDatepicker, MatDatepickerModule} from '@angular/material/datepicker';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
@@ -36,15 +35,10 @@ export const MY_FORMATS = {
   templateUrl: 'datepicker-views-selection-example.html',
   styleUrls: ['datepicker-views-selection-example.css'],
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // to your app config. We provide it at the component level here, due to limitations
+    // of our example generation script.
+    provideMomentDateAdapter(MY_FORMATS),
   ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatCardModule} from '@angular/material/card';
-import {MatNativeDateModule} from '@angular/material/core';
+import {provideNativeDateAdapter} from '@angular/material/core';
 
 /** @title Datepicker inline calendar example */
 @Component({
@@ -9,7 +9,8 @@ import {MatNativeDateModule} from '@angular/material/core';
   templateUrl: 'datepicker-inline-calendar-example.html',
   styleUrls: ['datepicker-inline-calendar-example.css'],
   standalone: true,
-  imports: [MatCardModule, MatDatepickerModule, MatNativeDateModule],
+  providers: [provideNativeDateAdapter()],
+  imports: [MatCardModule, MatDatepickerModule],
 })
 export class DatepickerInlineCalendarExample {
   selected: Date | null;
