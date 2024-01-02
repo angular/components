@@ -610,7 +610,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
       return;
     }
 
-    this._updateWidthInactive();
     this._updateValueIndicatorUI(source);
     this._updateTickMarkUI();
     this._cdr.detectChanges();
@@ -670,13 +669,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
       return false;
     }
     return endInput.translateX - startInput.translateX < 20;
-  }
-
-  private _updateWidthInactive(): void {
-    const eInput = this._getInput(_MatThumb.END);
-    const sInput = this._getInput(_MatThumb.START);
-    eInput?._updateWidthInactive();
-    sInput?._updateWidthInactive();
   }
 
   /**
