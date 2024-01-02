@@ -233,7 +233,6 @@ const _MatSelectMixinBase = mixinDisableRipple(
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
-    'ngSkipHydration': '',
     '[class.mat-mdc-select-disabled]': 'disabled',
     '[class.mat-mdc-select-invalid]': 'errorState',
     '[class.mat-mdc-select-required]': 'required',
