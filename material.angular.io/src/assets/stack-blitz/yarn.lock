@@ -212,6 +212,15 @@
   dependencies:
     tslib "^2.3.0"
 
+"@angular/localize@^17.0.0":
+  version "17.0.8"
+  resolved "https://registry.yarnpkg.com/@angular/localize/-/localize-17.0.8.tgz#f2d4d1e2b2e573350c2dae9666a7cf7720be2d36"
+  integrity sha512-1zW8qWKNMH3r/x4KpwzzUmVY+iN76vYdhjA6gzZDnpJxpon9eyljNEildj9+zSWeNUr2LgJ6HnkIX9q1f3mXfA==
+  dependencies:
+    "@babel/core" "7.23.2"
+    fast-glob "3.3.1"
+    yargs "^17.2.1"
+
 "@angular/material-moment-adapter@^17.0.0":
   version "17.0.0"
   resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-17.0.0.tgz#812e267da15c772dac80903e849f6f8301a88bd7"
@@ -292,14 +301,6 @@
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-17.0.0.tgz#8b46c723fd2555e0658c4ceaec29318249b39592"
   integrity sha512-ZkcGQv3NWbSXEKSomAO94jPTPhTyT67dSg7bg6VXkty/7xkdimpE0CHAdB5KXmnrci/0BgKfyaPwU5bSiQlgNQ==
   dependencies:
-    tslib "^2.3.0"
-
-"@angular/ssr@^17.0.0":
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/ssr/-/ssr-17.0.0.tgz#99694e9a602ab87e64415b8bbf35597551140d31"
-  integrity sha512-yctZuIR9AA9aaAQe6JzBNbBoRUy37449tYYpwdxmI1Fp5rsrzrlJ1HeFidrmca4k3RWXw3VZNpklPWStlZBm2Q==
-  dependencies:
-    critters "0.0.20"
     tslib "^2.3.0"
 
 "@assemblyscript/loader@^0.10.1":
