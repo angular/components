@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
-    "@angular/ssr": "^17.0.0",
+    "@angular/localize": "^17.0.0",
     "moment": "^2.18.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
