@@ -180,6 +180,8 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     // (undocumented)
     _setIsLeftThumb(): void;
     // (undocumented)
+    _setValue(value: string): void;
+    // (undocumented)
     _updateMinMax(): void;
     // (undocumented)
     _updateStaticStyles(): void;
@@ -261,6 +263,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     setDisabledState(isDisabled: boolean): void;
+    protected _setValue(value: string): void;
     _skipUIUpdate: boolean;
     // (undocumented)
     protected _slider: _MatSlider;
