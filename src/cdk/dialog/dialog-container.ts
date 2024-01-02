@@ -25,6 +25,7 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
   ElementRef,
@@ -99,6 +100,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    */
   _ariaLabelledByQueue: string[] = [];
 
+  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
   constructor(
     protected _elementRef: ElementRef,
     protected _focusTrapFactory: FocusTrapFactory,
@@ -115,6 +118,20 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
     if (this._config.ariaLabelledBy) {
       this._ariaLabelledByQueue.push(this._config.ariaLabelledBy);
+    }
+  }
+
+  _addAriaLabelledBy(id: string) {
+    this._ariaLabelledByQueue.push(id);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  _removeAriaLabelledBy(id: string) {
+    const index = this._ariaLabelledByQueue.indexOf(id);
+
+    if (index > -1) {
+      this._ariaLabelledByQueue.splice(index, 1);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
