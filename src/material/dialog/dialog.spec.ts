@@ -30,6 +30,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   forwardRef,
+  ApplicationRef,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -1090,7 +1091,7 @@ describe('MDC-based MatDialog', () => {
   it(
     'should recapture focus to the first element that matches the css selector when ' +
       'clicking on the backdrop with autoFocus set to a css selector',
-    fakeAsync(() => {
+    async () => {
       viewContainerFixture.autoDetectChanges();
       TestBed.inject(NgZone).run(() => {
         // Queueing a microtask prevents synchronous change detection after zone.run
@@ -1108,7 +1109,7 @@ describe('MDC-based MatDialog', () => {
         });
       });
 
-      flushMicrotasks();
+      await viewContainerFixture.whenStable();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       let firstButton = overlayContainerElement.querySelector(
@@ -1121,12 +1122,12 @@ describe('MDC-based MatDialog', () => {
 
       firstButton.blur(); // Programmatic clicks might not move focus so we simulate it.
       backdrop.click();
-      flush();
+      await viewContainerFixture.whenStable();
 
       expect(document.activeElement)
         .withContext('Expected first button to stay focused after click')
         .toBe(firstButton);
-    }),
+    },
   );
 
   describe('hasBackdrop option', () => {

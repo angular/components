@@ -92,7 +92,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
-  private readonly _injector = inject(Injector);
 
   constructor(
     elementRef: ElementRef,
