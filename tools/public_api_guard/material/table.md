@@ -27,7 +27,6 @@ import * as i1 from '@angular/material/core';
 import * as i2 from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 // @public
@@ -156,13 +155,11 @@ export class MatRowDef<T> extends CdkRowDef<T> {
 }
 
 // @public (undocumented)
-export class MatTable<T> extends CdkTable<T> implements OnInit {
+export class MatTable<T> extends CdkTable<T> {
     protected needsPositionStickyOnElement: boolean;
-    // (undocumented)
-    ngOnInit(): void;
     protected stickyCssClass: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTable<any>, "mat-table, table[mat-table]", ["matTable"], {}, {}, never, ["caption", "colgroup, col"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTable<any>, "mat-table, table[mat-table]", ["matTable"], {}, {}, never, ["caption", "colgroup, col", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTable<any>, never>;
 }

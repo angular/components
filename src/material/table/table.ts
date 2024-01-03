@@ -6,13 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Directive,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 import {
   CdkTable,
   _CoalescedStyleScheduler,
@@ -48,18 +42,39 @@ export class MatRecycleRows {}
   // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
   // We can't reuse `CDK_TABLE_TEMPLATE` because it's incompatible with local compilation mode.
   template: `
-    <ng-content select="caption"></ng-content>
-    <ng-content select="colgroup, col"></ng-content>
-    <ng-container headerRowOutlet></ng-container>
-    <ng-container rowOutlet></ng-container>
-    <ng-container noDataRowOutlet></ng-container>
-    <ng-container footerRowOutlet></ng-container>
+    <ng-content select="caption"/>
+    <ng-content select="colgroup, col"/>
+
+    <!--
+      Unprojected content throws a hydration error so we need this to capture it.
+      It gets removed on the client so it doesn't affect the layout.
+    -->
+    @if (_isServer) {
+      <ng-content/>
+    }
+
+    @if (_isNativeHtmlTable) {
+      <thead role="rowgroup">
+        <ng-container headerRowOutlet/>
+      </thead>
+      <tbody class="mdc-data-table__content" role="rowgroup">
+        <ng-container rowOutlet/>
+        <ng-container noDataRowOutlet/>
+      </tbody>
+      <tfoot role="rowgroup">
+        <ng-container footerRowOutlet/>
+      </tfoot>
+    } @else {
+      <ng-container headerRowOutlet/>
+      <ng-container rowOutlet/>
+      <ng-container noDataRowOutlet/>
+      <ng-container footerRowOutlet/>
+    }
   `,
   styleUrls: ['table.css'],
   host: {
     'class': 'mat-mdc-table mdc-data-table__table',
     '[class.mdc-table-fixed-layout]': 'fixedLayout',
-    'ngSkipHydration': '',
   },
   providers: [
     {provide: CdkTable, useExisting: MatTable},
@@ -78,22 +93,10 @@ export class MatRecycleRows {}
   standalone: true,
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
-export class MatTable<T> extends CdkTable<T> implements OnInit {
+export class MatTable<T> extends CdkTable<T> {
   /** Overrides the sticky CSS class set by the `CdkTable`. */
   protected override stickyCssClass = 'mat-mdc-table-sticky';
 
   /** Overrides the need to add position: sticky on every sticky cell element in `CdkTable`. */
   protected override needsPositionStickyOnElement = false;
-
-  override ngOnInit() {
-    super.ngOnInit();
-
-    // After ngOnInit, the `CdkTable` has created and inserted the table sections (thead, tbody,
-    // tfoot). MDC requires the `mdc-data-table__content` class to be added to the body. Note that
-    // this only applies to native tables, because we don't wrap the content of flexbox-based ones.
-    if (this._isNativeHtmlTable) {
-      const tbody = this._elementRef.nativeElement.querySelector('tbody');
-      tbody.classList.add('mdc-data-table__content');
-    }
-  }
 }
