@@ -18,6 +18,7 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '@angular/material/core';
 import {
@@ -28,6 +29,7 @@ import {
   MAT_SLIDER,
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * The visual slider thumb.
@@ -95,6 +97,8 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
 
   /** The host native HTML input element. */
   _hostElement: HTMLElement;
+
+  private _platform = inject(Platform);
 
   constructor(
     readonly _cdr: ChangeDetectorRef,
@@ -188,6 +192,12 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     // Happens when the user starts dragging a thumb, tabs away, and then stops dragging.
     if (!this._sliderInput._isFocused) {
       this._hideRipple(this._focusRippleRef);
+    }
+
+    // On Safari we need to immediately re-show the hover ripple because
+    // sliders do not retain focus from pointer events on that platform.
+    if (this._platform.SAFARI) {
+      this._showHoverRipple();
     }
   };
 
