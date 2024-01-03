@@ -282,7 +282,7 @@ All components also support a theme mixin that can be used to include the compon
 theme dimensions at once. (For example, `@include mat.checkbox-theme($theme)`).
 
 The recommended approach is to rely on the `theme` mixins to lay down your base styles, and if
-needed us the single dimension mixins to override particular aspects for parts of your app (see the
+needed use the single dimension mixins to override particular aspects for parts of your app (see the
 section on [Multiple themes in one file](#multiple-themes-in-one-file).)
 
 ### Using a pre-built theme
