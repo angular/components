@@ -2,12 +2,9 @@ import * as worker from '@bazel/worker';
 import * as fs from 'fs';
 import * as path from 'path';
 import yargs from 'yargs';
+import {OutputStyle, compile} from 'sass';
 
 import {createLocalAngularPackageImporter} from './local-sass-importer';
-
-// TODO: Switch to normal import when https://github.com/sass/dart-sass/issues/1714 is fixed.
-// Also re-add the `as XX` type narrowing below.
-const sass = require('sass') as any;
 
 const workerArgs = process.argv.slice(2);
 
@@ -63,8 +60,8 @@ async function processBuildAction(args: string[]) {
     .option('style', {type: 'string'})
     .parseAsync();
 
-  const result = sass.compile(inputExecpath, {
-    style: style, // TODO: Re-add: as sass.OutputStyle,
+  const result = compile(inputExecpath, {
+    style: style as OutputStyle,
     sourceMap,
     sourceMapIncludeSources: embedSources,
     loadPaths: loadPath,
