@@ -476,6 +476,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   _onPointerUp(): void {
     if (this._isActive) {
       this._isActive = false;
+      if (this._platform.SAFARI) {
+        this._setIsFocused(false);
+      }
       this.dragEnd.emit({source: this, parent: this._slider, value: this.value});
 
       // This setTimeout is to prevent the pointerup from triggering a value
