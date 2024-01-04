@@ -508,7 +508,14 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-slider
 @function slider($systems, $exclude-hardcoded) {
+  $ripple-color: map.get($systems, md-sys-color, primary);
+  $hover-ripple-color: if($ripple-color == null, null, #{rgba($ripple-color, 0.05)});
+  $focus-ripple-color: if($ripple-color == null, null, #{rgba($ripple-color, 0.2)});
+
   @return (
+    ripple-color: $ripple-color,
+    hover-ripple-color: $hover-ripple-color,
+    focus-ripple-color: $focus-ripple-color,
     value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
     value-indicator-padding: _hardcode(0, $exclude-hardcoded),
     value-indicator-width: _hardcode(28px, $exclude-hardcoded),
