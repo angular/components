@@ -627,7 +627,13 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       pointerup();
       flush();
-      expect(isRippleVisible('focus')).toBeTrue();
+
+      // The slider immediately loses focus on pointerup for Safari.
+      if (platform.SAFARI) {
+        expect(isRippleVisible('hover')).toBeTrue();
+      } else {
+        expect(isRippleVisible('focus')).toBeTrue();
+      }
     }));
 
     it('should hide the focus ripple on blur', fakeAsync(() => {
