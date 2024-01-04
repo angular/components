@@ -6,8 +6,6 @@
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
-@use '../core/tokens/m2/mat/slide-toggle' as tokens-mat-slide-toggle;
-@use '../core/tokens/token-utils';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -58,16 +56,11 @@
   }
   @else {
     $mdc-switch-typography-tokens: tokens-mdc-switch.get-typography-tokens($theme);
-    $mat-slide-toggle-typography-tokens: tokens-mat-slide-toggle.get-typography-tokens($theme);
 
     // Add values for MDC slide toggle tokens
     .mat-mdc-slide-toggle {
       @include mdc-switch-theme.theme($mdc-switch-typography-tokens);
       @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
-      @include token-utils.create-token-values(
-          tokens-mat-slide-toggle.$prefix,
-          $mat-slide-toggle-typography-tokens
-      );
     }
   }
 }
@@ -108,7 +101,5 @@
 @mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     @include mdc-switch-theme.theme(map.get($tokens, tokens-mdc-switch.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-slide-toggle.$prefix, map.get($tokens, tokens-mat-slide-toggle.$prefix));
   }
 }
