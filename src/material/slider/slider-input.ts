@@ -98,12 +98,21 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     if (this._isActive) {
       return;
     }
-    this._hostElement.value = stringValue;
+    this._setValue(stringValue);
+  }
+
+  /**
+   * Handles programmatic value setting. This has been split out to
+   * allow the range thumb to override it and add additional necessary logic.
+   */
+  protected _setValue(value: string) {
+    this._hostElement.value = value;
     this._updateThumbUIByValue();
     this._slider._onValueChange(this);
     this._cdr.detectChanges();
     this._slider._cdr.markForCheck();
   }
+
   /** Event emitted when the `value` is changed. */
   @Output() readonly valueChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -792,5 +801,11 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
       this._updateWidthInactive();
       this._updateSibling();
     }
+  }
+
+  override _setValue(value: string) {
+    super._setValue(value);
+    this._updateWidthInactive();
+    this._updateSibling();
   }
 }
