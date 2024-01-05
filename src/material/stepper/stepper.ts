@@ -25,6 +25,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   OnDestroy,
@@ -53,6 +54,7 @@ import {
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
 import {NgTemplateOutlet} from '@angular/common';
+import {Platform} from '@angular/cdk/platform';
 
 @Component({
   selector: 'mat-step',
@@ -66,6 +68,9 @@ import {NgTemplateOutlet} from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CdkPortalOutlet],
+  host: {
+    'hidden': '', // Hide the steps so they don't affect the layout.
+  },
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
   private _isSelected = Subscription.EMPTY;
@@ -141,7 +146,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
     '[attr.aria-orientation]': 'orientation',
     'role': 'tablist',
-    'ngSkipHydration': '',
   },
   animations: [
     matStepperAnimations.horizontalStepTransition,
@@ -208,6 +212,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
   }
   private _animationDuration = '';
+
+  /** Whether the stepper is rendering on the server. */
+  protected _isServer: boolean = !inject(Platform).isBrowser;
 
   constructor(
     @Optional() dir: Directionality,
