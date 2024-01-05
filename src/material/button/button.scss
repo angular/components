@@ -30,7 +30,6 @@
     $mdc-text-button-slots: tokens-mdc-text-button.get-token-slots();
 
     @include mdc-button-text-theme.theme-styles($mdc-text-button-slots);
-    @include mdc-button-text-theme.theme(tokens-mdc-text-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-text-button.$prefix,
       tokens-mat-text-button.get-token-slots());
 
@@ -47,7 +46,6 @@
     $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
     @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
-    @include mdc-button-filled-theme.theme(tokens-mdc-filled-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-filled-button.$prefix,
       tokens-mat-filled-button.get-token-slots());
 
@@ -65,7 +63,6 @@
     $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
 
     @include mdc-button-protected-theme.theme-styles($mdc-button-protected-slots);
-    @include mdc-button-protected-theme.theme(tokens-mdc-protected-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-protected-button.$prefix,
       tokens-mat-protected-button.get-token-slots());
 
@@ -90,7 +87,6 @@
     $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
 
     @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
-    @include mdc-button-outlined-theme.theme(tokens-mdc-outlined-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-outlined-button.$prefix,
       tokens-mat-outlined-button.get-token-slots());
 
