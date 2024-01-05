@@ -17,10 +17,6 @@ $prefix: (mdc, text-button);
   @return (
     container-shape: 4px,
 
-    // TODO: `container-height` is also included so it has a default value to
-    // prevent the buttons from collapsing if a density mixin isn't included.
-    container-height: 36px,
-
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
