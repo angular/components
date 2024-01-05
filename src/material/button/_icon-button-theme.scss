@@ -43,19 +43,21 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
   @else {
-    .mat-mdc-icon-button {
+    @include sass-utils.current-selector-or-root() {
       @include _icon-button-variant($theme, null);
 
-      &.mat-primary {
-        @include _icon-button-variant($theme, primary);
-      }
+      .mat-mdc-icon-button {
+        &.mat-primary {
+          @include _icon-button-variant($theme, primary);
+        }
 
-      &.mat-accent {
-        @include _icon-button-variant($theme, accent);
-      }
+        &.mat-accent {
+          @include _icon-button-variant($theme, accent);
+        }
 
-      &.mat-warn {
-        @include _icon-button-variant($theme, warn);
+        &.mat-warn {
+          @include _icon-button-variant($theme, warn);
+        }
       }
     }
   }
