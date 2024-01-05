@@ -1,6 +1,6 @@
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, Input, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
@@ -11,7 +11,7 @@ import {
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatTabsModule} from '../module';
-import {MatTabLink, MatTabNav} from './tab-nav-bar';
+import {MatTabLink, MatTabNav, MatTabNavPanel} from './tab-nav-bar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_TABS_CONFIG} from '../index';
 
@@ -492,6 +492,34 @@ describe('MatTabNavBar with a default config', () => {
     expect(indicatorElement.parentElement).toBeTruthy();
     expect(indicatorElement.parentElement).toBe(contentElement);
   });
+});
+it('allows tab panel to be in component above nav bar', () => {
+  @Component({
+    standalone: true,
+    selector: 'nav-wrapper',
+    imports: [MatTabsModule],
+    template: `
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <a mat-tab-link [active]="true"> link </a>
+    </nav>
+    `,
+  })
+  class NavWrapper {
+    @Input() tabPanel!: MatTabNavPanel;
+  }
+
+  @Component({
+    standalone: true,
+    imports: [MatTabsModule, NavWrapper],
+    template: `
+    <mat-tab-nav-panel #tabPanel />
+    <nav-wrapper [tabPanel]="tabPanel" />
+    `,
+  })
+  class TabPanelCmp {}
+
+  const comp = TestBed.createComponent(TabPanelCmp);
+  expect(() => comp.detectChanges()).not.toThrow();
 });
 
 describe('MatTabNavBar with enabled animations', () => {
