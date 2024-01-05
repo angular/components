@@ -81,7 +81,21 @@
 }
 
 @mixin base($theme) {
-  // TODO(mmalerba): Move button base tokens here
+  @if inspection.get-theme-version($theme) == 1 {
+    // TODO(crisbeto): emit M3 base tokens here.
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include mdc-button-text-theme.theme(
+        tokens-mdc-text-button.get-unthemable-tokens());
+      @include mdc-button-filled-theme.theme(
+        tokens-mdc-filled-button.get-unthemable-tokens());
+      @include mdc-button-protected-theme.theme(
+        tokens-mdc-protected-button.get-unthemable-tokens());
+      @include mdc-button-outlined-theme.theme(
+        tokens-mdc-outlined-button.get-unthemable-tokens());
+    }
+  }
 }
 
 @mixin color($theme) {
