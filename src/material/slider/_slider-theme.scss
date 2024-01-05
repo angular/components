@@ -46,11 +46,19 @@
     );
 
     .mat-accent {
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent),
+      );
       @include mdc-slider-theme.theme(
         tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
     }
 
       .mat-warn {
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn),
+        );
         @include mdc-slider-theme.theme(
             tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
       }
