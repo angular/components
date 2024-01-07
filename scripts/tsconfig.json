@@ -11,8 +11,5 @@
     "skipLibCheck": true,
     "downlevelIteration": true,
     "esModuleInterop": true
-  },
-  // The `firebase-functions` folder has its own `package.json` and does
-  // not pass type-checking. This excludes it from being checked.
-  "exclude": ["caretaking/firebase-functions/**"]
+  }
 }
