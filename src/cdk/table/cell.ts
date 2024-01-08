@@ -191,7 +191,7 @@ export class CdkHeaderCell extends BaseCdkCell {
 export class CdkFooterCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
-    const role = columnDef._table?._cellRole;
+    const role = columnDef._table?._getCellRole();
     if (role) {
       elementRef.nativeElement.setAttribute('role', role);
     }
@@ -209,7 +209,7 @@ export class CdkFooterCell extends BaseCdkCell {
 export class CdkCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
-    const role = columnDef._table?._cellRole;
+    const role = columnDef._table?._getCellRole();
     if (role) {
       elementRef.nativeElement.setAttribute('role', role);
     }
