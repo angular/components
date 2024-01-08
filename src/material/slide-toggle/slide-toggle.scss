@@ -6,8 +6,6 @@
 @use '../core/style/layout-common';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/tokens/m2/mdc/switch' as m2-mdc-switch;
-@use '../core/tokens/m2/mat/slide-toggle' as mat-slide-toggle-tokens;
-@use '../core/tokens/token-utils';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   $mdc-switch-token-slots: m2-mdc-switch.get-token-slots();
@@ -34,21 +32,6 @@
 
     &:disabled .mdc-switch__shadow {
       box-shadow: var(--mdc-switch-disabled-handle-elevation-shadow);
-    }
-  }
-
-
-  // Add slots for custom Angular Material slide-toggle tokens.
-  @include token-utils.use-tokens(
-    mat-slide-toggle-tokens.$prefix,
-    mat-slide-toggle-tokens.get-token-slots()
-  ) {
-    .mat-mdc-slide-toggle .mdc-label {
-      @include token-utils.create-token-slot(font-family, label-text-font);
-      @include token-utils.create-token-slot(font-size, label-text-size);
-      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
-      @include token-utils.create-token-slot(line-height, label-text-line-height);
-      @include token-utils.create-token-slot(font-weight, label-text-weight);
     }
   }
 }
