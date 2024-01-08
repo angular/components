@@ -1,3 +1,13 @@
+<!--
+  We need to project the content somewhere to avoid hydration errors. Some observations:
+  1. This is only necessary on the server.
+  2. We get a hydration error if there aren't any nodes after the `ng-content`.
+  3. We get a hydration error if `ng-content` is wrapped in another element.
+-->
+@if (_isServer) {
+  <ng-content/>
+}
+
 @switch (orientation) {
   @case ('horizontal') {
     <div class="mat-horizontal-stepper-wrapper">
