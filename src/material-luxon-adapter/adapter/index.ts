@@ -31,8 +31,7 @@ export * from './luxon-date-formats';
 export class LuxonDateModule {}
 
 @NgModule({
-  imports: [LuxonDateModule],
-  providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS}],
+  providers: [provideLuxonDateAdapter()],
 })
 export class MatLuxonDateModule {}
 

@@ -31,8 +31,7 @@ export * from './date-fns-formats';
 export class DateFnsModule {}
 
 @NgModule({
-  imports: [DateFnsModule],
-  providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_FORMATS}],
+  providers: [provideDateFnsAdapter()],
 })
 export class MatDateFnsModule {}
 

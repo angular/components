@@ -35,8 +35,7 @@ export * from './moment-date-formats';
 export class MomentDateModule {}
 
 @NgModule({
-  imports: [MomentDateModule],
-  providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}],
+  providers: [provideMomentDateAdapter()],
 })
 export class MatMomentDateModule {}
 
