@@ -33,7 +33,6 @@ import {Observable, Subject} from 'rxjs';
 import {AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {AnimationEvent} from '@angular/animations';
-import {take} from 'rxjs/operators';
 import {MatSnackBarConfig} from './snack-bar-config';
 
 let uniqueId = 0;
@@ -228,15 +227,13 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   }
 
   /**
-   * Waits for the zone to settle before removing the element. Helps prevent
-   * errors where we end up removing an element which is in the middle of an animation.
+   * Removes the element in a microtask. Helps prevent errors where we end up
+   * removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    this._ngZone.onMicrotaskEmpty.pipe(take(1)).subscribe(() => {
-      this._ngZone.run(() => {
-        this._onExit.next();
-        this._onExit.complete();
-      });
+    queueMicrotask(() => {
+      this._onExit.next();
+      this._onExit.complete();
     });
   }
 
