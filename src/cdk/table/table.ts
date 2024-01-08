@@ -435,6 +435,19 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   /** Whether the table has rendered out all the outlets for the first time. */
   private _hasRendered = false;
 
+  /** Aria role to apply to the table's cells based on the table's own role. */
+  get _cellRole(): string | null {
+    if (this._cellRoleInternal === undefined) {
+      // Perform this lazily in case the table's role was updated by a directive after construction.
+      const role = this._elementRef.nativeElement.getAttribute('role');
+      const cellRole = role === 'grid' || role === 'treegrid' ? 'gridcell' : 'cell';
+      this._cellRoleInternal = this._isNativeHtmlTable && cellRole === 'cell' ? null : cellRole;
+    }
+
+    return this._cellRoleInternal;
+  }
+  private _cellRoleInternal: string | null | undefined = undefined;
+
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
    * to `ngFor` `trackBy` function. Optimize row operations by identifying a row based on its data

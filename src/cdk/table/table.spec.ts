@@ -537,6 +537,27 @@ describe('CdkTable', () => {
     ]);
   });
 
+  it('defaults to table role in native HTML table', () => {
+    const fixture = createComponent(NativeHtmlTableApp);
+    const tableElement = fixture.nativeElement.querySelector('table');
+    fixture.detectChanges();
+    expect(tableElement.getAttribute('role')).toBe('table');
+
+    expect(getHeaderRows(tableElement)[0].getAttribute('role')).toBe('row');
+    const header = getHeaderRows(tableElement)[0];
+    getHeaderCells(header).forEach(cell => {
+      expect(cell.getAttribute('role')).toBe('columnheader');
+    });
+
+    getRows(tableElement).forEach(row => {
+      expect(row.getAttribute('role')).toBe('row');
+      getCells(row).forEach(cell => {
+        // Native role of TD elements is row.
+        expect(cell.getAttribute('role')).toBe(null);
+      });
+    });
+  });
+
   it('should be able to nest tables', () => {
     const thisFixture = createComponent(NestedHtmlTableApp);
     thisFixture.detectChanges();
