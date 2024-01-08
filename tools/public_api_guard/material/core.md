@@ -252,7 +252,7 @@ export class MatNativeDateModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatNativeDateModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, [typeof NativeDateModule], never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, never, never>;
 }
 
 // @public
