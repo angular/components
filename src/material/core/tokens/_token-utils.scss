@@ -156,9 +156,11 @@ $_component-prefix: null;
 }
 
 /// Gets the token values for the given components prefix with the given options.
-/// @param {Map} The full token map.
-/// @param {List} The component prefix to get the token values for.
+/// @param {Map} $tokens The full token map.
+/// @param {List} $prefix The component prefix to get the token values for.
 /// @param {ArgList} Any additional options
+///   Currently the additional supported options are:
+//     - $color-variant (The color variant to use for the component)
 /// @throws If given options are invalid
 /// @return {Map} The token values for the requested component.
 @function get-tokens-for($tokens, $prefix, $options...) {
