@@ -40,22 +40,27 @@
   // Add values for MDC slider tokens.
   @include sass-utils.current-selector-or-root() {
     @include mdc-slider-theme.theme($mdc-color-tokens);
-    @include _slider-ripple-color($theme, primary);
     @include token-utils.create-token-values(
       tokens-mat-slider.$prefix,
       $mat-slider-color-tokens
     );
 
     .mat-accent {
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent),
+      );
       @include mdc-slider-theme.theme(
         tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
-      @include _slider-ripple-color($theme, accent);
     }
 
       .mat-warn {
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn),
+        );
         @include mdc-slider-theme.theme(
             tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
-        @include _slider-ripple-color($theme, warn);
       }
     }
   }
@@ -103,15 +108,6 @@
       }
     }
   }
-}
-
-// Generated MDC ripple color tokens are not being calculated so needs to be set
-@mixin _slider-ripple-color($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-
-  --mat-mdc-slider-ripple-color: #{$color};
-  --mat-mdc-slider-hover-ripple-color: #{rgba($color, 0.05)};
-  --mat-mdc-slider-focus-ripple-color: #{rgba($color, 0.2)};
 }
 
 @mixin _theme-from-tokens($tokens) {

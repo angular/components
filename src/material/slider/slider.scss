@@ -115,23 +115,23 @@ $mat-slider-horizontal-margin: 8px !default;
         @include token-utils.create-token-slot(width, value-indicator-width);
         @include token-utils.create-token-slot(transform, value-indicator-text-transform);
       }
-    }
 
-    // The `.mat-ripple` wrapper here is redundant, but we need it to
-    // increase the specificity due to how some styles are setup in g3.
-    .mat-ripple {
-      // These ripple colors are custom so we have to introduce our own tokens.
-      .mat-ripple-element {
-        background-color: var(--mat-mdc-slider-ripple-color, transparent);
-      }
+      // The `.mat-ripple` wrapper here is redundant, but we need it to
+      // increase the specificity due to how some styles are setup in g3.
+      .mat-ripple {
+        // These ripple colors are custom so we have to introduce our own tokens.
+        .mat-ripple-element {
+          @include token-utils.create-token-slot(background-color, ripple-color);
+        }
 
-      .mat-mdc-slider-hover-ripple {
-        background-color: var(--mat-mdc-slider-hover-ripple-color, transparent);
-      }
+        .mat-mdc-slider-hover-ripple {
+          @include token-utils.create-token-slot(background-color, hover-state-layer-color);
+        }
 
-      .mat-mdc-slider-focus-ripple,
-      .mat-mdc-slider-active-ripple {
-        background-color: var(--mat-mdc-slider-focus-ripple-color, transparent);
+        .mat-mdc-slider-focus-ripple,
+        .mat-mdc-slider-active-ripple {
+          @include token-utils.create-token-slot(background-color, focus-state-layer-color);
+        }
       }
     }
 
