@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../../token-utils';
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
@@ -21,11 +22,28 @@ $prefix: (mat, slider);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
+  @return map.merge(
+    $theme-color-tokens,
+    (
+      // Opacity of value indicator text container
+      value-indicator-opacity: if($is-dark, 0.9, 0.6)
+    ),
+  );
+}
+
+// Generates tokens for the slider properties that change based on the theme.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $ripple-color: inspection.get-theme-color($theme, $palette-name);
+  $hover-ripple-color: if($ripple-color == null, null, #{rgba($ripple-color, 0.05)});
+  $focus-ripple-color: if($ripple-color == null, null, #{rgba($ripple-color, 0.2)});
+
   @return (
-    // Opacity of value indicator text container
-    value-indicator-opacity: if($is-dark, 0.9, 0.6)
+    ripple-color: $ripple-color,
+    hover-state-layer-color: $hover-ripple-color,
+    focus-state-layer-color: $focus-ripple-color
   );
 }
 
