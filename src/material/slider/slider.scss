@@ -125,12 +125,12 @@ $mat-slider-horizontal-margin: 8px !default;
         }
 
         .mat-mdc-slider-hover-ripple {
-          @include token-utils.create-token-slot(background-color, ripple-hover-state-layer-color);
+          @include token-utils.create-token-slot(background-color, hover-state-layer-color);
         }
 
         .mat-mdc-slider-focus-ripple,
         .mat-mdc-slider-active-ripple {
-          @include token-utils.create-token-slot(background-color, ripple-focus-state-layer-color);
+          @include token-utils.create-token-slot(background-color, focus-state-layer-color);
         }
       }
     }
