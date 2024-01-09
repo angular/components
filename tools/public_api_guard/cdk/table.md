@@ -296,7 +296,6 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
     addRowDef(rowDef: CdkRowDef<T>): void;
-    get _cellRole(): string | null;
     // (undocumented)
     protected readonly _changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -319,6 +318,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     set fixedLayout(value: boolean);
     // (undocumented)
     _footerRowOutlet: FooterRowOutlet;
+    _getCellRole(): string | null;
     _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[];
     _getRowDefs(data: T, dataIndex: number): CdkRowDef<T>[];
     // (undocumented)

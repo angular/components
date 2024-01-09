@@ -436,7 +436,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _hasRendered = false;
 
   /** Aria role to apply to the table's cells based on the table's own role. */
-  get _cellRole(): string | null {
+  _getCellRole(): string | null {
     if (this._cellRoleInternal === undefined) {
       // Perform this lazily in case the table's role was updated by a directive after construction.
       const role = this._elementRef.nativeElement.getAttribute('role');
