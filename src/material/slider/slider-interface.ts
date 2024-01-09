@@ -121,18 +121,6 @@ export interface _MatSlider {
    */
   _inputPadding: number;
 
-  /**
-   * The offset represents left most translateX of the slider knob. Inversely,
-   * (slider width - offset) = the right most translateX of the slider knob.
-   *
-   * Note:
-   *    * The native slider knob differs from the visual slider. It's knob cannot slide past
-   *      the end of the track AT ALL.
-   *    * The visual slider knob CAN slide past the end of the track slightly. It's knob can slide
-   *      past the end of the track such that it's center lines up with the end of the track.
-   */
-  _inputOffset: number;
-
   /** The radius of the visual slider's ripple. */
   _rippleRadius: number;
 

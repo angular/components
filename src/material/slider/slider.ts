@@ -427,7 +427,6 @@ export class MatSlider
   _knobRadius: number = 8;
 
   _inputPadding: number;
-  _inputOffset: number;
 
   ngAfterViewInit(): void {
     if (this._platform.isBrowser) {
@@ -450,7 +449,6 @@ export class MatSlider
     const thumb = this._getThumb(_MatThumb.END);
     this._rippleRadius = thumb._ripple.radius;
     this._inputPadding = this._rippleRadius - this._knobRadius;
-    this._inputOffset = this._knobRadius;
 
     this._isRange
       ? this._initUIRange(eInput as _MatSliderRangeThumb, sInput as _MatSliderRangeThumb)
