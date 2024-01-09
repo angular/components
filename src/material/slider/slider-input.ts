@@ -130,7 +130,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   get translateX(): number {
     if (this._slider.min >= this._slider.max) {
-      this._translateX = 0;
+      this._translateX = this._tickMarkOffset;
       return this._translateX;
     }
     if (this._translateX === undefined) {
@@ -215,6 +215,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   /** The radius of a native html slider's knob. */
   _knobRadius: number = 8;
+
+  /** The distance in px from the start of the slider track to the first tick mark. */
+  _tickMarkOffset = 3;
 
   /** Whether user's cursor is currently in a mouse down state on the input. */
   _isActive: boolean = false;
@@ -490,15 +493,22 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _clamp(v: number): number {
-    return Math.max(Math.min(v, this._slider._cachedWidth), 0);
+    const min = this._tickMarkOffset;
+    const max = this._slider._cachedWidth - this._tickMarkOffset;
+    return Math.max(Math.min(v, max), min);
   }
 
   _calcTranslateXByValue(): number {
     if (this._slider._isRtl) {
-      return (1 - this.percentage) * this._slider._cachedWidth;
+      return (
+        (1 - this.percentage) * (this._slider._cachedWidth - this._tickMarkOffset * 2) +
+        this._tickMarkOffset
+      );
     }
-    const tickMarkOffset = 3; // The spaces before & after the start & end tick marks.
-    return this.percentage * (this._slider._cachedWidth - tickMarkOffset * 2) + tickMarkOffset;
+    return (
+      this.percentage * (this._slider._cachedWidth - this._tickMarkOffset * 2) +
+      this._tickMarkOffset
+    );
   }
 
   _calcTranslateXByPointerEvent(event: PointerEvent): number {
@@ -509,19 +519,18 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    * Used to set the slider width to the correct
    * dimensions while the user is dragging.
    */
-  _updateWidthActive(): void {
-    this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
-    this._hostElement.style.width = `calc(100% + ${this._slider._inputPadding}px)`;
-  }
+  _updateWidthActive(): void {}
 
   /**
    * Sets the slider input to disproportionate dimensions to allow for touch
    * events to be captured on touch devices.
    */
   _updateWidthInactive(): void {
-    this._hostElement.style.padding = '0px';
-    this._hostElement.style.width = 'calc(100% + 48px)';
-    this._hostElement.style.left = '-24px';
+    this._hostElement.style.padding = `0 ${this._slider._inputPadding}px`;
+    this._hostElement.style.width = `calc(100% + ${
+      this._slider._inputPadding - this._tickMarkOffset * 2
+    }px)`;
+    this._hostElement.style.left = `-${this._slider._rippleRadius - this._tickMarkOffset}px`;
   }
 
   _updateThumbUIByValue(options?: {withAnimation: boolean}): void {
@@ -617,7 +626,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     if (!this._isLeftThumb && sibling) {
       return sibling.translateX;
     }
-    return 0;
+    return this._tickMarkOffset;
   }
 
   /**
@@ -629,7 +638,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     if (this._isLeftThumb && sibling) {
       return sibling.translateX;
     }
-    return this._slider._cachedWidth;
+    return this._slider._cachedWidth - this._tickMarkOffset;
   }
 
   _setIsLeftThumb(): void {
@@ -725,7 +734,8 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   override _updateWidthActive(): void {
     const minWidth = this._slider._rippleRadius * 2 - this._slider._inputPadding * 2;
-    const maxWidth = this._slider._cachedWidth + this._slider._inputPadding - minWidth;
+    const maxWidth =
+      this._slider._cachedWidth + this._slider._inputPadding - minWidth - this._tickMarkOffset * 2;
     const percentage =
       this._slider.min < this._slider.max
         ? (this.max - this.min) / (this._slider.max - this._slider.min)
@@ -740,7 +750,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     if (!sibling) {
       return;
     }
-    const maxWidth = this._slider._cachedWidth;
+    const maxWidth = this._slider._cachedWidth - this._tickMarkOffset * 2;
     const midValue = this._isEndThumb
       ? this.value - (this.value - sibling.value) / 2
       : this.value + (sibling.value - this.value) / 2;
@@ -768,11 +778,11 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     this._hostElement.style.padding = '0px';
 
     if (this._isLeftThumb) {
-      this._hostElement.style.left = '-24px';
+      this._hostElement.style.left = `-${this._slider._rippleRadius - this._tickMarkOffset}px`;
       this._hostElement.style.right = 'auto';
     } else {
       this._hostElement.style.left = 'auto';
-      this._hostElement.style.right = '-24px';
+      this._hostElement.style.right = `-${this._slider._rippleRadius - this._tickMarkOffset}px`;
     }
   }
 

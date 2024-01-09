@@ -60,15 +60,23 @@ describe('MDC-based MatSlider', () => {
     expect(input.max).withContext('max').toBe(max);
     expect(input.value).withContext('value').toBe(value);
 
-    // Note: This ±6 is here to account for the slight shift of the slider
-    // thumb caused by the tick marks being 3px away from the track start
-    // and end.
+    // The discrepancy between the "ideal" and "actual" translateX comes from
+    // the 3px offset from the start & end of the slider track to the first
+    // and last tick marks.
     //
-    // This check is meant to ensure the "ideal" estimate is within 3px of the
-    // actual slider thumb position.
-    expect(input.translateX - 6 < translateX && input.translateX + 6 > translateX)
+    // The "actual" translateX is calculated based on a slider that is 6px
+    // smaller than the width of the slider. Using this "actual" translateX in
+    // tests would make it even more difficult than it already is to tell if
+    // the translateX is off, so we abstract things in here so tests can be
+    // more intuitive.
+    //
+    // The most clear way to compare the two tx's is to just turn them into
+    // percentages by dividing by their (total height) / 100.
+    const idealTXPercentage = Math.round(translateX / 3);
+    const actualTXPercentage = Math.round((input.translateX - 3) / 2.94);
+    expect(actualTXPercentage)
       .withContext(`translateX: ${input.translateX} should be close to ${translateX}`)
-      .toBeTrue();
+      .toBe(idealTXPercentage);
     if (step !== undefined) {
       expect(input.step).withContext('step').toBe(step);
     }
