@@ -92,9 +92,8 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   position: relative;
 
   @include token-utils.use-tokens($_tokens...) {
-
     // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
-    .mat-datepicker-content & {
+    .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
       @include token-utils.create-token-slot(color, calendar-navigation-button-icon-color);
     }
   }
