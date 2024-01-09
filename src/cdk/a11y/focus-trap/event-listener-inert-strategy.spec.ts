@@ -60,8 +60,7 @@ function createComponent<T>(
   providers: Provider[] = [],
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
-    imports: [A11yModule],
-    declarations: [componentType],
+    imports: [A11yModule, componentType],
     providers: providers,
   }).compileComponents();
 
@@ -75,7 +74,8 @@ function createComponent<T>(
       <input #firstFocusable>
       <button #secondFocusable>SAVE</button>
     </div>
-    `,
+  `,
+  standalone: true,
 })
 class SimpleFocusTrap implements AfterViewInit {
   @ViewChild('focusTrapElement') focusTrapElement!: ElementRef<HTMLElement>;

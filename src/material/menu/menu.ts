@@ -47,6 +47,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {matMenuAnimations} from './menu-animations';
+import {NgClass} from '@angular/common';
 
 let menuPanelUid = 0;
 
@@ -104,10 +105,11 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
-    'ngSkipHydration': '',
   },
   animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
   providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
+  standalone: true,
+  imports: [NgClass],
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;

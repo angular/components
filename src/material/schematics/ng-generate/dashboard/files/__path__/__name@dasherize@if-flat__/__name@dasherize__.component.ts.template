@@ -1,6 +1,7 @@
 import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';<% if(standalone) { %>
+import { AsyncPipe } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,14 +14,15 @@ import { MatCardModule } from '@angular/material/card';<% } %>
     <%= indentTextContent(resolvedFiles.template, 4) %>
   `,<% } else { %>
   templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
-  styles: [`
+  styles: `
     <%= indentTextContent(resolvedFiles.stylesheet, 4) %>
-  `]<% } else { %>
-  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
+  `<% } else { %>
+  styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
   standalone: true,
   imports: [
+    AsyncPipe,
     MatGridListModule,
     MatMenuModule,
     MatIconModule,

@@ -2,7 +2,13 @@ import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatDialog, MatDialogModule, MatDialogConfig} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogConfig,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogHarness} from './dialog-harness';
 
@@ -12,8 +18,7 @@ describe('MatDialogHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, NoopAnimationsModule],
-      declarations: [DialogHarnessTest],
+      imports: [NoopAnimationsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DialogHarnessTest);
@@ -117,6 +122,8 @@ describe('MatDialogHarness', () => {
     </div>
   </ng-template>
   `,
+  standalone: true,
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions],
 })
 class DialogHarnessTest {
   @ViewChild(TemplateRef) dialogTmpl: TemplateRef<any>;

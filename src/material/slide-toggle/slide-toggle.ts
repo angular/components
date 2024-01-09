@@ -19,21 +19,34 @@ import {
   Inject,
   Input,
   numberAttribute,
+  OnChanges,
   OnDestroy,
   Optional,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 
-/** @docs-private */
+/**
+ * @deprecated Will stop being exported.
+ * @breaking-change 19.0.0
+ */
 export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatSlideToggle),
@@ -57,7 +70,6 @@ let nextUniqueId = 0;
   selector: 'mat-slide-toggle',
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
   host: {
     'class': 'mat-mdc-slide-toggle',
     '[id]': 'id',
@@ -74,11 +86,23 @@ let nextUniqueId = 0;
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
+  providers: [
+    MAT_SLIDE_TOGGLE_VALUE_ACCESSOR,
+    {
+      provide: NG_VALIDATORS,
+      useExisting: MatSlideToggle,
+      multi: true,
+    },
+  ],
+  standalone: true,
+  imports: [MatRipple, _MatInternalFormField],
 })
-export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValueAccessor {
+export class MatSlideToggle
+  implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
+{
   private _onChange = (_: any) => {};
   private _onTouched = () => {};
+  private _validatorOnChange = () => {};
 
   private _uniqueId: string;
   private _checked: boolean = false;
@@ -208,6 +232,12 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValue
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['required']) {
+      this._validatorOnChange();
+    }
+  }
+
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
@@ -225,6 +255,16 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, ControlValue
   /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
+  }
+
+  /** Implemented as a part of Validator. */
+  validate(control: AbstractControl<boolean>): ValidationErrors | null {
+    return this.required && control.value !== true ? {'required': true} : null;
+  }
+
+  /** Implemented as a part of Validator. */
+  registerOnValidatorChange(fn: () => void): void {
+    this._validatorOnChange = fn;
   }
 
   /** Implemented as a part of ControlValueAccessor. */

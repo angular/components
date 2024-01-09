@@ -16,8 +16,7 @@ describe('CdkTextColumn', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule],
-      declarations: [BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
+      imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
     }).compileComponents();
   }));
 
@@ -102,8 +101,7 @@ describe('CdkTextColumn', () => {
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [CdkTableModule],
-        declarations: [BasicTextColumnApp],
+        imports: [CdkTableModule, BasicTextColumnApp],
         providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}],
       });
 
@@ -165,6 +163,8 @@ interface TestData {
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
   `,
+  standalone: true,
+  imports: [CdkTableModule],
 })
 class BasicTextColumnApp {
   displayedColumns = ['propertyA', 'propertyB', 'propertyC'];
@@ -183,6 +183,8 @@ class BasicTextColumnApp {
   template: `
     <cdk-text-column name="column-a"></cdk-text-column>
   `,
+  standalone: true,
+  imports: [CdkTableModule],
 })
 class MissingTableApp {}
 
@@ -195,5 +197,7 @@ class MissingTableApp {}
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
   `,
+  standalone: true,
+  imports: [CdkTableModule],
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {}

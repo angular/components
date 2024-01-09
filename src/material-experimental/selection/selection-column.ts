@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MatCellDef, MatColumnDef, MatHeaderCellDef, MatTable} from '@angular/material/table';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatTable,
+} from '@angular/material/table';
 import {
   Component,
   Input,
@@ -18,8 +25,12 @@ import {
   ViewEncapsulation,
   Inject,
 } from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 
 import {MatSelection} from './selection';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {MatSelectionToggle} from './selection-toggle';
+import {MatSelectAll} from './select-all';
 
 /**
  * Column that adds row selecting checkboxes and a select-all checkbox if `matSelectionMultiple` is
@@ -32,10 +43,12 @@ import {MatSelection} from './selection';
   template: `
     <ng-container matColumnDef>
       <th mat-header-cell *matHeaderCellDef class="mat-selection-column-header">
-        <mat-checkbox *ngIf="selection.multiple"
-            matSelectAll
-            #allToggler="matSelectAll"
-            [indeterminate]="allToggler.indeterminate | async"></mat-checkbox>
+        @if (selection.multiple) {
+          <mat-checkbox
+              matSelectAll
+              #allToggler="matSelectAll"
+              [indeterminate]="allToggler.indeterminate | async"></mat-checkbox>
+        }
       </th>
       <td mat-cell *matCellDef="let row; let i = $index" class="mat-selection-column-cell">
         <mat-checkbox
@@ -48,6 +61,18 @@ import {MatSelection} from './selection';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['selection-column.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCheckbox,
+    MatSelectAll,
+    MatCellDef,
+    MatCell,
+    MatSelectionToggle,
+    AsyncPipe,
+  ],
 })
 export class MatSelectionColumn<T> implements OnInit, OnDestroy {
   /** Column name that should be used to reference this column. */

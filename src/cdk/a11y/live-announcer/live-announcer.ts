@@ -220,6 +220,7 @@ export class LiveAnnouncer implements OnDestroy {
 @Directive({
   selector: '[cdkAriaLive]',
   exportAs: 'cdkAriaLive',
+  standalone: true,
 })
 export class CdkAriaLive implements OnDestroy {
   /** The aria-live politeness level to use when announcing messages. */

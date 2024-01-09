@@ -22,11 +22,9 @@ import {
   IterableDiffers,
   OnDestroy,
   OnInit,
+  booleanAttribute,
+  numberAttribute,
 } from '@angular/core';
-import {CanDisable, HasTabIndex, mixinDisabled, mixinTabIndex} from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-
-const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 
 /**
  * Wrapper for the CdkTree node with Material design styles.
@@ -34,16 +32,23 @@ const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 @Directive({
   selector: 'mat-tree-node',
   exportAs: 'matTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}],
   host: {
     'class': 'mat-tree-node',
   },
+  standalone: true,
 })
-export class MatTreeNode<T, K = T>
-  extends _MatTreeNodeBase<T, K>
-  implements CanDisable, HasTabIndex, OnInit, OnDestroy
-{
+export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
+  /** Whether the node is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
+
+  /** Tabindex of the node. */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number;
+
   constructor(
     elementRef: ElementRef<HTMLElement>,
     tree: CdkTree<T, K>,
@@ -72,6 +77,7 @@ export class MatTreeNode<T, K = T>
   selector: '[matTreeNodeDef]',
   inputs: ['when: matTreeNodeDefWhen'],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
+  standalone: true,
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
@@ -83,7 +89,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 @Directive({
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
     {provide: CdkTreeNode, useExisting: MatNestedTreeNode},
@@ -92,6 +97,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   host: {
     'class': 'mat-nested-tree-node',
   },
+  standalone: true,
 })
 export class MatNestedTreeNode<T, K = T>
   extends CdkNestedTreeNode<T, K>
@@ -100,14 +106,8 @@ export class MatNestedTreeNode<T, K = T>
   @Input('matNestedTreeNode') node: T;
 
   /** Whether the node is disabled. */
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
 
   /** Tabindex for the node. */
   @Input()

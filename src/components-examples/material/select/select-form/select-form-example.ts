@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
-import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
@@ -22,7 +21,7 @@ interface Car {
   selector: 'select-form-example',
   templateUrl: 'select-form-example.html',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule, NgFor, MatInputModule],
+  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
 export class SelectFormExample {
   selectedValue: string;

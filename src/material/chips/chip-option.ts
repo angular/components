@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,9 +15,11 @@ import {
   ViewEncapsulation,
   OnInit,
   inject,
+  booleanAttribute,
 } from '@angular/core';
 import {MatChip} from './chip';
 import {MAT_CHIP, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MatChipAction} from './chip-action';
 
 /** Event object emitted by MatChipOption when selected or deselected. */
 export class MatChipSelectionChange {
@@ -42,7 +43,6 @@ export class MatChipSelectionChange {
   selector: 'mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]',
   templateUrl: 'chip-option.html',
   styleUrls: ['chip.css'],
-  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-option',
     '[class.mdc-evolution-chip]': '!_isBasicChip',
@@ -77,6 +77,8 @@ export class MatChipSelectionChange {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatChipAction],
 })
 export class MatChipOption extends MatChip implements OnInit {
   /** Default chip options. */
@@ -99,23 +101,23 @@ export class MatChipOption extends MatChip implements OnInit {
    * ignored. By default an option chip is selectable, and it becomes
    * non-selectable if its parent chip list is not selectable.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   get selectable(): boolean {
     return this._selectable && this.chipListSelectable;
   }
-  set selectable(value: BooleanInput) {
-    this._selectable = coerceBooleanProperty(value);
+  set selectable(value: boolean) {
+    this._selectable = value;
     this._changeDetectorRef.markForCheck();
   }
   protected _selectable: boolean = true;
 
   /** Whether the chip is selected. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get selected(): boolean {
     return this._selected;
   }
-  set selected(value: BooleanInput) {
-    this._setSelectedState(coerceBooleanProperty(value), false, true);
+  set selected(value: boolean) {
+    this._setSelectedState(value, false, true);
   }
   private _selected = false;
 

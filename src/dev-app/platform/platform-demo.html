@@ -9,5 +9,7 @@
 
 <p>
   Supported input types:
-  <span *ngFor="let type of supportedInputTypes">{{type}}, </span>
+  @for (type of supportedInputTypes; track type) {
+    <span>{{type}}, </span>
+  }
 </p>

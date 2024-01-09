@@ -13,8 +13,7 @@ describe('MatGridListHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatGridListModule, NoopAnimationsModule],
-      declarations: [GridListHarnessTest],
+      imports: [MatGridListModule, NoopAnimationsModule, GridListHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GridListHarnessTest);
@@ -151,7 +150,9 @@ describe('MatGridListHarness', () => {
     <mat-grid-list [cols]="columns">
       <mat-grid-tile>
         <mat-grid-tile-header>{{firstTileText}}</mat-grid-tile-header>
-        <mat-grid-tile-footer *ngIf="showFooter">Footer</mat-grid-tile-footer>
+        @if (showFooter) {
+          <mat-grid-tile-footer>Footer</mat-grid-tile-footer>
+        }
       </mat-grid-tile>
       <mat-grid-tile>
         <mat-grid-tile-header>Two</mat-grid-tile-header>
@@ -181,6 +182,8 @@ describe('MatGridListHarness', () => {
       </mat-grid-tile>
     </mat-grid-list>
   `,
+  standalone: true,
+  imports: [MatGridListModule],
 })
 class GridListHarnessTest {
   firstTileText = 'One';

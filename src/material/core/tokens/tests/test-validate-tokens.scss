@@ -1,6 +1,7 @@
 @use 'sass:list';
 @use 'sass:map';
 
+@use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
@@ -24,11 +25,13 @@
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
+@use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/protected-button' as tokens-mdc-protected-button;
 @use '../m2/mdc/filled-button' as tokens-mdc-filled-button;
 @use '../m2/mdc/text-button' as tokens-mdc-text-button;
+@use '../m2/mdc/outlined-button' as tokens-mdc-outlined-button;
 @use '../m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '../m2/mdc/linear-progress' as tokens-mdc-linear-progress;
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
@@ -49,6 +52,7 @@
 @use '../m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use '../m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use '../m2/mdc/form-field' as tokens-mdc-form-field;
 
 @mixin validate-slots($component, $slots, $reference) {
   @debug 'Validating #{$component}...';
@@ -176,4 +180,14 @@
   $component: 'm2.mdc.text-button',
   $slots: tokens-mdc-text-button.get-token-slots(),
   $reference: mdc-button-text-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.outlined-button',
+  $slots: tokens-mdc-outlined-button.get-token-slots(),
+  $reference: mdc-button-outlined-theme.$light-theme
+);
+@include validate-slots(
+  $component: 'm2.mdc.form-field',
+  $slots: tokens-mdc-form-field.get-token-slots(),
+  $reference: mdc-form-field-theme.$light-theme
 );

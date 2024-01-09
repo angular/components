@@ -46,8 +46,7 @@ function runBaseListFunctionalityTests<
     beforeEach(async () => {
       const testComponent = testComponentFn();
       await TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [testComponent],
+        imports: [MatListModule, testComponent],
       }).compileComponents();
 
       fixture = TestBed.createComponent(testComponent);
@@ -321,8 +320,7 @@ describe('MatActionListHarness', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [ActionListHarnessTest],
+        imports: [MatListModule, ActionListHarnessTest],
       }).compileComponents();
 
       fixture = TestBed.createComponent(ActionListHarnessTest);
@@ -355,8 +353,7 @@ describe('MatNavListHarness', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [NavListHarnessTest],
+        imports: [MatListModule, NavListHarnessTest],
       }).compileComponents();
 
       fixture = TestBed.createComponent(NavListHarnessTest);
@@ -425,8 +422,7 @@ describe('MatSelectionListHarness', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListHarnessTest],
+        imports: [MatListModule, SelectionListHarnessTest],
       }).compileComponents();
 
       fixture = TestBed.createComponent(SelectionListHarnessTest);
@@ -545,6 +541,8 @@ describe('MatSelectionListHarness', () => {
 
       <mat-list class="test-empty"></mat-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class ListHarnessTest {
   disableThirdItem = false;
@@ -584,6 +582,8 @@ class ListHarnessTest {
 
       <mat-action-list class="test-empty"></mat-action-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class ActionListHarnessTest {
   lastClicked: string;
@@ -625,6 +625,8 @@ class ActionListHarnessTest {
 
       <mat-nav-list class="test-empty"></mat-nav-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class NavListHarnessTest {
   lastClicked: string;
@@ -667,6 +669,8 @@ class NavListHarnessTest {
 
     <mat-selection-list class="test-empty" disabled></mat-selection-list>
   `,
+  standalone: true,
+  imports: [MatListModule],
 })
 class SelectionListHarnessTest {
   disableThirdItem = false;

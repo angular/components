@@ -1,8 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 
-import {DEFAULT_OPTIONS} from '../google-map/google-map';
-import {GoogleMapsModule} from '../google-maps-module';
+import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
+import {MapMarker} from '../map-marker/map-marker';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -28,18 +28,9 @@ describe('MapMarkerClusterer', () => {
 
   const anyMarkerMatcher = jasmine.any(Object) as unknown as google.maps.Marker;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GoogleMapsModule],
-      declarations: [TestApp],
-    });
-  }));
-
   beforeEach(() => {
-    TestBed.compileComponents();
-
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const markerSpy = createMarkerSpy({});
     // The spy target function cannot be an arrow-function as this breaks when created
@@ -49,8 +40,7 @@ describe('MapMarkerClusterer', () => {
     });
 
     markerClustererSpy = createMarkerClustererSpy();
-    markerClustererConstructorSpy =
-      createMarkerClustererConstructorSpy(markerClustererSpy).and.callThrough();
+    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy);
 
     fixture = TestBed.createComponent(TestApp);
   });
@@ -60,24 +50,19 @@ describe('MapMarkerClusterer', () => {
     (window as any).MarkerClusterer = undefined;
   });
 
-  it('throws an error if the clustering library has not been loaded', () => {
+  it('throws an error if the clustering library has not been loaded', fakeAsync(() => {
     (window as any).MarkerClusterer = undefined;
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(
-      markerClustererSpy,
-      false,
-    ).and.callThrough();
+    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy, false);
 
-    expect(() => fixture.detectChanges()).toThrow(
-      new Error(
-        'MarkerClusterer class not found, cannot construct a marker cluster. ' +
-          'Please install the MarkerClustererPlus library: ' +
-          'https://github.com/googlemaps/js-markerclustererplus',
-      ),
-    );
-  });
+    expect(() => {
+      fixture.detectChanges();
+      flush();
+    }).toThrowError(/MarkerClusterer class not found, cannot construct a marker cluster/);
+  }));
 
-  it('initializes a Google Map Marker Clusterer', () => {
+  it('initializes a Google Map Marker Clusterer', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith(mapSpy, [], {
       ariaLabelFn: undefined,
@@ -99,9 +84,9 @@ describe('MapMarkerClusterer', () => {
       zIndex: undefined,
       zoomOnClick: undefined,
     });
-  });
+  }));
 
-  it('sets marker clusterer inputs', () => {
+  it('sets marker clusterer inputs', fakeAsync(() => {
     fixture.componentInstance.ariaLabelFn = (testString: string) => testString;
     fixture.componentInstance.averageCenter = true;
     fixture.componentInstance.batchSize = 1;
@@ -119,6 +104,7 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.zIndex = 6;
     fixture.componentInstance.zoomOnClick = true;
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith(mapSpy, [], {
       ariaLabelFn: jasmine.any(Function),
@@ -140,10 +126,11 @@ describe('MapMarkerClusterer', () => {
       zIndex: 6,
       zoomOnClick: true,
     });
-  });
+  }));
 
-  it('sets marker clusterer options', () => {
+  it('sets marker clusterer options', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
     const options: MarkerClustererOptions = {
       enableRetinaIcons: true,
       gridSize: 1337,
@@ -153,10 +140,11 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.options = options;
     fixture.detectChanges();
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(jasmine.objectContaining(options));
-  });
+  }));
 
-  it('gives precedence to specific inputs over options', () => {
+  it('gives precedence to specific inputs over options', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
     const options: MarkerClustererOptions = {
       enableRetinaIcons: true,
       gridSize: 1337,
@@ -179,19 +167,21 @@ describe('MapMarkerClusterer', () => {
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(
       jasmine.objectContaining(expectedOptions),
     );
-  });
+  }));
 
-  it('sets Google Maps Markers in the MarkerClusterer', () => {
+  it('sets Google Maps Markers in the MarkerClusterer', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
       anyMarkerMatcher,
     ]);
-  });
+  }));
 
-  it('updates Google Maps Markers in the Marker Clusterer', () => {
+  it('updates Google Maps Markers in the Marker Clusterer', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
@@ -200,6 +190,7 @@ describe('MapMarkerClusterer', () => {
 
     fixture.componentInstance.state = 'state2';
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
@@ -207,6 +198,7 @@ describe('MapMarkerClusterer', () => {
 
     fixture.componentInstance.state = 'state0';
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith(
@@ -214,10 +206,11 @@ describe('MapMarkerClusterer', () => {
       true,
     );
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(2);
-  });
+  }));
 
-  it('exposes marker clusterer methods', () => {
+  it('exposes marker clusterer methods', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
     const markerClustererComponent = fixture.componentInstance.markerClusterer;
 
     markerClustererComponent.fitMapToMarkers(5);
@@ -284,10 +277,11 @@ describe('MapMarkerClusterer', () => {
 
     markerClustererSpy.getZoomOnClick.and.returnValue(true);
     expect(markerClustererComponent.getZoomOnClick()).toBe(true);
-  });
+  }));
 
-  it('initializes marker clusterer event handlers', () => {
+  it('initializes marker clusterer event handlers', fakeAsync(() => {
     fixture.detectChanges();
+    flush();
 
     expect(markerClustererSpy.addListener).toHaveBeenCalledWith(
       'clusteringbegin',
@@ -298,38 +292,49 @@ describe('MapMarkerClusterer', () => {
       jasmine.any(Function),
     );
     expect(markerClustererSpy.addListener).toHaveBeenCalledWith('click', jasmine.any(Function));
-  });
+  }));
 });
 
 @Component({
   selector: 'test-app',
-  template: `<google-map>
-               <map-marker-clusterer [ariaLabelFn]="ariaLabelFn"
-                                     [averageCenter]="averageCenter"
-                                     [batchSize]="batchSize"
-                                     [batchSizeIE]="batchSizeIE"
-                                     [calculator]="calculator"
-                                     [clusterClass]="clusterClass"
-                                     [enableRetinaIcons]="enableRetinaIcons"
-                                     [gridSize]="gridSize"
-                                     [ignoreHidden]="ignoreHidden"
-                                     [imageExtension]="imageExtension"
-                                     [imagePath]="imagePath"
-                                     [imageSizes]="imageSizes"
-                                     [maxZoom]="maxZoom"
-                                     [minimumClusterSize]="minimumClusterSize"
-                                     [styles]="styles"
-                                     [title]="title"
-                                     [zIndex]="zIndex"
-                                     [zoomOnClick]="zoomOnClick"
-                                     [options]="options"
-                                     (clusteringbegin)="onClusteringBegin()"
-                                     (clusterClick)="onClusterClick()">
-                 <map-marker *ngIf="state === 'state1'"></map-marker>
-                 <map-marker *ngIf="state === 'state1' || state === 'state2'"></map-marker>
-                 <map-marker *ngIf="state === 'state2'"></map-marker>
-               </map-marker-clusterer>
-             </google-map>`,
+  template: `
+    <google-map>
+      <map-marker-clusterer
+        [ariaLabelFn]="ariaLabelFn"
+        [averageCenter]="averageCenter"
+        [batchSize]="batchSize"
+        [batchSizeIE]="batchSizeIE"
+        [calculator]="calculator"
+        [clusterClass]="clusterClass"
+        [enableRetinaIcons]="enableRetinaIcons"
+        [gridSize]="gridSize"
+        [ignoreHidden]="ignoreHidden"
+        [imageExtension]="imageExtension"
+        [imagePath]="imagePath"
+        [imageSizes]="imageSizes"
+        [maxZoom]="maxZoom"
+        [minimumClusterSize]="minimumClusterSize"
+        [styles]="styles"
+        [title]="title"
+        [zIndex]="zIndex"
+        [zoomOnClick]="zoomOnClick"
+        [options]="options"
+        (clusteringbegin)="onClusteringBegin()"
+        (clusterClick)="onClusterClick()">
+          @if (state === 'state1') {
+            <map-marker />
+          }
+          @if (state === 'state1' || state === 'state2') {
+            <map-marker />
+          }
+          @if (state === 'state2') {
+            <map-marker />
+          }
+      </map-marker-clusterer>
+    </google-map>
+  `,
+  standalone: true,
+  imports: [GoogleMap, MapMarker, MapMarkerClusterer],
 })
 class TestApp {
   @ViewChild(MapMarkerClusterer) markerClusterer: MapMarkerClusterer;

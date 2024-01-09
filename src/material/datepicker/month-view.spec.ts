@@ -18,7 +18,7 @@ import {
   dispatchMouseEvent,
   createKeyboardEvent,
   dispatchEvent,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
@@ -38,11 +38,10 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
-        declarations: [
+        imports: [
+          MatNativeDateModule,
           MatCalendarBody,
           MatMonthView,
-
           // Test components.
           StandardMonthView,
           MonthViewWithDateFilter,
@@ -789,11 +788,10 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
-        declarations: [
+        imports: [
+          MatNativeDateModule,
           MatCalendarBody,
           MatMonthView,
-
           // Test components.
           StandardMonthView,
           MonthViewWithDateFilter,
@@ -847,6 +845,8 @@ describe('MatMonthView', () => {
       (dragEnded)="dragEnded($event)"
       [activeDrag]="activeDrag"></mat-month-view>
       `,
+  standalone: true,
+  imports: [MatMonthView],
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
@@ -877,6 +877,8 @@ class StandardMonthView {
       [dateFilter]="dateFilter"
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-month-view>`,
+  standalone: true,
+  imports: [MatMonthView],
 })
 class MonthViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -889,6 +891,8 @@ class MonthViewWithDateFilter {
 
 @Component({
   template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`,
+  standalone: true,
+  imports: [MatMonthView],
 })
 class MonthViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

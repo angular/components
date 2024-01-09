@@ -2,7 +2,7 @@ import ts from 'typescript';
 import minimatch from 'minimatch';
 
 import {existsSync} from 'fs';
-import {dirname, join, normalize, relative, resolve} from 'path';
+import {dirname, join, normalize, resolve} from 'path';
 import * as Lint from 'tslint';
 
 const BUILD_BAZEL_FILE = 'BUILD.bazel';
@@ -16,7 +16,7 @@ const BUILD_BAZEL_FILE = 'BUILD.bazel';
  */
 export class Rule extends Lint.Rules.AbstractRule {
   apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, checkSourceFile, this.getOptions().ruleArguments);
+    return this.applyWithFunction(sourceFile, checkSourceFile, this.getOptions().ruleArguments[0]);
   }
 }
 
@@ -25,10 +25,7 @@ export class Rule extends Lint.Rules.AbstractRule {
  * with relative cross entry-point references.
  */
 function checkSourceFile(ctx: Lint.WalkContext<string[]>) {
-  const filePath = ctx.sourceFile.fileName;
-  const relativeFilePath = relative(process.cwd(), filePath);
-
-  if (!ctx.options.every(o => minimatch(relativeFilePath, o))) {
+  if (ctx.options.some(o => minimatch(ctx.sourceFile.fileName, o))) {
     return;
   }
 
@@ -43,7 +40,7 @@ function checkSourceFile(ctx: Lint.WalkContext<string[]>) {
       }
 
       const modulePath = node.moduleSpecifier.text;
-      const basePath = dirname(filePath);
+      const basePath = dirname(ctx.sourceFile.fileName);
       const currentPackage = findClosestBazelPackage(basePath);
       const resolvedPackage = findClosestBazelPackage(resolve(basePath, modulePath));
 

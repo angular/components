@@ -4,12 +4,11 @@
   class="demo-radio-group"
   [(ngModel)]="optionalLabelText"
   (ngModelChange)="updateOptionalLabel()">
-  <mat-radio-button
-    class="demo-radio-button"
-    *ngFor="let optionalLabelTextChoice of optionalLabelTextChoices"
-    [value]="optionalLabelTextChoice">
-    {{optionalLabelTextChoice}}
-  </mat-radio-button>
+  @for (optionalLabelTextChoice of optionalLabelTextChoices; track optionalLabelTextChoice) {
+    <mat-radio-button
+      class="demo-radio-button"
+      [value]="optionalLabelTextChoice">{{optionalLabelTextChoice}}</mat-radio-button>
+  }
 </mat-radio-group>
 <mat-stepper class="demo-stepper" #stepper>
   <mat-step [stepControl]="firstFormGroup">

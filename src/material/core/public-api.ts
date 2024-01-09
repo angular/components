@@ -16,3 +16,4 @@ export * from './option/index';
 export * from './private/index';
 export * from './ripple/index';
 export * from './selection/index';
+export {_MatInternalFormField} from './internal-form-field/internal-form-field';

@@ -5,12 +5,27 @@ import {createFakeEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {
+  MatError,
+  MatFormField,
+  MatHint,
+  MatLabel,
+  MatPrefix,
+  MatSuffix,
+} from '@angular/material/form-field';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatInput} from '@angular/material/input';
+import {MatSelect} from '@angular/material/select';
+import {MatNativeDateModule, MatOption} from '@angular/material/core';
+import {
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerModule,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
 import {MatInputHarness} from '@angular/material/input/testing';
 import {MatSelectHarness} from '@angular/material/select/testing';
 import {
@@ -28,15 +43,10 @@ describe('MatFormFieldHarness', () => {
     await TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatAutocompleteModule,
-        MatInputModule,
-        MatSelectModule,
         MatNativeDateModule,
+        FormFieldHarnessTest,
         MatDatepickerModule,
       ],
-      declarations: [FormFieldHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);
@@ -347,6 +357,28 @@ describe('MatFormFieldHarness', () => {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatNativeDateModule,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDateRangePicker,
+    MatDateRangeInput,
+    MatEndDate,
+    MatError,
+    MatFormField,
+    MatHint,
+    MatInput,
+    MatLabel,
+    MatPrefix,
+    MatSelect,
+    MatStartDate,
+    MatSuffix,
+    MatOption,
+  ],
 })
 class FormFieldHarnessTest {
   requiredControl = new FormControl('Initial value', [Validators.required]);

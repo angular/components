@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Install node modules
@@ -56,74 +56,65 @@ jobs:
         # it has been merged.
         if: github.event_name == 'pull_request'
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Lint test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Lint check'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   api_golden_checks:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'API Goldens test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'API Golden Checks'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   e2e:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run e2e tests
         run: yarn e2e --flaky_test_attempts=2
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'E2E test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'E2E test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   integration:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run integration tests
@@ -131,83 +122,181 @@ jobs:
       - name: Running size integration tests
         run: yarn integration-tests:size-test
         continue-on-error: true
-      - name: Notify about failed integration size-test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Integration testing job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Integration test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_aot_tests:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run linker AOT tests
         run: yarn test-linker-aot
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Linker AOT test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Link AOT test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_jit_tests:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@fb30926790c6225d553b91a4818cab2fdde4fb4e
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run linker JIT tests
         run: yarn test-linker-jit
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Linker JIT test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-        env:
+          JOB_NAME: 'Link JIT test'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   test:
     runs-on: ubuntu-latest-16core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@9931e1a8d1b62fcd2267e89f9993a494856cc1cd
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - name: Notify about failed test
-        if: ${{ failure() && github.event_name == 'push'}}
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
-          channel-id: 'C015EBF2XB6'
-          slack-message: 'Browser test job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          JOB_NAME: 'Test'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run tests
+        run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Build'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  publish_snapshots:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Build Docs Content
+        run: yarn build-docs-content
+      - name: Build Docs Content
+        run: yarn build-docs-content
+      - name: Publish Snapshots
+        run: ./scripts/circleci/publish-snapshots.sh
         env:
+          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Snapshot publishing'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  upload_package_artifacts:
+    if: ${{ github.event_name != 'push'}}
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Build and create package artifacts
+        run: ./scripts/create-package-archives.js --suffix "pr${{github.event.number}}-$(git rev-parse --short HEAD)"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Package Artifacts
+          path: dist/release-archives
+
+  deploy_doc_site:
+    if: ${{ github.event_name == 'push'}}
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Deploy the docs app
+        run: yarn ci-push-deploy-docs-app
+        env:
+          CIRCLE_BRANCH: ${{ github.ref_name }}
+          CIRCLE_SHA1: ${{ github.sha }}
+          DOCS_SITE_GCP_SERVICE_KEY: ${{ secrets.DOCS_SITE_GCP_SERVICE_KEY }}
+          DOCS_DEPLOY_GITHUB_TOKEN: ${{ secrets.DOCS_DEPLOY_GITHUB_TOKEN }}
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Docs site deployment'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}

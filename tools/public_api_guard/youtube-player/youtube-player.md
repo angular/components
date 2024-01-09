@@ -9,19 +9,27 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
-export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
+export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
+
+// @public
+export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
+
+// @public
+export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     constructor(_ngZone: NgZone, platformId: Object);
     // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
-    get disableCookies(): boolean;
-    set disableCookies(value: unknown);
-    set endSeconds(endSeconds: number | undefined);
+    disableCookies: boolean;
+    disablePlaceholder: boolean;
+    endSeconds: number | undefined;
     // (undocumented)
     readonly error: Observable<YT.OnErrorEvent>;
     getAvailablePlaybackRates(): number[];
@@ -35,44 +43,75 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     getVideoLoadedFraction(): number;
     getVideoUrl(): string;
     getVolume(): number;
-    get height(): number | undefined;
+    // (undocumented)
+    protected _hasPlaceholder: boolean;
+    get height(): number;
     set height(height: number | undefined);
+    // (undocumented)
+    protected _isLoading: boolean;
     isMuted(): boolean;
+    protected _load(playVideo: boolean): void;
+    loadApi: boolean;
     mute(): void;
+    // (undocumented)
+    static ngAcceptInputType_disableCookies: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disablePlaceholder: unknown;
+    // (undocumented)
+    static ngAcceptInputType_endSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_height: unknown;
+    // (undocumented)
+    static ngAcceptInputType_loadApi: unknown;
+    // (undocumented)
+    static ngAcceptInputType_showBeforeIframeApiLoads: unknown;
+    // (undocumented)
+    static ngAcceptInputType_startSeconds: number | undefined;
+    // (undocumented)
+    static ngAcceptInputType_width: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnDestroy(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    ngOnInit(): void;
+    ngOnDestroy(): void;
     pauseVideo(): void;
+    placeholderButtonLabel: string;
+    placeholderImageQuality: PlaceholderImageQuality;
     // (undocumented)
     readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
     // (undocumented)
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
-    get playerVars(): YT.PlayerVars | undefined;
-    set playerVars(playerVars: YT.PlayerVars | undefined);
+    playerVars: YT.PlayerVars | undefined;
     playVideo(): void;
     readonly ready: Observable<YT.PlayerEvent>;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;
-    showBeforeIframeApiLoads: boolean | undefined;
-    set startSeconds(startSeconds: number | undefined);
+    protected _shouldShowPlaceholder(): boolean;
+    showBeforeIframeApiLoads: boolean;
+    startSeconds: number | undefined;
     // (undocumented)
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
     stopVideo(): void;
-    set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
+    suggestedQuality: YT.SuggestedVideoQuality | undefined;
     unMute(): void;
-    get videoId(): string | undefined;
-    set videoId(videoId: string | undefined);
-    get width(): number | undefined;
+    videoId: string | undefined;
+    get width(): number;
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+}
+
+// @public
+export interface YouTubePlayerConfig {
+    disablePlaceholder?: boolean;
+    loadApi?: boolean;
+    placeholderButtonLabel?: string;
+    placeholderImageQuality?: PlaceholderImageQuality;
 }
 
 // @public (undocumented)
@@ -82,7 +121,7 @@ export class YouTubePlayerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, [typeof i1.YouTubePlayer], never, [typeof i1.YouTubePlayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof i1.YouTubePlayer], [typeof i1.YouTubePlayer]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -15,7 +15,6 @@ import { FormGroupDirective } from '@angular/forms';
 import { HighContrastModeDetector } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
-import * as i4 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -24,6 +23,7 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
@@ -135,6 +135,16 @@ export class ErrorStateMatcher {
 }
 
 // @public
+export class _ErrorStateTracker {
+    constructor(_defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
+    errorState: boolean;
+    matcher: ErrorStateMatcher;
+    // (undocumented)
+    ngControl: NgControl | null;
+    updateErrorState(): void;
+}
+
+// @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public
@@ -209,9 +219,18 @@ export type MatDateFormats = {
 export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 // @public
+export class _MatInternalFormField {
+    labelPosition: 'before' | 'after';
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<_MatInternalFormField, "div[mat-internal-form-field]", never, { "labelPosition": { "alias": "labelPosition"; "required": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatInternalFormField, never>;
+}
+
+// @public
 export class MatLine {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLine, "[mat-line], [matLine]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLine, "[mat-line], [matLine]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatLine, never>;
 }
@@ -223,7 +242,7 @@ export class MatLineModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatLineModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, [typeof MatLine], [typeof i1_2.MatCommonModule], [typeof MatLine, typeof i1_2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, never, [typeof i1_2.MatCommonModule, typeof MatLine], [typeof MatLine, typeof i1_2.MatCommonModule]>;
 }
 
 // @public (undocumented)
@@ -233,7 +252,7 @@ export class MatNativeDateModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatNativeDateModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, [typeof NativeDateModule], never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, never, never>;
 }
 
 // @public
@@ -246,7 +265,7 @@ export class MatOptgroup {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, [{ optional: true; }]>;
 }
@@ -288,7 +307,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     value: T;
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -300,7 +319,7 @@ export class MatOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, [typeof i1_3.MatOption, typeof i2.MatOptgroup], [typeof i3.MatRippleModule, typeof i4.CommonModule, typeof i1_2.MatCommonModule, typeof i6.MatPseudoCheckboxModule], [typeof i1_3.MatOption, typeof i2.MatOptgroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, never, [typeof i1_3.MatRippleModule, typeof i1_2.MatCommonModule, typeof i3.MatPseudoCheckboxModule, typeof i4.MatOption, typeof i5.MatOptgroup], [typeof i4.MatOption, typeof i5.MatOptgroup]>;
 }
 
 // @public
@@ -333,7 +352,7 @@ export class MatPseudoCheckbox {
     disabled: boolean;
     state: MatPseudoCheckboxState;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckbox, "mat-pseudo-checkbox", never, { "state": { "alias": "state"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckbox, "mat-pseudo-checkbox", never, { "state": { "alias": "state"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckbox, [{ optional: true; }]>;
 }
@@ -345,7 +364,7 @@ export class MatPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, [typeof i1_5.MatPseudoCheckbox], [typeof i1_2.MatCommonModule], [typeof i1_5.MatPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, never, [typeof i1_2.MatCommonModule, typeof i2_2.MatPseudoCheckbox], [typeof i2_2.MatPseudoCheckbox]>;
 }
 
 // @public
@@ -375,7 +394,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     set trigger(trigger: HTMLElement);
     unbounded: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRipple, "[mat-ripple], [matRipple]", ["matRipple"], { "color": { "alias": "matRippleColor"; "required": false; }; "unbounded": { "alias": "matRippleUnbounded"; "required": false; }; "centered": { "alias": "matRippleCentered"; "required": false; }; "radius": { "alias": "matRippleRadius"; "required": false; }; "animation": { "alias": "matRippleAnimation"; "required": false; }; "disabled": { "alias": "matRippleDisabled"; "required": false; }; "trigger": { "alias": "matRippleTrigger"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRipple, "[mat-ripple], [matRipple]", ["matRipple"], { "color": { "alias": "matRippleColor"; "required": false; }; "unbounded": { "alias": "matRippleUnbounded"; "required": false; }; "centered": { "alias": "matRippleCentered"; "required": false; }; "radius": { "alias": "matRippleRadius"; "required": false; }; "animation": { "alias": "matRippleAnimation"; "required": false; }; "disabled": { "alias": "matRippleDisabled"; "required": false; }; "trigger": { "alias": "matRippleTrigger"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, [null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -384,13 +403,14 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 export class MatRippleLoader implements OnDestroy {
     constructor();
     // (undocumented)
-    attachRipple(host: Element, ripple: MatRipple): void;
+    attachRipple(host: HTMLElement, ripple: MatRipple): void;
     configureRipple(host: HTMLElement, config: {
         className?: string;
         centered?: boolean;
         disabled?: boolean;
     }): void;
-    createRipple(host: HTMLElement): MatRipple | undefined;
+    // (undocumented)
+    destroyRipple(host: HTMLElement): void;
     getRipple(host: HTMLElement): MatRipple | undefined;
     // (undocumented)
     ngOnDestroy(): void;
@@ -408,7 +428,7 @@ export class MatRippleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRippleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, [typeof i1_4.MatRipple], [typeof i1_2.MatCommonModule], [typeof i1_4.MatRipple, typeof i1_2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof i1_2.MatCommonModule, typeof i2.MatRipple], [typeof i2.MatRipple, typeof i1_2.MatCommonModule]>;
 }
 
 // @public
@@ -496,6 +516,9 @@ export class NativeDateModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<NativeDateModule, never, never, never>;
 }
 
+// @public (undocumented)
+export function provideNativeDateAdapter(formats?: MatDateFormats): Provider[];
+
 // @public
 export interface RippleAnimationConfig {
     enterDuration?: number;
@@ -547,7 +570,7 @@ export class RippleRenderer implements EventListenerObject {
 }
 
 // @public
-export const enum RippleState {
+export enum RippleState {
     // (undocumented)
     FADING_IN = 0,
     // (undocumented)

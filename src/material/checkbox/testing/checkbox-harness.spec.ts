@@ -12,8 +12,7 @@ describe('MatCheckboxHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatCheckboxModule, ReactiveFormsModule],
-      declarations: [CheckboxHarnessTest],
+      imports: [MatCheckboxModule, ReactiveFormsModule, CheckboxHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CheckboxHarnessTest);
@@ -68,9 +67,8 @@ describe('MatCheckboxHarness', () => {
   });
 
   it('should get indeterminate state', async () => {
-    const [checkedCheckbox, indeterminateCheckbox] = await loader.getAllHarnesses(
-      MatCheckboxHarness,
-    );
+    const [checkedCheckbox, indeterminateCheckbox] =
+      await loader.getAllHarnesses(MatCheckboxHarness);
     expect(await checkedCheckbox.isIndeterminate()).toBe(false);
     expect(await indeterminateCheckbox.isIndeterminate()).toBe(true);
   });
@@ -186,6 +184,8 @@ describe('MatCheckboxHarness', () => {
     </mat-checkbox>
     <span id="second-label">Second checkbox</span>
   `,
+  standalone: true,
+  imports: [MatCheckboxModule, ReactiveFormsModule],
 })
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);

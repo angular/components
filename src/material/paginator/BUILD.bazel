@@ -18,12 +18,10 @@ ng_module(
     ),
     assets = [":paginator.css"] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/coercion",
         "//src/material/button",
         "//src/material/core",
         "//src/material/select",
         "//src/material/tooltip",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",  # TODO(jelbourn): transitive dep via generated code
         "@npm//rxjs",
@@ -36,7 +34,6 @@ sass_library(
     deps = [
         "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
-        "//src/material/form-field:form_field_scss_lib",
     ],
 )
 

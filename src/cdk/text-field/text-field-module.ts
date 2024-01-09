@@ -11,7 +11,7 @@ import {CdkAutofill} from './autofill';
 import {CdkTextareaAutosize} from './autosize';
 
 @NgModule({
-  declarations: [CdkAutofill, CdkTextareaAutosize],
+  imports: [CdkAutofill, CdkTextareaAutosize],
   exports: [CdkAutofill, CdkTextareaAutosize],
 })
 export class TextFieldModule {}

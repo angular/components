@@ -7,7 +7,6 @@
  */
 
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -21,8 +20,8 @@ import {
   OnInit,
   Optional,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
@@ -35,10 +34,6 @@ import {matSortAnimations} from './sort-animations';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
-
-// Boilerplate for applying mixins to the sort header.
-/** @docs-private */
-const _MatSortHeaderBase = mixinDisabled(class {});
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -90,7 +85,6 @@ interface MatSortHeaderColumnDef {
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled'],
   animations: [
     matSortAnimations.indicator,
     matSortAnimations.leftPointer,
@@ -99,11 +93,9 @@ interface MatSortHeaderColumnDef {
     matSortAnimations.arrowPosition,
     matSortAnimations.allowChildren,
   ],
+  standalone: true,
 })
-export class MatSortHeader
-  extends _MatSortHeaderBase
-  implements CanDisable, MatSortable, OnDestroy, OnInit, AfterViewInit
-{
+export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
   private _rerenderSubscription: Subscription;
 
   /**
@@ -145,6 +137,10 @@ export class MatSortHeader
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
   @Input() start: SortDirection;
 
+  /** whether the sort header is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
+
   /**
    * Description applied to MatSortHeader's button element with aria-describedby. This text should
    * describe the action that will occur when the user clicks the sort header.
@@ -162,14 +158,8 @@ export class MatSortHeader
   private _sortActionDescription: string = 'Sort';
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
-  @Input()
-  get disableClear(): boolean {
-    return this._disableClear;
-  }
-  set disableClear(v: BooleanInput) {
-    this._disableClear = coerceBooleanProperty(v);
-  }
-  private _disableClear: boolean;
+  @Input({transform: booleanAttribute})
+  disableClear: boolean;
 
   constructor(
     /**
@@ -196,8 +186,6 @@ export class MatSortHeader
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
     // of this single reference.
-    super();
-
     if (!_sort && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getSortHeaderNotContainedWithinSortError();
     }

@@ -18,6 +18,7 @@ import {LIST_OPTION, ListOption} from './list-option-types';
 @Directive({
   selector: '[matListItemTitle]',
   host: {'class': 'mat-mdc-list-item-title mdc-list-item__primary-text'},
+  standalone: true,
 })
 export class MatListItemTitle {
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
@@ -32,6 +33,7 @@ export class MatListItemTitle {
 @Directive({
   selector: '[matListItemLine]',
   host: {'class': 'mat-mdc-list-item-line mdc-list-item__secondary-text'},
+  standalone: true,
 })
 export class MatListItemLine {
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
@@ -46,6 +48,7 @@ export class MatListItemLine {
 @Directive({
   selector: '[matListItemMeta]',
   host: {'class': 'mat-mdc-list-item-meta mdc-list-item__end'},
+  standalone: true,
 })
 export class MatListItemMeta {}
 
@@ -66,6 +69,7 @@ export class MatListItemMeta {}
     '[class.mdc-list-item__start]': '_isAlignedAtStart()',
     '[class.mdc-list-item__end]': '!_isAlignedAtStart()',
   },
+  standalone: true,
 })
 export class _MatListItemGraphicBase {
   constructor(@Optional() @Inject(LIST_OPTION) public _listOption: ListOption) {}
@@ -85,6 +89,7 @@ export class _MatListItemGraphicBase {
 @Directive({
   selector: '[matListItemAvatar]',
   host: {'class': 'mat-mdc-list-item-avatar'},
+  standalone: true,
 })
 export class MatListItemAvatar extends _MatListItemGraphicBase {}
 
@@ -96,5 +101,6 @@ export class MatListItemAvatar extends _MatListItemGraphicBase {}
 @Directive({
   selector: '[matListItemIcon]',
   host: {'class': 'mat-mdc-list-item-icon'},
+  standalone: true,
 })
 export class MatListItemIcon extends _MatListItemGraphicBase {}

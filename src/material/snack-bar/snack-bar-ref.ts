@@ -50,7 +50,10 @@ export class MatSnackBarRef<T> {
   /** Whether the snack bar was dismissed using the action button. */
   private _dismissedByAction = false;
 
-  constructor(containerInstance: MatSnackBarContainer, private _overlayRef: OverlayRef) {
+  constructor(
+    containerInstance: MatSnackBarContainer,
+    private _overlayRef: OverlayRef,
+  ) {
     this.containerInstance = containerInstance;
     containerInstance._onExit.subscribe(() => this._finishDismiss());
   }

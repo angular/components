@@ -12,8 +12,7 @@ describe('MDC-based Chip Remove', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
-      declarations: [TestChip],
+      imports: [MatChipsModule, TestChip],
     });
 
     TestBed.compileComponents();
@@ -116,6 +115,8 @@ describe('MDC-based Chip Remove', () => {
       </mat-chip>
     </mat-chip-set>
   `,
+  standalone: true,
+  imports: [MatChipsModule],
 })
 class TestChip {
   removable: boolean;

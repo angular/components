@@ -154,7 +154,7 @@ export interface _ViewRepeaterItemInsertArgs<C> {
 export type _ViewRepeaterItemValueResolver<T, R> = (record: IterableChangeRecord<R>) => T;
 
 // @public
-export const enum _ViewRepeaterOperation {
+export enum _ViewRepeaterOperation {
     INSERTED = 1,
     MOVED = 2,
     REMOVED = 3,

@@ -23,17 +23,16 @@ import { CdkTable } from '@angular/cdk/table';
 import { CdkTextColumn } from '@angular/cdk/table';
 import { DataSource } from '@angular/cdk/collections';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/material/core';
-import * as i6 from '@angular/cdk/table';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 // @public
 export class MatCell extends CdkCell {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCell, "mat-cell, td[mat-cell]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCell, "mat-cell, td[mat-cell]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCell, never>;
 }
@@ -41,7 +40,7 @@ export class MatCell extends CdkCell {
 // @public
 export class MatCellDef extends CdkCellDef {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCellDef, "[matCellDef]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCellDef, "[matCellDef]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCellDef, never>;
 }
@@ -52,7 +51,7 @@ export class MatColumnDef extends CdkColumnDef {
     set name(name: string);
     protected _updateColumnCssClassName(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatColumnDef, "[matColumnDef]", never, { "sticky": { "alias": "sticky"; "required": false; }; "name": { "alias": "matColumnDef"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatColumnDef, "[matColumnDef]", never, { "sticky": { "alias": "sticky"; "required": false; }; "name": { "alias": "matColumnDef"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatColumnDef, never>;
 }
@@ -60,7 +59,7 @@ export class MatColumnDef extends CdkColumnDef {
 // @public
 export class MatFooterCell extends CdkFooterCell {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterCell, "mat-footer-cell, td[mat-footer-cell]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterCell, "mat-footer-cell, td[mat-footer-cell]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFooterCell, never>;
 }
@@ -68,7 +67,7 @@ export class MatFooterCell extends CdkFooterCell {
 // @public
 export class MatFooterCellDef extends CdkFooterCellDef {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterCellDef, "[matFooterCellDef]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterCellDef, "[matFooterCellDef]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFooterCellDef, never>;
 }
@@ -76,7 +75,7 @@ export class MatFooterCellDef extends CdkFooterCellDef {
 // @public
 export class MatFooterRow extends CdkFooterRow {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFooterRow, "mat-footer-row, tr[mat-footer-row]", ["matFooterRow"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFooterRow, "mat-footer-row, tr[mat-footer-row]", ["matFooterRow"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFooterRow, never>;
 }
@@ -84,7 +83,7 @@ export class MatFooterRow extends CdkFooterRow {
 // @public
 export class MatFooterRowDef extends CdkFooterRowDef {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterRowDef, "[matFooterRowDef]", never, { "columns": { "alias": "matFooterRowDef"; "required": false; }; "sticky": { "alias": "matFooterRowDefSticky"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterRowDef, "[matFooterRowDef]", never, { "columns": { "alias": "matFooterRowDef"; "required": false; }; "sticky": { "alias": "matFooterRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFooterRowDef, never>;
 }
@@ -92,7 +91,7 @@ export class MatFooterRowDef extends CdkFooterRowDef {
 // @public
 export class MatHeaderCell extends CdkHeaderCell {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderCell, "mat-header-cell, th[mat-header-cell]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderCell, "mat-header-cell, th[mat-header-cell]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatHeaderCell, never>;
 }
@@ -100,7 +99,7 @@ export class MatHeaderCell extends CdkHeaderCell {
 // @public
 export class MatHeaderCellDef extends CdkHeaderCellDef {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderCellDef, "[matHeaderCellDef]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderCellDef, "[matHeaderCellDef]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatHeaderCellDef, never>;
 }
@@ -108,7 +107,7 @@ export class MatHeaderCellDef extends CdkHeaderCellDef {
 // @public
 export class MatHeaderRow extends CdkHeaderRow {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatHeaderRow, "mat-header-row, tr[mat-header-row]", ["matHeaderRow"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatHeaderRow, "mat-header-row, tr[mat-header-row]", ["matHeaderRow"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatHeaderRow, never>;
 }
@@ -116,7 +115,7 @@ export class MatHeaderRow extends CdkHeaderRow {
 // @public
 export class MatHeaderRowDef extends CdkHeaderRowDef {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderRowDef, "[matHeaderRowDef]", never, { "columns": { "alias": "matHeaderRowDef"; "required": false; }; "sticky": { "alias": "matHeaderRowDefSticky"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderRowDef, "[matHeaderRowDef]", never, { "columns": { "alias": "matHeaderRowDef"; "required": false; }; "sticky": { "alias": "matHeaderRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatHeaderRowDef, never>;
 }
@@ -126,7 +125,7 @@ export class MatNoDataRow extends CdkNoDataRow {
     // (undocumented)
     _contentClassName: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNoDataRow, "ng-template[matNoDataRow]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatNoDataRow, "ng-template[matNoDataRow]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatNoDataRow, never>;
 }
@@ -134,7 +133,7 @@ export class MatNoDataRow extends CdkNoDataRow {
 // @public
 export class MatRecycleRows {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRecycleRows, "mat-table[recycleRows], table[mat-table][recycleRows]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRecycleRows, "mat-table[recycleRows], table[mat-table][recycleRows]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRecycleRows, never>;
 }
@@ -142,7 +141,7 @@ export class MatRecycleRows {
 // @public
 export class MatRow extends CdkRow {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatRow, "mat-row, tr[mat-row]", ["matRow"], {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatRow, "mat-row, tr[mat-row]", ["matRow"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRow, never>;
 }
@@ -150,19 +149,17 @@ export class MatRow extends CdkRow {
 // @public
 export class MatRowDef<T> extends CdkRowDef<T> {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRowDef<any>, "[matRowDef]", never, { "columns": { "alias": "matRowDefColumns"; "required": false; }; "when": { "alias": "matRowDefWhen"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRowDef<any>, "[matRowDef]", never, { "columns": { "alias": "matRowDefColumns"; "required": false; }; "when": { "alias": "matRowDefWhen"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRowDef<any>, never>;
 }
 
 // @public (undocumented)
-export class MatTable<T> extends CdkTable<T> implements OnInit {
+export class MatTable<T> extends CdkTable<T> {
     protected needsPositionStickyOnElement: boolean;
-    // (undocumented)
-    ngOnInit(): void;
     protected stickyCssClass: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTable<any>, "mat-table, table[mat-table]", ["matTable"], {}, {}, never, ["caption", "colgroup, col"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTable<any>, "mat-table, table[mat-table]", ["matTable"], {}, {}, never, ["caption", "colgroup, col", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTable<any>, never>;
 }
@@ -199,13 +196,13 @@ export class MatTableModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTableModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTableModule, [typeof i1.MatTable, typeof i1.MatRecycleRows, typeof i2.MatHeaderCellDef, typeof i3.MatHeaderRowDef, typeof i2.MatColumnDef, typeof i2.MatCellDef, typeof i3.MatRowDef, typeof i2.MatFooterCellDef, typeof i3.MatFooterRowDef, typeof i2.MatHeaderCell, typeof i2.MatCell, typeof i2.MatFooterCell, typeof i3.MatHeaderRow, typeof i3.MatRow, typeof i3.MatFooterRow, typeof i3.MatNoDataRow, typeof i4.MatTextColumn], [typeof i5.MatCommonModule, typeof i6.CdkTableModule], [typeof i5.MatCommonModule, typeof i1.MatTable, typeof i1.MatRecycleRows, typeof i2.MatHeaderCellDef, typeof i3.MatHeaderRowDef, typeof i2.MatColumnDef, typeof i2.MatCellDef, typeof i3.MatRowDef, typeof i2.MatFooterCellDef, typeof i3.MatFooterRowDef, typeof i2.MatHeaderCell, typeof i2.MatCell, typeof i2.MatFooterCell, typeof i3.MatHeaderRow, typeof i3.MatRow, typeof i3.MatFooterRow, typeof i3.MatNoDataRow, typeof i4.MatTextColumn]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTableModule, never, [typeof i1.MatCommonModule, typeof i2.CdkTableModule, typeof i3.MatTable, typeof i3.MatRecycleRows, typeof i4.MatHeaderCellDef, typeof i5.MatHeaderRowDef, typeof i4.MatColumnDef, typeof i4.MatCellDef, typeof i5.MatRowDef, typeof i4.MatFooterCellDef, typeof i5.MatFooterRowDef, typeof i4.MatHeaderCell, typeof i4.MatCell, typeof i4.MatFooterCell, typeof i5.MatHeaderRow, typeof i5.MatRow, typeof i5.MatFooterRow, typeof i5.MatNoDataRow, typeof i6.MatTextColumn], [typeof i1.MatCommonModule, typeof i3.MatTable, typeof i3.MatRecycleRows, typeof i4.MatHeaderCellDef, typeof i5.MatHeaderRowDef, typeof i4.MatColumnDef, typeof i4.MatCellDef, typeof i5.MatRowDef, typeof i4.MatFooterCellDef, typeof i5.MatFooterRowDef, typeof i4.MatHeaderCell, typeof i4.MatCell, typeof i4.MatFooterCell, typeof i5.MatHeaderRow, typeof i5.MatRow, typeof i5.MatFooterRow, typeof i5.MatNoDataRow, typeof i6.MatTextColumn]>;
 }
 
 // @public
 export class MatTextColumn<T> extends CdkTextColumn<T> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTextColumn<any>, "mat-text-column", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTextColumn<any>, "mat-text-column", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTextColumn<any>, never>;
 }

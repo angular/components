@@ -15,8 +15,7 @@ describe('MatButtonHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatButtonModule, MatIconModule, PlatformModule],
-      declarations: [ButtonHarnessTest],
+      imports: [MatButtonModule, MatIconModule, PlatformModule, ButtonHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonHarnessTest);
@@ -175,6 +174,8 @@ describe('MatButtonHarness', () => {
     <a id="anchor-fab" mat-fab>Fab anchor</a>
     <a id="anchor-mini-fab" mat-mini-fab>Mini Fab anchor</a>
   `,
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule, PlatformModule],
 })
 class ButtonHarnessTest {
   disabled = true;

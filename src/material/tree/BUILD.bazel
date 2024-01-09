@@ -37,6 +37,9 @@ sass_library(
 sass_binary(
     name = "tree_scss",
     src = "tree.scss",
+    deps = [
+        ":tree_scss_lib",
+    ],
 )
 
 ng_test_library(

@@ -18,7 +18,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   typeInElement,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {Component, Type, ViewChild, Provider, Directive, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {

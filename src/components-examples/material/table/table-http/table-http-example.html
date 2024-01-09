@@ -1,11 +1,16 @@
 <div class="example-container mat-elevation-z8">
-  <div class="example-loading-shade"
-       *ngIf="isLoadingResults || isRateLimitReached">
-    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-    <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-      GitHub's API rate limit has been reached. It will be reset in one minute.
+  @if (isLoadingResults || isRateLimitReached) {
+    <div class="example-loading-shade">
+      @if (isLoadingResults) {
+        <mat-spinner></mat-spinner>
+      }
+      @if (isRateLimitReached) {
+        <div class="example-rate-limit-reached">
+          GitHub's API rate limit has been reached. It will be reset in one minute.
+        </div>
+      }
     </div>
-  </div>
+  }
 
   <div class="example-table-container">
 

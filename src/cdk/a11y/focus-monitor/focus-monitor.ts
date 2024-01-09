@@ -43,7 +43,7 @@ export interface FocusOptions {
 }
 
 /** Detection mode used for attributing the origin of a focus event. */
-export const enum FocusMonitorDetectionMode {
+export enum FocusMonitorDetectionMode {
   /**
    * Any mousedown, keydown, or touchstart event that happened in the previous
    * tick or the current tick will be used to assign a focus event's origin (to
@@ -616,6 +616,7 @@ export class FocusMonitor implements OnDestroy {
 @Directive({
   selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
   exportAs: 'cdkMonitorFocus',
+  standalone: true,
 })
 export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
   private _monitorSubscription: Subscription;
@@ -623,7 +624,10 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
 
   @Output() readonly cdkFocusChange = new EventEmitter<FocusOrigin>();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) {}
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _focusMonitor: FocusMonitor,
+  ) {}
 
   get focusOrigin(): FocusOrigin {
     return this._focusOrigin;

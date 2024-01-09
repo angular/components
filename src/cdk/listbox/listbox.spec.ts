@@ -1004,7 +1004,9 @@ class ListboxWithFormControl {
 @Component({
   template: `
     <div cdkListbox [formControl]="formControl">
-      <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
+      @for (option of options; track option) {
+        <div [cdkOption]="option">{{option}}</div>
+      }
     </div>
   `,
 })
@@ -1016,7 +1018,9 @@ class ListboxWithPreselectedFormControl {
 @Component({
   template: `
     <div cdkListbox [formControl]="formControl">
-      <div *ngFor="let option of options" [cdkOption]="option">{{option}}</div>
+      @for (option of options; track option) {
+        <div [cdkOption]="option">{{option}}</div>
+      }
     </div>
   `,
 })
@@ -1071,7 +1075,9 @@ class ListboxWithMultipleBoundValues {
 @Component({
   template: `
     <div cdkListbox [cdkListboxCompareWith]="fruitCompare">
-      <div *ngFor="let fruit of fruits" [cdkOption]="fruit">{{fruit.name}}</div>
+      @for (fruit of fruits; track fruit) {
+        <div [cdkOption]="fruit">{{fruit.name}}</div>
+      }
     </div>
   `,
 })

@@ -36,7 +36,6 @@ describe('MDC-based Option Chips', () => {
 
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
-      declarations: [SingleChip],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {
@@ -48,6 +47,7 @@ describe('MDC-based Option Chips', () => {
         },
         {provide: MAT_CHIPS_DEFAULT_OPTIONS, useFactory: () => defaultOptions},
       ],
+      declarations: [SingleChip],
     });
 
     TestBed.compileComponents();
@@ -398,16 +398,20 @@ describe('MDC-based Option Chips', () => {
 @Component({
   template: `
     <mat-chip-listbox>
-      <div *ngIf="shouldShow">
-        <mat-chip-option [selectable]="selectable"
-                 [color]="color" [selected]="selected" [disabled]="disabled"
-                 (destroyed)="chipDestroy($event)"
-                 (selectionChange)="chipSelectionChange($event)"
-                 [aria-label]="ariaLabel" [aria-description]="ariaDescription">
-          <span class="avatar" matChipAvatar *ngIf="avatarLabel">{{avatarLabel}}</span>
-          {{name}}
-        </mat-chip-option>
-      </div>
+      @if (shouldShow) {
+        <div>
+          <mat-chip-option [selectable]="selectable"
+                  [color]="color" [selected]="selected" [disabled]="disabled"
+                  (destroyed)="chipDestroy($event)"
+                  (selectionChange)="chipSelectionChange($event)"
+                  [aria-label]="ariaLabel" [aria-description]="ariaDescription">
+            @if (avatarLabel) {
+              <span class="avatar" matChipAvatar>{{avatarLabel}}</span>
+            }
+            {{name}}
+          </mat-chip-option>
+        </div>
+      }
     </mat-chip-listbox>`,
 })
 class SingleChip {

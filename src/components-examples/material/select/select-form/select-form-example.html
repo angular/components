@@ -3,9 +3,9 @@
   <mat-form-field>
     <mat-label>Favorite food</mat-label>
     <mat-select [(ngModel)]="selectedValue" name="food">
-      <mat-option *ngFor="let food of foods" [value]="food.value">
-        {{food.viewValue}}
-      </mat-option>
+      @for (food of foods; track food) {
+        <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <p> Selected food: {{selectedValue}} </p>
@@ -14,9 +14,9 @@
     <mat-label>Favorite car</mat-label>
     <select matNativeControl [(ngModel)]="selectedCar" name="car">
       <option value="" selected></option>
-      <option *ngFor="let car of cars" [value]="car.value">
-        {{car.viewValue}}
-      </option>
+      @for (car of cars; track car) {
+        <option [value]="car.value">{{car.viewValue}}</option>
+      }
     </select>
   </mat-form-field>
   <p> Selected car: {{selectedCar}} </p>

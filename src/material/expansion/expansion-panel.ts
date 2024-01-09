@@ -8,9 +8,8 @@
 
 import {AnimationEvent} from '@angular/animations';
 import {CdkAccordionItem} from '@angular/cdk/accordion';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
@@ -33,6 +32,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
@@ -81,8 +81,6 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled', 'expanded'],
-  outputs: ['opened', 'closed', 'expandedChange'],
   animations: [matExpansionAnimations.bodyExpansion],
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
@@ -96,23 +94,24 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 export class MatExpansionPanel
   extends CdkAccordionItem
   implements AfterContentInit, OnChanges, OnDestroy
 {
   private _document: Document;
-  private _hideToggle = false;
-  private _togglePosition: MatAccordionTogglePosition;
 
   /** Whether the toggle indicator should be hidden. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get hideToggle(): boolean {
     return this._hideToggle || (this.accordion && this.accordion.hideToggle);
   }
-  set hideToggle(value: BooleanInput) {
-    this._hideToggle = coerceBooleanProperty(value);
+  set hideToggle(value: boolean) {
+    this._hideToggle = value;
   }
+  private _hideToggle = false;
 
   /** The position of the expansion indicator. */
   @Input()
@@ -122,6 +121,7 @@ export class MatExpansionPanel
   set togglePosition(value: MatAccordionTogglePosition) {
     this._togglePosition = value;
   }
+  private _togglePosition: MatAccordionTogglePosition;
 
   /** An event emitted after the body's expansion animation happens. */
   @Output() readonly afterExpand = new EventEmitter<void>();
@@ -261,5 +261,6 @@ export class MatExpansionPanel
   host: {
     class: 'mat-action-row',
   },
+  standalone: true,
 })
 export class MatExpansionPanelActionRow {}

@@ -5,8 +5,8 @@
          [matAutocomplete]="auto"
          class="example-input">
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
-      {{street}}
-    </mat-option>
+    @for (street of filteredStreets | async; track street) {
+      <mat-option [value]="street">{{street}}</mat-option>
+    }
   </mat-autocomplete>
 </form>

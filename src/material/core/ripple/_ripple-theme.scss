@@ -1,34 +1,76 @@
-@use 'sass:meta';
+@use 'sass:map';
+@use '../tokens/m2/mat/ripple' as tokens-mat-ripple;
+@use '../tokens/token-utils';
+@use '../style/sass-utils';
 @use '../theming/theming';
 @use '../theming/inspection';
 
 @mixin base($theme) {
-  // TODO(mmalerba): Move ripple base tokens here
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {}
 }
 
-// Colors for the ripple elements.
 @mixin color($theme) {
-  $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $color-opacity: 0.1;
-
-  .mat-ripple-element {
-    // If the ripple color is resolves to a color *type*, we can use it directly, otherwise
-    // (e.g. it resolves to a CSS variable) we fall back to using the color and setting an opacity.
-    @if (meta.type-of($foreground-base) == color) {
-      background-color: rgba($foreground-base, $color-opacity);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-ripple.$prefix,
+        tokens-mat-ripple.get-color-tokens($theme));
     }
-    @else {
-      background-color: $foreground-base;
-      opacity: $color-opacity;
+  }
+}
+
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-ripple.$prefix,
+        tokens-mat-ripple.get-typography-tokens($theme));
+    }
+  }
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-ripple.$prefix,
+        tokens-mat-ripple.get-density-tokens($theme));
     }
   }
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-ripple') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+        tokens-mat-ripple.$prefix, map.get($tokens, tokens-mat-ripple.$prefix));
   }
 }

@@ -9,6 +9,10 @@
 import {Directive, forwardRef, Provider} from '@angular/core';
 import {CheckboxRequiredValidator, NG_VALIDATORS} from '@angular/forms';
 
+/**
+ * @deprecated No longer used, `MatCheckbox` implements required validation directly.
+ * @breaking-change 19.0.0
+ */
 export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatSlideToggleRequiredValidator),
@@ -22,10 +26,14 @@ export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider = {
  * where the value is always defined.
  *
  * Required slide-toggle form controls are valid when checked.
+ *
+ * @deprecated No longer used, `MatCheckbox` implements required validation directly.
+ * @breaking-change 19.0.0
  */
 @Directive({
   selector: `mat-slide-toggle[required][formControlName],
              mat-slide-toggle[required][formControl], mat-slide-toggle[required][ngModel]`,
   providers: [MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR],
+  standalone: true,
 })
 export class MatSlideToggleRequiredValidator extends CheckboxRequiredValidator {}

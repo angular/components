@@ -17,8 +17,8 @@ describe('MDC-based MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
-      declarations: [type],
       providers: [MatPaginatorIntl, ...providers],
+      declarations: [type],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(type);

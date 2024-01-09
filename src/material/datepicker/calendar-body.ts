@@ -23,6 +23,7 @@ import {
   inject,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {NgClass} from '@angular/common';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -86,6 +87,8 @@ const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgClass],
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
   private _platform = inject(Platform);
@@ -186,7 +189,10 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
   private _didDragSinceMouseDown = false;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ngZone: NgZone,
+  ) {
     _ngZone.runOutsideAngular(() => {
       const element = _elementRef.nativeElement;
 
@@ -512,7 +518,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     this._didDragSinceMouseDown = false;
     // Begin a drag if a cell within the current range was targeted.
     const cell = event.target && this._getCellFromElement(event.target as HTMLElement);
-    if (!cell || !this._isInRange(cell.rawValue)) {
+    if (!cell || !this._isInRange(cell.compareValue)) {
       return;
     }
 

@@ -119,7 +119,7 @@ describe('Material address-form schematic', () => {
       );
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
       expect(tree.readContent('/projects/material/src/app/foo/foo.component.ts')).toContain(
-        'styles: [`',
+        'styles: `',
       );
     });
 

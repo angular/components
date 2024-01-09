@@ -517,14 +517,17 @@ describe('MDC-based MatChipListbox', () => {
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'false']);
 
         primaryActions[2].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'false', 'true']);
 
         primaryActions[0].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'false', 'false']);
       }));
 
@@ -552,18 +555,22 @@ describe('MDC-based MatChipListbox', () => {
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'false']);
 
         primaryActions[2].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['false', 'true', 'true']);
 
         primaryActions[0].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'true', 'true']);
 
         primaryActions[1].click();
         fixture.detectChanges();
+        flush();
         expect(getAriaSelected()).toEqual(['true', 'false', 'true']);
       }));
     });
@@ -843,11 +850,11 @@ describe('MDC-based MatChipListbox', () => {
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
-      declarations: [component],
       providers: [
         {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
         {provide: Directionality, useValue: directionality},
       ],
+      declarations: [component],
     }).compileComponents();
 
     fixture = TestBed.createComponent<T>(component);
@@ -870,10 +877,11 @@ describe('MDC-based MatChipListbox', () => {
 @Component({
   template: `
     <mat-chip-listbox [tabIndex]="tabIndex" [selectable]="selectable" [role]="role">
-      <mat-chip-option *ngFor="let i of chips" (select)="chipSelect(i)"
-        (deselect)="chipDeselect(i)">
-        {{name}} {{i + 1}}
-      </mat-chip-option>
+      @for (i of chips; track i) {
+        <mat-chip-option (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
+          {{name}} {{i + 1}}
+        </mat-chip-option>
+      }
     </mat-chip-listbox>`,
 })
 class StandardChipListbox {
@@ -890,9 +898,11 @@ class StandardChipListbox {
   template: `
       <mat-chip-listbox [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        <mat-chip-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ food.viewValue }}
-        </mat-chip-option>
+        @for (food of foods; track food) {
+          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+            {{ food.viewValue }}
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
   `,
 })
@@ -921,9 +931,11 @@ class BasicChipListbox {
       <mat-chip-listbox [multiple]="true" [formControl]="control"
         [required]="isRequired"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        <mat-chip-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ food.viewValue }}
-        </mat-chip-option>
+        @for (food of foods; track food) {
+          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+            {{ food.viewValue }}
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
   `,
 })
@@ -950,9 +962,9 @@ class MultiSelectionChipListbox {
 @Component({
   template: `
       <mat-chip-listbox [formControl]="control">
-        <mat-chip-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-chip-option>
+        @for (food of foods; track food) {
+          <mat-chip-option [value]="food.value">{{ food.viewValue }}</mat-chip-option>
+        }
       </mat-chip-listbox>
   `,
 })
@@ -968,9 +980,11 @@ class FalsyValueChipListbox {
 @Component({
   template: `
     <mat-chip-listbox>
-        <mat-chip-option *ngFor="let food of foods" [value]="food.value" [selected]="food.selected">
+      @for (food of foods; track food) {
+        <mat-chip-option [value]="food.value" [selected]="food.selected">
             {{ food.viewValue }}
         </mat-chip-option>
+      }
     </mat-chip-listbox>
   `,
 })
@@ -987,9 +1001,11 @@ class SelectedChipListbox {
   template: `
       <mat-chip-listbox [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        <mat-chip-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
-          {{ food.viewValue }}
-        </mat-chip-option>
+        @for (food of foods; track food) {
+          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+            {{ food.viewValue }}
+          </mat-chip-option>
+        }
       </mat-chip-listbox>
   `,
 })

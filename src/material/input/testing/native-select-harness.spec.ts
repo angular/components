@@ -13,8 +13,7 @@ describe('MatNativeSelectHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatInputModule, FormsModule],
-      declarations: [SelectHarnessTest],
+      imports: [NoopAnimationsModule, MatInputModule, FormsModule, SelectHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectHarnessTest);
@@ -220,6 +219,8 @@ describe('MatNativeSelectHarness', () => {
       </select>
     </mat-form-field>
   `,
+  standalone: true,
+  imports: [MatInputModule, FormsModule],
 })
 class SelectHarnessTest {
   favoriteFood: string;

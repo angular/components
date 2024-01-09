@@ -14,7 +14,6 @@ import {OverlayRef} from '@angular/cdk/overlay';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -26,6 +25,7 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {matBottomSheetAnimations} from './bottom-sheet-animations';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 
 /**
  * Internal component that wraps user-provided bottom sheet content.
@@ -52,6 +52,8 @@ import {matBottomSheetAnimations} from './bottom-sheet-animations';
     '(@state.start)': '_onAnimationStart($event)',
     '(@state.done)': '_onAnimationDone($event)',
   },
+  standalone: true,
+  imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
   private _breakpointSubscription: Subscription;
@@ -74,7 +76,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     ngZone: NgZone,
     overlayRef: OverlayRef,
     breakpointObserver: BreakpointObserver,
-    private _changeDetectorRef: ChangeDetectorRef,
     focusMonitor?: FocusMonitor,
   ) {
     super(

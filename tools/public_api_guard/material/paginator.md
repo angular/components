@@ -4,21 +4,15 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
-import { BooleanInput } from '@angular/cdk/coercion';
-import { CanDisable } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import { HasInitialized } from '@angular/material/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/material/button';
-import * as i4 from '@angular/material/select';
-import * as i5 from '@angular/material/tooltip';
+import * as i1 from '@angular/material/button';
+import * as i2 from '@angular/material/select';
+import * as i3 from '@angular/material/tooltip';
 import { InjectionToken } from '@angular/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
@@ -39,44 +33,55 @@ export const MAT_PAGINATOR_INTL_PROVIDER: {
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
-export class MatPaginator extends _MatPaginatorMixinBase implements OnInit, OnDestroy, CanDisable, HasInitialized {
+export class MatPaginator extends _MatPaginatorMixinBase implements OnInit, OnDestroy, HasInitialized {
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
+    disabled: boolean;
     _displayedPageSizeOptions: number[];
     firstPage(): void;
     _formFieldAppearance?: MatFormFieldAppearance;
     getNumberOfPages(): number;
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
-    get hidePageSize(): boolean;
-    set hidePageSize(value: BooleanInput);
+    hidePageSize: boolean;
     // (undocumented)
     _intl: MatPaginatorIntl;
     lastPage(): void;
     get length(): number;
-    set length(value: NumberInput);
+    set length(value: number);
     _nextButtonsDisabled(): boolean;
     nextPage(): void;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hidePageSize: unknown;
+    // (undocumented)
+    static ngAcceptInputType_length: unknown;
+    // (undocumented)
+    static ngAcceptInputType_pageIndex: unknown;
+    // (undocumented)
+    static ngAcceptInputType_pageSize: unknown;
+    // (undocumented)
+    static ngAcceptInputType_showFirstLastButtons: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     readonly page: EventEmitter<PageEvent>;
     get pageIndex(): number;
-    set pageIndex(value: NumberInput);
+    set pageIndex(value: number);
     get pageSize(): number;
-    set pageSize(value: NumberInput);
+    set pageSize(value: number);
     readonly _pageSizeLabelId: string;
     get pageSizeOptions(): number[];
     set pageSizeOptions(value: number[] | readonly number[]);
     _previousButtonsDisabled(): boolean;
     previousPage(): void;
     selectConfig: MatPaginatorSelectConfig;
-    get showFirstLastButtons(): boolean;
-    set showFirstLastButtons(value: BooleanInput);
+    showFirstLastButtons: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatPaginator, "mat-paginator", ["matPaginator"], { "disabled": { "alias": "disabled"; "required": false; }; "color": { "alias": "color"; "required": false; }; "pageIndex": { "alias": "pageIndex"; "required": false; }; "length": { "alias": "length"; "required": false; }; "pageSize": { "alias": "pageSize"; "required": false; }; "pageSizeOptions": { "alias": "pageSizeOptions"; "required": false; }; "hidePageSize": { "alias": "hidePageSize"; "required": false; }; "showFirstLastButtons": { "alias": "showFirstLastButtons"; "required": false; }; "selectConfig": { "alias": "selectConfig"; "required": false; }; }, { "page": "page"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatPaginator, "mat-paginator", ["matPaginator"], { "color": { "alias": "color"; "required": false; }; "pageIndex": { "alias": "pageIndex"; "required": false; }; "length": { "alias": "length"; "required": false; }; "pageSize": { "alias": "pageSize"; "required": false; }; "pageSizeOptions": { "alias": "pageSizeOptions"; "required": false; }; "hidePageSize": { "alias": "hidePageSize"; "required": false; }; "showFirstLastButtons": { "alias": "showFirstLastButtons"; "required": false; }; "selectConfig": { "alias": "selectConfig"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "page": "page"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginator, [null, null, { optional: true; }]>;
 }
@@ -112,7 +117,7 @@ export class MatPaginatorModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPaginatorModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPaginatorModule, [typeof i1.MatPaginator], [typeof i2.CommonModule, typeof i3.MatButtonModule, typeof i4.MatSelectModule, typeof i5.MatTooltipModule], [typeof i1.MatPaginator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPaginatorModule, never, [typeof i1.MatButtonModule, typeof i2.MatSelectModule, typeof i3.MatTooltipModule, typeof i4.MatPaginator], [typeof i4.MatPaginator]>;
 }
 
 // @public

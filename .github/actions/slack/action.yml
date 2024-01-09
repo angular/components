@@ -1,0 +1,20 @@
+name: 'Notify slack on failure'
+description: 'Notifying Slack of failure'
+
+inputs:
+  JOB_NAME:
+    description: 'Name of the job'
+    required: true
+  SLACK_BOT_TOKEN:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Notify about failed test
+      uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v=v1.24.0
+      with:
+        channel-id: 'C015EBF2XB6'
+        slack-message: '${{ inputs.JOB_NAME }} job failed for ${{ github.base_ref }} branch failed on build ${{ github.event.after }}: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.SLACK_BOT_TOKEN }}

@@ -22,16 +22,12 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
 import {MatTabContent} from './tab-content';
 import {MAT_TAB, MatTabLabel} from './tab-label';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject} from 'rxjs';
-
-// Boilerplate for applying mixins to MatTab.
-/** @docs-private */
-const _MatTabMixinBase = mixinDisabled(class {});
 
 /**
  * Used to provide a tab group to a tab without causing a circular dependency.
@@ -41,21 +37,28 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 
 @Component({
   selector: 'mat-tab',
-
   // Note that usually we'd go through a bit more trouble and set up another class so that
   // the inlined template of `MatTab` isn't duplicated, however the template is small enough
   // that creating the extra class will generate more code than just duplicating the template.
   templateUrl: 'tab.html',
-  inputs: ['disabled'],
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatTab}],
+  standalone: true,
+  host: {
+    // This element will be rendered on the server in order to support hydration.
+    // Hide it so it doesn't cause a layout shift when it's removed on the client.
+    'hidden': '',
+  },
 })
-export class MatTab extends _MatTabMixinBase implements CanDisable, OnInit, OnChanges, OnDestroy {
+export class MatTab implements OnInit, OnChanges, OnDestroy {
+  /** whether the tab is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
+
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  private _templateLabel: MatTabLabel;
   @ContentChild(MatTabLabel)
   get templateLabel(): MatTabLabel {
     return this._templateLabel;
@@ -63,6 +66,7 @@ export class MatTab extends _MatTabMixinBase implements CanDisable, OnInit, OnCh
   set templateLabel(value: MatTabLabel) {
     this._setTemplateLabelInput(value);
   }
+  private _templateLabel: MatTabLabel;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
@@ -129,9 +133,7 @@ export class MatTab extends _MatTabMixinBase implements CanDisable, OnInit, OnCh
   constructor(
     private _viewContainerRef: ViewContainerRef,
     @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any,
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {

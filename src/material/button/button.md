@@ -45,6 +45,19 @@ not.
 </button>
 ```
 
+### Interactive disabled buttons
+Native disabled `<button>` elements cannot receive focus and do not dispatch any events. This can
+be problematic in some cases because it can prevent the app from telling the user why the button is
+disabled. You can use the `disabledInteractive` input to style the button as disabled but allow for
+it to receive focus and dispatch events. The button will have `aria-disabled="true"` for assistive
+technology. The behavior can be configured globally through the `MAT_BUTTON_CONFIG` injection token.
+
+**Note:** Using the `disabledInteractive` input can result in buttons that previously prevented
+actions to no longer do so, for example a submit button in a form. When using this input, you should
+guard against such cases in your component.
+
+<!-- example(button-disabled-interactive) -->
+
 ### Accessibility
 Angular Material uses native `<button>` and `<a>` elements to ensure an accessible experience by
 default. A `<button>` element should be used for any interaction that _performs an action on the

@@ -6,7 +6,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
   dispatchFakeEvent,
-} from '../../testing/private';
+} from '@angular/cdk/testing/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -52,7 +52,6 @@ describe('CdkDrag', () => {
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [DragDropModule, CdkScrollableModule],
-      declarations: [componentType, PassthroughComponent, ...extraDeclarations],
       providers: [
         {
           provide: CDK_DRAG_CONFIG,
@@ -66,6 +65,7 @@ describe('CdkDrag', () => {
         },
         ...providers,
       ],
+      declarations: [PassthroughComponent, componentType, ...extraDeclarations],
     });
 
     if (encapsulation != null) {
@@ -240,8 +240,8 @@ describe('CdkDrag', () => {
         const event = createMouseEvent('mousedown', 0, 0);
 
         Object.defineProperties(event, {
-          offsetX: {get: () => 0},
-          offsetY: {get: () => 0},
+          buttons: {get: () => 0},
+          detail: {get: () => 0},
         });
 
         expect(dragElement.style.transform).toBeFalsy();
@@ -567,7 +567,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -610,7 +610,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -1007,7 +1007,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -4352,7 +4352,7 @@ describe('CdkDrag', () => {
       expect(list.scrollTop).toBeLessThan(initialScrollDistance);
     }));
 
-    it('should auto-scroll right if the user holds their pointer at right edge', fakeAsync(() => {
+    it('should auto-scroll right if the user holds their pointer at right edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -4374,7 +4374,7 @@ describe('CdkDrag', () => {
       expect(list.scrollLeft).toBeGreaterThan(0);
     }));
 
-    it('should auto-scroll left if the user holds their pointer at left edge', fakeAsync(() => {
+    it('should auto-scroll left if the user holds their pointer at left edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -4388,6 +4388,56 @@ describe('CdkDrag', () => {
       tickAnimationFrames(20);
 
       expect(list.scrollLeft).toBeLessThan(initialScrollDistance);
+    }));
+
+    it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: observableOf()},
+        },
+      ]);
+      fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const listRect = list.getBoundingClientRect();
+      const initialScrollDistance = (list.scrollLeft = -list.scrollWidth);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        listRect.left + listRect.width,
+        listRect.top + listRect.height / 2,
+      );
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(list.scrollLeft).toBeGreaterThan(initialScrollDistance);
+    }));
+
+    it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: observableOf()},
+        },
+      ]);
+      fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const listRect = list.getBoundingClientRect();
+
+      expect(list.scrollLeft).toBe(0);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(list.scrollLeft).toBeLessThan(0);
     }));
 
     it('should be able to start auto scrolling with a drag boundary', fakeAsync(() => {
@@ -6725,10 +6775,11 @@ class StandaloneDraggableWithPreDisabledHandle {
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
-      <div
-        #handleElement
-        *ngIf="showHandle"
-        cdkDragHandle style="width: 10px; height: 10px; background: green;"></div>
+      @if (showHandle) {
+        <div
+          #handleElement
+          cdkDragHandle style="width: 10px; height: 10px; background: green;"></div>
+      }
     </div>
   `,
 })
@@ -6806,6 +6857,7 @@ class StandaloneDraggableWithMultipleHandles {
   @ViewChildren(CdkDragHandle) handles: QueryList<CdkDragHandle>;
 }
 
+// TODO(crisbeto): figure out why switch `*ngFor` with `@for` here causes a test failure.
 const DROP_ZONE_FIXTURE_TEMPLATE = `
   <div
     cdkDropList
@@ -6945,7 +6997,7 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
 }
 
 @Component({
-  // Note that we need the blank `ngSwitch` below to hit the code path that we're testing.
+  // Note that we need the blank `@if` below to hit the code path that we're testing.
   template: `
     <div
       cdkDropList
@@ -6955,16 +7007,17 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
       [cdkDropListData]="items"
       (cdkDropListSorted)="sortedSpy($event)"
       (cdkDropListDropped)="droppedSpy($event)">
-        <ng-container [ngSwitch]="true">
-          <div
-            *ngFor="let item of items"
-            cdkDrag
-            [cdkDragData]="item"
-            [cdkDragBoundary]="boundarySelector"
-            [style.height.px]="item.height"
-            [style.margin-bottom.px]="item.margin"
-            style="width: 100%; background: red;">{{item.value}}</div>
-        </ng-container>
+        @if (true) {
+          @for (item of items; track item) {
+            <div
+              cdkDrag
+              [cdkDragData]="item"
+              [cdkDragBoundary]="boundarySelector"
+              [style.height.px]="item.height"
+              [style.margin-bottom.px]="item.margin"
+              style="width: 100%; background: red;">{{item.value}}</div>
+          }
+        }
     </div>
   `,
 })
@@ -6993,12 +7046,13 @@ const HORIZONTAL_FIXTURE_TEMPLATE = `
     cdkDropListOrientation="horizontal"
     [cdkDropListData]="items"
     (cdkDropListDropped)="droppedSpy($event)">
-    <div
-      *ngFor="let item of items"
-      [style.width.px]="item.width"
-      [style.margin-right.px]="item.margin"
-      [cdkDragBoundary]="boundarySelector"
-      cdkDrag>{{item.value}}</div>
+    @for (item of items; track item) {
+      <div
+        [style.width.px]="item.width"
+        [style.margin-right.px]="item.margin"
+        [cdkDragBoundary]="boundarySelector"
+        cdkDrag>{{item.value}}</div>
+    }
   </div>
 `;
 
@@ -7058,26 +7112,29 @@ class DraggableInScrollableHorizontalDropZone extends DraggableInHorizontalDropZ
   }
 }
 
+// TODO(crisbeto): `*ngIf` here can be removed after updating to a version of Angular that includes
+// https://github.com/angular/angular/pull/52515
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragConstrainPosition]="constrainPosition"
-        [cdkDragBoundary]="boundarySelector"
-        [cdkDragPreviewClass]="previewClass"
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
-          {{item}}
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragConstrainPosition]="constrainPosition"
+          [cdkDragBoundary]="boundarySelector"
+          [cdkDragPreviewClass]="previewClass"
+          style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+            {{item}}
 
-          <ng-container *ngIf="renderCustomPreview">
-            <ng-template cdkDragPreview [matchSize]="matchPreviewSize">
-              <div
-                class="custom-preview"
-                style="width: 50px; height: 50px; background: purple;">Custom preview</div>
-            </ng-template>
-          </ng-container>
-      </div>
+            <ng-container *ngIf="renderCustomPreview">
+              <ng-template cdkDragPreview [matchSize]="matchPreviewSize">
+                <div
+                  class="custom-preview"
+                  style="width: 50px; height: 50px; background: purple;">Custom preview</div>
+              </ng-template>
+            </ng-container>
+        </div>
+      }
     </div>
   `,
 })
@@ -7095,15 +7152,16 @@ class DraggableInDropZoneWithCustomPreview {
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragConstrainPosition]="constrainPosition"
-        [cdkDragBoundary]="boundarySelector"
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
-          {{item}}
-          <ng-template cdkDragPreview>Hello {{item}}</ng-template>
-      </div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragConstrainPosition]="constrainPosition"
+          [cdkDragBoundary]="boundarySelector"
+          style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+            {{item}}
+            <ng-template cdkDragPreview>Hello {{item}}</ng-template>
+        </div>
+      }
     </div>
   `,
 })
@@ -7116,16 +7174,15 @@ class DraggableInDropZoneWithCustomTextOnlyPreview {
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+      @for (item of items; track item) {
+        <div cdkDrag style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
           {{item}}
           <ng-template cdkDragPreview>
             <span>Hello</span>
             <span>{{item}}</span>
           </ng-template>
-      </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -7141,16 +7198,17 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
       cdkDropList
       (cdkDropListDropped)="droppedSpy($event)"
       style="width: 100px; background: pink;">
-      <div *ngFor="let item of items" cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+      @for (item of items; track item) {
+        <div cdkDrag style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
           {{item}}
-          <ng-container *ngIf="renderPlaceholder">
+          @if (renderPlaceholder) {
             <div
               class="custom-placeholder"
               [ngClass]="extraPlaceholderClass"
               *cdkDragPlaceholder>Custom placeholder</div>
-          </ng-container>
-      </div>
+          }
+        </div>
+      }
     </div>
   `,
   styles: [
@@ -7172,11 +7230,12 @@ class DraggableInDropZoneWithCustomPlaceholder {
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div *ngFor="let item of items" cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+      @for (item of items; track item) {
+        <div cdkDrag style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
           {{item}}
           <ng-template cdkDragPlaceholder>Hello {{item}}</ng-template>
-      </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -7188,14 +7247,15 @@ class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div *ngFor="let item of items" cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+      @for (item of items; track item) {
+        <div cdkDrag style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
           {{item}}
           <ng-template cdkDragPlaceholder>
             <span>Hello</span>
             <span>{{item}}</span>
           </ng-template>
-      </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -7229,11 +7289,12 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     [cdkDropListConnectedTo]="[doneZone]"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
-    <div
-      [cdkDragData]="item"
-      (cdkDragEntered)="itemEnteredSpy($event)"
-      *ngFor="let item of todo"
-      cdkDrag>{{item}}</div>
+    @for (item of todo; track item) {
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        cdkDrag>{{item}}</div>
+    }
   </div>
 
   <div
@@ -7243,11 +7304,12 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     [cdkDropListConnectedTo]="[todoZone]"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
-    <div
-      [cdkDragData]="item"
-      (cdkDragEntered)="itemEnteredSpy($event)"
-      *ngFor="let item of done"
-      cdkDrag>{{item}}</div>
+    @for (item of done; track item) {
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        cdkDrag>{{item}}</div>
+    }
   </div>
 
   <div
@@ -7256,11 +7318,12 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     [cdkDropListData]="extra"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
-    <div
-      [cdkDragData]="item"
-      (cdkDragEntered)="itemEnteredSpy($event)"
-      *ngFor="let item of extra"
-      cdkDrag>{{item}}</div>
+    @for (item of extra; track item) {
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        cdkDrag>{{item}}</div>
+    }
   </div>
 `;
 
@@ -7295,7 +7358,7 @@ class ConnectedDropZones implements AfterViewInit {
 @Component({
   encapsulation: ViewEncapsulation.ShadowDom,
   styles: CONNECTED_DROP_ZONES_STYLES,
-  template: `<div *ngIf="true">${CONNECTED_DROP_ZONES_TEMPLATE}</div>`,
+  template: `@if (true) {${CONNECTED_DROP_ZONES_TEMPLATE}}`,
 })
 class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
 
@@ -7323,14 +7386,18 @@ class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
         cdkDropList
         [cdkDropListData]="todo"
         (cdkDropListDropped)="droppedSpy($event)">
-        <div [cdkDragData]="item" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+        @for (item of todo; track item) {
+  <div [cdkDragData]="item" cdkDrag>{{item}}</div>
+}
       </div>
 
       <div
         cdkDropList
         [cdkDropListData]="done"
         (cdkDropListDropped)="droppedSpy($event)">
-        <div [cdkDragData]="item" *ngFor="let item of done" cdkDrag>{{item}}</div>
+        @for (item of done; track item) {
+          <div [cdkDragData]="item" cdkDrag>{{item}}</div>
+        }
       </div>
     </div>
   `,
@@ -7445,10 +7512,12 @@ class DropListOnNgContainer {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div *ngFor="let item of items"
-        cdkDrag
-        [style.height.px]="item.height"
-        style="width: 100%; background: red;">{{item.value}}</div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [style.height.px]="item.height"
+          style="width: 100%; background: red;">{{item.value}}</div>
+      }
     </div>
   `,
 })
@@ -7503,16 +7572,17 @@ class ConnectedWrappedDropZones {
       [cdkDropListData]="items"
       (cdkDropListSorted)="sortedSpy($event)"
       (cdkDropListDropped)="droppedSpy($event)">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragData]="item"
-        [style.height.px]="item.height"
-        [style.margin-bottom.px]="item.margin"
-        style="width: 100%; background: red;">
-          {{item.value}}
-          <canvas width="100px" height="100px"></canvas>
-        </div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragData]="item"
+          [style.height.px]="item.height"
+          [style.margin-bottom.px]="item.margin"
+          style="width: 100%; background: red;">
+            {{item.value}}
+            <canvas width="100px" height="100px"></canvas>
+          </div>
+        }
     </div>
   `,
 })
@@ -7546,16 +7616,17 @@ class DraggableWithCanvasInDropZone extends DraggableInDropZone implements After
       [cdkDropListData]="items"
       (cdkDropListSorted)="sortedSpy($event)"
       (cdkDropListDropped)="droppedSpy($event)">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragData]="item"
-        [style.height.px]="item.height"
-        [style.margin-bottom.px]="item.margin"
-        style="width: 100%; background: red;">
-          {{item.value}}
-          <canvas width="0" height="0"></canvas>
-        </div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragData]="item"
+          [style.height.px]="item.height"
+          [style.margin-bottom.px]="item.margin"
+          style="width: 100%; background: red;">
+            {{item.value}}
+            <canvas width="0" height="0"></canvas>
+          </div>
+        }
     </div>
   `,
 })
@@ -7576,7 +7647,9 @@ class PassthroughComponent {}
   selector: 'wrapped-drop-container',
   template: `
     <div cdkDropList [cdkDropListData]="items">
-      <div *ngFor="let item of items" cdkDrag>{{item}}</div>
+      @for (item of items; track item) {
+        <div cdkDrag>{{item}}</div>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7695,10 +7768,11 @@ class NestedDragsThroughTemplate {
   template: `
     <div cdkDropList class="drop-list" #outerList>
       <div cdkDropList class="drop-list" #innerList>
-        <div
-          *ngFor="let item of items"
-          cdkDrag
-          style="width: 100%; background: red; height: ${ITEM_HEIGHT}px;">{{item}}</div>
+        @for (item of items; track item) {
+          <div
+            cdkDrag
+            style="width: 100%; background: red; height: ${ITEM_HEIGHT}px;">{{item}}</div>
+        }
       </div>
     </div>
   `,
@@ -7743,13 +7817,14 @@ class PlainStandaloneDropList {
   ],
   template: `
     <div class="list" cdkDropList cdkDropListOrientation="horizontal">
-      <div *ngFor="let item of items" class="item" cdkDrag>
-        {{item}}
-
-        <ng-template cdkDragPreview [matchSize]="true">
-          <div class="item">{{item}}</div>
-        </ng-template>
-      </div>
+      @for (item of items; track item) {
+        <div class="item" cdkDrag>
+          {{item}}
+          <ng-template cdkDragPreview [matchSize]="true">
+            <div class="item">{{item}}</div>
+          </ng-template>
+        </div>
+      }
     </div>
   `,
 })
@@ -7768,11 +7843,12 @@ class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
       [cdkDropListConnectedTo]="[doneZone]"
       (cdkDropListDropped)="droppedSpy($event)"
       (cdkDropListEntered)="enteredSpy($event)">
-      <div
-        [cdkDragData]="item"
-        (cdkDragEntered)="itemEnteredSpy($event)"
-        *ngFor="let item of todo"
-        cdkDrag>{{item}}</div>
+      @for (item of todo; track item) {
+        <div
+          [cdkDragData]="item"
+          (cdkDragEntered)="itemEnteredSpy($event)"
+          cdkDrag>{{item}}</div>
+      }
     </div>
 
     <div
@@ -7785,11 +7861,12 @@ class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
 
       <div>Hello there</div>
       <div>
-        <div
-          [cdkDragData]="item"
-          (cdkDragEntered)="itemEnteredSpy($event)"
-          *ngFor="let item of done"
-          cdkDrag>{{item}}</div>
+        @for (item of done; track item) {
+          <div
+            [cdkDragData]="item"
+            (cdkDragEntered)="itemEnteredSpy($event)"
+            cdkDrag>{{item}}</div>
+        }
       </div>
     </div>
   `,
@@ -7824,21 +7901,22 @@ class DraggableWithAlternateRootAndSelfHandle {
       [cdkDropListData]="items"
       (cdkDropListSorted)="sortedSpy($event)"
       (cdkDropListDropped)="droppedSpy($event)">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragData]="item"
-        [style.height.px]="item.height"
-        [style.margin-bottom.px]="item.margin"
-        style="width: 100%; background: red;">
-          {{item.value}}
-          <input [value]="inputValue"/>
-          <textarea [value]="inputValue"></textarea>
-          <select [value]="inputValue">
-            <option value="goodbye">Goodbye</option>
-            <option value="hello">Hello</option>
-          </select>
-        </div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragData]="item"
+          [style.height.px]="item.height"
+          [style.margin-bottom.px]="item.margin"
+          style="width: 100%; background: red;">
+            {{item.value}}
+            <input [value]="inputValue"/>
+            <textarea [value]="inputValue"></textarea>
+            <select [value]="inputValue">
+              <option value="goodbye">Goodbye</option>
+              <option value="hello">Hello</option>
+            </select>
+          </div>
+      }
     </div>
   `,
 })
@@ -7852,13 +7930,14 @@ class DraggableWithInputsInDropZone extends DraggableInDropZone {
       cdkDropList
       class="drop-list scroll-container"
       [cdkDropListData]="items">
-      <div
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragData]="item">
-          {{item.id}}
-          <input type="radio" name="radio" [checked]="item.checked"/>
-        </div>
+      @for (item of items; track item) {
+        <div
+          cdkDrag
+          [cdkDragData]="item">
+            {{item.id}}
+            <input type="radio" name="radio" [checked]="item.checked"/>
+          </div>
+      }
     </div>
   `,
 })

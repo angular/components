@@ -33,6 +33,8 @@ import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';
 import {Platform} from '@angular/cdk/platform';
+import {NgTemplateOutlet} from '@angular/common';
+import {CdkObserveContent} from '@angular/cdk/observers';
 
 /**
  * Injection token that can be used to reference instances of an `SelectionList`. It serves
@@ -95,6 +97,8 @@ export interface SelectionList extends MatListBase {
     {provide: MatListItemBase, useExisting: MatListOption},
     {provide: LIST_OPTION, useExisting: MatListOption},
   ],
+  standalone: true,
+  imports: [NgTemplateOutlet, CdkObserveContent],
 })
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
   @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;

@@ -24,6 +24,7 @@ import {TABLE_PROVIDERS} from './constants';
     ...TABLE_PROVIDERS,
     {provide: ColumnResize, useExisting: CdkDefaultEnabledColumnResize},
   ],
+  standalone: true,
 })
 export class CdkDefaultEnabledColumnResize extends ColumnResize {
   constructor(

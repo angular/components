@@ -20,14 +20,11 @@ import {
   Directive,
   Inject,
   Input,
+  booleanAttribute,
+  numberAttribute,
+  Output,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput,
-} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
@@ -128,21 +125,16 @@ export abstract class MatPaginatedTabHeader
    * Whether pagination should be disabled. This can be used to avoid unnecessary
    * layout recalculations if it's known that pagination won't be required.
    */
-  @Input()
-  get disablePagination(): boolean {
-    return this._disablePagination;
-  }
-  set disablePagination(value: BooleanInput) {
-    this._disablePagination = coerceBooleanProperty(value);
-  }
-  private _disablePagination: boolean = false;
+  @Input({transform: booleanAttribute})
+  disablePagination: boolean = false;
 
   /** The index of the active tab. */
+  @Input({transform: numberAttribute})
   get selectedIndex(): number {
     return this._selectedIndex;
   }
-  set selectedIndex(value: NumberInput) {
-    value = coerceNumberProperty(value);
+  set selectedIndex(v: number) {
+    const value = isNaN(v) ? 0 : v;
 
     if (this._selectedIndex != value) {
       this._selectedIndexChanged = true;
@@ -156,10 +148,10 @@ export abstract class MatPaginatedTabHeader
   private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
-  readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when a label is focused. */
-  readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(
     protected _elementRef: ElementRef<HTMLElement>,

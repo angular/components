@@ -23,6 +23,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  booleanAttribute,
 } from '@angular/core';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
@@ -31,7 +32,8 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatInkBar} from './ink-bar';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {MatRipple} from '@angular/material/core';
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
@@ -44,8 +46,6 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
   styleUrls: ['tab-header.css'],
-  inputs: ['selectedIndex'],
-  outputs: ['selectFocusedIndex', 'indexFocused'],
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
@@ -54,6 +54,8 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
     '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-mdc-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   },
+  standalone: true,
+  imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabHeader
   extends MatPaginatedTabHeader
@@ -68,16 +70,8 @@ export class MatTabHeader
   _inkBar: MatInkBar;
 
   /** Whether the ripple effect is disabled or not. */
-  @Input()
-  get disableRipple(): boolean {
-    return this._disableRipple;
-  }
-
-  set disableRipple(value: BooleanInput) {
-    this._disableRipple = coerceBooleanProperty(value);
-  }
-
-  private _disableRipple: boolean = false;
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
 
   constructor(
     elementRef: ElementRef,

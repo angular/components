@@ -1,13 +1,9 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
 
-
 $inset-margin: 80px;
 
 .mat-divider {
-  @include token-utils.create-token-values(
-    tokens-mat-divider.$prefix, tokens-mat-divider.get-unthemable-tokens());
-
   display: block;
   margin: 0;
   border-top-style: solid;

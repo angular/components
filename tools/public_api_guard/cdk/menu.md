@@ -101,7 +101,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
     protected triggerItem?: CdkMenuItem;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["items"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["items"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuBase, never>;
 }
@@ -183,7 +183,7 @@ export abstract class CdkMenuItemSelectable extends CdkMenuItem {
     // (undocumented)
     static ngAcceptInputType_checked: unknown;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuItemSelectable, never, never, { "checked": { "alias": "cdkMenuItemChecked"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuItemSelectable, never, never, { "checked": { "alias": "cdkMenuItemChecked"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuItemSelectable, never>;
 }
@@ -235,7 +235,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected readonly stopOutsideClicksListener: Observable<void>;
     protected readonly viewContainerRef: ViewContainerRef;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTriggerBase, never, never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTriggerBase, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuTriggerBase, never>;
 }
@@ -275,7 +275,7 @@ export interface FocusableElement {
 }
 
 // @public
-export const enum FocusNext {
+export enum FocusNext {
     // (undocumented)
     currentItem = 2,
     // (undocumented)

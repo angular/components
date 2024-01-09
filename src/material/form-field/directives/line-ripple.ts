@@ -27,9 +27,13 @@ const DEACTIVATING_CLASS = 'mdc-line-ripple--deactivating';
   host: {
     'class': 'mdc-line-ripple',
   },
+  standalone: true,
 })
 export class MatFormFieldLineRipple implements OnDestroy {
-  constructor(private _elementRef: ElementRef<HTMLElement>, ngZone: NgZone) {
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    ngZone: NgZone,
+  ) {
     ngZone.runOutsideAngular(() => {
       _elementRef.nativeElement.addEventListener('transitionend', this._handleTransitionEnd);
     });

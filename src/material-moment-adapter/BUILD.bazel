@@ -40,6 +40,7 @@ ng_web_test_suite(
 ng_package(
     name = "npm_package",
     srcs = ["package.json"],
+    nested_packages = ["//src/material-moment-adapter/schematics:npm_package"],
     tags = ["release-package"],
     deps = [":material-moment-adapter"],
 )

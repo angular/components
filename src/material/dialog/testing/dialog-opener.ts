@@ -24,6 +24,7 @@ import {Subscription} from 'rxjs';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
   /** Component that should be opened with the MatDialog `open` method. */
@@ -72,7 +73,6 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
 }
 
 @NgModule({
-  declarations: [MatTestDialogOpener],
-  imports: [MatDialogModule, NoopAnimationsModule],
+  imports: [MatDialogModule, NoopAnimationsModule, MatTestDialogOpener],
 })
 export class MatTestDialogOpenerModule {}

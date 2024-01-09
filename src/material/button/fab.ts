@@ -69,6 +69,7 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatFabButton extends MatButtonBase {
   override _isFab = true;
@@ -101,6 +102,7 @@ export class MatFabButton extends MatButtonBase {
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatMiniFabButton extends MatButtonBase {
   override _isFab = true;
@@ -137,6 +139,7 @@ export class MatMiniFabButton extends MatButtonBase {
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatFabAnchor extends MatAnchor {
   override _isFab = true;
@@ -169,6 +172,7 @@ export class MatFabAnchor extends MatAnchor {
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MatMiniFabAnchor extends MatAnchor {
   override _isFab = true;

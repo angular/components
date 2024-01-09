@@ -1,13 +1,14 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {CommonModule} from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   Directive,
   Inject,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  signal,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -39,8 +40,9 @@ describe('MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         BurritosNotification,
         DirectiveWithViewContainer,
@@ -358,7 +360,7 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
 
-    viewContainerFixture.componentInstance.childComponentExists = false;
+    viewContainerFixture.componentInstance.childComponentExists.set(false);
     viewContainerFixture.detectChanges();
     flush();
 
@@ -403,6 +405,9 @@ describe('MatSnackBar', () => {
     const dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
 
     viewContainerFixture.detectChanges();
+
+    const containerElement = document.querySelector('mat-snack-bar-container')!;
+    expect(containerElement.classList).toContain('ng-animating');
     const container1 = snackBarRef.containerInstance as MatSnackBarContainer;
     expect(container1._animationState)
       .withContext(`Expected the animation state would be 'visible'.`)
@@ -765,8 +770,12 @@ describe('MatSnackBar with parent MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [ComponentThatProvidesMatSnackBar, DirectiveWithViewContainer],
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
+        ComponentThatProvidesMatSnackBar,
+        DirectiveWithViewContainer,
+      ],
     }).compileComponents();
   }));
 
@@ -839,8 +848,12 @@ describe('MatSnackBar Positioning', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, CommonModule, NoopAnimationsModule],
-      declarations: [ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      imports: [
+        MatSnackBarModule,
+        NoopAnimationsModule,
+        ComponentWithChildViewContainer,
+        DirectiveWithViewContainer,
+      ],
     }).compileComponents();
   }));
 
@@ -1084,19 +1097,25 @@ describe('MatSnackBar Positioning', () => {
   }));
 });
 
-@Directive({selector: 'dir-with-view-container'})
+@Directive({
+  selector: 'dir-with-view-container',
+  standalone: true,
+})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
   selector: 'arbitrary-component',
-  template: `<dir-with-view-container *ngIf="childComponentExists"></dir-with-view-container>`,
+  template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
+  standalone: true,
+  imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
 
-  childComponentExists: boolean = true;
+  childComponentExists = signal(true);
 
   get childViewContainer() {
     return this.childWithViewContainer.viewContainerRef;
@@ -1110,6 +1129,7 @@ class ComponentWithChildViewContainer {
       Fries {{localValue}} {{data?.value}}
     </ng-template>
   `,
+  standalone: true,
 })
 class ComponentWithTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
@@ -1117,7 +1137,10 @@ class ComponentWithTemplateRef {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Burritos are on the way.</p>'})
+@Component({
+  template: '<p>Burritos are on the way.</p>',
+  standalone: true,
+})
 class BurritosNotification {
   constructor(
     public snackBarRef: MatSnackBarRef<BurritosNotification>,
@@ -1128,6 +1151,7 @@ class BurritosNotification {
 @Component({
   template: '',
   providers: [MatSnackBar],
+  standalone: true,
 })
 class ComponentThatProvidesMatSnackBar {
   constructor(public snackBar: MatSnackBar) {}

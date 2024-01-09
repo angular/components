@@ -52,11 +52,6 @@ merge:
       - 'pr: needs*'
       - 'presubmit failures'
 
-    # list of PR statuses that need to be successful
-    requiredStatuses:
-      - 'ci/circleci: bazel_build'
-      - 'ci/circleci: build_release_packages'
-
   # the comment that will be added when the merge label is added despite failing checks, leave empty or set to false to disable
   # {{MERGE_LABEL}} will be replaced by the value of the mergeLabel option
   # {{PLACEHOLDER}} will be replaced by the list of failing checks

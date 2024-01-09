@@ -20,6 +20,9 @@ import {
 } from '@angular/core';
 
 import {CdkSelection} from './selection';
+import {AsyncPipe} from '@angular/common';
+import {CdkSelectionToggle} from './selection-toggle';
+import {CdkSelectAll} from './select-all';
 
 /**
  * Column that adds row selecting checkboxes and a select-all checkbox if `cdkSelectionMultiple` is
@@ -32,12 +35,14 @@ import {CdkSelection} from './selection';
   template: `
     <ng-container cdkColumnDef>
       <th cdkHeaderCell *cdkHeaderCellDef>
-        <input type="checkbox" *ngIf="selection.multiple"
-            cdkSelectAll
-            #allToggler="cdkSelectAll"
-            [checked]="allToggler.checked | async"
-            [indeterminate]="allToggler.indeterminate | async"
-            (click)="allToggler.toggle($event)">
+        @if (selection.multiple) {
+          <input type="checkbox"
+              cdkSelectAll
+              #allToggler="cdkSelectAll"
+              [checked]="allToggler.checked | async"
+              [indeterminate]="allToggler.indeterminate | async"
+              (click)="allToggler.toggle($event)">
+        }
       </th>
       <td cdkCell *cdkCellDef="let row; let i = $index">
         <input type="checkbox"
@@ -52,6 +57,15 @@ import {CdkSelection} from './selection';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    CdkColumnDef,
+    CdkHeaderCellDef,
+    CdkSelectAll,
+    CdkCellDef,
+    CdkSelectionToggle,
+    AsyncPipe,
+  ],
 })
 export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   /** Column name that should be used to reference this column. */

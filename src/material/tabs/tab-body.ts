@@ -32,6 +32,7 @@ import {Subject, Subscription} from 'rxjs';
 import {distinctUntilChanged, startWith} from 'rxjs/operators';
 import {AnimationEvent} from '@angular/animations';
 import {matTabsAnimations} from './tabs-animations';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 /**
  * The portal host directive for the contents of the tab.
@@ -39,6 +40,7 @@ import {matTabsAnimations} from './tabs-animations';
  */
 @Directive({
   selector: '[matTabBodyHost]',
+  standalone: true,
 })
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
   /** Subscription to events for when the tab body begins centering. */
@@ -114,6 +116,8 @@ export type MatTabBodyPositionState =
   host: {
     'class': 'mat-mdc-tab-body',
   },
+  standalone: true,
+  imports: [MatTabBodyPortal, CdkScrollable],
 })
 export class MatTabBody implements OnInit, OnDestroy {
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */

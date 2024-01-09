@@ -23,8 +23,7 @@ describe('CdkTableScrollContainer', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule, CdkTableScrollContainerModule],
-      declarations: [componentType, ...declarations],
+      imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -247,13 +246,15 @@ class FakeDataSource extends DataSource<TestData> {
   template: `
     <div cdkTableScrollContainer>
     <table cdk-table [dataSource]="dataSource">
-      <ng-container [cdkColumnDef]="column" *ngFor="let column of columns"
-                    [sticky]="isStuck(stickyStartColumns, column)"
-                    [stickyEnd]="isStuck(stickyEndColumns, column)">
-        <th cdk-header-cell *cdkHeaderCellDef> Header {{column}} </th>
-        <td cdk-cell *cdkCellDef="let row"> {{column}} </td>
-        <td cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </td>
-      </ng-container>
+      @for (column of columns; track column) {
+        <ng-container [cdkColumnDef]="column"
+                      [sticky]="isStuck(stickyStartColumns, column)"
+                      [stickyEnd]="isStuck(stickyEndColumns, column)">
+          <th cdk-header-cell *cdkHeaderCellDef> Header {{column}} </th>
+          <td cdk-cell *cdkCellDef="let row"> {{column}} </td>
+          <td cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </td>
+        </ng-container>
+      }
 
       <tr cdk-header-row *cdkHeaderRowDef="columns; sticky: isStuck(stickyHeaders, 'header-1')">
       </tr>
@@ -273,6 +274,8 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
     </div>
   `,
+  standalone: true,
+  imports: [CdkTableModule, CdkTableScrollContainerModule],
   styles: [
     `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {

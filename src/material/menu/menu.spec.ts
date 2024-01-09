@@ -2736,13 +2736,13 @@ describe('MatMenu default overrides', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
-      declarations: [SimpleMenu, FakeIcon],
       providers: [
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
           useValue: {overlapTrigger: true, xPosition: 'before', yPosition: 'above'},
         },
       ],
+      declarations: [SimpleMenu, FakeIcon],
     }).compileComponents();
   }));
 
@@ -2780,11 +2780,15 @@ const SIMPLE_MENU_TEMPLATE = `
     <button mat-menu-item>
       <span>Item with text inside span</span>
     </button>
-    <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
+    @for (item of extraItems; track item) {
+      <button mat-menu-item> {{item}} </button>
+    }
   </mat-menu>
 `;
 
-@Component({template: SIMPLE_MENU_TEMPLATE})
+@Component({
+  template: SIMPLE_MENU_TEMPLATE,
+})
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
@@ -2889,11 +2893,12 @@ class CustomMenu {
         [matMenuTriggerFor]="levelOne"
         #levelOneTrigger="matMenuTrigger">One</button>
       <button mat-menu-item>Two</button>
-      <button mat-menu-item
-        *ngIf="showLazy"
-        id="lazy-trigger"
-        [matMenuTriggerFor]="lazy"
-        #lazyTrigger="matMenuTrigger">Three</button>
+      @if (showLazy) {
+        <button mat-menu-item
+          id="lazy-trigger"
+          [matMenuTriggerFor]="lazy"
+          #lazyTrigger="matMenuTrigger">Three</button>
+      }
     </mat-menu>
 
     <mat-menu #levelOne="matMenu" (closed)="levelOneCloseCallback($event)">
@@ -2962,11 +2967,12 @@ class NestedMenuCustomElevation {
   template: `
     <button [matMenuTriggerFor]="root" #rootTriggerEl>Toggle menu</button>
     <mat-menu #root="matMenu">
-      <button
-        mat-menu-item
-        class="level-one-trigger"
-        *ngFor="let item of items"
-        [matMenuTriggerFor]="levelOne">{{item}}</button>
+      @for (item of items; track item) {
+        <button
+          mat-menu-item
+          class="level-one-trigger"
+          [matMenuTriggerFor]="levelOne">{{item}}</button>
+      }
     </mat-menu>
 
     <mat-menu #levelOne="matMenu">
@@ -3083,10 +3089,9 @@ class MenuWithCheckboxItems {
   template: `
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
     <mat-menu #menu="matMenu">
-      <button
-        *ngFor="let item of items"
-        [disabled]="item.disabled"
-        mat-menu-item>{{item.label}}</button>
+      @for (item of items; track item) {
+        <button [disabled]="item.disabled"mat-menu-item>{{item.label}}</button>
+      }
     </mat-menu>
   `,
 })
@@ -3105,10 +3110,9 @@ class SimpleMenuWithRepeater {
     <button [matMenuTriggerFor]="menu">Toggle menu</button>
     <mat-menu #menu="matMenu">
       <ng-template matMenuContent>
-        <button
-          *ngFor="let item of items"
-          [disabled]="item.disabled"
-          mat-menu-item>{{item.label}}</button>
+        @for (item of items; track item) {
+          <button [disabled]="item.disabled" mat-menu-item>{{item.label}}</button>
+        }
       </ng-template>
     </mat-menu>
   `,
@@ -3173,7 +3177,9 @@ class StaticAriaDescribedbyMenu {}
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu #menu="matMenu">
-      <button *ngFor="let item of items" mat-menu-item>{{item}}</button>
+      @for (item of items; track item) {
+        <button mat-menu-item>{{item}}</button>
+      }
     </mat-menu>
   `,
 })

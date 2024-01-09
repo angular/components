@@ -10,6 +10,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -22,6 +23,7 @@ import {
   Inject,
   InjectionToken,
   Input,
+  numberAttribute,
   OnDestroy,
   OnInit,
   Optional,
@@ -30,15 +32,8 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  CanDisableRipple,
-  HasTabIndex,
-  mixinDisableRipple,
-  mixinTabIndex,
-  ThemePalette,
-} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple, ThemePalette} from '@angular/material/core';
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -107,6 +102,7 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
     'role': 'radiogroup',
     'class': 'mat-mdc-radio-group',
   },
+  standalone: true,
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
   /** Selected value for the radio group. */
@@ -217,22 +213,22 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   }
 
   /** Whether the radio group is disabled */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled;
   }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+  set disabled(value: boolean) {
+    this._disabled = value;
     this._markRadiosForCheck();
   }
 
   /** Whether the radio group is required */
-  @Input()
+  @Input({transform: booleanAttribute})
   get required(): boolean {
     return this._required;
   }
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
+  set required(value: boolean) {
+    this._required = value;
     this._markRadiosForCheck();
   }
 
@@ -348,18 +344,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   }
 }
 
-// Boilerplate for applying mixins to MatRadioButton.
-/** @docs-private */
-abstract class MatRadioButtonBase {
-  // Since the disabled property is manually defined for the MatRadioButton and isn't set up in
-  // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
-  // defined to properly work.
-  abstract disabled: boolean;
-  constructor(public _elementRef: ElementRef) {}
-}
-
-const _MatRadioButtonMixinBase = mixinDisableRipple(mixinTabIndex(MatRadioButtonBase));
-
 @Component({
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
@@ -382,15 +366,13 @@ const _MatRadioButtonMixinBase = mixinDisableRipple(mixinTabIndex(MatRadioButton
     // the focus to the native element.
     '(focus)': '_inputElement.nativeElement.focus()',
   },
-  inputs: ['disableRipple', 'tabIndex'],
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatRipple, _MatInternalFormField],
 })
-export class MatRadioButton
-  extends _MatRadioButtonMixinBase
-  implements OnInit, AfterViewInit, DoCheck, OnDestroy, CanDisableRipple, HasTabIndex
-{
+export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
   /** The unique ID for the radio button. */
@@ -408,24 +390,33 @@ export class MatRadioButton
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
   @Input('aria-describedby') ariaDescribedby: string;
 
+  /** Whether ripples are disabled inside the radio button */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
+
+  /** Tabindex of the radio button. */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number = 0;
+
   /** Whether this radio button is checked. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get checked(): boolean {
     return this._checked;
   }
-  set checked(value: BooleanInput) {
-    const newCheckedState = coerceBooleanProperty(value);
-    if (this._checked !== newCheckedState) {
-      this._checked = newCheckedState;
-      if (newCheckedState && this.radioGroup && this.radioGroup.value !== this.value) {
+  set checked(value: boolean) {
+    if (this._checked !== value) {
+      this._checked = value;
+      if (value && this.radioGroup && this.radioGroup.value !== this.value) {
         this.radioGroup.selected = this;
-      } else if (!newCheckedState && this.radioGroup && this.radioGroup.value === this.value) {
+      } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
         // When unchecking the selected radio button, update the selected radio
         // property on the group.
         this.radioGroup.selected = null;
       }
 
-      if (newCheckedState) {
+      if (value) {
         // Notify all radio buttons with the same name to un-check.
         this._radioDispatcher.notify(this.id, this.name);
       }
@@ -464,21 +455,21 @@ export class MatRadioButton
   private _labelPosition: 'before' | 'after';
 
   /** Whether the radio button is disabled. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get disabled(): boolean {
     return this._disabled || (this.radioGroup !== null && this.radioGroup.disabled);
   }
-  set disabled(value: BooleanInput) {
-    this._setDisabled(coerceBooleanProperty(value));
+  set disabled(value: boolean) {
+    this._setDisabled(value);
   }
 
   /** Whether the radio button is required. */
-  @Input()
+  @Input({transform: booleanAttribute})
   get required(): boolean {
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
-  set required(value: BooleanInput) {
-    this._required = coerceBooleanProperty(value);
+  set required(value: boolean) {
+    this._required = value;
   }
 
   /** Theme color of the radio button. */
@@ -534,12 +525,16 @@ export class MatRadioButton
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
+  /** Trigger elements for the ripple events. */
+  @ViewChild('formField', {read: ElementRef, static: true})
+  _rippleTrigger: ElementRef<HTMLElement>;
+
   /** Whether animations are disabled. */
   _noopAnimations: boolean;
 
   constructor(
     @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
-    elementRef: ElementRef,
+    protected _elementRef: ElementRef,
     private _changeDetector: ChangeDetectorRef,
     private _focusMonitor: FocusMonitor,
     private _radioDispatcher: UniqueSelectionDispatcher,
@@ -549,15 +544,13 @@ export class MatRadioButton
     private _providerOverride?: MatRadioDefaultOptions,
     @Attribute('tabindex') tabIndex?: string,
   ) {
-    super(elementRef);
-
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
     this._noopAnimations = animationMode === 'NoopAnimations';
 
     if (tabIndex) {
-      this.tabIndex = coerceNumberProperty(tabIndex, 0);
+      this.tabIndex = numberAttribute(tabIndex, 0);
     }
   }
 

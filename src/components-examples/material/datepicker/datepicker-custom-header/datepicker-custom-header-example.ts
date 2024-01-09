@@ -10,7 +10,7 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
-  MatNativeDateModule,
+  provideNativeDateAdapter,
 } from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -25,7 +25,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   templateUrl: 'datepicker-custom-header-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatNativeDateModule, MatDatepickerModule],
+  providers: [provideNativeDateAdapter()],
+  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
 })
 export class DatepickerCustomHeaderExample {
   exampleHeader = ExampleHeader;

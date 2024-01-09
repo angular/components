@@ -25,6 +25,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   OnDestroy,
@@ -39,7 +40,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {Subject, Subscription} from 'rxjs';
 import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
@@ -52,6 +53,8 @@ import {
 } from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
+import {NgTemplateOutlet} from '@angular/common';
+import {Platform} from '@angular/cdk/platform';
 
 @Component({
   selector: 'mat-step',
@@ -63,6 +66,11 @@ import {MatStepContent} from './step-content';
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CdkPortalOutlet],
+  host: {
+    'hidden': '', // Hide the steps so they don't affect the layout.
+  },
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
   private _isSelected = Subscription.EMPTY;
@@ -128,7 +136,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   exportAs: 'matStepper, matVerticalStepper, matHorizontalStepper',
   templateUrl: 'stepper.html',
   styleUrls: ['stepper.css'],
-  inputs: ['selectedIndex'],
   host: {
     '[class.mat-stepper-horizontal]': 'orientation === "horizontal"',
     '[class.mat-stepper-vertical]': 'orientation === "vertical"',
@@ -139,7 +146,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
     '[attr.aria-orientation]': 'orientation',
     'role': 'tablist',
-    'ngSkipHydration': '',
   },
   animations: [
     matStepperAnimations.horizontalStepTransition,
@@ -148,6 +154,8 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgTemplateOutlet, MatStepHeader],
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
@@ -204,6 +212,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
   }
   private _animationDuration = '';
+
+  /** Whether the stepper is rendering on the server. */
+  protected _isServer: boolean = !inject(Platform).isBrowser;
 
   constructor(
     @Optional() dir: Directionality,

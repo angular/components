@@ -7,23 +7,27 @@
   <div class="mdc-slider__track--active">
     <div #trackActive class="mdc-slider__track--active_fill"></div>
   </div>
-  <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
-    <ng-container *ngIf="_cachedWidth">
-        <div
-          *ngFor="let tickMark of _tickMarks; let i = index"
-          [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
-          [style.transform]="_calcTickMarkTransform(i)"></div>
-    </ng-container>
-  </div>
+  @if (showTickMarks) {
+    <div class="mdc-slider__tick-marks" #tickMarkContainer>
+      @if (_cachedWidth) {
+        @for (tickMark of _tickMarks; track tickMark; let i = $index) {
+          <div
+            [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
+            [style.transform]="_calcTickMarkTransform(i)"></div>
+        }
+      }
+    </div>
+  }
 </div>
 
 <!-- Thumbs -->
-<mat-slider-visual-thumb
-  *ngIf="_isRange"
-  [discrete]="discrete"
-  [thumbPosition]="1"
-  [valueIndicatorText]="startValueIndicatorText">
-</mat-slider-visual-thumb>
+@if (_isRange) {
+  <mat-slider-visual-thumb
+    [discrete]="discrete"
+    [thumbPosition]="1"
+    [valueIndicatorText]="startValueIndicatorText">
+  </mat-slider-visual-thumb>
+}
 
 <mat-slider-visual-thumb
   [discrete]="discrete"

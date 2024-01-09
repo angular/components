@@ -8,7 +8,7 @@
 
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '../../cdk/testing/private';
+import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -38,8 +38,8 @@ describe('MDC-based MatSlider', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
-      declarations: [component],
       providers: [...providers],
+      declarations: [component],
     }).compileComponents();
     platform = TestBed.inject(Platform);
     return TestBed.createComponent<T>(component);
@@ -59,7 +59,16 @@ describe('MDC-based MatSlider', () => {
     expect(input.min).withContext('min').toBe(min);
     expect(input.max).withContext('max').toBe(max);
     expect(input.value).withContext('value').toBe(value);
-    expect(input.translateX).withContext('translateX').toBeCloseTo(translateX, 0.1);
+
+    // Note: This ±6 is here to account for the slight shift of the slider
+    // thumb caused by the tick marks being 3px away from the track start
+    // and end.
+    //
+    // This check is meant to ensure the "ideal" estimate is within 3px of the
+    // actual slider thumb position.
+    expect(input.translateX - 6 < translateX && input.translateX + 6 > translateX)
+      .withContext(`translateX: ${input.translateX} should be close to ${translateX}`)
+      .toBeTrue();
     if (step !== undefined) {
       expect(input.step).withContext('step').toBe(step);
     }
@@ -618,7 +627,13 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       pointerup();
       flush();
-      expect(isRippleVisible('focus')).toBeTrue();
+
+      // The slider immediately loses focus on pointerup for Safari.
+      if (platform.SAFARI) {
+        expect(isRippleVisible('hover')).toBeTrue();
+      } else {
+        expect(isRippleVisible('focus')).toBeTrue();
+      }
     }));
 
     it('should hide the focus ripple on blur', fakeAsync(() => {
@@ -1012,6 +1027,32 @@ describe('MDC-based MatSlider', () => {
       fixture.componentInstance.endValue = 70;
       fixture.detectChanges();
       expect(endInput.value).toBe(70);
+    });
+
+    it('should update the input width when the start value changes', () => {
+      const startInputEl = startInput._elementRef.nativeElement;
+      const endInputEl = endInput._elementRef.nativeElement;
+      const startInputWidthBefore = startInputEl.getBoundingClientRect().width;
+      const endInputWidthBefore = endInputEl.getBoundingClientRect().width;
+      fixture.componentInstance.startValue = 10;
+      fixture.detectChanges();
+      const startInputWidthAfter = startInputEl.getBoundingClientRect().width;
+      const endInputWidthAfter = endInputEl.getBoundingClientRect().width;
+      expect(startInputWidthBefore).not.toBe(startInputWidthAfter);
+      expect(endInputWidthBefore).not.toBe(endInputWidthAfter);
+    });
+
+    it('should update the input width when the end value changes', () => {
+      const startInputEl = startInput._elementRef.nativeElement;
+      const endInputEl = endInput._elementRef.nativeElement;
+      const startInputWidthBefore = startInputEl.getBoundingClientRect().width;
+      const endInputWidthBefore = endInputEl.getBoundingClientRect().width;
+      fixture.componentInstance.endValue = 90;
+      fixture.detectChanges();
+      const startInputWidthAfter = startInputEl.getBoundingClientRect().width;
+      const endInputWidthAfter = endInputEl.getBoundingClientRect().width;
+      expect(startInputWidthBefore).not.toBe(startInputWidthAfter);
+      expect(endInputWidthBefore).not.toBe(endInputWidthAfter);
     });
   });
 

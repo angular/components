@@ -10,7 +10,7 @@ import {NgModule} from '@angular/core';
 import {CdkAutoSizeVirtualScroll} from './auto-size-virtual-scroll';
 
 @NgModule({
+  imports: [CdkAutoSizeVirtualScroll],
   exports: [CdkAutoSizeVirtualScroll],
-  declarations: [CdkAutoSizeVirtualScroll],
 })
 export class ScrollingModule {}

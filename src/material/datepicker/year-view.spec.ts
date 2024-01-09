@@ -9,7 +9,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -23,11 +23,10 @@ describe('MatYearView', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule],
-      declarations: [
+      imports: [
+        MatNativeDateModule,
         MatCalendarBody,
         MatYearView,
-
         // Test components.
         StandardYearView,
         YearViewWithDateFilter,
@@ -387,6 +386,8 @@ describe('MatYearView', () => {
   template: `
     <mat-year-view [(activeDate)]="date" [(selected)]="selected"
                    (monthSelected)="selectedMonth=$event"></mat-year-view>`,
+  standalone: true,
+  imports: [MatYearView],
 })
 class StandardYearView {
   date = new Date(2017, JAN, 5);
@@ -403,6 +404,8 @@ class StandardYearView {
       [dateFilter]="dateFilter"
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-year-view>`,
+  standalone: true,
+  imports: [MatYearView],
 })
 class YearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -421,6 +424,8 @@ class YearViewWithDateFilter {
 
 @Component({
   template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`,
+  standalone: true,
+  imports: [MatYearView],
 })
 class YearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

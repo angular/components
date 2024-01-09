@@ -14,40 +14,62 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
-import {YouTubePlayerModule} from '@angular/youtube-player';
+import {PlaceholderImageQuality, YouTubePlayer} from '@angular/youtube-player';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 interface Video {
   id: string;
   name: string;
   isPlaylist?: boolean;
+  autoplay?: boolean;
+  placeholderQuality: PlaceholderImageQuality;
 }
 
 const VIDEOS: Video[] = [
   {
-    id: 'PRQCAL_RMVo',
-    name: 'Instructional',
+    id: 'hsUxJjY-PRg',
+    name: 'Control Flow',
+    placeholderQuality: 'high',
   },
   {
     id: 'O0xx5SvjmnU',
     name: 'Angular Conf',
+    placeholderQuality: 'high',
   },
   {
     id: 'invalidname',
     name: 'Invalid',
+    placeholderQuality: 'high',
   },
   {
     id: 'PLOa5YIicjJ-XCGXwnEmMmpHHCn11gUgvL',
     name: 'Angular Forms Playlist',
     isPlaylist: true,
+    placeholderQuality: 'high',
   },
   {
     id: 'PLOa5YIicjJ-VpOOoLczAGTLEEznZ2JEa6',
     name: 'Angular Router Playlist',
     isPlaylist: true,
+    placeholderQuality: 'high',
+  },
+  {
+    id: 'PXNp4LENMPA',
+    name: 'Angular.dev (autoplay)',
+    autoplay: true,
+    placeholderQuality: 'high',
+  },
+  {
+    id: 'txqiwrbYGrs',
+    name: 'David after dentist (only standard quality placeholder)',
+    placeholderQuality: 'low',
+  },
+  {
+    id: 'EwTZ2xpQwpA',
+    name: 'Chocolate rain (only low quality placeholder)',
+    placeholderQuality: 'low',
   },
 ];
 
@@ -56,7 +78,7 @@ const VIDEOS: Video[] = [
   templateUrl: 'youtube-player-demo.html',
   styleUrls: ['youtube-player-demo.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayerModule],
+  imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   @ViewChild('demoYouTubePlayer') demoYouTubePlayer: ElementRef<HTMLDivElement>;
@@ -68,10 +90,10 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   videoWidth: number | undefined;
   videoHeight: number | undefined;
   disableCookies = false;
+  disablePlaceholder = false;
+  placeholderQuality: PlaceholderImageQuality;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this._loadApi();
-
     this.selectedVideo = VIDEOS[0];
   }
 
@@ -105,11 +127,12 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
 
   set selectedVideo(value: Video | undefined) {
     this._selectedVideo = value;
+    this.placeholderQuality = value?.placeholderQuality || 'standard';
 
     // If the video is a playlist, don't send a video id, and prepare playerVars instead
 
     if (!value?.isPlaylist) {
-      this._playerVars = undefined;
+      this._playerVars = value?.autoplay ? {autoplay: 1} : undefined;
       this._selectedVideoId = value?.id;
       return;
     }
@@ -120,15 +143,5 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
     };
 
     this._selectedVideoId = undefined;
-  }
-
-  private _loadApi() {
-    if (!window.YT) {
-      // We don't need to wait for the API to load since the
-      // component is set up to wait for it automatically.
-      const script = document.createElement('script');
-      script.src = 'https://www.youtube.com/iframe_api';
-      document.body.appendChild(script);
-    }
   }
 }

@@ -24,6 +24,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
@@ -69,6 +70,13 @@ const defaultPositionList: ConnectedPosition[] = [
 /** Injection token that determines the scroll handling while the connected overlay is open. */
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'cdk-connected-overlay-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
 );
 
 /**

@@ -14,7 +14,7 @@
   "peerDependencies": {
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
-    "date-fns": "^2.23.0"
+    "date-fns": ">2.20.0 <4.0"
   },
   "dependencies": {
     "tslib": "0.0.0-TSLIB"
@@ -26,5 +26,6 @@
       "@angular/material-date-fns-adapter"
     ]
   },
+  "schematics": "./schematics/collection.json",
   "sideEffects": false
 }

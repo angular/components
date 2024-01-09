@@ -12,7 +12,6 @@ ng_module(
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
-        "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "@npm//@angular/core",

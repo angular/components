@@ -13,8 +13,7 @@ import {CdkComboboxPopup} from './combobox-popup';
 
 const EXPORTED_DECLARATIONS = [CdkCombobox, CdkComboboxPopup];
 @NgModule({
-  imports: [OverlayModule],
+  imports: [OverlayModule, ...EXPORTED_DECLARATIONS],
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
 })
 export class CdkComboboxModule {}

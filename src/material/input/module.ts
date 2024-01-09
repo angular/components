@@ -13,8 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput} from './input';
 
 @NgModule({
-  imports: [MatCommonModule, MatFormFieldModule],
+  imports: [MatCommonModule, MatFormFieldModule, MatInput],
   exports: [MatInput, MatFormFieldModule, TextFieldModule, MatCommonModule],
-  declarations: [MatInput],
 })
 export class MatInputModule {}

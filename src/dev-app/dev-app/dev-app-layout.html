@@ -1,15 +1,15 @@
 <mat-sidenav-container class="demo-container">
   <mat-sidenav #navigation role="navigation">
     <mat-nav-list>
-      <a *ngFor="let navItem of navItems"
-         mat-list-item
-         (click)="navigation.close()"
-         routerLinkActive
-         #routerLinkActiveInstance="routerLinkActive"
-         [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-         [routerLink]="[navItem.route]">
-        {{navItem.name}}
-      </a>
+      @for (navItem of navItems; track navItem) {
+        <a
+          mat-list-item
+          (click)="navigation.close()"
+          routerLinkActive
+          #routerLinkActiveInstance="routerLinkActive"
+          [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+          [routerLink]="[navItem.route]">{{navItem.name}}</a>
+      }
 
       <mat-divider></mat-divider>
 
@@ -55,37 +55,61 @@
             mat-icon-button
             (click)="toggleM3()"
             [matTooltip]="state.m3Enabled ? 'Use M2 theme' : 'Use M3 theme'">
-            <mat-icon>brush</mat-icon>
+            @if (state.m3Enabled) {
+              <mat-icon>invert_colors_off</mat-icon>
+            } @else {
+              <mat-icon>invert_colors</mat-icon>
+            }
           </button>
           <button
             mat-icon-button
             (click)="toggleAnimations()"
             [matTooltip]="state.animations ? 'Disable animations' : 'Enable animations'">
-            <mat-icon>animation</mat-icon>
+            @if (state.animations) {
+              <mat-icon>pause_circle</mat-icon>
+            } @else {
+              <mat-icon>animation</mat-icon>
+            }
           </button>
           <button
             mat-icon-button
             (click)="toggleTheme()"
             [matTooltip]="state.darkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
-            <mat-icon>dark_mode</mat-icon>
+            @if (state.darkTheme) {
+              <mat-icon>light_mode</mat-icon>
+            } @else {
+              <mat-icon>dark_mode</mat-icon>
+            }
           </button>
           <button
             mat-icon-button
             (click)="toggleRippleDisabled()"
             [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'">
-            <mat-icon>waves</mat-icon>
+            @if (state.rippleDisabled) {
+              <mat-icon>waves</mat-icon>
+            } @else {
+              <mat-icon>water</mat-icon>
+            }
           </button>
           <button
             mat-icon-button
             (click)="toggleStrongFocus()"
             [matTooltip]="state.strongFocusEnabled ? 'Disable strong focus' : 'Enable strong focus'">
-            <mat-icon>accessibility</mat-icon>
+            @if (state.strongFocusEnabled) {
+              <mat-icon>not_accessible</mat-icon>
+            } @else {
+              <mat-icon>accessibility</mat-icon>
+            }
           </button>
           <button
             mat-icon-button
             (click)="toggleDirection()"
             [matTooltip]="state.direction === 'rtl' ? 'Switch to LTR' : 'Switch to RTL'">
-            <mat-icon>keyboard_tab_rtl</mat-icon>
+            @if (state.direction === 'rtl') {
+              <mat-icon>west</mat-icon>
+            } @else {
+              <mat-icon>east</mat-icon>
+            }
           </button>
           <button
             mat-icon-button

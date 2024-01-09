@@ -11,8 +11,7 @@ describe('MatBadgeHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatBadgeModule],
-      declarations: [BadgeHarnessTest],
+      imports: [MatBadgeModule, BadgeHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BadgeHarnessTest);
@@ -127,6 +126,8 @@ describe('MatBadgeHarness', () => {
       matBadge="Disabled badge"
       [matBadgeDisabled]="disabled">Disabled</button>
   `,
+  standalone: true,
+  imports: [MatBadgeModule],
 })
 class BadgeHarnessTest {
   simpleContent = 'Simple badge';

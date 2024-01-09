@@ -53,6 +53,7 @@
 /src/material/core/line/**                                  @andrewseguin
 /src/material/core/mdc-helpers/**                           @mmalerba
 /src/material/core/option/**                                @crisbeto
+/src/material/core/internal-form-field/**                   @crisbeto
 /src/material/core/placeholder/**                           @mmalerba
 /src/material/core/private/**                               @wagnermaciel
 /src/material/core/ripple/**                                @devversion
@@ -107,7 +108,6 @@
 /src/material-experimental/popover-edit/**                  @andrewseguin
 /src/material-experimental/selection/**                     @andrewseguin
 /src/material-experimental/theming/**                       @mmalerba
-/src/material-experimental/theming-next/**                  @mmalerba
 
 # CDK experimental package
 /src/cdk-experimental/*                                     @andrewseguin

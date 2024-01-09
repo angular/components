@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {Sort, MatSortModule} from '@angular/material/sort';
-import {NgFor} from '@angular/common';
 
 /**
  * @title Testing with MatSortHarness
@@ -9,7 +8,7 @@ import {NgFor} from '@angular/common';
   selector: 'sort-harness-example',
   templateUrl: 'sort-harness-example.html',
   standalone: true,
-  imports: [MatSortModule, NgFor],
+  imports: [MatSortModule],
 })
 export class SortHarnessExample {
   disableThirdHeader = false;

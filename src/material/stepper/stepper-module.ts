@@ -28,9 +28,6 @@ import {MatStepContent} from './step-content';
     CdkStepperModule,
     MatIconModule,
     MatRippleModule,
-  ],
-  exports: [
-    MatCommonModule,
     MatStep,
     MatStepLabel,
     MatStepper,
@@ -40,7 +37,8 @@ import {MatStepContent} from './step-content';
     MatStepperIcon,
     MatStepContent,
   ],
-  declarations: [
+  exports: [
+    MatCommonModule,
     MatStep,
     MatStepLabel,
     MatStepper,

@@ -11,6 +11,7 @@
 
 import {
   Directive,
+  EventEmitter,
   Input,
   NgZone,
   OnChanges,
@@ -23,6 +24,7 @@ import {
 import {Observable} from 'rxjs';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Directions Renderer via the Google Maps
@@ -33,6 +35,7 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-directions-renderer',
   exportAs: 'mapDirectionsRenderer',
+  standalone: true,
 })
 export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -65,23 +68,49 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   readonly directionsChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('directions_changed');
 
+  /** Event emitted when the directions renderer is initialized. */
+  @Output() readonly directionsRendererInitialized: EventEmitter<google.maps.DirectionsRenderer> =
+    new EventEmitter<google.maps.DirectionsRenderer>();
+
   /** The underlying google.maps.DirectionsRenderer object. */
   directionsRenderer?: google.maps.DirectionsRenderer;
 
-  constructor(private readonly _googleMap: GoogleMap, private _ngZone: NgZone) {}
+  constructor(
+    private readonly _googleMap: GoogleMap,
+    private _ngZone: NgZone,
+  ) {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.directionsRenderer = new google.maps.DirectionsRenderer(this._combineOptions());
-      });
-      this._assertInitialized();
-      this.directionsRenderer.setMap(this._googleMap.googleMap!);
-      this._eventManager.setTarget(this.directionsRenderer);
+      if (google.maps.DirectionsRenderer && this._googleMap.googleMap) {
+        this._initialize(this._googleMap.googleMap, google.maps.DirectionsRenderer);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          Promise.all([
+            this._googleMap._resolveMap(),
+            importLibrary<typeof google.maps.DirectionsRenderer>('routes', 'DirectionsRenderer'),
+          ]).then(([map, rendererConstructor]) => {
+            this._initialize(map, rendererConstructor);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    rendererConstructor: typeof google.maps.DirectionsRenderer,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.directionsRenderer = new rendererConstructor(this._combineOptions());
+      this._assertInitialized();
+      this.directionsRenderer.setMap(map);
+      this._eventManager.setTarget(this.directionsRenderer);
+      this.directionsRendererInitialized.emit(this.directionsRenderer);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -98,9 +127,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this._eventManager.destroy();
-    if (this.directionsRenderer) {
-      this.directionsRenderer.setMap(null);
-    }
+    this.directionsRenderer?.setMap(null);
   }
 
   /**
@@ -143,12 +170,6 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     directionsRenderer: google.maps.DirectionsRenderer;
   } {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.directionsRenderer) {
         throw Error(
           'Cannot interact with a Google Map Directions Renderer before it has been ' +

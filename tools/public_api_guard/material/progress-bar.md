@@ -4,18 +4,14 @@
 
 ```ts
 
-import { _AbstractConstructor } from '@angular/material/core';
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@angular/material/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { _Constructor } from '@angular/material/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
@@ -29,13 +25,17 @@ export const MAT_PROGRESS_BAR_LOCATION: InjectionToken<MatProgressBarLocation>;
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation;
 
 // @public (undocumented)
-export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit, OnDestroy, CanColor {
-    constructor(elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, _animationMode?: string | undefined, defaults?: MatProgressBarDefaultOptions);
+export class MatProgressBar implements AfterViewInit, OnDestroy {
+    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, _animationMode?: string | undefined, defaults?: MatProgressBarDefaultOptions);
     readonly animationEnd: EventEmitter<ProgressAnimationEnd>;
     // (undocumented)
     _animationMode?: string | undefined;
     get bufferValue(): number;
-    set bufferValue(v: NumberInput);
+    set bufferValue(v: number);
+    get color(): string | null | undefined;
+    set color(value: string | null | undefined);
+    // (undocumented)
+    readonly _elementRef: ElementRef<HTMLElement>;
     _getBufferBarFlexBasis(): string;
     _getPrimaryBarTransform(): string;
     _isIndeterminate(): boolean;
@@ -43,13 +43,17 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
     get mode(): ProgressBarMode;
     set mode(value: ProgressBarMode);
     // (undocumented)
+    static ngAcceptInputType_bufferValue: unknown;
+    // (undocumented)
+    static ngAcceptInputType_value: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     get value(): number;
-    set value(v: NumberInput);
+    set value(v: number);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "bufferValue": { "alias": "bufferValue"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, { "animationEnd": "animationEnd"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "bufferValue": { "alias": "bufferValue"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, { "animationEnd": "animationEnd"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, [null, null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -73,7 +77,7 @@ export class MatProgressBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressBarModule, [typeof i1.MatProgressBar], never, [typeof i1.MatProgressBar, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressBarModule, never, [typeof i1.MatProgressBar], [typeof i1.MatProgressBar, typeof i2.MatCommonModule]>;
 }
 
 // @public

@@ -17,8 +17,7 @@ describe('MatTreeHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatTreeModule],
-      declarations: [TreeHarnessTest],
+      imports: [MatTreeModule, TreeHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TreeHarnessTest);
@@ -251,6 +250,8 @@ interface ExampleFlatNode {
       </mat-nested-tree-node>
     </mat-tree>
   `,
+  standalone: true,
+  imports: [MatTreeModule],
 })
 class TreeHarnessTest {
   private _transformer = (node: Node, level: number) => {

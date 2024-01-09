@@ -16,8 +16,7 @@ describe('DragDropRegistry', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [DragDropModule],
-      declarations: [BlankComponent],
+      imports: [DragDropModule, BlankComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlankComponent);
@@ -258,6 +257,10 @@ describe('DragDropRegistry', () => {
     }
   }
 
-  @Component({template: ``})
+  @Component({
+    template: ``,
+    standalone: true,
+    imports: [DragDropModule],
+  })
   class BlankComponent {}
 });

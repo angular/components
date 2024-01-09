@@ -12,7 +12,7 @@ import {
   dispatchMouseEvent,
   MockNgZone,
   typeInElement,
-} from '../../cdk/testing/private';
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -72,8 +72,8 @@ describe('MDC-based MatAutocomplete', () => {
         NoopAnimationsModule,
         OverlayModule,
       ],
-      declarations: [component],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}, ...providers],
+      declarations: [component],
     });
 
     TestBed.compileComponents();
@@ -705,6 +705,65 @@ describe('MDC-based MatAutocomplete', () => {
     }).not.toThrow();
   });
 
+  it('should clear the selected option if it no longer matches the input text while typing', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(false);
+  }));
+
+  it('should not clear the selected option if it no longer matches the input text while typing with requireSelection', fakeAsync(() => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.componentInstance.requireSelection = true;
+    fixture.detectChanges();
+    tick();
+
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    // Select an option and reopen the panel.
+    (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    input.value = '';
+    typeInElement(input, 'Ala');
+    fixture.detectChanges();
+    tick();
+
+    expect(fixture.componentInstance.options.first.selected).toBe(true);
+  }));
+
   describe('forms integration', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
@@ -845,6 +904,33 @@ describe('MDC-based MatAutocomplete', () => {
       tick();
 
       expect(input.value).withContext(`Expected input value to be empty after reset.`).toEqual('');
+    }));
+
+    it('should clear the previous selection when reactive form field is reset programmatically', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+      const clickedOption = options[0];
+      const option = fixture.componentInstance.options.first;
+
+      clickedOption.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+      expect(option.selected).toBe(true);
+
+      fixture.componentInstance.stateCtrl.reset();
+      tick();
+
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.stateCtrl.value).toEqual(null);
+      expect(option.selected).toBe(false);
     }));
 
     it('should disable input in view when disabled programmatically', () => {
@@ -3758,7 +3844,9 @@ describe('MDC-based MatAutocomplete', () => {
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
   <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width" [color]="theme">
-    <mat-label *ngIf="hasLabel">State</mat-label>
+    @if (hasLabel) {
+      <mat-label>State</mat-label>
+    }
     <input
       matInput
       placeholder="State"
@@ -3777,13 +3865,14 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
     [aria-labelledby]="ariaLabelledby"
     (opened)="openedSpy()"
     (closed)="closedSpy()">
-    <mat-option
-      *ngFor="let state of filteredStates"
-      [value]="state"
-      [style.height.px]="state.height"
-      [disabled]="state.disabled">
-      <span>{{ state.code }}: {{ state.name }}</span>
-    </mat-option>
+    @for (state of filteredStates; track state) {
+      <mat-option
+        [value]="state"
+        [style.height.px]="state.height"
+        [disabled]="state.disabled">
+        <span>{{ state.code }}: {{ state.name }}</span>
+      </mat-option>
+    }
   </mat-autocomplete>
 `;
 
@@ -3848,14 +3937,18 @@ class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
 @Component({
   template: `
-    <mat-form-field *ngIf="isVisible">
+    @if (isVisible) {
+<mat-form-field>
       <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
     </mat-form-field>
+}
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      @for (option of filteredOptions | async; track option) {
+  <mat-option [value]="option">
          {{option}}
       </mat-option>
+}
     </mat-autocomplete>
   `,
 })
@@ -3888,9 +3981,11 @@ class NgIfAutocomplete {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates" [value]="state">
-        <span> {{ state }}  </span>
-      </mat-option>
+      @for (state of filteredStates; track state) {
+        <mat-option [value]="state">
+          <span> {{ state }}  </span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3915,9 +4010,11 @@ class AutocompleteWithoutForms {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates" [value]="state">
-        <span>{{ state }}</span>
-      </mat-option>
+      @for (state of filteredStates; track state) {
+        <mat-option [value]="state">
+          <span>{{ state }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3944,9 +4041,11 @@ class AutocompleteWithNgModel {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let number of numbers" [value]="number">
-        <span>{{ number }}</span>
-      </mat-option>
+      @for (number of numbers; track number) {
+        <mat-option [value]="number">
+          <span>{{ number }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3963,7 +4062,9 @@ class AutocompleteWithNumbers {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
+      @for (option of options; track option) {
+        <mat-option [value]="option">{{ option }}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -3983,9 +4084,9 @@ class AutocompleteWithOnPushDelay implements OnInit {
     <input placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-         {{option}}
-      </mat-option>
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option">{{option}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4024,11 +4125,15 @@ class AutocompleteWithoutPanel {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-optgroup *ngFor="let group of stateGroups" [label]="group.label">
-        <mat-option *ngFor="let state of group.states" [value]="state">
-          <span>{{ state }}</span>
-        </mat-option>
-      </mat-optgroup>
+      @for (group of stateGroups; track group) {
+        <mat-optgroup [label]="group.label">
+          @for (state of group.states; track state) {
+            <mat-option [value]="state">
+              <span>{{ state }}</span>
+            </mat-option>
+          }
+        </mat-optgroup>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4058,13 +4163,17 @@ class AutocompleteWithGroups {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <ng-container [ngSwitch]="true">
-        <mat-optgroup *ngFor="let group of stateGroups" [label]="group.label">
-          <mat-option *ngFor="let state of group.states" [value]="state">
-            <span>{{ state }}</span>
-          </mat-option>
-        </mat-optgroup>
-      </ng-container>
+      @if (true) {
+        @for (group of stateGroups; track group) {
+          <mat-optgroup [label]="group.label">
+            @for (state of group.states; track state) {
+              <mat-option [value]="state">
+                <span>{{ state }}</span>
+              </mat-option>
+            }
+          </mat-optgroup>
+        }
+      }
     </mat-autocomplete>
   `,
 })
@@ -4077,9 +4186,11 @@ class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
-      <mat-option *ngFor="let state of states" [value]="state">
-        <span>{{ state }}</span>
-      </mat-option>
+      @for (state of states; track state) {
+        <mat-option [value]="state">
+          <span>{{ state }}</span>
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4109,7 +4220,9 @@ class PlainAutocompleteInputWithFormControl {
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
+      @for (value of values; track value) {
+        <mat-option [value]="value">{{value}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4139,7 +4252,9 @@ class AutocompleteWithNumberInputAndNgModel {
     </div>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
+      @for (value of values; track value) {
+        <mat-option [value]="value">{{value}}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4173,7 +4288,9 @@ class InputWithoutAutocompleteAndDisabled {}
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete" (optionActivated)="optionActivated($event)">
-      <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+      @for (state of states; track state) {
+        <mat-option [value]="state">{{ state }}</mat-option>
+      }
     </mat-autocomplete>
   `,
 })
@@ -4198,9 +4315,9 @@ class AutocompleteWithActivatedEvent {
           <input matInput [matAutocomplete]="reactiveAuto" [formControl]="formControl">
         </mat-form-field>
         <mat-autocomplete #reactiveAuto="matAutocomplete">
-          <mat-option *ngFor="let food of foods; let index = index" [value]="food">
-            {{food.viewValue}}
-          </mat-option>
+          @for (food of foods; track food; let index = $index) {
+            <mat-option [value]="food">{{food.viewValue}}</mat-option>
+          }
         </mat-autocomplete>
       </div>
     </ng-template>

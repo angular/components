@@ -28,6 +28,8 @@ import {
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+import {MatRipple} from '../ripple/ripple';
+import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -77,6 +79,8 @@ export class MatOptionSelectionChange<T = any> {
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatPseudoCheckbox, MatRipple],
 })
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
   private _selected = false;

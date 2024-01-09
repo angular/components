@@ -258,10 +258,10 @@ export class StickyStyler {
       return;
     }
 
-    const tfoot = tableElement.querySelector('tfoot')!;
-
     // Coalesce with other sticky updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
+      const tfoot = tableElement.querySelector('tfoot')!;
+
       if (stickyStates.some(state => !state)) {
         this._removeStickyStyle(tfoot, ['bottom']);
       } else {

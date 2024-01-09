@@ -37,8 +37,8 @@ describe('MatRipple', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatRippleModule],
-      declarations: [
+      imports: [
+        MatRippleModule,
         BasicRippleContainer,
         RippleContainerWithInputBindings,
         RippleContainerWithoutBindings,
@@ -201,7 +201,7 @@ describe('MatRipple', () => {
 
     it('should ignore fake mouse events from screen readers', () => {
       const event = createMouseEvent('mousedown');
-      Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
+      Object.defineProperties(event, {buttons: {get: () => 0}, detail: {get: () => 0}});
 
       dispatchEvent(rippleTarget, event);
 
@@ -511,8 +511,7 @@ describe('MatRipple', () => {
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatRippleModule, ...extraImports],
-        declarations: [testComponent],
+        imports: [MatRippleModule, ...extraImports, testComponent],
         providers: [{provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig}],
       });
 
@@ -612,8 +611,7 @@ describe('MatRipple', () => {
     beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [NoopAnimationsModule, MatRippleModule],
-        declarations: [BasicRippleContainer],
+        imports: [NoopAnimationsModule, MatRippleModule, BasicRippleContainer],
       });
 
       fixture = TestBed.createComponent(BasicRippleContainer);
@@ -839,6 +837,8 @@ describe('MatRipple', () => {
          style="position: relative; width:300px; height:200px;">
     </div>
   `,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class BasicRippleContainer {
   @ViewChild('ripple') ripple: MatRipple;
@@ -857,6 +857,8 @@ class BasicRippleContainer {
     </div>
     <div class="alternateTrigger"></div>
   `,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleContainerWithInputBindings {
   animationConfig: RippleAnimationConfig;
@@ -870,11 +872,15 @@ class RippleContainerWithInputBindings {
 
 @Component({
   template: `<div id="container" #ripple="matRipple" matRipple></div>`,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleContainerWithoutBindings {}
 
 @Component({
-  template: `<div id="container" matRipple *ngIf="!isDestroyed"></div>`,
+  template: `@if (!isDestroyed) {<div id="container" matRipple></div>}`,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleContainerWithNgIf {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -885,6 +891,8 @@ class RippleContainerWithNgIf {
   styles: [`* { transition: none !important; }`],
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleCssTransitionNone {}
 
@@ -892,15 +900,19 @@ class RippleCssTransitionNone {}
   styles: [`* { transition-duration: 0ms !important; }`],
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleCssTransitionDurationZero {}
 
 @Component({
   template: `
-    <div *ngIf="show" (click)="show = false" matRipple>
-      Click to remove this element.
-    </div>
+    @if (show) {
+      <div (click)="show = false" matRipple>Click to remove this element.</div>
+    }
   `,
+  standalone: true,
+  imports: [MatRippleModule],
 })
 class RippleWithDomRemovalOnClick {
   show = true;

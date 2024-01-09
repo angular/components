@@ -10,8 +10,7 @@ describe('DragDrop', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [DragDropModule],
+      imports: [DragDropModule, TestComponent],
     });
 
     TestBed.compileComponents();
@@ -40,6 +39,8 @@ describe('DragDrop', () => {
 
 @Component({
   template: '<div></div>',
+  standalone: true,
+  imports: [DragDropModule],
 })
 class TestComponent {
   constructor(public elementRef: ElementRef<HTMLElement>) {}

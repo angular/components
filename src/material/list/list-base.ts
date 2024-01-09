@@ -42,6 +42,7 @@ import {MAT_LIST_CONFIG} from './tokens';
   host: {
     '[attr.aria-disabled]': 'disabled',
   },
+  standalone: true,
 })
 /** @docs-private */
 export abstract class MatListBase {
@@ -79,6 +80,7 @@ export abstract class MatListBase {
     '[attr.aria-disabled]': 'disabled',
     '[attr.disabled]': '(_isButtonElement && disabled) || null',
   },
+  standalone: true,
 })
 /** @docs-private */
 export abstract class MatListItemBase implements AfterViewInit, OnDestroy, RippleTarget {
@@ -326,13 +328,13 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
  */
 function sanityCheckListItemContent(item: MatListItemBase) {
   const numTitles = item._titles!.length;
-  const numLines = item._titles!.length;
+  const numLines = item._lines!.length;
 
   if (numTitles > 1) {
-    throw Error('A list item cannot have multiple titles.');
+    console.warn('A list item cannot have multiple titles.');
   }
   if (numTitles === 0 && numLines > 0) {
-    throw Error('A list item line can only be used if there is a list item title.');
+    console.warn('A list item line can only be used if there is a list item title.');
   }
   if (
     numTitles === 0 &&
@@ -340,9 +342,9 @@ function sanityCheckListItemContent(item: MatListItemBase) {
     item._explicitLines !== null &&
     item._explicitLines > 1
   ) {
-    throw Error('A list item cannot have wrapping content without a title.');
+    console.warn('A list item cannot have wrapping content without a title.');
   }
   if (numLines > 2 || (numLines === 2 && item._hasUnscopedTextContent)) {
-    throw Error('A list item can have at maximum three lines.');
+    console.warn('A list item can have at maximum three lines.');
   }
 }

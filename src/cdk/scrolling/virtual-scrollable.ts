@@ -38,7 +38,7 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
   }
 
   /**
-   * Measure the bounding ClientRect size including the scroll offset.
+   * Measure the bounding DOMRect size including the scroll offset.
    *
    * @param from The edge to measure from.
    */

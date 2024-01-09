@@ -32,15 +32,13 @@ describe('FocusMonitor', () => {
     fakeActiveElement = null;
 
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [PlainButton],
+      imports: [A11yModule, PlainButton],
       providers: [
         {
           provide: DOCUMENT,
           useFactory: () => {
             // We have to stub out the `document` in order to be able to fake `activeElement`.
             const fakeDocument = {body: document.body};
-
             [
               'createElement',
               'dispatchEvent',
@@ -54,11 +52,9 @@ describe('FocusMonitor', () => {
                 return (document as any)[method].apply(document, arguments);
               };
             });
-
             Object.defineProperty(fakeDocument, 'activeElement', {
               get: () => fakeActiveElement || document.activeElement,
             });
-
             return fakeDocument;
           },
         },
@@ -168,7 +164,7 @@ describe('FocusMonitor', () => {
     // Simulate focus via a fake mousedown from a screen reader.
     dispatchMouseEvent(buttonElement, 'mousedown');
     const event = createMouseEvent('mousedown');
-    Object.defineProperties(event, {offsetX: {get: () => 0}, offsetY: {get: () => 0}});
+    Object.defineProperties(event, {detail: {get: () => 0}});
     dispatchEvent(buttonElement, event);
 
     buttonElement.focus();
@@ -473,8 +469,7 @@ describe('FocusMonitor with "eventual" detection', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [PlainButton],
+      imports: [A11yModule, PlainButton],
       providers: [
         {
           provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
@@ -511,8 +506,8 @@ describe('FocusMonitor with "eventual" detection', () => {
 describe('cdkMonitorFocus', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [
+      imports: [
+        A11yModule,
         ButtonWithFocusClasses,
         ComplexComponentWithMonitorElementFocus,
         ComplexComponentWithMonitorSubtreeFocus,
@@ -830,8 +825,7 @@ describe('FocusMonitor observable stream', () => {
   beforeEach(() => {
     fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [PlainButton],
+      imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}],
     }).compileComponents();
   });
@@ -880,8 +874,7 @@ describe('FocusMonitor input label detection', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [CheckboxWithLabel],
+      imports: [A11yModule, CheckboxWithLabel],
     }).compileComponents();
   });
 
@@ -919,11 +912,15 @@ describe('FocusMonitor input label detection', () => {
 
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class PlainButton {}
 
 @Component({
   template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class ButtonWithFocusClasses {
   focusChanged(_origin: FocusOrigin) {}
@@ -931,21 +928,29 @@ class ButtonWithFocusClasses {
 
 @Component({
   template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class ComplexComponentWithMonitorElementFocus {}
 
 @Component({
   template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class ComplexComponentWithMonitorSubtreeFocus {}
 
 @Component({
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
 
 @Component({
   template: `<ng-container cdkMonitorElementFocus></ng-container>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class FocusMonitorOnCommentNode {}
 
@@ -954,11 +959,15 @@ class FocusMonitorOnCommentNode {}
     <label for="test-checkbox">Check me</label>
     <input id="test-checkbox" type="checkbox">
   `,
+  standalone: true,
+  imports: [A11yModule],
 })
 class CheckboxWithLabel {}
 
 @Component({
   template: `<button cdkMonitorElementFocus #exportedDir="cdkMonitorFocus"></button>`,
+  standalone: true,
+  imports: [A11yModule],
 })
 class ExportedFocusMonitor {
   @ViewChild('exportedDir') exportedDirRef: CdkMonitorFocus;

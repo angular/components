@@ -7,20 +7,22 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatCheckbox} from './checkbox';
 import {MatCheckboxRequiredValidator} from './checkbox-required-validator';
 
-/** This module is used by both original and MDC-based checkbox implementations. */
+/**
+ * @deprecated No longer used, `MatCheckbox` implements required validation directly.
+ * @breaking-change 19.0.0
+ */
 @NgModule({
+  imports: [MatCheckboxRequiredValidator],
   exports: [MatCheckboxRequiredValidator],
-  declarations: [MatCheckboxRequiredValidator],
 })
 export class _MatCheckboxRequiredValidatorModule {}
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule, _MatCheckboxRequiredValidatorModule],
-  exports: [MatCheckbox, MatCommonModule, _MatCheckboxRequiredValidatorModule],
-  declarations: [MatCheckbox],
+  imports: [MatCheckbox, MatCommonModule],
+  exports: [MatCheckbox, MatCommonModule],
 })
 export class MatCheckboxModule {}

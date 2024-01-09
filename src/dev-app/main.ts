@@ -15,7 +15,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {bootstrapApplication} from '@angular/platform-browser';
 
-import {MAT_RIPPLE_GLOBAL_OPTIONS} from '@angular/material/core';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, provideNativeDateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, FullscreenOverlayContainer} from '@angular/cdk/overlay';
 
@@ -43,6 +43,7 @@ bootstrapApplication(DevApp, {
       RouterModule.forRoot(DEV_APP_ROUTES),
       HttpClientModule,
     ),
+    provideNativeDateAdapter(),
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
     {provide: Directionality, useClass: DevAppDirectionality},

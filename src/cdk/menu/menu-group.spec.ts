@@ -13,8 +13,7 @@ describe('MenuGroup', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [CheckboxMenu],
+        imports: [CdkMenuModule, CheckboxMenu],
       }).compileComponents();
 
       fixture = TestBed.createComponent(CheckboxMenu);
@@ -41,8 +40,7 @@ describe('MenuGroup', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuWithMultipleRadioGroups],
+        imports: [CdkMenuModule, MenuWithMultipleRadioGroups],
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
@@ -105,6 +103,8 @@ describe('MenuGroup', () => {
       </ul>
     </ng-template>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class CheckboxMenu {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
@@ -148,6 +148,8 @@ class CheckboxMenu {
       </ul>
     </ng-template>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuWithMultipleRadioGroups {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;

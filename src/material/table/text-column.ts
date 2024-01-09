@@ -8,6 +8,7 @@
 
 import {CdkTextColumn} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from './cell';
 
 /**
  * Column that simply shows text content for the header and row cells. Assumes that the table
@@ -38,5 +39,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell],
 })
 export class MatTextColumn<T> extends CdkTextColumn<T> {}

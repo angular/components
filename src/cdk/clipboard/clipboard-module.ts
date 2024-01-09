@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {CdkCopyToClipboard} from './copy-to-clipboard';
 
 @NgModule({
-  declarations: [CdkCopyToClipboard],
+  imports: [CdkCopyToClipboard],
   exports: [CdkCopyToClipboard],
 })
 export class ClipboardModule {}

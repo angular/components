@@ -1,12 +1,26 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {YouTubePlayerModule} from './youtube-module';
-import {YouTubePlayer, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT} from './youtube-player';
+import {Component, Provider, ViewChild} from '@angular/core';
+import {
+  YouTubePlayer,
+  DEFAULT_PLAYER_WIDTH,
+  DEFAULT_PLAYER_HEIGHT,
+  YOUTUBE_PLAYER_CONFIG,
+} from './youtube-player';
 import {createFakeYtNamespace} from './fake-youtube-player';
+import {PlaceholderImageQuality} from './youtube-player-placeholder';
 import {Subscription} from 'rxjs';
 
 const VIDEO_ID = 'a12345';
 const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
+const TEST_PROVIDERS: Provider[] = [
+  {
+    provide: YOUTUBE_PLAYER_CONFIG,
+    useValue: {
+      // Disable API loading in tests since we don't want to pull in any additional scripts.
+      loadApi: false,
+    },
+  },
+];
 
 describe('YoutubePlayer', () => {
   let playerCtorSpy: jasmine.Spy;
@@ -21,17 +35,21 @@ describe('YoutubePlayer', () => {
     playerSpy = fake.playerSpy;
     window.YT = fake.namespace;
     events = fake.events;
-
-    TestBed.configureTestingModule({
-      imports: [YouTubePlayerModule],
-      declarations: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
-    });
-
-    TestBed.compileComponents();
   }));
+
+  function getVideoHost(componentFixture: ComponentFixture<unknown>): HTMLElement {
+    // Not the most resilient selector, but we don't want to introduce any
+    // classes/IDs on the `div` so users don't start depending on it.
+    return componentFixture.nativeElement.querySelector('div > div');
+  }
+
+  function getPlaceholder(componentFixture: ComponentFixture<unknown>): HTMLElement {
+    return componentFixture.nativeElement.querySelector('youtube-player-placeholder');
+  }
 
   describe('API ready', () => {
     beforeEach(() => {
+      TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
       fixture.detectChanges();
@@ -42,21 +60,29 @@ describe('YoutubePlayer', () => {
       window.onYouTubeIframeAPIReady = undefined;
     });
 
-    it('initializes a youtube player', () => {
-      let containerElement = fixture.nativeElement.querySelector('div');
+    it('initializes a youtube player when the placeholder is clicked', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+      events.onReady({target: playerSpy});
+      fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
-        containerElement,
+        getVideoHost(fixture),
         jasmine.objectContaining({
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
-          playerVars: undefined,
+          playerVars: {autoplay: 1},
         }),
       );
+
+      expect(getPlaceholder(fixture)).toBeFalsy();
     });
 
     it('destroys the iframe when the component is destroyed', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       events.onReady({target: playerSpy});
 
       testComponent.visible = false;
@@ -66,7 +92,10 @@ describe('YoutubePlayer', () => {
     });
 
     it('responds to changes in video id', () => {
-      let containerElement = fixture.nativeElement.querySelector('div');
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
+      const containerElement = getVideoHost(fixture);
 
       testComponent.videoId = 'otherId';
       fixture.detectChanges();
@@ -94,6 +123,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('responds to changes in size', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.width = 5;
       fixture.detectChanges();
 
@@ -141,6 +173,10 @@ describe('YoutubePlayer', () => {
     });
 
     it('passes the configured playerVars to the player', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+      events.onReady({target: playerSpy});
+
       const playerVars: YT.PlayerVars = {modestbranding: YT.ModestBranding.Modest};
       fixture.componentInstance.playerVars = playerVars;
       fixture.detectChanges();
@@ -151,11 +187,14 @@ describe('YoutubePlayer', () => {
       // We expect 2 calls since the first one is run on init and the
       // second one happens after the `playerVars` have changed.
       expect(calls.length).toBe(2);
-      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars: undefined}));
+      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars: {autoplay: 1}}));
       expect(calls[1].args[1]).toEqual(jasmine.objectContaining({playerVars}));
     });
 
     it('initializes the player with start and end seconds', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.startSeconds = 5;
       testComponent.endSeconds = 6;
       fixture.detectChanges();
@@ -193,6 +232,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('sets the suggested quality', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.suggestedQuality = 'small';
       fixture.detectChanges();
 
@@ -216,6 +258,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('proxies events as output', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       events.onReady({target: playerSpy});
       expect(testComponent.onReady).toHaveBeenCalledWith({target: playerSpy});
 
@@ -239,6 +284,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('proxies methods to the player', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       events.onReady({target: playerSpy});
 
       testComponent.youtubePlayer.playVideo();
@@ -306,6 +354,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should play on init if playVideo was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.playVideo();
       expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.PLAYING);
 
@@ -315,6 +366,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should pause on init if pauseVideo was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.pauseVideo();
       expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.PAUSED);
 
@@ -324,6 +378,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should stop on init if stopVideo was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.stopVideo();
       expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.CUED);
 
@@ -332,20 +389,22 @@ describe('YoutubePlayer', () => {
       expect(playerSpy.stopVideo).toHaveBeenCalled();
     });
 
-    it(
-      'should set the playback rate on init if setPlaybackRate was called before ' +
-        'the API has loaded',
-      () => {
-        testComponent.youtubePlayer.setPlaybackRate(1337);
-        expect(testComponent.youtubePlayer.getPlaybackRate()).toBe(1337);
+    it('should set the playback rate on init if setPlaybackRate was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
 
-        events.onReady({target: playerSpy});
+      testComponent.youtubePlayer.setPlaybackRate(1337);
+      expect(testComponent.youtubePlayer.getPlaybackRate()).toBe(1337);
 
-        expect(playerSpy.setPlaybackRate).toHaveBeenCalledWith(1337);
-      },
-    );
+      events.onReady({target: playerSpy});
+
+      expect(playerSpy.setPlaybackRate).toHaveBeenCalledWith(1337);
+    });
 
     it('should set the volume on init if setVolume was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.setVolume(37);
       expect(testComponent.youtubePlayer.getVolume()).toBe(37);
 
@@ -355,6 +414,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should mute on init if mute was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.mute();
       expect(testComponent.youtubePlayer.isMuted()).toBe(true);
 
@@ -364,6 +426,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should unmute on init if umMute was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.unMute();
       expect(testComponent.youtubePlayer.isMuted()).toBe(false);
 
@@ -373,6 +438,9 @@ describe('YoutubePlayer', () => {
     });
 
     it('should seek on init if seekTo was called before the API has loaded', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+
       testComponent.youtubePlayer.seekTo(1337, true);
       expect(testComponent.youtubePlayer.getCurrentTime()).toBe(1337);
 
@@ -382,7 +450,11 @@ describe('YoutubePlayer', () => {
     });
 
     it('should be able to disable cookies', () => {
-      const containerElement = fixture.nativeElement.querySelector('div');
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
+      events.onReady({target: playerSpy});
+
+      const containerElement = getVideoHost(fixture);
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
         containerElement,
@@ -404,6 +476,8 @@ describe('YoutubePlayer', () => {
     });
 
     it('should play with a playlist id instead of a video id', () => {
+      getPlaceholder(fixture).click();
+      fixture.detectChanges();
       playerCtorSpy.calls.reset();
 
       const playerVars: YT.PlayerVars = {
@@ -456,9 +530,11 @@ describe('YoutubePlayer', () => {
 
     it('waits until the api is ready before initializing', () => {
       (window.YT as any) = YT_LOADING_STATE_MOCK;
-
+      TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
+      fixture.detectChanges();
+      getPlaceholder(fixture).click();
       fixture.detectChanges();
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
@@ -466,10 +542,8 @@ describe('YoutubePlayer', () => {
       window.YT = api!;
       window.onYouTubeIframeAPIReady!();
 
-      let containerElement = fixture.nativeElement.querySelector('div');
-
       expect(playerCtorSpy).toHaveBeenCalledWith(
-        containerElement,
+        getVideoHost(fixture),
         jasmine.objectContaining({
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
@@ -481,9 +555,11 @@ describe('YoutubePlayer', () => {
     it('should not override any pre-existing API loaded callbacks', () => {
       const spy = jasmine.createSpy('other API loaded spy');
       window.onYouTubeIframeAPIReady = spy;
-
+      TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
+      fixture.detectChanges();
+      getPlaceholder(fixture).click();
       fixture.detectChanges();
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
@@ -495,8 +571,111 @@ describe('YoutubePlayer', () => {
     });
   });
 
+  describe('placeholder behavior', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({providers: TEST_PROVIDERS});
+      fixture = TestBed.createComponent(TestApp);
+      testComponent = fixture.debugElement.componentInstance;
+      fixture.detectChanges();
+    });
+
+    afterEach(() => {
+      fixture = testComponent = (window as any).YT = window.onYouTubeIframeAPIReady = undefined!;
+    });
+
+    it('should show a placeholder', () => {
+      const placeholder = getPlaceholder(fixture);
+      expect(placeholder).toBeTruthy();
+      expect(placeholder.style.backgroundImage).toContain(
+        `https://i.ytimg.com/vi_webp/${VIDEO_ID}/sddefault.webp`,
+      );
+      expect(placeholder.style.width).toBe(`${DEFAULT_PLAYER_WIDTH}px`);
+      expect(placeholder.style.height).toBe(`${DEFAULT_PLAYER_HEIGHT}px`);
+      expect(placeholder.querySelector('button')).toBeTruthy();
+
+      testComponent.videoId = 'foo123';
+      testComponent.width = 100;
+      testComponent.height = 50;
+      fixture.detectChanges();
+
+      expect(placeholder.style.backgroundImage).toContain(
+        'https://i.ytimg.com/vi_webp/foo123/sddefault.webp',
+      );
+      expect(placeholder.style.width).toBe('100px');
+      expect(placeholder.style.height).toBe('50px');
+    });
+
+    it('should allow for the placeholder to be disabled', () => {
+      expect(getPlaceholder(fixture)).toBeTruthy();
+
+      testComponent.disablePlaceholder = true;
+      fixture.detectChanges();
+
+      expect(getPlaceholder(fixture)).toBeFalsy();
+    });
+
+    it('should allow for the placeholder button label to be changed', () => {
+      const button = getPlaceholder(fixture).querySelector('button')!;
+
+      expect(button.getAttribute('aria-label')).toBe('Play video');
+
+      testComponent.placeholderButtonLabel = 'Play Star Wars';
+      fixture.detectChanges();
+
+      expect(button.getAttribute('aria-label')).toBe('Play Star Wars');
+    });
+
+    it('should not show the placeholder if a playlist is assigned', () => {
+      expect(getPlaceholder(fixture)).toBeTruthy();
+
+      testComponent.videoId = undefined;
+      testComponent.playerVars = {
+        list: 'some-playlist-id',
+        listType: 'playlist',
+      };
+      fixture.detectChanges();
+
+      expect(getPlaceholder(fixture)).toBeFalsy();
+    });
+
+    it('should hide the placeholder and start playing if an autoplaying video is assigned', () => {
+      expect(getPlaceholder(fixture)).toBeTruthy();
+      expect(playerCtorSpy).not.toHaveBeenCalled();
+
+      testComponent.playerVars = {autoplay: 1};
+      fixture.detectChanges();
+      events.onReady({target: playerSpy});
+      fixture.detectChanges();
+
+      expect(getPlaceholder(fixture)).toBeFalsy();
+      expect(playerCtorSpy).toHaveBeenCalled();
+    });
+
+    it('should allow for the placeholder image quality to be changed', () => {
+      const placeholder = getPlaceholder(fixture);
+      expect(placeholder.style.backgroundImage).toContain(
+        `https://i.ytimg.com/vi_webp/${VIDEO_ID}/sddefault.webp`,
+      );
+
+      testComponent.placeholderImageQuality = 'low';
+      fixture.detectChanges();
+      expect(placeholder.style.backgroundImage).toContain(
+        `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`,
+      );
+
+      testComponent.placeholderImageQuality = 'high';
+      fixture.detectChanges();
+      expect(placeholder.style.backgroundImage).toContain(
+        `https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`,
+      );
+    });
+  });
+
   it('should pick up static startSeconds and endSeconds values', () => {
+    TestBed.configureTestingModule({providers: TEST_PROVIDERS});
     const staticSecondsApp = TestBed.createComponent(StaticStartEndSecondsApp);
+    staticSecondsApp.detectChanges();
+    getPlaceholder(staticSecondsApp).click();
     staticSecondsApp.detectChanges();
 
     playerSpy.getPlayerState.and.returnValue(window.YT!.PlayerState.CUED);
@@ -508,7 +687,10 @@ describe('YoutubePlayer', () => {
   });
 
   it('should be able to subscribe to events after initialization', () => {
+    TestBed.configureTestingModule({providers: TEST_PROVIDERS});
     const noEventsApp = TestBed.createComponent(NoEventsApp);
+    noEventsApp.detectChanges();
+    getPlaceholder(noEventsApp).click();
     noEventsApp.detectChanges();
     events.onReady({target: playerSpy});
     noEventsApp.detectChanges();
@@ -553,24 +735,38 @@ describe('YoutubePlayer', () => {
 /** Test component that contains a YouTubePlayer. */
 @Component({
   selector: 'test-app',
+  standalone: true,
+  imports: [YouTubePlayer],
   template: `
-    <youtube-player #player [videoId]="videoId" *ngIf="visible" [width]="width" [height]="height"
-      [startSeconds]="startSeconds" [endSeconds]="endSeconds" [suggestedQuality]="suggestedQuality"
-      [playerVars]="playerVars"
-      [disableCookies]="disableCookies"
-      (ready)="onReady($event)"
-      (stateChange)="onStateChange($event)"
-      (playbackQualityChange)="onPlaybackQualityChange($event)"
-      (playbackRateChange)="onPlaybackRateChange($event)"
-      (error)="onError($event)"
-      (apiChange)="onApiChange($event)">
-    </youtube-player>
+    @if (visible) {
+      <youtube-player #player
+        [videoId]="videoId"
+        [width]="width"
+        [height]="height"
+        [startSeconds]="startSeconds"
+        [endSeconds]="endSeconds"
+        [suggestedQuality]="suggestedQuality"
+        [playerVars]="playerVars"
+        [disableCookies]="disableCookies"
+        [disablePlaceholder]="disablePlaceholder"
+        [placeholderButtonLabel]="placeholderButtonLabel"
+        [placeholderImageQuality]="placeholderImageQuality"
+        (ready)="onReady($event)"
+        (stateChange)="onStateChange($event)"
+        (playbackQualityChange)="onPlaybackQualityChange($event)"
+        (playbackRateChange)="onPlaybackRateChange($event)"
+        (error)="onError($event)"
+        (apiChange)="onApiChange($event)"/>
+    }
   `,
 })
 class TestApp {
   videoId: string | undefined = VIDEO_ID;
   disableCookies = false;
   visible = true;
+  disablePlaceholder = false;
+  placeholderButtonLabel = 'Play video';
+  placeholderImageQuality: PlaceholderImageQuality = 'standard';
   width: number | undefined;
   height: number | undefined;
   startSeconds: number | undefined;
@@ -587,8 +783,10 @@ class TestApp {
 }
 
 @Component({
+  standalone: true,
+  imports: [YouTubePlayer],
   template: `
-    <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"></youtube-player>
+    <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"/>
   `,
 })
 class StaticStartEndSecondsApp {
@@ -596,7 +794,9 @@ class StaticStartEndSecondsApp {
 }
 
 @Component({
-  template: `<youtube-player [videoId]="videoId"></youtube-player>`,
+  standalone: true,
+  imports: [YouTubePlayer],
+  template: `<youtube-player [videoId]="videoId"/>`,
 })
 class NoEventsApp {
   @ViewChild(YouTubePlayer) player: YouTubePlayer;

@@ -338,11 +338,30 @@ $mat-tab-animation-duration: 500ms !default;
 }
 
 // Structural styles for the element that wraps the paginated container's content.
-@mixin paginated-tab-header-container {
+// Include a selector for an inverted header if the header may be optionally positioned on the
+// bottom of the content.
+@mixin paginated-tab-header-container($inverted-header-selector: null) {
   display: flex;
   flex-grow: 1;
   overflow: hidden;
   z-index: 1;
+  @include token-utils.use-tokens(
+    tokens-mat-tab-header.$prefix,
+    tokens-mat-tab-header.get-token-slots()
+  ) {
+    border-bottom-style: solid;
+    @include token-utils.create-token-slot(border-bottom-width, divider-height);
+    @include token-utils.create-token-slot(border-bottom-color, divider-color);
+
+    @if ($inverted-header-selector) {
+      #{$inverted-header-selector} & {
+        border-bottom: none;
+        border-top-style: solid;
+        @include token-utils.create-token-slot(border-top-width, divider-height);
+        @include token-utils.create-token-slot(border-top-color, divider-color);
+      }
+    }
+  }
 }
 
 @mixin paginated-tab-header-with-background($header-selector, $tab-selector) {

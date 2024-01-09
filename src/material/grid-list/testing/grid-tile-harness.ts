@@ -10,7 +10,7 @@ import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/t
 import {GridTileHarnessFilters} from './grid-list-harness-filters';
 
 /** Selectors for the various `mat-grid-tile` sections that may contain user content. */
-export const enum MatGridTileSection {
+export enum MatGridTileSection {
   HEADER = '.mat-grid-tile-header',
   FOOTER = '.mat-grid-tile-footer',
 }

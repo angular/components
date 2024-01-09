@@ -16,8 +16,7 @@ describe('MatBottomSheetHarness', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
-      declarations: [BottomSheetHarnessTest],
+      imports: [MatBottomSheetModule, NoopAnimationsModule, BottomSheetHarnessTest],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BottomSheetHarnessTest);
@@ -55,6 +54,8 @@ describe('MatBottomSheetHarness', () => {
       Hello from the bottom sheet!
     </ng-template>
   `,
+  standalone: true,
+  imports: [MatBottomSheetModule],
 })
 class BottomSheetHarnessTest {
   @ViewChild(TemplateRef) template: TemplateRef<any>;

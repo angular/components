@@ -16,13 +16,18 @@ import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
 import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '../../cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 
 describe('MatExpansionPanel', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatExpansionModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        MatExpansionModule,
+        NoopAnimationsModule,
         PanelWithContent,
         PanelWithContentInNgIf,
         PanelWithCustomMargin,
@@ -400,7 +405,6 @@ describe('MatExpansionPanel', () => {
     TestBed.resetTestingModule()
       .configureTestingModule({
         imports: [MatExpansionModule, NoopAnimationsModule],
-        declarations: [PanelWithTwoWayBinding],
         providers: [
           {
             provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
@@ -570,6 +574,8 @@ describe('MatExpansionPanel', () => {
     <p>Some content</p>
     <button>I am a button</button>
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class PanelWithContent {
   expanded = false;
@@ -582,11 +588,16 @@ class PanelWithContent {
 
 @Component({
   template: `
-  <div *ngIf="expansionShown">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
-    </mat-expansion-panel>
-  </div>`,
+    @if (expansionShown) {
+      <div>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </div>
+    }
+  `,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class PanelWithContentInNgIf {
   expansionShown = true;
@@ -604,6 +615,8 @@ class PanelWithContentInNgIf {
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
     corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class PanelWithCustomMargin {
   expanded = false;
@@ -619,6 +632,8 @@ class PanelWithCustomMargin {
       <button>I am a button</button>
     </ng-template>
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class LazyPanelWithContent {
   expanded = false;
@@ -633,6 +648,8 @@ class LazyPanelWithContent {
       <p>Some content</p>
     </ng-template>
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class LazyPanelOpenOnLoad {}
 
@@ -641,6 +658,8 @@ class LazyPanelOpenOnLoad {}
   <mat-expansion-panel [(expanded)]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class PanelWithTwoWayBinding {
   expanded = false;
@@ -651,6 +670,8 @@ class PanelWithTwoWayBinding {
   <mat-expansion-panel>
     <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class PanelWithHeaderTabindex {}
 
@@ -664,6 +685,8 @@ class PanelWithHeaderTabindex {}
       </mat-expansion-panel>
     </mat-expansion-panel>
   `,
+  standalone: true,
+  imports: [MatExpansionModule],
 })
 class NestedLazyPanelWithContent {
   parentExpanded = false;

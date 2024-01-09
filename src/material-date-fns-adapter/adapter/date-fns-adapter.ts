@@ -54,7 +54,7 @@ const DAY_OF_WEEK_FORMATS = {
 export class DateFnsAdapter extends DateAdapter<Date, Locale> {
   constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: {}) {
     super();
-    this.setLocale(matDateLocale);
+    this.setLocale(matDateLocale as Locale);
   }
 
   getYear(date: Date): number {

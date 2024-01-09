@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {TestComponentsModule} from '@angular/cdk/testing/tests';
+import {TestMainComponent} from '@angular/cdk/testing/tests';
 
 @Component({
   selector: 'component-harness-e2e',
@@ -7,6 +7,6 @@ import {TestComponentsModule} from '@angular/cdk/testing/tests';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TestComponentsModule],
+  imports: [TestMainComponent],
 })
 export class ComponentHarnessE2e {}

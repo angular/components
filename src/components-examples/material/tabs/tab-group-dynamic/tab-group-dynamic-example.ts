@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgFor} from '@angular/common';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
@@ -23,7 +22,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatButtonModule,
     MatCheckboxModule,
     MatTabsModule,
-    NgFor,
   ],
 })
 export class TabGroupDynamicExample {
@@ -40,5 +38,6 @@ export class TabGroupDynamicExample {
 
   removeTab(index: number) {
     this.tabs.splice(index, 1);
+    this.selected.setValue(index);
   }
 }

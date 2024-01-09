@@ -23,7 +23,7 @@ import {
   Self,
 } from '@angular/core';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
-import {CanUpdateErrorState, ErrorStateMatcher, mixinErrorState} from '@angular/material/core';
+import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 import {getMatInputUnsupportedTypeError} from './input-errors';
@@ -43,31 +43,6 @@ const MAT_INPUT_INVALID_TYPES = [
 ];
 
 let nextUniqueId = 0;
-
-// Boilerplate for applying mixins to MatInput.
-/** @docs-private */
-const _MatInputBase = mixinErrorState(
-  class {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form field to update. Implemented as part of `MatFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-      public _defaultErrorStateMatcher: ErrorStateMatcher,
-      public _parentForm: NgForm,
-      public _parentFormGroup: FormGroupDirective,
-      /**
-       * Form control bound to the component.
-       * Implemented as part of `MatFormFieldControl`.
-       * @docs-private
-       */
-      public ngControl: NgControl,
-    ) {}
-  },
-);
 
 @Directive({
   selector: `input[matInput], textarea[matInput], select[matNativeControl],
@@ -102,21 +77,16 @@ const _MatInputBase = mixinErrorState(
     '(input)': '_onInput()',
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
+  standalone: true,
 })
 export class MatInput
-  extends _MatInputBase
-  implements
-    MatFormFieldControl<any>,
-    OnChanges,
-    OnDestroy,
-    AfterViewInit,
-    DoCheck,
-    CanUpdateErrorState
+  implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck
 {
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
   private _previousPlaceholder: string | null;
+  private _errorStateTracker: _ErrorStateTracker;
 
   /** Whether the component is being rendered on the server. */
   readonly _isServer: boolean;
@@ -140,7 +110,7 @@ export class MatInput
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  override readonly stateChanges: Subject<void> = new Subject<void>();
+  readonly stateChanges: Subject<void> = new Subject<void>();
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -231,7 +201,13 @@ export class MatInput
   protected _type = 'text';
 
   /** An object used to control when error messages are shown. */
-  @Input() override errorStateMatcher: ErrorStateMatcher;
+  @Input()
+  get errorStateMatcher() {
+    return this._errorStateTracker.matcher;
+  }
+  set errorStateMatcher(value: ErrorStateMatcher) {
+    this._errorStateTracker.matcher = value;
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -264,6 +240,14 @@ export class MatInput
   }
   private _readonly = false;
 
+  /** Whether the input is in an error state. */
+  get errorState() {
+    return this._errorStateTracker.errorState;
+  }
+  set errorState(value: boolean) {
+    this._errorStateTracker.errorState = value;
+  }
+
   protected _neverEmptyInputTypes = [
     'date',
     'datetime',
@@ -276,10 +260,10 @@ export class MatInput
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     protected _platform: Platform,
-    @Optional() @Self() ngControl: NgControl,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    _defaultErrorStateMatcher: ErrorStateMatcher,
+    @Optional() @Self() public ngControl: NgControl,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
+    defaultErrorStateMatcher: ErrorStateMatcher,
     @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
     private _autofillMonitor: AutofillMonitor,
     ngZone: NgZone,
@@ -287,8 +271,6 @@ export class MatInput
     // to inject the form field for determining whether the placeholder has been promoted.
     @Optional() @Inject(MAT_FORM_FIELD) protected _formField?: MatFormField,
   ) {
-    super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
-
     const element = this._elementRef.nativeElement;
     const nodeName = element.nodeName.toLowerCase();
 
@@ -310,6 +292,13 @@ export class MatInput
       });
     }
 
+    this._errorStateTracker = new _ErrorStateTracker(
+      defaultErrorStateMatcher,
+      ngControl,
+      parentFormGroup,
+      parentForm,
+      this.stateChanges,
+    );
     this._isServer = !this._platform.isBrowser;
     this._isNativeSelect = nodeName === 'select';
     this._isTextarea = nodeName === 'textarea';
@@ -377,6 +366,11 @@ export class MatInput
   /** Focuses the input. */
   focus(options?: FocusOptions): void {
     this._elementRef.nativeElement.focus(options);
+  }
+
+  /** Refreshes the error state of the input. */
+  updateErrorState() {
+    this._errorStateTracker.updateErrorState();
   }
 
   /** Callback for the cases where the focused state of the input changes. */

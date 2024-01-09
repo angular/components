@@ -1,0 +1,40 @@
+.youtube-player-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #000;
+  background-position: center center;
+  background-size: cover;
+  transition: box-shadow 300ms ease;
+
+  // YouTube has a slight drop shadow on the preview that we try to imitate here.
+  // Note that they use a base64 image, likely for performance reasons. We can't use the
+  // image, because it can break users with a CSP that doesn't allow `data:` URLs.
+  box-shadow: inset 0 120px 90px -90px rgba(0, 0, 0, 0.8);
+}
+
+.youtube-player-placeholder-button {
+  transition: opacity 300ms ease;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+
+  svg {
+    width: 68px;
+    height: 48px;
+  }
+}
+
+.youtube-player-placeholder-loading {
+  box-shadow: none;
+
+  .youtube-player-placeholder-button {
+    opacity: 0;
+  }
+}

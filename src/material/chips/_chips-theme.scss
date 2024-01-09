@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use 'sass:color';
 @use '@material/chips/chip-theme' as mdc-chip-theme;
 @use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
@@ -6,63 +7,94 @@
 @use '../core/typography/typography';
 
 @mixin base($theme) {
-  .mat-mdc-standard-chip {
-    @include mdc-chip-theme.theme(tokens-mdc-chip.get-unthemable-tokens());
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  }
+  @else {
+    .mat-mdc-standard-chip {
+      @include mdc-chip-theme.theme(tokens-mdc-chip.get-unthemable-tokens());
+    }
   }
 }
 
 @mixin color($theme) {
-  .mat-mdc-standard-chip {
-    $default-color-tokens: tokens-mdc-chip.get-color-tokens($theme);
-    @include mdc-chip-theme.theme($default-color-tokens);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  }
+  @else {
+    .mat-mdc-standard-chip {
+      $default-color-tokens: tokens-mdc-chip.get-color-tokens($theme);
+      @include mdc-chip-theme.theme($default-color-tokens);
 
-    &.mat-mdc-chip-selected,
-    &.mat-mdc-chip-highlighted {
-      &.mat-primary {
-        $primary-color-tokens: tokens-mdc-chip.get-color-tokens($theme, primary);
-        @include mdc-chip-theme.theme($primary-color-tokens);
-      }
+      &.mat-mdc-chip-selected,
+      &.mat-mdc-chip-highlighted {
+        &.mat-primary {
+          $primary-color-tokens: tokens-mdc-chip.get-color-tokens($theme, primary);
+          @include mdc-chip-theme.theme($primary-color-tokens);
+        }
 
-      &.mat-accent {
-        $accent-color-tokens: tokens-mdc-chip.get-color-tokens($theme, accent);
-        @include mdc-chip-theme.theme($accent-color-tokens);
-      }
+        &.mat-accent {
+          $accent-color-tokens: tokens-mdc-chip.get-color-tokens($theme, accent);
+          @include mdc-chip-theme.theme($accent-color-tokens);
+        }
 
-      &.mat-warn {
-        $warn-color-tokens: tokens-mdc-chip.get-color-tokens($theme, warn);
-        @include mdc-chip-theme.theme($warn-color-tokens);
+        &.mat-warn {
+          $warn-color-tokens: tokens-mdc-chip.get-color-tokens($theme, warn);
+          @include mdc-chip-theme.theme($warn-color-tokens);
+        }
       }
     }
   }
 }
 
 @mixin typography($theme) {
-  $typography-tokens: tokens-mdc-chip.get-typography-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    $typography-tokens: tokens-mdc-chip.get-typography-tokens($theme);
 
-  .mat-mdc-standard-chip {
-    @include mdc-chip-theme.theme($typography-tokens);
+    .mat-mdc-standard-chip {
+      @include mdc-chip-theme.theme($typography-tokens);
+    }
   }
 }
 
 @mixin density($theme) {
-  $density-tokens: tokens-mdc-chip.get-density-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  }
+  @else {
+    $density-tokens: tokens-mdc-chip.get-density-tokens($theme);
 
-  .mat-mdc-chip.mat-mdc-standard-chip {
-    @include mdc-chip-theme.theme($density-tokens);
+    .mat-mdc-chip.mat-mdc-standard-chip {
+      @include mdc-chip-theme.theme($density-tokens);
+    }
   }
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include mdc-chip-theme.theme(map.get($tokens, tokens-mdc-chip.$prefix));
   }
 }

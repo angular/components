@@ -27,8 +27,7 @@ describe('Menu', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuCheckboxGroup],
+        imports: [CdkMenuModule, MenuCheckboxGroup],
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuCheckboxGroup);
@@ -63,8 +62,7 @@ describe('Menu', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [InlineMenu],
+        imports: [CdkMenuModule, InlineMenu],
       }).compileComponents();
     }));
 
@@ -139,8 +137,7 @@ describe('Menu', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenus],
+          imports: [CdkMenuModule, WithComplexNestedMenus],
         }).compileComponents();
       }));
 
@@ -331,8 +328,7 @@ describe('Menu', () => {
 
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkMenuModule],
-          declarations: [WithComplexNestedMenusOnBottom],
+          imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
         }).compileComponents();
       }));
 
@@ -524,6 +520,8 @@ describe('Menu', () => {
       </ul>
     </ng-template>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class MenuCheckboxGroup {
   @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
@@ -536,6 +534,8 @@ class MenuCheckboxGroup {
       <button cdkMenuItem>Starred</button>
     </div>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class InlineMenu {}
 
@@ -588,6 +588,8 @@ class InlineMenu {}
       </div>
     </ng-template>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class WithComplexNestedMenus {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;
@@ -647,6 +649,8 @@ class WithComplexNestedMenus {
       </div>
     </ng-template>
   `,
+  standalone: true,
+  imports: [CdkMenuModule],
 })
 class WithComplexNestedMenusOnBottom {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;

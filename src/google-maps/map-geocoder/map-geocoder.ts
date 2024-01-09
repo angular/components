@@ -10,6 +10,7 @@
 /// <reference types="google.maps" />
 
 import {Injectable, NgZone} from '@angular/core';
+import {importLibrary} from '../import-library';
 import {Observable} from 'rxjs';
 
 export interface MapGeocoderResponse {
@@ -32,18 +33,31 @@ export class MapGeocoder {
    */
   geocode(request: google.maps.GeocoderRequest): Observable<MapGeocoderResponse> {
     return new Observable(observer => {
-      // Initialize the `Geocoder` lazily since the Google Maps API may
-      // not have been loaded when the provider is instantiated.
-      if (!this._geocoder) {
-        this._geocoder = new google.maps.Geocoder();
-      }
-
-      this._geocoder.geocode(request, (results, status) => {
-        this._ngZone.run(() => {
-          observer.next({results: results || [], status});
-          observer.complete();
+      this._getGeocoder().then(geocoder => {
+        geocoder.geocode(request, (results, status) => {
+          this._ngZone.run(() => {
+            observer.next({results: results || [], status});
+            observer.complete();
+          });
         });
       });
     });
+  }
+
+  private _getGeocoder(): Promise<google.maps.Geocoder> {
+    if (!this._geocoder) {
+      if (google.maps.Geocoder) {
+        this._geocoder = new google.maps.Geocoder();
+      } else {
+        return importLibrary<typeof google.maps.Geocoder>('geocoding', 'Geocoder').then(
+          geocoderConstructor => {
+            this._geocoder = new geocoderConstructor();
+            return this._geocoder;
+          },
+        );
+      }
+    }
+
+    return Promise.resolve(this._geocoder);
   }
 }

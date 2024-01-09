@@ -143,7 +143,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragConstrainPosition') constrainPosition?: (
     userPointerPosition: Point,
     dragRef: DragRef,
-    dimensions: ClientRect,
+    dimensions: DOMRect,
     pickupPositionInElement: Point,
   ) => Point;
 

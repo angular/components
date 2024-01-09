@@ -15,7 +15,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {ThemePalette} from '@angular/material/core';
-import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 export interface State {
   code: string;
@@ -42,7 +42,6 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
-    MatDialogModule,
     MatInputModule,
     ReactiveFormsModule,
   ],
@@ -224,9 +223,9 @@ export class AutocompleteDemo {
         <mat-label>T-Shirt Size</mat-label>
         <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentSize" name="size">
         <mat-autocomplete #tdAuto="matAutocomplete">
-          <mat-option *ngFor="let size of sizes" [value]="size">
-            {{size}}
-          </mat-option>
+          @for (size of sizes; track size) {
+            <mat-option [value]="size">{{size}}</mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
 
@@ -248,14 +247,7 @@ export class AutocompleteDemo {
   `,
   ],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-  ],
+  imports: [CommonModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
 })
 export class AutocompleteDemoExampleDialog {
   constructor(public dialogRef: MatDialogRef<AutocompleteDemoExampleDialog>) {}

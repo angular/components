@@ -20,13 +20,22 @@ import {
   Input,
   NgZone,
   numberAttribute,
+  OnChanges,
   Optional,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple} from '@angular/material/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusableOption} from '@angular/cdk/a11y';
 import {
@@ -39,7 +48,7 @@ import {
  * Represents the different states that require custom transitions between them.
  * @docs-private
  */
-export const enum TransitionCheckState {
+export enum TransitionCheckState {
   /** The initial state of the component before any user interaction. */
   Init,
   /** The state representing the component when it's becoming checked. */
@@ -50,6 +59,10 @@ export const enum TransitionCheckState {
   Indeterminate,
 }
 
+/**
+ * @deprecated Will stop being exported.
+ * @breaking-change 19.0.0
+ */
 export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatCheckbox),
@@ -87,12 +100,23 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     '[class.mat-mdc-checkbox-checked]': 'checked',
     '[class]': 'color ? "mat-" + color : "mat-accent"',
   },
-  providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
+  providers: [
+    MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR,
+    {
+      provide: NG_VALIDATORS,
+      useExisting: MatCheckbox,
+      multi: true,
+    },
+  ],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatRipple, _MatInternalFormField],
 })
-export class MatCheckbox implements AfterViewInit, ControlValueAccessor, FocusableOption {
+export class MatCheckbox
+  implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
+{
   /** Focuses the checkbox. */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -195,10 +219,9 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
   _onTouched: () => any = () => {};
 
   private _currentAnimationClass: string = '';
-
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
-
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
+  private _validatorChangeFn = () => {};
 
   constructor(
     public _elementRef: ElementRef<HTMLElement>,
@@ -212,6 +235,12 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
     this.color = this._options.color || defaults.color;
     this.tabIndex = parseInt(tabIndex) || 0;
     this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['required']) {
+      this._validatorChangeFn();
+    }
   }
 
   ngAfterViewInit() {
@@ -305,6 +334,16 @@ export class MatCheckbox implements AfterViewInit, ControlValueAccessor, Focusab
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
+  }
+
+  // Implemented as a part of Validator.
+  validate(control: AbstractControl<boolean>): ValidationErrors | null {
+    return this.required && control.value !== true ? {'required': true} : null;
+  }
+
+  // Implemented as a part of Validator.
+  registerOnValidatorChange(fn: () => void): void {
+    this._validatorChangeFn = fn;
   }
 
   private _transitionCheckState(newState: TransitionCheckState) {

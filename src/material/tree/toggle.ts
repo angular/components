@@ -16,5 +16,6 @@ import {Directive} from '@angular/core';
   selector: '[matTreeNodeToggle]',
   providers: [{provide: CdkTreeNodeToggle, useExisting: MatTreeNodeToggle}],
   inputs: ['recursive: matTreeNodeToggleRecursive'],
+  standalone: true,
 })
 export class MatTreeNodeToggle<T, K = T> extends CdkTreeNodeToggle<T, K> {}

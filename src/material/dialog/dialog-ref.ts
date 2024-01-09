@@ -17,7 +17,7 @@ import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {GlobalPositionStrategy} from '@angular/cdk/overlay';
 import {ComponentRef} from '@angular/core';
 
-export const enum MatDialogState {
+export enum MatDialogState {
   OPEN,
   CLOSING,
   CLOSED,
