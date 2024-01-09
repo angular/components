@@ -42,8 +42,8 @@ $prefix: (mat, slider);
 
   @return (
     ripple-color: $ripple-color,
-    hover-ripple-color: $hover-ripple-color,
-    focus-ripple-color: $focus-ripple-color
+    ripple-hover-state-layer-color: $hover-ripple-color,
+    ripple-focus-state-layer-color: $focus-ripple-color
   );
 }
 
