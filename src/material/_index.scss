@@ -151,4 +151,4 @@
 
 // New theming APIs:
 @forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
-  get-theme-typography, get-theme-density, theme-has;
+  get-theme-typography, get-theme-density, theme-has, theme-remove;
