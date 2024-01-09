@@ -339,6 +339,78 @@
   );
 }
 
+/// Generates custom tokens for the mat-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-button
+@function text-button($systems, $exclude-hardcoded) {
+  @return (
+    state-layer-color: map.get($systems, md-sys-color, primary),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, primary),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  );
+}
+
+/// Generates custom tokens for the mat-flat-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-flat-button
+@function filled-button($systems, $exclude-hardcoded) {
+  @return (
+    state-layer-color: map.get($systems, md-sys-color, on-primary),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, on-primary),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  );
+}
+
+/// Generates custom tokens for the mat-raised-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-raised-button
+@function elevated-button($systems, $exclude-hardcoded) {
+  @return (
+    state-layer-color: map.get($systems, md-sys-color, primary),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, primary),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  );
+}
+
+/// Generates custom tokens for the mat-outlined-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-outlined-button
+@function outlined-button($systems, $exclude-hardcoded) {
+  @return (
+    state-layer-color: map.get($systems, md-sys-color, primary),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: mat.private-safe-color-change(
+      map.get($systems, md-sys-color, primary),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  );
+}
+
 /// Generates custom tokens for the mat-icon-button.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
@@ -346,6 +418,7 @@
 @function icon-button($systems, $exclude-hardcoded) {
   @return (
     state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-surface-variant),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)

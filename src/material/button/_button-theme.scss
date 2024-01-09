@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
@@ -80,9 +81,28 @@
   @include token-utils.create-token-values(tokens-mat-outlined-button.$prefix, $mat-tokens);
 }
 
+@mixin _theme-from-tokens($tokens) {
+  @if ($tokens != ()) {
+    @include mdc-button-text-theme.theme(map.get($tokens, tokens-mdc-text-button.$prefix));
+    @include mdc-button-protected-theme.theme(
+      map.get($tokens, tokens-mdc-protected-button.$prefix));
+    @include mdc-button-filled-theme.theme(map.get($tokens, tokens-mdc-filled-button.$prefix));
+    @include mdc-button-outlined-theme.theme(map.get($tokens, tokens-mdc-outlined-button.$prefix));
+
+    @include token-utils.create-token-values(
+      tokens-mat-text-button.$prefix, map.get($tokens, tokens-mat-text-button.$prefix));
+    @include token-utils.create-token-values(
+      tokens-mat-protected-button.$prefix, map.get($tokens, tokens-mat-protected-button.$prefix));
+    @include token-utils.create-token-values(
+      tokens-mat-filled-button.$prefix, map.get($tokens, tokens-mat-filled-button.$prefix));
+    @include token-utils.create-token-values(
+      tokens-mat-outlined-button.$prefix, map.get($tokens, tokens-mat-outlined-button.$prefix));
+  }
+}
+
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    // TODO(crisbeto): emit M3 base tokens here.
+    @include theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -99,131 +119,152 @@
 }
 
 @mixin color($theme) {
-  @include sass-utils.current-selector-or-root() {
-    @include _text-button-variant($theme, null);
-    @include _filled-button-variant($theme, null);
-    @include _protected-button-variant($theme, null);
-    @include _outlined-button-variant($theme, null);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
-
-  .mat-mdc-button {
-    &.mat-primary {
-      @include _text-button-variant($theme, primary);
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include _text-button-variant($theme, null);
+      @include _filled-button-variant($theme, null);
+      @include _protected-button-variant($theme, null);
+      @include _outlined-button-variant($theme, null);
     }
 
-    &.mat-accent {
-      @include _text-button-variant($theme, accent);
-    }
-
-    &.mat-warn {
-      @include _text-button-variant($theme, warn);
-    }
-  }
-
-  .mat-mdc-unelevated-button {
-    &.mat-primary {
-      @include _filled-button-variant($theme, primary);
-    }
-
-    &.mat-accent {
-      @include _filled-button-variant($theme, accent);
-    }
-
-    &.mat-warn {
-      @include _filled-button-variant($theme, warn);
-    }
-  }
-
-  .mat-mdc-raised-button {
-    &.mat-primary {
-      @include _protected-button-variant($theme, primary);
-    }
-
-    &.mat-accent {
-      @include _protected-button-variant($theme, accent);
-    }
-
-    &.mat-warn {
-      @include _protected-button-variant($theme, warn);
-    }
-
-    // TODO(wagnermaciel): Remove this workaround when b/301126527 is resolved
-    @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include mdc-elevation-theme.elevation(2);
-
-      &:hover, &:focus {
-        @include mdc-elevation-theme.elevation(4);
+    .mat-mdc-button {
+      &.mat-primary {
+        @include _text-button-variant($theme, primary);
       }
 
-      &:active, &:focus:active {
-        @include mdc-elevation-theme.elevation(8);
+      &.mat-accent {
+        @include _text-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _text-button-variant($theme, warn);
       }
     }
-  }
 
-  .mat-mdc-outlined-button {
-    &.mat-primary {
-      @include _outlined-button-variant($theme, primary);
+    .mat-mdc-unelevated-button {
+      &.mat-primary {
+        @include _filled-button-variant($theme, primary);
+      }
+
+      &.mat-accent {
+        @include _filled-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _filled-button-variant($theme, warn);
+      }
     }
 
-    &.mat-accent {
-      @include _outlined-button-variant($theme, accent);
+    .mat-mdc-raised-button {
+      &.mat-primary {
+        @include _protected-button-variant($theme, primary);
+      }
+
+      &.mat-accent {
+        @include _protected-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _protected-button-variant($theme, warn);
+      }
+
+      // TODO(wagnermaciel): Remove this workaround when b/301126527 is resolved
+      @include mdc-helpers.disable-mdc-fallback-declarations {
+        @include mdc-elevation-theme.elevation(2);
+
+        &:hover, &:focus {
+          @include mdc-elevation-theme.elevation(4);
+        }
+
+        &:active, &:focus:active {
+          @include mdc-elevation-theme.elevation(8);
+        }
+      }
     }
 
-    &.mat-warn {
-      @include _outlined-button-variant($theme, warn);
+    .mat-mdc-outlined-button {
+      &.mat-primary {
+        @include _outlined-button-variant($theme, primary);
+      }
+
+      &.mat-accent {
+        @include _outlined-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _outlined-button-variant($theme, warn);
+      }
     }
   }
 }
 
 @mixin typography($theme) {
-  $text-typography-tokens: tokens-mdc-text-button.get-typography-tokens($theme);
-  $filled-typography-tokens: tokens-mdc-filled-button.get-typography-tokens($theme);
-  $outlined-typography-tokens: tokens-mdc-outlined-button.get-typography-tokens($theme);
-  $protected-typography-tokens: tokens-mdc-protected-button.get-typography-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  }
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      $text-typography-tokens: tokens-mdc-text-button.get-typography-tokens($theme);
+      $filled-typography-tokens: tokens-mdc-filled-button.get-typography-tokens($theme);
+      $outlined-typography-tokens: tokens-mdc-outlined-button.get-typography-tokens($theme);
+      $protected-typography-tokens: tokens-mdc-protected-button.get-typography-tokens($theme);
 
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-button-text-theme.theme($text-typography-tokens);
-    @include mdc-button-filled-theme.theme($filled-typography-tokens);
-    @include mdc-button-outlined-theme.theme($outlined-typography-tokens);
-    @include mdc-button-protected-theme.theme($protected-typography-tokens);
+      @include mdc-button-text-theme.theme($text-typography-tokens);
+      @include mdc-button-filled-theme.theme($filled-typography-tokens);
+      @include mdc-button-outlined-theme.theme($outlined-typography-tokens);
+      @include mdc-button-protected-theme.theme($protected-typography-tokens);
+    }
   }
 }
 
 @mixin density($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-  $text-density-tokens: tokens-mdc-text-button.get-density-tokens($theme);
-  $filled-density-tokens: tokens-mdc-filled-button.get-density-tokens($theme);
-  $outlined-density-tokens: tokens-mdc-outlined-button.get-density-tokens($theme);
-  $protected-density-tokens: tokens-mdc-protected-button.get-density-tokens($theme);
-
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-button-text-theme.theme($text-density-tokens);
-    @include mdc-button-filled-theme.theme($filled-density-tokens);
-    @include mdc-button-outlined-theme.theme($outlined-density-tokens);
-    @include mdc-button-protected-theme.theme($protected-density-tokens);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
+  @else {
+    $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
-  .mat-mdc-button,
-  .mat-mdc-raised-button,
-  .mat-mdc-unelevated-button,
-  .mat-mdc-outlined-button {
-    // TODO: tokenize the touch target visibility.
-    @include button-base.mat-private-button-touch-target-density($density-scale);
+    @include sass-utils.current-selector-or-root() {
+      $text-density-tokens: tokens-mdc-text-button.get-density-tokens($theme);
+      $filled-density-tokens: tokens-mdc-filled-button.get-density-tokens($theme);
+      $outlined-density-tokens: tokens-mdc-outlined-button.get-density-tokens($theme);
+      $protected-density-tokens: tokens-mdc-protected-button.get-density-tokens($theme);
+
+      @include mdc-button-text-theme.theme($text-density-tokens);
+      @include mdc-button-filled-theme.theme($filled-density-tokens);
+      @include mdc-button-outlined-theme.theme($outlined-density-tokens);
+      @include mdc-button-protected-theme.theme($protected-density-tokens);
+    }
+
+    .mat-mdc-button,
+    .mat-mdc-raised-button,
+    .mat-mdc-unelevated-button,
+    .mat-mdc-outlined-button {
+      // TODO: tokenize the touch target visibility.
+      @include button-base.mat-private-button-touch-target-density($density-scale);
+    }
   }
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
-    @include base($theme);
-    @if inspection.theme-has($theme, color) {
-      @include color($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
     }
-    @if inspection.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if inspection.theme-has($theme, typography) {
-      @include typography($theme);
+    @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }
