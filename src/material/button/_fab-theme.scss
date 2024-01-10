@@ -47,6 +47,7 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include _fab-variant($theme, null);
+      @include mdc-extended-fab-theme.theme(tokens-mdc-extended-fab.get-color-tokens($theme));
 
       .mat-mdc-fab,
       .mat-mdc-mini-fab {

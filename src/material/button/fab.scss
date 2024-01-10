@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/fab' as mdc-fab;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
@@ -5,7 +6,6 @@
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
-@use '../core/style/elevation';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/token-utils';
 @use '../core/style/private' as style-private;
@@ -17,13 +17,21 @@
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   $mdc-fab-token-slots: tokens-mdc-fab.get-token-slots();
   $mdc-extended-fab-token-slots: tokens-mdc-extended-fab.get-token-slots();
+  $exclude-tokens: (
+    // Exclude the elevation tokens here since we output them manually below.
+    container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
+  );
 
   // Note: it's important to pass the query here, otherwise MDC generates
   // some unnecessary typography styles for the extended FAB.
   @include mdc-fab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
 
   .mat-mdc-fab, .mat-mdc-mini-fab {
-    @include mdc-fab-theme.theme-styles($mdc-fab-token-slots);
+    @include mdc-fab-theme.theme-styles(map.merge($mdc-fab-token-slots, $exclude-tokens));
   }
 
   .mat-mdc-extended-fab {
@@ -31,7 +39,8 @@
     // tokens it doesn't. We add it since it can cause tiny differences in
     // screenshot tests and it generally looks better.
     @include mdc-typography.smooth-font();
-    @include mdc-extended-fab-theme.theme-styles($mdc-extended-fab-token-slots);
+    @include mdc-extended-fab-theme.theme-styles(
+      map.merge($mdc-extended-fab-token-slots, $exclude-tokens));
   }
 }
 
@@ -41,7 +50,6 @@
   @include button-base.mat-private-button-ripple(tokens-mat-fab.$prefix,
     tokens-mat-fab.get-token-slots());
   @include style-private.private-animation-noop();
-  @include elevation.elevation(6);
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
   @include mdc-helpers.disable-mdc-fallback-declarations {
@@ -50,20 +58,26 @@
     }
   }
 
-  &:hover, &:focus {
-    @include elevation.elevation(8);
-  }
+  @include token-utils.use-tokens(tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()) {
+    @include button-base.mat-private-button-elevation(container-elevation);
 
-  &:active, &:focus:active {
-    @include elevation.elevation(12);
+    &:hover {
+      @include button-base.mat-private-button-elevation(hover-container-elevation);
+    }
+
+    &:focus {
+      @include button-base.mat-private-button-elevation(focus-container-elevation);
+    }
+
+    &:active, &:focus:active {
+      @include button-base.mat-private-button-elevation(pressed-container-elevation);
+    }
   }
 
   @include button-base.mat-private-button-disabled {
-    @include elevation.elevation(0);
-
     // Necessary for interactive disabled buttons.
-    &:focus {
-      @include elevation.elevation(0);
+    &, &:focus {
+      box-shadow: none;
     }
 
     @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
@@ -99,6 +113,30 @@
 }
 
 .mat-mdc-extended-fab {
+  @include token-utils.use-tokens(tokens-mdc-extended-fab.$prefix,
+    tokens-mdc-extended-fab.get-token-slots()) {
+    @include button-base.mat-private-button-elevation(container-elevation);
+
+    &:hover {
+      @include button-base.mat-private-button-elevation(hover-container-elevation);
+    }
+
+    &:focus {
+      @include button-base.mat-private-button-elevation(focus-container-elevation);
+    }
+
+    &:active, &:focus:active {
+      @include button-base.mat-private-button-elevation(pressed-container-elevation);
+    }
+  }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+
   & > .mat-icon,
   & > .material-icons {  // stylelint-disable-line selector-class-pattern
     @include mdc-fab.extended-icon-padding(
