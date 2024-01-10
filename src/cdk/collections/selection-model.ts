@@ -94,7 +94,7 @@ export class SelectionModel<T> {
     const newSelectedSet = new Set(values);
     values.forEach(value => this._markSelected(value));
     oldValues
-      .filter(value => !newSelectedSet.has(value))
+      .filter(value => !newSelectedSet.has(this._getConcreteValue(value, newSelectedSet)))
       .forEach(value => this._unmarkSelected(value));
     const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
@@ -234,11 +234,12 @@ export class SelectionModel<T> {
   }
 
   /** Returns a value that is comparable to inputValue by applying compareWith function, returns the same inputValue otherwise. */
-  private _getConcreteValue(inputValue: T): T {
+  private _getConcreteValue(inputValue: T, selection?: Set<T>): T {
     if (!this.compareWith) {
       return inputValue;
     } else {
-      for (let selectedValue of this._selection) {
+      selection = selection ?? this._selection;
+      for (let selectedValue of selection) {
         if (this.compareWith!(inputValue, selectedValue)) {
           return selectedValue;
         }
