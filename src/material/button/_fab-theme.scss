@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 @use '../core/style/sass-utils';
@@ -10,6 +9,9 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-fab.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -40,9 +42,14 @@
   @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-tokens);
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the fab: primary, secondary, or tertiary
+///     (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -67,6 +74,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -80,6 +89,8 @@
   }
 }
 
+/// Outputs density theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -92,10 +103,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the fab: primary, secondary, or tertiary
+///     (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -112,11 +128,12 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-extended-fab-theme.theme(map.get($tokens, tokens-mdc-extended-fab.$prefix));
-    @include mdc-fab-theme.theme(map.get($tokens, tokens-mdc-fab.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-fab.$prefix, map.get($tokens, tokens-mat-fab.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-extended-fab-tokens: token-utils.get-tokens-for(
+      $tokens, tokens-mdc-extended-fab.$prefix, $options...);
+  $mdc-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-fab.$prefix, $options...);
+  $mat-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mat-fab.$prefix, $options...);
+  @include mdc-extended-fab-theme.theme($mdc-extended-fab-tokens);
+  @include mdc-fab-theme.theme($mdc-fab-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-fab-tokens);
 }

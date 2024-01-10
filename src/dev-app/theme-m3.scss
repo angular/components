@@ -6,15 +6,49 @@
 //  a demo thing.
 @mixin color-variants-back-compat($theme) {
   .mat-primary {
-    &.mat-icon { @include mat.icon-color($theme, $color-variant: primary); }
+    @include mat.option-color($theme, $color-variant: primary);
+
+    &.mat-icon {
+      @include mat.icon-color($theme, $color-variant: primary);
+    }
+
+    &.mat-mdc-checkbox {
+      @include mat.checkbox-color($theme, $color-variant: primary);
+    }
+
+    &.mat-mdc-fab,
+    &.mat-mdc-mini-fab {
+      @include mat.fab-color($theme, $color-variant: primary);
+    }
   }
 
   .mat-accent {
-    &.mat-icon { @include mat.icon-color($theme, $color-variant: secondary); }
+    @include mat.option-color($theme, $color-variant: secondary);
+
+    &.mat-icon {
+      @include mat.icon-color($theme, $color-variant: secondary);
+    }
+
+    &.mat-mdc-checkbox {
+      @include mat.checkbox-color($theme, $color-variant: secondary);
+    }
+
+    &.mat-mdc-fab,
+    &.mat-mdc-mini-fab {
+      @include mat.fab-color($theme, $color-variant: secondary);
+    }
   }
 
   .mat-warn {
-    &.mat-icon { @include mat.icon-color($theme, $color-variant: error); }
+    @include mat.option-color($theme, $color-variant: error);
+
+    &.mat-icon {
+      @include mat.icon-color($theme, $color-variant: error);
+    }
+
+    &.mat-mdc-checkbox {
+      @include mat.checkbox-color($theme, $color-variant: error);
+    }
   }
 }
 

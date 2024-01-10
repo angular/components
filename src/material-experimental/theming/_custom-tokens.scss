@@ -272,7 +272,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-fab
 @function fab($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     foreground-color: map.get($systems, md-sys-color, on-primary-container),
     state-layer-color: map.get($systems, md-sys-color, primary-container),
     ripple-color: mat.private-safe-color-change(
@@ -286,7 +286,26 @@
       map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
     disabled-state-foreground-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-  );
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      foreground-color: map.get($systems, md-sys-color, on-secondary-container),
+      state-layer-color: map.get($systems, md-sys-color, secondary-container),
+      ripple-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, on-secondary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
+      state-layer-color: map.get($systems, md-sys-color, tertiary-container),
+      ripple-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, on-tertiary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-form-field.
@@ -338,6 +357,7 @@
     color: _hardcode(inherit, $exclude-hardcoded),
   ), (
     // Color variants:
+    neutral: (), // Default, no overrides needed.
     primary: (
       color: map.get($systems, md-sys-color, primary),
     ),
@@ -485,7 +505,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-option
 @function option($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return (mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, label-large),
     (
       selected-state-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
@@ -500,7 +520,22 @@
       ),
       selected-state-layer-color: map.get($systems, md-sys-color, secondary-container),
     ),
-  );
+  ), (
+    // Color variants:
+    primary: (
+      selected-state-label-text-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-state-layer-color: map.get($systems, md-sys-color, primary-container),
+    ),
+    secondary: (), // Default, no overrides needed
+    tertiary: (
+      selected-state-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-state-layer-color: map.get($systems, md-sys-color, tertiary-container),
+    ),
+    error: (
+      selected-state-label-text-color: map.get($systems, md-sys-color, on-error-container),
+      selected-state-layer-color: map.get($systems, md-sys-color, error-container),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-paginator.
@@ -799,5 +834,54 @@
     node-text-font: map.get($systems, md-sys-typescale, body-large-font),
     node-text-size: map.get($systems, md-sys-typescale, body-large-size),
     node-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
+  );
+}
+
+/// Generates custom token overrides for the mdc-checkbox color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-checkbox
+@function mdc-checkbox-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-container-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-container-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-container-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-pressed-container-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-secondary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-pressed-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-container-color: map.get($systems, md-sys-color, error),
+      selected-focus-container-color: map.get($systems, md-sys-color, error),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-container-color: map.get($systems, md-sys-color, error),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-pressed-container-color: map.get($systems, md-sys-color, error),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-error),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+    )
   );
 }
