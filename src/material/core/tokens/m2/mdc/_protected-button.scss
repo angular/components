@@ -27,12 +27,6 @@ $prefix: (mdc, protected-button);
     focus-state-layer-opacity: null,
     hover-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
-    container-shadow-color: null,
-    container-elevation: null,
-    hover-container-elevation: null,
-    disabled-container-elevation: null,
-    focus-container-elevation: null,
-    pressed-container-elevation: null,
     with-icon-icon-size: null,
     focus-label-text-color: null,
     hover-label-text-color: null,
@@ -57,7 +51,13 @@ $prefix: (mdc, protected-button);
     container-color: inspection.get-theme-color($theme, background, card),
     label-text-color: $on-surface,
     disabled-container-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38))
+    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
+    container-elevation: 2,
+    disabled-container-elevation: 0,
+    focus-container-elevation: 4,
+    hover-container-elevation: 4,
+    pressed-container-elevation: 8,
+    container-shadow-color: #000,
   );
 }
 

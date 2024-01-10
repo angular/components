@@ -3,10 +3,8 @@
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
-@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 
 @use './button-base';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
@@ -169,19 +167,6 @@
 
       &.mat-warn {
         @include _protected-button-variant($theme, warn);
-      }
-
-      // TODO(wagnermaciel): Remove this workaround when b/301126527 is resolved
-      @include mdc-helpers.disable-mdc-fallback-declarations {
-        @include mdc-elevation-theme.elevation(2);
-
-        &:hover, &:focus {
-          @include mdc-elevation-theme.elevation(4);
-        }
-
-        &:active, &:focus:active {
-          @include mdc-elevation-theme.elevation(8);
-        }
       }
     }
 
