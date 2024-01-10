@@ -2,6 +2,22 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
+// TODO(mmalerba): Consider adding this as a back-compat API for users who want it, rather than just
+//  a demo thing.
+@mixin color-variants-back-compat($theme) {
+  .mat-primary {
+    &.mat-icon { @include mat.icon-color($theme, $color-variant: primary); }
+  }
+
+  .mat-accent {
+    &.mat-icon { @include mat.icon-color($theme, $color-variant: secondary); }
+  }
+
+  .mat-warn {
+    &.mat-icon { @include mat.icon-color($theme, $color-variant: error); }
+  }
+}
+
 // Add an indicator to make it clear that the app is styled with the experimental M3 theme.
 dev-app {
   &::before {
@@ -79,6 +95,8 @@ html {
   @include mat.tree-theme($light-theme);
 }
 
+@include color-variants-back-compat($light-theme);
+
 // Emit dark theme styles.
 .demo-unicorn-dark-theme {
   // TODO(mmalerba): choose colors from the theming API.
@@ -124,6 +142,8 @@ html {
   @include mat.toolbar-color($dark-theme);
   @include mat.tooltip-color($dark-theme);
   @include mat.tree-color($dark-theme);
+
+  @include color-variants-back-compat($dark-theme);
 }
 
 // Emit density styles for each scale.

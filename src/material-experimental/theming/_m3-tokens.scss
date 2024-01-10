@@ -1,5 +1,5 @@
-@use 'sass:map';
 @use 'sass:list';
+@use 'sass:map';
 @use 'sass:meta';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
@@ -51,15 +51,35 @@
 
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
 /// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map} $m3-values A map of M3 token values for the given prefix.
+/// @param {Map|(Map, Map)} $m3-values A map of M3 token values for the given prefix.
+///  This param may also be a tuple of maps, the first one representing the default M3 token values,
+//   and the second containing overrides for different color variants.
+//   Single map example:
+//     (token1: green, token2: 2px)
+//   Tuple example:
+//     (
+//       (token1: green, token2: 2px),
+//       (
+//         secondary: (token1: blue),
+//         error: (token1: red),
+//       )
+//     )
 /// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @param {String|null} $variant The name of the variant the token values are for.
 /// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function _namespace-tokens($prefix, $m3-values, $slots) {
+@function _namespace-tokens($prefix, $m3-values, $slots, $variant: null) {
+  $result: ();
+  @if $variant == null and meta.type-of($m3-values) == 'list' and list.length($m3-values == 2) {
+    $variants: list.nth($m3-values, 2);
+    $m3-values: list.nth($m3-values, 1);
+    @each $variant, $overrides in $variants {
+      $result: map.merge($result, _namespace-tokens($prefix, $overrides, $slots, $variant));
+    }
+  }
   $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
   $used-m3-tokens: _pick(_filter-nulls($m3-values), $used-token-names);
-  @return (
-    $prefix: $used-m3-tokens,
-  );
+  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
+  @return map.merge($result, ($prefix: $used-m3-tokens));
 }
 
 /// Generates tokens for the given palette with the given prefix.
@@ -394,7 +414,7 @@
   $token-slots: mat.m2-tokens-from-theme($fake-theme);
 
   // TODO(mmalerba): Fill in remaining tokens.
-  $result: mat.private-merge-all(
+  $result: mat.private-deep-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
     (
       (mdc, theme): map.get($systems, md-sys-color),
