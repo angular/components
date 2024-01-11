@@ -677,6 +677,16 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, full-pseudo-checkbox),
+      custom-tokens.full-pseudo-checkbox($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, minimal-pseudo-checkbox),
+      custom-tokens.minimal-pseudo-checkbox($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, radio),
       custom-tokens.radio($systems, $exclude-hardcoded),
       $token-slots

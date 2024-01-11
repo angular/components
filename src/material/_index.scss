@@ -60,7 +60,8 @@
 @forward './core/option/optgroup-theme' as optgroup-* show optgroup-color, optgroup-typography,
   optgroup-theme, optgroup-density, optgroup-base;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-theme' as pseudo-checkbox-* show
-  pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme, pseudo-checkbox-base;
+  pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme, pseudo-checkbox-density,
+  pseudo-checkbox-base;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-common' as pseudo-checkbox-* show
   pseudo-checkbox-legacy-size;
 @forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
