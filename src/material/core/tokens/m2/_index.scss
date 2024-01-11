@@ -21,6 +21,8 @@
 @use './mat/option' as tokens-mat-option;
 @use './mat/optgroup' as tokens-mat-optgroup;
 @use './mat/paginator' as tokens-mat-paginator;
+@use './mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
+@use './mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/select' as tokens-mat-select;
@@ -122,6 +124,8 @@
       _get-tokens-for-module($theme, tokens-mat-option),
       _get-tokens-for-module($theme, tokens-mat-outlined-button),
       _get-tokens-for-module($theme, tokens-mat-paginator),
+      _get-tokens-for-module($theme, tokens-mat-full-pseudo-checkbox),
+      _get-tokens-for-module($theme, tokens-mat-minimal-pseudo-checkbox),
       _get-tokens-for-module($theme, tokens-mat-protected-button),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
