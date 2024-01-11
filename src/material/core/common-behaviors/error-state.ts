@@ -65,7 +65,7 @@ export class _ErrorStateTracker {
     const parent = this._parentFormGroup || this._parentForm;
     const matcher = this.matcher || this._defaultMatcher;
     const control = this.ngControl ? (this.ngControl.control as AbstractControl) : null;
-    const newState = matcher?.isErrorState(control, parent);
+    const newState = matcher?.isErrorState(control, parent) ?? false;
 
     if (newState !== oldState) {
       this.errorState = newState;
