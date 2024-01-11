@@ -1,3 +1,12 @@
+<a name="16.2.13"></a>
+# 16.2.13 "pink-peach" (2024-01-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [398197d7e](https://github.com/angular/components/commit/398197d7e7596d1a6526a0be47a1eb1305e0bc1c) | fix | **button:** resolve memory leaks in ripples ([#28254](https://github.com/angular/components/pull/28254)) ([#28408](https://github.com/angular/components/pull/28408)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.0-rc.0"></a>
 # 17.1.0-rc.0 "sunstone-synergy" (2024-01-10)
 ### cdk
