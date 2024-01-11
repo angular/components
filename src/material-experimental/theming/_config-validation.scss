@@ -154,7 +154,7 @@
     @return (#{'$config has unexpected properties. Valid properties are: scale. Found:'} $err);
   }
   @if $config and map.has-key($config, scale) {
-    $allowed-scales: (0, -1, -2, -3, -4 -5, minimum, maximum);
+    $allowed-scales: (0, -1, -2, -3, -4, -5, minimum, maximum);
     @if mat.private-validate-allowed-values(map.get($config, scale), $allowed-scales...) {
       @return (
         #{'Expected $config.scale to be one of: #{$allowed-scales}. Got:'}
