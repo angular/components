@@ -110,6 +110,7 @@
 @mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     @include mdc-radio-theme.theme(map.get($tokens, tokens-mdc-radio.$prefix));
+    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
     @include token-utils.create-token-values(
         tokens-mat-radio.$prefix, map.get($tokens, tokens-mat-radio.$prefix));
   }

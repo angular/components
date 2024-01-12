@@ -107,5 +107,6 @@
     // TODO(mmalerba): Some of the theme styles above are not represented in terms of tokens,
     //   so this mixin is currently incomplete.
     @include mdc-checkbox-theme.theme(map.get($tokens, tokens-mdc-checkbox.$prefix));
+    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
   }
 }
