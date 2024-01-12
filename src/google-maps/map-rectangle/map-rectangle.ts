@@ -24,7 +24,6 @@ import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
-import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Rectangle via the Google Maps JavaScript API.
@@ -163,12 +162,11 @@ export class MapRectangle implements OnInit, OnDestroy {
             this._initialize(this._map.googleMap, google.maps.Rectangle, options);
           } else {
             this._ngZone.runOutsideAngular(() => {
-              Promise.all([
-                this._map._resolveMap(),
-                importLibrary<typeof google.maps.Rectangle>('maps', 'Rectangle'),
-              ]).then(([map, rectangleConstructor]) => {
-                this._initialize(map, rectangleConstructor, options);
-              });
+              Promise.all([this._map._resolveMap(), google.maps.importLibrary('maps')]).then(
+                ([map, lib]) => {
+                  this._initialize(map, (lib as google.maps.MapsLibrary).Rectangle, options);
+                },
+              );
             });
           }
         });

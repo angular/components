@@ -22,7 +22,6 @@ import {
 } from '@angular/core';
 
 import {GoogleMap} from '../google-map/google-map';
-import {importLibrary} from '../import-library';
 
 /** Possible data that can be shown on a heatmap layer. */
 export type HeatmapData =
@@ -82,7 +81,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     if (this._googleMap._isBrowser) {
       if (
         !window.google?.maps?.visualization &&
-        !(window as any).google?.maps.importLibrary &&
+        !window.google?.maps.importLibrary &&
         (typeof ngDevMode === 'undefined' || ngDevMode)
       ) {
         throw Error(
@@ -98,12 +97,9 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
         this._ngZone.runOutsideAngular(() => {
           Promise.all([
             this._googleMap._resolveMap(),
-            importLibrary<typeof google.maps.visualization.HeatmapLayer>(
-              'visualization',
-              'HeatmapLayer',
-            ),
-          ]).then(([map, heatmapConstructor]) => {
-            this._initialize(map, heatmapConstructor);
+            google.maps.importLibrary('visualization'),
+          ]).then(([map, lib]) => {
+            this._initialize(map, (lib as google.maps.VisualizationLibrary).HeatmapLayer);
           });
         });
       }
