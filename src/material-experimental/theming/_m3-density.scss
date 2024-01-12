@@ -96,7 +96,9 @@ $_density-tokens: (
   (mat, paginator): (
     container-size: (56px, 52px, 48px, 40px),
   ),
-  (mat, radio): (),
+  (mat, radio): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, ripple): (),
   (mat, select): (),
   (mat, sidenav): (),

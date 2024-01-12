@@ -108,6 +108,10 @@
       $set-width: true,
       $query: mdc-helpers.$mdc-base-styles-query);
 
+    @include token-utils.use-tokens(tokens-mat-radio.$prefix,tokens-mat-radio.get-token-slots()) {
+      @include token-utils.create-token-slot(display, touch-target-display);
+    }
+
     [dir='rtl'] & {
       left: 0;
       right: 50%;
