@@ -74,6 +74,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-extended-fab-theme.theme(tokens-mdc-extended-fab.get-typography-tokens($theme));
+      @include token-utils.create-token-values(tokens-mat-fab.$prefix,
+        tokens-mat-fab.get-typography-tokens($theme));
     }
   }
 }
@@ -82,7 +84,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-fab.$prefix,
+        tokens-mat-fab.get-density-tokens($theme));
+    }
+  }
 }
 
 @mixin theme($theme) {

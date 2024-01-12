@@ -110,22 +110,13 @@
   }
 }
 
-// Hides the touch target on lower densities.
-@mixin mat-private-button-touch-target-density($scale) {
-  @include mdc-helpers.if-touch-targets-unsupported($scale) {
-    .mat-mdc-button-touch-target {
-      display: none;
-    }
-  }
-}
-
 // Adds an elevation shadow to a button.
 @mixin mat-private-button-elevation($token-name) {
   // MDC outputs a variable that is the same as the token name, but suffixed with `-shadow`.
   box-shadow: var(#{token-utils.get-token-variable($token-name) + '-shadow'});
 }
 
-@mixin mat-private-button-touch-target($is-square) {
+@mixin mat-private-button-touch-target($is-square, $prefix, $slots) {
   // Element used to ensure that the button has a touch target that meets the required minimum.
   // Note that we use this, instead of MDC's built-in `mdc-button--touch` class, because the MDC
   // class is implemented as `margin-top: 6px; margin-bottom: 6px` on the host element which
@@ -136,5 +127,9 @@
     @include mdc-touch-target.touch-target(
       $set-width: $is-square,
       $query: mdc-helpers.$mdc-base-styles-query);
+
+    @include token-utils.use-tokens($prefix, $slots) {
+      @include token-utils.create-token-slot(display, touch-target-display);
+    }
   }
 }
