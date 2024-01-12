@@ -68,6 +68,9 @@ $_density-tokens: (
   (mat, badge): (),
   (mat, bottom-sheet): (),
   (mat, card): (),
+  (mat, checkbox): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, datepicker): (),
   (mat, divider): (),
   (mat, expansion): (

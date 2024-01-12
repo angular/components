@@ -2,12 +2,13 @@
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
+@use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -16,6 +17,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-checkbox.$prefix, tokens-mat-checkbox.get-unthemable-tokens());
     }
   }
 }
@@ -27,6 +30,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-checkbox.$prefix, tokens-mat-checkbox.get-color-tokens($theme));
     }
 
     .mat-mdc-checkbox {
@@ -55,6 +60,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-checkbox.$prefix, tokens-mat-checkbox.get-typography-tokens($theme));
     }
 
     .mat-mdc-checkbox {
@@ -72,12 +79,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($theme));
-    }
-
-    @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
-      .mat-mdc-checkbox-touch-target {
-        display: none;
-      }
+      @include token-utils.create-token-values(
+        tokens-mat-checkbox.$prefix, tokens-mat-checkbox.get-density-tokens($theme));
     }
   }
 }
@@ -108,5 +111,7 @@
     //   so this mixin is currently incomplete.
     @include mdc-checkbox-theme.theme(map.get($tokens, tokens-mdc-checkbox.$prefix));
     @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
+    @include token-utils.create-token-values(
+      tokens-mat-checkbox.$prefix, map.get($tokens, tokens-mat-checkbox.$prefix));
   }
 }
