@@ -77,7 +77,9 @@ $_density-tokens: (
     header-collapsed-state-height: (48px, 44px, 40px, 36px),
     header-expanded-state-height: (64px, 60px, 56px, 48px),
   ),
-  (mat, fab): (),
+  (mat, fab): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, form-field): (
     container-height: (56px, 52px, 48px, 44px, 40px, 36px),
     filled-label-display: (block, block, none, none, none, none),
@@ -87,7 +89,21 @@ $_density-tokens: (
   ),
   (mat, grid-list): (),
   (mat, icon): (),
-  (mat, icon-button): (),
+  (mat, icon-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, text-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, protected-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, filled-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, outlined-button): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, menu): (),
   (mat, optgroup): (),
   (mat, option): (),

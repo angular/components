@@ -46,7 +46,8 @@
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
   @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-touch-target(true);
+  @include button-base.mat-private-button-touch-target(true, tokens-mat-fab.$prefix,
+    tokens-mat-fab.get-token-slots());
   @include button-base.mat-private-button-ripple(tokens-mat-fab.$prefix,
     tokens-mat-fab.get-token-slots());
   @include style-private.private-animation-noop();

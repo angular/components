@@ -5,7 +5,6 @@
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 @use '../core/style/sass-utils';
-@use './button-base';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -67,7 +66,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-typography-tokens($theme));
+    }
+  }
 }
 
 @mixin density($theme) {
@@ -91,6 +95,11 @@
       $property-name: size,
     );
 
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-density-tokens($theme));
+    }
+
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     .mat-mdc-icon-button.mat-mdc-button-base {
       // Match the styles that used to be present. This is necessary for backwards
@@ -107,8 +116,6 @@
       width: var(--mdc-icon-button-state-layer-size);
       height: var(--mdc-icon-button-state-layer-size);
       padding: math.div($calculated-size - $icon-size, 2);
-
-      @include button-base.mat-private-button-touch-target-density($density-scale);
     }
   }
 }
