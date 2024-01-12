@@ -8,6 +8,7 @@
 @use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
 @use '../core/tokens/token-utils';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
@@ -220,6 +221,11 @@
   @include mdc-touch-target.touch-target(
     $set-width: true,
     $query: mdc-helpers.$mdc-base-styles-query);
+
+  @include token-utils.use-tokens(tokens-mat-checkbox.$prefix,
+    tokens-mat-checkbox.get-token-slots()) {
+    @include token-utils.create-token-slot(display, touch-target-display);
+  }
 }
 
 // Checkbox components have to set `border-radius: 50%` in order to support density scaling
