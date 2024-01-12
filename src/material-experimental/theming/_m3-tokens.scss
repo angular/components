@@ -384,6 +384,22 @@
   ));
 }
 
+/// Gets the token values for the MDC form field.
+/// @param {Map} $systems The MDC system tokens.
+/// @return {Map} The form field tokens.
+@function _get-form-field-tokens($systems) {
+  @return (
+    // TODO: MDC currently doesn't provide tokens for the form field so we need to
+    // define them ourselves. Clean this up once b/284340076 is resolved.
+    label-text-color: map.get($systems, 'md-sys-color', 'on-surface'),
+    label-text-font: map.get($systems, 'md-sys-typescale', 'body-medium-font'),
+    label-text-line-height: map.get($systems, 'md-sys-typescale', 'body-medium-line-height'),
+    label-text-size: map.get($systems, 'md-sys-typescale', 'body-medium-size'),
+    label-text-tracking: map.get($systems, 'md-sys-typescale', 'body-medium-tracking'),
+    label-text-weight: map.get($systems, 'md-sys-typescale', 'body-medium-weight'),
+  );
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -464,6 +480,11 @@
         // include opacities that are used for the disabled state.
         mdc-tokens.md-comp-filled-text-field-values($systems, false)
       ),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, form-field),
+      _get-form-field-tokens($systems),
       $token-slots
     ),
     _namespace-tokens(

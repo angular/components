@@ -101,5 +101,6 @@
 @mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     @include mdc-switch-theme.theme(map.get($tokens, tokens-mdc-switch.$prefix));
+    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
   }
 }
