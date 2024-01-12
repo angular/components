@@ -673,14 +673,12 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-slider
 @function slider($systems, $exclude-hardcoded) {
-  $ripple-color: map.get($systems, md-sys-color, primary);
-  $hover-ripple-color: mat.private-safe-color-change($ripple-color, $alpha: 0.05);
-  $focus-ripple-color: mat.private-safe-color-change($ripple-color, $alpha: 0.2);
-
-  @return (
-    ripple-color: $ripple-color,
-    hover-state-layer-color: $hover-ripple-color,
-    focus-state-layer-color: $focus-ripple-color,
+  @return ((
+    ripple-color: map.get($systems, md-sys-color, primary),
+    hover-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, primary), $alpha: 0.05),
+    focus-state-layer-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, primary), $alpha: 0.2),
     value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
     value-indicator-padding: _hardcode(0, $exclude-hardcoded),
     value-indicator-width: _hardcode(28px, $exclude-hardcoded),
@@ -690,7 +688,31 @@
     value-indicator-text-transform: _hardcode(rotate(45deg), $exclude-hardcoded),
     value-indicator-container-transform:
       _hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
-  );
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      ripple-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, secondary), $alpha: 0.05),
+      focus-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, secondary), $alpha: 0.2),
+    ),
+    teriatiary: (
+      ripple-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, tertiary), $alpha: 0.05),
+      focus-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, tertiary), $alpha: 0.2),
+    ),
+    error: (
+      ripple-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, error), $alpha: 0.05),
+      focus-state-layer-color: mat.private-safe-color-change(
+          map.get($systems, md-sys-color, error), $alpha: 0.2),
+    ),
+  ));
 }
 
 /// Generates custom tokens for the mat-snack-bar.
@@ -755,7 +777,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-tab-header
 @function tab-header($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return (mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
       divider-color: map.get($systems, md-sys-color, surface-variant),
@@ -773,7 +795,22 @@
       active-focus-indicator-color: map.get($systems, md-sys-color, primary),
       active-hover-indicator-color: map.get($systems, md-sys-color, primary),
     ),
-  );
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, secondary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, tertiary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, error),
+      active-hover-indicator-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mdc-tab-indicator. (MDC has a tab-indicator component, but they
@@ -783,11 +820,23 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mdc-tab-indicator
 @function tab-indicator($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     active-indicator-height: _hardcode(2px, $exclude-hardcoded),
     active-indicator-shape: _hardcode(0, $exclude-hardcoded),
     active-indicator-color: map.get($systems, md-sys-color, primary),
-  );
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-indicator-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-table.
@@ -815,11 +864,11 @@
 /// @return {Map} A set of custom tokens for the mat-toolbar
 @function toolbar($systems, $exclude-hardcoded) {
   @return mat.private-merge-all(
-      _generate-typography-tokens($systems, title-text, title-large),
-      (
-        container-background-color: map.get($systems, md-sys-color, surface),
-        container-text-color: map.get($systems, md-sys-color, on-surface),
-      )
+    _generate-typography-tokens($systems, title-text, title-large),
+    (
+      container-background-color: map.get($systems, md-sys-color, surface),
+      container-text-color: map.get($systems, md-sys-color, on-surface),
+    )
   );
 }
 
@@ -883,5 +932,57 @@
       selected-pressed-icon-color: map.get($systems, md-sys-color, on-error),
       unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
     )
+  );
+}
+
+/// Generates custom token overrides for the mdc-slider color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-slider
+@function mdc-slider-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-track-color: map.get($systems, md-sys-color, secondary),
+      focus-handle-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      handle-color: map.get($systems, md-sys-color, secondary),
+      hover-handle-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-container-color: map.get($systems, md-sys-color, secondary),
+      label-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      pressed-handle-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-secondary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-secondary),
+    ),
+    tertiary: (
+      active-track-color: map.get($systems, md-sys-color, tertiary),
+      focus-handle-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      handle-color: map.get($systems, md-sys-color, tertiary),
+      hover-handle-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-container-color: map.get($systems, md-sys-color, tertiary),
+      label-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      pressed-handle-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-tertiary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-tertiary),
+    ),
+    error: (
+      active-track-color: map.get($systems, md-sys-color, error),
+      focus-handle-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      handle-color: map.get($systems, md-sys-color, error),
+      hover-handle-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-container-color: map.get($systems, md-sys-color, error),
+      label-label-text-color: map.get($systems, md-sys-color, on-error),
+      pressed-handle-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-error),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-error),
+    ),
   );
 }

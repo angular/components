@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -8,6 +7,9 @@
 @use '../core/tokens/m2/mat/slider' as tokens-mat-slider;
 @use '../core/tokens/m2/mdc/slider' as tokens-mdc-slider;
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-slider.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -22,9 +24,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     $is-dark: inspection.get-theme-type($theme) == dark;
@@ -66,6 +73,9 @@
   }
 }
 
+
+/// Outputs typography theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -78,6 +88,9 @@
   }
 }
 
+
+/// Outputs density theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -90,10 +103,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-option.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-slider') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -110,10 +128,9 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-slider-theme.theme(map.get($tokens, tokens-mdc-slider.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-slider.$prefix, map.get($tokens, tokens-mat-slider.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-slider.$prefix, $options...);
+  $mat-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mat-slider.$prefix, $options...);
+  @include mdc-slider-theme.theme($mdc-slider-tokens);
+  @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-slider-tokens);
 }
