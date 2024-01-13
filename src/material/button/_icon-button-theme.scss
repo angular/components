@@ -1,6 +1,4 @@
 @use 'sass:map';
-@use 'sass:math';
-@use '@material/density/functions' as mdc-density-functions;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
@@ -79,43 +77,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    $icon-size: 24px;
-    $density-scale: inspection.get-theme-density($theme);
-    // Manually apply the expected density theming, and include the padding
-    // as it was applied before
-    $calculated-size: mdc-density-functions.prop-value(
-      $density-config: (
-        size: (
-          default: 48px,
-          maximum: 48px,
-          minimum: 28px,
-        ),
-      ),
-      $density-scale: $density-scale,
-      $property-name: size,
-    );
-
     @include sass-utils.current-selector-or-root() {
+      @include mdc-icon-button-theme.theme(tokens-mdc-icon-button.get-density-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
         tokens-mat-icon-button.get-density-tokens($theme));
-    }
-
-    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
-    .mat-mdc-icon-button.mat-mdc-button-base {
-      // Match the styles that used to be present. This is necessary for backwards
-      // compat to match the previous implementations selector count (two classes).
-      @include mdc-icon-button-theme.theme((
-        state-layer-size: $calculated-size,
-      ));
-
-      // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
-      // Currently fails validation because the variable is "undefined"
-      // in the sass stack.
-      // TODO: Switch icon-size to "var(--mdc-icon-button-icon-size)". Currently
-      // fails validation because the variable is "undefined" in the sass stack.
-      width: var(--mdc-icon-button-state-layer-size);
-      height: var(--mdc-icon-button-state-layer-size);
-      padding: math.div($calculated-size - $icon-size, 2);
     }
   }
 }
