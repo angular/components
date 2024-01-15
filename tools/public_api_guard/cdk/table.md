@@ -75,7 +75,7 @@ export const CDK_ROW_TEMPLATE = "<ng-container cdkCellOutlet></ng-container>";
 export const CDK_TABLE: InjectionToken<any>;
 
 // @public
-export const CDK_TABLE_TEMPLATE = "\n  <ng-content select=\"caption\"></ng-content>\n  <ng-content select=\"colgroup, col\"></ng-content>\n  <ng-container headerRowOutlet></ng-container>\n  <ng-container rowOutlet></ng-container>\n  <ng-container noDataRowOutlet></ng-container>\n  <ng-container footerRowOutlet></ng-container>\n";
+export const CDK_TABLE_TEMPLATE = "\n  <ng-content select=\"caption\"/>\n  <ng-content select=\"colgroup, col\"/>\n\n  <!--\n    Unprojected content throws a hydration error so we need this to capture it.\n    It gets removed on the client so it doesn't affect the layout.\n  -->\n  @if (_isServer) {\n    <ng-content/>\n  }\n\n  @if (_isNativeHtmlTable) {\n    <thead role=\"rowgroup\">\n      <ng-container headerRowOutlet/>\n    </thead>\n    <tbody role=\"rowgroup\">\n      <ng-container rowOutlet/>\n      <ng-container noDataRowOutlet/>\n    </tbody>\n    <tfoot role=\"rowgroup\">\n      <ng-container footerRowOutlet/>\n    </tfoot>\n  } @else {\n    <ng-container headerRowOutlet/>\n    <ng-container rowOutlet/>\n    <ng-container noDataRowOutlet/>\n    <ng-container footerRowOutlet/>\n  }\n";
 
 // @public
 export class CdkCell extends BaseCdkCell {
@@ -318,11 +318,13 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     set fixedLayout(value: boolean);
     // (undocumented)
     _footerRowOutlet: FooterRowOutlet;
+    _getCellRole(): string | null;
     _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[];
     _getRowDefs(data: T, dataIndex: number): CdkRowDef<T>[];
     // (undocumented)
     _headerRowOutlet: HeaderRowOutlet;
     protected _isNativeHtmlTable: boolean;
+    protected _isServer: boolean;
     get multiTemplateDataRows(): boolean;
     set multiTemplateDataRows(value: boolean);
     // (undocumented)
@@ -343,6 +345,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     _noDataRow: CdkNoDataRow;
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;
+    _outletAssigned(): void;
     removeColumnDef(columnDef: CdkColumnDef): void;
     removeFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
@@ -366,7 +369,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // (undocumented)
     protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, [null, null, null, { attribute: "role"; }, { optional: true; }, null, null, null, null, null, { optional: true; skipSelf: true; }, { optional: true; }]>;
 }

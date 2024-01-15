@@ -9,12 +9,22 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Ground Overlay via the Google Maps JavaScript API.
@@ -35,6 +45,7 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
     google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | undefined
   >(undefined);
   private readonly _destroyed = new Subject<void>();
+  private _hasWatchers: boolean;
 
   /**
    * The underlying google.maps.GroundOverlay object.
@@ -82,6 +93,10 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   @Output() readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
 
+  /** Event emitted when the ground overlay is initialized. */
+  @Output() readonly groundOverlayInitialized: EventEmitter<google.maps.GroundOverlay> =
+    new EventEmitter<google.maps.GroundOverlay>();
+
   constructor(
     private readonly _map: GoogleMap,
     private readonly _ngZone: NgZone,
@@ -98,34 +113,58 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
           this.groundOverlay = undefined;
         }
 
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        if (bounds) {
+        if (!bounds) {
+          return;
+        }
+
+        if (google.maps.GroundOverlay && this._map.googleMap) {
+          this._initialize(this._map.googleMap, google.maps.GroundOverlay, bounds);
+        } else {
           this._ngZone.runOutsideAngular(() => {
-            this.groundOverlay = new google.maps.GroundOverlay(this._url.getValue(), bounds, {
-              clickable: this.clickable,
-              opacity: this._opacity.value,
+            Promise.all([
+              this._map._resolveMap(),
+              importLibrary<typeof google.maps.GroundOverlay>('maps', 'GroundOverlay'),
+            ]).then(([map, overlayConstructor]) => {
+              this._initialize(map, overlayConstructor, bounds);
             });
           });
-          this._assertInitialized();
-          this.groundOverlay.setMap(this._map.googleMap!);
-          this._eventManager.setTarget(this.groundOverlay);
         }
       });
-
-      this._watchForOpacityChanges();
-      this._watchForUrlChanges();
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    overlayConstructor: typeof google.maps.GroundOverlay,
+    bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.groundOverlay = new overlayConstructor(this._url.getValue(), bounds, {
+        clickable: this.clickable,
+        opacity: this._opacity.value,
+      });
+      this._assertInitialized();
+      this.groundOverlay.setMap(map);
+      this._eventManager.setTarget(this.groundOverlay);
+      this.groundOverlayInitialized.emit(this.groundOverlay);
+
+      // We only need to set up the watchers once.
+      if (!this._hasWatchers) {
+        this._hasWatchers = true;
+        this._watchForOpacityChanges();
+        this._watchForUrlChanges();
+      }
+    });
   }
 
   ngOnDestroy() {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.groundOverlay) {
-      this.groundOverlay.setMap(null);
-    }
+    this.groundOverlay?.setMap(null);
   }
 
   /**
@@ -161,32 +200,26 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   private _watchForOpacityChanges() {
     this._opacity.pipe(takeUntil(this._destroyed)).subscribe(opacity => {
       if (opacity != null) {
-        this._assertInitialized();
-        this.groundOverlay.setOpacity(opacity);
+        this.groundOverlay?.setOpacity(opacity);
       }
     });
   }
 
   private _watchForUrlChanges() {
     this._url.pipe(takeUntil(this._destroyed)).subscribe(url => {
-      this._assertInitialized();
       const overlay = this.groundOverlay;
-      overlay.set('url', url);
 
-      // Google Maps only redraws the overlay if we re-set the map.
-      overlay.setMap(null);
-      overlay.setMap(this._map.googleMap!);
+      if (overlay) {
+        overlay.set('url', url);
+        // Google Maps only redraws the overlay if we re-set the map.
+        overlay.setMap(null);
+        overlay.setMap(this._map.googleMap!);
+      }
     });
   }
 
   private _assertInitialized(): asserts this is {groundOverlay: google.maps.GroundOverlay} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._map.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.groundOverlay) {
         throw Error(
           'Cannot interact with a Google Map GroundOverlay before it has been initialized. ' +

@@ -24,6 +24,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   numberAttribute,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -38,6 +39,7 @@ import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {NgClass} from '@angular/common';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {Platform} from '@angular/cdk/platform';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -75,7 +77,6 @@ const ENABLE_BACKGROUND_INPUT = true;
     },
   ],
   host: {
-    'ngSkipHydration': '',
     'class': 'mat-mdc-tab-group',
     '[class]': '"mat-" + (color || "primary")',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
@@ -247,6 +248,9 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     new EventEmitter<MatTabChangeEvent>(true);
 
   private _groupId: number;
+
+  /** Whether the tab group is rendered on the server. */
+  protected _isServer: boolean = !inject(Platform).isBrowser;
 
   constructor(
     readonly _elementRef: ElementRef,

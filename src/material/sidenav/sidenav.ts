@@ -37,7 +37,6 @@ import {ScrollDispatcher, CdkScrollable} from '@angular/cdk/scrolling';
     'class': 'mat-drawer-content mat-sidenav-content',
     '[style.margin-left.px]': '_container._contentMargins.left',
     '[style.margin-right.px]': '_container._contentMargins.right',
-    'ngSkipHydration': '',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -79,7 +78,6 @@ export class MatSidenavContent extends MatDrawerContent {
     '[class.mat-sidenav-fixed]': 'fixedInViewport',
     '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
     '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
-    'ngSkipHydration': '',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -132,7 +130,6 @@ export class MatSidenav extends MatDrawer {
   host: {
     'class': 'mat-drawer-container mat-sidenav-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
-    'ngSkipHydration': '',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

@@ -15,7 +15,7 @@ import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {DragDropRegistry} from './drag-drop-registry';
 import type {DragRef, Point} from './drag-ref';
-import {isPointerNearClientRect, isInsideClientRect} from './dom/client-rect';
+import {isPointerNearDomRect, isInsideClientRect} from './dom/dom-rect';
 import {ParentPositionTracker} from './dom/parent-position-tracker';
 import {DragCSSStyleDeclaration} from './dom/styling';
 import {DropListSortStrategy} from './sorting/drop-list-sort-strategy';
@@ -148,8 +148,8 @@ export class DropListRef<T = any> {
   /** Strategy being used to sort items within the list. */
   private _sortStrategy: DropListSortStrategy<DragRef>;
 
-  /** Cached `ClientRect` of the drop list. */
-  private _clientRect: ClientRect | undefined;
+  /** Cached `DOMRect` of the drop list. */
+  private _domRect: DOMRect | undefined;
 
   /** Draggable items in the container. */
   private _draggables: readonly DragRef[] = [];
@@ -410,8 +410,8 @@ export class DropListRef<T = any> {
     // Don't sort the item if sorting is disabled or it's out of range.
     if (
       this.sortingDisabled ||
-      !this._clientRect ||
-      !isPointerNearClientRect(this._clientRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)
+      !this._domRect ||
+      !isPointerNearDomRect(this._domRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)
     ) {
       return;
     }
@@ -451,12 +451,11 @@ export class DropListRef<T = any> {
         return;
       }
 
-      if (
-        isPointerNearClientRect(position.clientRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)
-      ) {
+      if (isPointerNearDomRect(position.clientRect, DROP_PROXIMITY_THRESHOLD, pointerX, pointerY)) {
         [verticalScrollDirection, horizontalScrollDirection] = getElementScrollDirections(
           element as HTMLElement,
           position.clientRect,
+          this._sortStrategy.direction,
           pointerX,
           pointerY,
         );
@@ -470,16 +469,16 @@ export class DropListRef<T = any> {
     // Otherwise check if we can start scrolling the viewport.
     if (!verticalScrollDirection && !horizontalScrollDirection) {
       const {width, height} = this._viewportRuler.getViewportSize();
-      const clientRect = {
+      const domRect = {
         width,
         height,
         top: 0,
         right: width,
         bottom: height,
         left: 0,
-      } as ClientRect;
-      verticalScrollDirection = getVerticalScrollDirection(clientRect, pointerY);
-      horizontalScrollDirection = getHorizontalScrollDirection(clientRect, pointerX);
+      } as DOMRect;
+      verticalScrollDirection = getVerticalScrollDirection(domRect, pointerY);
+      horizontalScrollDirection = getHorizontalScrollDirection(domRect, pointerX);
       scrollNode = window;
     }
 
@@ -529,8 +528,8 @@ export class DropListRef<T = any> {
     this._parentPositions.cache(this._scrollableElements);
 
     // The list element is always in the `scrollableElements`
-    // so we can take advantage of the cached `ClientRect`.
-    this._clientRect = this._parentPositions.positions.get(element)!.clientRect!;
+    // so we can take advantage of the cached `DOMRect`.
+    this._domRect = this._parentPositions.positions.get(element)!.clientRect!;
   }
 
   /** Resets the container to its initial state. */
@@ -577,7 +576,7 @@ export class DropListRef<T = any> {
    * @param y Pointer position along the Y axis.
    */
   _isOverContainer(x: number, y: number): boolean {
-    return this._clientRect != null && isInsideClientRect(this._clientRect, x, y);
+    return this._domRect != null && isInsideClientRect(this._domRect, x, y);
   }
 
   /**
@@ -599,8 +598,8 @@ export class DropListRef<T = any> {
    */
   _canReceive(item: DragRef, x: number, y: number): boolean {
     if (
-      !this._clientRect ||
-      !isInsideClientRect(this._clientRect, x, y) ||
+      !this._domRect ||
+      !isInsideClientRect(this._domRect, x, y) ||
       !this.enterPredicate(item, this)
     ) {
       return false;
@@ -616,7 +615,7 @@ export class DropListRef<T = any> {
 
     const nativeElement = coerceElement(this.element);
 
-    // The `ClientRect`, that we're using to find the container over which the user is
+    // The `DOMRect`, that we're using to find the container over which the user is
     // hovering, doesn't give us any information on whether the element has been scrolled
     // out of the view or whether it's overlapping with other containers. This means that
     // we could end up transferring the item into a container that's invisible or is positioned
@@ -712,7 +711,7 @@ export class DropListRef<T = any> {
  * @param clientRect Dimensions of the node.
  * @param pointerY Position of the user's pointer along the y axis.
  */
-function getVerticalScrollDirection(clientRect: ClientRect, pointerY: number) {
+function getVerticalScrollDirection(clientRect: DOMRect, pointerY: number) {
   const {top, bottom, height} = clientRect;
   const yThreshold = height * SCROLL_PROXIMITY_THRESHOLD;
 
@@ -730,7 +729,7 @@ function getVerticalScrollDirection(clientRect: ClientRect, pointerY: number) {
  * @param clientRect Dimensions of the node.
  * @param pointerX Position of the user's pointer along the x axis.
  */
-function getHorizontalScrollDirection(clientRect: ClientRect, pointerX: number) {
+function getHorizontalScrollDirection(clientRect: DOMRect, pointerX: number) {
   const {left, right, width} = clientRect;
   const xThreshold = width * SCROLL_PROXIMITY_THRESHOLD;
 
@@ -748,12 +747,14 @@ function getHorizontalScrollDirection(clientRect: ClientRect, pointerX: number) 
  * assuming that the user's pointer is already within it scrollable region.
  * @param element Element for which we should calculate the scroll direction.
  * @param clientRect Bounding client rectangle of the element.
+ * @param direction Layout direction of the drop list.
  * @param pointerX Position of the user's pointer along the x axis.
  * @param pointerY Position of the user's pointer along the y axis.
  */
 function getElementScrollDirections(
   element: HTMLElement,
-  clientRect: ClientRect,
+  clientRect: DOMRect,
+  direction: Direction,
   pointerX: number,
   pointerY: number,
 ): [AutoScrollVerticalDirection, AutoScrollHorizontalDirection] {
@@ -781,12 +782,23 @@ function getElementScrollDirections(
   if (computedHorizontal) {
     const scrollLeft = element.scrollLeft;
 
-    if (computedHorizontal === AutoScrollHorizontalDirection.LEFT) {
-      if (scrollLeft > 0) {
+    if (direction === 'rtl') {
+      if (computedHorizontal === AutoScrollHorizontalDirection.RIGHT) {
+        // In RTL `scrollLeft` will be negative when scrolled.
+        if (scrollLeft < 0) {
+          horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+        }
+      } else if (element.scrollWidth + scrollLeft > element.clientWidth) {
         horizontalScrollDirection = AutoScrollHorizontalDirection.LEFT;
       }
-    } else if (element.scrollWidth - scrollLeft > element.clientWidth) {
-      horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+    } else {
+      if (computedHorizontal === AutoScrollHorizontalDirection.LEFT) {
+        if (scrollLeft > 0) {
+          horizontalScrollDirection = AutoScrollHorizontalDirection.LEFT;
+        }
+      } else if (element.scrollWidth - scrollLeft > element.clientWidth) {
+        horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+      }
     }
   }
 

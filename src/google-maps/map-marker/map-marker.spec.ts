@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
@@ -15,19 +15,20 @@ describe('MapMarker', () => {
 
   beforeEach(() => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
   });
 
   afterEach(() => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map marker', () => {
+  it('initializes a Google Map marker', fakeAsync(() => {
     const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith({
       ...DEFAULT_MARKER_OPTIONS,
@@ -38,9 +39,9 @@ describe('MapMarker', () => {
       visible: undefined,
       map: mapSpy,
     });
-  });
+  }));
 
-  it('sets marker inputs', () => {
+  it('sets marker inputs', fakeAsync(() => {
     const options: google.maps.MarkerOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
@@ -51,7 +52,7 @@ describe('MapMarker', () => {
       map: mapSpy,
     };
     const markerSpy = createMarkerSpy(options);
-    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = options.position;
@@ -61,11 +62,12 @@ describe('MapMarker', () => {
     fixture.componentInstance.icon = 'icon.png';
     fixture.componentInstance.visible = false;
     fixture.detectChanges();
+    flush();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith(options);
-  });
+  }));
 
-  it('sets marker options, ignoring map', () => {
+  it('sets marker options, ignoring map', fakeAsync(() => {
     const options: google.maps.MarkerOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
@@ -75,16 +77,17 @@ describe('MapMarker', () => {
       visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
-    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
     fixture.detectChanges();
+    flush();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith({...options, map: mapSpy});
-  });
+  }));
 
-  it('gives precedence to specific inputs over options', () => {
+  it('gives precedence to specific inputs over options', fakeAsync(() => {
     const options: google.maps.MarkerOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
@@ -102,7 +105,7 @@ describe('MapMarker', () => {
       visible: undefined,
     };
     const markerSpy = createMarkerSpy(options);
-    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = expectedOptions.position;
@@ -111,16 +114,18 @@ describe('MapMarker', () => {
     fixture.componentInstance.clickable = expectedOptions.clickable;
     fixture.componentInstance.options = options;
     fixture.detectChanges();
+    flush();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith(expectedOptions);
-  });
+  }));
 
-  it('exposes methods that provide information about the marker', () => {
+  it('exposes methods that provide information about the marker', fakeAsync(() => {
     const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    createMarkerConstructorSpy(markerSpy).and.callThrough();
+    createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
     const marker = fixture.componentInstance.marker;
 
     markerSpy.getAnimation.and.returnValue(null);
@@ -158,15 +163,16 @@ describe('MapMarker', () => {
 
     markerSpy.getZIndex.and.returnValue(2);
     expect(marker.getZIndex()).toBe(2);
-  });
+  }));
 
-  it('initializes marker event handlers', () => {
+  it('initializes marker event handlers', fakeAsync(() => {
     const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    createMarkerConstructorSpy(markerSpy).and.callThrough();
+    createMarkerConstructorSpy(markerSpy);
 
     const addSpy = markerSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('position_changed', jasmine.any(Function));
@@ -189,15 +195,16 @@ describe('MapMarker', () => {
     expect(addSpy).not.toHaveBeenCalledWith('title_changed', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('visible_changed', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('zindex_changed', jasmine.any(Function));
-  });
+  }));
 
-  it('should be able to add an event listener after init', () => {
+  it('should be able to add an event listener after init', fakeAsync(() => {
     const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    createMarkerConstructorSpy(markerSpy).and.callThrough();
+    createMarkerConstructorSpy(markerSpy);
 
     const addSpy = markerSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('flat_changed', jasmine.any(Function));
 
@@ -207,7 +214,7 @@ describe('MapMarker', () => {
 
     expect(addSpy).toHaveBeenCalledWith('flat_changed', jasmine.any(Function));
     subscription.unsubscribe();
-  });
+  }));
 });
 
 @Component({

@@ -1,5 +1,5 @@
-@use 'sass:map';
 @use 'sass:list';
+@use 'sass:map';
 @use 'sass:meta';
 @use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
@@ -51,15 +51,35 @@
 
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
 /// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map} $m3-values A map of M3 token values for the given prefix.
+/// @param {Map|(Map, Map)} $m3-values A map of M3 token values for the given prefix.
+///  This param may also be a tuple of maps, the first one representing the default M3 token values,
+//   and the second containing overrides for different color variants.
+//   Single map example:
+//     (token1: green, token2: 2px)
+//   Tuple example:
+//     (
+//       (token1: green, token2: 2px),
+//       (
+//         secondary: (token1: blue),
+//         error: (token1: red),
+//       )
+//     )
 /// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @param {String|null} $variant The name of the variant the token values are for.
 /// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function _namespace-tokens($prefix, $m3-values, $slots) {
+@function _namespace-tokens($prefix, $m3-values, $slots, $variant: null) {
+  $result: ();
+  @if $variant == null and meta.type-of($m3-values) == 'list' and list.length($m3-values == 2) {
+    $variants: list.nth($m3-values, 2);
+    $m3-values: list.nth($m3-values, 1);
+    @each $variant, $overrides in $variants {
+      $result: map.merge($result, _namespace-tokens($prefix, $overrides, $slots, $variant));
+    }
+  }
   $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
   $used-m3-tokens: _pick(_filter-nulls($m3-values), $used-token-names);
-  @return (
-    $prefix: $used-m3-tokens,
-  );
+  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
+  @return map.merge($result, ($prefix: $used-m3-tokens));
 }
 
 /// Generates tokens for the given palette with the given prefix.
@@ -256,6 +276,71 @@
   @return $tokens;
 }
 
+
+/// Fixes inconsistent values in the text button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of text button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all text button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-text-button-tokens($initial-tokens, $all-tokens) {
+  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+    (
+      color: 'disabled-label-text-color',
+      opacity: 'disabled-label-text-opacity',
+    ),
+  ));
+}
+
+/// Fixes inconsistent values in the filled button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of filled button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all filled button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-filled-button-tokens($initial-tokens, $all-tokens) {
+  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+    (
+      color: 'disabled-label-text-color',
+      opacity: 'disabled-label-text-opacity',
+    ),
+    (
+      color: 'disabled-container-color',
+      opacity: 'disabled-container-opacity',
+    )
+  ));
+}
+
+/// Fixes inconsistent values in the protected button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of protected button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all protected button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-protected-button-tokens($initial-tokens, $all-tokens) {
+  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+    (
+      color: 'disabled-label-text-color',
+      opacity: 'disabled-label-text-opacity',
+    ),
+    (
+      color: 'disabled-container-color',
+      opacity: 'disabled-container-opacity',
+    )
+  ));
+}
+
+/// Fixes inconsistent values in the outlined button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of outlined button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all outlined button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-outlined-button-tokens($initial-tokens, $all-tokens) {
+  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+    (
+      color: 'disabled-label-text-color',
+      opacity: 'disabled-label-text-opacity',
+    ),
+    (
+      color: 'disabled-outline-color',
+      opacity: 'disabled-outline-opacity',
+    )
+  ));
+}
+
 /// Fixes inconsistent values in the outlined text field tokens so that they can produce valid
 /// styles.
 /// @param {Map} $initial-tokens Map of outlined text field tokens currently being generated.
@@ -299,6 +384,22 @@
   ));
 }
 
+/// Gets the token values for the MDC form field.
+/// @param {Map} $systems The MDC system tokens.
+/// @return {Map} The form field tokens.
+@function _get-form-field-tokens($systems) {
+  @return (
+    // TODO: MDC currently doesn't provide tokens for the form field so we need to
+    // define them ourselves. Clean this up once b/284340076 is resolved.
+    label-text-color: map.get($systems, 'md-sys-color', 'on-surface'),
+    label-text-font: map.get($systems, 'md-sys-typescale', 'body-medium-font'),
+    label-text-line-height: map.get($systems, 'md-sys-typescale', 'body-medium-line-height'),
+    label-text-size: map.get($systems, 'md-sys-typescale', 'body-medium-size'),
+    label-text-tracking: map.get($systems, 'md-sys-typescale', 'body-medium-tracking'),
+    label-text-weight: map.get($systems, 'md-sys-typescale', 'body-medium-weight'),
+  );
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -329,7 +430,7 @@
   $token-slots: mat.m2-tokens-from-theme($fake-theme);
 
   // TODO(mmalerba): Fill in remaining tokens.
-  $result: mat.private-merge-all(
+  $result: mat.private-deep-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
     (
       (mdc, theme): map.get($systems, md-sys-color),
@@ -382,8 +483,54 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, form-field),
+      _get-form-field-tokens($systems),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, icon-button),
       mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, text-button),
+      _fix-text-button-tokens(
+        mdc-tokens.md-comp-text-button-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-text-button-values($systems, false),
+      ),
+      $token-slots
+    ),
+    _namespace-tokens(
+      // Note: in M3 the "protected" button is called "elevated".
+      (mdc, protected-button),
+      _fix-protected-button-tokens(
+        mdc-tokens.md-comp-elevated-button-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-elevated-button-values($systems, false),
+      ),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, filled-button),
+      _fix-filled-button-tokens(
+        mdc-tokens.md-comp-filled-button-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-filled-button-values($systems, false),
+      ),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mdc, outlined-button),
+      _fix-outlined-button-tokens(
+        mdc-tokens.md-comp-outlined-button-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-outlined-button-values($systems, false),
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -505,6 +652,27 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, text-button),
+      custom-tokens.text-button($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, filled-button),
+      custom-tokens.filled-button($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      // Note: in M3 the "protected" button is called "elevated".
+      (mat, protected-button),
+      custom-tokens.elevated-button($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, outlined-button),
+      custom-tokens.outlined-button($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mat, icon-button),
       custom-tokens.icon-button($systems, $exclude-hardcoded),
       $token-slots
@@ -527,6 +695,16 @@
     _namespace-tokens(
       (mat, paginator),
       custom-tokens.paginator($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, full-pseudo-checkbox),
+      custom-tokens.full-pseudo-checkbox($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, minimal-pseudo-checkbox),
+      custom-tokens.minimal-pseudo-checkbox($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(

@@ -4,7 +4,7 @@ load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_module", "sass_binary", "ts_library")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary", "ts_library")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
 package(default_visibility = ["//visibility:public"])
@@ -127,6 +127,7 @@ http_server(
     name = "server",
     srcs = [
         ":debug_prerender_bin",
+        "@npm//zone.js",
     ],
     additional_root_paths = [
         "npm/node_modules",
@@ -135,5 +136,21 @@ http_server(
     deps = [
         ":client_bundle",
         ":styles_scss",
+    ],
+)
+
+ng_e2e_test_library(
+    name = "hydration_e2e_tests_sources",
+    srcs = ["hydration.e2e.spec.ts"],
+)
+
+protractor_web_test_suite(
+    name = "hydration_e2e_tests",
+    configuration = ":protractor.conf.js",
+    on_prepare = ":start-devserver.js",
+    server = ":server",
+    tags = ["e2e"],
+    deps = [
+        ":hydration_e2e_tests_sources",
     ],
 )

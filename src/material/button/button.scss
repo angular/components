@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@material/button/button' as mdc-button;
 @use '@material/button/button-base' as mdc-button-base;
 @use '@material/button/variables' as mdc-button-variables;
@@ -30,8 +31,9 @@
     $mdc-text-button-slots: tokens-mdc-text-button.get-token-slots();
 
     @include mdc-button-text-theme.theme-styles($mdc-text-button-slots);
-    @include mdc-button-text-theme.theme(tokens-mdc-text-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-text-button.$prefix,
+      tokens-mat-text-button.get-token-slots());
+    @include button-base.mat-private-button-touch-target(false, tokens-mat-text-button.$prefix,
       tokens-mat-text-button.get-token-slots());
 
     @include token-utils.use-tokens(tokens-mdc-text-button.$prefix, $mdc-text-button-slots) {
@@ -47,8 +49,9 @@
     $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
     @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
-    @include mdc-button-filled-theme.theme(tokens-mdc-filled-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-filled-button.$prefix,
+      tokens-mat-filled-button.get-token-slots());
+    @include button-base.mat-private-button-touch-target(false, tokens-mat-filled-button.$prefix,
       tokens-mat-filled-button.get-token-slots());
 
     @include token-utils.use-tokens(tokens-mdc-filled-button.$prefix, $mdc-filled-button-slots) {
@@ -64,23 +67,45 @@
   .mat-mdc-raised-button {
     $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
 
-    @include mdc-button-protected-theme.theme-styles($mdc-button-protected-slots);
-    @include mdc-button-protected-theme.theme(tokens-mdc-protected-button.get-unthemable-tokens());
+    @include mdc-button-protected-theme.theme-styles(map.merge($mdc-button-protected-slots, (
+      // Exclude the elevation tokens here since we output them manually below.
+      container-elevation: null,
+      hover-container-elevation: null,
+      disabled-container-elevation: null,
+      focus-container-elevation: null,
+      pressed-container-elevation: null,
+      container-shadow-color: null,
+    )));
     @include button-base.mat-private-button-ripple(tokens-mat-protected-button.$prefix,
+      tokens-mat-protected-button.get-token-slots());
+    @include button-base.mat-private-button-touch-target(false, tokens-mat-protected-button.$prefix,
       tokens-mat-protected-button.get-token-slots());
 
     @include token-utils.use-tokens(
       tokens-mdc-protected-button.$prefix,
       $mdc-button-protected-slots) {
+      @include button-base.mat-private-button-elevation(container-elevation);
+
+      &:hover {
+        @include button-base.mat-private-button-elevation(hover-container-elevation);
+      }
+
+      &:focus {
+        @include button-base.mat-private-button-elevation(focus-container-elevation);
+      }
+
+      &:active, &:focus:active {
+        @include button-base.mat-private-button-elevation(pressed-container-elevation);
+      }
+
       // We need to re-apply the disabled tokens since MDC uses
       // `:disabled` which doesn't apply to anchors.
       @include button-base.mat-private-button-disabled {
         @include token-utils.create-token-slot(color, disabled-label-text-color);
         @include token-utils.create-token-slot(background-color, disabled-container-color);
 
-        // Since we're still doing elevation through the theme, we need additional specificity here.
         &.mat-mdc-button-disabled {
-          box-shadow: none;
+          @include button-base.mat-private-button-elevation(disabled-container-elevation);
         }
       }
     }
@@ -90,8 +115,9 @@
     $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
 
     @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
-    @include mdc-button-outlined-theme.theme(tokens-mdc-outlined-button.get-unthemable-tokens());
     @include button-base.mat-private-button-ripple(tokens-mat-outlined-button.$prefix,
+      tokens-mat-outlined-button.get-token-slots());
+    @include button-base.mat-private-button-touch-target(false, tokens-mat-outlined-button.$prefix,
       tokens-mat-outlined-button.get-token-slots());
 
     @include token-utils.use-tokens(
@@ -116,7 +142,6 @@
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button {
   @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-touch-target(false);
   @include style-private.private-animation-noop();
 }
 

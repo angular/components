@@ -1,8 +1,10 @@
+@use 'sass:list';
 @use 'sass:map';
 @use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
+@use '../style/sass-utils';
 @use '../theming/palette';
 @use '../theming/theming';
 @use '../typography/typography';
@@ -124,4 +126,58 @@ $_component-prefix: null;
     $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
     $shadow-color-token: null,
   ));
+}
+
+/// Checks whether a list starts wih a given prefix
+/// @param {List} $list The list value to check the prefix of.
+/// @param {List} $prefix The prefix to check.
+/// @return {Boolean} Whether the list starts with the prefix.
+@function _is-prefix($list, $prefix) {
+  @for $i from 1 through list.length($prefix) {
+    @if list.nth($list, $i) != list.nth($prefix, $i) {
+      @return false;
+    }
+  }
+  @return true;
+}
+
+/// Gets the supported color variants in the given token set for the given prefix.
+/// @param {Map} $tokens The full token map.
+/// @param {List} $prefix The component prefix to get color variants for.
+/// @return {List} The supported color variants.
+@function _supported-color-variants($tokens, $prefix) {
+  $result: ();
+  @each $namespace in map.keys($tokens) {
+    @if list.length($prefix) == list.length($namespace) - 1 and _is-prefix($namespace, $prefix) {
+      $result: list.append($result, list.nth($namespace, list.length($namespace)), comma);
+    }
+  }
+  @return $result;
+}
+
+/// Gets the token values for the given components prefix with the given options.
+/// @param {Map} $tokens The full token map.
+/// @param {List} $prefix The component prefix to get the token values for.
+/// @param {ArgList} Any additional options
+///   Currently the additional supported options are:
+//     - $color-variant (The color variant to use for the component)
+/// @throws If given options are invalid
+/// @return {Map} The token values for the requested component.
+@function get-tokens-for($tokens, $prefix, $options...) {
+  $options: sass-utils.validate-keyword-args($options, (color-variant));
+  @if $tokens == () {
+    @return ();
+  }
+  $values: map.get($tokens, $prefix);
+  $color-variant: map.get($options, color-variant);
+  @if $color-variant == null {
+    @return $values;
+  }
+  $overrides: map.get($tokens, list.append($prefix, $color-variant));
+  @if $overrides == null {
+    @error #{'Invalid color variant: '}#{$color-variant}#{'. Supported color variants are: '}#{
+      _supported-color-variants($tokens, $prefix)
+    }#{'.'};
+  }
+  @return map.merge($values, $overrides);
 }

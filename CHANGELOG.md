@@ -1,3 +1,104 @@
+<a name="16.2.13"></a>
+# 16.2.13 "pink-peach" (2024-01-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [398197d7e](https://github.com/angular/components/commit/398197d7e7596d1a6526a0be47a1eb1305e0bc1c) | fix | **button:** resolve memory leaks in ripples ([#28254](https://github.com/angular/components/pull/28254)) ([#28408](https://github.com/angular/components/pull/28408)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.1.0-rc.0"></a>
+# 17.1.0-rc.0 "sunstone-synergy" (2024-01-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [10fbe362ca](https://github.com/angular/components/commit/10fbe362cac0d59a6e78d155eb17f02a53350421) | fix | **a11y:** resolve hydration error in focus trap |
+| [58d4958384](https://github.com/angular/components/commit/58d4958384a6435e14a18237f68f8547becc4c75) | fix | **collections:** Do not deselect comparable already selected value with setSelection ([#28267](https://github.com/angular/components/pull/28267)) |
+| [230bdb5c13](https://github.com/angular/components/commit/230bdb5c13c74266808ee3eb58e896dc38cbb4fc) | fix | **dialog:** resolve hydration error in focus trap |
+| [6db225e39d](https://github.com/angular/components/commit/6db225e39d4a03a4bd8e92a7f45c64208f4e53b7) | fix | **drag-drop:** auto-scroll to the left not starting in rtl layout ([#28334](https://github.com/angular/components/pull/28334)) |
+| [46eb9321cc](https://github.com/angular/components/commit/46eb9321cc522aaf55c9473ed5eed8af2548abb6) | fix | **table:** _cellRole lint error ([#28391](https://github.com/angular/components/pull/28391)) |
+| [d3e8a28389](https://github.com/angular/components/commit/d3e8a28389dd77b865feaef0160911fd2c41f496) | fix | **table:** measuring sticky row too early ([#28393](https://github.com/angular/components/pull/28393)) |
+| [30f0705491](https://github.com/angular/components/commit/30f07054913ff1026b0ec8420cd217ccc8daa167) | fix | **table:** support hydration ([#28356](https://github.com/angular/components/pull/28356)) |
+| [e43c059ac3](https://github.com/angular/components/commit/e43c059ac313fca732443c6c73cf397f0cf446f3) | perf | **a11y:** Micro-optimizations to aria-reference.ts. ([#28337](https://github.com/angular/components/pull/28337)) |
+| [1fe1f69303](https://github.com/angular/components/commit/1fe1f69303780c11c07ff84313f5fdc10440d55b) | perf | **table:** Optimize a11y role logic in CdkCell. ([#28336](https://github.com/angular/components/pull/28336)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6b7e6c5886](https://github.com/angular/components/commit/6b7e6c5886cefab4008b1fa97a5bf899475baa2b) | fix | **autocomplete:** not closing when clicking on hint area ([#28316](https://github.com/angular/components/pull/28316)) |
+| [2dc10daa07](https://github.com/angular/components/commit/2dc10daa07a9380c61c955edd44005f2c06e5e22) | fix | **button:** use tokens for button elevation ([#28396](https://github.com/angular/components/pull/28396)) |
+| [c00c2db924](https://github.com/angular/components/commit/c00c2db9242f0ea1933af2113f03535f8f75b2f2) | fix | **datepicker:** unable to distinguish disabled buttons in the calendar ([#28385](https://github.com/angular/components/pull/28385)) |
+| [fef66fee7c](https://github.com/angular/components/commit/fef66fee7cca3829a0b756f57800e88624c597a2) | fix | **dialog:** `mat-dialog-title` should work under `OnPush` `viewContainerRef` ([#28329](https://github.com/angular/components/pull/28329)) |
+| [4d0719a6a0](https://github.com/angular/components/commit/4d0719a6a0d0472ee1729750100167d9941b1641) | fix | **paginator:** match visual and reading order ([#28285](https://github.com/angular/components/pull/28285)) |
+| [1bb36bb60d](https://github.com/angular/components/commit/1bb36bb60d705a598e8df1c1912733aba80442ff) | fix | **schematics:** resolve errors in dashboard schematic |
+| [b9450c978d](https://github.com/angular/components/commit/b9450c978dee101dc74cef57234ac081a4dbb29c) | fix | **schematics:** schema error in mdc migration ([#28342](https://github.com/angular/components/pull/28342)) |
+| [b4bb46667f](https://github.com/angular/components/commit/b4bb46667fbf5711d957f38df8fbe5d05c9b67a3) | fix | **schematics:** use single style and styleUrl in generated code |
+| [1b6db8c89b](https://github.com/angular/components/commit/1b6db8c89b00ace8aaa0e0824866acec5369635f) | fix | **select:** flicker if opened from inside a focus handler ([#28287](https://github.com/angular/components/pull/28287)) |
+| [7a91d46360](https://github.com/angular/components/commit/7a91d4636040f54dd172fb702cf0d00ed5d6b3a8) | fix | **sidenav:** enable hydration |
+| [00e70fd8e3](https://github.com/angular/components/commit/00e70fd8e3542cc7a64c555a84f8092016c5236e) | fix | **slide-toggle:** delete custom typography tokens ([#28365](https://github.com/angular/components/pull/28365)) |
+| [4bae8854d6](https://github.com/angular/components/commit/4bae8854d6394f5d33be0ceadd365a1818e99c63) | fix | **slider:** fix internal focus state on safari ([#28243](https://github.com/angular/components/pull/28243)) |
+| [4550637812](https://github.com/angular/components/commit/4550637812dadb67a9af21df261899eaf3f1ae4c) | fix | **slider:** fix value indicator bubble for m3 ([#28250](https://github.com/angular/components/pull/28250)) |
+| [90b37e5652](https://github.com/angular/components/commit/90b37e5652bad1044dff3c4702aa4b73b715117a) | fix | **slider:** m3 ripple color ([#28369](https://github.com/angular/components/pull/28369)) |
+| [5c7674a9e2](https://github.com/angular/components/commit/5c7674a9e214fa7f912f566b6a8374efb5bd379c) | fix | **slider:** slider tx imprecision ([#28283](https://github.com/angular/components/pull/28283)) |
+| [6bfbe9b19f](https://github.com/angular/components/commit/6bfbe9b19f9d277401f0ac7041e6a658db6a2e8e) | fix | **slider:** update inactive input width on value change ([#28275](https://github.com/angular/components/pull/28275)) |
+| [a643a2ed42](https://github.com/angular/components/commit/a643a2ed42b7751087c59ff55a61c7e14f262604) | fix | **snack-bar:** Ensure snackbar open animation works with OnPush ancestor ([#28331](https://github.com/angular/components/pull/28331)) |
+| [7f601b0936](https://github.com/angular/components/commit/7f601b093683c4519a79447bec3d8faf896c9e6e) | fix | **stepper:** enable hydration ([#28382](https://github.com/angular/components/pull/28382)) |
+| [a7f87a80a1](https://github.com/angular/components/commit/a7f87a80a18a62d75a8c5621fd89dbc2cf28a865) | fix | **tabs:** enable hydration ([#28366](https://github.com/angular/components/pull/28366)) |
+| [916263374e](https://github.com/angular/components/commit/916263374e70efc7ce7c6503adce290dda6d8160) | fix | **theming:** Expose the `theme-remove` Sass function ([#28314](https://github.com/angular/components/pull/28314)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9f1989228f](https://github.com/angular/components/commit/9f1989228f10694b61e694db456c387687e9626d) | feat | add support for dynamic library loading API |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [244bed4675](https://github.com/angular/components/commit/244bed467505b618a38e62c7dc4ca9b67ac431b0) | feat | **theming:** add M3 button tokens ([#28375](https://github.com/angular/components/pull/28375)) |
+| [0b7e656f19](https://github.com/angular/components/commit/0b7e656f192002b7ea025aef68404e76f733be12) | feat | **theming:** Add support for color variants ([#28279](https://github.com/angular/components/pull/28279)) |
+| [94d8997b2c](https://github.com/angular/components/commit/94d8997b2c10116bfe711b004af8ccfc82e012f3) | fix | **theming:** fix border radius of filled form field |
+| [d1ceb6b44a](https://github.com/angular/components/commit/d1ceb6b44aa65652f9a8d301554a41d21c3b01f1) | fix | **theming:** fix disabled form field in M3 |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [083472db0e](https://github.com/angular/components/commit/083472db0e52b5a0127d2c746a8f44061763de51) | feat | support date-fns 3.0 ([#28364](https://github.com/angular/components/pull/28364)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1c2d1b73fe](https://github.com/angular/components/commit/1c2d1b73fe78b5c44c037c1b4d1acb6ead50f4db) | fix | enable hydration in autocomplete, menu and select ([#28343](https://github.com/angular/components/pull/28343)) |
+| [7840cd3a77](https://github.com/angular/components/commit/7840cd3a779b6e7388971e279bd60de2bcb1e89b) | fix | provide standalone-friendly APIs for date adapters ([#28349](https://github.com/angular/components/pull/28349)) |
+| [21737ad394](https://github.com/angular/components/commit/21737ad394a404881193ad89edfe29fe3ec8235e) | fix | use provide functions in providers for date adapters ([#28363](https://github.com/angular/components/pull/28363)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.0.5"></a>
+# 17.0.5 "stardust-symphony" (2024-01-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5e2d13b912](https://github.com/angular/components/commit/5e2d13b9128da3d78259fe49abd1200af7ec3947) | fix | **a11y:** resolve hydration error in focus trap |
+| [837d396aff](https://github.com/angular/components/commit/837d396aff79e4cd8f3dbbbc15342050e9ba1bc2) | fix | **collections:** Do not deselect comparable already selected value with setSelection ([#28267](https://github.com/angular/components/pull/28267)) |
+| [94a9fa9c6c](https://github.com/angular/components/commit/94a9fa9c6cd31bb82d3b0367aec5c13d54b18802) | fix | **dialog:** resolve hydration error in focus trap |
+| [82c37a9774](https://github.com/angular/components/commit/82c37a97741e0d3d27c6922894978596cc51539d) | fix | **drag-drop:** auto-scroll to the left not starting in rtl layout ([#28334](https://github.com/angular/components/pull/28334)) |
+| [a75bb7ad87](https://github.com/angular/components/commit/a75bb7ad8749a6c56cdcfbc1685436b99ee18ece) | perf | **a11y:** Micro-optimizations to aria-reference.ts. ([#28337](https://github.com/angular/components/pull/28337)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2852c3f7a4](https://github.com/angular/components/commit/2852c3f7a4e41b5c7804596fa5e20b387ccfb26b) | fix | **autocomplete:** not closing when clicking on hint area ([#28316](https://github.com/angular/components/pull/28316)) |
+| [4eb24cfdaf](https://github.com/angular/components/commit/4eb24cfdafb67d4834a78cfc73ec04e9a4acf16c) | fix | **schematics:** resolve errors in dashboard schematic |
+| [6feb26d107](https://github.com/angular/components/commit/6feb26d10701a841f45545d42bd29e873120a131) | fix | **schematics:** schema error in mdc migration ([#28342](https://github.com/angular/components/pull/28342)) |
+| [3500908ca6](https://github.com/angular/components/commit/3500908ca609aa4d2110513ea20fbaff475b78a9) | fix | **schematics:** use single style and styleUrl in generated code |
+| [65331e2aa8](https://github.com/angular/components/commit/65331e2aa872cbe00c784a24724586a521aae2a6) | fix | **select:** flicker if opened from inside a focus handler ([#28287](https://github.com/angular/components/pull/28287)) |
+| [7076f96a09](https://github.com/angular/components/commit/7076f96a09252b54f8d5399e00f74f76e345b3ab) | fix | **sidenav:** enable hydration |
+| [27a09a5f57](https://github.com/angular/components/commit/27a09a5f57e377bf0315310d190a457aa1c7a0af) | fix | **slider:** fix internal focus state on safari ([#28243](https://github.com/angular/components/pull/28243)) |
+| [766d1d8f85](https://github.com/angular/components/commit/766d1d8f85ebb55f0901658fa1bbf543fc5d6fb5) | fix | **slider:** fix value indicator bubble for m3 ([#28250](https://github.com/angular/components/pull/28250)) |
+| [1d9d11325c](https://github.com/angular/components/commit/1d9d11325cd7100b898e889ac7386195e9d5292e) | fix | **slider:** m3 ripple color ([#28369](https://github.com/angular/components/pull/28369)) |
+| [e97d98b037](https://github.com/angular/components/commit/e97d98b037b7903d4d14986e8aa940d5d4ca3f01) | fix | **slider:** slider tx imprecision ([#28283](https://github.com/angular/components/pull/28283)) |
+| [cbfdc060b4](https://github.com/angular/components/commit/cbfdc060b415d43dce3a2a69cc425436b5043c36) | fix | **theming:** Expose the `theme-remove` Sass function ([#28314](https://github.com/angular/components/pull/28314)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ddbc022843](https://github.com/angular/components/commit/ddbc0228433bc63768468924dfcb3efe4435aab8) | fix | enable hydration in autocomplete, menu and select ([#28343](https://github.com/angular/components/pull/28343)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.0-next.3"></a>
 # 17.1.0-next.3 "muscovite-map" (2023-12-13)
 ### material

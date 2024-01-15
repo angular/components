@@ -3,6 +3,10 @@
 @use '../../style/sass-utils';
 @use './mat/autocomplete' as tokens-mat-autocomplete;
 @use './mat/badge' as tokens-mat-badge;
+@use './mat/text-button' as tokens-mat-text-button;
+@use './mat/protected-button' as tokens-mat-protected-button;
+@use './mat/filled-button' as tokens-mat-filled-button;
+@use './mat/outlined-button' as tokens-mat-outlined-button;
 @use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
 @use './mat/card' as tokens-mat-card;
 @use './mat/datepicker' as tokens-mat-datepicker;
@@ -17,11 +21,12 @@
 @use './mat/option' as tokens-mat-option;
 @use './mat/optgroup' as tokens-mat-optgroup;
 @use './mat/paginator' as tokens-mat-paginator;
+@use './mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
+@use './mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
 @use './mat/radio' as tokens-mat-radio;
 @use './mat/ripple' as tokens-mat-ripple;
 @use './mat/select' as tokens-mat-select;
 @use './mat/sidenav' as tokens-mat-sidenav;
-@use './mat/slide-toggle' as tokens-mat-slide-toggle;
 @use './mat/slider' as tokens-mat-slider;
 @use './mat/snack-bar' as tokens-mat-snack-bar;
 @use './mat/sort' as tokens-mat-sort;
@@ -33,12 +38,17 @@
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/tree' as tokens-mat-tree;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
+@use './mdc/text-button' as tokens-mdc-text-button;
+@use './mdc/protected-button' as tokens-mdc-protected-button;
+@use './mdc/filled-button' as tokens-mdc-filled-button;
+@use './mdc/outlined-button' as tokens-mdc-outlined-button;
 @use './mdc/chip' as tokens-mdc-chip;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
 @use './mdc/elevated-card' as tokens-mdc-elevated-card;
 @use './mdc/extended-fab' as tokens-mdc-extended-fab;
 @use './mdc/fab' as tokens-mdc-fab;
+@use './mdc/form-field' as tokens-mdc-form-field;
 @use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
@@ -105,26 +115,31 @@
       _get-tokens-for-module($theme, tokens-mat-divider),
       _get-tokens-for-module($theme, tokens-mat-expansion),
       _get-tokens-for-module($theme, tokens-mat-fab),
+      _get-tokens-for-module($theme, tokens-mat-filled-button),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
-      _get-tokens-for-module($theme, tokens-mat-icon),
       _get-tokens-for-module($theme, tokens-mat-icon-button),
+      _get-tokens-for-module($theme, tokens-mat-icon),
       _get-tokens-for-module($theme, tokens-mat-menu),
       _get-tokens-for-module($theme, tokens-mat-optgroup),
       _get-tokens-for-module($theme, tokens-mat-option),
+      _get-tokens-for-module($theme, tokens-mat-outlined-button),
       _get-tokens-for-module($theme, tokens-mat-paginator),
+      _get-tokens-for-module($theme, tokens-mat-full-pseudo-checkbox),
+      _get-tokens-for-module($theme, tokens-mat-minimal-pseudo-checkbox),
+      _get-tokens-for-module($theme, tokens-mat-protected-button),
       _get-tokens-for-module($theme, tokens-mat-radio),
       _get-tokens-for-module($theme, tokens-mat-ripple),
       _get-tokens-for-module($theme, tokens-mat-select),
       _get-tokens-for-module($theme, tokens-mat-sidenav),
-      _get-tokens-for-module($theme, tokens-mat-slide-toggle),
       _get-tokens-for-module($theme, tokens-mat-slider),
       _get-tokens-for-module($theme, tokens-mat-snack-bar),
       _get-tokens-for-module($theme, tokens-mat-sort),
       _get-tokens-for-module($theme, tokens-mat-stepper),
-      _get-tokens-for-module($theme, tokens-mat-tab-header),
       _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
+      _get-tokens-for-module($theme, tokens-mat-tab-header),
       _get-tokens-for-module($theme, tokens-mat-table),
+      _get-tokens-for-module($theme, tokens-mat-text-button),
       _get-tokens-for-module($theme, tokens-mat-toolbar),
       _get-tokens-for-module($theme, tokens-mat-tree),
       _get-tokens-for-module($theme, tokens-mdc-checkbox),
@@ -134,18 +149,23 @@
       _get-tokens-for-module($theme, tokens-mdc-elevated-card),
       _get-tokens-for-module($theme, tokens-mdc-extended-fab),
       _get-tokens-for-module($theme, tokens-mdc-fab),
+      _get-tokens-for-module($theme, tokens-mdc-filled-button),
       _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
+      _get-tokens-for-module($theme, tokens-mdc-form-field),
       _get-tokens-for-module($theme, tokens-mdc-icon-button),
       _get-tokens-for-module($theme, tokens-mdc-linear-progress),
       _get-tokens-for-module($theme, tokens-mdc-list),
+      _get-tokens-for-module($theme, tokens-mdc-outlined-button),
       _get-tokens-for-module($theme, tokens-mdc-outlined-card),
       _get-tokens-for-module($theme, tokens-mdc-outlined-text-field),
       _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
+      _get-tokens-for-module($theme, tokens-mdc-protected-button),
       _get-tokens-for-module($theme, tokens-mdc-radio),
       _get-tokens-for-module($theme, tokens-mdc-slider),
       _get-tokens-for-module($theme, tokens-mdc-snack-bar),
       _get-tokens-for-module($theme, tokens-mdc-switch),
-      _get-tokens-for-module($theme, tokens-mdc-tab),
       _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+      _get-tokens-for-module($theme, tokens-mdc-tab),
+      _get-tokens-for-module($theme, tokens-mdc-text-button),
   );
 }

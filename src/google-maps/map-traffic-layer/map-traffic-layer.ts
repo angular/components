@@ -9,11 +9,12 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Directive, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Traffic Layer via the Google Maps JavaScript API.
@@ -44,6 +45,10 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
     this._autoRefresh.next(autoRefresh);
   }
 
+  /** Event emitted when the traffic layer is initialized. */
+  @Output() readonly trafficLayerInitialized: EventEmitter<google.maps.TrafficLayer> =
+    new EventEmitter<google.maps.TrafficLayer>();
+
   constructor(
     private readonly _map: GoogleMap,
     private readonly _ngZone: NgZone,
@@ -54,24 +59,40 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          this._ngZone.runOutsideAngular(() => {
-            this.trafficLayer = new google.maps.TrafficLayer(options);
-          });
-          this._assertInitialized();
-          this.trafficLayer.setMap(this._map.googleMap!);
+          if (google.maps.TrafficLayer && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.TrafficLayer, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.TrafficLayer>('maps', 'TrafficLayer'),
+              ]).then(([map, layerConstructor]) => {
+                this._initialize(map, layerConstructor, options);
+              });
+            });
+          }
         });
-
-      this._watchForAutoRefreshChanges();
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    layerConstructor: typeof google.maps.TrafficLayer,
+    options: google.maps.TrafficLayerOptions,
+  ) {
+    this._ngZone.runOutsideAngular(() => {
+      this.trafficLayer = new layerConstructor(options);
+      this._assertInitialized();
+      this.trafficLayer.setMap(map);
+      this.trafficLayerInitialized.emit(this.trafficLayer);
+      this._watchForAutoRefreshChanges();
+    });
   }
 
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.trafficLayer) {
-      this.trafficLayer.setMap(null);
-    }
+    this.trafficLayer?.setMap(null);
   }
 
   private _combineOptions(): Observable<google.maps.TrafficLayerOptions> {
@@ -93,12 +114,6 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
   }
 
   private _assertInitialized(): asserts this is {trafficLayer: google.maps.TrafficLayer} {
-    if (!this._map.googleMap) {
-      throw Error(
-        'Cannot access Google Map information before the API has been initialized. ' +
-          'Please wait for the API to load before trying to interact with it.',
-      );
-    }
     if (!this.trafficLayer) {
       throw Error(
         'Cannot interact with a Google Map Traffic Layer before it has been initialized. ' +

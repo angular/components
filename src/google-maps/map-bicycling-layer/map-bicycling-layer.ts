@@ -9,9 +9,10 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive} from '@angular/core';
+import {Directive, EventEmitter, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 
-import {MapBaseLayer} from '../map-base-layer';
+import {importLibrary} from '../import-library';
+import {GoogleMap} from '../google-map/google-map';
 
 /**
  * Angular component that renders a Google Maps Bicycling Layer via the Google Maps JavaScript API.
@@ -23,7 +24,10 @@ import {MapBaseLayer} from '../map-base-layer';
   exportAs: 'mapBicyclingLayer',
   standalone: true,
 })
-export class MapBicyclingLayer extends MapBaseLayer {
+export class MapBicyclingLayer implements OnInit, OnDestroy {
+  private _map = inject(GoogleMap);
+  private _zone = inject(NgZone);
+
   /**
    * The underlying google.maps.BicyclingLayer object.
    *
@@ -31,19 +35,38 @@ export class MapBicyclingLayer extends MapBaseLayer {
    */
   bicyclingLayer?: google.maps.BicyclingLayer;
 
-  protected override _initializeObject() {
-    this.bicyclingLayer = new google.maps.BicyclingLayer();
-  }
+  /** Event emitted when the bicycling layer is initialized. */
+  @Output() readonly bicyclingLayerInitialized: EventEmitter<google.maps.BicyclingLayer> =
+    new EventEmitter<google.maps.BicyclingLayer>();
 
-  protected override _setMap() {
-    this._assertLayerInitialized();
-    this.bicyclingLayer.setMap(this._map.googleMap!);
-  }
-
-  protected override _unsetMap() {
-    if (this.bicyclingLayer) {
-      this.bicyclingLayer.setMap(null);
+  ngOnInit(): void {
+    if (this._map._isBrowser) {
+      if (google.maps.BicyclingLayer && this._map.googleMap) {
+        this._initialize(this._map.googleMap, google.maps.BicyclingLayer);
+      } else {
+        this._zone.runOutsideAngular(() => {
+          Promise.all([
+            this._map._resolveMap(),
+            importLibrary<typeof google.maps.BicyclingLayer>('maps', 'BicyclingLayer'),
+          ]).then(([map, layerConstructor]) => {
+            this._initialize(map, layerConstructor);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(map: google.maps.Map, layerConstructor: typeof google.maps.BicyclingLayer) {
+    this._zone.runOutsideAngular(() => {
+      this.bicyclingLayer = new layerConstructor();
+      this.bicyclingLayerInitialized.emit(this.bicyclingLayer);
+      this._assertLayerInitialized();
+      this.bicyclingLayer.setMap(map);
+    });
+  }
+
+  ngOnDestroy() {
+    this.bicyclingLayer?.setMap(null);
   }
 
   private _assertLayerInitialized(): asserts this is {bicyclingLayer: google.maps.BicyclingLayer} {

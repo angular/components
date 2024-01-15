@@ -60,15 +60,23 @@ describe('MDC-based MatSlider', () => {
     expect(input.max).withContext('max').toBe(max);
     expect(input.value).withContext('value').toBe(value);
 
-    // Note: This ±6 is here to account for the slight shift of the slider
-    // thumb caused by the tick marks being 3px away from the track start
-    // and end.
+    // The discrepancy between the "ideal" and "actual" translateX comes from
+    // the 3px offset from the start & end of the slider track to the first
+    // and last tick marks.
     //
-    // This check is meant to ensure the "ideal" estimate is within 3px of the
-    // actual slider thumb position.
-    expect(input.translateX - 6 < translateX && input.translateX + 6 > translateX)
+    // The "actual" translateX is calculated based on a slider that is 6px
+    // smaller than the width of the slider. Using this "actual" translateX in
+    // tests would make it even more difficult than it already is to tell if
+    // the translateX is off, so we abstract things in here so tests can be
+    // more intuitive.
+    //
+    // The most clear way to compare the two tx's is to just turn them into
+    // percentages by dividing by their (total height) / 100.
+    const idealTXPercentage = Math.round(translateX / 3);
+    const actualTXPercentage = Math.round((input.translateX - 3) / 2.94);
+    expect(actualTXPercentage)
       .withContext(`translateX: ${input.translateX} should be close to ${translateX}`)
-      .toBeTrue();
+      .toBe(idealTXPercentage);
     if (step !== undefined) {
       expect(input.step).withContext('step').toBe(step);
     }
@@ -627,7 +635,13 @@ describe('MDC-based MatSlider', () => {
       pointerdown();
       pointerup();
       flush();
-      expect(isRippleVisible('focus')).toBeTrue();
+
+      // The slider immediately loses focus on pointerup for Safari.
+      if (platform.SAFARI) {
+        expect(isRippleVisible('hover')).toBeTrue();
+      } else {
+        expect(isRippleVisible('focus')).toBeTrue();
+      }
     }));
 
     it('should hide the focus ripple on blur', fakeAsync(() => {
@@ -1021,6 +1035,32 @@ describe('MDC-based MatSlider', () => {
       fixture.componentInstance.endValue = 70;
       fixture.detectChanges();
       expect(endInput.value).toBe(70);
+    });
+
+    it('should update the input width when the start value changes', () => {
+      const startInputEl = startInput._elementRef.nativeElement;
+      const endInputEl = endInput._elementRef.nativeElement;
+      const startInputWidthBefore = startInputEl.getBoundingClientRect().width;
+      const endInputWidthBefore = endInputEl.getBoundingClientRect().width;
+      fixture.componentInstance.startValue = 10;
+      fixture.detectChanges();
+      const startInputWidthAfter = startInputEl.getBoundingClientRect().width;
+      const endInputWidthAfter = endInputEl.getBoundingClientRect().width;
+      expect(startInputWidthBefore).not.toBe(startInputWidthAfter);
+      expect(endInputWidthBefore).not.toBe(endInputWidthAfter);
+    });
+
+    it('should update the input width when the end value changes', () => {
+      const startInputEl = startInput._elementRef.nativeElement;
+      const endInputEl = endInput._elementRef.nativeElement;
+      const startInputWidthBefore = startInputEl.getBoundingClientRect().width;
+      const endInputWidthBefore = endInputEl.getBoundingClientRect().width;
+      fixture.componentInstance.endValue = 90;
+      fixture.detectChanges();
+      const startInputWidthAfter = startInputEl.getBoundingClientRect().width;
+      const endInputWidthAfter = endInputEl.getBoundingClientRect().width;
+      expect(startInputWidthBefore).not.toBe(startInputWidthAfter);
+      expect(endInputWidthBefore).not.toBe(endInputWidthAfter);
     });
   });
 

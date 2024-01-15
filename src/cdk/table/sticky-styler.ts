@@ -120,18 +120,18 @@ export class StickyStyler {
       return;
     }
 
-    const firstRow = rows[0];
-    const numCells = firstRow.children.length;
-    const cellWidths: number[] = this._getCellWidths(firstRow, recalculateCellWidths);
-
-    const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
-    const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
-
-    const lastStickyStart = stickyStartStates.lastIndexOf(true);
-    const firstStickyEnd = stickyEndStates.indexOf(true);
-
     // Coalesce with sticky row updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
+      const firstRow = rows[0];
+      const numCells = firstRow.children.length;
+      const cellWidths: number[] = this._getCellWidths(firstRow, recalculateCellWidths);
+
+      const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
+      const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
+
+      const lastStickyStart = stickyStartStates.lastIndexOf(true);
+      const firstStickyEnd = stickyEndStates.indexOf(true);
+
       const isRtl = this.direction === 'rtl';
       const start = isRtl ? 'right' : 'left';
       const end = isRtl ? 'left' : 'right';
@@ -188,37 +188,38 @@ export class StickyStyler {
       return;
     }
 
-    // If positioning the rows to the bottom, reverse their order when evaluating the sticky
-    // position such that the last row stuck will be "bottom: 0px" and so on. Note that the
-    // sticky states need to be reversed as well.
-    const rows = position === 'bottom' ? rowsToStick.slice().reverse() : rowsToStick;
-    const states = position === 'bottom' ? stickyStates.slice().reverse() : stickyStates;
-
-    // Measure row heights all at once before adding sticky styles to reduce layout thrashing.
-    const stickyOffsets: number[] = [];
-    const stickyCellHeights: (number | undefined)[] = [];
-    const elementsToStick: HTMLElement[][] = [];
-    for (let rowIndex = 0, stickyOffset = 0; rowIndex < rows.length; rowIndex++) {
-      if (!states[rowIndex]) {
-        continue;
-      }
-
-      stickyOffsets[rowIndex] = stickyOffset;
-      const row = rows[rowIndex];
-      elementsToStick[rowIndex] = this._isNativeHtmlTable
-        ? (Array.from(row.children) as HTMLElement[])
-        : [row];
-
-      const height = row.getBoundingClientRect().height;
-      stickyOffset += height;
-      stickyCellHeights[rowIndex] = height;
-    }
-
-    const borderedRowIndex = states.lastIndexOf(true);
-
     // Coalesce with other sticky row updates (top/bottom), sticky columns updates
     // (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
+      // If positioning the rows to the bottom, reverse their order when evaluating the sticky
+      // position such that the last row stuck will be "bottom: 0px" and so on. Note that the
+      // sticky states need to be reversed as well.
+      const rows = position === 'bottom' ? rowsToStick.slice().reverse() : rowsToStick;
+      const states = position === 'bottom' ? stickyStates.slice().reverse() : stickyStates;
+
+      // Measure row heights all at once before adding sticky styles to reduce layout thrashing.
+      const stickyOffsets: number[] = [];
+      const stickyCellHeights: (number | undefined)[] = [];
+      const elementsToStick: HTMLElement[][] = [];
+
+      for (let rowIndex = 0, stickyOffset = 0; rowIndex < rows.length; rowIndex++) {
+        if (!states[rowIndex]) {
+          continue;
+        }
+
+        stickyOffsets[rowIndex] = stickyOffset;
+        const row = rows[rowIndex];
+        elementsToStick[rowIndex] = this._isNativeHtmlTable
+          ? (Array.from(row.children) as HTMLElement[])
+          : [row];
+
+        const height = row.getBoundingClientRect().height;
+        stickyOffset += height;
+        stickyCellHeights[rowIndex] = height;
+      }
+
+      const borderedRowIndex = states.lastIndexOf(true);
+
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         if (!states[rowIndex]) {
           continue;
@@ -258,10 +259,10 @@ export class StickyStyler {
       return;
     }
 
-    const tfoot = tableElement.querySelector('tfoot')!;
-
     // Coalesce with other sticky updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
+      const tfoot = tableElement.querySelector('tfoot')!;
+
       if (stickyStates.some(state => !state)) {
         this._removeStickyStyle(tfoot, ['bottom']);
       } else {

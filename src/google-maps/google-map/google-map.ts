@@ -29,6 +29,8 @@ import {
 import {isPlatformBrowser} from '@angular/common';
 import {Observable} from 'rxjs';
 import {MapEventManager} from '../map-event-manager';
+import {take} from 'rxjs/operators';
+import {importLibrary} from '../import-library';
 
 interface GoogleMapsWindow extends Window {
   gm_authFailure?: () => void;
@@ -307,15 +309,28 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // Create the object outside the zone so its events don't trigger change detection.
       // We'll bring it back in inside the `MapEventManager` only for the events that the
       // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.googleMap = new google.maps.Map(this._mapEl, this._combineOptions());
-      });
-      this._eventManager.setTarget(this.googleMap);
-      this.mapInitialized.emit(this.googleMap);
+      if (google.maps.Map) {
+        this._initialize(google.maps.Map);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          importLibrary<typeof google.maps.Map>('maps', 'Map').then(mapConstructor =>
+            this._initialize(mapConstructor),
+          );
+        });
+      }
     }
   }
 
+  private _initialize(mapConstructor: typeof google.maps.Map) {
+    this._ngZone.runOutsideAngular(() => {
+      this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
+      this._eventManager.setTarget(this.googleMap);
+      this.mapInitialized.emit(this.googleMap);
+    });
+  }
+
   ngOnDestroy() {
+    this.mapInitialized.complete();
     this._eventManager.destroy();
 
     if (this._isBrowser) {
@@ -481,6 +496,13 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null> {
     this._assertInitialized();
     return this.googleMap.overlayMapTypes;
+  }
+
+  /** Returns a promise that resolves when the map has been initialized. */
+  _resolveMap(): Promise<google.maps.Map> {
+    return this.googleMap
+      ? Promise.resolve(this.googleMap)
+      : this.mapInitialized.pipe(take(1)).toPromise();
   }
 
   private _setSize() {

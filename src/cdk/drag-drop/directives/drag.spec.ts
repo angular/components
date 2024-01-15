@@ -567,7 +567,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -610,7 +610,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -1007,7 +1007,7 @@ describe('CdkDrag', () => {
       fixture.componentInstance.dragInstance.constrainPosition = (
         {x, y}: Point,
         _dragRef: DragRef,
-        _dimensions: ClientRect,
+        _dimensions: DOMRect,
         pickup: Point,
       ) => {
         x -= pickup.x;
@@ -4352,7 +4352,7 @@ describe('CdkDrag', () => {
       expect(list.scrollTop).toBeLessThan(initialScrollDistance);
     }));
 
-    it('should auto-scroll right if the user holds their pointer at right edge', fakeAsync(() => {
+    it('should auto-scroll right if the user holds their pointer at right edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -4374,7 +4374,7 @@ describe('CdkDrag', () => {
       expect(list.scrollLeft).toBeGreaterThan(0);
     }));
 
-    it('should auto-scroll left if the user holds their pointer at left edge', fakeAsync(() => {
+    it('should auto-scroll left if the user holds their pointer at left edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -4388,6 +4388,56 @@ describe('CdkDrag', () => {
       tickAnimationFrames(20);
 
       expect(list.scrollLeft).toBeLessThan(initialScrollDistance);
+    }));
+
+    it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: observableOf()},
+        },
+      ]);
+      fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const listRect = list.getBoundingClientRect();
+      const initialScrollDistance = (list.scrollLeft = -list.scrollWidth);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        listRect.left + listRect.width,
+        listRect.top + listRect.height / 2,
+      );
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(list.scrollLeft).toBeGreaterThan(initialScrollDistance);
+    }));
+
+    it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
+        {
+          provide: Directionality,
+          useValue: {value: 'rtl', change: observableOf()},
+        },
+      ]);
+      fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const listRect = list.getBoundingClientRect();
+
+      expect(list.scrollLeft).toBe(0);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(list.scrollLeft).toBeLessThan(0);
     }));
 
     it('should be able to start auto scrolling with a drag boundary', fakeAsync(() => {

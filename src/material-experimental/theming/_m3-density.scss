@@ -28,6 +28,18 @@ $_density-tokens: (
   (mdc, extended-fab): (),
   (mdc, fab): (),
   (mdc, filled-text-field): (),
+  (mdc, text-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, protected-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, filled-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, outlined-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
   (mdc, icon-button): (
     state-layer-size: (48px, 44px, 40px, 36px, 32px, 28px),
   ),
@@ -56,13 +68,18 @@ $_density-tokens: (
   (mat, badge): (),
   (mat, bottom-sheet): (),
   (mat, card): (),
+  (mat, checkbox): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, datepicker): (),
   (mat, divider): (),
   (mat, expansion): (
     header-collapsed-state-height: (48px, 44px, 40px, 36px),
     header-expanded-state-height: (64px, 60px, 56px, 48px),
   ),
-  (mat, fab): (),
+  (mat, fab): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, form-field): (
     container-height: (56px, 52px, 48px, 44px, 40px, 36px),
     filled-label-display: (block, block, none, none, none, none),
@@ -72,14 +89,32 @@ $_density-tokens: (
   ),
   (mat, grid-list): (),
   (mat, icon): (),
-  (mat, icon-button): (),
+  (mat, icon-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, text-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, protected-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, filled-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, outlined-button): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, menu): (),
   (mat, optgroup): (),
   (mat, option): (),
+  (mat, full-pseudo-checkbox): (),
+  (mat, minimal-pseudo-checkbox): (),
   (mat, paginator): (
     container-size: (56px, 52px, 48px, 40px),
   ),
-  (mat, radio): (),
+  (mat, radio): (
+    touch-target-display: (block, block, none, none),
+  ),
   (mat, ripple): (),
   (mat, select): (),
   (mat, sidenav): (),

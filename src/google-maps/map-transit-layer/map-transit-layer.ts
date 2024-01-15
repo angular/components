@@ -9,9 +9,10 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive} from '@angular/core';
+import {Directive, EventEmitter, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 
-import {MapBaseLayer} from '../map-base-layer';
+import {importLibrary} from '../import-library';
+import {GoogleMap} from '../google-map/google-map';
 
 /**
  * Angular component that renders a Google Maps Transit Layer via the Google Maps JavaScript API.
@@ -23,7 +24,10 @@ import {MapBaseLayer} from '../map-base-layer';
   exportAs: 'mapTransitLayer',
   standalone: true,
 })
-export class MapTransitLayer extends MapBaseLayer {
+export class MapTransitLayer implements OnInit, OnDestroy {
+  private _map = inject(GoogleMap);
+  private _zone = inject(NgZone);
+
   /**
    * The underlying google.maps.TransitLayer object.
    *
@@ -31,19 +35,38 @@ export class MapTransitLayer extends MapBaseLayer {
    */
   transitLayer?: google.maps.TransitLayer;
 
-  protected override _initializeObject() {
-    this.transitLayer = new google.maps.TransitLayer();
-  }
+  /** Event emitted when the transit layer is initialized. */
+  @Output() readonly transitLayerInitialized: EventEmitter<google.maps.TransitLayer> =
+    new EventEmitter<google.maps.TransitLayer>();
 
-  protected override _setMap() {
-    this._assertLayerInitialized();
-    this.transitLayer.setMap(this._map.googleMap!);
-  }
-
-  protected override _unsetMap() {
-    if (this.transitLayer) {
-      this.transitLayer.setMap(null);
+  ngOnInit(): void {
+    if (this._map._isBrowser) {
+      if (google.maps.TransitLayer && this._map.googleMap) {
+        this._initialize(this._map.googleMap, google.maps.TransitLayer);
+      } else {
+        this._zone.runOutsideAngular(() => {
+          Promise.all([
+            this._map._resolveMap(),
+            importLibrary<typeof google.maps.TransitLayer>('maps', 'TransitLayer'),
+          ]).then(([map, layerConstructor]) => {
+            this._initialize(map, layerConstructor);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(map: google.maps.Map, layerConstructor: typeof google.maps.TransitLayer) {
+    this._zone.runOutsideAngular(() => {
+      this.transitLayer = new layerConstructor();
+      this.transitLayerInitialized.emit(this.transitLayer);
+      this._assertLayerInitialized();
+      this.transitLayer.setMap(map);
+    });
+  }
+
+  ngOnDestroy() {
+    this.transitLayer?.setMap(null);
   }
 
   private _assertLayerInitialized(): asserts this is {transitLayer: google.maps.TransitLayer} {

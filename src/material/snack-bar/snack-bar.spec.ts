@@ -1,12 +1,14 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {
+  ChangeDetectionStrategy,
   Component,
   Directive,
   Inject,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  signal,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -358,7 +360,7 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
 
-    viewContainerFixture.componentInstance.childComponentExists = false;
+    viewContainerFixture.componentInstance.childComponentExists.set(false);
     viewContainerFixture.detectChanges();
     flush();
 
@@ -403,6 +405,9 @@ describe('MatSnackBar', () => {
     const dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
 
     viewContainerFixture.detectChanges();
+
+    const containerElement = document.querySelector('mat-snack-bar-container')!;
+    expect(containerElement.classList).toContain('ng-animating');
     const container1 = snackBarRef.containerInstance as MatSnackBarContainer;
     expect(container1._animationState)
       .withContext(`Expected the animation state would be 'visible'.`)
@@ -1102,14 +1107,15 @@ class DirectiveWithViewContainer {
 
 @Component({
   selector: 'arbitrary-component',
-  template: `@if (childComponentExists) {<dir-with-view-container></dir-with-view-container>}`,
+  template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
   standalone: true,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
 
-  childComponentExists: boolean = true;
+  childComponentExists = signal(true);
 
   get childViewContainer() {
     return this.childWithViewContainer.viewContainerRef;

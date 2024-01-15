@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
@@ -251,7 +252,7 @@ export class MatNativeDateModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatNativeDateModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, [typeof NativeDateModule], never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatNativeDateModule, never, never, never>;
 }
 
 // @public
@@ -514,6 +515,9 @@ export class NativeDateModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<NativeDateModule, never, never, never>;
 }
+
+// @public (undocumented)
+export function provideNativeDateAdapter(formats?: MatDateFormats): Provider[];
 
 // @public
 export interface RippleAnimationConfig {

@@ -56,7 +56,8 @@
   @include button-base.mat-private-button-interactive();
   @include button-base.mat-private-button-ripple(tokens-mat-icon-button.$prefix,
     tokens-mat-icon-button.get-token-slots());
-  @include button-base.mat-private-button-touch-target(true);
+  @include button-base.mat-private-button-touch-target(true, tokens-mat-icon-button.$prefix,
+    tokens-mat-icon-button.get-token-slots());
   @include private.private-animation-noop();
 
   .mat-mdc-button-persistent-ripple {

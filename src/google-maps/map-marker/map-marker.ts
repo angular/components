@@ -19,12 +19,15 @@ import {
   OnChanges,
   SimpleChanges,
   inject,
+  EventEmitter,
 } from '@angular/core';
 import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {importLibrary} from '../import-library';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -264,6 +267,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   @Output() readonly zindexChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('zindex_changed');
 
+  /** Event emitted when the marker is initialized. */
+  @Output() readonly markerInitialized: EventEmitter<google.maps.Marker> =
+    new EventEmitter<google.maps.Marker>();
+
   /**
    * The underlying google.maps.Marker object.
    *
@@ -277,17 +284,35 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   ) {}
 
   ngOnInit() {
-    if (this._googleMap._isBrowser) {
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.marker = new google.maps.Marker(this._combineOptions());
-      });
-      this._assertInitialized();
-      this.marker.setMap(this._googleMap.googleMap!);
-      this._eventManager.setTarget(this.marker);
+    if (!this._googleMap._isBrowser) {
+      return;
     }
+
+    if (google.maps.Marker && this._googleMap.googleMap) {
+      this._initialize(this._googleMap.googleMap, google.maps.Marker);
+    } else {
+      this._ngZone.runOutsideAngular(() => {
+        Promise.all([
+          this._googleMap._resolveMap(),
+          importLibrary<typeof google.maps.Marker>('marker', 'Marker'),
+        ]).then(([map, markerConstrutor]) => {
+          this._initialize(map, markerConstrutor);
+        });
+      });
+    }
+  }
+
+  private _initialize(map: google.maps.Map, markerConstructor: typeof google.maps.Marker) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.marker = new markerConstructor(this._combineOptions());
+      this._assertInitialized();
+      this.marker.setMap(map);
+      this._eventManager.setTarget(this.marker);
+      this.markerInitialized.next(this.marker);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -325,10 +350,9 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   }
 
   ngOnDestroy() {
+    this.markerInitialized.complete();
     this._eventManager.destroy();
-    if (this.marker) {
-      this.marker.setMap(null);
-    }
+    this.marker?.setMap(null);
   }
 
   /**
@@ -445,6 +469,13 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     return this.marker;
   }
 
+  /** Returns a promise that resolves when the marker has been initialized. */
+  _resolveMarker(): Promise<google.maps.Marker> {
+    return this.marker
+      ? Promise.resolve(this.marker)
+      : this.markerInitialized.pipe(take(1)).toPromise();
+  }
+
   /** Creates a combined options object using the passed-in options and the individual inputs. */
   private _combineOptions(): google.maps.MarkerOptions {
     const options = this._options || DEFAULT_MARKER_OPTIONS;
@@ -462,12 +493,6 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
 
   private _assertInitialized(): asserts this is {marker: google.maps.Marker} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.marker) {
         throw Error(
           'Cannot interact with a Google Map Marker before it has been ' +

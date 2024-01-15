@@ -105,7 +105,6 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[attr.aria-describedby]': 'null',
-    'ngSkipHydration': '',
   },
   animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
   providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],

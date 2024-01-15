@@ -9,12 +9,22 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps KML Layer via the Google Maps JavaScript API.
@@ -70,6 +80,10 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   @Output() readonly statusChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('status_changed');
 
+  /** Event emitted when the KML layer is initialized. */
+  @Output() readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer> =
+    new EventEmitter<google.maps.KmlLayer>();
+
   constructor(
     private readonly _map: GoogleMap,
     private _ngZone: NgZone,
@@ -80,27 +94,46 @@ export class MapKmlLayer implements OnInit, OnDestroy {
       this._combineOptions()
         .pipe(take(1))
         .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(() => (this.kmlLayer = new google.maps.KmlLayer(options)));
-          this._assertInitialized();
-          this.kmlLayer.setMap(this._map.googleMap!);
-          this._eventManager.setTarget(this.kmlLayer);
+          if (google.maps.KmlLayer && this._map.googleMap) {
+            this._initialize(this._map.googleMap, google.maps.KmlLayer, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              Promise.all([
+                this._map._resolveMap(),
+                importLibrary<typeof google.maps.KmlLayer>('maps', 'KmlLayer'),
+              ]).then(([map, layerConstructor]) => {
+                this._initialize(map, layerConstructor, options);
+              });
+            });
+          }
         });
+    }
+  }
 
+  private _initialize(
+    map: google.maps.Map,
+    layerConstructor: typeof google.maps.KmlLayer,
+    options: google.maps.KmlLayerOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.kmlLayer = new layerConstructor(options);
+      this._assertInitialized();
+      this.kmlLayer.setMap(map);
+      this._eventManager.setTarget(this.kmlLayer);
+      this.kmlLayerInitialized.emit(this.kmlLayer);
       this._watchForOptionsChanges();
       this._watchForUrlChanges();
-    }
+    });
   }
 
   ngOnDestroy() {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.kmlLayer) {
-      this.kmlLayer.setMap(null);
-    }
+    this.kmlLayer?.setMap(null);
   }
 
   /**
@@ -176,12 +209,6 @@ export class MapKmlLayer implements OnInit, OnDestroy {
 
   private _assertInitialized(): asserts this is {kmlLayer: google.maps.KmlLayer} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._map.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.kmlLayer) {
         throw Error(
           'Cannot interact with a Google Map KmlLayer before it has been ' +

@@ -12,6 +12,7 @@
 import {
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   NgZone,
   OnDestroy,
@@ -25,6 +26,7 @@ import {map, take, takeUntil} from 'rxjs/operators';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
@@ -100,6 +102,10 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   @Output() readonly zindexChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('zindex_changed');
 
+  /** Event emitted when the info window is initialized. */
+  @Output() readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow> =
+    new EventEmitter<google.maps.InfoWindow>();
+
   constructor(
     private readonly _googleMap: GoogleMap,
     private _elementRef: ElementRef<HTMLElement>,
@@ -108,22 +114,36 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
-      const combinedOptionsChanges = this._combineOptions();
-
-      combinedOptionsChanges.pipe(take(1)).subscribe(options => {
-        // Create the object outside the zone so its events don't trigger change detection.
-        // We'll bring it back in inside the `MapEventManager` only for the events that the
-        // user has subscribed to.
-        this._ngZone.runOutsideAngular(() => {
-          this.infoWindow = new google.maps.InfoWindow(options);
+      this._combineOptions()
+        .pipe(take(1))
+        .subscribe(options => {
+          if (google.maps.InfoWindow) {
+            this._initialize(google.maps.InfoWindow, options);
+          } else {
+            this._ngZone.runOutsideAngular(() => {
+              importLibrary<typeof google.maps.InfoWindow>('maps', 'InfoWindow').then(
+                infoWindowConstructor => this._initialize(infoWindowConstructor, options),
+              );
+            });
+          }
         });
+    }
+  }
 
-        this._eventManager.setTarget(this.infoWindow);
-      });
-
+  private _initialize(
+    infoWindowConstructor: typeof google.maps.InfoWindow,
+    options: google.maps.InfoWindowOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.infoWindow = new infoWindowConstructor(options);
+      this._eventManager.setTarget(this.infoWindow);
+      this.infoWindowInitialized.emit(this.infoWindow);
       this._watchForOptionsChanges();
       this._watchForPositionChanges();
-    }
+    });
   }
 
   ngOnDestroy() {
@@ -229,12 +249,6 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   private _assertInitialized(): asserts this is {infoWindow: google.maps.InfoWindow} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.infoWindow) {
         throw Error(
           'Cannot interact with a Google Map Info Window before it has been ' +

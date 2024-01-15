@@ -136,7 +136,7 @@ See the below example of reading the density scale from a theme:
 ```scss
 $theme: mat.define-dark-theme(...);
 
-$density-scale: mat.get-theme-desity($theme);
+$density-scale: mat.get-theme-density($theme);
 ```
 
 ### Checking what dimensions are configured for a theme

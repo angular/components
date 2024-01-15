@@ -2416,20 +2416,20 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
       const originalGetBoundingClientRect = overlayRef.overlayElement.getBoundingClientRect;
 
-      // The browser may return a `ClientRect` with sub-pixel deviations if the screen is zoomed in.
+      // The browser may return a `DOMRect` with sub-pixel deviations if the screen is zoomed in.
       // Since there's no way for us to zoom in the screen programmatically, we simulate the effect
       // by patching `getBoundingClientRect` to return a slightly different value.
       overlayRef.overlayElement.getBoundingClientRect = function () {
-        const clientRect = originalGetBoundingClientRect.apply(this);
+        const domRect = originalGetBoundingClientRect.apply(this);
         const zoomOffset = 0.1;
 
         return {
-          top: clientRect.top,
-          right: clientRect.right + zoomOffset,
-          bottom: clientRect.bottom + zoomOffset,
-          left: clientRect.left,
-          width: clientRect.width + zoomOffset,
-          height: clientRect.height + zoomOffset,
+          top: domRect.top,
+          right: domRect.right + zoomOffset,
+          bottom: domRect.bottom + zoomOffset,
+          left: domRect.left,
+          width: domRect.width + zoomOffset,
+          height: domRect.height + zoomOffset,
         } as any;
       };
 

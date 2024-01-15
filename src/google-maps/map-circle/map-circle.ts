@@ -9,12 +9,22 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" />
 
-import {Directive, Input, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Circle via the Google Maps JavaScript API.
@@ -148,40 +158,63 @@ export class MapCircle implements OnInit, OnDestroy {
   @Output() readonly circleRightclick: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
 
+  /** Event emitted when the circle is initialized. */
+  @Output() readonly circleInitialized: EventEmitter<google.maps.Circle> =
+    new EventEmitter<google.maps.Circle>();
+
   constructor(
     private readonly _map: GoogleMap,
     private readonly _ngZone: NgZone,
   ) {}
 
   ngOnInit() {
-    if (this._map._isBrowser) {
-      this._combineOptions()
-        .pipe(take(1))
-        .subscribe(options => {
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this._ngZone.runOutsideAngular(() => {
-            this.circle = new google.maps.Circle(options);
-          });
-          this._assertInitialized();
-          this.circle.setMap(this._map.googleMap!);
-          this._eventManager.setTarget(this.circle);
-        });
+    if (!this._map._isBrowser) {
+      return;
+    }
 
+    this._combineOptions()
+      .pipe(take(1))
+      .subscribe(options => {
+        if (google.maps.Circle && this._map.googleMap) {
+          this._initialize(this._map.googleMap, google.maps.Circle, options);
+        } else {
+          this._ngZone.runOutsideAngular(() => {
+            Promise.all([
+              this._map._resolveMap(),
+              importLibrary<typeof google.maps.Circle>('maps', 'Circle'),
+            ]).then(([map, circleConstructor]) => {
+              this._initialize(map, circleConstructor, options);
+            });
+          });
+        }
+      });
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    circleConstructor: typeof google.maps.Circle,
+    options: google.maps.CircleOptions,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.circle = new circleConstructor(options);
+      this._assertInitialized();
+      this.circle.setMap(map);
+      this._eventManager.setTarget(this.circle);
+      this.circleInitialized.emit(this.circle);
       this._watchForOptionsChanges();
       this._watchForCenterChanges();
       this._watchForRadiusChanges();
-    }
+    });
   }
 
   ngOnDestroy() {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this.circle) {
-      this.circle.setMap(null);
-    }
+    this.circle?.setMap(null);
   }
 
   /**
@@ -278,12 +311,6 @@ export class MapCircle implements OnInit, OnDestroy {
 
   private _assertInitialized(): asserts this is {circle: google.maps.Circle} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._map.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
       if (!this.circle) {
         throw Error(
           'Cannot interact with a Google Map Circle before it has been ' +

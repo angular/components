@@ -116,7 +116,7 @@ describe('GoogleMap', () => {
   it('sets center and zoom of the map', () => {
     const options = {center: {lat: 3, lng: 5}, zoom: 7, mapTypeId: DEFAULT_OPTIONS.mapTypeId};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.center = options.center;
@@ -142,7 +142,7 @@ describe('GoogleMap', () => {
       mapTypeId: DEFAULT_OPTIONS.mapTypeId,
     };
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -160,7 +160,7 @@ describe('GoogleMap', () => {
   it('should set a default center if the custom options do not provide one', () => {
     const options = {zoom: 7};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -172,7 +172,7 @@ describe('GoogleMap', () => {
   it('should set a default zoom level if the custom options do not provide one', () => {
     const options = {};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -184,7 +184,7 @@ describe('GoogleMap', () => {
   it('should not set a default zoom level if the custom options provide "zoom: 0"', () => {
     const options = {zoom: 0};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
@@ -216,7 +216,7 @@ describe('GoogleMap', () => {
 
   it('exposes methods that change the configuration of the Google Map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -238,7 +238,7 @@ describe('GoogleMap', () => {
 
   it('exposes methods that get information about the Google Map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -275,7 +275,7 @@ describe('GoogleMap', () => {
 
   it('initializes event handlers that are set on the map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const addSpy = mapSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
@@ -303,7 +303,7 @@ describe('GoogleMap', () => {
 
   it('should be able to add an event listener after init', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const addSpy = mapSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
@@ -321,7 +321,7 @@ describe('GoogleMap', () => {
 
   it('should set the map type', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.mapTypeId = 'terrain' as unknown as google.maps.MapTypeId;
@@ -341,7 +341,7 @@ describe('GoogleMap', () => {
   it('sets mapTypeId through the options', () => {
     const options = {mapTypeId: 'satellite'};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
     fixture.detectChanges();

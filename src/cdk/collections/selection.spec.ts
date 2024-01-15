@@ -299,4 +299,19 @@ describe('SelectionModel', () => {
     model.deselect(v2);
     expect(model.selected.length).toBe(1);
   });
+
+  describe('setSelection', () => {
+    it('should not deselect an already selected value', () => {
+      type Item = {key: number; value: string};
+      const v1: Item = {key: 1, value: 'blue'};
+      const v2: Item = {key: 1, value: 'apple'};
+      const compareFun = (x: Item, y: Item) => x.key === y.key;
+      const model = new SelectionModel<Item>(false, [v1], false, compareFun);
+
+      model.setSelection(v2);
+
+      expect(model.selected.length).toBe(1);
+      expect(compareFun(model.selected[0], v2)).toBeTruthy();
+    });
+  });
 });

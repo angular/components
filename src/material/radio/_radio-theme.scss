@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -60,6 +59,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix, tokens-mat-radio.get-typography-tokens($theme));
     }
 
     .mat-mdc-radio-button {
@@ -77,12 +78,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
-    }
-
-    @include mdc-helpers.if-touch-targets-unsupported($density-scale) {
-      .mat-mdc-radio-touch-target {
-        display: none;
-      }
+      @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix, tokens-mat-radio.get-density-tokens($theme));
     }
   }
 }
@@ -110,6 +107,7 @@
 @mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     @include mdc-radio-theme.theme(map.get($tokens, tokens-mdc-radio.$prefix));
+    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
     @include token-utils.create-token-values(
         tokens-mat-radio.$prefix, map.get($tokens, tokens-mat-radio.$prefix));
   }
