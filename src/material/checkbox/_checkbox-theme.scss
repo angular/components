@@ -1,15 +1,17 @@
-@use 'sass:map';
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/style/sass-utils';
-@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 @use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-checkbox.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -23,9 +25,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the checkbox: primary, secondary, tertiary, or
+///     error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -48,6 +55,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -65,6 +74,8 @@
   }
 }
 
+/// Outputs density theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   $density-scale: inspection.get-theme-density($theme);
 
@@ -80,10 +91,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the checkbox: primary, secondary, tertiary, or
+///     error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-checkbox') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -100,13 +116,14 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    // TODO(mmalerba): Some of the theme styles above are not represented in terms of tokens,
-    //   so this mixin is currently incomplete.
-    @include mdc-checkbox-theme.theme(map.get($tokens, tokens-mdc-checkbox.$prefix));
-    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
-    @include token-utils.create-token-values(
-      tokens-mat-checkbox.$prefix, map.get($tokens, tokens-mat-checkbox.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-checkbox-tokens: token-utils.get-tokens-for(
+      $tokens, tokens-mdc-checkbox.$prefix, $options...);
+  // Don't pass $options here, since the mdc-form-field doesn't support color options,
+  // only the mdc-checkbox does.
+  $mdc-form-field-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-form-field.$prefix);
+  $mat-checkbox-tokens: token-utils.get-tokens-for($tokens, tokens-mat-checkbox.$prefix);
+  @include mdc-checkbox-theme.theme($mdc-checkbox-tokens);
+  @include mdc-form-field-theme.theme($mdc-form-field-tokens);
+  @include token-utils.create-token-values(tokens-mat-checkbox.$prefix, $mat-checkbox-tokens);
 }

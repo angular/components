@@ -8,6 +8,18 @@
 
 // TODO(mmalerba): Split up this file into smaller pieces.
 
+/// Maps the values in a map to new values using the given mapping function
+/// @param {Map} $map The maps whose values will be mapped to new values.
+/// @param {Function} $fn The value mapping function.
+/// @param {Map} A new map with its values updated using the mapping function.
+@function _map-values($map, $fn) {
+  $result: ();
+  @each $key, $value in $map {
+    $result: map.set($result, $key, meta.call($fn, $value));
+  }
+  @return $result;
+}
+
 /// Picks a submap containing only the given keys out the given map.
 /// @param {Map} $map The map to pick from.
 /// @param {List} $keys The map keys to pick.
@@ -169,7 +181,11 @@
 /// @param {Map} $all-tokens Map of all checkbox tokens, including hardcoded values.
 /// This is necessary in order to do opacity lookups.
 /// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
-@function _fix-checkbox-tokens($tokens, $all-tokens) {
+@function _fix-checkbox-tokens($tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-checkbox-values((), false);
+
   $rename-keys: (
     selected-icon-color: selected-checkmark-color,
     selected-disabled-icon-color: disabled-selected-checkmark-color,
@@ -188,9 +204,9 @@
   );
 
   $remapped-tokens: _rename-map-keys($tokens, $rename-keys);
-  $remapped-all-tokens: _rename-map-keys($all-tokens, $rename-keys);
+  $remapped-hardcoded-tokens: _rename-map-keys($hardcoded-tokens, $rename-keys);
 
-  @return _combine-color-tokens($remapped-tokens, $remapped-all-tokens, (
+  @return _combine-color-tokens($remapped-tokens, $remapped-hardcoded-tokens, (
     (
       color: disabled-selected-icon-color,
       opacity: disabled-selected-icon-opacity,
@@ -474,11 +490,12 @@
     // Get the official MDC component tokens
     _namespace-tokens(
       (mdc, checkbox),
-      _fix-checkbox-tokens(
-        mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-checkbox-values($systems, false)
+      (
+        _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
+        _map_values(
+            custom-tokens.mdc-checkbox-color-variants($systems, $exclude-hardcoded),
+            meta.get-function(_fix-checkbox-tokens)
+        )
       ),
       $token-slots
     ),
@@ -504,12 +521,29 @@
     ),
     _namespace-tokens(
       (mdc, fab),
-      mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
+        (
+          // Color variants
+          primary: (), // Default, no overrides needed.
+          secondary: mdc-tokens.md-comp-fab-secondary-values($systems, $exclude-hardcoded),
+          tertiary: mdc-tokens.md-comp-fab-tertiary-values($systems, $exclude-hardcoded)
+        )
+      ),
       $token-slots
     ),
     _namespace-tokens(
       (mdc, extended-fab),
-      mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
+        (
+          // Color variants
+          primary: (), // Default, no overrides needed.
+          secondary: mdc-tokens.md-comp-extended-fab-secondary-values($systems, $exclude-hardcoded),
+          tertiary: mdc-tokens.md-comp-extended-fab-tertiary-values($systems, $exclude-hardcoded),
+          error: () // TODO(mmalerba): Should we add our own error variant?
+        ),
+      ),
       $token-slots
     ),
     _namespace-tokens(
