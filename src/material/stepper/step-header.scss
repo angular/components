@@ -28,11 +28,13 @@
     &:hover:not([aria-disabled]),
     &:hover[aria-disabled='false'] {
       @include token-utils.create-token-slot(background-color, header-hover-state-layer-color);
+      @include token-utils.create-token-slot(border-radius, header-hover-state-layer-shape);
     }
 
     &.cdk-keyboard-focused,
     &.cdk-program-focused {
       @include token-utils.create-token-slot(background-color, header-focus-state-layer-color);
+      @include token-utils.create-token-slot(border-radius, header-focus-state-layer-shape);
     }
   }
 

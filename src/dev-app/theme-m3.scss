@@ -6,6 +6,7 @@
   @include mat.option-color($theme, $color-variant: $color-variant);
   @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
   @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
+  @include mat.stepper-color($theme, $color-variant: $color-variant);
 
   &.mat-icon {
     @include mat.icon-color($theme, $color-variant: $color-variant);
