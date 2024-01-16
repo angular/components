@@ -166,8 +166,10 @@
 /// different). This is a temporary workaround until MDC updates to use the correct names for the
 /// tokens.
 /// @param {Map} $tokens The map of checkbox tokens with the official tokens names
+/// @param {Map} $all-tokens Map of all checkbox tokens, including hardcoded values.
+/// This is necessary in order to do opacity lookups.
 /// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
-@function _fix-checkbox-tokens($tokens) {
+@function _fix-checkbox-tokens($tokens, $all-tokens) {
   $rename-keys: (
     selected-icon-color: selected-checkmark-color,
     selected-disabled-icon-color: disabled-selected-checkmark-color,
@@ -184,7 +186,20 @@
     unselected-outline-color: unselected-icon-color,
     unselected-pressed-outline-color: unselected-pressed-icon-color
   );
-  @return _rename-map-keys($tokens, $rename-keys);
+
+  $remapped-tokens: _rename-map-keys($tokens, $rename-keys);
+  $remapped-all-tokens: _rename-map-keys($all-tokens, $rename-keys);
+
+  @return _combine-color-tokens($remapped-tokens, $remapped-all-tokens, (
+    (
+      color: disabled-selected-icon-color,
+      opacity: disabled-selected-icon-opacity,
+    ),
+    (
+      color: disabled-unselected-icon-color,
+      opacity: disabled-unselected-icon-opacity,
+    ),
+  ));
 }
 
 /// Fixes inconsistent values in the text field color tokens. Applies to both filled and outlined
@@ -196,32 +211,32 @@
 @function _fix-text-field-color-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
     ),
     (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
     ),
     (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
     ),
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
     ),
     (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
     ),
     (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
     ),
     (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
     )
   ));
 }
@@ -235,32 +250,32 @@
 @function _fix-filled-text-field-tokens($initial-tokens, $all-tokens) {
   $tokens: _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
     ),
     (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
     ),
     (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
     ),
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
     ),
     (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
     ),
     (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
     ),
     (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
     )
   ));
 
@@ -284,8 +299,8 @@
 @function _fix-text-button-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity',
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
     ),
   ));
 }
@@ -297,12 +312,12 @@
 @function _fix-filled-button-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity',
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
     ),
     (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity',
+      color: disabled-container-color,
+      opacity: disabled-container-opacity,
     )
   ));
 }
@@ -314,12 +329,12 @@
 @function _fix-protected-button-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity',
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
     ),
     (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity',
+      color: disabled-container-color,
+      opacity: disabled-container-opacity,
     )
   ));
 }
@@ -331,12 +346,12 @@
 @function _fix-outlined-button-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity',
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
     ),
     (
-      color: 'disabled-outline-color',
-      opacity: 'disabled-outline-opacity',
+      color: disabled-outline-color,
+      opacity: disabled-outline-opacity,
     )
   ));
 }
@@ -350,36 +365,36 @@
 @function _fix-outlined-text-field-tokens($initial-tokens, $all-tokens) {
   @return _combine-color-tokens($initial-tokens, $all-tokens, (
     (
-      color: 'disabled-outline-color',
-      opacity: 'disabled-outline-opacity'
+      color: disabled-outline-color,
+      opacity: disabled-outline-opacity
     ),
     (
-      color: 'disabled-active-indicator-color',
-      opacity: 'disabled-active-indicator-opacity'
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
     ),
     (
-      color: 'disabled-container-color',
-      opacity: 'disabled-container-opacity'
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
     ),
     (
-      color: 'disabled-input-text-color',
-      opacity: 'disabled-input-text-opacity'
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
     ),
     (
-      color: 'disabled-label-text-color',
-      opacity: 'disabled-label-text-opacity'
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
     ),
     (
-      color: 'disabled-leading-icon-color',
-      opacity: 'disabled-leading-icon-opacity'
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
     ),
     (
-      color: 'disabled-supporting-text-color',
-      opacity: 'disabled-supporting-text-opacity'
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
     ),
     (
-      color: 'disabled-trailing-icon-color',
-      opacity: 'disabled-trailing-icon-opacity'
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
     )
   ));
 }
@@ -439,7 +454,12 @@
     // Get the official MDC component tokens
     _namespace-tokens(
       (mdc, checkbox),
-      _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
+      _fix-checkbox-tokens(
+        mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-checkbox-values($systems, false)
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -705,6 +725,11 @@
     _namespace-tokens(
       (mat, minimal-pseudo-checkbox),
       custom-tokens.minimal-pseudo-checkbox($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, checkbox),
+      custom-tokens.checkbox($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
