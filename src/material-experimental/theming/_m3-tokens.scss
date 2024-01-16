@@ -415,6 +415,26 @@
   );
 }
 
+/// Fixes inconsistent values in the icon button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of icon button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all icon button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-icon-button-tokens($tokens, $all-tokens) {
+  $rename-keys: (
+    unselected-icon-color: icon-color,
+  );
+
+  $remapped-tokens: _rename-map-keys($tokens, $rename-keys);
+  $remapped-all-tokens: _rename-map-keys($all-tokens, $rename-keys);
+
+  @return _combine-color-tokens($remapped-tokens, $remapped-all-tokens, (
+    (
+      color: disabled-icon-color,
+      opacity: disabled-icon-opacity,
+    ),
+  ));
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -509,7 +529,12 @@
     ),
     _namespace-tokens(
       (mdc, icon-button),
-      mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
+      _fix-icon-button-tokens(
+        mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
+        // Need to pass in the hardcoded values, because they
+        // include opacities that are used for the disabled state.
+        mdc-tokens.md-comp-icon-button-values($systems, false)
+      ),
       $token-slots
     ),
     _namespace-tokens(
