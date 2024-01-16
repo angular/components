@@ -14,7 +14,9 @@ $prefix: (mat, checkbox);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  @return ();
+  @return (
+    disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
