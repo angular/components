@@ -1,22 +1,14 @@
-@use 'sass:map';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/linear-progress/linear-progress' as mdc-linear-progress;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use '../core/tokens/m2/mdc/linear-progress' as m2-mdc-linear-progress;
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-progress-bar-token-slots: m2-mdc-linear-progress.get-token-slots();
-
   // Add the MDC progress-bar static styles.
   @include mdc-linear-progress.static-styles();
 
   // Add the official slots for the MDC progress-bar.
-  @include mdc-linear-progress-theme.theme-styles(
-      map.merge($mdc-progress-bar-token-slots, (
-      // Excluded because it is meant to be set by theme (b/273562256).
-      track-color: null,
-    ))
-  );
+  @include mdc-linear-progress-theme.theme-styles(m2-mdc-linear-progress.get-token-slots());
 }
 
 .mat-mdc-progress-bar {
