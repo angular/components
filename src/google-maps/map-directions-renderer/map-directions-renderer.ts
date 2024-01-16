@@ -24,7 +24,6 @@ import {
 import {Observable} from 'rxjs';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
-import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Directions Renderer via the Google Maps
@@ -86,12 +85,11 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
         this._initialize(this._googleMap.googleMap, google.maps.DirectionsRenderer);
       } else {
         this._ngZone.runOutsideAngular(() => {
-          Promise.all([
-            this._googleMap._resolveMap(),
-            importLibrary<typeof google.maps.DirectionsRenderer>('routes', 'DirectionsRenderer'),
-          ]).then(([map, rendererConstructor]) => {
-            this._initialize(map, rendererConstructor);
-          });
+          Promise.all([this._googleMap._resolveMap(), google.maps.importLibrary('routes')]).then(
+            ([map, lib]) => {
+              this._initialize(map, (lib as google.maps.RoutesLibrary).DirectionsRenderer);
+            },
+          );
         });
       }
     }

@@ -26,7 +26,6 @@ import {map, take, takeUntil} from 'rxjs/operators';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
-import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
@@ -121,9 +120,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
             this._initialize(google.maps.InfoWindow, options);
           } else {
             this._ngZone.runOutsideAngular(() => {
-              importLibrary<typeof google.maps.InfoWindow>('maps', 'InfoWindow').then(
-                infoWindowConstructor => this._initialize(infoWindowConstructor, options),
-              );
+              google.maps.importLibrary('maps').then(lib => {
+                this._initialize((lib as google.maps.MapsLibrary).InfoWindow, options);
+              });
             });
           }
         });
@@ -208,13 +207,11 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // case where the window doesn't have an anchor, but is placed at a particular position.
     if (this.infoWindow.get('anchor') !== anchorObject || !anchorObject) {
       this._elementRef.nativeElement.style.display = '';
-
-      // The config is cast to `any`, because the internal typings are out of date.
       this.infoWindow.open({
         map: this._googleMap.googleMap,
         anchor: anchorObject,
         shouldFocus,
-      } as any);
+      });
     }
   }
 

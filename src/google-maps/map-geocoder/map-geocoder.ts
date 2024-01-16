@@ -10,7 +10,6 @@
 /// <reference types="google.maps" />
 
 import {Injectable, NgZone} from '@angular/core';
-import {importLibrary} from '../import-library';
 import {Observable} from 'rxjs';
 
 export interface MapGeocoderResponse {
@@ -49,12 +48,10 @@ export class MapGeocoder {
       if (google.maps.Geocoder) {
         this._geocoder = new google.maps.Geocoder();
       } else {
-        return importLibrary<typeof google.maps.Geocoder>('geocoding', 'Geocoder').then(
-          geocoderConstructor => {
-            this._geocoder = new geocoderConstructor();
-            return this._geocoder;
-          },
-        );
+        return google.maps.importLibrary('geocoding').then(lib => {
+          this._geocoder = new (lib as google.maps.GeocodingLibrary).Geocoder();
+          return this._geocoder;
+        });
       }
     }
 

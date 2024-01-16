@@ -30,7 +30,6 @@ import {isPlatformBrowser} from '@angular/common';
 import {Observable} from 'rxjs';
 import {MapEventManager} from '../map-event-manager';
 import {take} from 'rxjs/operators';
-import {importLibrary} from '../import-library';
 
 interface GoogleMapsWindow extends Window {
   gm_authFailure?: () => void;
@@ -313,9 +312,9 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
         this._initialize(google.maps.Map);
       } else {
         this._ngZone.runOutsideAngular(() => {
-          importLibrary<typeof google.maps.Map>('maps', 'Map').then(mapConstructor =>
-            this._initialize(mapConstructor),
-          );
+          google.maps
+            .importLibrary('maps')
+            .then(lib => this._initialize((lib as google.maps.MapsLibrary).Map));
         });
       }
     }

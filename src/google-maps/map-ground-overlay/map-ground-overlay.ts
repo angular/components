@@ -24,7 +24,6 @@ import {takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
-import {importLibrary} from '../import-library';
 
 /**
  * Angular component that renders a Google Maps Ground Overlay via the Google Maps JavaScript API.
@@ -121,12 +120,11 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
           this._initialize(this._map.googleMap, google.maps.GroundOverlay, bounds);
         } else {
           this._ngZone.runOutsideAngular(() => {
-            Promise.all([
-              this._map._resolveMap(),
-              importLibrary<typeof google.maps.GroundOverlay>('maps', 'GroundOverlay'),
-            ]).then(([map, overlayConstructor]) => {
-              this._initialize(map, overlayConstructor, bounds);
-            });
+            Promise.all([this._map._resolveMap(), google.maps.importLibrary('maps')]).then(
+              ([map, lib]) => {
+                this._initialize(map, (lib as google.maps.MapsLibrary).GroundOverlay, bounds);
+              },
+            );
           });
         }
       });

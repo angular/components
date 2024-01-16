@@ -13,6 +13,7 @@ import {
 const DEFAULT_DIRECTIONS: google.maps.DirectionsResult = {
   geocoded_waypoints: [],
   routes: [],
+  request: {origin: 'foo', destination: 'bar', travelMode: 'BICYCLING' as google.maps.TravelMode},
 };
 
 describe('MapDirectionsRenderer', () => {
@@ -64,6 +65,11 @@ describe('MapDirectionsRenderer', () => {
   it('gives precedence to directions over options', fakeAsync(() => {
     const updatedDirections: google.maps.DirectionsResult = {
       geocoded_waypoints: [{partial_match: false, place_id: 'test', types: []}],
+      request: {
+        origin: 'foo',
+        destination: 'bar',
+        travelMode: 'BICYCLING' as google.maps.TravelMode,
+      },
       routes: [],
     };
     const directionsRendererSpy = createDirectionsRendererSpy({directions: updatedDirections});

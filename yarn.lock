@@ -4987,10 +4987,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/google.maps@^3.52.4":
-  version "3.52.4"
-  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.52.4.tgz#01d640d7c49f153570b22fe337a35aea7ac41eb9"
-  integrity sha512-FXtZsLDX7fbxJ03zbze3MdUjaH4Y/zRmW8O65LNIWEHJ7RqddrabusRm/U3zF1ifmqe8y4oPqBvs+vBG8kv0yQ==
+"@types/google.maps@^3.54.10":
+  version "3.54.10"
+  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.54.10.tgz#f3101dda3e873f3602ae664cf518592686ca215b"
+  integrity sha512-N6gwM01mKhooXaw+IKbUH7wJcIJCn8U60VoaVvom5EiQjmfgevhQ+0+/r17beXW5j8ad2x+WPr0iyOUodCw4/w==
 
 "@types/http-cache-semantics@*":
   version "4.0.1"

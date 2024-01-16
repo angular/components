@@ -10,7 +10,6 @@
 /// <reference types="google.maps" />
 
 import {Injectable, NgZone} from '@angular/core';
-import {importLibrary} from '../import-library';
 import {Observable} from 'rxjs';
 
 export interface MapDirectionsResponse {
@@ -53,11 +52,8 @@ export class MapDirectionsService {
       if (google.maps.DirectionsService) {
         this._directionsService = new google.maps.DirectionsService();
       } else {
-        return importLibrary<typeof google.maps.DirectionsService>(
-          'routes',
-          'DirectionsService',
-        ).then(serviceConstructor => {
-          this._directionsService = new serviceConstructor();
+        return google.maps.importLibrary('routes').then(lib => {
+          this._directionsService = new (lib as google.maps.RoutesLibrary).DirectionsService();
           return this._directionsService;
         });
       }

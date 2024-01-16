@@ -11,7 +11,6 @@
 
 import {Directive, EventEmitter, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 
-import {importLibrary} from '../import-library';
 import {GoogleMap} from '../google-map/google-map';
 
 /**
@@ -45,12 +44,11 @@ export class MapBicyclingLayer implements OnInit, OnDestroy {
         this._initialize(this._map.googleMap, google.maps.BicyclingLayer);
       } else {
         this._zone.runOutsideAngular(() => {
-          Promise.all([
-            this._map._resolveMap(),
-            importLibrary<typeof google.maps.BicyclingLayer>('maps', 'BicyclingLayer'),
-          ]).then(([map, layerConstructor]) => {
-            this._initialize(map, layerConstructor);
-          });
+          Promise.all([this._map._resolveMap(), google.maps.importLibrary('maps')]).then(
+            ([map, lib]) => {
+              this._initialize(map, (lib as google.maps.MapsLibrary).BicyclingLayer);
+            },
+          );
         });
       }
     }
