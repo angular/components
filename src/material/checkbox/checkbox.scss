@@ -171,6 +171,11 @@
 
   &.mat-mdc-checkbox-disabled label {
     cursor: default;
+
+    @include token-utils.use-tokens(tokens-mat-checkbox.$prefix,
+      tokens-mat-checkbox.get-token-slots()) {
+      @include token-utils.create-token-slot(color, disabled-label-color);
+    }
   }
 
   // The MDC styles result in extra padding if the label is present but empty. To fix this we hide
