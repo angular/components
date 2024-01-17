@@ -421,7 +421,7 @@
 @function _get-form-field-tokens($systems) {
   @return (
     // TODO: MDC currently doesn't provide tokens for the form field so we need to
-    // define them ourselves. Clean this up once b/284340076 is resolved.
+    // define them ourselves. Clean this up once b/246297033 is resolved.
     label-text-color: map.get($systems, 'md-sys-color', 'on-surface'),
     label-text-font: map.get($systems, 'md-sys-typescale', 'body-medium-font'),
     label-text-line-height: map.get($systems, 'md-sys-typescale', 'body-medium-line-height'),
