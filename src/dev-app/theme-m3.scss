@@ -2,53 +2,48 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
+@mixin color-variant-styles($theme, $color-variant) {
+  @include mat.option-color($theme, $color-variant: $color-variant);
+
+  &.mat-icon {
+    @include mat.icon-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-checkbox {
+    @include mat.checkbox-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-slider {
+    @include mat.slider-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-tab-group,
+  &.mat-mdc-tab-nav-bar {
+    @include mat.tabs-color($theme, $color-variant: $color-variant);
+  }
+
+  // M3 dropped support for warn/error color FABs.
+  @if $color-variant != error {
+    &.mat-mdc-fab,
+    &.mat-mdc-mini-fab {
+      @include mat.fab-color($theme, $color-variant: $color-variant);
+    }
+  }
+}
+
 // TODO(mmalerba): Consider adding this as a back-compat API for users who want it, rather than just
 //  a demo thing.
 @mixin color-variants-back-compat($theme) {
   .mat-primary {
-    @include mat.option-color($theme, $color-variant: primary);
-
-    &.mat-icon {
-      @include mat.icon-color($theme, $color-variant: primary);
-    }
-
-    &.mat-mdc-checkbox {
-      @include mat.checkbox-color($theme, $color-variant: primary);
-    }
-
-    &.mat-mdc-fab,
-    &.mat-mdc-mini-fab {
-      @include mat.fab-color($theme, $color-variant: primary);
-    }
+    @include color-variant-styles($theme, primary);
   }
 
   .mat-accent {
-    @include mat.option-color($theme, $color-variant: secondary);
-
-    &.mat-icon {
-      @include mat.icon-color($theme, $color-variant: secondary);
-    }
-
-    &.mat-mdc-checkbox {
-      @include mat.checkbox-color($theme, $color-variant: secondary);
-    }
-
-    &.mat-mdc-fab,
-    &.mat-mdc-mini-fab {
-      @include mat.fab-color($theme, $color-variant: secondary);
-    }
+    @include color-variant-styles($theme, secondary);
   }
 
   .mat-warn {
-    @include mat.option-color($theme, $color-variant: error);
-
-    &.mat-icon {
-      @include mat.icon-color($theme, $color-variant: error);
-    }
-
-    &.mat-mdc-checkbox {
-      @include mat.checkbox-color($theme, $color-variant: error);
-    }
+    @include color-variant-styles($theme, error);
   }
 }
 

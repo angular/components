@@ -540,8 +540,7 @@
           // Color variants
           primary: (), // Default, no overrides needed.
           secondary: mdc-tokens.md-comp-extended-fab-secondary-values($systems, $exclude-hardcoded),
-          tertiary: mdc-tokens.md-comp-extended-fab-tertiary-values($systems, $exclude-hardcoded),
-          error: () // TODO(mmalerba): Should we add our own error variant?
+          tertiary: mdc-tokens.md-comp-extended-fab-tertiary-values($systems, $exclude-hardcoded)
         ),
       ),
       $token-slots
@@ -649,7 +648,10 @@
     ),
     _namespace-tokens(
       (mdc, slider),
-      mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
+        custom-tokens.mdc-slider-color-variants($systems, $exclude-hardcoded)
+      ),
       $token-slots
     ),
     _namespace-tokens(

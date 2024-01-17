@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '../core/style/sass-utils';
@@ -11,6 +10,9 @@
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-tab.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -29,9 +31,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-tab.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the tab indicator: primary, secondary,
+///      tertiary, or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     .mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
@@ -74,6 +81,8 @@
    tokens-mat-tab-header.get-color-tokens($theme, $palette-name));
 }
 
+/// Outputs typography theme styles for the mat-tab.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -92,6 +101,8 @@
   }
 }
 
+/// Outputs density theme styles for the mat-tab.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -110,10 +121,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-tab.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the tab indicator: primary, secondary,
+///      tertiary, or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tabs') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -130,13 +146,15 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-tab-theme.secondary-navigation-tab-theme(
-        map.get($tokens, tokens-mdc-tab.$prefix));
-    @include mdc-tab-indicator-theme.theme(
-        map.get($tokens, tokens-mdc-tab-indicator.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-tab-header.$prefix, map.get($tokens, tokens-mat-tab-header.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-tab-indicator-tokens: token-utils.get-tokens-for(
+      $tokens, tokens-mdc-tab-indicator.$prefix, $options...);
+  $mat-tab-header-tokens: token-utils.get-tokens-for(
+      $tokens, tokens-mat-tab-header.$prefix, $options...);
+  // Don't pass $options here, because the mdc-tab doesn't have color variants,
+  // only the mdc-tab-indicator and mat-tab-header do.
+  $mdc-tab-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-tab.$prefix);
+  @include mdc-tab-theme.secondary-navigation-tab-theme($mdc-tab-tokens);
+  @include mdc-tab-indicator-theme.theme($mdc-tab-indicator-tokens);
+  @include token-utils.create-token-values(tokens-mat-tab-header.$prefix, $mat-tab-header-tokens);
 }
