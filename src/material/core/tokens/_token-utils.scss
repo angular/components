@@ -110,6 +110,28 @@ $_component-prefix: null;
   @return mdc-custom-properties.create-varname('#{$_component-prefix}-#{$token}');
 }
 
+// TODO(crisbeto): should be able to replace the usages of `get-token-variable` with this.
+// Returns a `var()` reference to a specific token. Intended for declarations
+// where the token has to be referenced as a part of a larger expression.
+@function get-token-variable-reference($token, $emit-fallback: false) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error '`get-token-variable-reference` must be used within `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+
+  $var: get-token-variable($token);
+  $fallback: if($emit-fallback, map.get($_tokens, $token), null);
+
+  @if ($fallback != null) {
+    @return var($var, $fallback);
+  }
+  @else {
+    @return var($var);
+  }
+}
+
 @mixin create-token-values($prefix, $tokens) {
   @include _configure-token-prefix($prefix...) {
     @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
