@@ -1,3 +1,12 @@
+<a name="17.0.6"></a>
+# 17.0.6 "plastic-spoon" (2024-01-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [53aae488ff](https://github.com/angular/components/commit/53aae488ff77fecd6dab1f15151938c1a2968f80) | fix | **progress-bar:** remove track color workaround ([#28416](https://github.com/angular/components/pull/28416)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.0.5"></a>
 # 17.0.5 "stardust-symphony" (2024-01-10)
 ### cdk
