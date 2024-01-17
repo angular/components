@@ -72,7 +72,7 @@ export interface CanDisableRipple {
 // @public
 export interface CanUpdateErrorState {
     errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher: ErrorStateMatcher_2;
     updateErrorState(): void;
 }
 
@@ -136,9 +136,9 @@ export class ErrorStateMatcher {
 
 // @public
 export class _ErrorStateTracker {
-    constructor(_defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
+    constructor(_defaultMatcher: ErrorStateMatcher_2 | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
     errorState: boolean;
-    matcher: ErrorStateMatcher;
+    matcher: ErrorStateMatcher_2;
     // (undocumented)
     ngControl: NgControl | null;
     updateErrorState(): void;
