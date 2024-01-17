@@ -390,6 +390,10 @@
 /// @return {Map} A set of custom tokens for the mat-button
 @function text-button($systems, $exclude-hardcoded) {
   @return (
+    horizontal-padding: _hardcode(12px, $exclude-hardcoded),
+    with-icon-horizontal-padding: _hardcode(16px, $exclude-hardcoded),
+    icon-spacing: _hardcode(8px, $exclude-hardcoded),
+    icon-offset: _hardcode(-4px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: mat.private-safe-color-change(
@@ -408,6 +412,9 @@
 /// @return {Map} A set of custom tokens for the mat-flat-button
 @function filled-button($systems, $exclude-hardcoded) {
   @return (
+    horizontal-padding: _hardcode(24px, $exclude-hardcoded),
+    icon-spacing: _hardcode(8px, $exclude-hardcoded),
+    icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, on-primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: mat.private-safe-color-change(
@@ -426,6 +433,9 @@
 /// @return {Map} A set of custom tokens for the mat-raised-button
 @function elevated-button($systems, $exclude-hardcoded) {
   @return (
+    horizontal-padding: _hardcode(24px, $exclude-hardcoded),
+    icon-spacing: _hardcode(8px, $exclude-hardcoded),
+    icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: mat.private-safe-color-change(
@@ -444,6 +454,9 @@
 /// @return {Map} A set of custom tokens for the mat-outlined-button
 @function outlined-button($systems, $exclude-hardcoded) {
   @return (
+    horizontal-padding: _hardcode(24px, $exclude-hardcoded),
+    icon-spacing: _hardcode(8px, $exclude-hardcoded),
+    icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: mat.private-safe-color-change(
