@@ -8,8 +8,11 @@
 
 import {AbstractControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {ErrorStateMatcher} from '../error/error-options';
+import {ErrorStateMatcher as _ErrorStateMatcher} from '../error/error-options';
 import {AbstractConstructor, Constructor} from './constructor';
+
+// Declare ErrorStateMatcher as an interface to have compatibility with Closure Compiler.
+interface ErrorStateMatcher extends _ErrorStateMatcher {}
 
 /** @docs-private */
 export interface CanUpdateErrorState {
@@ -62,10 +65,7 @@ export class _ErrorStateTracker {
     const parent = this._parentFormGroup || this._parentForm;
     const matcher = this.matcher || this._defaultMatcher;
     const control = this.ngControl ? (this.ngControl.control as AbstractControl) : null;
-    // Note: the null check here shouldn't be necessary, but there's an internal
-    // test that appears to pass an object whose `isErrorState` isn't a function.
-    const newState =
-      typeof matcher?.isErrorState === 'function' ? matcher.isErrorState(control, parent) : false;
+    const newState = matcher?.isErrorState(control, parent) ?? false;
 
     if (newState !== oldState) {
       this.errorState = newState;
