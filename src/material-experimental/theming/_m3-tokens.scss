@@ -671,6 +671,11 @@
     // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
     // values.
     _namespace-tokens(
+      (mat, app),
+      custom-tokens.app($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, tab-indicator),
       custom-tokens.tab-indicator($systems, $exclude-hardcoded),
       $token-slots

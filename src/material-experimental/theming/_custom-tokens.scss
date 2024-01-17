@@ -31,6 +31,17 @@
   );
 }
 
+/// Generates custom tokens for the app.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the app
+@function app($systems, $exclude-hardcoded) {
+  @return (
+    background-color: map.get($systems, md-sys-color, background),
+    text-color: map.get($systems, md-sys-color, on-background),
+  );
+}
+
 /// Generates custom tokens for the mat-badge.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

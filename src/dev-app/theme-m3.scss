@@ -96,6 +96,7 @@ html {
   @include mat.card-theme($light-theme);
   @include mat.checkbox-theme($light-theme);
   @include mat.chips-theme($light-theme);
+  @include mat.core-theme($light-theme);
   @include mat.datepicker-theme($light-theme);
   @include mat.dialog-theme($light-theme);
   @include mat.divider-theme($light-theme);
@@ -108,14 +109,10 @@ html {
   @include mat.input-theme($light-theme);
   @include mat.list-theme($light-theme);
   @include mat.menu-theme($light-theme);
-  @include mat.optgroup-theme($light-theme);
-  @include mat.option-theme($light-theme);
   @include mat.paginator-theme($light-theme);
-  @include mat.pseudo-checkbox-theme($light-theme);
   @include mat.progress-bar-theme($light-theme);
   @include mat.progress-spinner-theme($light-theme);
   @include mat.radio-theme($light-theme);
-  @include mat.ripple-theme($light-theme);
   @include mat.select-theme($light-theme);
   @include mat.sidenav-theme($light-theme);
   @include mat.slide-toggle-theme($light-theme);
@@ -146,6 +143,7 @@ html {
   @include mat.card-color($dark-theme);
   @include mat.checkbox-color($dark-theme);
   @include mat.chips-color($dark-theme);
+  @include mat.core-color($dark-theme);
   @include mat.datepicker-color($dark-theme);
   @include mat.dialog-color($dark-theme);
   @include mat.divider-color($dark-theme);
@@ -158,14 +156,10 @@ html {
   @include mat.input-color($dark-theme);
   @include mat.list-color($dark-theme);
   @include mat.menu-color($dark-theme);
-  @include mat.optgroup-color($dark-theme);
-  @include mat.option-color($dark-theme);
   @include mat.paginator-color($dark-theme);
-  @include mat.pseudo-checkbox-color($dark-theme);
   @include mat.progress-bar-color($dark-theme);
   @include mat.progress-spinner-color($dark-theme);
   @include mat.radio-color($dark-theme);
-  @include mat.ripple-color($dark-theme);
   @include mat.select-color($dark-theme);
   @include mat.sidenav-color($dark-theme);
   @include mat.slide-toggle-color($dark-theme);
@@ -195,6 +189,7 @@ html {
     @include mat.card-density($scale-theme);
     @include mat.checkbox-density($scale-theme);
     @include mat.chips-density($scale-theme);
+    @include mat.core-density($scale-theme);
     @include mat.datepicker-density($scale-theme);
     @include mat.dialog-density($scale-theme);
     @include mat.divider-density($scale-theme);
@@ -207,10 +202,7 @@ html {
     @include mat.input-density($scale-theme);
     @include mat.list-density($scale-theme);
     @include mat.menu-density($scale-theme);
-    @include mat.optgroup-density($scale-theme);
-    @include mat.option-density($scale-theme);
     @include mat.paginator-density($scale-theme);
-    @include mat.pseudo-checkbox-density($scale-theme);
     @include mat.progress-bar-density($scale-theme);
     @include mat.progress-spinner-density($scale-theme);
     @include mat.radio-density($scale-theme);

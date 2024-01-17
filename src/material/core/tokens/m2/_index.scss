@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../style/sass-utils';
+@use './mat/app' as tokens-mat-app;
 @use './mat/autocomplete' as tokens-mat-autocomplete;
 @use './mat/badge' as tokens-mat-badge;
 @use './mat/text-button' as tokens-mat-text-button;
@@ -107,6 +108,7 @@
 ///     )
 @function m2-tokens-from-theme($theme) {
   @return sass-utils.deep-merge-all(
+      _get-tokens-for-module($theme, tokens-mat-app),
       _get-tokens-for-module($theme, tokens-mat-autocomplete),
       _get-tokens-for-module($theme, tokens-mat-badge),
       _get-tokens-for-module($theme, tokens-mat-bottom-sheet),
