@@ -368,7 +368,7 @@
     color: _hardcode(inherit, $exclude-hardcoded),
   ), (
     // Color variants:
-    neutral: (), // Default, no overrides needed.
+    surface: (), // Default, no overrides needed.
     primary: (
       color: map.get($systems, md-sys-color, primary),
     ),
@@ -614,12 +614,24 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-radio
 @function radio($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     ripple-color: map.get($systems, md-sys-color, on-surface),
     checked-ripple-color: map.get($systems, md-sys-color, primary),
     disabled-label-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed
+    secondary: (
+      checked-ripple-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      checked-ripple-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      checked-ripple-color: map.get($systems, md-sys-color, error),
+    ),
+  ));
 }
 
 /// Generates custom tokens for the mat-ripple.
@@ -637,7 +649,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-select
 @function select($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return (mat.private-merge-all(
     _generate-typography-tokens($systems, trigger-text, body-large),
     (
       panel-background-color: map.get($systems, md-sys-color, surface-container),
@@ -651,7 +663,19 @@
       focused-arrow-color: map.get($systems, md-sys-color, primary),
       invalid-arrow-color: map.get($systems, md-sys-color, error),
     )
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed
+    secondary: (
+      focused-arrow-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      focused-arrow-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      focused-arrow-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-sidenav.
@@ -669,14 +693,6 @@
     scrim-color: mat.private-safe-color-change(
         map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
   );
-}
-
-/// Generates custom tokens for the mat-slide-toggle.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @return {Map} A set of custom tokens for the mat-slide-toggle
-@function slide-toggle($systems, $exclude-hardcoded) {
-  @return _generate-typography-tokens($systems, label-text, label-large);
 }
 
 /// Generates custom tokens for the mat-slider.
@@ -994,6 +1010,100 @@
       pressed-state-layer-color: map.get($systems, md-sys-color, error),
       with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-error),
       with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-error),
+    ),
+  );
+}
+
+/// Generates custom token overrides for the mdc-switch color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-switch
+@function mdc-switch-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-track-color: map.get($systems, md-sys-color, secondary),
+      selected-handle-color: map.get($systems, md-sys-color, on-secondary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-track-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, secondary),
+      selected-track-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-handle-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-track-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-focus-track-color: map.get($systems, md-sys-color, error),
+      selected-handle-color: map.get($systems, md-sys-color, on-error),
+      selected-hover-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-track-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-pressed-track-color: map.get($systems, md-sys-color, error),
+      selected-track-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+}
+
+@function mdc-radio-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, secondary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, tertiary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-focus-icon-color: map.get($systems, md-sys-color, error),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-icon-color: map.get($systems, md-sys-color, error),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, error),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, error),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
     ),
   );
 }

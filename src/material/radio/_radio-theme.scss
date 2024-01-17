@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/style/sass-utils';
@@ -10,6 +9,9 @@
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-radio.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -23,9 +25,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-radio.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the radio button: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     .mat-mdc-radio-button {
@@ -52,6 +59,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-radio.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -69,6 +78,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-radio.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -84,10 +95,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-radio.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the radio button: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -104,11 +120,13 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-radio-theme.theme(map.get($tokens, tokens-mdc-radio.$prefix));
-    @include mdc-form-field-theme.theme(map.get($tokens, tokens-mdc-form-field.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-radio.$prefix, map.get($tokens, tokens-mat-radio.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-radio.$prefix, $options...);
+  $mat-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mat-radio.$prefix, $options...);
+  // Don't pass $options here, since the mdc-form-field doesn't support color options,
+  // only the mdc-radio and mat-radio do.
+  $mdc-form-field-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-form-field.$prefix);
+  @include mdc-radio-theme.theme($mdc-radio-tokens);
+  @include mdc-form-field-theme.theme($mdc-form-field-tokens);
+  @include token-utils.create-token-values(tokens-mat-radio.$prefix, $mat-radio-tokens);
 }

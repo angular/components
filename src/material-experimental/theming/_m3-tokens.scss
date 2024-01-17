@@ -643,7 +643,10 @@
     ),
     _namespace-tokens(
       (mdc, radio),
-      mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
+        custom-tokens.mdc-radio-color-variants($systems, $exclude-hardcoded)
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -661,7 +664,10 @@
     ),
     _namespace-tokens(
       (mdc, switch),
-      mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
+        custom-tokens.mdc-switch-color-variants($systems, $exclude-hardcoded)
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -816,11 +822,6 @@
     _namespace-tokens(
       (mat, sidenav),
       custom-tokens.sidenav($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, slide-toggle),
-      custom-tokens.slide-toggle($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
