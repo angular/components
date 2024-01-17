@@ -12,7 +12,17 @@ $prefix: (mat, protected-button);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    // Start/end padding of the button.
+    horizontal-padding: 16px,
+
+    // Space between the icon and the button's main content.
+    icon-spacing: 8px,
+
+    // Amount by which to offset the icon so that its presence
+    // doesn't increase throw off the horizontal padding.
+    icon-offset: -4px,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.

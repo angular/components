@@ -111,6 +111,15 @@
         tokens-mdc-protected-button.get-unthemable-tokens());
       @include mdc-button-outlined-theme.theme(
         tokens-mdc-outlined-button.get-unthemable-tokens());
+
+      @include token-utils.create-token-values(tokens-mat-text-button.$prefix,
+        tokens-mat-text-button.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mat-filled-button.$prefix,
+        tokens-mat-filled-button.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mat-protected-button.$prefix,
+        tokens-mat-protected-button.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mat-outlined-button.$prefix,
+        tokens-mat-outlined-button.get-unthemable-tokens());
     }
   }
 }

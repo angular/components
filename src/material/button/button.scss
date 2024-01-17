@@ -1,11 +1,11 @@
 @use 'sass:map';
 @use '@material/button/button' as mdc-button;
-@use '@material/button/button-base' as mdc-button-base;
 @use '@material/button/variables' as mdc-button-variables;
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
+@use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
@@ -31,6 +31,8 @@
     $mdc-text-button-slots: tokens-mdc-text-button.get-token-slots();
 
     @include mdc-button-text-theme.theme-styles($mdc-text-button-slots);
+    @include button-base.mat-private-button-horizontal-layout(tokens-mat-text-button.$prefix,
+      tokens-mat-text-button.get-token-slots(), true);
     @include button-base.mat-private-button-ripple(tokens-mat-text-button.$prefix,
       tokens-mat-text-button.get-token-slots());
     @include button-base.mat-private-button-touch-target(false, tokens-mat-text-button.$prefix,
@@ -49,6 +51,8 @@
     $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
 
     @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
+    @include button-base.mat-private-button-horizontal-layout(tokens-mat-filled-button.$prefix,
+      tokens-mat-filled-button.get-token-slots(), false);
     @include button-base.mat-private-button-ripple(tokens-mat-filled-button.$prefix,
       tokens-mat-filled-button.get-token-slots());
     @include button-base.mat-private-button-touch-target(false, tokens-mat-filled-button.$prefix,
@@ -76,6 +80,8 @@
       pressed-container-elevation: null,
       container-shadow-color: null,
     )));
+    @include button-base.mat-private-button-horizontal-layout(tokens-mat-protected-button.$prefix,
+      tokens-mat-protected-button.get-token-slots(), false);
     @include button-base.mat-private-button-ripple(tokens-mat-protected-button.$prefix,
       tokens-mat-protected-button.get-token-slots());
     @include button-base.mat-private-button-touch-target(false, tokens-mat-protected-button.$prefix,
@@ -115,6 +121,8 @@
     $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
 
     @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
+    @include button-base.mat-private-button-horizontal-layout(tokens-mat-outlined-button.$prefix,
+      tokens-mat-outlined-button.get-token-slots(), false);
     @include button-base.mat-private-button-ripple(tokens-mat-outlined-button.$prefix,
       tokens-mat-outlined-button.get-token-slots());
     @include button-base.mat-private-button-touch-target(false, tokens-mat-outlined-button.$prefix,
@@ -143,34 +151,17 @@
 .mat-mdc-outlined-button {
   @include button-base.mat-private-button-interactive();
   @include style-private.private-animation-noop();
-}
 
-// MDC expects button icons to contain this HTML content:
-// ```html
-//   <span class="mdc-button__icon material-icons">favorite</span>
-// ```
-// However, Angular Material expects a `mat-icon` instead. The following
-// mixins will style the icons appropriately.
-.mat-mdc-button {
+  // Similar to MDC's `_icon-structure`, apart from the margin which we
+  // handle via custom tokens in `mat-private-button-horizontal-layout`.
   & > .mat-icon {
-    @include mdc-button-base.icon();
-  }
-  .mdc-button__label + .mat-icon {
-    @include mdc-button-base.icon-trailing();
-  }
-}
-
-.mat-mdc-unelevated-button,
-.mat-mdc-raised-button,
-.mat-mdc-outlined-button {
-  // Icons inside contained buttons have different styles due to increased button padding
-  & > .mat-icon {
-    @include mdc-button-base.icon();
-    @include mdc-button-base.icon-contained();
-  }
-
-  .mdc-button__label + .mat-icon {
-    @include mdc-button-base.icon-contained-trailing();
+    $icon-size: mdc-typography.px-to-rem(18px);
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    font-size: $icon-size;
+    height: $icon-size;
+    width: $icon-size;
   }
 }
 
