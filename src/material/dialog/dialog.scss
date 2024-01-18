@@ -1,4 +1,5 @@
 @use '@material/dialog' as mdc-dialog;
+@use '@material/animation/animation' as mdc-animation;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../core/mdc-helpers/mdc-helpers';
@@ -33,14 +34,20 @@ $mat-dialog-button-horizontal-margin: 8px !default;
     outline: 0;
 
     .mdc-dialog__container {
-      transition-duration: var(--mat-dialog-transition-duration, 0ms);
+      transition: opacity linear var(--mat-dialog-transition-duration, 0ms);
+    }
+
+    .mdc-dialog__surface {
+      transition: mdc-animation.enter(transform, var(--mat-dialog-transition-duration, 0ms));
     }
 
     // Angular Material supports disabling all animations when NoopAnimationsModule is imported.
     // TODO(devversion): Look into using MDC's Sass queries to separate the animation styles and
     // conditionally add them. Consider the size cost and churn when deciding whether to switch.
-    &._mat-animation-noopable .mdc-dialog__container {
-      transition: none;
+    &._mat-animation-noopable {
+      .mdc-dialog__container, .mdc-dialog__surface {
+        transition: none;
+      }
     }
   }
 }
