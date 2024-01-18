@@ -22,6 +22,18 @@
     @include mat.tabs-color($theme, $color-variant: $color-variant);
   }
 
+  &.mat-mdc-slide-toggle {
+    @include mat.slide-toggle-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-form-field {
+    @include mat.select-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-radio-button {
+    @include mat.radio-color($theme, $color-variant: $color-variant);
+  }
+
   // M3 dropped support for warn/error color FABs.
   @if $color-variant != error {
     &.mat-mdc-fab,
