@@ -218,53 +218,17 @@
   ));
 }
 
-/// Fixes inconsistent values in the text field color tokens. Applies to both filled and outlined
-/// variants.
-/// @param {Map} $initial-tokens Map of text field tokens currently being generated.
-/// @param {Map} $all-tokens Map of all text field tokens, including hardcoded values.
-/// This is necessary in order to do opacity lookups.
-/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-text-field-color-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
-    (
-      color: disabled-active-indicator-color,
-      opacity: disabled-active-indicator-opacity
-    ),
-    (
-      color: disabled-container-color,
-      opacity: disabled-container-opacity
-    ),
-    (
-      color: disabled-input-text-color,
-      opacity: disabled-input-text-opacity
-    ),
-    (
-      color: disabled-label-text-color,
-      opacity: disabled-label-text-opacity
-    ),
-    (
-      color: disabled-leading-icon-color,
-      opacity: disabled-leading-icon-opacity
-    ),
-    (
-      color: disabled-supporting-text-color,
-      opacity: disabled-supporting-text-opacity
-    ),
-    (
-      color: disabled-trailing-icon-color,
-      opacity: disabled-trailing-icon-opacity
-    )
-  ));
-}
-
-
 /// Fixes inconsistent values in the filled text field tokens so that they can produce valid
 /// styles.
 /// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
 /// @param {Map} $all-tokens Map of all filled text field tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-filled-text-field-tokens($initial-tokens, $all-tokens) {
-  $tokens: _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-filled-text-field-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-filled-text-field-values((), false);
+
+  $tokens: _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-active-indicator-color,
       opacity: disabled-active-indicator-opacity
@@ -378,8 +342,12 @@
 /// @param {Map} $all-tokens Map of all outlined text field tokens, including hardcoded values.
 /// This is necessary in order to do opacity lookups.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-outlined-text-field-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-outlined-text-field-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-outlined-text-field-values((), false);
+
+  @return _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-outline-color,
       opacity: disabled-outline-opacity
@@ -492,7 +460,7 @@
       (mdc, checkbox),
       (
         _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
-        _map_values(
+        _map-values(
             custom-tokens.mdc-checkbox-color-variants($systems, $exclude-hardcoded),
             meta.get-function(_fix-checkbox-tokens)
         )
@@ -506,7 +474,10 @@
     ),
     _namespace-tokens(
       (mdc, circular-progress),
-      mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
+        custom-tokens.mdc-circular-progress-color-variants($systems, $exclude-hardcoded),
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -547,11 +518,14 @@
     ),
     _namespace-tokens(
       (mdc, filled-text-field),
-      _fix-filled-text-field-tokens(
-        mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-filled-text-field-values($systems, false)
+      (
+        _fix-filled-text-field-tokens(
+          mdc-tokens.md-comp-filled-text-field-values($systems, $exclude-hardcoded)
+        ),
+        _map-values(
+          custom-tokens.mdc-filled-text-field-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-filled-text-field-tokens)
+        )
       ),
       $token-slots
     ),
@@ -613,7 +587,10 @@
     ),
     _namespace-tokens(
       (mdc, linear-progress),
-      mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
+      (
+        mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
+        custom-tokens.mdc-linear-progress-color-variants($systems, $exclude-hardcoded),
+      ),
       $token-slots
     ),
     _namespace-tokens(
@@ -628,11 +605,14 @@
     ),
     _namespace-tokens(
       (mdc, outlined-text-field),
-      _fix-outlined-text-field-tokens(
-        mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-outlined-text-field-values($systems, false),
+      (
+        _fix-outlined-text-field-tokens(
+          mdc-tokens.md-comp-outlined-text-field-values($systems, $exclude-hardcoded)
+        ),
+        _map-values(
+          custom-tokens.mdc-outlined-text-field-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-outlined-text-field-tokens)
+        )
       ),
       $token-slots
     ),

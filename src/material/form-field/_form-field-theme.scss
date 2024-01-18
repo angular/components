@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
 @use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
@@ -10,6 +9,9 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-form-field.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -29,9 +31,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-form-field.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the form field: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -63,6 +70,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-form-field.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -79,6 +88,8 @@
   }
 }
 
+/// Outputs density theme styles for the mat-form-field.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -91,10 +102,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-form-field.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the form field: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-form-field') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -111,13 +127,14 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-filled-text-field-theme.theme(
-        map.get($tokens, tokens-mdc-filled-text-field.$prefix));
-    @include mdc-outlined-text-field-theme.theme(
-        map.get($tokens, tokens-mdc-outlined-text-field.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-form-field.$prefix, map.get($tokens, tokens-mat-form-field.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-filled-text-field-tokens:
+    token-utils.get-tokens-for($tokens, tokens-mdc-filled-text-field.$prefix, $options...);
+  $mdc-outlined-text-field-tokens:
+    token-utils.get-tokens-for($tokens, tokens-mdc-outlined-text-field.$prefix, $options...);
+  $mat-form-field-tokens:
+    token-utils.get-tokens-for($tokens, tokens-mat-form-field.$prefix, $options...);
+  @include mdc-filled-text-field-theme.theme($mdc-filled-text-field-tokens);
+  @include mdc-outlined-text-field-theme.theme($mdc-outlined-text-field-tokens);
+  @include token-utils.create-token-values(tokens-mat-form-field.$prefix, $mat-form-field-tokens);
 }

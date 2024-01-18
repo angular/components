@@ -172,15 +172,15 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-datepicker
 @function datepicker($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     calendar-date-in-range-state-background-color:
       map.get($systems, md-sys-color, primary-container),
     calendar-date-in-comparison-range-state-background-color:
-      map.get($systems, md-sys-color, secondary-container),
-    calendar-date-in-overlap-range-state-background-color:
       map.get($systems, md-sys-color, tertiary-container),
+    calendar-date-in-overlap-range-state-background-color:
+      map.get($systems, md-sys-color, secondary-container),
     calendar-date-in-overlap-range-selected-state-background-color:
-      map.get($systems, md-sys-color, tertiary),
+      map.get($systems, md-sys-color, secondary),
     calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-primary),
     calendar-date-selected-state-background-color: map.get($systems, md-sys-color, primary),
     calendar-date-selected-disabled-state-background-color: mat.private-safe-color-change(
@@ -234,7 +234,43 @@
     calendar-period-button-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
     calendar-header-text-size: map.get($systems, md-sys-typescale, title-small-size),
     calendar-header-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, secondary-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-secondary),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-in-overlap-range-state-background-color:
+          map.get($systems, md-sys-color, primary-container),
+      calendar-date-in-overlap-range-selected-state-background-color:
+          map.get($systems, md-sys-color, primary),
+    ),
+    tertiary: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, tertiary-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-tertiary),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-in-comparison-range-state-background-color:
+          map.get($systems, md-sys-color, primary-container),
+    ),
+    error: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, error-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-error),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, error),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, error),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, error),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-divider.
@@ -324,7 +360,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-form-field
 @function form-field($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return (mat.private-merge-all(
     _generate-typography-tokens($systems, container-text, body-large),
     _generate-typography-tokens($systems, subscript-text, body-small),
     (
@@ -343,7 +379,19 @@
       focus-select-arrow-color: map.get($systems, md-sys-color, primary),
       outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
     )
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-grid-list.
@@ -1088,6 +1136,10 @@
   );
 }
 
+/// Generates custom token overrides for the mdc-radio color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-radio
 @function mdc-radio-color-variants($systems, $exclude-hardcoded) {
   @return (
     primary: (), // Default, no overrides needed
@@ -1117,6 +1169,94 @@
       selected-icon-color: map.get($systems, md-sys-color, error),
       selected-pressed-icon-color: map.get($systems, md-sys-color, error),
       unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+}
+
+/// Generates custom token overrides for the mdc-circular-progress color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-circular-progress
+@function mdc-circular-progress-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-indicator-color: map.get($systems, md-sys-color, error),
+    )
+  );
+}
+
+/// Generates custom token overrides for the mdc-linear-progress color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-linear-progress
+@function mdc-linear-progress-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-indicator-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+}
+
+/// Generates custom token overrides for the mdc-filled-form-field color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-filled-form-field
+@function mdc-filled-text-field-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-active-indicator-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+}
+
+/// Generates custom token overrides for the mdc-outlined-form-field color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-outlined-form-field
+@function mdc-outlined-text-field-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-outline-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-outline-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-outline-color: map.get($systems, md-sys-color, error),
     ),
   );
 }
