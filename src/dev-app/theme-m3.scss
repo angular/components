@@ -4,6 +4,7 @@
 
 @mixin color-variant-styles($theme, $color-variant) {
   @include mat.option-color($theme, $color-variant: $color-variant);
+  @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
 
   &.mat-icon {
     @include mat.icon-color($theme, $color-variant: $color-variant);
@@ -31,6 +32,24 @@
   }
 
   &.mat-mdc-radio-button {
+    @include mat.radio-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-progress-bar {
+    @include mat.progress-bar-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-form-field {
+    @include mat.form-field-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-datepicker-content {
+    @include mat.datepicker-color($theme, $color-variant: $color-variant);
+  }
+
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include mat.checkbox-color($theme, $color-variant: $color-variant);
     @include mat.radio-color($theme, $color-variant: $color-variant);
   }
 
