@@ -47,7 +47,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-badge
 @function badge($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     background-color: map.get($systems, md-sys-color, error),
     text-color: map.get($systems, md-sys-color, on-error),
     disabled-state-background-color: mat.private-safe-color-change(
@@ -60,7 +60,36 @@
     text-weight: map.get($systems, md-sys-typescale, label-small-weight),
     small-size-text-size: _hardcode(0, $exclude-hardcoded),
     large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
-  );
+  ), (
+    primary: (
+      background-color: map.get($systems, md-sys-color, primary),
+      text-color: map.get($systems, md-sys-color, on-primary),
+      disabled-state-background-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, primary),
+        $alpha: 0.38,
+      ),
+      disabled-state-text-color: map.get($systems, md-sys-color, on-primary),
+    ),
+    secondary: (
+      background-color: map.get($systems, md-sys-color, secondary),
+      text-color: map.get($systems, md-sys-color, on-secondary),
+      disabled-state-background-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, secondary),
+        $alpha: 0.38,
+      ),
+      disabled-state-text-color: map.get($systems, md-sys-color, on-secondary),
+    ),
+    tertiary: (
+      background-color: map.get($systems, md-sys-color, tertiary),
+      text-color: map.get($systems, md-sys-color, on-tertiary),
+      disabled-state-background-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, tertiary),
+        $alpha: 0.38,
+      ),
+      disabled-state-text-color: map.get($systems, md-sys-color, on-tertiary),
+    ),
+    error: () // Default, no overrides needed
+  ));
 }
 
 /// Generates custom tokens for the mat-bottom-sheet.
@@ -83,7 +112,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-button-toggle
 @function button-toggle($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     shape: _hardcode(9999px, $exclude-hardcoded),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
@@ -107,7 +136,22 @@
     ),
     divider-color: map.get($systems, md-sys-color, outline),
     text-font: map.get($systems, md-sys-typescale, label-large-font),
-  );
+  ), (
+    // Color variants:
+    primary: (
+      selected-state-background-color: map.get($systems, md-sys-color, primary-container),
+      selected-state-text-color: map.get($systems, md-sys-color, on-primary-container),
+    ),
+    secondary: (), // Default, no overrides needed
+    tertiary: (
+      selected-state-background-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-state-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+    ),
+    error: (
+      selected-state-background-color: map.get($systems, md-sys-color, error-container),
+      selected-state-text-color: map.get($systems, md-sys-color, on-error-container),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-card.
@@ -131,7 +175,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mdc-chip
 @function chip($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return (mat.private-merge-all(
     _generate-typography-tokens($systems, label-text, label-large),
     (
       container-shape: _hardcode((
@@ -164,7 +208,19 @@
       focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
       focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ),
-  );
+  ), (
+    // Color variants:
+    primary: (
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-primary-container),
+    ),
+    secondary: (), // Default, no overrides needed.
+    tertiary: (
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+    ),
+    error: (
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-error-container),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-datepicker.
@@ -437,7 +493,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-button
 @function text-button($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     horizontal-padding: _hardcode(12px, $exclude-hardcoded),
     with-icon-horizontal-padding: _hardcode(16px, $exclude-hardcoded),
     icon-spacing: _hardcode(8px, $exclude-hardcoded),
@@ -451,7 +507,31 @@
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      state-layer-color: map.get($systems, md-sys-color, secondary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, secondary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      )
+    ),
+    tertiary: (
+      state-layer-color: map.get($systems, md-sys-color, tertiary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, tertiary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      )
+    ),
+    error: (
+      state-layer-color: map.get($systems, md-sys-color, error),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, error),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      )
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-flat-button.
@@ -459,7 +539,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-flat-button
 @function filled-button($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     horizontal-padding: _hardcode(24px, $exclude-hardcoded),
     icon-spacing: _hardcode(8px, $exclude-hardcoded),
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
@@ -472,7 +552,31 @@
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      state-layer-color: map.get($systems, md-sys-color, on-secondary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-secondary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      state-layer-color: map.get($systems, md-sys-color, on-tertiary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-tertiary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    error: (
+      state-layer-color: map.get($systems, md-sys-color, on-error),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-error),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-raised-button.
@@ -480,7 +584,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-raised-button
 @function elevated-button($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     horizontal-padding: _hardcode(24px, $exclude-hardcoded),
     icon-spacing: _hardcode(8px, $exclude-hardcoded),
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
@@ -493,7 +597,31 @@
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      state-layer-color: map.get($systems, md-sys-color, secondary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, secondary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      state-layer-color: map.get($systems, md-sys-color, tertiary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, tertiary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    error: (
+      state-layer-color: map.get($systems, md-sys-color, error),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, error),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-outlined-button.
@@ -501,7 +629,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-outlined-button
 @function outlined-button($systems, $exclude-hardcoded) {
-  @return (
+  @return ((
     horizontal-padding: _hardcode(24px, $exclude-hardcoded),
     icon-spacing: _hardcode(8px, $exclude-hardcoded),
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
@@ -514,7 +642,31 @@
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      state-layer-color: map.get($systems, md-sys-color, secondary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, secondary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      state-layer-color: map.get($systems, md-sys-color, tertiary),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, tertiary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    error: (
+      state-layer-color: map.get($systems, md-sys-color, error),
+      ripple-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, error),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
 }
 
 /// Generates custom tokens for the mat-icon-button.
@@ -636,14 +788,29 @@
   $disabled-color: mat.private-safe-color-change(
     map.get($systems, md-sys-color, on-surface), $alpha: 0.38);
 
-  @return (
-    selected-icon-color: map.get($systems, 'md-sys-color', 'primary'),
-    selected-checkmark-color: map.get($systems, 'md-sys-color', 'on-primary'),
-    unselected-icon-color: map.get($systems, 'md-sys-color', 'on-surface-variant'),
-    disabled-selected-checkmark-color: map.get($systems, 'md-sys-color', 'surface'),
+  @return ((
+    selected-icon-color: map.get($systems, md-sys-color, primary),
+    selected-checkmark-color: map.get($systems, md-sys-color, on-primary),
+    unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    disabled-selected-checkmark-color: map.get($systems, md-sys-color, surface),
     disabled-unselected-icon-color: $disabled-color,
     disabled-selected-icon-color: $disabled-color,
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      selected-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-secondary),
+    ),
+    tertiary: (
+      selected-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-tertiary),
+    ),
+    error: (
+      selected-icon-color: map.get($systems, md-sys-color, error),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-error),
+    )
+  ));
 }
 
 /// Generates custom tokens for the minimal variant of mat-pseudo-checkbox.
@@ -651,11 +818,23 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the minimal variant of mat-pseudo-checkbox
 @function minimal-pseudo-checkbox($systems, $exclude-hardcoded) {
-  @return (
-    selected-checkmark-color: map.get($systems, 'md-sys-color', 'primary'),
+  @return ((
+    selected-checkmark-color: map.get($systems, md-sys-color, primary),
     disabled-selected-checkmark-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-  );
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      selected-checkmark-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-checkmark-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-checkmark-color: map.get($systems, md-sys-color, error),
+    )
+  ));
 }
 
 /// Generates custom tokens for mat-checkbox.
@@ -1260,3 +1439,206 @@
     ),
   );
 }
+
+/// Generates custom token overrides for the mdc-text-button color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-text-button
+@function mdc-text-button-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      hover-label-text-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, secondary)
+    ),
+    tertiary: (
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      hover-label-text-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, tertiary)
+    ),
+    error: (
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      hover-label-text-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-text-color: map.get($systems, md-sys-color, error),
+      pressed-label-text-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, error)
+    )
+  );
+}
+
+/// Generates custom token overrides for the mdc-elevated-button color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-elevated-button
+@function mdc-elevated-button-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      hover-label-text-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, secondary)
+    ),
+    tertiary: (
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      hover-label-text-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, tertiary)
+    ),
+    error: (
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      hover-label-text-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-text-color: map.get($systems, md-sys-color, error),
+      pressed-label-text-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, error)
+    )
+  );
+}
+
+/// Generates custom token overrides for the mdc-filled-button color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-filled-button
+@function mdc-filled-button-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      container-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-secondary),
+      hover-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, on-secondary),
+      label-text-color: map.get($systems, md-sys-color, on-secondary),
+      pressed-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, on-secondary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, on-secondary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, on-secondary),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-secondary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, on-secondary)
+    ),
+    tertiary: (
+      container-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-tertiary),
+      hover-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, on-tertiary),
+      label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      pressed-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, on-tertiary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary)
+    ),
+    error: (
+      container-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, on-error),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-error),
+      hover-label-text-color: map.get($systems, md-sys-color, on-error),
+      hover-state-layer-color: map.get($systems, md-sys-color, on-error),
+      label-text-color: map.get($systems, md-sys-color, on-error),
+      pressed-label-text-color: map.get($systems, md-sys-color, on-error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, on-error),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, on-error),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, on-error),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-error),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, on-error)
+    )
+  );
+}
+
+/// Generates custom token overrides for the mdc-outlined-button color variants.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of color variant token overrides for the mdc-outlined-button
+@function mdc-outlined-button-color-variants($systems, $exclude-hardcoded) {
+  @return (
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-outline-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      hover-label-text-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, secondary)
+    ),
+    tertiary: (
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-outline-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      hover-label-text-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, tertiary)
+    ),
+    error: (
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-outline-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      hover-label-text-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-text-color: map.get($systems, md-sys-color, error),
+      pressed-label-text-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, error)
+    )
+  );
+}
+

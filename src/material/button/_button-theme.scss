@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@material/button/button-text-theme' as mdc-button-text-theme;
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
@@ -78,25 +77,39 @@
   @include token-utils.create-token-values(tokens-mat-outlined-button.$prefix, $mat-tokens);
 }
 
-@mixin _theme-from-tokens($tokens) {
-  @if ($tokens != ()) {
-    @include mdc-button-text-theme.theme(map.get($tokens, tokens-mdc-text-button.$prefix));
-    @include mdc-button-protected-theme.theme(
-      map.get($tokens, tokens-mdc-protected-button.$prefix));
-    @include mdc-button-filled-theme.theme(map.get($tokens, tokens-mdc-filled-button.$prefix));
-    @include mdc-button-outlined-theme.theme(map.get($tokens, tokens-mdc-outlined-button.$prefix));
-
-    @include token-utils.create-token-values(
-      tokens-mat-text-button.$prefix, map.get($tokens, tokens-mat-text-button.$prefix));
-    @include token-utils.create-token-values(
-      tokens-mat-protected-button.$prefix, map.get($tokens, tokens-mat-protected-button.$prefix));
-    @include token-utils.create-token-values(
-      tokens-mat-filled-button.$prefix, map.get($tokens, tokens-mat-filled-button.$prefix));
-    @include token-utils.create-token-values(
-      tokens-mat-outlined-button.$prefix, map.get($tokens, tokens-mat-outlined-button.$prefix));
-  }
+@mixin _theme-from-tokens($tokens, $options...) {
+  $mdc-text-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mdc-text-button.$prefix, $options...);
+  $mdc-protected-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mdc-protected-button.$prefix, $options...);
+  $mdc-filled-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mdc-filled-button.$prefix, $options...);
+  $mdc-outlined-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mdc-outlined-button.$prefix, $options...);
+  $mat-text-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mat-text-button.$prefix, $options...);
+  $mat-protected-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mat-protected-button.$prefix, $options...);
+  $mat-filled-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mat-filled-button.$prefix, $options...);
+  $mat-outlined-button-tokens:
+      token-utils.get-tokens-for($tokens, tokens-mat-outlined-button.$prefix, $options...);
+  @include mdc-button-text-theme.theme($mdc-text-button-tokens);
+  @include mdc-button-protected-theme.theme($mdc-protected-button-tokens);
+  @include mdc-button-filled-theme.theme($mdc-filled-button-tokens);
+  @include mdc-button-outlined-theme.theme($mdc-outlined-button-tokens);
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, $mat-text-button-tokens);
+  @include token-utils.create-token-values(
+      tokens-mat-protected-button.$prefix, $mat-protected-button-tokens);
+  @include token-utils.create-token-values(
+      tokens-mat-filled-button.$prefix, $mat-filled-button-tokens);
+  @include token-utils.create-token-values(
+      tokens-mat-outlined-button.$prefix, $mat-outlined-button-tokens);
 }
 
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-button.
+/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -124,9 +137,14 @@
   }
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -194,6 +212,8 @@
   }
 }
 
+/// Outputs typography theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
@@ -221,6 +241,8 @@
   }
 }
 
+/// Outputs density theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
@@ -248,10 +270,15 @@
   }
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);

@@ -5,6 +5,7 @@
 @mixin color-variant-styles($theme, $color-variant) {
   @include mat.option-color($theme, $color-variant: $color-variant);
   @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
+  @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
 
   &.mat-icon {
     @include mat.icon-color($theme, $color-variant: $color-variant);
@@ -47,6 +48,14 @@
     @include mat.datepicker-color($theme, $color-variant: $color-variant);
   }
 
+  &.mat-mdc-button-base {
+    @include mat.button-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-standard-chip {
+    @include mat.chips-color($theme, $color-variant: $color-variant);
+  }
+
   .mdc-list-item__start,
   .mdc-list-item__end {
     @include mat.checkbox-color($theme, $color-variant: $color-variant);
@@ -68,13 +77,22 @@
   .mat-primary {
     @include color-variant-styles($theme, primary);
   }
+  .mat-badge {
+    @include mat.badge-color($theme, $color-variant: primary);
+  }
 
   .mat-accent {
     @include color-variant-styles($theme, secondary);
   }
+  .mat-badge-accent {
+    @include mat.badge-color($theme, $color-variant: secondary);
+  }
 
   .mat-warn {
     @include color-variant-styles($theme, error);
+  }
+  .mat-badge-warn {
+    @include mat.badge-color($theme, $color-variant: error);
   }
 }
 
