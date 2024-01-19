@@ -2,6 +2,7 @@
 @use '@material/fab' as mdc-fab;
 @use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
 @use '@material/fab/fab-theme' as mdc-fab-theme;
+@use '@material/fab/fab-small-theme' as mdc-fab-small-theme;
 @use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
@@ -13,9 +14,12 @@
 @use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
 @use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
 @use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
+@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
+@use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   $mdc-fab-token-slots: tokens-mdc-fab.get-token-slots();
+  $mdc-fab-small-token-slots: tokens-mdc-fab-small.get-token-slots();
   $mdc-extended-fab-token-slots: tokens-mdc-extended-fab.get-token-slots();
   $exclude-tokens: (
     // Exclude the elevation tokens here since we output them manually below.
@@ -30,8 +34,13 @@
   // some unnecessary typography styles for the extended FAB.
   @include mdc-fab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
 
-  .mat-mdc-fab, .mat-mdc-mini-fab {
+  .mat-mdc-fab {
     @include mdc-fab-theme.theme-styles(map.merge($mdc-fab-token-slots, $exclude-tokens));
+  }
+
+  .mat-mdc-mini-fab {
+    @include mdc-fab-small-theme.theme-styles(
+      map.merge($mdc-fab-small-token-slots, $exclude-tokens));
   }
 
   .mat-mdc-extended-fab {
@@ -46,46 +55,8 @@
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
   @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-touch-target(true, tokens-mat-fab.$prefix,
-    tokens-mat-fab.get-token-slots());
-  @include button-base.mat-private-button-ripple(tokens-mat-fab.$prefix,
-    tokens-mat-fab.get-token-slots());
   @include style-private.private-animation-noop();
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
-
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
-      @include token-utils.create-token-slot(color, foreground-color, inherit);
-    }
-  }
-
-  @include token-utils.use-tokens(tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()) {
-    @include button-base.mat-private-button-elevation(container-elevation);
-
-    &:hover {
-      @include button-base.mat-private-button-elevation(hover-container-elevation);
-    }
-
-    &:focus {
-      @include button-base.mat-private-button-elevation(focus-container-elevation);
-    }
-
-    &:active, &:focus:active {
-      @include button-base.mat-private-button-elevation(pressed-container-elevation);
-    }
-  }
-
-  @include button-base.mat-private-button-disabled {
-    // Necessary for interactive disabled buttons.
-    &, &:focus {
-      box-shadow: none;
-    }
-
-    @include token-utils.use-tokens(tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()) {
-      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
-      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
-    }
-  }
 
   // MDC adds some styles to fab and mini-fab that conflict with some of our focus indicator
   // styles and don't actually do anything. This undoes those conflicting styles.
@@ -111,11 +82,17 @@
     $offset: calc(#{$border-width} + 2px);
     margin: calc(#{$offset} * -1);
   }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
 }
 
-.mat-mdc-extended-fab {
-  @include token-utils.use-tokens(tokens-mdc-extended-fab.$prefix,
-    tokens-mdc-extended-fab.get-token-slots()) {
+@mixin _fab-elevation($mdc-tokens) {
+  @include token-utils.use-tokens($mdc-tokens...) {
     @include button-base.mat-private-button-elevation(container-elevation);
 
     &:hover {
@@ -130,6 +107,45 @@
       @include button-base.mat-private-button-elevation(pressed-container-elevation);
     }
   }
+}
+
+@mixin _fab-structure($mdc-tokens, $mat-tokens) {
+  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
+  @include button-base.mat-private-button-ripple($mat-tokens...);
+
+  @include mdc-helpers.disable-mdc-fallback-declarations {
+    @include token-utils.use-tokens($mat-tokens...) {
+      @include token-utils.create-token-slot(color, foreground-color, inherit);
+    }
+  }
+
+  @include _fab-elevation($mdc-tokens);
+
+  @include button-base.mat-private-button-disabled {
+    @include token-utils.use-tokens($mat-tokens...) {
+      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
+      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
+    }
+  }
+}
+
+.mat-mdc-fab {
+  @include _fab-structure(
+    (tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()),
+    (tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()),
+  );
+}
+
+.mat-mdc-mini-fab {
+  @include _fab-structure(
+    (tokens-mdc-fab-small.$prefix, tokens-mdc-fab-small.get-token-slots()),
+    (tokens-mat-fab-small.$prefix, tokens-mat-fab-small.get-token-slots()),
+  );
+}
+
+.mat-mdc-extended-fab {
+  @include _fab-elevation((tokens-mdc-extended-fab.$prefix,
+    tokens-mdc-extended-fab.get-token-slots()));
 
   @include button-base.mat-private-button-disabled {
     // Necessary for interactive disabled buttons.
@@ -146,6 +162,12 @@
     );
   }
 
+  // All FABs are square except the extended ones so we
+  // need to set the touch target back to full-width.
+  .mat-mdc-button-touch-target {
+    width: 100%;
+  }
+
   // For Extended FAB with text label followed by icon.
   // We are checking for the a button class because white this is a FAB it
   // uses the same template as button.
@@ -159,8 +181,3 @@
   }
 }
 
-// All FABs are square except the extended ones so we
-// need to set the touch target back to full-width.
-.mat-mdc-extended-fab .mat-mdc-button-touch-target {
-  width: 100%;
-}

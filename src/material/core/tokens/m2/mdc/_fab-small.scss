@@ -4,7 +4,7 @@
 @use 'sass:map';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, fab);
+$prefix: (mdc, fab-small);
 
 @function get-unthemable-tokens() {
   @return (
@@ -19,7 +19,6 @@ $prefix: (mdc, fab);
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
     container-height: null,
-    container-surface-tint-layer-color: null,
     container-width: null,
 
     focus-icon-color: null,

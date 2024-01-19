@@ -14,6 +14,7 @@
 @use './mat/divider' as tokens-mat-divider;
 @use './mat/expansion' as tokens-mat-expansion;
 @use './mat/fab' as tokens-mat-fab;
+@use './mat/fab-small' as tokens-mat-fab-small;
 @use './mat/form-field' as tokens-mat-form-field;
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
@@ -50,6 +51,7 @@
 @use './mdc/elevated-card' as tokens-mdc-elevated-card;
 @use './mdc/extended-fab' as tokens-mdc-extended-fab;
 @use './mdc/fab' as tokens-mdc-fab;
+@use './mdc/fab-small' as tokens-mdc-fab-small;
 @use './mdc/form-field' as tokens-mdc-form-field;
 @use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use './mdc/icon-button' as tokens-mdc-icon-button;
@@ -118,6 +120,7 @@
       _get-tokens-for-module($theme, tokens-mat-divider),
       _get-tokens-for-module($theme, tokens-mat-expansion),
       _get-tokens-for-module($theme, tokens-mat-fab),
+      _get-tokens-for-module($theme, tokens-mat-fab-small),
       _get-tokens-for-module($theme, tokens-mat-filled-button),
       _get-tokens-for-module($theme, tokens-mat-form-field),
       _get-tokens-for-module($theme, tokens-mat-grid-list),
@@ -153,6 +156,7 @@
       _get-tokens-for-module($theme, tokens-mdc-elevated-card),
       _get-tokens-for-module($theme, tokens-mdc-extended-fab),
       _get-tokens-for-module($theme, tokens-mdc-fab),
+      _get-tokens-for-module($theme, tokens-mdc-fab-small),
       _get-tokens-for-module($theme, tokens-mdc-filled-button),
       _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
       _get-tokens-for-module($theme, tokens-mdc-form-field),

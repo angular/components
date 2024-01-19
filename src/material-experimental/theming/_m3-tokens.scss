@@ -504,6 +504,19 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mdc, fab-small),
+      (
+        mdc-tokens.md-comp-fab-primary-small-values($systems, $exclude-hardcoded),
+        (
+          // Color variants
+          primary: (), // Default, no overrides needed.
+          secondary: mdc-tokens.md-comp-fab-secondary-small-values($systems, $exclude-hardcoded),
+          tertiary: mdc-tokens.md-comp-fab-tertiary-small-values($systems, $exclude-hardcoded)
+        )
+      ),
+      $token-slots
+    ),
+    _namespace-tokens(
       (mdc, extended-fab),
       (
         mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
@@ -701,6 +714,11 @@
     _namespace-tokens(
       (mat, fab),
       custom-tokens.fab($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, fab-small),
+      custom-tokens.fab-small($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
