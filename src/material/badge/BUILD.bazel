@@ -4,6 +4,7 @@ load(
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
+    "sass_binary",
     "sass_library",
 )
 
@@ -15,6 +16,9 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = [
+        ":badge_scss",
+    ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -23,7 +27,16 @@ ng_module(
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
-    ] + glob(["**/*.html"]),
+    ],
+)
+
+sass_binary(
+    name = "badge_scss",
+    src = "badge.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_library(

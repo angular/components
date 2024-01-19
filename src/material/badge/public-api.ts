@@ -7,4 +7,4 @@
  */
 
 export * from './badge-module';
-export * from './badge';
+export {MatBadge, MatBadgePosition, MatBadgeSize} from './badge';
