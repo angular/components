@@ -9,9 +9,14 @@
 import {AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {
+  ApplicationRef,
   booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  createComponent,
   Directive,
   ElementRef,
+  EnvironmentInjector,
   inject,
   Inject,
   Input,
@@ -20,6 +25,7 @@ import {
   OnInit,
   Optional,
   Renderer2,
+  ViewEncapsulation,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -41,6 +47,22 @@ export type MatBadgePosition =
 export type MatBadgeSize = 'small' | 'medium' | 'large';
 
 const BADGE_CONTENT_CLASS = 'mat-badge-content';
+
+/** Keeps track of the apps currently containing badges. */
+const badgeApps = new Set<ApplicationRef>();
+
+/**
+ * Component used to load the structural styles of the badge.
+ * @docs-private
+ */
+@Component({
+  standalone: true,
+  styleUrls: ['badge.css'],
+  encapsulation: ViewEncapsulation.None,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class _MatBadgeStyleLoader {}
 
 /** Directive to display a text badge. */
 @Directive({
@@ -134,6 +156,23 @@ export class MatBadge implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
   ) {
+    const appRef = inject(ApplicationRef);
+
+    if (!badgeApps.has(appRef)) {
+      badgeApps.add(appRef);
+
+      const componentRef = createComponent(_MatBadgeStyleLoader, {
+        environmentInjector: inject(EnvironmentInjector),
+      });
+
+      appRef.onDestroy(() => {
+        badgeApps.delete(appRef);
+        if (badgeApps.size === 0) {
+          componentRef.destroy();
+        }
+      });
+    }
+
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = _elementRef.nativeElement;
       if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
