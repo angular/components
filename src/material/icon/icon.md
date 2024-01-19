@@ -19,9 +19,12 @@ component.
 By default, `<mat-icon>` expects the
 [Material icons font](https://google.github.io/material-design-icons/#icon-font-for-the-web).
 (You will still need to include the HTML to load the font and its CSS, as described in the link).
-You can specify a different font by setting the `fontSet` input to either the CSS class to apply to
-use the desired font, or to an alias previously registered with
-`MatIconRegistry.registerFontClassAlias`.
+
+You can specify a different font, such as Material's latest icons, 
+[Material Symbols](https://fonts.google.com/icons), by setting the `fontSet` input to either the 
+CSS class to apply to use the desired font, or to an alias previously registered with
+`MatIconRegistry.registerFontClassAlias`. Alternatively you can set the default for all
+your application's icons using `MatIconRegistry.setDefaultFontSetClass`.
 
 ### Font icons with CSS
 

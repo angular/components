@@ -13,7 +13,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
-import {MatIconModule} from '@angular/material/icon';
+import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DevAppDirectionality} from './dev-app-directionality';
@@ -110,12 +110,14 @@ export class DevAppLayout {
     @Inject(Directionality) private _dir: DevAppDirectionality,
     private _changeDetectorRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private _document: Document,
+    private _iconRegistry: MatIconRegistry,
   ) {
     this.toggleTheme(this.state.darkTheme);
     this.toggleStrongFocus(this.state.strongFocusEnabled);
     this.toggleDensity(Math.max(this._densityScales.indexOf(this.state.density), 0));
     this.toggleRippleDisabled(this.state.rippleDisabled);
     this.toggleDirection(this.state.direction);
+    this.toggleM3(this.state.m3Enabled);
   }
 
   toggleTheme(value = !this.state.darkTheme) {
@@ -168,9 +170,13 @@ export class DevAppLayout {
       (document.getElementById('theme-styles') as HTMLLinkElement).href = value
         ? 'theme-m3.css'
         : 'theme.css';
-      this.state.m3Enabled = value;
-      setAppState(this.state);
     }
+
+    this._iconRegistry.setDefaultFontSetClass(
+      value ? 'material-symbols-outlined' : 'material-icons',
+    );
+    this.state.m3Enabled = value;
+    setAppState(this.state);
   }
 
   getDensityClass() {
