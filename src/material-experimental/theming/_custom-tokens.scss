@@ -285,7 +285,7 @@
 @function fab($systems, $exclude-hardcoded) {
   @return ((
     foreground-color: map.get($systems, md-sys-color, on-primary-container),
-    state-layer-color: map.get($systems, md-sys-color, primary-container),
+    state-layer-color: map.get($systems, md-sys-color, on-primary-container),
     ripple-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-primary-container),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
@@ -302,7 +302,7 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       foreground-color: map.get($systems, md-sys-color, on-secondary-container),
-      state-layer-color: map.get($systems, md-sys-color, secondary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       ripple-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, on-secondary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
@@ -310,7 +310,7 @@
     ),
     tertiary: (
       foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
-      state-layer-color: map.get($systems, md-sys-color, tertiary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
       ripple-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, on-tertiary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
@@ -326,7 +326,7 @@
 @function fab-small($systems, $exclude-hardcoded) {
   @return ((
     foreground-color: map.get($systems, md-sys-color, on-primary-container),
-    state-layer-color: map.get($systems, md-sys-color, primary-container),
+    state-layer-color: map.get($systems, md-sys-color, on-primary-container),
     ripple-color: mat.private-safe-color-change(
       map.get($systems, md-sys-color, on-primary-container),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
@@ -343,7 +343,7 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       foreground-color: map.get($systems, md-sys-color, on-secondary-container),
-      state-layer-color: map.get($systems, md-sys-color, secondary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       ripple-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, on-secondary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
@@ -351,7 +351,7 @@
     ),
     tertiary: (
       foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
-      state-layer-color: map.get($systems, md-sys-color, tertiary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
       ripple-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, on-tertiary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)

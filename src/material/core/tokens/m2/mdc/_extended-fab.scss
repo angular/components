@@ -8,12 +8,13 @@ $prefix: (mdc, extended-fab);
 
 @function get-unthemable-tokens() {
   @return (
+    container-height: 48px,
+    container-shape: 24px,
+
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
     container-color: null,
-    container-height: null,
-    container-shape: null,
     container-surface-tint-layer-color: null,
     focus-icon-color: null,
     focus-label-text-color: null,
