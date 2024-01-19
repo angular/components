@@ -56,7 +56,7 @@ export class MatBadgeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatBadgeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBadgeModule, never, [typeof i1.A11yModule, typeof i2.MatCommonModule, typeof i3.MatBadge], [typeof i3.MatBadge, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBadgeModule, never, [typeof i1.A11yModule, typeof i2.MatCommonModule, typeof i3.MatBadge, typeof i3._MatBadgeStyleLoader], [typeof i3.MatBadge, typeof i2.MatCommonModule]>;
 }
 
 // @public
