@@ -146,6 +146,7 @@
   $slots: tokens-mdc-dialog.get-token-slots(),
   $reference: mdc-dialog-theme.$light-theme
 );
+// Note: we should validate the `fab-small` here as well, but MDC doesn't expose its light theme.
 @include validate-slots(
   $component: 'm2.mdc.fab',
   $slots: tokens-mdc-fab.get-token-slots(),
