@@ -221,7 +221,6 @@
 /// Fixes inconsistent values in the filled text field tokens so that they can produce valid
 /// styles.
 /// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
-/// @param {Map} $all-tokens Map of all filled text field tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
 @function _fix-filled-text-field-tokens($initial-tokens) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
@@ -274,10 +273,13 @@
 
 /// Fixes inconsistent values in the text button tokens so that they can produce valid styles.
 /// @param {Map} $initial-tokens Map of text button tokens currently being generated.
-/// @param {Map} $all-tokens Map of all text button tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-text-button-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-text-button-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-text-button-values((), false);
+
+  @return _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,
@@ -287,10 +289,13 @@
 
 /// Fixes inconsistent values in the filled button tokens so that they can produce valid styles.
 /// @param {Map} $initial-tokens Map of filled button tokens currently being generated.
-/// @param {Map} $all-tokens Map of all filled button tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-filled-button-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-filled-button-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-filled-button-values((), false);
+
+  @return _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,
@@ -304,10 +309,13 @@
 
 /// Fixes inconsistent values in the protected button tokens so that they can produce valid styles.
 /// @param {Map} $initial-tokens Map of protected button tokens currently being generated.
-/// @param {Map} $all-tokens Map of all protected button tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-protected-button-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-protected-button-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-elevated-button-values((), false);
+
+  @return _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,
@@ -321,10 +329,11 @@
 
 /// Fixes inconsistent values in the outlined button tokens so that they can produce valid styles.
 /// @param {Map} $initial-tokens Map of outlined button tokens currently being generated.
-/// @param {Map} $all-tokens Map of all outlined button tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-outlined-button-tokens($initial-tokens, $all-tokens) {
-  @return _combine-color-tokens($initial-tokens, $all-tokens, (
+@function _fix-outlined-button-tokens($initial-tokens) {
+  $hardcoded-tokens: mdc-tokens.md-comp-outlined-button-values((), false);
+
+  @return _combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,
@@ -403,15 +412,19 @@
 /// @param {Map} $initial-tokens Map of icon button tokens currently being generated.
 /// @param {Map} $all-tokens Map of all icon button tokens, including hardcoded values.
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-icon-button-tokens($tokens, $all-tokens) {
+@function _fix-icon-button-tokens($tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: mdc-tokens.md-comp-icon-button-values((), false);
+
   $rename-keys: (
     unselected-icon-color: icon-color,
   );
 
   $remapped-tokens: _rename-map-keys($tokens, $rename-keys);
-  $remapped-all-tokens: _rename-map-keys($all-tokens, $rename-keys);
+  $remapped-hardcoded-tokens: _rename-map-keys($hardcoded-tokens, $rename-keys);
 
-  @return _combine-color-tokens($remapped-tokens, $remapped-all-tokens, (
+  @return _combine-color-tokens($remapped-tokens, $remapped-hardcoded-tokens, (
     (
       color: disabled-icon-color,
       opacity: disabled-icon-opacity,
@@ -549,52 +562,59 @@
     ),
     _namespace-tokens(
       (mdc, icon-button),
-      _fix-icon-button-tokens(
-        mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-icon-button-values($systems, false)
-      ),
+      _fix-icon-button-tokens(mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded)),
       $token-slots
     ),
     _namespace-tokens(
       (mdc, text-button),
-      _fix-text-button-tokens(
-        mdc-tokens.md-comp-text-button-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-text-button-values($systems, false),
+      (
+        _fix-text-button-tokens(
+          mdc-tokens.md-comp-text-button-values($systems, $exclude-hardcoded)
+        ),
+        _map-values(
+          custom-tokens.mdc-text-button-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-text-button-tokens)
+        )
       ),
       $token-slots
     ),
     _namespace-tokens(
       // Note: in M3 the "protected" button is called "elevated".
       (mdc, protected-button),
-      _fix-protected-button-tokens(
-        mdc-tokens.md-comp-elevated-button-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-elevated-button-values($systems, false),
+      (
+        _fix-protected-button-tokens(
+          mdc-tokens.md-comp-elevated-button-values($systems, $exclude-hardcoded)
+        ),
+        _map-values(
+          custom-tokens.mdc-elevated-button-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-protected-button-tokens)
+        )
       ),
       $token-slots
     ),
     _namespace-tokens(
       (mdc, filled-button),
-      _fix-filled-button-tokens(
-        mdc-tokens.md-comp-filled-button-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-filled-button-values($systems, false),
+      (
+        _fix-filled-button-tokens(
+          mdc-tokens.md-comp-filled-button-values($systems, $exclude-hardcoded),
+        ),
+        _map-values(
+          custom-tokens.mdc-filled-button-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-filled-button-tokens)
+        )
       ),
       $token-slots
     ),
     _namespace-tokens(
       (mdc, outlined-button),
-      _fix-outlined-button-tokens(
-        mdc-tokens.md-comp-outlined-button-values($systems, $exclude-hardcoded),
-        // Need to pass in the hardcoded values, because they
-        // include opacities that are used for the disabled state.
-        mdc-tokens.md-comp-outlined-button-values($systems, false),
+      (
+        _fix-outlined-button-tokens(
+          mdc-tokens.md-comp-outlined-button-values($systems, $exclude-hardcoded),
+        ),
+        _map-values(
+          custom-tokens.mdc-outlined-button-color-variants($systems, $exclude-hardcoded),
+          meta.get-function(_fix-outlined-button-tokens)
+        )
       ),
       $token-slots
     ),
