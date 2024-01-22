@@ -23,6 +23,7 @@ import {
   booleanAttribute,
   numberAttribute,
   Output,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -40,7 +41,6 @@ import {
 } from 'rxjs';
 import {take, switchMap, startWith, skip, takeUntil, filter} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({

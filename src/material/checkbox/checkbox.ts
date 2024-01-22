@@ -26,6 +26,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -36,7 +37,6 @@ import {
   Validator,
 } from '@angular/forms';
 import {_MatInternalFormField, MatRipple} from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusableOption} from '@angular/cdk/a11y';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,

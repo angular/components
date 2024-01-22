@@ -42,6 +42,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {
@@ -55,7 +56,6 @@ import {
   mapTo,
 } from 'rxjs/operators';
 import {matDrawerAnimations} from './drawer-animations';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /**
  * Throws an exception when two MatDrawer are matching the same position.

@@ -26,8 +26,8 @@ import {
   booleanAttribute,
   inject,
   numberAttribute,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
 import {ThemePalette, MatRipple} from '@angular/material/core';
