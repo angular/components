@@ -13,8 +13,8 @@ import {
   ChangeDetectionStrategy,
   Inject,
   Optional,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /**
  * Possible states for a pseudo checkbox.

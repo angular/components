@@ -15,8 +15,8 @@ import {
   NgZone,
   Optional,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './button-base';
 
 /**

@@ -26,8 +26,8 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRipple,

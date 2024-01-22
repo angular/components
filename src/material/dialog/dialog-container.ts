@@ -20,9 +20,9 @@ import {
   OnDestroy,
   Optional,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';

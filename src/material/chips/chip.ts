@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterViewInit,
   AfterContentInit,
@@ -32,6 +31,7 @@ import {
   inject,
   booleanAttribute,
   numberAttribute,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {

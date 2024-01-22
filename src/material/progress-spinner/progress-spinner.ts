@@ -17,9 +17,9 @@ import {
   ViewChild,
   ViewEncapsulation,
   numberAttribute,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */

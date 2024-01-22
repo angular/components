@@ -17,10 +17,10 @@ import {
   OnDestroy,
   OnInit,
   Optional,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {

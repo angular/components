@@ -26,6 +26,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -35,7 +36,6 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
