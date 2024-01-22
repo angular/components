@@ -6,14 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Injectable,
-  NgZone,
-  OnDestroy,
-  InjectionToken,
-  afterRender,
-  AfterRenderPhase,
-} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, InjectionToken} from '@angular/core';
 import {from, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 
@@ -42,46 +35,7 @@ export class _CoalescedStyleScheduler implements OnDestroy {
   private _currentSchedule: _Schedule | null = null;
   private readonly _destroyed = new Subject<void>();
 
-  private readonly _earlyReadTasks: (() => unknown)[] = [];
-  private readonly _writeTasks: (() => unknown)[] = [];
-  private readonly _readTasks: (() => unknown)[] = [];
-
-  constructor(private readonly _ngZone: NgZone) {
-    afterRender(() => flushTasks(this._earlyReadTasks), {phase: AfterRenderPhase.EarlyRead});
-    afterRender(() => flushTasks(this._writeTasks), {phase: AfterRenderPhase.Write});
-    afterRender(() => flushTasks(this._readTasks), {phase: AfterRenderPhase.Read});
-  }
-
-  /**
-   * Like afterNextRender(fn, AfterRenderPhase.EarlyRead), but can be called
-   * outside of injection context. Runs after current/next CD.
-   */
-  scheduleEarlyRead(task: () => unknown): void {
-    this._earlyReadTasks.push(task);
-  }
-
-  /**
-   * Like afterNextRender(fn, AfterRenderPhase.Write), but can be called
-   * outside of injection context. Runs after current/next CD.
-   */
-  scheduleWrite(task: () => unknown): void {
-    this._writeTasks.push(task);
-  }
-
-  /**
-   * Like afterNextRender(fn, AfterRenderPhase.Read), but can be called
-   * outside of injection context. Runs after current/next CD.
-   */
-  scheduleRead(task: () => unknown): void {
-    this._readTasks.push(task);
-  }
-
-  /** Greedily triggers pending EarlyRead, Write, and Read tasks, in that order. */
-  flushAfterRender() {
-    flushTasks(this._earlyReadTasks);
-    flushTasks(this._writeTasks);
-    flushTasks(this._readTasks);
-  }
+  constructor(private readonly _ngZone: NgZone) {}
 
   /**
    * Schedules the specified task to run at the end of the current VM turn.
@@ -143,16 +97,5 @@ export class _CoalescedStyleScheduler implements OnDestroy {
     return this._ngZone.isStable
       ? from(Promise.resolve(undefined))
       : this._ngZone.onStable.pipe(take(1));
-  }
-}
-
-/**
- * Runs and removes tasks from the passed array in order.
- * Tasks appended mid-flight will also be flushed.
- */
-function flushTasks(tasks: (() => unknown)[]) {
-  let task: (() => unknown) | undefined;
-  while ((task = tasks.shift())) {
-    task();
   }
 }
