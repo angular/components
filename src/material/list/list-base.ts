@@ -20,6 +20,7 @@ import {
   OnDestroy,
   Optional,
   QueryList,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -28,7 +29,6 @@ import {
   RippleRenderer,
   RippleTarget,
 } from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription, merge} from 'rxjs';
 import {
   MatListItemLine,

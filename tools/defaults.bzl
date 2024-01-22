@@ -143,7 +143,6 @@ def ng_module(
     local_deps = [
         # Add tslib because we use import helpers for all public packages.
         "@npm//tslib",
-        "@npm//@angular/platform-browser",
     ]
 
     # Append given deps only if they're not in the default set of deps

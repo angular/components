@@ -30,10 +30,10 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {DOCUMENT, NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {

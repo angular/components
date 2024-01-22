@@ -28,9 +28,9 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, ThemePalette} from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
 import {
   _MatThumb,

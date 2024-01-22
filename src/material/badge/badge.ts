@@ -26,9 +26,9 @@ import {
   Optional,
   Renderer2,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 let nextId = 0;
 

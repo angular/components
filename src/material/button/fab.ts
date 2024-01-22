@@ -18,8 +18,8 @@ import {
   Optional,
   ViewEncapsulation,
   booleanAttribute,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 import {MatAnchor} from './button';
 import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatButtonBase} from './button-base';
