@@ -727,9 +727,11 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     if (this._ngZone && NgZone.isInAngularZone()) {
       this._ngZone.onStable.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
         this.updateStickyColumnStyles();
+        this._coalescedStyleScheduler.flushAfterRender();
       });
     } else {
       this.updateStickyColumnStyles();
+      this._coalescedStyleScheduler.flushAfterRender();
     }
 
     this.contentChanged.next();
