@@ -1,5 +1,4 @@
 @use 'sass:color';
-@use 'sass:math';
 @use '@angular/cdk';
 @use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
 @use '../core/tokens/token-utils';
@@ -8,65 +7,33 @@ $default-size: 22px !default;
 $small-size: $default-size - 6;
 $large-size: $default-size + 6;
 
+@mixin _badge-size($size) {
+  @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+    $prefix: if($size == 'medium', '', $size + '-size-');
+    $legacy-size-var: token-utils.get-token-variable('legacy-#{$prefix}container-size');
+    $size-var: token-utils.get-token-variable('#{$prefix}container-size');
 
-// Mixin for building offset given different sizes
-@mixin _badge-size($size, $font-size-token) {
-  .mat-badge-content {
-    width: $size;
-    height: $size;
-    line-height: $size;
-
-    @if ($font-size-token) {
-      @include token-utils.use-tokens(tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-token-slots()) {
-        @include token-utils.create-token-slot(font-size, $font-size-token);
-      }
-    }
-  }
-
-  &.mat-badge-above .mat-badge-content {
-    top: math.div(-$size, 2);
-  }
-
-  &.mat-badge-below .mat-badge-content {
-    bottom: math.div(-$size, 2);
-  }
-
-  &.mat-badge-before .mat-badge-content {
-    left: -$size;
-  }
-
-  [dir='rtl'] &.mat-badge-before .mat-badge-content {
-    left: auto;
-    right: -$size;
-  }
-
-  &.mat-badge-after .mat-badge-content {
-    right: -$size;
-  }
-
-  [dir='rtl'] &.mat-badge-after .mat-badge-content {
-    right: auto;
-    left: -$size;
-  }
-
-  &.mat-badge-overlap {
-    &.mat-badge-before .mat-badge-content {
-      left: math.div(-$size, 2);
+    .mat-badge-content {
+      // The M2 badge is implemented incorrectly because it uses `width` and `height` for its
+      // size which causes the text to be truncated. For M3 we want to fix this by emitting
+      // two declarations:
+      // * `legacy-container-size` token - targets width/height as in M2. In M3 the token is
+      // emitted as `unset`.
+      // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
+      // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
+      // grow with the content.
+      width: var(#{$legacy-size-var}, unset);
+      height: var(#{$legacy-size-var}, unset);
+      min-width: var(#{$size-var}, unset);
+      min-height: var(#{$size-var}, unset);
+      line-height: var($legacy-size-var, var(#{$size-var}));
+      @include token-utils.create-token-slot(padding, '#{$prefix}container-padding');
+      @include token-utils.create-token-slot(font-size, '#{$prefix}text-size');
+      @include token-utils.create-token-slot(margin, '#{$prefix}container-offset');
     }
 
-    [dir='rtl'] &.mat-badge-before .mat-badge-content {
-      left: auto;
-      right: math.div(-$size, 2);
-    }
-
-    &.mat-badge-after .mat-badge-content {
-      right: math.div(-$size, 2);
-    }
-
-    [dir='rtl'] &.mat-badge-after .mat-badge-content {
-      right: auto;
-      left: math.div(-$size, 2);
+    &.mat-badge-overlap .mat-badge-content {
+      @include token-utils.create-token-slot(margin, '#{$prefix}container-overlap-offset');
     }
   }
 }
@@ -87,25 +54,51 @@ $large-size: $default-size + 6;
   position: absolute;
   text-align: center;
   display: inline-block;
-  border-radius: 50%;
   transition: transform 200ms ease-in-out;
   transform: scale(0.6);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  box-sizing: border-box;
   pointer-events: none;
+
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+    border-radius: 0;
+  }
 
   @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
     @include token-utils.create-token-slot(background-color, background-color);
     @include token-utils.create-token-slot(color, text-color);
     @include token-utils.create-token-slot(font-family, text-font);
-    @include token-utils.create-token-slot(font-size, text-size);
     @include token-utils.create-token-slot(font-weight, text-weight);
-  }
+    @include token-utils.create-token-slot(border-radius, container-shape);
 
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-    border-radius: 0;
+    .mat-badge-above & {
+      bottom: 100%;
+    }
+
+    .mat-badge-below & {
+      top: 100%;
+    }
+
+    .mat-badge-before & {
+      right: 100%;
+    }
+
+    [dir='rtl'] .mat-badge-before & {
+      right: auto;
+      left: 100%;
+    }
+
+    .mat-badge-after & {
+      left: 100%;
+    }
+
+    [dir='rtl'] .mat-badge-after & {
+      left: auto;
+      right: 100%;
+    }
   }
 }
 
@@ -133,13 +126,13 @@ $large-size: $default-size + 6;
 }
 
 .mat-badge-small {
-  @include _badge-size($small-size, small-size-text-size);
+  @include _badge-size('small');
 }
 
 .mat-badge-medium {
-  @include _badge-size($default-size, null);
+  @include _badge-size('medium');
 }
 
 .mat-badge-large {
-  @include _badge-size($large-size, large-size-text-size);
+  @include _badge-size('large');
 }
