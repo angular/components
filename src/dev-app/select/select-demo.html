@@ -11,7 +11,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
                       [class.demo-drinks-width-large]="drinksWidth === '400px'">
         <mat-label>Drink</mat-label>
         <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
-          [disabled]="drinksDisabled" #drinkControl="ngModel">
+          [disabled]="drinksDisabled" #drinkControl="ngModel" [panelClass]="m3ForceSecondary ? 'demo-force-secondary' : ''">
           <mat-option [disabled]="drinksOptionsDisabled === 'all'">None</mat-option>
           @for (drink of drinks; track drink; let index = $index) {
             <mat-option [value]="drink.value"
@@ -58,6 +58,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <option value="first-middle-last">Disable First, Middle, and Last Options</option>
           <option value="all">Disable All Options</option>
         </select>
+      </p>
+      <p>
+        <mat-checkbox [(ngModel)]="m3ForceSecondary">Force secondary color for options in M3</mat-checkbox>
       </p>
 
       <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>

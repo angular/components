@@ -71,6 +71,7 @@ export class SelectDemo {
   pokemonTheme: ThemePalette = 'primary';
   compareByValue = true;
   selectFormControl = new FormControl('', Validators.required);
+  m3ForceSecondary = true;
 
   sandwichBread = '';
   sandwichMeat = '';

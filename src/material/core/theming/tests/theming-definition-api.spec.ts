@@ -112,7 +112,6 @@ describe('theming definition api', () => {
           color: (
             theme-type: dark,
             primary: matx.$m3-yellow-palette,
-            secondary: matx.$m3-orange-palette,
             tertiary: matx.$m3-red-palette,
           )
         ));
@@ -131,10 +130,10 @@ describe('theming definition api', () => {
       const vars = getRootVars(css);
       expect(vars['token-surface']).toBe('#1c1c17');
       expect(vars['token-primary']).toBe('#cdcd00');
-      expect(vars['token-secondary']).toBe('#ffb787');
+      expect(vars['token-secondary']).toBe('#cac8a5');
       expect(vars['token-tertiary']).toBe('#ffb4a8');
       expect(vars['palette-primary']).toBe('#7b7b00');
-      expect(vars['palette-secondary']).toBe('#bc5d00');
+      expect(vars['palette-secondary']).toBe('#7a795a');
       expect(vars['palette-tertiary']).toBe('#ef0000');
       expect(vars['type']).toBe('dark');
     });
