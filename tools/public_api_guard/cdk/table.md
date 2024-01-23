@@ -423,13 +423,9 @@ export const _COALESCED_STYLE_SCHEDULER: InjectionToken<_CoalescedStyleScheduler
 // @public
 export class _CoalescedStyleScheduler implements OnDestroy {
     constructor(_ngZone: NgZone);
-    flushAfterRender(): void;
     ngOnDestroy(): void;
     schedule(task: () => unknown): void;
-    scheduleEarlyRead(task: () => unknown): void;
     scheduleEnd(task: () => unknown): void;
-    scheduleRead(task: () => unknown): void;
-    scheduleWrite(task: () => unknown): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_CoalescedStyleScheduler, never>;
     // (undocumented)
