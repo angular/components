@@ -1,5 +1,6 @@
 @use 'sass:meta';
 @use 'sass:map';
+@use 'sass:math';
 @use 'sass:color';
 @use '../../token-utils';
 @use '../../../theming/inspection';
@@ -11,7 +12,32 @@ $prefix: (mat, badge);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  $default-size: 22px;
+  $small-size: $default-size - 6;
+  $large-size: $default-size + 6;
+
+  @return (
+    container-shape: 50%,
+    container-size: unset,
+    small-size-container-size: unset,
+    large-size-container-size: unset,
+
+    legacy-container-size: $default-size,
+    legacy-small-size-container-size: $small-size,
+    legacy-large-size-container-size: $large-size,
+
+    container-offset: math.div($default-size, -2) 0,
+    small-size-container-offset: math.div($small-size, -2) 0,
+    large-size-container-offset: math.div($large-size, -2) 0,
+
+    container-overlap-offset: math.div($default-size, -2),
+    small-size-container-overlap-offset: math.div($small-size, -2),
+    large-size-container-overlap-offset: math.div($large-size, -2),
+
+    container-padding: 0,
+    small-size-container-padding: 0,
+    large-size-container-padding: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.

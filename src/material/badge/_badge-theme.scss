@@ -13,7 +13,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-unthemable-tokens());
+    }
+  }
 }
 
 /// Outputs color theme styles for the mat-badge.

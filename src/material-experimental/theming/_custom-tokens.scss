@@ -59,7 +59,25 @@
     text-size: map.get($systems, md-sys-typescale, label-small-size),
     text-weight: map.get($systems, md-sys-typescale, label-small-weight),
     small-size-text-size: _hardcode(0, $exclude-hardcoded),
+    container-shape: map.get($systems, md-sys-shape, corner-full),
+    container-size: _hardcode(16px, $exclude-hardcoded),
+    legacy-container-size: _hardcode(unset, $exclude-hardcoded),
+    legacy-small-size-container-size: _hardcode(unset, $exclude-hardcoded),
+    small-size-container-size: _hardcode(6px, $exclude-hardcoded),
+    container-padding: _hardcode(0 4px, $exclude-hardcoded),
+    small-size-container-padding: _hardcode(0, $exclude-hardcoded),
+    container-offset: -12px 0,
+    small-size-container-offset: -6px 0,
+    container-overlap-offset: -12px,
+    small-size-container-overlap-offset: -6px,
+
+    // This size isn't in the M3 spec so we emit the same values as for `medium`.
+    large-size-container-size: _hardcode(16px, $exclude-hardcoded),
+    large-size-container-offset: -12px 0,
+    large-size-container-overlap-offset: -12px,
     large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
+    large-size-container-padding: _hardcode(0 4px, $exclude-hardcoded),
+    legacy-large-size-container-size: _hardcode(unset, $exclude-hardcoded),
   ), (
     primary: (
       background-color: map.get($systems, md-sys-color, primary),
