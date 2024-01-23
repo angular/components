@@ -31,8 +31,6 @@ $prefix: (mdc, outlined-text-field);
     label-text-type: null,
     label-text-populated-line-height: null,
     label-text-populated-size: null,
-    hover-label-text-color: null,
-    error-hover-label-text-color: null,
     disabled-label-text-opacity: null,
     disabled-supporting-text-color: null,
     disabled-supporting-text-opacity: null,
@@ -48,6 +46,9 @@ $prefix: (mdc, outlined-text-field);
     supporting-text-tracking: null,
     supporting-text-type: null,
     supporting-text-weight: null,
+    leading-icon-size: null,
+    trailing-icon-size: null,
+    leading-icon-color: null,
     disabled-leading-icon-color: null,
     disabled-leading-icon-opacity: null,
     error-focus-leading-icon-color: null,
@@ -55,8 +56,7 @@ $prefix: (mdc, outlined-text-field);
     error-leading-icon-color: null,
     focus-leading-icon-color: null,
     hover-leading-icon-color: null,
-    leading-icon-color: null,
-    leading-icon-size: null,
+    trailing-icon-color: null,
     disabled-trailing-icon-color: null,
     disabled-trailing-icon-opacity: null,
     error-focus-trailing-icon-color: null,
@@ -64,8 +64,6 @@ $prefix: (mdc, outlined-text-field);
     error-trailing-icon-color: null,
     focus-trailing-icon-color: null,
     hover-trailing-icon-color: null,
-    trailing-icon-color: null,
-    trailing-icon-size: null,
     input-text-prefix-color: null,
     input-text-type: null,
     container-height: null,
@@ -94,6 +92,7 @@ $prefix: (mdc, outlined-text-field);
 
   @return map.merge($color-tokens, (
     label-text-color: rgba($on-surface, 0.6),
+    hover-label-text-color: rgba($on-surface, 0.6),
     disabled-label-text-color: rgba($on-surface, 0.38),
 
     input-text-color: rgba($on-surface, 0.87),
@@ -103,6 +102,7 @@ $prefix: (mdc, outlined-text-field);
     error-caret-color: $warn-color,
     error-focus-label-text-color: $warn-color,
     error-label-text-color: $warn-color,
+    error-hover-label-text-color: $warn-color,
 
     // Outline tokens
     outline-color: rgba($on-surface, 0.38),
