@@ -72,34 +72,21 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
   }
 
   stickyColumnsUpdated({sizes}: StickyUpdate): void {
-    if (arrayEquals(this._startSizes, sizes)) {
-      return;
-    }
     this._startSizes = sizes;
     this._updateScrollbar();
   }
 
   stickyEndColumnsUpdated({sizes}: StickyUpdate): void {
-    if (arrayEquals(this._endSizes, sizes)) {
-      return;
-    }
     this._endSizes = sizes;
     this._updateScrollbar();
   }
 
   stickyHeaderRowsUpdated({sizes}: StickyUpdate): void {
-    if (arrayEquals(this._headerSizes, sizes)) {
-      return;
-    }
     this._headerSizes = sizes;
     this._updateScrollbar();
   }
 
   stickyFooterRowsUpdated({sizes}: StickyUpdate): void {
-    console.log('sizes', this._footerSizes, sizes, arrayEquals(this._footerSizes, sizes));
-    if (arrayEquals(this._footerSizes, sizes)) {
-      return;
-    }
     this._footerSizes = sizes;
     this._updateScrollbar();
   }
@@ -143,13 +130,9 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
   /** Updates the stylesheet with the specified scrollbar style. */
   private _applyCss(value: string) {
     this._clearCss();
+
     const selector = `.${this._uniqueClassName}::-webkit-scrollbar-track`;
     this._getStyleSheet().insertRule(`${selector} {margin: ${value}}`, 0);
-
-    // Force the scrollbar to paint.
-    const display = this._elementRef.nativeElement.style.display;
-    this._elementRef.nativeElement.style.display = 'none';
-    this._elementRef.nativeElement.style.display = display;
   }
 
   private _clearCss() {
@@ -169,21 +152,4 @@ function computeMargin(sizes: (number | null | undefined)[]): number {
     margin += size;
   }
   return margin;
-}
-
-function arrayEquals(a1: unknown[], a2: unknown[]) {
-  if (a1 === a2) {
-    return true;
-  }
-  if (a1.length !== a2.length) {
-    return false;
-  }
-
-  for (let index = 0; index < a1.length; index++) {
-    if (a1[index] !== a2[index]) {
-      return false;
-    }
-  }
-
-  return true;
 }
