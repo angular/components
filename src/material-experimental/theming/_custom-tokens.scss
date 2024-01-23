@@ -493,6 +493,17 @@
       focus-state-layer-opacity: _hardcode(0, $exclude-hardcoded),
       focus-select-arrow-color: map.get($systems, md-sys-color, primary),
       outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
+
+      leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-leading-icon-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+
+      trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-trailing-icon-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      error-focus-trailing-icon-color: map.get($systems, md-sys-color, error),
+      error-hover-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
+      error-trailing-icon-color: map.get($systems, md-sys-color, error),
     )
   ), (
     // Color variants:

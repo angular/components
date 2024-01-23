@@ -142,6 +142,48 @@ $_icon-prefix-infix-padding: 4px;
   // Needs a z-index to ensure it's on top of other content clickable. See #27043.
   position: relative;
   z-index: 1;
+
+  & > .mat-icon {
+    padding: 12px;
+    // It's common for apps to apply `box-sizing: border-box`
+    // globally which will break the alignment.
+    box-sizing: content-box;
+  }
+}
+
+.mat-mdc-form-field-icon-prefix {
+  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()) {
+    @include token-utils.create-token-slot(color, leading-icon-color);
+
+    .mat-form-field-disabled & {
+      @include token-utils.create-token-slot(color, disabled-leading-icon-color);
+    }
+  }
+}
+
+.mat-mdc-form-field-icon-suffix {
+  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()) {
+    @include token-utils.create-token-slot(color, trailing-icon-color);
+
+    .mat-form-field-disabled & {
+      @include token-utils.create-token-slot(color, disabled-trailing-icon-color);
+    }
+
+    .mat-form-field-invalid & {
+      @include token-utils.create-token-slot(color, error-trailing-icon-color);
+    }
+
+    .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled)
+      .mat-mdc-text-field-wrapper:hover & {
+      @include token-utils.create-token-slot(color, error-hover-trailing-icon-color);
+    }
+
+    .mat-form-field-invalid.mat-focused .mat-mdc-text-field-wrapper & {
+      @include token-utils.create-token-slot(color, error-focus-trailing-icon-color);
+    }
+  }
 }
 
 // The prefix/suffix needs a little extra padding between the icon and the infix. Because we need to
@@ -154,16 +196,6 @@ $_icon-prefix-infix-padding: 4px;
 .mat-mdc-form-field-icon-suffix,
 [dir='rtl'] .mat-mdc-form-field-icon-prefix {
   padding: 0 0 0 $_icon-prefix-infix-padding;
-}
-
-.mat-mdc-form-field-icon-prefix,
-.mat-mdc-form-field-icon-suffix {
-  & > .mat-icon {
-    padding: 12px;
-    // It's common for apps to apply `box-sizing: border-box`
-    // globally which will break the alignment.
-    box-sizing: content-box;
-  }
 }
 
 // Scale down icons in the subscript and floating label to be the same size
