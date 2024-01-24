@@ -14,7 +14,7 @@
   @include mdc-switch.static-styles-without-ripple();
 
   // TODO(wagnermaciel): Use our custom token system to emit this css rule.
-  .mdc-switch--disabled + label {
+  .mat-mdc-slide-toggle .mdc-switch--disabled + label {
     color: var(--mdc-switch-disabled-label-text-color);
   }
 
