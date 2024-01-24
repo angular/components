@@ -72,6 +72,9 @@ export class MatDialogRef<T, R = any> {
     this.disableClose = config.disableClose;
     this.id = _ref.id;
 
+    // Used to target panels specifically tied to dialogs.
+    _ref.addPanelClass('mat-mdc-dialog-panel');
+
     // Emit when opening animation completes
     _containerInstance._animationStateChanged
       .pipe(

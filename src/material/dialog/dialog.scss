@@ -2,7 +2,10 @@
 @use '@material/animation/animation' as mdc-animation;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
+@use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/token-utils';
+@use '../core/style/variables';
 @use './mdc-dialog-structure-overrides';
 
 // Dialog content max height. This has been copied from the standard dialog
@@ -52,22 +55,63 @@ $mat-dialog-button-horizontal-margin: 8px !default;
   }
 }
 
+// This needs extra specificity so it doesn't get overwritten by the CDK structural styles.
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    @include token-utils.create-token-slot(max-width, container-max-width);
+    @include token-utils.create-token-slot(min-width, container-min-width);
+
+    @media (variables.$xsmall) {
+      @include token-utils.create-token-slot(max-width, container-small-max-width);
+    }
+  }
+}
+
+.mat-mdc-dialog-title {
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    @include token-utils.create-token-slot(padding, headline-padding);
+  }
+}
+
 // MDC sets the display behavior for title and actions, but not for content. Since we support
 // using the `mdc-dialog__content` as custom element, we need to set the element to `block`.
 .mat-mdc-dialog-content {
   display: block;
+
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    // These styles need a bit more specificity.
+    .mat-mdc-dialog-container & {
+      @include token-utils.create-token-slot(padding, content-padding);
+    }
+
+    .mat-mdc-dialog-container:has(.mat-mdc-dialog-actions) & {
+      @include token-utils.create-token-slot(padding, with-actions-content-padding);
+    }
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-dialog-title + & {
+    padding-top: 0;
+  }
 }
 
 .mat-mdc-dialog-actions {
   // For backwards compatibility, actions align at start by default. MDC usually
   // aligns actions at the end of the container.
-  justify-content: start;
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    @include token-utils.create-token-slot(padding, actions-padding);
+    @include token-utils.create-token-slot(justify-content, actions-alignment);
+  }
 
-  // .mat-mdc-dialog-actions-align-{center|end} are set by directive input "align"
-  // [align='center'] and [align='right'] are kept for backwards compability
+  // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"
+  // [align='start'], [align='center'] and [align='right'] are kept for backwards compability
+  &.mat-mdc-dialog-actions-align-start, &[align='start'] {
+    justify-content: start;
+  }
+
   &.mat-mdc-dialog-actions-align-center, &[align='center'] {
     justify-content: center;
   }
+
   &.mat-mdc-dialog-actions-align-end, &[align='end'] {
     justify-content: flex-end;
   }

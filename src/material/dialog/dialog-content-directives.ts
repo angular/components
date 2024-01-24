@@ -157,6 +157,7 @@ export class MatDialogContent {}
   standalone: true,
   host: {
     'class': 'mat-mdc-dialog-actions mdc-dialog__actions',
+    '[class.mat-mdc-dialog-actions-align-start]': 'align === "start"',
     '[class.mat-mdc-dialog-actions-align-center]': 'align === "center"',
     '[class.mat-mdc-dialog-actions-align-end]': 'align === "end"',
   },
@@ -165,7 +166,7 @@ export class MatDialogActions {
   /**
    * Horizontal alignment of action buttons.
    */
-  @Input() align?: 'start' | 'center' | 'end' = 'start';
+  @Input() align?: 'start' | 'center' | 'end';
 }
 
 /**
