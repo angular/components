@@ -31,10 +31,12 @@
       @include mdc-switch-theme.theme($mdc-switch-color-tokens);
       @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
 
-      // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
-      .mdc-switch--disabled + label {
-        color: inspection.get-theme-color($theme, foreground, disabled-text);
-      }
+      // TODO(wagnermaciel): Use our token system to define this css variable.
+      --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+        $theme,
+        foreground,
+        disabled-text
+      )};
 
       // Change the color palette related tokens to accent or warn if applicable
       &.mat-accent {

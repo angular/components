@@ -13,6 +13,11 @@
   // Add the MDC switch static styles.
   @include mdc-switch.static-styles-without-ripple();
 
+  // TODO(wagnermaciel): Use our custom token system to emit this css rule.
+  .mat-mdc-slide-toggle .mdc-switch--disabled + label {
+    color: var(--mdc-switch-disabled-label-text-color);
+  }
+
   .mdc-switch {
     // Add the official slots for the MDC switch
     @include mdc-switch-theme.theme-styles($mdc-switch-token-slots);
