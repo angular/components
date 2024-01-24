@@ -474,10 +474,7 @@ describe('MDC-based MatDialog', () => {
 
     let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-    expect(overlayPane.style.maxWidth)
-      .withContext('Expected dialog to set a default max-width on overlay pane')
-      .toBe('80vw');
-
+    expect(overlayPane.style.maxWidth).toBe('');
     dialogRef.close();
 
     tick(500);

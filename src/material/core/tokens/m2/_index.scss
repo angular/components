@@ -8,6 +8,7 @@
 @use './mat/protected-button' as tokens-mat-protected-button;
 @use './mat/filled-button' as tokens-mat-filled-button;
 @use './mat/outlined-button' as tokens-mat-outlined-button;
+@use './mat/dialog' as tokens-mat-dialog;
 @use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
 @use './mat/card' as tokens-mat-card;
 @use './mat/datepicker' as tokens-mat-datepicker;
@@ -117,6 +118,7 @@
       _get-tokens-for-module($theme, tokens-mat-button-toggle),
       _get-tokens-for-module($theme, tokens-mat-card),
       _get-tokens-for-module($theme, tokens-mat-datepicker),
+      _get-tokens-for-module($theme, tokens-mat-dialog),
       _get-tokens-for-module($theme, tokens-mat-divider),
       _get-tokens-for-module($theme, tokens-mat-expansion),
       _get-tokens-for-module($theme, tokens-mat-fab),

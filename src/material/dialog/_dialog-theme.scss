@@ -2,6 +2,8 @@
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '../core/style/sass-utils';
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
+@use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
+@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
@@ -14,6 +16,8 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-dialog.$prefix, tokens-mat-dialog.get-unthemable-tokens());
     }
   }
 }
@@ -25,6 +29,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-dialog.$prefix, tokens-mat-dialog.get-color-tokens($theme));
     }
   }
 }
@@ -36,6 +42,8 @@
   @else {
     @include sass-utils.current-selector-or-root() {
       @include mdc-dialog-theme.theme(tokens-mdc-dialog.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-dialog.$prefix, tokens-mat-dialog.get-typography-tokens($theme));
     }
   }
 }
@@ -70,5 +78,7 @@
 @mixin _theme-from-tokens($tokens) {
   @if ($tokens != ()) {
     @include mdc-dialog-theme.theme(map.get($tokens, tokens-mdc-dialog.$prefix));
+    @include token-utils.create-token-values(
+      tokens-mat-dialog.$prefix, map.get($tokens, tokens-mat-dialog.$prefix));
   }
 }
