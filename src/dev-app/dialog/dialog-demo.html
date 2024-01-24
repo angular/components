@@ -14,6 +14,10 @@
   <mat-checkbox [(ngModel)]="enableLegacyPadding">Enable legacy padding</mat-checkbox>
 </p>
 
+<p>
+  <mat-checkbox [(ngModel)]="isScrollable">Make dialog scrollable</mat-checkbox>
+</p>
+
 <mat-card class="demo-dialog-card">
   <mat-card-content>
     <h2>Dialog dimensions</h2>
@@ -92,7 +96,7 @@
       <mat-form-field>
         <mat-label>Button alignment</mat-label>
         <mat-select [(ngModel)]="actionsAlignment">
-          <mat-option>Start</mat-option>
+          <mat-option value="start">Start</mat-option>
           <mat-option value="end">End</mat-option>
           <mat-option value="center">Center</mat-option>
         </mat-select>

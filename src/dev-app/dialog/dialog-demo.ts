@@ -27,8 +27,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
-const defaultDialogConfig = new MatDialogConfig();
-
 @Component({
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
@@ -61,7 +59,7 @@ export class DialogDemo {
     height: '',
     minWidth: '',
     minHeight: '',
-    maxWidth: defaultDialogConfig.maxWidth,
+    maxWidth: '',
     maxHeight: '',
     position: {
       top: '',
@@ -75,6 +73,7 @@ export class DialogDemo {
   };
   numTemplateOpens = 0;
   enableLegacyPadding = false;
+  isScrollable = false;
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
@@ -110,6 +109,7 @@ export class DialogDemo {
   openContentElement() {
     const dialogRef = this.dialog.open(ContentElementDialog, this._getDialogConfig());
     dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
+    dialogRef.componentInstance.isScrollable = this.isScrollable;
   }
 
   openTemplate() {
@@ -195,7 +195,7 @@ export class JazzDialog {
     `
     img {
       max-width: 100%;
-      height: 800px;
+      max-height: 800px;
     }
   `,
   ],
@@ -212,12 +212,17 @@ export class JazzDialog {
         astronomical units (4.50x109 km). It is named after the Roman god of the sea and has the
         astronomical symbol ♆, a stylised version of the god Neptune's trident.
       </p>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg"/>
+
+      @if (isScrollable) {
+        @for (i of [1, 2, 3]; track $index) {
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg"/>
+        }
+      }
     </mat-dialog-content>
 
     <mat-dialog-actions [align]="actionsAlignment">
       <button
-        mat-raised-button
+        mat-button
         color="primary"
         mat-dialog-close>Close</button>
 
@@ -238,12 +243,13 @@ export class JazzDialog {
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
 })
 export class ContentElementDialog {
-  actionsAlignment: 'start' | 'center' | 'end';
+  actionsAlignment?: 'start' | 'center' | 'end';
+  isScrollable: boolean;
 
   constructor(public dialog: MatDialog) {}
 
   showInStackedDialog() {
-    this.dialog.open(IFrameDialog);
+    this.dialog.open(IFrameDialog, {maxWidth: '80vw'});
   }
 }
 
@@ -253,6 +259,7 @@ export class ContentElementDialog {
     `
     iframe {
       width: 800px;
+      height: 500px;
     }
   `,
   ],
@@ -265,7 +272,7 @@ export class ContentElementDialog {
 
     <mat-dialog-actions>
       <button
-        mat-raised-button
+        mat-button
         color="primary"
         mat-dialog-close>Close</button>
     </mat-dialog-actions>
