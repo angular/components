@@ -432,6 +432,38 @@
   ));
 }
 
+/// Fixes inconsistent values in the dialog tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of dialog tokens currently being generated.
+/// @param {Map} $all-tokens Map of all dialog tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-dialog-tokens($systems, $tokens) {
+  $tokens: _rename-map-keys($tokens, (
+    headline-color: subhead-color,
+    headline-font: subhead-font,
+    headline-line-height: subhead-line-height,
+    headline-size: subhead-size,
+    headline-tracking: subhead-tracking,
+    headline-weight: subhead-weight,
+  ));
+
+  @if (map.has-key($tokens, container-elevation)) {
+    $tokens: map.merge($tokens, (
+      // The spec has the dialog at an elevation of 3 which is consistent with the current
+      // version of the tokens (0_161), however both the designs and MDC's implementation
+      // have the elevation set to 0. Set it manually to 0 here since the value in the
+      // exported tokens  is likely outdated.
+      container-elevation: 0,
+
+      // This color needs to be supplied for MDC to produce the shadow. Technically we don't
+      // have to provide it since the elevation is set to 0 above, but we do it in case
+      // the value changes in the future.
+      container-shadow-color: #000,
+    ));
+  }
+
+  @return $tokens;
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -495,7 +527,7 @@
     ),
     _namespace-tokens(
       (mdc, dialog),
-      mdc-tokens.md-comp-dialog-values($systems, $exclude-hardcoded),
+      _fix-dialog-tokens($systems, mdc-tokens.md-comp-dialog-values($systems, $exclude-hardcoded)),
       $token-slots
     ),
     _namespace-tokens(
@@ -724,6 +756,11 @@
     _namespace-tokens(
       (mat, datepicker),
       custom-tokens.datepicker($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, dialog),
+      custom-tokens.dialog($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
