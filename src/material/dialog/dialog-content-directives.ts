@@ -88,6 +88,44 @@ export class MatDialogClose implements OnInit, OnChanges {
   }
 }
 
+@Directive({standalone: true})
+export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
+  constructor(
+    // The dialog title directive is always used in combination with a `MatDialogRef`.
+    // tslint:disable-next-line: lightweight-tokens
+    @Optional() protected _dialogRef: MatDialogRef<any>,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _dialog: MatDialog,
+  ) {}
+
+  protected abstract _onAdd(): void;
+  protected abstract _onRemove(): void;
+
+  ngOnInit() {
+    if (!this._dialogRef) {
+      this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
+    }
+
+    if (this._dialogRef) {
+      Promise.resolve().then(() => {
+        this._onAdd();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    // Note: we null check because there are some internal
+    // tests that are mocking out `MatDialogRef` incorrectly.
+    const instance = this._dialogRef?._containerInstance;
+
+    if (instance) {
+      Promise.resolve().then(() => {
+        this._onRemove();
+      });
+    }
+  }
+}
+
 /**
  * Title of a dialog element. Stays fixed to the top of the dialog when scrolling.
  */
@@ -100,41 +138,17 @@ export class MatDialogClose implements OnInit, OnChanges {
     '[id]': 'id',
   },
 })
-export class MatDialogTitle implements OnInit, OnDestroy {
+export class MatDialogTitle extends MatDialogLayoutSection {
   @Input() id: string = `mat-mdc-dialog-title-${dialogElementUid++}`;
 
-  constructor(
-    // The dialog title directive is always used in combination with a `MatDialogRef`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() private _dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog,
-  ) {}
-
-  ngOnInit() {
-    if (!this._dialogRef) {
-      this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
-    }
-
-    if (this._dialogRef) {
-      Promise.resolve().then(() => {
-        // Note: we null check the queue, because there are some internal
-        // tests that are mocking out `MatDialogRef` incorrectly.
-        this._dialogRef._containerInstance?._addAriaLabelledBy?.(this.id);
-      });
-    }
+  protected _onAdd() {
+    // Note: we null check the queue, because there are some internal
+    // tests that are mocking out `MatDialogRef` incorrectly.
+    this._dialogRef._containerInstance?._addAriaLabelledBy?.(this.id);
   }
 
-  ngOnDestroy() {
-    // Note: we null check because there are some internal
-    // tests that are mocking out `MatDialogRef` incorrectly.
-    const instance = this._dialogRef?._containerInstance;
-
-    if (instance) {
-      Promise.resolve().then(() => {
-        instance._removeAriaLabelledBy?.(this.id);
-      });
-    }
+  protected override _onRemove(): void {
+    this._dialogRef?._containerInstance?._removeAriaLabelledBy?.(this.id);
   }
 }
 
@@ -162,11 +176,19 @@ export class MatDialogContent {}
     '[class.mat-mdc-dialog-actions-align-end]': 'align === "end"',
   },
 })
-export class MatDialogActions {
+export class MatDialogActions extends MatDialogLayoutSection {
   /**
    * Horizontal alignment of action buttons.
    */
   @Input() align?: 'start' | 'center' | 'end';
+
+  protected _onAdd() {
+    this._dialogRef._containerInstance?._updateActionSectionCount?.(1);
+  }
+
+  protected override _onRemove(): void {
+    this._dialogRef._containerInstance?._updateActionSectionCount?.(-1);
+  }
 }
 
 /**

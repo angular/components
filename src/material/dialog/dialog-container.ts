@@ -68,6 +68,7 @@ export const CLOSE_ANIMATION_DURATION = 75;
     '[attr.aria-label]': '_config.ariaLabel',
     '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
     '[class._mat-animation-noopable]': '!_animationsEnabled',
+    '[class.mat-mdc-dialog-container-with-actions]': '_actionSectionCount > 0',
   },
 })
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
@@ -76,6 +77,9 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
 
   /** Whether animations are enabled. */
   _animationsEnabled: boolean = this._animationMode !== 'NoopAnimations';
+
+  /** Number of actions projected in the dialog. */
+  protected _actionSectionCount = 0;
 
   /** Host element of the dialog container component. */
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
@@ -192,6 +196,15 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       // animations, the defer is applied here.
       Promise.resolve().then(() => this._finishDialogClose());
     }
+  }
+
+  /**
+   * Updates the number action sections.
+   * @param delta Increase/decrease in the number of sections.
+   */
+  _updateActionSectionCount(delta: number) {
+    this._actionSectionCount += delta;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
