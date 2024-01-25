@@ -1,3 +1,28 @@
+<a name="17.1.1"></a>
+# 17.1.1 "plastic-mug" (2024-01-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7a7cd113a0](https://github.com/angular/components/commit/7a7cd113a073b2be2fc15ff4165bacbf40b7f01b) | perf | **table:** Use afterRender hooks ([#28354](https://github.com/angular/components/pull/28354)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [739b841bbc](https://github.com/angular/components/commit/739b841bbc478c1f393d2945cc40c9fc216cf211) | fix | **badge:** move structural styles out of theme ([#28452](https://github.com/angular/components/pull/28452)) |
+| [9e7fe24494](https://github.com/angular/components/commit/9e7fe24494add34341062ab9ba3fd1160adc3830) | fix | **core:** fix mat-error not rendering with Closure Compiler ([#28405](https://github.com/angular/components/pull/28405)) |
+| [90456b0d4c](https://github.com/angular/components/commit/90456b0d4c0acf1eab096509a9e68b7472a0cc62) | fix | **dialog:** scale animation not working ([#28449](https://github.com/angular/components/pull/28449)) |
+| [ed0a7aaa43](https://github.com/angular/components/commit/ed0a7aaa4379c18afde630518aa366beb5cd2317) | fix | **slide-toggle:** move state-layer-size token ([#28397](https://github.com/angular/components/pull/28397)) |
+| [ab2ceab21c](https://github.com/angular/components/commit/ab2ceab21c7e2c4508c21280b261bcaec4cc627b) | fix | **slide-toggle:** use css var for disabled label color ([#28471](https://github.com/angular/components/pull/28471)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d7f26c3342](https://github.com/angular/components/commit/d7f26c334288caecc86c378214282fbae8c46465) | fix | **theming:** align form field icons with M3 ([#28463](https://github.com/angular/components/pull/28463)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4c83ea8ef8](https://github.com/angular/components/commit/4c83ea8ef830d9a409f72c09a27d7a6069928558) | fix | import ANIMATION_MODULE_TYPE from core ([#28459](https://github.com/angular/components/pull/28459)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.0"></a>
 # 17.1.0 "metal-table" (2024-01-17)
 ### cdk
