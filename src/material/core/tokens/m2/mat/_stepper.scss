@@ -10,7 +10,12 @@ $prefix: (mat, stepper);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    // Border radius for step header on focus
+    header-focus-state-layer-shape: 0,
+    // Border radius for step header on hover
+    header-hover-state-layer-shape: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
