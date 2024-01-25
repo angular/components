@@ -113,8 +113,12 @@ export class MatDialog implements OnDestroy {
 }
 
 // @public
-export class MatDialogActions {
+export class MatDialogActions extends MatDialogLayoutSection {
     align?: 'start' | 'center' | 'end';
+    // (undocumented)
+    protected _onAdd(): void;
+    // (undocumented)
+    protected _onRemove(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogActions, "[mat-dialog-actions], mat-dialog-actions, [matDialogActions]", never, { "align": { "alias": "align"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -184,6 +188,7 @@ export class MatDialogConfig<D = any> {
 // @public (undocumented)
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
     constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _animationMode?: string | undefined, focusMonitor?: FocusMonitor);
+    protected _actionSectionCount: number;
     _animationsEnabled: boolean;
     _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
     // (undocumented)
@@ -196,6 +201,7 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     ngOnDestroy(): void;
     protected _openAnimationDone(totalTime: number): void;
     _startExitAnimation(): void;
+    _updateActionSectionCount(delta: number): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatDialogContainer, "mat-dialog-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -253,18 +259,17 @@ export enum MatDialogState {
 }
 
 // @public
-export class MatDialogTitle implements OnInit, OnDestroy {
-    constructor(_dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
+export class MatDialogTitle extends MatDialogLayoutSection {
     // (undocumented)
     id: string;
     // (undocumented)
-    ngOnDestroy(): void;
+    protected _onAdd(): void;
     // (undocumented)
-    ngOnInit(): void;
+    protected _onRemove(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogTitle, "[mat-dialog-title], [matDialogTitle]", ["matDialogTitle"], { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogTitle, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogTitle, never>;
 }
 
 // (No @packageDocumentation comment for this package)

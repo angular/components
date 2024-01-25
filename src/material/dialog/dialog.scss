@@ -15,6 +15,11 @@ $mat-dialog-content-max-height: 65vh !default;
 // don't expose this value as variable.
 $mat-dialog-button-horizontal-margin: 8px !default;
 
+// Whether to emit fallback values for the structural styles. Previously MDC was emitting
+// paddings in the static styles which meant that users would get them even if they didn't
+// include the `dialog-base`. Eventually we should clean up the usages of this flag.
+$_emit-fallbacks: true;
+
 // Note that we disable fallback declarations, but we don't disable fallback
 // values, because there are a lot of internal apps that don't include a proper
 // theme in their tests.
@@ -55,21 +60,31 @@ $mat-dialog-button-horizontal-margin: 8px !default;
   }
 }
 
+@mixin _use-mat-tokens {
+  @include mdc-helpers.disable-mdc-fallback-declarations {
+    @include token-utils.use-tokens(tokens-mat-dialog.$prefix,
+      tokens-mat-dialog.get-token-slots()) {
+      @content;
+    }
+  }
+}
+
 // This needs extra specificity so it doesn't get overwritten by the CDK structural styles.
 .cdk-overlay-pane.mat-mdc-dialog-panel {
-  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
-    @include token-utils.create-token-slot(max-width, container-max-width);
-    @include token-utils.create-token-slot(min-width, container-min-width);
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(max-width, container-max-width, $_emit-fallbacks);
+    @include token-utils.create-token-slot(min-width, container-min-width, $_emit-fallbacks);
 
     @media (variables.$xsmall) {
-      @include token-utils.create-token-slot(max-width, container-small-max-width);
+      @include token-utils.create-token-slot(max-width, container-small-max-width,
+        $_emit-fallbacks);
     }
   }
 }
 
 .mat-mdc-dialog-title {
-  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
-    @include token-utils.create-token-slot(padding, headline-padding);
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(padding, headline-padding, $_emit-fallbacks);
   }
 }
 
@@ -78,14 +93,17 @@ $mat-dialog-button-horizontal-margin: 8px !default;
 .mat-mdc-dialog-content {
   display: block;
 
-  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+  @include _use-mat-tokens {
     // These styles need a bit more specificity.
     .mat-mdc-dialog-container & {
-      @include token-utils.create-token-slot(padding, content-padding);
+      @include token-utils.create-token-slot(padding, content-padding, $_emit-fallbacks);
     }
 
-    .mat-mdc-dialog-container:has(.mat-mdc-dialog-actions) & {
-      @include token-utils.create-token-slot(padding, with-actions-content-padding);
+    // Note: we can achieve this with a `:has` selector, but it results in an
+    // increased specificity which breaks a lot of internal clients.
+    .mat-mdc-dialog-container-with-actions & {
+      @include token-utils.create-token-slot(padding, with-actions-content-padding,
+        $_emit-fallbacks);
     }
   }
 
@@ -97,9 +115,9 @@ $mat-dialog-button-horizontal-margin: 8px !default;
 .mat-mdc-dialog-actions {
   // For backwards compatibility, actions align at start by default. MDC usually
   // aligns actions at the end of the container.
-  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
-    @include token-utils.create-token-slot(padding, actions-padding);
-    @include token-utils.create-token-slot(justify-content, actions-alignment);
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(padding, actions-padding, $_emit-fallbacks);
+    @include token-utils.create-token-slot(justify-content, actions-alignment, $_emit-fallbacks);
   }
 
   // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"
