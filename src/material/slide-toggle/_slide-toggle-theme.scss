@@ -1,5 +1,6 @@
 @use '@material/switch/switch-theme' as mdc-switch-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
@@ -15,7 +16,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
-    .mdc-switch {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme(tokens-mdc-switch.get-unthemable-tokens());
     }
   }
@@ -35,26 +36,29 @@
     $mdc-switch-color-tokens: tokens-mdc-switch.get-color-tokens($theme);
 
     // Add values for MDC slide toggles tokens
-    .mat-mdc-slide-toggle {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme($mdc-switch-color-tokens);
-      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
 
       // TODO(wagnermaciel): Use our token system to define this css variable.
-      --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
-        $theme,
-        foreground,
-        disabled-text
-      )};
+    --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+      $theme,
+      foreground,
+      disabled-text
+    )};
 
-      // Change the color palette related tokens to accent or warn if applicable
-      &.mat-accent {
-        @include mdc-switch-theme.theme(
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent));
-      }
+    .mat-mdc-slide-toggle {
+        @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-color-tokens($theme));
 
-      &.mat-warn {
-        @include mdc-switch-theme.theme(
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn));
+        // Change the color palette related tokens to accent or warn if applicable
+        &.mat-accent {
+          @include mdc-switch-theme.theme(
+              tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent));
+        }
+
+        &.mat-warn {
+          @include mdc-switch-theme.theme(
+              tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn));
+        }
       }
     }
   }
@@ -70,9 +74,12 @@
     $mdc-switch-typography-tokens: tokens-mdc-switch.get-typography-tokens($theme);
 
     // Add values for MDC slide toggle tokens
-    .mat-mdc-slide-toggle {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme($mdc-switch-typography-tokens);
-      @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
+
+      .mat-mdc-slide-toggle {
+        @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
+      }
     }
   }
 }
@@ -84,7 +91,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    .mat-mdc-slide-toggle {
+    @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme(tokens-mdc-switch.get-density-tokens($theme));
     }
   }
