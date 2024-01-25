@@ -84,10 +84,8 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    $density-scale: inspection.get-theme-density($theme);
-
     .mat-mdc-slide-toggle {
-      @include mdc-switch-theme.theme(mdc-switch-theme.density($density-scale));
+      @include mdc-switch-theme.theme(tokens-mdc-switch.get-density-tokens($theme));
     }
   }
 }
