@@ -1,9 +1,41 @@
-<a name="17.1.1"></a>
-# 17.1.1 "plastic-mug" (2024-01-25)
-### cdk
+<a name="17.2.0-next.0"></a>
+# 17.2.0-next.0 "metal-spatula" (2024-01-26)
+### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [7a7cd113a0](https://github.com/angular/components/commit/7a7cd113a073b2be2fc15ff4165bacbf40b7f01b) | perf | **table:** Use afterRender hooks ([#28354](https://github.com/angular/components/pull/28354)) |
+| [e05795dde0](https://github.com/angular/components/commit/e05795dde0ca56be3398f34cb834df007f18da1a) | fix | **button:** calculate icon button padding based on tokens |
+| [a496855f30](https://github.com/angular/components/commit/a496855f303acbf4b82821be029467c577976729) | fix | **button:** generate separate tokens for mini fab |
+| [cbeeb3ae17](https://github.com/angular/components/commit/cbeeb3ae1771c4ccbd6c5677cf73ac3d21c593c5) | fix | **checkbox:** use token for disabled label color |
+| [f6d3f1bc21](https://github.com/angular/components/commit/f6d3f1bc21e0ee734432f0609f0ea17016cfdbe1) | fix | **schematics:** import async animations and remove deprecated function usages ([#28424](https://github.com/angular/components/pull/28424)) |
+| [2455a42d3c](https://github.com/angular/components/commit/2455a42d3c5866e122421f144f08ae6fa4df4198) | fix | **stepper:** Update token values for M3 and add color variant support ([#28430](https://github.com/angular/components/pull/28430)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d16e8ac5de](https://github.com/angular/components/commit/d16e8ac5de0191da06089e5668067c8d6e608d61) | feat | **theming:** add M3 tokens for pseudo checkbox ([#28407](https://github.com/angular/components/pull/28407)) |
+| [1f1dac5e57](https://github.com/angular/components/commit/1f1dac5e57019d5faf044875c1b10be8e0fb1dd1) | fix | **theming:** Add support for color variants in badge, button-toggle, button, pseudo-checkbox, and chips ([#28457](https://github.com/angular/components/pull/28457)) |
+| [08c97ab648](https://github.com/angular/components/commit/08c97ab648245d5369e0d3164e0b05c1abc9d193) | fix | **theming:** Add support for color variants in option, checkbox, and fab ([#28412](https://github.com/angular/components/pull/28412)) |
+| [715877a13d](https://github.com/angular/components/commit/715877a13d8f60af3a1f26bf9f6a5f0cc2aee0ee) | fix | **theming:** Add support for color variants in progress-spiner, progress-bar, list, form-field, and datepicker ([#28451](https://github.com/angular/components/pull/28451)) |
+| [29a1e5d8a1](https://github.com/angular/components/commit/29a1e5d8a13e1e81b9aa2e1dd89d54fb063fc191) | fix | **theming:** Add support for color variants in slide-toggle, select, and radio ([#28445](https://github.com/angular/components/pull/28445)) |
+| [e45e210055](https://github.com/angular/components/commit/e45e210055eff26bd74956560b10f2681d4f2ac6) | fix | **theming:** Add support for color variants in tabs and slider ([#28417](https://github.com/angular/components/pull/28417)) |
+| [9ab104b804](https://github.com/angular/components/commit/9ab104b8041ad6bd3f7529a88a6bdefcc219248a) | fix | **theming:** align dialog with M3 |
+| [957bc487bf](https://github.com/angular/components/commit/957bc487bf8077cd4b657baa3d4ed64aebff9196) | fix | **theming:** align fab with M3 spec |
+| [ba3680ed48](https://github.com/angular/components/commit/ba3680ed489e36c106578f790459084649e74bd0) | fix | **theming:** align M3 icon buttons with spec |
+| [601a745fc8](https://github.com/angular/components/commit/601a745fc8e19ab7be93379297ea5fef58d5327e) | fix | **theming:** cap icon button size |
+| [339905c5af](https://github.com/angular/components/commit/339905c5af8a0abe632c2abcdc9f19e9a480677e) | fix | **theming:** disabled radio button incorrect label color ([#28415](https://github.com/angular/components/pull/28415)) |
+| [fdd16e6675](https://github.com/angular/components/commit/fdd16e667550690d554bba49888bfc6929bc97b2) | fix | **theming:** fix filled text field |
+| [06c81e38c7](https://github.com/angular/components/commit/06c81e38c719b7b051aeae2ef339b904cc45015e) | fix | **theming:** fix paginator in M3 |
+| [1e48cd431f](https://github.com/angular/components/commit/1e48cd431fb11f0e0172251d719340b2bc9aa39b) | fix | **theming:** fix up M3 checkbox |
+| [056e2221ec](https://github.com/angular/components/commit/056e2221ecfd75808c74e2ef9a783bcb82a25c03) | fix | **theming:** implement M3 badge ([#28460](https://github.com/angular/components/pull/28460)) |
+| [935eda0872](https://github.com/angular/components/commit/935eda0872ffdafbf0273b931d6df04e49030369) | fix | **theming:** incorrect validation for density scale |
+| [dabb96765a](https://github.com/angular/components/commit/dabb96765a80c29067d07240d46d7852fbc580fa) | fix | **theming:** set up core theme and app tokens ([#28431](https://github.com/angular/components/pull/28431)) |
+| [d26a51e3a5](https://github.com/angular/components/commit/d26a51e3a54b71928bc98df175c54997f8a31929) | fix | **theming:** set up internal form field in M3 ([#28414](https://github.com/angular/components/pull/28414)) |
+| [42f2cc9ad8](https://github.com/angular/components/commit/42f2cc9ad8a2a4f2e38531cb299ef7f89e104d92) | fix | **theming:** set up padding tokens |
+| [0da585f730](https://github.com/angular/components/commit/0da585f7307ea98b5575d520d3b6da79769827c4) | fix | **theming:** Update color palettes ([#28472](https://github.com/angular/components/pull/28472)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="17.1.1"></a>
+# 17.1.1 "plastic-mug" (2024-01-25)
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
