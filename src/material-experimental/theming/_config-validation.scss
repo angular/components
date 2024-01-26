@@ -89,7 +89,7 @@
   @if $err {
     @return (#{'$config should be a color configuration object. Got:'} $config);
   }
-  $allowed: (theme-type, primary, secondary, tertiary);
+  $allowed: (theme-type, primary, tertiary);
   $err: mat.private-validate-allowed-values(map.keys($config or ()), $allowed...);
   @if $err {
     @return (

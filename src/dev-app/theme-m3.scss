@@ -83,10 +83,10 @@
   }
 
   .mat-accent {
-    @include color-variant-styles($theme, secondary);
+    @include color-variant-styles($theme, tertiary);
   }
   .mat-badge-accent {
-    @include mat.badge-color($theme, $color-variant: secondary);
+    @include mat.badge-color($theme, $color-variant: tertiary);
   }
 
   .mat-warn {
@@ -120,8 +120,7 @@ dev-app {
 $m3-base-config: (
   color: (
     primary: matx.$m3-green-palette,
-    secondary: matx.$m3-blue-palette,
-    tertiary: matx.$m3-yellow-palette,
+    tertiary: matx.$m3-violet-palette,
   ),
 );
 
@@ -174,6 +173,10 @@ html {
 
 @include color-variants-back-compat($light-theme);
 
+.demo-force-secondary {
+  @include mat.option-color($light-theme, $color-variant: secondary);
+}
+
 // Emit dark theme styles.
 .demo-unicorn-dark-theme {
   // TODO(mmalerba): choose colors from the theming API.
@@ -219,6 +222,10 @@ html {
   @include mat.tree-color($dark-theme);
 
   @include color-variants-back-compat($dark-theme);
+
+  .demo-force-secondary {
+    @include mat.option-color($dark-theme, $color-variant: secondary);
+  }
 }
 
 // Emit density styles for each scale.

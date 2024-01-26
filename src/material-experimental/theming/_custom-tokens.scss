@@ -1058,7 +1058,7 @@
       focus-state-layer-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, secondary), $alpha: 0.2),
     ),
-    teriatiary: (
+    tertiary: (
       ripple-color: map.get($systems, md-sys-color, tertiary),
       hover-state-layer-color: mat.private-safe-color-change(
           map.get($systems, md-sys-color, tertiary), $alpha: 0.05),
