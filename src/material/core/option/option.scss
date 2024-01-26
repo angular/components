@@ -5,6 +5,7 @@
 @use '@material/typography/typography' as mdc-typography;
 
 @use '../tokens/m2/mat/option' as tokens-mat-option;
+@use '../tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../tokens/token-utils';
 @use '../mdc-helpers/mdc-helpers';
 @use '../style/vendor-prefixes';
@@ -175,6 +176,18 @@
       right: auto;
       left: mdc-list-variables.$side-padding;
     }
+  }
+}
+
+.mat-mdc-option-multiple {
+  // Multi-select options in the selected state aren't supposed to change their background color,
+  // because the checkbox already indicates that they're selected. This happened to work in M2,
+  // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
+  // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
+  @include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
+    $selected-token: token-utils.get-token-variable(list-item-selected-container-color);
+    $base-token: token-utils.get-token-variable(list-item-container-color);
+    #{$selected-token}: var(#{$base-token}, transparent);
   }
 }
 
