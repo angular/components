@@ -83,6 +83,13 @@ $scale: 0.75 !default;
   }
 }
 
+.mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid .mat-mdc-select-arrow,
+.mat-form-field-invalid:not(.mat-form-field-disabled) .mat-mdc-form-field-infix::after {
+  @include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+    @include token-utils.create-token-slot(color, invalid-arrow-color);
+  }
+}
+
 .mat-mdc-select-arrow {
   width: $mat-select-arrow-size * 2;
   height: $mat-select-arrow-size;
@@ -94,10 +101,6 @@ $scale: 0.75 !default;
 
     .mat-mdc-form-field.mat-focused & {
       @include token-utils.create-token-slot(color, focused-arrow-color);
-    }
-
-    .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid & {
-      @include token-utils.create-token-slot(color, invalid-arrow-color);
     }
 
     .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-disabled & {
