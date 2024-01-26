@@ -163,6 +163,10 @@ div.mat-mdc-select-panel {
     border-bottom-right-radius: 0;
     transform-origin: bottom center;
   }
+
+  .mat-mdc-option {
+    --mdc-list-list-item-container-color: var(--mat-select-panel-background-color);
+  }
 }
 
 .mat-mdc-select-placeholder {
