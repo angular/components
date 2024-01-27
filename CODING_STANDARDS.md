@@ -258,14 +258,13 @@ behaviors can be composed. Instead, [TypeScript mixins][ts-mixins] can be used t
 common behaviors into a single component.
 
 #### Coercion
-Component and directive inputs for boolean and number values must use a setter to coerce values to
-the expected type using cdk/coercion.
+Component and directive inputs for boolean and number values must use an input transform function
+to coerce values to the expected type.
 For example:
 ```ts
-@Input() disabled: boolean;
-get disabled(): boolean { return this._disabled; }
-set disabled(v: BooleanInput) { this._disabled = coerceBooleanProperty(v); }
-private _disabled = false;
+import {Input, booleanAttribute} from '@angular/core';
+
+@Input({transform: booleanAttribute}) disabled: boolean = false;
 ```
 The above code allows users to set `disabled` similar to how it can be set on native inputs:
 ```html
