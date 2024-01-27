@@ -1513,12 +1513,15 @@
     primary: (), // Default, no overrides needed
     secondary: (
       active-indicator-color: map.get($systems, md-sys-color, secondary),
+      track-color: map.get($systems, md-sys-color, secondary-container),
     ),
     tertiary: (
       active-indicator-color: map.get($systems, md-sys-color, tertiary),
+      track-color: map.get($systems, md-sys-color, tertiary-container),
     ),
     error: (
       active-indicator-color: map.get($systems, md-sys-color, error),
+      track-color: map.get($systems, md-sys-color, error-container),
     ),
   );
 }
