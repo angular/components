@@ -60,7 +60,7 @@ $prefix: (mat, form-field);
     disabled-select-arrow-color: rgba($on-surface, 0.38),
 
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
   ));
 }
 
