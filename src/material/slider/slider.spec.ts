@@ -91,6 +91,16 @@ describe('MDC-based MatSlider', () => {
     }
   }
 
+  // Note that this test is outside of the other `describe` blocks, because they all run
+  // `detectChanges` in the `beforeEach` and we're testing specifically what happens if it
+  // is destroyed before change detection has run.
+  it('should not throw if a slider is destroyed before the first change detection run', () => {
+    expect(() => {
+      const fixture = createComponent(StandardSlider);
+      fixture.destroy();
+    }).not.toThrow();
+  });
+
   describe('standard slider', () => {
     let fixture: ComponentFixture<StandardSlider>;
     let slider: MatSlider;
