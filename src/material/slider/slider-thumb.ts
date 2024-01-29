@@ -75,7 +75,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   private _sliderInput: _MatSliderThumb;
 
   /** The native html element of the slider input corresponding to this thumb. */
-  private _sliderInputEl: HTMLInputElement;
+  private _sliderInputEl: HTMLInputElement | undefined;
 
   /** The RippleRef for the slider thumbs hover state. */
   private _hoverRippleRef: RippleRef | undefined;
@@ -129,12 +129,15 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
 
   ngOnDestroy() {
     const input = this._sliderInputEl;
-    input.removeEventListener('pointermove', this._onPointerMove);
-    input.removeEventListener('pointerdown', this._onDragStart);
-    input.removeEventListener('pointerup', this._onDragEnd);
-    input.removeEventListener('pointerleave', this._onMouseLeave);
-    input.removeEventListener('focus', this._onFocus);
-    input.removeEventListener('blur', this._onBlur);
+
+    if (input) {
+      input.removeEventListener('pointermove', this._onPointerMove);
+      input.removeEventListener('pointerdown', this._onDragStart);
+      input.removeEventListener('pointerup', this._onDragEnd);
+      input.removeEventListener('pointerleave', this._onMouseLeave);
+      input.removeEventListener('focus', this._onFocus);
+      input.removeEventListener('blur', this._onBlur);
+    }
   }
 
   private _onPointerMove = (event: PointerEvent): void => {
