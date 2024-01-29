@@ -27,14 +27,28 @@
     .mat-mdc-chip-focus-overlay {
       @include token-utils.create-token-slot(background, focus-state-layer-color);
 
+      .mat-mdc-chip-selected & {
+        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+      }
+
       .mat-mdc-chip:hover & {
         @include token-utils.create-token-slot(background, hover-state-layer-color);
         @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
       }
 
+      .mat-mdc-chip-selected:hover & {
+        @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
+        @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
+      }
+
       .mat-mdc-chip.cdk-focused & {
         @include token-utils.create-token-slot(background, focus-state-layer-color);
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      }
+
+      .mat-mdc-chip-selected.cdk-focused & {
+        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+        @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
       }
     }
 
@@ -79,13 +93,6 @@
       mdc-chip-theme.$trailing-action-leading-padding,
       mdc-chip-theme.$trailing-action-trailing-padding
     );
-
-    // MDC has some code looking for a `with-icon-selected-disabled-icon-color` token for this
-    // color, but the token isn't defined in the theme map so the validation throws an error.
-    // We don't change the color anyway so we can point it to the enable color instead.
-    &.mdc-evolution-chip--disabled .mdc-evolution-chip__checkmark {
-      color: var(--mdc-chip-with-icon-selected-icon-color, currentColor);
-    }
   }
 
   .mdc-evolution-chip--with-avatar {
