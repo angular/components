@@ -39,7 +39,7 @@
           <mat-icon matChipAvatar>home</mat-icon>
           Home
           <button matChipRemove aria-label="Remove chip">
-            <mat-icon>cancel</mat-icon>
+            <mat-icon>close</mat-icon>
           </button>
         </mat-chip>
 
@@ -47,7 +47,7 @@
           <mat-chip-avatar>P</mat-chip-avatar>
           Portel
           <button matChipRemove aria-label="Remove chip">
-            <mat-icon>cancel</mat-icon>
+            <mat-icon>close</mat-icon>
           </button>
         </mat-chip>
 
@@ -59,7 +59,7 @@
         <mat-chip>
           Koby
           <button matChipRemove aria-label="Remove chip">
-            <mat-icon>cancel</mat-icon>
+            <mat-icon>close</mat-icon>
           </button>
         </mat-chip>
 
@@ -76,7 +76,7 @@
           <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" matChipAvatar>
           Husi
           <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
+            <mat-icon>close</mat-icon>
           </button>
         </mat-chip>
 
@@ -100,7 +100,7 @@
                   (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
             With Events
             <button matChipRemove aria-label="Remove chip">
-              <mat-icon>cancel</mat-icon>
+              <mat-icon>close</mat-icon>
             </button>
           </mat-chip>
         }
@@ -180,7 +180,7 @@
               (edited)="edit(person, $event)">
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
-                <mat-icon>cancel</mat-icon>
+                <mat-icon>close</mat-icon>
               </button>
             </mat-chip-row>
           }
@@ -201,7 +201,7 @@
             <mat-chip-row (removed)="remove(person)">
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
-                <mat-icon>cancel</mat-icon>
+                <mat-icon>close</mat-icon>
               </button>
             </mat-chip-row>
           }

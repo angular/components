@@ -60,8 +60,18 @@
   @include token-utils.use-tokens(tokens-mat-chip.$prefix, $mat-chip-token-slots) {
     // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
     // Now that MDC supports disabled styles, we should switch to using theirs.
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+    .mat-mdc-standard-chip.mat-mdc-chip-selected.mdc-evolution-chip--disabled {
       @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+    }
+
+    .mat-mdc-standard-chip.mat-mdc-chip-selected:not(.mdc-evolution-chip--disabled) {
+      .mdc-evolution-chip__icon--trailing {
+        @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+      }
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+      @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
     }
   }
 }
