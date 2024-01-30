@@ -182,6 +182,10 @@ $_standard-tokens: (
   @include vendor-prefixes.user-select(none);
   display: inline-block;
   padding: $legacy-padding;
+  // Add the cursor effect on the label.
+  cursor: pointer;
+  // Center the content when needed.
+  margin: auto;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(line-height, height);
@@ -263,6 +267,9 @@ $_standard-tokens: (
   outline: none;
   width: 100%; // Stretch the button in case the consumer set a custom width.
   cursor: pointer;
+
+  // Creates a new bounding box for the button and fill all available space.
+  position: absolute;
 
   .mat-button-toggle-disabled & {
     cursor: default;
