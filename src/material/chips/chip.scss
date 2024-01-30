@@ -73,6 +73,30 @@
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
       @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
     }
+
+    .mat-mdc-chip-remove {
+      @include token-utils.create-token-slot(opacity, trailing-action-opacity);
+
+      &:focus {
+        @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
+      }
+
+      &::after {
+        @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
+      }
+
+      &:hover::after {
+        @include token-utils.create-token-slot(opacity, trailing-action-hover-state-layer-opacity);
+      }
+
+      &:focus::after {
+        @include token-utils.create-token-slot(opacity, trailing-action-focus-state-layer-opacity);
+      }
+    }
+
+    .mat-mdc-chip-selected .mat-mdc-chip-remove::after {
+      @include token-utils.create-token-slot(background, selected-trailing-action-state-layer-color);
+    }
   }
 }
 
@@ -282,14 +306,6 @@
 }
 
 .mat-mdc-chip-remove {
-  // Fades out the trailing icon slightly so that it can become darker when focused.
-  // The MDC theming has variables for this, but the focus/hover states don't seem to work.
-  opacity: 0.54;
-
-  &:focus {
-    opacity: 1;
-  }
-
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $offset: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
@@ -298,6 +314,20 @@
     // MDC sets a padding a on the chip button which stretches out the focus indicator.
     left: 8px;
     right: 8px;
+  }
+
+  // Used as a state overlay.
+  &::after {
+    $offset: 2px;
+    content: '';
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 0 - $offset;
+    bottom: 0 - $offset;
+    left: 8px - $offset;
+    right: 8px - $offset;
+    border-radius: 50%;
   }
 
   .mat-icon {

@@ -199,16 +199,31 @@
     disabled-container-opacity: _hardcode(1, $exclude-hardcoded),
     selected-trailing-icon-color: map.get($systems, md-sys-color, on-secondary-container),
     selected-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
+    trailing-action-opacity: 1,
+    trailing-action-focus-opacity: 1,
+    trailing-action-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    selected-trailing-action-state-layer-color:
+        map.get($systems, md-sys-color, on-secondary-container),
+    trailing-action-hover-state-layer-opacity:
+        map.get($systems, md-sys-state, hover-state-layer-opacity),
+    trailing-action-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
   ), (
     primary: (
       selected-trailing-icon-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-primary-container),
     ),
     secondary: (), // Default, no overrides needed.
     tertiary: (
       selected-trailing-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-tertiary-container),
     ),
     error: (
       selected-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-error-container),
     ),
   ));
 }
