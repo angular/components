@@ -4,27 +4,37 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/chip' as m2-mdc-chip;
+@use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
+@use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
 @use '../core/tokens/token-utils';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 // The slots for tokens that will be configured in the theme can be emitted with no fallback.
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $token-slots: m2-mdc-chip.get-token-slots();
+  $mdc-chip-token-slots: tokens-mdc-chip.get-token-slots();
+  $mat-chip-token-slots: tokens-mat-chip.get-token-slots();
 
   // Add the MDC chip static styles.
   @include mdc-chip.static-styles();
 
   .mat-mdc-standard-chip {
     // Add the official slots for the MDC chip.
-    @include mdc-chip-theme.theme-styles($token-slots);
+    @include mdc-chip-theme.theme-styles($mdc-chip-token-slots);
   }
 
   // Add additional slots for the MDC chip tokens, needed in Angular Material.
-  @include token-utils.use-tokens(m2-mdc-chip.$prefix, $token-slots) {
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, $mdc-chip-token-slots) {
     .mat-mdc-chip-focus-overlay {
       @include token-utils.create-token-slot(background, focus-state-layer-color);
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
+  }
+
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, $mat-chip-token-slots) {
+    // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
+    // Now that MDC supports disabled styles, we should switch to using theirs.
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+      @include token-utils.create-token-slot(opacity, disabled-container-opacity);
     }
   }
 }
@@ -33,6 +43,7 @@
 // `theme-styles` mixin, but we can't at the time of writing.
 @mixin _missing-mdc-theme-styles() {
   .mat-mdc-standard-chip {
+    @include mdc-chip-theme.outline-style(solid);
     @include mdc-chip-theme.checkmark-size(mdc-chip-theme.$checkmark-size);
     @include mdc-chip-theme.trailing-action-size(mdc-chip-theme.$trailing-action-size);
     @include mdc-chip-theme.horizontal-padding(
@@ -96,12 +107,6 @@
       // very specific.
       stroke: CanvasText !important;
     }
-  }
-
-  // Angular Material supports disabled chips, which MDC does not.
-  // Dim the disabled chips and stop MDC from changing the icon color on click.
-  &.mdc-evolution-chip--disabled {
-    opacity: 0.4;
   }
 
   // MDC sets `overflow: hidden` on these elements in order to truncate the text. This is

@@ -201,11 +201,6 @@
         radius: 8px,
       ), $exclude-hardcoded),
       with-avatar-avatar-size: _hardcode(24px, $exclude-hardcoded),
-      elevated-container-color: map.get($systems, md-sys-color, surface-container-low),
-      elevated-disabled-container-color: mat.private-safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: 0.12,
-      ),
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
       disabled-label-text-color: mat.private-safe-color-change(
         map.get($systems, md-sys-color, on-surface),
@@ -225,6 +220,13 @@
       ),
       focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
       focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+      outline-width: _hardcode(1px, $exclude-hardcoded),
+      outline-color: map.get($systems, md-sys-color, outline),
+      disabled-outline-color: mat.private-safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: 0.12,
+      ),
+      focus-outline-color: map.get($systems, md-sys-color, on-surface-variant),
     ),
   ), (
     // Color variants:

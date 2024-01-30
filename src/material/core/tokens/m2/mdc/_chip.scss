@@ -39,6 +39,14 @@ $prefix: (mdc, chip);
     with-avatar-avatar-size: 28px,
     // The width & height of the chip icon.
     with-icon-icon-size: 18px,
+    // The chip's border width.
+    outline-width: 0,
+    // The chip's border color.
+    outline-color: transparent,
+    // The chip's border color when disabled.
+    disabled-outline-color: transparent,
+    // The chip's border color when focused.
+    focus-outline-color: transparent,
     // Not used by MDC.
     disabled-label-text-opacity: null,
     // Not used by MDC.
@@ -55,8 +63,6 @@ $prefix: (mdc, chip);
     flat-selected-outline-width: null,
     // Our chips do not have a border.
     flat-unselected-outline-width: null,
-    // Our chips do not have a border.
-    outline-width: null,
     // Not used by MDC.
     with-avatar-disabled-avatar-opacity: null,
     // Not used by MDC.
@@ -73,8 +79,6 @@ $prefix: (mdc, chip);
     container-elevation: null,
     // Elevated chips not implemented.
     container-shadow-color: null,
-    // Our chips do not have a border.
-    disabled-outline-color: null,
     // Elevated chips not implemented.
     elevated-container-elevation: null,
     // Elevated chips not implemented.
@@ -136,15 +140,11 @@ $prefix: (mdc, chip);
     // Unused.
     focus-label-text-color: null,
     // Unused.
-    focus-outline-color: null,
-    // Unused.
     hover-label-text-color: null,
     // Unused.
     hover-state-layer-color: null,
     // Unused.
     hover-state-layer-opacity: null,
-    // Unused.
-    outline-color: null,
     // Unused.
     pressed-label-text-color: null,
     // Unused.
