@@ -1,5 +1,4 @@
 @use '../../token-utils';
-@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -8,7 +7,19 @@ $prefix: (mat, switch);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    unselected-handle-size: 20px,
+    selected-handle-size: 20px,
+    pressed-handle-size: 20px,
+    with-icon-handle-size: 20px,
+
+    selected-handle-horizontal-margin: 0,
+    selected-with-icon-handle-horizontal-margin: 0,
+    selected-pressed-handle-horizontal-margin: 0,
+    unselected-handle-horizontal-margin: 0,
+    unselected-with-icon-handle-horizontal-margin: 0,
+    unselected-pressed-handle-horizontal-margin: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
