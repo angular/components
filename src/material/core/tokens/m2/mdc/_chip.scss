@@ -47,6 +47,10 @@ $prefix: (mdc, chip);
     disabled-outline-color: transparent,
     // The chip's border color when focused.
     focus-outline-color: transparent,
+    // The opacity of the chip's state overlay when hovered.
+    hover-state-layer-opacity: 0.04,
+    // Not used by MDC.
+    with-avatar-disabled-avatar-opacity: 1,
     // Not used by MDC.
     disabled-label-text-opacity: null,
     // Not used by MDC.
@@ -63,8 +67,6 @@ $prefix: (mdc, chip);
     flat-selected-outline-width: null,
     // Our chips do not have a border.
     flat-unselected-outline-width: null,
-    // Not used by MDC.
-    with-avatar-disabled-avatar-opacity: null,
     // Not used by MDC.
     with-icon-disabled-icon-opacity: null,
     // Not used by MDC.
@@ -141,10 +143,6 @@ $prefix: (mdc, chip);
     focus-label-text-color: null,
     // Unused.
     hover-label-text-color: null,
-    // Unused.
-    hover-state-layer-color: null,
-    // Unused.
-    hover-state-layer-opacity: null,
     // Unused.
     pressed-label-text-color: null,
     // Unused.
@@ -269,6 +267,8 @@ $prefix: (mdc, chip);
     elevated-disabled-container-color: $background,
     // The color of the focus state layer.
     focus-state-layer-color: $state-layer-color,
+    // The color of the hover state layer.
+    hover-state-layer-color: $state-layer-color,
     // The opacity of the focus state layer.
     focus-state-layer-opacity: $state-layer-opacity,
     // The chip text color.
