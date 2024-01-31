@@ -1,3 +1,15 @@
+<a name="17.1.2"></a>
+# 17.1.2 "acrylic-aquarium" (2024-01-31)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8675ae2436](https://github.com/angular/components/commit/8675ae24368dbf904176f1813ed0d8945e145fa5) | fix | **form-field:** insufficient color contrast text to input fill ([#28274](https://github.com/angular/components/pull/28274)) |
+| [b6a9ac8214](https://github.com/angular/components/commit/b6a9ac8214a19b31776e73d56c811663c712b1e3) | fix | **schematics:** import async animations and remove deprecated function usages ([#28481](https://github.com/angular/components/pull/28481)) |
+| [251293f950](https://github.com/angular/components/commit/251293f9502d8dbe39a3dc2c2399082ffeea2d49) | fix | **slide-toggle:** Emit token values under current selector or root ([#28390](https://github.com/angular/components/pull/28390)) |
+| [9e02a1135b](https://github.com/angular/components/commit/9e02a1135bd108a3443e796f6c19385bce963495) | fix | **slider:** error if slider is destroyed before first change detection ([#28494](https://github.com/angular/components/pull/28494)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.1"></a>
 # 17.1.1 "plastic-mug" (2024-01-25)
 ### material
