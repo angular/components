@@ -1,0 +1,96 @@
+@use '@angular/material' as mat;
+
+@mixin color-variant-styles($theme, $color-variant) {
+  @include mat.option-color($theme, $color-variant: $color-variant);
+  @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
+  @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
+  @include mat.stepper-color($theme, $color-variant: $color-variant);
+
+  &.mat-icon {
+    @include mat.icon-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-checkbox {
+    @include mat.checkbox-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-slider {
+    @include mat.slider-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-tab-group,
+  &.mat-mdc-tab-nav-bar {
+    @include mat.tabs-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-slide-toggle {
+    @include mat.slide-toggle-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-form-field {
+    @include mat.select-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-radio-button {
+    @include mat.radio-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-progress-bar {
+    @include mat.progress-bar-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-form-field {
+    @include mat.form-field-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-datepicker-content {
+    @include mat.datepicker-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-button-base {
+    @include mat.button-color($theme, $color-variant: $color-variant);
+  }
+
+  &.mat-mdc-standard-chip {
+    @include mat.chips-color($theme, $color-variant: $color-variant);
+  }
+
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include mat.checkbox-color($theme, $color-variant: $color-variant);
+    @include mat.radio-color($theme, $color-variant: $color-variant);
+  }
+
+  // M3 dropped support for warn/error color FABs.
+  @if $color-variant != error {
+    &.mat-mdc-fab,
+    &.mat-mdc-mini-fab {
+      @include mat.fab-color($theme, $color-variant: $color-variant);
+    }
+  }
+}
+
+// TODO(mmalerba): Consider adding this as a back-compat API for users who want it, rather than just
+//  a demo thing.
+@mixin color-variants-back-compat($theme) {
+  .mat-primary {
+    @include color-variant-styles($theme, primary);
+  }
+  .mat-badge {
+    @include mat.badge-color($theme, $color-variant: primary);
+  }
+
+  .mat-accent {
+    @include color-variant-styles($theme, tertiary);
+  }
+  .mat-badge-accent {
+    @include mat.badge-color($theme, $color-variant: tertiary);
+  }
+
+  .mat-warn {
+    @include color-variant-styles($theme, error);
+  }
+  .mat-badge-warn {
+    @include mat.badge-color($theme, $color-variant: error);
+  }
+}
