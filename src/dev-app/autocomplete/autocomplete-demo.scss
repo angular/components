@@ -19,3 +19,9 @@
   color: rgba(0, 0, 0, 0.54);
   margin-left: 8px;
 }
+
+.demo-truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

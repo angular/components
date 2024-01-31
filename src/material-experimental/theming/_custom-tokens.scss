@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '@material/elevation/elevation-theme' as mdc-elevation;
 
 /// Hardcode the given value, or null if hardcoded values are excluded.
 @function _hardcode($value, $exclude-hardcoded) {
@@ -28,6 +29,9 @@
 @function autocomplete($systems, $exclude-hardcoded) {
   @return (
     background-color: map.get($systems, md-sys-color, surface-container),
+    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+    container-elevation-shadow:
+      _hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
   );
 }
 
