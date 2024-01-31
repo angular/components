@@ -19,6 +19,7 @@ export interface DevAppState {
   strongFocusEnabled: boolean;
   m3Enabled: boolean;
   direction: Direction;
+  colorApiBackCompat: boolean;
 }
 
 /** Gets the current appearance state of the dev app. */
@@ -43,6 +44,7 @@ export function getAppState(): DevAppState {
       strongFocusEnabled: false,
       m3Enabled: false,
       direction: 'ltr',
+      colorApiBackCompat: true,
     };
 
     saveToStorage(value);

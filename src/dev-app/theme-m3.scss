@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 @use './color-api-back-compat';
@@ -79,8 +78,16 @@ $density-scales: (-1, -2, -3, -4, minimum, maximum);
   }
 }
 
-@include color-api-back-compat.color-variants-back-compat($light-theme);
+// Enable back-compat CSS for color="..." API.
+.demo-color-api-back-compat {
+  @include color-api-back-compat.color-variants-back-compat($light-theme);
 
-.demo-unicorn-dark-theme {
-  @include color-api-back-compat.color-variants-back-compat($dark-theme);
+  &.demo-unicorn-dark-theme {
+    @include color-api-back-compat.color-variants-back-compat($dark-theme);
+  }
+}
+
+// In M3 buttons are smaller than their touch target at zero-density.
+.demo-config-buttons button {
+  margin: 4px;
 }
