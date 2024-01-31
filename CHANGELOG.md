@@ -1,3 +1,20 @@
+<a name="17.2.0-next.1"></a>
+# 17.2.0-next.1 "resin-rings" (2024-01-31)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0a1c8eedb4](https://github.com/angular/components/commit/0a1c8eedb45c3e24247539abe489ea835d19a0d7) | fix | **chips:** Tokenize chip outline and disabled opacity ([#28488](https://github.com/angular/components/pull/28488)) |
+| [82ecf0d24a](https://github.com/angular/components/commit/82ecf0d24aabbb156463903c45667a10b5606a79) | fix | **form-field:** insufficient color contrast text to input fill ([#28274](https://github.com/angular/components/pull/28274)) |
+| [2d43f93fe4](https://github.com/angular/components/commit/2d43f93fe4beb8bfd27fd7a48e3e811e11f99bcc) | fix | **slide-toggle:** Emit token values under current selector or root ([#28390](https://github.com/angular/components/pull/28390)) |
+| [41766330b6](https://github.com/angular/components/commit/41766330b6993628dc511bf8595b8d58dd495c22) | fix | **slider:** error if slider is destroyed before first change detection ([#28494](https://github.com/angular/components/pull/28494)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [93f3421538](https://github.com/angular/components/commit/93f3421538118ef9187c2bcd4a2aec24a8fcfc01) | fix | **theming:** incorrect track color for alternate progress bar palettes ([#28484](https://github.com/angular/components/pull/28484)) |
+| [5f1a7ea1ee](https://github.com/angular/components/commit/5f1a7ea1ee6eecc5b4e2b3fd52445e5adb5911a6) | fix | **theming:** resolve M3 issues in mat-option ([#28482](https://github.com/angular/components/pull/28482)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.1.2"></a>
 # 17.1.2 "acrylic-aquarium" (2024-01-31)
 ### material
