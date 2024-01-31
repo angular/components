@@ -2,6 +2,8 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
 
+mat.$theme-legacy-inspection-api-compatibility: false;
+
 @mixin color-variant-styles($theme, $color-variant) {
   @include mat.option-color($theme, $color-variant: $color-variant);
   @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
