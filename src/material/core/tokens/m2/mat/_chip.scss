@@ -29,7 +29,8 @@ $prefix: (mat, chip);
     $grey-50: map.get(palette.$grey-palette, 50);
     $grey-900: map.get(palette.$grey-palette, 900);
     $foreground: if($is-dark, $grey-50, $grey-900);
-  } @else {
+  }
+  @else {
     $foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
   }
   @return (
