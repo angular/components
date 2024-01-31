@@ -10,7 +10,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
+        tokens-mat-autocomplete.get-unthemable-tokens());
+    }
+  }
 }
 
 @mixin color($theme) {
@@ -29,14 +34,24 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
+        tokens-mat-autocomplete.get-typography-tokens($theme));
+    }
+  }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-autocomplete.$prefix,
+        tokens-mat-autocomplete.get-density-tokens($theme));
+    }
+  }
 }
 
 @mixin theme($theme) {

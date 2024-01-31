@@ -3,7 +3,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
 <div class="demo-autocomplete">
   <mat-card>
     Reactive length: {{ reactiveStates.length }}
-    <div>Reactive value: {{ stateCtrl.value | json }}</div>
+    <div class="demo-truncate-text">Reactive value: {{ stateCtrl.value | json }}</div>
     <div>Reactive dirty: {{ stateCtrl.dirty }}</div>
 
     <mat-form-field [color]="reactiveStatesTheme">
