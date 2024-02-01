@@ -20,6 +20,13 @@
             (mapClick)="clickMarker(marker)"></map-marker>
         }
       </map-marker-clusterer>
+      <map-advanced-marker
+        #secondMarker="mapAdvancedMarker"
+        (mapClick)="clickAdvancedMarker(secondMarker)"
+        title="Advanced Marker"
+        [gmpDraggable]="false"
+        [position]="mapAdvancedMarkerPosition"
+      ></map-advanced-marker>
       <map-info-window>Testing 1 2 3</map-info-window>
       @if (isPolylineDisplayed) {
         <map-polyline [options]="polylineOptions"></map-polyline>

@@ -194,6 +194,25 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   }
 
   /**
+   * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+   */
+  openAdvancedMarkerElement(
+    advancedMarkerElement: google.maps.marker.AdvancedMarkerElement,
+    content?: string | Element | Text,
+  ): void {
+    this._assertInitialized();
+    if (!advancedMarkerElement) {
+      return;
+    }
+
+    this.infoWindow.close();
+    if (content) {
+      this.infoWindow.setContent(content);
+    }
+    this.infoWindow.open(this._googleMap.googleMap, advancedMarkerElement);
+  }
+
+  /**
    * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
    * then the position property of the options input is used instead.
    */

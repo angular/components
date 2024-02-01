@@ -42,6 +42,7 @@ export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   zoom: 17,
   // Note: the type conversion here isn't necessary for our CI, but it resolves a g3 failure.
   mapTypeId: 'roadmap' as unknown as google.maps.MapTypeId,
+  mapId: '123',
 };
 
 /** Arbitrary default height for the map element */
@@ -82,6 +83,12 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   /** Width of the map. Set this to `null` if you'd like to control the width through CSS. */
   @Input() width: string | number | null = DEFAULT_WIDTH;
+
+  /**
+   * The Map ID of the map. This parameter cannot be set or changed after a map is instantiated.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions.mapId
+   */
+  @Input() mapId: string | undefined;
 
   /**
    * Type of map that should be rendered. E.g. hybrid map, terrain map etc.
@@ -525,6 +532,9 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // Passing in an undefined `mapTypeId` seems to break tile loading
       // so make sure that we have some kind of default (see #22082).
       mapTypeId: this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId,
+      // Passing in an undefined `mapTypeId` seems to break tile loading
+      // so make sure that we have some kind of default (see #22082).
+      mapId: this.mapId || options.mapId || DEFAULT_OPTIONS.mapId,
     };
   }
 

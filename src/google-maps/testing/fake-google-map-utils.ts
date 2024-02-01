@@ -36,6 +36,9 @@ export interface TestingWindow extends Window {
       visualization?: {
         HeatmapLayer?: jasmine.Spy;
       };
+      marker?: {
+        AdvancedMarkerElement?: jasmine.Spy;
+      };
       Geocoder?: jasmine.Spy;
     };
   };
@@ -137,6 +140,45 @@ export function createMarkerConstructorSpy(
     };
   }
   return markerConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.marker.AdvancedMarkerElement */
+export function createAdvancedMarkerSpy(
+  options: google.maps.marker.AdvancedMarkerElementOptions,
+): jasmine.SpyObj<google.maps.marker.AdvancedMarkerElement> {
+  const advancedMarkerSpy = jasmine.createSpyObj('google.maps.marker.AdvancedMarkerElement', [
+    'addListener',
+  ]);
+  advancedMarkerSpy.addListener.and.returnValue({remove: () => {}});
+  return advancedMarkerSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.marker.AdvancedMarkerElement */
+export function createAdvancedMarkerConstructorSpy(
+  advancedMarkerSpy: jasmine.SpyObj<google.maps.marker.AdvancedMarkerElement>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const advancedMarkerConstructorSpy = jasmine
+    .createSpy('Advanced Marker constructor', function () {
+      return advancedMarkerSpy;
+    })
+    .and.callThrough();
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps.marker = {
+      'AdvancedMarkerElement': advancedMarkerConstructorSpy,
+    };
+  } else {
+    testingWindow.google = {
+      maps: {
+        marker: {
+          'AdvancedMarkerElement': advancedMarkerConstructorSpy,
+        },
+      },
+    };
+  }
+
+  return advancedMarkerConstructorSpy;
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.InfoWindow */
