@@ -123,7 +123,7 @@ export class SliderDemo {
   selector: 'slider-dialog-demo',
   styleUrls: ['slider-demo.css'],
   template: `
-  <h1 mat-dialog-title>Slider in a dialog</h1>
+  <h2 mat-dialog-title>Slider in a dialog</h2>
   <mat-dialog-content class="demo-dialog-content">
   <mat-slider [discrete]="this.data.discrete" [showTickMarks]="this.data.showTickMarks" [color]="this.data.color" step="10">
       <input value="50" matSliderThumb>

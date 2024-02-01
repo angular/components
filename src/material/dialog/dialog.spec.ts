@@ -1217,7 +1217,7 @@ describe('MDC-based MatDialog', () => {
       flushMicrotasks();
 
       let firstHeader = overlayContainerElement.querySelector(
-        'h1[tabindex="-1"]',
+        'h2[tabindex="-1"]',
       ) as HTMLInputElement;
 
       expect(document.activeElement)
@@ -1628,7 +1628,7 @@ describe('MDC-based MatDialog', () => {
       @Component({
         standalone: true,
         imports: [MatDialogTitle],
-        template: `@if (showTitle()) { <h1 mat-dialog-title>This is the first title</h1> }`,
+        template: `@if (showTitle()) { <h2 mat-dialog-title>This is the first title</h2> }`,
       })
       class DialogCmp {
         showTitle = signal(true);
@@ -2243,13 +2243,13 @@ class PizzaMsg {
 @Component({
   template: `
     @if (shouldShowTitle('first')) {
-      <h1 mat-dialog-title>This is the first title</h1>
+      <h2 mat-dialog-title>This is the first title</h2>
     }
     @if (shouldShowTitle('second')) {
-      <h1 mat-dialog-title>This is the second title</h1>
+      <h2 mat-dialog-title>This is the second title</h2>
     }
     @if (shouldShowTitle('third')) {
-      <h1 mat-dialog-title>This is the third title</h1>
+      <h2 mat-dialog-title>This is the third title</h2>
     }
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -2278,13 +2278,13 @@ class ContentElementDialog {
   template: `
     <ng-template>
       @if (shouldShowTitle('first')) {
-        <h1 mat-dialog-title>This is the first title</h1>
+        <h2 mat-dialog-title>This is the first title</h2>
       }
       @if (shouldShowTitle('second')) {
-        <h1 mat-dialog-title>This is the second title</h1>
+        <h2 mat-dialog-title>This is the second title</h2>
       }
       @if (shouldShowTitle('third')) {
-        <h1 mat-dialog-title>This is the third title</h1>
+        <h2 mat-dialog-title>This is the third title</h2>
       }
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
       <mat-dialog-actions align="end">
