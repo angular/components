@@ -228,6 +228,14 @@ html {
   }
 }
 
+.demo-toolbar {
+  margin-left: 8px;
+}
+
+.demo-config-buttons {
+  gap: 8px;
+}
+
 // Emit density styles for each scale.
 @each $scale in (maximum, 0, -1, -2, -3, -4, minimum) {
   $scale-theme: matx.define-theme(map.set($m3-base-config, density, scale, $scale));
