@@ -1,3 +1,4 @@
+@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use 'sass:color';
 @use 'sass:meta';
 @use '../../token-utils';
@@ -14,6 +15,8 @@ $prefix: (mat, sidenav);
     // Currently zero, but it appears to be relevant for M3.
     // See: https://m3.material.io/components/navigation-drawer/overview
     container-shape: 0,
+    container-elevation-shadow: mdc-elevation.elevation-box-shadow(16),
+    container-width: auto,
   );
 }
 

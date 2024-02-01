@@ -1030,12 +1030,14 @@
 /// @return {Map} A set of custom tokens for the mat-sidenav
 @function sidenav($systems, $exclude-hardcoded) {
   @return (
-    container-shape: 16px,
-    container-divider-color: map.get($systems, md-sys-color, outline),
+    container-elevation-shadow: _hardcode(none, $exclude-hardcoded),
+    container-divider-color: _hardcode(transparent, $exclude-hardcoded),
+    container-width: _hardcode(360px, $exclude-hardcoded),
+    container-shape: map.get($systems, md-sys-shape, corner-large),
     container-background-color: map.get($systems, md-sys-color, surface),
     container-text-color: map.get($systems, md-sys-color, on-surface-variant),
-    content-background-color: _hardcode(inherit, $exclude-hardcoded),
-    content-text-color: _hardcode(inherit, $exclude-hardcoded),
+    content-background-color: map.get($systems, md-sys-color, background),
+    content-text-color: map.get($systems, md-sys-color, on-background),
     scrim-color: mat.private-safe-color-change(
         map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
   );
