@@ -875,7 +875,7 @@ describe('Dialog', () => {
       flushMicrotasks();
 
       let firstHeader = overlayContainerElement.querySelector(
-        'h1[tabindex="-1"]',
+        'h2[tabindex="-1"]',
       ) as HTMLInputElement;
 
       expect(document.activeElement)
@@ -1270,7 +1270,7 @@ class PizzaMsg {
 
 @Component({
   template: `
-    <h1>This is the title</h1>
+    <h2>This is the title</h2>
   `,
   standalone: true,
   imports: [DialogModule],
