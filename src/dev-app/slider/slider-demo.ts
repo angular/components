@@ -124,7 +124,7 @@ export class SliderDemo {
   styleUrls: ['slider-demo.css'],
   template: `
   <h1 mat-dialog-title>Slider in a dialog</h1>
-  <div class="demo-dialog-content" mat-dialog-content>
+  <mat-dialog-content class="demo-dialog-content">
   <mat-slider [discrete]="this.data.discrete" [showTickMarks]="this.data.showTickMarks" [color]="this.data.color" step="10">
       <input value="50" matSliderThumb>
     </mat-slider>
@@ -132,7 +132,7 @@ export class SliderDemo {
       <input value="30" matSliderStartThumb>
       <input value="70" matSliderEndThumb>
     </mat-slider>
-  </div>
+  </mat-dialog-content>
   `,
   standalone: true,
   imports: [MatSliderModule, MatDialogTitle, MatDialogContent],
