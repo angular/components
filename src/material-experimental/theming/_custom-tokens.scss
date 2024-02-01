@@ -1094,6 +1094,25 @@
   ));
 }
 
+/// Generates custom tokens for the mat-slide-toggle.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-slide-toggle
+@function switch($systems, $exclude-hardcoded) {
+  @return ((
+    unselected-handle-size: 16px,
+    selected-handle-size: 24px,
+    with-icon-handle-size: 24px,
+    pressed-handle-size: 28px,
+    selected-handle-horizontal-margin: 0 24px,
+    selected-with-icon-handle-horizontal-margin: 0 24px,
+    selected-pressed-handle-horizontal-margin: 0 22px,
+    unselected-handle-horizontal-margin: 0 8px,
+    unselected-with-icon-handle-horizontal-margin: 0 4px,
+    unselected-pressed-handle-horizontal-margin: 0 2px,
+  ), ());
+}
+
 /// Generates custom tokens for the mat-snack-bar.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

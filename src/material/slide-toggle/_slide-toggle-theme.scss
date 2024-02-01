@@ -6,6 +6,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/form-field' as tokens-mdc-form-field;
+@use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -17,7 +18,10 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-switch-theme.theme(tokens-mdc-switch.get-unthemable-tokens());
+      $mat-tokens: tokens-mat-switch.get-unthemable-tokens();
+      $mdc-tokens: tokens-mdc-switch.get-unthemable-tokens();
+      @include mdc-switch-theme.theme($mdc-tokens);
+      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
     }
   }
 }
@@ -33,11 +37,13 @@
   }
   @else {
     $is-dark: inspection.get-theme-type($theme) == dark;
-    $mdc-switch-color-tokens: tokens-mdc-switch.get-color-tokens($theme);
+    $mat-tokens: tokens-mat-switch.get-color-tokens($theme);
+    $mdc-tokens: tokens-mdc-switch.get-color-tokens($theme);
 
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
-      @include mdc-switch-theme.theme($mdc-switch-color-tokens);
+      @include mdc-switch-theme.theme($mdc-tokens);
+      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
 
       // TODO(wagnermaciel): Use our token system to define this css variable.
     --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
@@ -71,11 +77,13 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
-    $mdc-switch-typography-tokens: tokens-mdc-switch.get-typography-tokens($theme);
+    $mat-tokens: tokens-mat-switch.get-typography-tokens($theme);
+    $mdc-tokens: tokens-mdc-switch.get-typography-tokens($theme);
 
     // Add values for MDC slide toggle tokens
     @include sass-utils.current-selector-or-root() {
-      @include mdc-switch-theme.theme($mdc-switch-typography-tokens);
+      @include mdc-switch-theme.theme($mdc-tokens);
+      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
 
       .mat-mdc-slide-toggle {
         @include mdc-form-field-theme.theme(tokens-mdc-form-field.get-typography-tokens($theme));
@@ -92,6 +100,8 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
+      $mat-tokens: tokens-mat-switch.get-density-tokens($theme);
+      $mdc-tokens: tokens-mdc-switch.get-density-tokens($theme);
       @include mdc-switch-theme.theme(tokens-mdc-switch.get-density-tokens($theme));
     }
   }
@@ -123,10 +133,13 @@
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
-  $mdc-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-switch.$prefix, $options...);
   // Don't pass $options here, since the mdc-form-field doesn't support color options,
   // only the mdc-switch does.
   $mdc-form-field-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-form-field.$prefix);
-  @include mdc-switch-theme.theme($mdc-switch-tokens);
+  $mat-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix);
+  $mdc-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-switch.$prefix, $options...);
+
   @include mdc-form-field-theme.theme($mdc-form-field-tokens);
+  @include mdc-switch-theme.theme($mdc-switch-tokens);
+  @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-switch-tokens);
 }
