@@ -4,7 +4,6 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/layout-common';
-@use '../core/style/elevation';
 
 $drawer-content-z-index: 1;
 $drawer-side-drawer-z-index: 2;
@@ -122,17 +121,16 @@ $drawer-over-drawer-z-index: 4;
 .mat-drawer {
   $high-contrast-border: solid 1px currentColor;
 
-  // The elevation of z-16 is noted in the design specifications.
-  // See https://material.io/design/components/navigation-drawer.html
-  @include elevation.elevation(16);
   @include drawer-stacking-context($drawer-over-drawer-z-index);
 
   @include token-utils.use-tokens(
     tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
     @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
     @include token-utils.create-token-slot(background-color, container-background-color);
     @include token-utils.create-token-slot(border-top-right-radius, container-shape);
     @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+    @include token-utils.create-token-slot(width, container-width);
   }
 
   display: block;
