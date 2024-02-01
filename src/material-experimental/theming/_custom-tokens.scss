@@ -250,16 +250,10 @@
       ),
       with-icon-icon-size: _hardcode(18px, $exclude-hardcoded),
       with-icon-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      with-icon-disabled-icon-color: mat.private-safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: 0.38,
-      ),
+      with-icon-disabled-icon-color: map.get($systems, md-sys-color, on-surface),
       with-icon-selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
       with-trailing-icon-trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      with-trailing-icon-disabled-trailing-icon-color: mat.private-safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: 0.38,
-      ),
+      with-trailing-icon-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
       focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
       focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
       outline-width: _hardcode(1px, $exclude-hardcoded),
@@ -285,6 +279,8 @@
       selected-focus-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       selected-focus-state-layer-opacity:
         map.get($systems, md-sys-state, focus-state-layer-opacity),
+      with-trailing-icon-disabled-trailing-icon-opacity: _hardcode(0.38, $exclude-hardcoded),
+      with-icon-disabled-icon-opacity: _hardcode(0.38, $exclude-hardcoded),
     ),
   ), (
     // Color variants:

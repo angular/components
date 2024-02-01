@@ -55,30 +55,43 @@
     .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
       @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
     }
+
+    .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) {
+      .mdc-evolution-chip__icon--trailing {
+        @include token-utils.create-token-slot(
+            opacity, with-trailing-icon-disabled-trailing-icon-opacity);
+      }
+    }
+
+    .mdc-evolution-chip--disabled .mdc-evolution-chip__checkmark {
+      @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
+    }
   }
 
   @include token-utils.use-tokens(tokens-mat-chip.$prefix, $mat-chip-token-slots) {
     // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
     // Now that MDC supports disabled styles, we should switch to using theirs.
-    .mat-mdc-standard-chip.mat-mdc-chip-selected.mdc-evolution-chip--disabled {
-      @include token-utils.create-token-slot(opacity, disabled-container-opacity);
-    }
+    .mat-mdc-standard-chip {
+      &.mdc-evolution-chip--disabled {
+        @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+      }
 
-    .mat-mdc-standard-chip.mat-mdc-chip-selected:not(.mdc-evolution-chip--disabled) {
-      .mdc-evolution-chip__icon--trailing {
-        @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+      &.mdc-evolution-chip--selected {
+        .mdc-evolution-chip__icon--trailing {
+          @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+        }
+
+        &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+          @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
+        }
       }
     }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-      @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
-    }
-
     .mat-mdc-chip-remove {
-      @include token-utils.create-token-slot(opacity, trailing-action-opacity);
+      filter: #{'opacity('}var(token-utils.get-token-variable(trailing-action-opacity))#{')'};
 
       &:focus {
-        @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
+        filter: #{'opacity('}var(token-utils.get-token-variable(trailing-action-focus-opacity))#{')'};
       }
 
       &::after {
