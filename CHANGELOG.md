@@ -1,3 +1,12 @@
+<a name="16.2.14"></a>
+# 16.2.14 "silky-schematic" (2024-02-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8baf8d5aa](https://github.com/angular/components/commit/8baf8d5aa372462e985a3874d85f32f1d8987d00) | fix | **schematics:** schema error in mdc migration ([#28520](https://github.com/angular/components/pull/28520)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.13"></a>
 # 16.2.13 "pink-peach" (2024-01-11)
 ### material
