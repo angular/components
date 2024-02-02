@@ -1,7 +1,11 @@
 @use '@angular/material' as mat;
 
 @mixin color-variant-styles($theme, $color-variant) {
-  @include mat.option-color($theme, $color-variant: $color-variant);
+  // Some components use the secondary color rather than primary color for `.mat-primary`.
+  // Those components should use the $secondary-color-variant.
+  $secondary-color-variant: if($color-variant == primary, secondary, $color-variant);
+
+  @include mat.option-color($theme, $color-variant: $secondary-color-variant);
   @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
   @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
   @include mat.stepper-color($theme, $color-variant: $color-variant);
@@ -52,7 +56,7 @@
   }
 
   &.mat-mdc-standard-chip {
-    @include mat.chips-color($theme, $color-variant: $color-variant);
+    @include mat.chips-color($theme, $color-variant: $secondary-color-variant);
   }
 
   .mdc-list-item__start,
@@ -70,8 +74,6 @@
   }
 }
 
-// TODO(mmalerba): Consider adding this as a back-compat API for users who want it, rather than just
-//  a demo thing.
 @mixin color-variants-back-compat($theme) {
   .mat-primary {
     @include color-variant-styles($theme, primary);
