@@ -1012,6 +1012,8 @@
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       focused-arrow-color: map.get($systems, md-sys-color, primary),
       invalid-arrow-color: map.get($systems, md-sys-color, error),
+      container-elevation-shadow:
+        _hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
     )
   ), (
     // Color variants:

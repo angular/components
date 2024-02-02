@@ -32,6 +32,11 @@ $scale: 0.75 !default;
     @include token-utils.create-token-slot(letter-spacing, trigger-text-tracking);
   }
 }
+@include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+  div.mat-mdc-select-panel {
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+  }
+}
 
 .mat-mdc-select-disabled {
   @include token-utils.use-tokens(
@@ -131,7 +136,6 @@ $scale: 0.75 !default;
 // DOM for the Gmat versions to work. We need to bump up the specificity here
 // so that it's higher than MDC's styles.
 div.mat-mdc-select-panel {
-  @include elevation.elevation(8);
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: $mat-select-panel-max-height;
   outline: 0;
