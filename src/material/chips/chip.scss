@@ -56,13 +56,6 @@
       @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
     }
 
-    .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) {
-      .mdc-evolution-chip__icon--trailing {
-        @include token-utils.create-token-slot(
-            opacity, with-trailing-icon-disabled-trailing-icon-opacity);
-      }
-    }
-
     .mdc-evolution-chip--disabled .mdc-evolution-chip__checkmark {
       @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
     }
@@ -88,12 +81,6 @@
     }
 
     .mat-mdc-chip-remove {
-      filter: #{'opacity('}var(token-utils.get-token-variable(trailing-action-opacity))#{')'};
-
-      &:focus {
-        filter: #{'opacity('}var(token-utils.get-token-variable(trailing-action-focus-opacity))#{')'};
-      }
-
       &::after {
         @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
       }
@@ -320,6 +307,14 @@
 }
 
 .mat-mdc-chip-remove {
+  // Fades out the trailing icon slightly so that it can become darker when focused.
+  // The MDC theming has variables for this, but the focus/hover states don't seem to work.
+  opacity: 0.54;
+
+  &:focus {
+    opacity: 1;
+  }
+
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $offset: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});

@@ -199,8 +199,6 @@
     disabled-container-opacity: _hardcode(1, $exclude-hardcoded),
     selected-trailing-icon-color: map.get($systems, md-sys-color, on-secondary-container),
     selected-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
-    trailing-action-opacity: 1,
-    trailing-action-focus-opacity: 1,
     trailing-action-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     selected-trailing-action-state-layer-color:
         map.get($systems, md-sys-color, on-secondary-container),
@@ -279,7 +277,6 @@
       selected-focus-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       selected-focus-state-layer-opacity:
         map.get($systems, md-sys-state, focus-state-layer-opacity),
-      with-trailing-icon-disabled-trailing-icon-opacity: _hardcode(0.38, $exclude-hardcoded),
       with-icon-disabled-icon-opacity: _hardcode(0.38, $exclude-hardcoded),
     ),
   ), (
