@@ -23,6 +23,8 @@
   }
 
   // Add additional slots for the MDC chip tokens, needed in Angular Material.
+  $disabled-trailing-icon-opacity: 1;
+
   @include token-utils.use-tokens(tokens-mdc-chip.$prefix, $mdc-chip-token-slots) {
     .mat-mdc-chip-focus-overlay {
       @include token-utils.create-token-slot(background, focus-state-layer-color);
@@ -56,6 +58,14 @@
       @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
     }
 
+    .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+      $disabled-trailing-icon-opacity:
+        token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
+
+      @include token-utils.create-token-slot(
+          opacity, with-trailing-icon-disabled-trailing-icon-opacity);
+    }
+
     .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
       @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
     }
@@ -81,6 +91,12 @@
     }
 
     .mat-mdc-chip-remove {
+      @include token-utils.create-token-slot(opacity, trailing-action-opacity);
+
+      &:focus {
+        @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
+      }
+
       &::after {
         @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
       }
@@ -97,6 +113,24 @@
     .mat-mdc-chip-selected .mat-mdc-chip-remove::after {
       @include token-utils.create-token-slot(
           background, selected-trailing-action-state-layer-color);
+    }
+
+    // If the trailing icon is a chip-remove button, we have to factor in the trailing action
+    // opacity as well as the disabled opacity.
+    .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+      &.mat-mdc-chip-remove {
+        opacity: calc(
+          var(#{token-utils.get-token-variable(trailing-action-opacity)}) *
+          var(#{$disabled-trailing-icon-opacity})
+        );
+
+        &:focus {
+          opacity: calc(
+            var(#{token-utils.get-token-variable(trailing-action-focus-opacity)}) *
+            var(#{$disabled-trailing-icon-opacity})
+          );
+        }
+      }
     }
   }
 }
@@ -307,14 +341,6 @@
 }
 
 .mat-mdc-chip-remove {
-  // Fades out the trailing icon slightly so that it can become darker when focused.
-  // The MDC theming has variables for this, but the focus/hover states don't seem to work.
-  opacity: 0.54;
-
-  &:focus {
-    opacity: 1;
-  }
-
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $offset: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});

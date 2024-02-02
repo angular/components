@@ -12,6 +12,8 @@ $prefix: (mat, chip);
 @function get-unthemable-tokens() {
   @return (
     disabled-container-opacity: 0.4,
+    trailing-action-opacity: 0.54,
+    trailing-action-focus-opacity: 1,
     trailing-action-state-layer-color: transparent,
     selected-trailing-action-state-layer-color: transparent,
     trailing-action-hover-state-layer-opacity: 0,
