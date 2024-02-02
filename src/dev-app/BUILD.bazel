@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary", "sass_library")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
@@ -105,6 +105,14 @@ devmode_esbuild(
     ],
 )
 
+sass_library(
+    name = "color-api-back-compat",
+    srcs = glob(["**/_*.scss"]),
+    deps = [
+        "//src/material:sass_lib",
+    ],
+)
+
 sass_binary(
     name = "theme",
     src = "theme.scss",
@@ -119,6 +127,7 @@ sass_binary(
     name = "theme_m3",
     src = "theme-m3.scss",
     deps = [
+        ":color-api-back-compat",
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
         "//src/material/core:theming_scss_lib",

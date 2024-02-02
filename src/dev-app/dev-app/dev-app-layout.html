@@ -45,6 +45,14 @@
       <div class="demo-toolbar">
         <h1>Angular Material Demos</h1>
         <div class="demo-config-buttons">
+          @if (state.m3Enabled) {
+            <button
+                mat-icon-button
+                (click)="toggleColorApiBackCompat()"
+                matTooltip="{{state.colorApiBackCompat ? 'Disable' : 'Enable'}} color API back-compat">
+              <mat-icon>colorize</mat-icon>
+            </button>
+          }
           <button
             mat-icon-button
             (click)="toggleFullscreen()"

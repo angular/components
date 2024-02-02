@@ -68,6 +68,7 @@
 @use './mdc/switch' as tokens-mdc-switch;
 @use './mdc/tab' as tokens-mdc-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../../theming/inspection';
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
 /// @param {Map} $theme The Angular Material theme object to generate token values from.
@@ -81,11 +82,11 @@
     @return meta.call(
         meta.get-function(get-#{$system}-tokens, $module: $module));
   }
-  @if not map.get($theme, $system) {
+  @if not inspection.theme-has($theme, $system) {
     @return ();
   }
   @return meta.call(
-      meta.get-function(get-#{$system}-tokens, $module: $module), map.get($theme, $system));
+      meta.get-function(get-#{$system}-tokens, $module: $module), $theme);
 }
 
 /// Gets the fully qualified tokens map for the given theme and m2 tokens module.

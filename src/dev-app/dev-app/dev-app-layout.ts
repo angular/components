@@ -118,6 +118,7 @@ export class DevAppLayout {
     this.toggleRippleDisabled(this.state.rippleDisabled);
     this.toggleDirection(this.state.direction);
     this.toggleM3(this.state.m3Enabled);
+    this.toggleColorApiBackCompat(this.state.colorApiBackCompat);
   }
 
   toggleTheme(value = !this.state.darkTheme) {
@@ -176,6 +177,12 @@ export class DevAppLayout {
       value ? 'material-symbols-outlined' : 'material-icons',
     );
     this.state.m3Enabled = value;
+    setAppState(this.state);
+  }
+
+  toggleColorApiBackCompat(value = !this.state.colorApiBackCompat) {
+    this.state.colorApiBackCompat = value;
+    this._document.body.classList.toggle('demo-color-api-back-compat', value);
     setAppState(this.state);
   }
 

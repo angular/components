@@ -1,283 +1,93 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
+@use './color-api-back-compat';
 
-@mixin color-variant-styles($theme, $color-variant) {
-  @include mat.option-color($theme, $color-variant: $color-variant);
-  @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
-  @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
-  @include mat.stepper-color($theme, $color-variant: $color-variant);
+// Plus imports for other components in your app.
 
-  &.mat-icon {
-    @include mat.icon-color($theme, $color-variant: $color-variant);
-  }
+// Disable legacy API compatibility, since dev-app is fully migrated to theme inspection API.
+mat.$theme-legacy-inspection-api-compatibility: false;
 
-  &.mat-mdc-checkbox {
-    @include mat.checkbox-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-slider {
-    @include mat.slider-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-tab-group,
-  &.mat-mdc-tab-nav-bar {
-    @include mat.tabs-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-slide-toggle {
-    @include mat.slide-toggle-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-form-field {
-    @include mat.select-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-radio-button {
-    @include mat.radio-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-progress-bar {
-    @include mat.progress-bar-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-form-field {
-    @include mat.form-field-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-datepicker-content {
-    @include mat.datepicker-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-button-base {
-    @include mat.button-color($theme, $color-variant: $color-variant);
-  }
-
-  &.mat-mdc-standard-chip {
-    @include mat.chips-color($theme, $color-variant: $color-variant);
-  }
-
-  .mdc-list-item__start,
-  .mdc-list-item__end {
-    @include mat.checkbox-color($theme, $color-variant: $color-variant);
-    @include mat.radio-color($theme, $color-variant: $color-variant);
-  }
-
-  // M3 dropped support for warn/error color FABs.
-  @if $color-variant != error {
-    &.mat-mdc-fab,
-    &.mat-mdc-mini-fab {
-      @include mat.fab-color($theme, $color-variant: $color-variant);
-    }
-  }
+// Create a theme with the specified color type and density.
+@function create-theme($type: light, $density: 0) {
+  @return matx.define-theme((
+    color: (
+      theme-type: $type,
+      primary: matx.$m3-green-palette,
+      tertiary: matx.$m3-violet-palette,
+    ),
+    density: (
+      scale: $density
+    ),
+  ));
 }
 
-// TODO(mmalerba): Consider adding this as a back-compat API for users who want it, rather than just
-//  a demo thing.
-@mixin color-variants-back-compat($theme) {
-  .mat-primary {
-    @include color-variant-styles($theme, primary);
-  }
-  .mat-badge {
-    @include mat.badge-color($theme, $color-variant: primary);
-  }
+// Define the default (light) theme.
+$light-theme: create-theme($type: light);
 
-  .mat-accent {
-    @include color-variant-styles($theme, tertiary);
-  }
-  .mat-badge-accent {
-    @include mat.badge-color($theme, $color-variant: tertiary);
-  }
+// Create our dark theme.
+$dark-theme: create-theme($type: dark);
 
-  .mat-warn {
-    @include color-variant-styles($theme, error);
-  }
-  .mat-badge-warn {
-    @include mat.badge-color($theme, $color-variant: error);
-  }
-}
-
-// Add an indicator to make it clear that the app is styled with the experimental M3 theme.
-dev-app {
-  &::before {
-    content: 'Using experimental M3 theme, only components that support M3 will work';
-    display: inline-block;
-    position: fixed;
-    z-index: 100;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px;
-    border-radius: 8px 8px 0 0;
-    background: red;
-    color: white;
-  }
-}
-
-// Emit Angular Material core styles.
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// **Be sure that you only ever include this mixin once!**
 @include mat.core();
 
-// Base theme configuration for our M3 theme.
-$m3-base-config: (
-  color: (
-    primary: matx.$m3-green-palette,
-    tertiary: matx.$m3-violet-palette,
-  ),
-);
-
-// Our M3 light theme.
-$light-theme: matx.define-theme($m3-base-config);
-
-// Our M3 dark theme.
-$dark-theme: matx.define-theme(map.set($m3-base-config, color, theme-type, dark));
-
-// Emit default theme styles.
+// Include the default theme styles.
 html {
-  @include mat.autocomplete-theme($light-theme);
-  @include mat.badge-theme($light-theme);
-  @include mat.bottom-sheet-theme($light-theme);
-  @include mat.button-theme($light-theme);
-  @include mat.button-toggle-theme($light-theme);
-  @include mat.card-theme($light-theme);
-  @include mat.checkbox-theme($light-theme);
-  @include mat.chips-theme($light-theme);
-  @include mat.core-theme($light-theme);
-  @include mat.datepicker-theme($light-theme);
-  @include mat.dialog-theme($light-theme);
-  @include mat.divider-theme($light-theme);
-  @include mat.expansion-theme($light-theme);
-  @include mat.fab-theme($light-theme);
-  @include mat.form-field-theme($light-theme);
-  @include mat.grid-list-theme($light-theme);
-  @include mat.icon-button-theme($light-theme);
-  @include mat.icon-theme($light-theme);
-  @include mat.input-theme($light-theme);
-  @include mat.list-theme($light-theme);
-  @include mat.menu-theme($light-theme);
-  @include mat.paginator-theme($light-theme);
-  @include mat.progress-bar-theme($light-theme);
-  @include mat.progress-spinner-theme($light-theme);
-  @include mat.radio-theme($light-theme);
-  @include mat.select-theme($light-theme);
-  @include mat.sidenav-theme($light-theme);
-  @include mat.slide-toggle-theme($light-theme);
-  @include mat.slider-theme($light-theme);
-  @include mat.snack-bar-theme($light-theme);
-  @include mat.sort-theme($light-theme);
-  @include mat.stepper-theme($light-theme);
-  @include mat.table-theme($light-theme);
-  @include mat.tabs-theme($light-theme);
-  @include mat.toolbar-theme($light-theme);
-  @include mat.tooltip-theme($light-theme);
-  @include mat.tree-theme($light-theme);
+  @include mat.all-component-themes($light-theme);
+  // TODO(mmalerba): Support M3 for experimental components.
+  // @include matx.column-resize-theme($light-theme);
+  // @include matx.popover-edit-theme($light-theme);
 }
 
-@include color-variants-back-compat($light-theme);
+// TODO(mmalerba): Support M3 for typography hierarchy.
+// @include mat.typography-hierarchy($light-theme);
 
-.demo-force-secondary {
-  @include mat.option-color($light-theme, $color-variant: secondary);
+.demo-strong-focus {
+  // Note: we can theme the indicators directly through `strong-focus-indicators` as well.
+  // Use the theme so we have some coverage over the entire API surface.
+  @include mat.strong-focus-indicators();
+  @include mat.strong-focus-indicators-theme($light-theme);
 }
 
-// Emit dark theme styles.
+// Include the alternative theme styles inside of a block with a CSS class. You can make this
+// CSS class whatever you want. In this example, any component inside of an element with
+// `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
+// default theme.
 .demo-unicorn-dark-theme {
-  // TODO(mmalerba): choose colors from the theming API.
-  background: black;
-  color: white;
+  // Include the dark theme color styles.
+  @include mat.all-component-colors($dark-theme);
+  // TODO(mmalerba): Support M3 for experimental components.
+  // @include matx.column-resize-color($dark-theme);
+  // @include matx.popover-edit-color($dark-theme);
 
-  @include mat.autocomplete-color($dark-theme);
-  @include mat.badge-color($dark-theme);
-  @include mat.bottom-sheet-color($dark-theme);
-  @include mat.button-color($dark-theme);
-  @include mat.button-toggle-color($dark-theme);
-  @include mat.card-color($dark-theme);
-  @include mat.checkbox-color($dark-theme);
-  @include mat.chips-color($dark-theme);
-  @include mat.core-color($dark-theme);
-  @include mat.datepicker-color($dark-theme);
-  @include mat.dialog-color($dark-theme);
-  @include mat.divider-color($dark-theme);
-  @include mat.expansion-color($dark-theme);
-  @include mat.fab-color($dark-theme);
-  @include mat.form-field-color($dark-theme);
-  @include mat.grid-list-color($dark-theme);
-  @include mat.icon-button-color($dark-theme);
-  @include mat.icon-color($dark-theme);
-  @include mat.input-color($dark-theme);
-  @include mat.list-color($dark-theme);
-  @include mat.menu-color($dark-theme);
-  @include mat.paginator-color($dark-theme);
-  @include mat.progress-bar-color($dark-theme);
-  @include mat.progress-spinner-color($dark-theme);
-  @include mat.radio-color($dark-theme);
-  @include mat.select-color($dark-theme);
-  @include mat.sidenav-color($dark-theme);
-  @include mat.slide-toggle-color($dark-theme);
-  @include mat.slider-color($dark-theme);
-  @include mat.snack-bar-color($dark-theme);
-  @include mat.sort-color($dark-theme);
-  @include mat.stepper-color($dark-theme);
-  @include mat.table-color($dark-theme);
-  @include mat.tabs-color($dark-theme);
-  @include mat.toolbar-color($dark-theme);
-  @include mat.tooltip-color($dark-theme);
-  @include mat.tree-color($dark-theme);
-
-  @include color-variants-back-compat($dark-theme);
-
-  .demo-force-secondary {
-    @include mat.option-color($dark-theme, $color-variant: secondary);
+  // Include the dark theme colors for focus indicators.
+  &.demo-strong-focus {
+    @include mat.strong-focus-indicators-color($dark-theme);
   }
 }
 
-.demo-toolbar {
-  margin-left: 8px;
-}
-
-.demo-config-buttons {
-  gap: 8px;
-}
-
-// Emit density styles for each scale.
-@each $scale in (maximum, 0, -1, -2, -3, -4, minimum) {
-  $scale-theme: matx.define-theme(map.set($m3-base-config, density, scale, $scale));
-
+// Create classes for all density scales which are supported by all MDC-based components.
+// The classes are applied conditionally based on the selected density in the dev-app layout
+// component.
+$density-scales: (-1, -2, -3, -4, minimum, maximum);
+@each $scale in $density-scales {
   .demo-density-#{$scale} {
-    @include mat.autocomplete-density($scale-theme);
-    @include mat.badge-density($scale-theme);
-    @include mat.bottom-sheet-density($scale-theme);
-    @include mat.button-density($scale-theme);
-    @include mat.button-toggle-density($scale-theme);
-    @include mat.card-density($scale-theme);
-    @include mat.checkbox-density($scale-theme);
-    @include mat.chips-density($scale-theme);
-    @include mat.core-density($scale-theme);
-    @include mat.datepicker-density($scale-theme);
-    @include mat.dialog-density($scale-theme);
-    @include mat.divider-density($scale-theme);
-    @include mat.expansion-density($scale-theme);
-    @include mat.fab-density($scale-theme);
-    @include mat.form-field-density($scale-theme);
-    @include mat.grid-list-density($scale-theme);
-    @include mat.icon-button-density($scale-theme);
-    @include mat.icon-density($scale-theme);
-    @include mat.input-density($scale-theme);
-    @include mat.list-density($scale-theme);
-    @include mat.menu-density($scale-theme);
-    @include mat.paginator-density($scale-theme);
-    @include mat.progress-bar-density($scale-theme);
-    @include mat.progress-spinner-density($scale-theme);
-    @include mat.radio-density($scale-theme);
-    @include mat.select-density($scale-theme);
-    @include mat.sidenav-density($scale-theme);
-    @include mat.slide-toggle-density($scale-theme);
-    @include mat.slider-density($scale-theme);
-    @include mat.snack-bar-density($scale-theme);
-    @include mat.sort-density($scale-theme);
-    @include mat.stepper-density($scale-theme);
-    @include mat.table-density($scale-theme);
-    @include mat.tabs-density($scale-theme);
-    @include mat.toolbar-density($scale-theme);
-    @include mat.tooltip-density($scale-theme);
-    @include mat.tree-density($scale-theme);
+    $density-theme: create-theme($density: $scale);
+    @include mat.all-component-densities($density-theme);
   }
+}
+
+// Enable back-compat CSS for color="..." API.
+.demo-color-api-back-compat {
+  @include color-api-back-compat.color-variants-back-compat($light-theme);
+
+  &.demo-unicorn-dark-theme {
+    @include color-api-back-compat.color-variants-back-compat($dark-theme);
+  }
+}
+
+// In M3 buttons are smaller than their touch target at zero-density.
+.demo-config-buttons button {
+  margin: 4px;
 }

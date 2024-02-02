@@ -285,7 +285,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   $result: ();
   @each $system in $systems {
-    $result: map.deep-merge($result, map.get($theme, $_internals, '#{$system}-tokens'));
+    $result: map.deep-merge($result, map.get($theme, $_internals, '#{$system}-tokens') or ());
   }
   @return $result;
 }
