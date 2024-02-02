@@ -1,5 +1,6 @@
 <div class="mat-calendar-header">
   <div class="mat-calendar-controls">
+    <label [id]="_periodButtonLabelId" class="cdk-visually-hidden">{{periodButtonDescription}}</label>
     <button mat-button type="button" class="mat-calendar-period-button"
             (click)="currentPeriodClicked()" [attr.aria-label]="periodButtonLabel"
             [attr.aria-describedby]="_periodButtonLabelId" aria-live="polite">
@@ -25,4 +26,3 @@
     </button>
   </div>
 </div>
-<label [id]="_periodButtonLabelId" class="mat-calendar-hidden-label">{{periodButtonDescription}}</label>

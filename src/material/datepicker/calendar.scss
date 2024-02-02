@@ -174,7 +174,3 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   content: '';
 }
 
-// Label that is not rendered and removed from the accessibility tree.
-.mat-calendar-hidden-label {
-  display: none;
-}
