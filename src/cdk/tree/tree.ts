@@ -288,7 +288,9 @@ export class CdkTree<T, K = T>
       this._dataSubscription = null;
     }
 
-    this._keyManager.destroy();
+    // In certain tests, the tree might be destroyed before this is initialized
+    // in `ngAfterContentInit`.
+    this._keyManager?.destroy();
   }
 
   ngOnInit() {
@@ -520,12 +522,6 @@ export class CdkTree<T, K = T>
           this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex!);
-          const set = this._getAriaSet(item.item);
-          const key = this._getExpansionKey(item.item);
-          set.splice(
-            set.findIndex(groupItem => this._getExpansionKey(groupItem) === key),
-            1,
-          );
         } else {
           const view = viewContainer.get(adjustedPreviousIndex!);
           viewContainer.move(view!, currentIndex);
@@ -1116,7 +1112,7 @@ export class CdkTree<T, K = T>
     '[attr.aria-setsize]': '_getSetSize()',
     '[tabindex]': '_tabindex',
     'role': 'treeitem',
-    '(click)': '_focusItem()',
+    '(click)': '_setActiveItem()',
     '(focus)': '_focusItem()',
   },
   standalone: true,
@@ -1194,6 +1190,13 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   readonly _dataChanges = new Subject<void>();
 
   private _inputIsExpandable: boolean = false;
+  /**
+   * Flag used to determine whether or not we should be focusing the actual element based on
+   * some user interaction (click or focus). On click, we don't forcibly focus the element
+   * since the click could trigger some other component that wants to grab its own focus
+   * (e.g. menu, dialog).
+   */
+  private _shouldFocus = true;
   private _parentNodeAriaLevel: number;
 
   /** The tree node's data. */
@@ -1295,7 +1298,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._tabindex = 0;
-    this._elementRef.nativeElement.focus();
+    if (this._shouldFocus) {
+      this._elementRef.nativeElement.focus();
+    }
 
     this._changeDetectorRef.markForCheck();
   }
@@ -1334,6 +1339,15 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
       return;
     }
     this._tree._keyManager.focusItem(this);
+  }
+
+  _setActiveItem() {
+    if (this.isDisabled) {
+      return;
+    }
+    this._shouldFocus = false;
+    this._tree._keyManager.focusItem(this);
+    this._shouldFocus = true;
   }
 
   _emitExpansionState(expanded: boolean) {
