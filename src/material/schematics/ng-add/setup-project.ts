@@ -23,7 +23,7 @@ import {addThemeToAppStyles, addTypographyClass} from './theming/theming';
  */
 export default function (options: Schema): Rule {
   return async (host: Tree, context: SchematicContext) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await getWorkspace(host, options.project);
     const project = getProjectFromWorkspace(workspace, options.project);
 
     if (project.extensions['projectType'] === ProjectType.Application) {
