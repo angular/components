@@ -128,6 +128,30 @@
 }
 
 @include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+  .mdc-switch--selected .mdc-switch__track {
+    &::before {
+      @include token-utils.create-token-slot(opacity, hidden-track-opacity);
+      @include token-utils.create-token-slot(transition, hidden-track-transition);
+    }
+    &::after {
+      @include token-utils.create-token-slot(opacity, visible-track-opacity);
+      @include token-utils.create-token-slot(transition, visible-track-transition);
+    }
+  }
+
+  .mdc-switch--unselected .mdc-switch__track {
+    &::before {
+      @include token-utils.create-token-slot(opacity, visible-track-opacity);
+      @include token-utils.create-token-slot(transition, visible-track-transition);
+    }
+    &::after {
+      @include token-utils.create-token-slot(opacity, hidden-track-opacity);
+      @include token-utils.create-token-slot(transition, hidden-track-transition);
+    }
+  }
+}
+
+@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
   .mat-mdc-slide-toggle {
     .mdc-switch--unselected .mdc-switch__handle {
       @include token-utils.create-token-slot(width, unselected-handle-size);

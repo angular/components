@@ -1110,6 +1110,11 @@
     unselected-handle-horizontal-margin: 0 8px,
     unselected-with-icon-handle-horizontal-margin: 0 4px,
     unselected-pressed-handle-horizontal-margin: 0 2px,
+
+    visible-track-opacity: 1,
+    hidden-track-opacity: 0,
+    visible-track-transition: opacity 75ms,
+    hidden-track-transition: opacity 75ms,
   ), ());
 }
 

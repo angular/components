@@ -19,6 +19,11 @@ $prefix: (mat, switch);
     unselected-handle-horizontal-margin: 0,
     unselected-with-icon-handle-horizontal-margin: 0,
     unselected-pressed-handle-horizontal-margin: 0,
+
+    visible-track-opacity: 1,
+    hidden-track-opacity: 1,
+    visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
+    hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
   );
 }
 
