@@ -95,6 +95,10 @@ $_density-tokens: (
   (mat, icon-button): (
     touch-target-display: (block, block, none, none),
   ),
+  (mat, list): (
+    list-item-leading-icon-start-space: (16px, 12px, 8px, 4px),
+    list-item-leading-icon-end-space: (16px, 12px, 8px, 4px),
+  ),
   (mat, text-button): (
     touch-target-display: (block, block, none, none),
   ),
