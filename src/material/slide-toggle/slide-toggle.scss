@@ -127,6 +127,13 @@
     margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+// The hidden and visible track represent whichever track is visible or
+// hidden in the ui. This could be the .mdc-switch__track :before or
+// :after depending on whether the switch is selected or unselected.
+//
+// The m2 slide-toggle uses transforms to hide & show the tracks while
+// the m3 slide-toggle uses opacity.
+
 @include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
   .mdc-switch--selected .mdc-switch__track {
     &::before {
