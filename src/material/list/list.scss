@@ -3,6 +3,7 @@
 @use '@material/list/list-theme' as mdc-list-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/style/layout-common';
+@use '../core/tokens/m2/mat/list' as m2-mat-list;
 @use '../core/tokens/m2/mdc/list' as m2-mdc-list;
 @use '../core/tokens/token-utils';
 @use './list-item-hcm-indicator';
@@ -193,5 +194,17 @@ mat-action-list button {
 
   &::-moz-focus-inner {
     border: 0;
+  }
+}
+
+@include token-utils.use-tokens(m2-mat-list.$prefix,
+  m2-mat-list.get-token-slots()) {
+  .mdc-list-item--with-leading-icon .mdc-list-item__start {
+    @include token-utils.create-token-slot(margin-left, list-item-leading-icon-start-space);
+    @include token-utils.create-token-slot(margin-right, list-item-leading-icon-end-space);
+    [dir='rtl'] & {
+      @include token-utils.create-token-slot(margin-right, list-item-leading-icon-start-space);
+      @include token-utils.create-token-slot(margin-left, list-item-leading-icon-end-space);
+    }
   }
 }

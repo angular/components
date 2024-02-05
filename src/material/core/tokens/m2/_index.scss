@@ -21,6 +21,7 @@
 @use './mat/grid-list' as tokens-mat-grid-list;
 @use './mat/icon' as tokens-mat-icon;
 @use './mat/icon-button' as tokens-mat-icon-button;
+@use './mat/list' as tokens-mat-list;
 @use './mat/menu' as tokens-mat-menu;
 @use './mat/option' as tokens-mat-option;
 @use './mat/optgroup' as tokens-mat-optgroup;
@@ -139,6 +140,7 @@
       _get-tokens-for-module($theme, tokens-mat-paginator),
       _get-tokens-for-module($theme, tokens-mat-checkbox),
       _get-tokens-for-module($theme, tokens-mat-full-pseudo-checkbox),
+      _get-tokens-for-module($theme, tokens-mat-list),
       _get-tokens-for-module($theme, tokens-mat-minimal-pseudo-checkbox),
       _get-tokens-for-module($theme, tokens-mat-protected-button),
       _get-tokens-for-module($theme, tokens-mat-radio),
