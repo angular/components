@@ -27,27 +27,76 @@
     .mat-mdc-chip-focus-overlay {
       @include token-utils.create-token-slot(background, focus-state-layer-color);
 
+      .mat-mdc-chip-selected & {
+        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+      }
+
       .mat-mdc-chip:hover & {
         @include token-utils.create-token-slot(background, hover-state-layer-color);
         @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      }
+
+      .mat-mdc-chip-selected:hover & {
+        @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
+        @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
       }
 
       .mat-mdc-chip.cdk-focused & {
         @include token-utils.create-token-slot(background, focus-state-layer-color);
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
       }
+
+      .mat-mdc-chip-selected.cdk-focused & {
+        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+        @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
+      }
     }
 
     .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
       @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
+    }
+
+    .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
+      @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
     }
   }
 
   @include token-utils.use-tokens(tokens-mat-chip.$prefix, $mat-chip-token-slots) {
     // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
     // Now that MDC supports disabled styles, we should switch to using theirs.
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
-      @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+    .mat-mdc-standard-chip {
+      &.mdc-evolution-chip--disabled {
+        @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+      }
+
+      &.mdc-evolution-chip--selected {
+        .mdc-evolution-chip__icon--trailing {
+          @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+        }
+
+        &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+          @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
+        }
+      }
+    }
+
+    .mat-mdc-chip-remove {
+      &::after {
+        @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
+      }
+
+      &:hover::after {
+        @include token-utils.create-token-slot(opacity, trailing-action-hover-state-layer-opacity);
+      }
+
+      &:focus::after {
+        @include token-utils.create-token-slot(opacity, trailing-action-focus-state-layer-opacity);
+      }
+    }
+
+    .mat-mdc-chip-selected .mat-mdc-chip-remove::after {
+      @include token-utils.create-token-slot(
+          background, selected-trailing-action-state-layer-color);
     }
   }
 }
@@ -79,13 +128,6 @@
       mdc-chip-theme.$trailing-action-leading-padding,
       mdc-chip-theme.$trailing-action-trailing-padding
     );
-
-    // MDC has some code looking for a `with-icon-selected-disabled-icon-color` token for this
-    // color, but the token isn't defined in the theme map so the validation throws an error.
-    // We don't change the color anyway so we can point it to the enable color instead.
-    &.mdc-evolution-chip--disabled .mdc-evolution-chip__checkmark {
-      color: var(--mdc-chip-with-icon-selected-icon-color, currentColor);
-    }
   }
 
   .mdc-evolution-chip--with-avatar {
@@ -281,6 +323,20 @@
     // MDC sets a padding a on the chip button which stretches out the focus indicator.
     left: 8px;
     right: 8px;
+  }
+
+  // Used as a state overlay.
+  &::after {
+    $offset: 2px;
+    content: '';
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 0 - $offset;
+    bottom: 0 - $offset;
+    left: 8px - $offset;
+    right: 8px - $offset;
+    border-radius: 50%;
   }
 
   .mat-icon {

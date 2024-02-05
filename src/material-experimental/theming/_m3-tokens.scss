@@ -514,7 +514,7 @@
     ),
     _namespace-tokens(
       (mdc, chip),
-      custom-tokens.chip($systems, $exclude-hardcoded),
+      custom-tokens.mdc-chip($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
@@ -751,6 +751,11 @@
     _namespace-tokens(
       (mat, card),
       custom-tokens.card($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
+      (mat, chip),
+      custom-tokens.chip($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
