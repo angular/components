@@ -55,6 +55,8 @@ $prefix: (mdc, chip);
     flat-selected-outline-width: 0,
     // The opacity of the chip's state overlay when selected and hovered.
     selected-hover-state-layer-opacity: 0.04,
+    // The opacity of the chip's trailing icon when it is disabled.
+    with-trailing-icon-disabled-trailing-icon-opacity: 1,
     // The opacity of the chip's leading icon when it is disabled.
     with-icon-disabled-icon-opacity: 1,
     // Not used by MDC.
@@ -75,8 +77,6 @@ $prefix: (mdc, chip);
     with-leading-icon-disabled-leading-icon-opacity: null,
     // Not used by MDC.
     with-leading-icon-leading-icon-size: null,
-    // Not used by MDC.
-    with-trailing-icon-disabled-trailing-icon-opacity: null,
     // Not used by MDC.
     with-trailing-icon-trailing-icon-size: null,
     // Elevated chips not implemented.
