@@ -15,7 +15,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
-  @else {}
+  @else {
+    @include sass-utils.current-selector-or-root() {
+      $mat-tokens: tokens-mat-select.get-unthemable-tokens();
+      @include token-utils.create-token-values(tokens-mat-select.$prefix, $mat-tokens);
+    }
+  }
 }
 
 /// Outputs color theme styles for the mat-select.
