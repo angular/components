@@ -1171,6 +1171,16 @@
     unselected-handle-horizontal-margin: 0 8px,
     unselected-with-icon-handle-horizontal-margin: 0 4px,
     unselected-pressed-handle-horizontal-margin: 0 2px,
+    // The hidden and visible track represent whichever track is visible or
+    // hidden in the ui. This could be the .mdc-switch__track :before or
+    // :after depending on whether the switch is selected or unselected.
+    //
+    // The m2 slide-toggle uses transforms to hide & show the tracks while
+    // the m3 slide-toggle uses opacity.
+    visible-track-opacity: 1,
+    hidden-track-opacity: 0,
+    visible-track-transition: opacity 75ms,
+    hidden-track-transition: opacity 75ms,
   ), ());
 }
 
