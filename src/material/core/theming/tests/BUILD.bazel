@@ -55,11 +55,9 @@ build_test(
 ts_library(
     name = "unit_test_lib",
     testonly = True,
-    srcs = [
-        "theming-definition-api.spec.ts",
-        "theming-inspection-api.spec.ts",
-        "theming-mixin-api.spec.ts",
-    ],
+    srcs = glob([
+        "*.spec.ts",
+    ]),
     # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
     devmode_module = "commonjs",
     deps = [
