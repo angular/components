@@ -1,3 +1,6 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:string';
 @use 'typography-utils';
 @use '../theming/inspection';
 @use './versioning';
@@ -8,11 +11,133 @@
 @forward './definition';
 @forward './versioning';
 
+@mixin typography-hierarchy($theme, $selector: '.mat-typography', $back-compat: false) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _m3-typography-hierarchy($theme, $selector, $back-compat);
+  }
+  @else {
+    @include _m2-typography-hierarchy($theme, $selector);
+  }
+}
+
+@function _get-selector($selectors, $prefix) {
+  $result: ();
+  @each $selector in $selectors {
+    // Don't add "naked" tag selectors, and don't nest prefix selector.
+    @if string.index($selector, '.') == 1 {
+      $result: list.append($result, $selector, $separator: comma);
+    }
+    // Don't nest the prefix selector in itself.
+    @if $selector != $prefix {
+      $result: list.append($result, '#{$prefix} #{$selector}', $separator: comma);
+    }
+  }
+  @return $result;
+}
+
+@mixin _m3-typography-level($theme, $selector-prefix, $level, $selectors, $margin: null) {
+  #{_get-selector($selectors, $selector-prefix)} {
+    // TODO(mmalerba): When we expose system tokens as CSS vars, we should change this to emit token
+    //  slots.
+    font: inspection.get-theme-typography($theme, $level, font);
+    letter-spacing: inspection.get-theme-typography($theme, $level, letter-spacing);
+    @if $margin != null {
+      margin: 0 0 $margin;
+    }
+  }
+}
+
+@mixin _m3-typography-hierarchy($theme, $selector-prefix, $add-m2-selectors) {
+ $levels: (
+   display-large: (
+     selectors: ('.mat-display-large', 'h1'),
+     m2-selectors: ('.mat-h1', '.mat-headline-1'),
+     margin: 0.5em
+   ),
+   display-medium: (
+     selectors: ('.mat-display-medium', 'h2'),
+     m2-selectors: ('.mat-h2', '.mat-headline-2'),
+     margin: 0.5em
+   ),
+   display-small: (
+     selectors: ('.mat-display-small', 'h3'),
+     m2-selectors: ('.mat-h3', '.mat-headline-3'),
+     margin: 0.5em
+   ),
+   headline-large: (
+     selectors: ('.mat-headline-large', 'h4'),
+     m2-selectors: ('.mat-h4', '.mat-headline-4'),
+     margin: 0.5em
+   ),
+   headline-medium: (
+     selectors: ('.mat-headline-medium', 'h5'),
+     m2-selectors: ('.mat-h5', '.mat-headline-5'),
+     margin: 0.5em
+   ),
+   headline-small: (
+     selectors: ('.mat-headline-small', 'h6'),
+     m2-selectors: ('.mat-h6', '.mat-headline-6'),
+     margin: 0.5em
+   ),
+   title-large: (
+     selectors: ('.mat-title-large'),
+     m2-selectors: ('.mat-subtitle-1'),
+   ),
+   title-medium: (
+     selectors: ('.mat-title-medium'),
+     m2-selectors: ('.mat-subtitle-2'),
+   ),
+   title-small: (
+     selectors: ('.mat-title-small')
+   ),
+   body-large: (
+     selectors: ('.mat-body-large', $selector-prefix),
+     m2-selectors: ('.mat-body', '.mat-body-strong', '.mat-body-2'),
+   ),
+   body-medium: (
+     selectors: ('.mat-body-medium')
+   ),
+   body-small: (
+     selectors: ('.mat-body-small')
+   ),
+   label-large: (
+     selectors: ('.mat-label-large')
+   ),
+   label-medium: (
+     selectors: ('.mat-label-medium')
+   ),
+   label-small: (
+     selectors: ('.mat-label-small'),
+     m2-selectors: ('.mat-small', '.mat-caption')
+   ),
+ );
+
+  @each $level, $options in $levels {
+    @if $add-m2-selectors {
+      $options: map.set($options, selectors,
+          list.join(map.get($options, selectors), map.get($options, m2-selectors) or ()));
+    }
+    $options: map.remove($options, m2-selectors);
+
+    // Apply styles for the level.
+    @include _m3-typography-level($theme, $selector-prefix, $level, $options...);
+
+    // Also style <p> inside body-large.
+    @if $level == body-large {
+      #{_get-selector(map.get($options, selectors), $selector-prefix)} {
+        p {
+          margin: 0 0 0.75em;
+        }
+      }
+    }
+  }
+}
+
 /// Emits baseline typographic styles based on a given config.
 /// @param {Map} $config-or-theme A typography config for an entire theme.
 /// @param {String} $selector Ancestor selector under which native elements, such as h1, will
 ///     be styled.
-@mixin typography-hierarchy($theme, $selector: '.mat-typography') {
+@mixin _m2-typography-hierarchy($theme, $selector) {
   // Note that it seems redundant to prefix the class rules with the `$selector`, however it's
   // necessary if we want to allow people to overwrite the tag selectors. This is due to
   // selectors like `#{$selector} h1` being more specific than ones like `.mat-title`.
