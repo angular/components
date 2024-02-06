@@ -1190,11 +1190,13 @@
     //
     // The m2 slide-toggle uses transforms to hide & show the tracks while
     // the m3 slide-toggle uses opacity.
-    visible-track-opacity: _hardcode(1, $exclude-hardcoded),
-    hidden-track-opacity: _hardcode(0, $exclude-hardcoded),
-    visible-track-transition: _hardcode(opacity 75ms, $exclude-hardcoded),
-    hidden-track-transition: _hardcode(opacity 75ms, $exclude-hardcoded),
-  );
+    visible-track-opacity: 1,
+    hidden-track-opacity: 0,
+    visible-track-transition: opacity 75ms,
+    hidden-track-transition: opacity 75ms,
+    track-outline: 2px solid map.get($systems, md-sys-color, outline),
+    disabled-unselected-track-outline: 2px solid map.get($systems, md-sys-color, on-surface),
+  ), ();
 }
 
 /// Generates custom tokens for the mat-snack-bar.

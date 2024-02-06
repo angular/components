@@ -212,3 +212,15 @@
     }
   }
 }
+
+@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+  .mdc-switch__track::after,
+  .mdc-switch__track::before {
+    @include token-utils.create-token-slot(border, track-outline);
+  }
+
+  .mdc-switch--disabled .mdc-switch__track::after,
+  .mdc-switch--disabled .mdc-switch__track::before {
+    @include token-utils.create-token-slot(border, disabled-unselected-track-outline);
+  }
+}
