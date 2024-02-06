@@ -140,7 +140,7 @@ element, apply `cdkVirtualScrollingElement` to the scrolling parent element.
 
 <!-- example(cdk-virtual-scroll-parent-scrolling) -->
 
-Another common scenario is using the window itself as the scrolling element. This often a better
+Another common scenario is using the window itself as the scrolling element. This is often a better
 user experience on mobile devices, as it allows the browser chrome to scroll away. To use the
 window as the scrolling element, add the `scrollWindow` attribute to the 
 `cdk-virtual-scroll-viewport`.
