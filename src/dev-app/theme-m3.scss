@@ -39,8 +39,7 @@ html {
   // @include matx.popover-edit-theme($light-theme);
 }
 
-// TODO(mmalerba): Support M3 for typography hierarchy.
-// @include mat.typography-hierarchy($light-theme);
+@include mat.typography-hierarchy($light-theme);
 
 .demo-strong-focus {
   // Note: we can theme the indicators directly through `strong-focus-indicators` as well.
@@ -77,9 +76,10 @@ $density-scales: (-1, -2, -3, -4, minimum, maximum);
   }
 }
 
-// Enable back-compat CSS for color="..." API.
+// Enable back-compat CSS for color="..." API & typography hierarchy.
 .demo-color-api-back-compat {
   @include matx.color-variants-back-compat($light-theme);
+  @include mat.typography-hierarchy($light-theme, $back-compat: true);
 
   &.demo-unicorn-dark-theme {
     @include matx.color-variants-back-compat($dark-theme);
