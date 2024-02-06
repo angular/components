@@ -24,7 +24,12 @@ import {
 } from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
-import {MatListItemLine, MatListItemMeta, MatListItemTitle} from './list-item-sections';
+import {
+  MatListItemLine,
+  MatListItemMeta,
+  MatListItemSwitch,
+  MatListItemTitle,
+} from './list-item-sections';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkObserveContent} from '@angular/cdk/observers';
 
@@ -59,6 +64,7 @@ export class MatList extends MatListBase {}
     '[class.mdc-list-item--with-leading-avatar]': '_avatars.length !== 0',
     '[class.mdc-list-item--with-leading-icon]': '_icons.length !== 0',
     '[class.mdc-list-item--with-trailing-meta]': '_meta.length !== 0',
+    '[class.mdc-list-item--with-trailing-switch]': '_switch.length !== 0',
     '[class._mat-animation-noopable]': '_noopAnimations',
     '[attr.aria-current]': '_getAriaCurrent()',
   },
@@ -72,6 +78,7 @@ export class MatListItem extends MatListItemBase {
   @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
   @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
   @ContentChildren(MatListItemMeta, {descendants: true}) _meta: QueryList<MatListItemMeta>;
+  @ContentChildren(MatListItemSwitch, {descendants: true}) _switch: QueryList<MatListItemSwitch>;
   @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
   @ViewChild('text') _itemText: ElementRef<HTMLElement>;
 

@@ -2,6 +2,7 @@
 <h1>mat-list demo</h1>
 
 <button mat-raised-button (click)="thirdLine = !thirdLine">Show third line</button>
+<button mat-raised-button (click)="showSwitch = !showSwitch">Show switch</button>
 <button mat-raised-button (click)="showBoxes = !showBoxes">Show item boxes</button>
 
 <div class="demo-list" [class.demo-show-boxes]="showBoxes">
@@ -12,7 +13,10 @@
     <mat-list>
       <div mat-subheader>Items</div>
       @for (item of items; track item) {
-        <mat-list-item>{{item}}</mat-list-item>
+        <mat-list-item>
+          {{item}}
+          <mat-slide-toggle matListItemSwitch *ngIf="showSwitch"></mat-slide-toggle>
+        </mat-list-item>
       }
     </mat-list>
 
@@ -24,6 +28,7 @@
             <div matListItemLine>extra line</div>
           }
           <div matListItemLine>{{contact.headline}}</div>
+          <mat-slide-toggle matListItemSwitch *ngIf="showSwitch"></mat-slide-toggle>
         </mat-list-item>
       }
     </mat-list>

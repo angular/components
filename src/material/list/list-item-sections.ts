@@ -53,6 +53,21 @@ export class MatListItemLine {
 export class MatListItemMeta {}
 
 /**
+ * Directive matching an optional switch for list items.
+ *
+ * List items can reserve space at the end of an item to display a control,
+ * button or additional text content.
+ */
+@Directive({
+  selector: 'mat-slide-toggle[matListItemMeta]',
+  host: {
+    'class': 'mat-mdc-list-item-switch mdc-list-item__end',
+  },
+  standalone: true,
+})
+export class MatListItemSwitch {}
+
+/**
  * @docs-private
  *
  * MDC uses the very intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end` to

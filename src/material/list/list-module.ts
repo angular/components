@@ -20,6 +20,7 @@ import {
   MatListItemMeta,
   MatListItemAvatar,
   MatListItemIcon,
+  MatListItemSwitch,
 } from './list-item-sections';
 import {MatNavList} from './nav-list';
 import {MatSelectionList} from './selection-list';
@@ -44,6 +45,7 @@ import {ObserversModule} from '@angular/cdk/observers';
     MatListItemLine,
     MatListItemTitle,
     MatListItemMeta,
+    MatListItemSwitch,
   ],
   exports: [
     MatList,
