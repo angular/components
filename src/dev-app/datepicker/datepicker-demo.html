@@ -15,7 +15,7 @@
   </mat-form-field>
 </p>
 <p>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Min date</mat-label>
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
         [disabled]="inputDisabled" [max]="maxDate">
@@ -29,7 +29,7 @@
       }
     </mat-datepicker>
   </mat-form-field>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Max date</mat-label>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
         [disabled]="inputDisabled" [min]="minDate">
@@ -45,7 +45,7 @@
   </mat-form-field>
 </p>
 <p>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Start at date</mat-label>
     <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
         [disabled]="inputDisabled">
