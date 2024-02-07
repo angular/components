@@ -33,7 +33,7 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple, MatPseudoCheckbox} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -54,6 +54,10 @@ export interface MatButtonToggleDefaultOptions {
    * setting an appearance on a button toggle or group.
    */
   appearance?: MatButtonToggleAppearance;
+  /** Whetehr icon indicators should be hidden for single-selection button toggle groups. */
+  hideSingleSelectionIndicator?: boolean;
+  /** Whether icon indicators should be hidden for multiple-selection button toggle groups. */
+  hideMultipleSelectionIndicator?: boolean;
 }
 
 /**
@@ -62,7 +66,18 @@ export interface MatButtonToggleDefaultOptions {
  */
 export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonToggleDefaultOptions>(
   'MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS',
+  {
+    providedIn: 'root',
+    factory: MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY,
+  },
 );
+
+export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions {
+  return {
+    hideSingleSelectionIndicator: false,
+    hideMultipleSelectionIndicator: false,
+  };
+}
 
 /**
  * Injection token that can be used to reference instances of `MatButtonToggleGroup`.
@@ -215,6 +230,28 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
 
+  /** Whether checkmark indicator for single-selection button toggle groups is hidden. */
+  @Input({transform: booleanAttribute})
+  get hideSingleSelectionIndicator(): boolean {
+    return this._hideSingleSelectionIndicator;
+  }
+  set hideSingleSelectionIndicator(value: boolean) {
+    this._hideSingleSelectionIndicator = value;
+    this._markButtonsForCheck();
+  }
+  private _hideSingleSelectionIndicator: boolean;
+
+  /** Whether checkmark indicator for multiple-selection button toggle groups is hidden. */
+  @Input({transform: booleanAttribute})
+  get hideMultipleSelectionIndicator(): boolean {
+    return this._hideMultipleSelectionIndicator;
+  }
+  set hideMultipleSelectionIndicator(value: boolean) {
+    this._hideMultipleSelectionIndicator = value;
+    this._markButtonsForCheck();
+  }
+  private _hideMultipleSelectionIndicator: boolean;
+
   constructor(
     private _changeDetector: ChangeDetectorRef,
     @Optional()
@@ -223,6 +260,8 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   ) {
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
+    this.hideSingleSelectionIndicator = defaultOptions?.hideSingleSelectionIndicator ?? false;
+    this.hideMultipleSelectionIndicator = defaultOptions?.hideMultipleSelectionIndicator ?? false;
   }
 
   ngOnInit() {
@@ -401,7 +440,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     'role': 'presentation',
   },
   standalone: true,
-  imports: [MatRipple],
+  imports: [MatRipple, MatPseudoCheckbox],
 })
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _checked = false;

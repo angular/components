@@ -9,6 +9,7 @@
 
 $standard-padding: 0 12px !default;
 $legacy-padding: 0 16px !default;
+$checkmark-padding: 12px !default;
 
 // TODO(crisbeto): these variables aren't used anymore and should be removed.
 $legacy-height: 36px !default;
@@ -93,6 +94,14 @@ $_standard-tokens: (
   // Fixes SVG icons that get thrown off because of the `vertical-align` on the parent.
   .mat-icon svg {
     vertical-align: top;
+  }
+
+  .mat-pseudo-checkbox {
+    margin-right: $checkmark-padding;
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: $checkmark-padding;
+    }
   }
 }
 
