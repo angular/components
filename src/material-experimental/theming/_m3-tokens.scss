@@ -464,6 +464,17 @@
   @return $tokens;
 }
 
+/// Fixes values in the list tokens that are inconsistent with its usage.
+/// @param {Map} $initial-tokens Map of list tokens currently being generated.
+/// @return {Map} The given tokens, with the inconsistent values replaced with valid ones.
+@function _fix-list-tokens($tokens) {
+  // This does not match the spec, which defines this to be `md.sys.color.surface`.
+  // However, this interferes with the use case of placing a list on other components. For example,
+  // the bottom sheet's container color is `md.sys.color.surface-container-low`. Instead, allow the
+  // list to just display the colors for its background.
+  @return map.set($tokens, list-item-container-color, transparent);
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -660,7 +671,9 @@
     ),
     _namespace-tokens(
       (mdc, list),
-      mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded),
+      _fix-list-tokens(
+        mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded)
+      ),
       $token-slots
     ),
     _namespace-tokens(
