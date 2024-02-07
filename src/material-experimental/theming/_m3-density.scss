@@ -119,7 +119,13 @@ $_density-tokens: (
     touch-target-display: (block, block, none, none),
   ),
   (mat, ripple): (),
-  (mat, select): (),
+  (mat, select): (
+    arrow-transform: (
+      translateY(-8px),
+      translateY(-8px),
+      none,
+    ),
+  ),
   (mat, sidenav): (),
   (mat, slide-toggle): (),
   (mat, slider): (),

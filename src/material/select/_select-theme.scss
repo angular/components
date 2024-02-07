@@ -1,5 +1,3 @@
-@use '@material/density' as mdc-density;
-@use '@material/textfield' as mdc-textfield;
 @use '../core/tokens/m2/mat/select' as tokens-mat-select;
 @use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
@@ -71,23 +69,6 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    $density-scale: inspection.get-theme-density($theme);
-
-    // Density is clamped at -5 here, because MDC's form field throws an error for anything lower.
-    $form-field-height: mdc-density.prop-value(
-      $density-config: mdc-textfield.$density-config,
-      $density-scale: theming.clamp-density($density-scale, -5),
-      $property-name: height,
-    );
-
-    // On lower densities the filled form field hides its label which causes the label to
-    // be misaligned. Remove the additional offset that was added because of the label.
-    @if ($form-field-height < mdc-textfield.$minimum-height-for-filled-label) {
-      .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
-        transform: none;
-      }
-    }
-
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(tokens-mat-select.$prefix,
         tokens-mat-select.get-density-tokens($theme));

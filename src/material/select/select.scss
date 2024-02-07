@@ -77,11 +77,6 @@ $scale: 0.75 !default;
   display: inline-flex;
   align-items: center;
 
-  // When used in a fill appearance with a label, form-field the arrow should be shifted up 8px.
-  .mat-form-field-appearance-fill & {
-    transform: translateY(-8px);
-  }
-
   .mat-form-field-appearance-fill .mdc-text-field--no-label & {
     transform: none;
   }
@@ -244,4 +239,10 @@ div.mat-mdc-select-panel {
   // Prevents some browsers from rendering the element in high contrast mode. Use `visibility`
   // instead of `opacity` since VoiceOver + Chrome still reads out the space with the latter.
   visibility: hidden;
+}
+
+@include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+  .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+    @include token-utils.create-token-slot(transform, arrow-transform);
+  }
 }
