@@ -200,11 +200,7 @@ mat-action-list button {
 @include token-utils.use-tokens(m2-mat-list.$prefix,
   m2-mat-list.get-token-slots()) {
   .mdc-list-item--with-leading-icon .mdc-list-item__start {
-    @include token-utils.create-token-slot(margin-left, list-item-leading-icon-start-space);
-    @include token-utils.create-token-slot(margin-right, list-item-leading-icon-end-space);
-    [dir='rtl'] & {
-      @include token-utils.create-token-slot(margin-right, list-item-leading-icon-start-space);
-      @include token-utils.create-token-slot(margin-left, list-item-leading-icon-end-space);
-    }
+    @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
+    @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);
   }
 }
