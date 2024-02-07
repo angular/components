@@ -118,7 +118,6 @@ describe('GoogleMap', () => {
       center: {lat: 3, lng: 5},
       zoom: 7,
       mapTypeId: DEFAULT_OPTIONS.mapTypeId,
-      mapId: DEFAULT_OPTIONS.mapId,
     };
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);

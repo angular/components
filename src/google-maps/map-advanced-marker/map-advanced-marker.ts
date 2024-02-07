@@ -107,7 +107,7 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
   private _options: google.maps.marker.AdvancedMarkerElementOptions;
 
   /**
-   * All AdvancedMarkerElements are displayed on the map in order of their zIndex, with higher values displaying in front of AdvancedMarkerElements with lower values. By default, AdvancedMarkerElements are displayed according to their vertical position on screen, with lower AdvancedMarkerElements appearing in front of AdvancedMarkerElements farther up the screen. Note that zIndex is also used to help determine relative priority between CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY Advanced Markers. A higher zIndex value indicates higher priority.
+   * AdvancedMarkerElements on the map are prioritized by zIndex, with higher values indicating higher display.
    * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.zIndex
    */
   @Input()
