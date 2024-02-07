@@ -1,3 +1,24 @@
+<a name="17.2.0-rc.0"></a>
+# 17.2.0-rc.0 "concrete-cardinal" (2024-02-07)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [58764afec](https://github.com/angular/components/commit/58764afec2b181c6be1b21f952215c3aa0a160f0) | fix | **chips:** Tokenize the hover & focus overlays ([#28497](https://github.com/angular/components/pull/28497)) |
+| [32f86e48e](https://github.com/angular/components/commit/32f86e48e17caa316baa4738e0f458a64e16e4e5) | fix | **chips:** Tokenize the selected state ([#28498](https://github.com/angular/components/pull/28498)) |
+| [1dcc19585](https://github.com/angular/components/commit/1dcc195853a74d1e0b724b742673eb5fd744cb67) | fix | **core:** ensure that option inherits container background |
+| [46fe83f21](https://github.com/angular/components/commit/46fe83f21f4f7cb54b09603829ddc4985a2e8be5) | fix | **list:** use transparent background for M3 ([#28504](https://github.com/angular/components/pull/28504)) |
+| [fca43aa49](https://github.com/angular/components/commit/fca43aa49b060e77d27b9286740c9535b4ae42c2) | fix | **select:** styles for m3 ([#28492](https://github.com/angular/components/pull/28492)) |
+| [d799c044a](https://github.com/angular/components/commit/d799c044a7acffcf94a9d86cc304a2fd3ace1961) | fix | **slide-toggle:** fix m3 slide-toggle handle ([#28503](https://github.com/angular/components/pull/28503)) |
+| [130afedf1](https://github.com/angular/components/commit/130afedf1c823c2d24eda2bedd1ebe5e3b33e6fa) | fix | **slide-toggle:** m3 slide-toggle track ([#28539](https://github.com/angular/components/pull/28539)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b6e0b20e1](https://github.com/angular/components/commit/b6e0b20e1f72f48622179f0a8859b76df056b484) | fix | **theming:** Fix chip trailing icon opacity in M3 ([#28530](https://github.com/angular/components/pull/28530)) |
+| [8fab89229](https://github.com/angular/components/commit/8fab89229d3aad9109c5a22244f9f35ae3fc675f) | fix | **theming:** Make color API back-cmpat styles available ([#28526](https://github.com/angular/components/pull/28526)) |
+| [f1deb30a1](https://github.com/angular/components/commit/f1deb30a1768ac6a5e87872a1b790f1b93b5b2c7) | fix | **theming:** Make M3 work with typography-hierarchy ([#28540](https://github.com/angular/components/pull/28540)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.2.14"></a>
 # 16.2.14 "silky-schematic" (2024-02-01)
 ### material
