@@ -120,8 +120,9 @@
             }
           </button>
           <button
+            #densityTooltip="matTooltip"
             mat-icon-button
-            (click)="toggleDensity()"
+            (click)="toggleDensity(undefined, densityTooltip)"
             [matTooltip]="'Density: ' + state.density">
             <mat-icon>grid_on</mat-icon>
           </button>
