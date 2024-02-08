@@ -74,6 +74,13 @@
       @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
       @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
     }
+
+    // Set font-size of leading icon to same value as its width and height. Ensure icon scales to
+    // "list-item-leading-icon-size" token. In Angular Material, the icon is on the same element as
+    // ".mdc-list-item__start", rather than a child of ".mdc-list-item__start".
+    .mat-mdc-list-item-icon {
+      @include token-utils.create-token-slot(font-size, list-item-leading-icon-size);
+    }
   }
 }
 
