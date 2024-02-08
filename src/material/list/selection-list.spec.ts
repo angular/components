@@ -1319,6 +1319,21 @@ describe('MDC-based MatSelectionList with forms', () => {
         .toBe(1);
     }));
 
+    it('should focus the first option when the list items are changed', fakeAsync(() => {
+      fixture.componentInstance.options = ['first option', 'second option'];
+      fixture.detectChanges();
+
+      tick();
+
+      const listElements = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.nativeElement);
+
+      expect(listElements.length).toBe(2);
+      expect(listElements[0].tabIndex).toBe(0);
+      expect(listElements[1].tabIndex).toBe(-1);
+    }));
+
     it('should not mark the model as touched when the list is blurred', fakeAsync(() => {
       expect(ngModel.touched)
         .withContext('Expected the selection-list to be untouched by default.')
