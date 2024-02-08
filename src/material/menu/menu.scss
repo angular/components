@@ -128,6 +128,7 @@ mat-menu {
   }
 
   .mat-icon {
+    flex-shrink: 0;
     margin-right: mdc-list-variables.$side-padding;
   }
 
