@@ -475,6 +475,13 @@
   @if map.get($tokens, list-item-container-color) != null {
     $tokens: map.set($tokens, list-item-container-color, transparent);
   }
+
+  // Match spec, which has list-item-leading-icon-size of 24px. Current version of tokens (0_161)
+  // has 18px.
+  @if map.get($tokens, list-item-leading-icon-size) != null {
+    $tokens: map.set($tokens, list-item-leading-icon-size, 24px);
+  }
+
   @return $tokens;
 }
 
