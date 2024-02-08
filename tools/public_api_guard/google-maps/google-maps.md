@@ -86,6 +86,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     readonly mapDrag: Observable<void>;
     readonly mapDragend: Observable<void>;
     readonly mapDragstart: Observable<void>;
+    mapId: string | undefined;
     readonly mapInitialized: EventEmitter<google.maps.Map>;
     readonly mapMousemove: Observable<google.maps.MapMouseEvent>;
     readonly mapMouseout: Observable<google.maps.MapMouseEvent>;
@@ -115,7 +116,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     set zoom(zoom: number);
     readonly zoomChanged: Observable<void>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapId": { "alias": "mapId"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMap, never>;
 }
@@ -127,11 +128,38 @@ export class GoogleMapsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
 }
 
 // @public
 export type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
+
+// @public
+export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
+    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    advancedMarker: google.maps.marker.AdvancedMarkerElement;
+    set content(content: Node | google.maps.marker.PinElement);
+    set gmpDraggable(draggable: boolean);
+    readonly mapClick: Observable<google.maps.MapMouseEvent>;
+    readonly mapDrag: Observable<google.maps.MapMouseEvent>;
+    readonly mapDragend: Observable<google.maps.MapMouseEvent>;
+    readonly mapDragstart: Observable<google.maps.MapMouseEvent>;
+    readonly markerInitialized: EventEmitter<google.maps.marker.AdvancedMarkerElement>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    set options(options: google.maps.marker.AdvancedMarkerElementOptions);
+    set position(position: google.maps.LatLngLiteral | google.maps.LatLng | google.maps.LatLngAltitude | google.maps.LatLngAltitudeLiteral);
+    set title(title: string);
+    set zIndex(zIndex: number);
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MapAdvancedMarker, never>;
+}
 
 // @public
 export interface MapAnchorPoint {
@@ -364,6 +392,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     open(anchor?: MapAnchorPoint, shouldFocus?: boolean): void;
+    openAdvancedMarkerElement(advancedMarkerElement: google.maps.marker.AdvancedMarkerElement, content?: string | Element | Text): void;
     // (undocumented)
     set options(options: google.maps.InfoWindowOptions);
     // (undocumented)

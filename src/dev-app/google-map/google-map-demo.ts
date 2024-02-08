@@ -25,6 +25,7 @@ import {
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
+  MapAdvancedMarker,
 } from '@angular/google-maps';
 
 const POLYLINE_PATH: google.maps.LatLngLiteral[] = [
@@ -72,6 +73,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapKmlLayer,
     MapMarker,
     MapMarkerClusterer,
+    MapAdvancedMarker,
     MapPolygon,
     MapPolyline,
     MapRectangle,
@@ -87,6 +89,7 @@ export class GoogleMapDemo {
   @ViewChild(MapCircle) circle: MapCircle;
 
   center = {lat: 24, lng: 12};
+  mapAdvancedMarkerPosition = {lat: 24, lng: 16};
   markerOptions = {draggable: false};
   markerPositions: google.maps.LatLngLiteral[] = [];
   zoom = 4;
@@ -171,6 +174,13 @@ export class GoogleMapDemo {
 
   clickMarker(marker: MapMarker) {
     this.infoWindow.open(marker);
+  }
+
+  clickAdvancedMarker(advancedMarker: MapAdvancedMarker) {
+    this.infoWindow.openAdvancedMarkerElement(
+      advancedMarker.advancedMarker,
+      advancedMarker.advancedMarker.title,
+    );
   }
 
   handleRightclick() {

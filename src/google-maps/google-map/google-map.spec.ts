@@ -114,7 +114,11 @@ describe('GoogleMap', () => {
   });
 
   it('sets center and zoom of the map', () => {
-    const options = {center: {lat: 3, lng: 5}, zoom: 7, mapTypeId: DEFAULT_OPTIONS.mapTypeId};
+    const options = {
+      center: {lat: 3, lng: 5},
+      zoom: 7,
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+    };
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
@@ -140,6 +144,7 @@ describe('GoogleMap', () => {
       zoom: 7,
       draggable: false,
       mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: '123',
     };
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
@@ -194,12 +199,13 @@ describe('GoogleMap', () => {
   });
 
   it('gives precedence to center and zoom over options', () => {
-    const inputOptions = {center: {lat: 3, lng: 5}, zoom: 7, heading: 170};
+    const inputOptions = {center: {lat: 3, lng: 5}, zoom: 7, heading: 170, mapId: '123'};
     const correctedOptions = {
       center: {lat: 12, lng: 15},
       zoom: 5,
       heading: 170,
       mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: '123',
     };
     mapSpy = createMapSpy(correctedOptions);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
