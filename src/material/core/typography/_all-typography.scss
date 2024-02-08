@@ -51,7 +51,12 @@
   // mixin that is transitively loaded by the `all-theme` file, imports `all-typography` which
   // would then load `all-theme` again. This ultimately results a circular dependency.
   @include badge-theme.typography($theme);
-  @include typography.typography-hierarchy($theme);
+  // Historically the typography hierarchy styles were included as part of this. We maintain this
+  // behavior for M2, but from M3 forward this is not included and should be explicitly @included
+  // by the user if desired.
+  @if (inspection.get-theme-version($theme) < 1) {
+    @include typography.typography-hierarchy($theme);
+  }
   @include bottom-sheet-theme.typography($theme);
   @include button-toggle-theme.typography($theme);
   @include divider-theme.typography($theme);
