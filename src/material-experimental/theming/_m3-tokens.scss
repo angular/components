@@ -468,11 +468,17 @@
 /// @param {Map} $initial-tokens Map of list tokens currently being generated.
 /// @return {Map} The given tokens, with the inconsistent values replaced with valid ones.
 @function _fix-list-tokens($tokens) {
-  // This does not match the spec, which defines this to be `md.sys.color.surface`.
-  // However, this interferes with the use case of placing a list on other components. For example,
-  // the bottom sheet's container color is `md.sys.color.surface-container-low`. Instead, allow the
-  // list to just display the colors for its background.
-  @return map.set($tokens, list-item-container-color, transparent);
+  @return map.merge($tokens, (
+    // This does not match the spec, which defines this to be `md.sys.color.surface`. However, this
+    // interferes with the use case of placing a list on other components. For example, the bottom
+    // sheet's container color is `md.sys.color.surface-container-low`. Instead, allow the list to
+    // just display the colors for its background.
+    list-item-container-color: transparent,
+
+    // Match spec, which has list-item-leading-icon-size of 24px. Current version of tokens (0_161)
+    // has 18px.
+    list-item-leading-icon-size: 24px,
+  ));
 }
 
 /// Generates a set of namespaced tokens for all components.
