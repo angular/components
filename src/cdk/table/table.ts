@@ -24,6 +24,7 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
+  AfterContentInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -285,7 +286,9 @@ export interface RenderRow<T> {
   standalone: true,
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
-export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTable<T>
+  implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit
+{
   private _document: Document;
 
   /** Latest data provided by the data source. */
@@ -433,7 +436,10 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _isShowingNoDataRow = false;
 
   /** Whether the table has rendered out all the outlets for the first time. */
-  private _hasRendered = false;
+  private _hasAllOutlets = false;
+
+  /** Whether the table is done initializing. */
+  private _hasInitialized = false;
 
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
@@ -641,9 +647,13 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       });
   }
 
+  ngAfterContentInit() {
+    this._hasInitialized = true;
+  }
+
   ngAfterContentChecked() {
     // Only start re-rendering in `ngAfterContentChecked` after the first render.
-    if (this._hasRendered) {
+    if (this._canRender()) {
       this._render();
     }
   }
@@ -902,15 +912,25 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // Also we can't use queries to resolve the outlets, because they're wrapped in a
     // conditional, so we have to rely on them being assigned via DI.
     if (
-      !this._hasRendered &&
+      !this._hasAllOutlets &&
       this._rowOutlet &&
       this._headerRowOutlet &&
       this._footerRowOutlet &&
       this._noDataRowOutlet
     ) {
-      this._hasRendered = true;
-      this._render();
+      this._hasAllOutlets = true;
+
+      // In some setups this may fire before `ngAfterContentInit`
+      // so we need a check here. See #28538.
+      if (this._canRender()) {
+        this._render();
+      }
     }
+  }
+
+  /** Whether the table has all the information to start rendering. */
+  private _canRender(): boolean {
+    return this._hasAllOutlets && this._hasInitialized;
   }
 
   /** Renders the table if its state has changed. */

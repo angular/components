@@ -263,10 +263,12 @@ export class StickyStyler {
     this._coalescedStyleScheduler.schedule(() => {
       const tfoot = tableElement.querySelector('tfoot')!;
 
-      if (stickyStates.some(state => !state)) {
-        this._removeStickyStyle(tfoot, ['bottom']);
-      } else {
-        this._addStickyStyle(tfoot, 'bottom', 0, false);
+      if (tfoot) {
+        if (stickyStates.some(state => !state)) {
+          this._removeStickyStyle(tfoot, ['bottom']);
+        } else {
+          this._addStickyStyle(tfoot, 'bottom', 0, false);
+        }
       }
     });
   }

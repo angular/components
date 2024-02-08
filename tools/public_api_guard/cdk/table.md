@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
@@ -288,7 +289,7 @@ export class CdkRowDef<T> extends BaseRowDef {
 }
 
 // @public
-export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform, _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>, _coalescedStyleScheduler: _CoalescedStyleScheduler, _viewportRuler: ViewportRuler,
     _stickyPositioningListener: StickyPositioningListener,
     _ngZone?: NgZone | undefined);
@@ -336,6 +337,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     static ngAcceptInputType_multiTemplateDataRows: unknown;
     // (undocumented)
     ngAfterContentChecked(): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
