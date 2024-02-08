@@ -224,3 +224,13 @@
     @include token-utils.create-token-slot(border, disabled-unselected-track-outline);
   }
 }
+
+@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+  .mdc-switch--disabled.mdc-switch--selected .mdc-switch__handle::after {
+    @include token-utils.create-token-slot(opacity, disabled-selected-handle-opacity);
+  }
+
+  .mdc-switch--disabled.mdc-switch--unselected .mdc-switch__handle::after {
+    @include token-utils.create-token-slot(opacity, disabled-unselected-handle-opacity);
+  }
+}

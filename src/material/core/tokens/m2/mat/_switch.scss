@@ -8,6 +8,9 @@ $prefix: (mat, switch);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
+    disabled-selected-handle-opacity: 0.38,
+    disabled-unselected-handle-opacity: 0.38,
+
     unselected-handle-size: 20px,
     selected-handle-size: 20px,
     pressed-handle-size: 20px,

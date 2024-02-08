@@ -18,7 +18,7 @@ $prefix: (mdc, switch);
 @function get-unthemable-tokens() {
   @return (
     // Opacity of handle when disabled.
-    disabled-handle-opacity: 0.38,
+    disabled-handle-opacity: null,
     // Opacity of icon when disabled and selected.
     disabled-selected-icon-opacity: 0.38,
     // Opacity of track when disabled.
