@@ -27,7 +27,6 @@ $touch-max-height: 788px;
 
 
 .mat-datepicker-content {
-  @include elevation.elevation(4);
   display: block;
   border-radius: 4px;
 
@@ -35,6 +34,8 @@ $touch-max-height: 788px;
     tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
     @include token-utils.create-token-slot(background-color, calendar-container-background-color);
     @include token-utils.create-token-slot(color, calendar-container-text-color);
+    @include token-utils.create-token-slot(box-shadow, calendar-container-elevation-shadow);
+    @include token-utils.create-token-slot(border-radius, calendar-container-shape);
   }
 
   .mat-calendar {
