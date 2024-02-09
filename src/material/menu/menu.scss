@@ -20,6 +20,7 @@ mat-menu {
   &,
   .mat-mdc-menu-item .mat-mdc-menu-item-text {
     @include mdc-typography.smooth-font();
+    flex: 1;
     white-space: normal;
 
     @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
@@ -64,11 +65,37 @@ mat-menu {
   }
 }
 
+.mat-divider {
+  // Use margin instead of padding since divider uses border-top for line
+  @include token-utils.use-tokens(
+    tokens-mat-menu.$prefix,
+    tokens-mat-menu.get-token-slots()
+  ) {
+    color: var(#{token-utils.get-token-variable(divider-color)});
+    margin-bottom: var(#{token-utils.get-token-variable(divider-bottom-spacing)});
+    margin-top: var(#{token-utils.get-token-variable(divider-top-spacing)});
+  }
+}
+
 .mat-mdc-menu-item {
   @include mdc-helpers.disable-mdc-fallback-declarations {
     @include mdc-list-mixins.item-base;
-    @include mdc-list-mixins.item-spacing(
-      mdc-list-variables.$side-padding, $query: mdc-helpers.$mdc-base-styles-query);
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+      @include mdc-list-mixins.item-spacing(
+        var(#{token-utils.get-token-variable(item-leading-spacing)}),
+        var(#{token-utils.get-token-variable(item-trailing-spacing)}),
+        $query: mdc-helpers.$mdc-base-styles-query
+      );
+
+      // stylelint-disable-next-line selector-class-pattern
+      &:has(.material-icons, mat-icon, [matButtonIcon]) {
+        @include mdc-list-mixins.item-spacing(
+          var(#{token-utils.get-token-variable(item-with-icon-leading-spacing)}),
+          var(#{token-utils.get-token-variable(item-with-icon-trailing-spacing)}),
+          $query: mdc-helpers.$mdc-base-styles-query
+        );
+      }
+    }
   }
 
   // MDC's menu items are `<li>` nodes which don't need resets, however ours
@@ -129,7 +156,11 @@ mat-menu {
 
   .mat-icon {
     flex-shrink: 0;
-    margin-right: mdc-list-variables.$side-padding;
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+      margin-right: var(#{token-utils.get-token-variable(item-spacing)});
+      height: var(#{token-utils.get-token-variable(item-icon-size)});
+      width: var(#{token-utils.get-token-variable(item-icon-size)});
+    }
   }
 
   [dir='rtl'] & {
@@ -137,12 +168,10 @@ mat-menu {
 
     .mat-icon {
       margin-right: 0;
-      margin-left: mdc-list-variables.$side-padding;
+      @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+        margin-left: var(#{token-utils.get-token-variable(item-spacing)});
+      }
     }
-  }
-
-  &.mat-mdc-menu-item-submenu-trigger {
-    @include menu-common.item-submenu-trigger(mdc-list-variables.$side-padding);
   }
 
   &:not([disabled]) {
@@ -169,7 +198,12 @@ mat-menu {
 }
 
 .mat-mdc-menu-submenu-icon {
-  @include menu-common.item-submenu-icon(mdc-list-variables.$side-padding);
+  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+    @include menu-common.item-submenu-icon(
+      var(#{token-utils.get-token-variable(item-spacing)}),
+      var(#{token-utils.get-token-variable(item-icon-size)})
+    );
+  }
 }
 
 // Increase specificity because ripple styles are part of the `mat-core` mixin and can

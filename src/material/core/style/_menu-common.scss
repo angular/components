@@ -59,29 +59,16 @@ $icon-margin: 16px !default;
   }
 }
 
-@mixin item-submenu-trigger($side-padding) {
-  // Increase the side padding to prevent the indicator from overlapping the text.
-  padding-right: $side-padding * 2;
-
-  [dir='rtl'] & {
-    padding-right: $side-padding;
-    padding-left: $side-padding * 2;
-  }
-}
-
-@mixin item-submenu-icon($side-padding) {
-  position: absolute;
-  top: 50%;
-  right: $side-padding;
-  transform: translateY(-50%);
-  width: 5px;
+@mixin item-submenu-icon($item-spacing, $icon-size) {
+  width: $icon-size;
   height: 10px;
   fill: currentColor;
+  padding-left: $item-spacing;
 
   [dir='rtl'] & {
     right: auto;
-    left: $side-padding;
-    transform: translateY(-50%) scaleX(-1);
+    padding-right: $item-spacing;
+    padding-left: 0;
   }
 
   // Fix for Chromium-based browsers blending in the `currentColor` with the background.
