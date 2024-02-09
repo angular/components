@@ -446,7 +446,7 @@
     headline-weight: subhead-weight,
   ));
 
-  @if (map.has-key($tokens, container-elevation)) {
+  @if map.get($tokens, container-elevation) != null {
     $tokens: map.merge($tokens, (
       // The spec has the dialog at an elevation of 3 which is consistent with the current
       // version of the tokens (0_161), however both the designs and MDC's implementation
@@ -472,7 +472,10 @@
   // However, this interferes with the use case of placing a list on other components. For example,
   // the bottom sheet's container color is `md.sys.color.surface-container-low`. Instead, allow the
   // list to just display the colors for its background.
-  @return map.set($tokens, list-item-container-color, transparent);
+  @if map.get($tokens, list-item-container-color) != null {
+    $tokens: map.set($tokens, list-item-container-color, transparent);
+  }
+  @return $tokens;
 }
 
 /// Generates a set of namespaced tokens for all components.
@@ -976,7 +979,13 @@
     mdc-tokens.md-sys-color-values-light($ref));
   @return _generate-tokens(map.merge($ref, (
     md-sys-color: $sys-color,
+    // Because the elevation values are always combined with color values to create the box shadow,
+    // elevation needs to be part of the color dimension.
     md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
+    // Because the state values are sometimes combined with color values to create rgba colors,
+    // state needs to be part of color dimension.
+    // TODO(mmalerba): If at some point we remove the need for these combined values, we can move
+    //  state to the base dimension.
     md-sys-state: mdc-tokens.md-sys-state-values(),
   )));
 }
@@ -1012,6 +1021,5 @@
   @return _generate-tokens((
     md-sys-motion: mdc-tokens.md-sys-motion-values(),
     md-sys-shape: mdc-tokens.md-sys-shape-values(),
-    md-sys-state: mdc-tokens.md-sys-state-values(),
   ), $include-non-systemized: true);
 }

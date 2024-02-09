@@ -112,7 +112,7 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
     @include sass-utils.current-selector-or-root() {

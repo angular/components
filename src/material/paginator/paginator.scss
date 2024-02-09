@@ -27,6 +27,12 @@ $button-icon-size: 28px;
     @include token-utils.create-token-slot(font-weight, container-text-weight);
     @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
 
+    // Apply custom form-field density for paginator.
+    @include token-utils.create-token-slot(
+        --mat-form-field-container-height, form-field-container-height);
+    @include token-utils.create-token-slot(
+        --mat-form-field-container-vertical-padding, form-field-container-vertical-padding);
+
     .mat-mdc-select-value {
       @include token-utils.create-token-slot(font-size, select-trigger-text-size);
     }
