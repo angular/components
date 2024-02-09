@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
-@use '../form-field/form-field-theme';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/theming/theming';
@@ -52,12 +51,6 @@
       @include token-utils.create-token-values(tokens-mat-paginator.$prefix,
         tokens-mat-paginator.get-density-tokens($theme));
     }
-  }
-
-  // We need the form field to be narrower in order to fit into the paginator,
-  // so we set its density to be -4 or denser.
-  .mat-mdc-paginator {
-    @include form-field-theme.density((density: $form-field-density));
   }
 }
 

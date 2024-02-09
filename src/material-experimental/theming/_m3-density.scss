@@ -118,6 +118,8 @@ $_density-tokens: (
   (mat, minimal-pseudo-checkbox): (),
   (mat, paginator): (
     container-size: (56px, 52px, 48px, 40px),
+    form-field-container-height: (40px, 40px, 40px, 40px, 40px, 36px),
+    form-field-container-vertical-padding: (8px, 8px, 8px, 8px, 8px, 6px),
   ),
   (mat, radio): (
     touch-target-display: (block, block, none, none),
