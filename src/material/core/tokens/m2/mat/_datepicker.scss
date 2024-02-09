@@ -1,3 +1,4 @@
+@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use 'sass:color';
 @use 'sass:meta';
 @use 'sass:math';
@@ -30,7 +31,10 @@ $private-default-overlap-color: #a8dab5;
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    calendar-container-shape: 4px,
+    calendar-container-elevation-shadow: mdc-elevation.elevation-box-shadow(4),
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
@@ -43,6 +47,8 @@ $private-default-overlap-color: #a8dab5;
   $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
   $preview-outline-color: $divider-color;
   $today-disabled-outline-color: null;
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $on-surface: if($is-dark, #fff, #000);
 
   $primary-color: inspection.get-theme-color($theme, primary);
   $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
@@ -67,6 +73,7 @@ $private-default-overlap-color: #a8dab5;
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
     toggle-icon-color: $inactive-icon-color,
     calendar-body-label-text-color: $secondary-text-color,
+    calendar-period-button-text-color: $on-surface,
     calendar-period-button-icon-color: $inactive-icon-color,
     calendar-navigation-button-icon-color: $inactive-icon-color,
     calendar-header-divider-color: $divider-color,
