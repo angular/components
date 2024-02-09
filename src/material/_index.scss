@@ -20,22 +20,11 @@
 @forward './core/density/private/all-density' show all-component-densities;
 @forward './core/theming/theming' show private-check-duplicate-theme-styles,
   private-legacy-get-theme, private-is-theme-object;
-@forward './core/style/layout-common' as private-* show private-fill;
-@forward './core/style/private' show private-theme-elevation, private-animation-noop;
-@forward './core/style/vendor-prefixes' as private-* show private-user-select,
-  private-position-sticky, private-color-adjust, private-clip-path;
-@forward './core/theming/palette' as private-* show $private-dark-primary-text,
-  $private-dark-disabled-text;
+@forward './core/style/private' show private-theme-elevation;
+@forward './core/style/vendor-prefixes' as private-* show private-user-select;
 @forward './core/style/variables' as private-* show $private-swift-ease-in-duration,
   $private-swift-ease-in-timing-function, $private-swift-ease-out-timing-function,
   $private-ease-in-out-curve-function, $private-swift-ease-out-duration, $private-xsmall;
-@forward './core/typography/typography' show private-typography-to-2014-config,
-  private-typography-to-2018-config;
-@forward './table/table-flex-styles' show private-table-flex-styles;
-@forward './core/style/menu-common' as private-menu-common-*;
-@forward './core/style/button-common' as private-button-common-*;
-// The form field density mixin needs to be exposed, because the paginator depends on it.
-@forward './form-field/form-field-theme' as private-form-field-* show private-form-field-density;
 @forward './core/style/sass-utils' as private-*;
 @forward './core/style/validation' as private-*;
 
@@ -143,12 +132,6 @@
 @forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density,
   tree-base;
 
-// MDC Helpers
-@forward './core/mdc-helpers/mdc-helpers' as private-* show
-  private-disable-mdc-fallback-declarations, private-typography-config-level-from-mdc,
-  $private-mdc-base-styles-query, $private-mdc-base-styles-without-animation-query,
-  $private-mdc-theme-styles-query, $private-mdc-typography-styles-query;
-
-// New theming APIs:
+// New theming APIs
 @forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
   get-theme-typography, get-theme-density, theme-has, theme-remove;
