@@ -10,6 +10,14 @@ $prefix: (mat, menu);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 4px,
+    divider-bottom-spacing: 0,
+    divider-top-spacing: 0,
+    item-spacing: 16px,
+    item-icon-size: 24px,
+    item-leading-spacing: 16px,
+    item-trailing-spacing: 16px,
+    item-with-icon-leading-spacing: 16px,
+    item-with-icon-trailing-spacing: 16px,
   );
 }
 
@@ -26,6 +34,7 @@ $prefix: (mat, menu);
     item-hover-state-layer-color: $active-state-layer-color,
     item-focus-state-layer-color: $active-state-layer-color,
     container-color: inspection.get-theme-color($theme, background, card),
+    divider-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }
 

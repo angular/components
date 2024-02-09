@@ -856,9 +856,13 @@
   @return mat.private-merge-all(
     _generate-typography-tokens($systems, item-label-text, label-large),
     (
-      container-shape: _hardcode(4px, $exclude-hardcoded),
+      container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+      divider-color: map.get($systems, md-sys-color, surface-variant),
+      divider-bottom-spacing: _hardcode(8px, $exclude-hardcoded),
+      divider-top-spacing: _hardcode(8px, $exclude-hardcoded),
       item-label-text-color: map.get($systems, md-sys-color, on-surface),
       item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      item-icon-size: _hardcode(24px, $exclude-hardcoded),
       item-hover-state-layer-color: mat.private-safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
@@ -867,6 +871,11 @@
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
+      item-spacing: _hardcode(12px, $exclude-hardcoded),
+      item-leading-spacing: _hardcode(12px, $exclude-hardcoded),
+      item-trailing-spacing: _hardcode(12px, $exclude-hardcoded),
+      item-with-icon-leading-spacing: _hardcode(12px, $exclude-hardcoded),
+      item-with-icon-trailing-spacing: _hardcode(12px, $exclude-hardcoded),
       container-color: map.get($systems, md-sys-color, surface-container),
     )
   );
