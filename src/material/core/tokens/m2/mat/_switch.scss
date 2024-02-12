@@ -35,10 +35,10 @@ $prefix: (mat, switch);
     visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
     hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
 
-    track-outline-width: 1,
-    track-outline-color: rgba(0,0,0,0),
-    disabled-unselected-track-outline-width: 1,
-    disabled-unselected-track-outline-color: rgba(0,0,0,0),
+    track-outline-width: 1px,
+    track-outline-color: transparent,
+    disabled-unselected-track-outline-width: 1px,
+    disabled-unselected-track-outline-color: transparent,
   );
 }
 
