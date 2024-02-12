@@ -15,7 +15,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
 import {DevAppDirectionality} from './dev-app-directionality';
 import {DevAppRippleOptions} from './ripple-options';
 import {getAppState, setAppState} from './dev-app-state';
@@ -143,13 +143,19 @@ export class DevAppLayout {
     location.reload();
   }
 
-  toggleDensity(index?: number) {
+  toggleDensity(index?: number, tooltipInstance?: MatTooltip) {
     if (index == null) {
       index = (this._densityScales.indexOf(this.state.density) + 1) % this._densityScales.length;
     }
 
     this.state.density = this._densityScales[index];
     setAppState(this.state);
+
+    // Keep the tooltip open so we can see what the density was changed to. Ideally we'd
+    // always show the density in a badge, but the M2 badge is too large for the toolbar.
+    if (tooltipInstance) {
+      requestAnimationFrame(() => tooltipInstance.show(0));
+    }
   }
 
   toggleRippleDisabled(value = !this.state.rippleDisabled) {
