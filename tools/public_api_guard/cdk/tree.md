@@ -197,6 +197,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');
     // (undocumented)
+    _setActiveItem(): void;
+    // (undocumented)
     protected _tabindex: number | null;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
