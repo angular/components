@@ -57,7 +57,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 .mat-calendar-body-label {
   height: 0;
   line-height: 0;
-  text-align: left;
+  text-align: start;
   padding-left: $calendar-body-label-side-padding;
   padding-right: $calendar-body-label-side-padding;
 
@@ -422,11 +422,5 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
       border-right: 0;
       border-left: $comparison-range-border;
     }
-  }
-}
-
-[dir='rtl'] {
-  .mat-calendar-body-label {
-    text-align: right;
   }
 }
