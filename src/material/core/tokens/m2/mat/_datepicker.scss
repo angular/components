@@ -33,7 +33,9 @@ $private-default-overlap-color: #a8dab5;
 @function get-unthemable-tokens() {
   @return (
     calendar-container-shape: 4px,
+    calendar-container-touch-shape: 4px,
     calendar-container-elevation-shadow: mdc-elevation.elevation-box-shadow(4),
+    calendar-container-touch-elevation-shadow: mdc-elevation.elevation-box-shadow(24),
   );
 }
 

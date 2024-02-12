@@ -75,9 +75,14 @@ $touch-max-height: 788px;
 }
 
 .mat-datepicker-content-touch {
-  @include elevation.elevation(24);
   display: block;
   max-height: 80vh;
+
+  @include token-utils.use-tokens(
+      tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(box-shadow, calendar-container-touch-elevation-shadow);
+    @include token-utils.create-token-slot(border-radius, calendar-container-touch-shape);
+  }
 
   // Allows for the screen reader close button to be seen in touch UI mode.
   position: relative;
