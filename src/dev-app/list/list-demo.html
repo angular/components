@@ -110,7 +110,7 @@
     <h2>Nav lists</h2>
     <mat-nav-list>
       @for (link of links; track link) {
-        <a mat-list-item [href]="link.href" [activated]="isActivated(link.href)">
+        <a mat-list-item [href]="link.href" [activated]="isActivated(link)">
           {{ link.name }}
         </a>
       }
@@ -120,7 +120,7 @@
     }
     <mat-nav-list>
       @for (link of links; track link; let last = $last) {
-        <a mat-list-item [href]="link.href" [activated]="isActivated(link.href)">
+        <a mat-list-item [href]="link.href" [activated]="isActivated(link)">
           <mat-icon matListItemIcon>folder</mat-icon>
           <span matListItemTitle>{{ link.name }}</span>
         </a>

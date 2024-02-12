@@ -653,6 +653,17 @@
   ));
 }
 
+/// Generates custom tokens for the mat-list.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {Map} A set of custom tokens for the mat-list
+@function list-active-indicator($systems, $exclude-hardcoded) {
+  @return (
+    active-indicator-color: map.get($systems, md-sys-color, secondary-container),
+    active-indicator-shape: map.get($systems, md-sys-shape, corner-full),
+  );
+}
+
 /// Generates custom tokens for the mat-button.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values

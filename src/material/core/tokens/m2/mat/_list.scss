@@ -12,7 +12,10 @@ $prefix: (mat, list);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  @return ();
+  @return (
+    active-indicator-color: transparent,
+    active-indicator-shape: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
