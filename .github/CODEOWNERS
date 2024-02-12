@@ -9,7 +9,7 @@
 /src/material/checkbox/**                                   @mmalerba
 /src/material/chips/**                                      @mmalerba @crisbeto @zarend
 /src/material/datepicker/**                                 @mmalerba @crisbeto @zarend
-/src/material/dialog/**                                     @devversion
+/src/material/dialog/**                                     @devversion @crisbeto
 /src/material/divider/**                                    @andrewseguin @crisbeto
 /src/material/expansion/**                                  @andrewseguin
 /src/material/form-field/**                                 @devversion @mmalerba
@@ -212,54 +212,95 @@
 /.yarn/**                                                   @devversion @josephperrott
 /scripts/**                                                 @devversion @josephperrott
 /test/**                                                    @devversion @josephperrott
-/tools/**                                                   @devversion @josephperrott
+/tools/*                                                    @devversion @josephperrott
+/tools/angular/**                                           @devversion @josephperrott
+/tools/dgeni/**                                             @devversion @josephperrott
+/tools/example-module/**                                    @devversion @josephperrott
+/tools/highlight-files/**                                   @devversion @josephperrott
+/tools/markdown-to-html/**                                  @devversion @josephperrott
+/tools/mdc-deps/**                                          @devversion @josephperrott
+/tools/package-docs-content/**                              @devversion @josephperrott
+/tools/postcss/**                                           @devversion @josephperrott
+/tools/postinstall/**                                       @devversion @josephperrott
+/tools/region-parser/**                                     @devversion @josephperrott
+/tools/release-checks/**                                    @devversion @josephperrott
+/tools/sass/**                                              @devversion @josephperrott
+/tools/server-test/**                                       @devversion @josephperrott
+/tools/stylelint/**                                         @devversion @josephperrott @crisbeto
+/tools/tslint-rules/**                                      @devversion @josephperrott @crisbeto
+
+# Only the root of the API guard, the rest of the files
+# should be distributed among the component owners.
+/tools/public_api_guard/*                                   @devversion @josephperrott
 
 # Public API golden files
+/tools/public_api_guard/cdk/*                               @andrewseguin
 /tools/public_api_guard/cdk/a11y**                          @jelbourn @devversion
 /tools/public_api_guard/cdk/accordion**                     @andrewseguin
 /tools/public_api_guard/cdk/bidi**                          @andrewseguin
-/tools/public_api_guard/cdk/cdk**                           @andrewseguin
 /tools/public_api_guard/cdk/clipboard**                     @andrewseguin
 /tools/public_api_guard/cdk/coercion**                      @andrewseguin
 /tools/public_api_guard/cdk/collections**                   @crisbeto @andrewseguin
+/tools/public_api_guard/cdk/dialog**                        @jelbourn @crisbeto
 /tools/public_api_guard/cdk/drag-drop**                     @crisbeto
 /tools/public_api_guard/cdk/keycodes**                      @andrewseguin
 /tools/public_api_guard/cdk/layout**                        @andrewseguin
+/tools/public_api_guard/cdk/listbox**                       @jelbourn
+/tools/public_api_guard/cdk/menu**                          @mmalerba @crisbeto
 /tools/public_api_guard/cdk/observers**                     @andrewseguin @crisbeto
-/tools/public_api_guard/cdk/overlay**                       @andrewseguin @crisbeto
+/tools/public_api_guard/cdk/overlay**                       @jelbourn @crisbeto
 /tools/public_api_guard/cdk/platform**                      @andrewseguin @devversion
 /tools/public_api_guard/cdk/portal**                        @andrewseguin
+/tools/public_api_guard/cdk/schematics**                    @devversion @andrewseguin
 /tools/public_api_guard/cdk/scrolling**                     @andrewseguin @crisbeto
 /tools/public_api_guard/cdk/stepper**                       @mmalerba
 /tools/public_api_guard/cdk/table**                         @andrewseguin
 /tools/public_api_guard/cdk/testing**                       @mmalerba @devversion
 /tools/public_api_guard/cdk/text-field**                    @mmalerba
 /tools/public_api_guard/cdk/tree**                          @jelbourn @andrewseguin
-/tools/public_api_guard/google-maps/**                      @crisbeto
+
+/tools/public_api_guard/material/*                          @andrewseguin
 /tools/public_api_guard/material/autocomplete**             @crisbeto
-/tools/public_api_guard/material/badge**                    @andrewseguin
-/tools/public_api_guard/material/bottom-sheet**             @andrewseguin @crisbeto
+/tools/public_api_guard/material/badge**                    @jelbourn
+/tools/public_api_guard/material/bottom-sheet**             @jelbourn @crisbeto
 /tools/public_api_guard/material/button-toggle**            @andrewseguin
-/tools/public_api_guard/material/chips**                    @andrewseguin
-/tools/public_api_guard/material/chips/testing**            @andrewseguin
-/tools/public_api_guard/material/core**                     @andrewseguin
+/tools/public_api_guard/material/button**                   @andrewseguin
+/tools/public_api_guard/material/card**                     @mmalerba
+/tools/public_api_guard/material/checkbox**                 @mmalerba
+/tools/public_api_guard/material/chips**                    @mmalerba @crisbeto @zarend
 /tools/public_api_guard/material/datepicker**               @mmalerba @crisbeto @zarend
+/tools/public_api_guard/material/dialog**                   @devversion @crisbeto
 /tools/public_api_guard/material/divider**                  @andrewseguin @crisbeto
 /tools/public_api_guard/material/expansion**                @andrewseguin
-/tools/public_api_guard/material/form-field**               @mmalerba
+/tools/public_api_guard/material/form-field**               @devversion @mmalerba
 /tools/public_api_guard/material/grid-list**                @andrewseguin
 /tools/public_api_guard/material/icon**                     @andrewseguin
-/tools/public_api_guard/material/list**                     @andrewseguin @crisbeto @devversion
-/tools/public_api_guard/material/material**                 @andrewseguin
+/tools/public_api_guard/material/input**                    @devversion @mmalerba
+/tools/public_api_guard/material/list**                     @mmalerba @devversion
 /tools/public_api_guard/material/menu**                     @crisbeto
-/tools/public_api_guard/material/radio**                    @andrewseguin @devversion
+/tools/public_api_guard/material/paginator**                @crisbeto
+/tools/public_api_guard/material/prebuilt-themes**          @andrewseguin
+/tools/public_api_guard/material/progress-bar**             @andrewseguin
+/tools/public_api_guard/material/progress-spinner**         @andrewseguin
+/tools/public_api_guard/material/radio**                    @mmalerba
+/tools/public_api_guard/material/schematics**               @devversion @andrewseguin
+/tools/public_api_guard/material/select**                   @crisbeto
+/tools/public_api_guard/material/select**                   @crisbeto
 /tools/public_api_guard/material/sidenav**                  @mmalerba
-/tools/public_api_guard/material/slider**                   @mmalerba
+/tools/public_api_guard/material/slide-toggle**             @crisbeto
+/tools/public_api_guard/material/slider**                   @devversion
+/tools/public_api_guard/material/snack-bar**                @andrewseguin
 /tools/public_api_guard/material/sort**                     @andrewseguin
 /tools/public_api_guard/material/stepper**                  @mmalerba
+/tools/public_api_guard/material/table**                    @andrewseguin
+/tools/public_api_guard/material/tabs**                     @crisbeto
+/tools/public_api_guard/material/testing**                  @andrewseguin
 /tools/public_api_guard/material/toolbar**                  @devversion
+/tools/public_api_guard/material/tooltip**                  @andrewseguin
 /tools/public_api_guard/material/tree**                     @jelbourn @andrewseguin
-/tools/public_api_guard/youtube-player/**                   @andrewseguin
+
+/tools/public_api_guard/youtube-player/**                   @crisbeto
+/tools/public_api_guard/google-maps/**                      @crisbeto
 
 # Misc
 /.github/**                                                 @devversion @josephperrott
