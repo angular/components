@@ -16,11 +16,7 @@
   display: block;
 
   // Explicitly set a `text-align` so that the content isn't affected by the parent (see #27613).
-  text-align: left;
-
-  [dir='rtl'] & {
-    text-align: right;
-  }
+  text-align: start;
 
   // Inverts the progress bar horizontally in `query` mode.
   &[mode='query'] {
