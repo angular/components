@@ -1174,6 +1174,8 @@
 /// @return {Map} A set of custom tokens for the mat-slide-toggle
 @function switch($systems, $exclude-hardcoded) {
   @return (
+    disabled-selected-handle-opacity: _hardcode(1, $exclude-hardcoded),
+    disabled-unselected-handle-opacity: _hardcode(0.38, $exclude-hardcoded),
     unselected-handle-size: _hardcode(16px, $exclude-hardcoded),
     selected-handle-size: _hardcode(24px, $exclude-hardcoded),
     with-icon-handle-size: _hardcode(24px, $exclude-hardcoded),
@@ -1194,7 +1196,11 @@
     hidden-track-opacity: _hardcode(0, $exclude-hardcoded),
     visible-track-transition: _hardcode(opacity 75ms, $exclude-hardcoded),
     hidden-track-transition: _hardcode(opacity 75ms, $exclude-hardcoded),
-  );
+    track-outline-width: _hardcode(2px, $exclude-hardcoded),
+    track-outline-color:  map.get($systems, md-sys-color, outline),
+    disabled-unselected-track-outline-width: _hardcode(2px, $exclude-hardcoded),
+    disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
+  ), ();
 }
 
 /// Generates custom tokens for the mat-snack-bar.
