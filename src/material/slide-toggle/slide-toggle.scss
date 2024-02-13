@@ -212,3 +212,27 @@
     }
   }
 }
+
+@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+  .mdc-switch__track::after,
+  .mdc-switch__track::before {
+    @include token-utils.create-token-slot(border-width, track-outline-width);
+    @include token-utils.create-token-slot(border-color, track-outline-color);
+  }
+
+  .mdc-switch--disabled .mdc-switch__track::after,
+  .mdc-switch--disabled .mdc-switch__track::before {
+    @include token-utils.create-token-slot(border-width, disabled-unselected-track-outline-width);
+    @include token-utils.create-token-slot(border-color, disabled-unselected-track-outline-color);
+  }
+}
+
+@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+  .mdc-switch--disabled.mdc-switch--selected .mdc-switch__handle::after {
+    @include token-utils.create-token-slot(opacity, disabled-selected-handle-opacity);
+  }
+
+  .mdc-switch--disabled.mdc-switch--unselected .mdc-switch__handle::after {
+    @include token-utils.create-token-slot(opacity, disabled-unselected-handle-opacity);
+  }
+}

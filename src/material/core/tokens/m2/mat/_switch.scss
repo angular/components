@@ -8,6 +8,9 @@ $prefix: (mat, switch);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
+    disabled-selected-handle-opacity: 0.38,
+    disabled-unselected-handle-opacity: 0.38,
+
     unselected-handle-size: 20px,
     selected-handle-size: 20px,
     pressed-handle-size: 20px,
@@ -31,6 +34,11 @@ $prefix: (mat, switch);
     hidden-track-opacity: 1,
     visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
     hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
+
+    track-outline-width: 1px,
+    track-outline-color: transparent,
+    disabled-unselected-track-outline-width: 1px,
+    disabled-unselected-track-outline-color: transparent,
   );
 }
 
