@@ -104,6 +104,26 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(optionEls[0].getAttribute('tabindex')).toBe('10');
     });
+
+    it('should reset the tabindex if the active option is destroyed', () => {
+      const {fixture, listbox, listboxEl} = setupComponent(ListboxWithOptions);
+      let options = fixture.nativeElement.querySelectorAll('.cdk-option');
+      expect(listboxEl.getAttribute('tabindex')).toBe('0');
+      expect(options[0].getAttribute('tabindex')).toBe('-1');
+
+      listbox.focus();
+      fixture.detectChanges();
+
+      expect(listboxEl.getAttribute('tabindex')).toBe('-1');
+      expect(options[0].getAttribute('tabindex')).toBe('0');
+
+      fixture.componentInstance.appleRendered = false;
+      fixture.detectChanges();
+      options = fixture.nativeElement.querySelectorAll('.cdk-option');
+
+      expect(listboxEl.getAttribute('tabindex')).toBe('0');
+      expect(options[0].getAttribute('tabindex')).toBe('-1');
+    });
   });
 
   describe('selection', () => {
@@ -943,12 +963,14 @@ describe('CdkOption and CdkListbox', () => {
          [cdkListboxNavigatesDisabledOptions]="!navigationSkipsDisabled"
          [cdkListboxValue]="selectedValue"
          (cdkListboxValueChange)="onSelectionChange($event)">
-      <div cdkOption="apple"
-           [cdkOptionDisabled]="isAppleDisabled"
-           [id]="appleId"
-           [tabindex]="appleTabindex">
-        Apple
-      </div>
+      @if (appleRendered) {
+        <div cdkOption="apple"
+             [cdkOptionDisabled]="isAppleDisabled"
+             [id]="appleId"
+             [tabindex]="appleTabindex">
+          Apple
+        </div>
+      }
       <div cdkOption="orange" [cdkOptionDisabled]="isOrangeDisabled">Orange
       </div>
       <div cdkOption="banana">Banana</div>
@@ -965,6 +987,7 @@ class ListboxWithOptions {
   isActiveDescendant = false;
   navigationWraps = true;
   navigationSkipsDisabled = true;
+  appleRendered = true;
   listboxId: string;
   listboxTabindex: number;
   appleId: string;
