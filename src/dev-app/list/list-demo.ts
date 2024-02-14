@@ -13,6 +13,11 @@ import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list
 import {MatIconModule} from '@angular/material/icon';
 import {CommonModule} from '@angular/common';
 
+interface Link {
+  name: string;
+  href: string;
+}
+
 @Component({
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
@@ -52,7 +57,7 @@ export class ListDemo {
     },
   ];
 
-  links: {name: string; href: string}[] = [
+  links: Link[] = [
     {name: 'Inbox', href: '/list#inbox'},
     {name: 'Outbox', href: '/list#outbox'},
     {name: 'Spam', href: '/list#spam'},
@@ -85,7 +90,7 @@ export class ListDemo {
     alert(msg);
   }
 
-  isActivated(href: string) {
-    return window.location.href === new URL(href, window.location.href).toString();
+  isActivated(link: Link) {
+    return `${window.location.pathname}${window.location.hash}` === link.href;
   }
 }

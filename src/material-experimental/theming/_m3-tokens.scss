@@ -837,6 +837,11 @@
       $token-slots
     ),
     _namespace-tokens(
+      (mat, list),
+      custom-tokens.list($systems, $exclude-hardcoded),
+      $token-slots
+    ),
+    _namespace-tokens(
       // Note: in M3 the "protected" button is called "elevated".
       (mat, protected-button),
       custom-tokens.elevated-button($systems, $exclude-hardcoded),
