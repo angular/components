@@ -88,13 +88,13 @@ export class SeleniumWebDriverElement implements TestElement {
 
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
-    await this._actions().mouseMove(this.element()).perform();
+    await this._actions().move({origin: this.element()}).perform();
     await this._stabilize();
   }
 
   /** Moves the mouse away from the element. */
   async mouseAway(): Promise<void> {
-    await this._actions().mouseMove(this.element(), {x: -1, y: -1}).perform();
+    await this._actions().move({origin: this.element(), x: -1, y: -1}).perform();
     await this._stabilize();
   }
 
@@ -290,7 +290,7 @@ export class SeleniumWebDriverElement implements TestElement {
   /** Dispatches all the events that are part of a click event sequence. */
   private async _dispatchClickEventSequence(
     args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
-    button: string,
+    button: webdriver.Button,
   ) {
     let modifiers: ModifierKeys = {};
     if (args.length && typeof args[args.length - 1] === 'object') {
@@ -305,12 +305,12 @@ export class SeleniumWebDriverElement implements TestElement {
       {x: number; y: number},
     ];
 
-    let actions = this._actions().mouseMove(this.element(), ...offsetArgs);
+    let actions = this._actions().move({origin: this.element(), ...offsetArgs});
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);
     }
-    actions = actions.click(button);
+    actions = actions.press(button);
     for (const modifierKey of modifierKeys) {
       actions = actions.keyUp(modifierKey);
     }

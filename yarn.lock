@@ -5306,7 +5306,7 @@
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.1.tgz#d8f1c0d0dc23afad6dc16a9e993a0865774b4065"
   integrity sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==
 
-"@types/selenium-webdriver@^3.0.0", "@types/selenium-webdriver@^3.0.17":
+"@types/selenium-webdriver@^3.0.0":
   version "3.0.19"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-3.0.19.tgz#28ecede76f15b13553b4e86074d4cf9a0bbe49c4"
   integrity sha512-OFUilxQg+rWL2FMxtmIgCkUDlJB6pskkpvmew7yeXfzzsOBb5rc+y2+DjHm+r3r1ZPPcJefK3DveNSYWGiy68g==
@@ -5315,6 +5315,13 @@
   version "4.0.18"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-4.0.18.tgz#98f6e1ccd2d92f6fddaccfc7c148d2e158da0f92"
   integrity sha512-gkrUo3QldGr8V9im/DjgKkX4UVd1rtflfEBuPG9hPSA1keu7A0rF8h/MQjpTMm2EPVhBCd2K8tn5nlC9Vsd5Xw==
+
+"@types/selenium-webdriver@^4.1.21":
+  version "4.1.21"
+  resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-4.1.21.tgz#79fe31faf9953a4143c3e32944d98d5146bbe185"
+  integrity sha512-QGURnImvxYlIQz5DVhvHdqpYNLBjhJ2Vm+cnQI2G9QZzkWlZm0LkLcvDcHp+qE6N2KBz4CeuvXgPO7W3XQ0Tyw==
+  dependencies:
+    "@types/ws" "*"
 
 "@types/semver@^7.3.9":
   version "7.3.9"
@@ -5400,7 +5407,7 @@
   resolved "https://registry.yarnpkg.com/@types/which/-/which-2.0.1.tgz#27ecd67f915b7c3d6ba552135bb1eecd66e63501"
   integrity sha512-Jjakcv8Roqtio6w1gr0D7y6twbhx6gGgFGF5BLwajPpnOIOxFkakFhCq+LmyyeAz7BX6ULrjBOxdKaCDy+4+dQ==
 
-"@types/ws@8.5.10":
+"@types/ws@*", "@types/ws@8.5.10":
   version "8.5.10"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.10.tgz#4acfb517970853fa6574a3a6886791d04a396787"
   integrity sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==
@@ -15651,7 +15658,7 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selenium-webdriver@3.6.0, selenium-webdriver@^3.0.1, selenium-webdriver@^3.6.0:
+selenium-webdriver@3.6.0, selenium-webdriver@^3.0.1:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-3.6.0.tgz#2ba87a1662c020b8988c981ae62cb2a01298eafc"
   integrity sha512-WH7Aldse+2P5bbFBO4Gle/nuQOdVwpHMTL6raL3uuBj/vPG07k6uzt3aiahu352ONBr5xXh0hDlM3LhtXPOC4Q==
@@ -15665,6 +15672,15 @@ selenium-webdriver@4.15.0:
   version "4.15.0"
   resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.15.0.tgz#ee827f8993864dc0821df0d3b46d4f312d6f1aa3"
   integrity sha512-BNG1bq+KWiBGHcJ/wULi0eKY0yaDqFIbEmtbsYJmfaEghdCkXBsx1akgOorhNwjBipOr0uwpvNXqT6/nzl+zjg==
+  dependencies:
+    jszip "^3.10.1"
+    tmp "^0.2.1"
+    ws ">=8.14.2"
+
+selenium-webdriver@^4.17.0:
+  version "4.17.0"
+  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.17.0.tgz#f6c93a9df3e0543df7dc2329d81968af42845a7f"
+  integrity sha512-e2E+2XBlGepzwgFbyQfSwo9Cbj6G5fFfs9MzAS00nC99EewmcS2rwn2MwtgfP7I5p1e7DYv4HQJXtWedsu6DvA==
   dependencies:
     jszip "^3.10.1"
     tmp "^0.2.1"
