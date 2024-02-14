@@ -52,11 +52,11 @@ $prefix: (mat, standard-button-toggle);
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    // TODO(crisbeto): other components have tokens for all typography dimensions (font weight,
-    // letter spacing etc). The button toggle only has the font to match what it had in the
-    // old theming API and to reduce internal breakages. We should introduce more typography
-    // tokens at some point.
-    text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
