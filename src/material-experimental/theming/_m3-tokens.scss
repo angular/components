@@ -831,7 +831,7 @@
     ),
     _namespace-tokens(
       (mat, list),
-      custom-tokens.list-active-indicator($systems, $exclude-hardcoded),
+      custom-tokens.list($systems, $exclude-hardcoded),
       $token-slots
     ),
     _namespace-tokens(
