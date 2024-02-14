@@ -1,21 +1,73 @@
-<a name="17.2.0-rc.0"></a>
-# 17.2.0-rc.0 "concrete-cardinal" (2024-02-07)
+<a name="17.2.0"></a>
+# 17.2.0 "polymer-prism" (2024-02-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [55eeee3516](https://github.com/angular/components/commit/55eeee35163d5392703e02f8de044598e74cc6f5) | fix | **listbox:** unable to tab in if active option is removed ([#28583](https://github.com/angular/components/pull/28583)) |
+| [2f7aaaa220](https://github.com/angular/components/commit/2f7aaaa22095bdf96a5a6a65a658fd3e01b68cc8) | fix | **table:** error if outlets are assigned too early ([#28551](https://github.com/angular/components/pull/28551)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [58764afec](https://github.com/angular/components/commit/58764afec2b181c6be1b21f952215c3aa0a160f0) | fix | **chips:** Tokenize the hover & focus overlays ([#28497](https://github.com/angular/components/pull/28497)) |
-| [32f86e48e](https://github.com/angular/components/commit/32f86e48e17caa316baa4738e0f458a64e16e4e5) | fix | **chips:** Tokenize the selected state ([#28498](https://github.com/angular/components/pull/28498)) |
-| [1dcc19585](https://github.com/angular/components/commit/1dcc195853a74d1e0b724b742673eb5fd744cb67) | fix | **core:** ensure that option inherits container background |
-| [46fe83f21](https://github.com/angular/components/commit/46fe83f21f4f7cb54b09603829ddc4985a2e8be5) | fix | **list:** use transparent background for M3 ([#28504](https://github.com/angular/components/pull/28504)) |
-| [fca43aa49](https://github.com/angular/components/commit/fca43aa49b060e77d27b9286740c9535b4ae42c2) | fix | **select:** styles for m3 ([#28492](https://github.com/angular/components/pull/28492)) |
-| [d799c044a](https://github.com/angular/components/commit/d799c044a7acffcf94a9d86cc304a2fd3ace1961) | fix | **slide-toggle:** fix m3 slide-toggle handle ([#28503](https://github.com/angular/components/pull/28503)) |
-| [130afedf1](https://github.com/angular/components/commit/130afedf1c823c2d24eda2bedd1ebe5e3b33e6fa) | fix | **slide-toggle:** m3 slide-toggle track ([#28539](https://github.com/angular/components/pull/28539)) |
+| [99a4e2a10f](https://github.com/angular/components/commit/99a4e2a10ff39599f16f0a9c842963ae1452de92) | fix | **button-toggle:** Add remaining typography tokens needed for M3 ([#28578](https://github.com/angular/components/pull/28578)) |
+| [e05795dde0](https://github.com/angular/components/commit/e05795dde0ca56be3398f34cb834df007f18da1a) | fix | **button:** calculate icon button padding based on tokens |
+| [a496855f30](https://github.com/angular/components/commit/a496855f303acbf4b82821be029467c577976729) | fix | **button:** generate separate tokens for mini fab |
+| [cbeeb3ae17](https://github.com/angular/components/commit/cbeeb3ae1771c4ccbd6c5677cf73ac3d21c593c5) | fix | **checkbox:** use token for disabled label color |
+| [0a1c8eedb4](https://github.com/angular/components/commit/0a1c8eedb45c3e24247539abe489ea835d19a0d7) | fix | **chips:** Tokenize chip outline and disabled opacity ([#28488](https://github.com/angular/components/pull/28488)) |
+| [58764afec2](https://github.com/angular/components/commit/58764afec2b181c6be1b21f952215c3aa0a160f0) | fix | **chips:** Tokenize the hover & focus overlays ([#28497](https://github.com/angular/components/pull/28497)) |
+| [32f86e48e1](https://github.com/angular/components/commit/32f86e48e17caa316baa4738e0f458a64e16e4e5) | fix | **chips:** Tokenize the selected state ([#28498](https://github.com/angular/components/pull/28498)) |
+| [1dcc195853](https://github.com/angular/components/commit/1dcc195853a74d1e0b724b742673eb5fd744cb67) | fix | **core:** ensure that option inherits container background |
+| [873c8e97dc](https://github.com/angular/components/commit/873c8e97dc4a077ca30d64c4ce629d7011caf10e) | fix | **datepicker:** fix M3 styles ([#28556](https://github.com/angular/components/pull/28556)) |
+| [8ac58ff328](https://github.com/angular/components/commit/8ac58ff328aac006e9f22f9f97bf5552050c12ef) | fix | **datepicker:** fix touchui shadow and border-radius ([#28577](https://github.com/angular/components/pull/28577)) |
+| [92ab097987](https://github.com/angular/components/commit/92ab0979874945b85554914879b58ab6b7152e39) | fix | **datepicker:** use direction-agnostic text-align |
+| [0edc47673f](https://github.com/angular/components/commit/0edc47673f93beb1533788e774d9b739821b33f4) | fix | **form-field:** container height in lower densities ([#28546](https://github.com/angular/components/pull/28546)) |
+| [b1f281cab5](https://github.com/angular/components/commit/b1f281cab5d739e5b89d8c057e830fd61e88615b) | fix | **list:** ensure leading icon scales with token |
+| [306c2424f7](https://github.com/angular/components/commit/306c2424f7d12383166fb233770c05f063a094cd) | fix | **list:** indexOf usage incorreect for active focus reset ([#28531](https://github.com/angular/components/pull/28531)) |
+| [75955eb9b4](https://github.com/angular/components/commit/75955eb9b422709064ceeb681ee9ef35db432102) | fix | **list:** match leading icon size in M3 to spec |
+| [b8327cd92c](https://github.com/angular/components/commit/b8327cd92c1f124a5e2c9ef6693354dd76cc5ca9) | fix | **list:** tokenize active-indicator  ([#28586](https://github.com/angular/components/pull/28586)) |
+| [ba05521005](https://github.com/angular/components/commit/ba05521005c1d19f6c2b12fd4ad07fc8df7e68cf) | fix | **list:** tokenize space around leading icon |
+| [0d88889452](https://github.com/angular/components/commit/0d888894525801fd45e673e37557dc58cef44934) | fix | **list:** use direction-agnostic text-align |
+| [46fe83f21f](https://github.com/angular/components/commit/46fe83f21f4f7cb54b09603829ddc4985a2e8be5) | fix | **list:** use transparent background for M3 ([#28504](https://github.com/angular/components/pull/28504)) |
+| [044c9ba648](https://github.com/angular/components/commit/044c9ba6480cc80e2ab0e9a5d45a15c3b5c06174) | fix | **menu:** prevent icon from collapsing when text is long ([#28541](https://github.com/angular/components/pull/28541)) |
+| [47c55925c0](https://github.com/angular/components/commit/47c55925c0eb9ff9b6a64446577ff322c01f03dc) | fix | **menu:** Update token values and styles for M3 ([#28470](https://github.com/angular/components/pull/28470)) |
+| [a656164255](https://github.com/angular/components/commit/a656164255a276a0fdef4162a7e529426e0aae1d) | fix | **progress-bar:** incorrect alignment if direction is set on element |
+| [f6d3f1bc21](https://github.com/angular/components/commit/f6d3f1bc21e0ee734432f0609f0ea17016cfdbe1) | fix | **schematics:** import async animations and remove deprecated function usages ([#28424](https://github.com/angular/components/pull/28424)) |
+| [fbf2ef3fcb](https://github.com/angular/components/commit/fbf2ef3fcba5266188e530e77ee91f8f1d4ff7dd) | fix | **select:** fix m3 arrow alignment ([#28545](https://github.com/angular/components/pull/28545)) |
+| [fca43aa49b](https://github.com/angular/components/commit/fca43aa49b060e77d27b9286740c9535b4ae42c2) | fix | **select:** styles for m3 ([#28492](https://github.com/angular/components/pull/28492)) |
+| [d799c044a7](https://github.com/angular/components/commit/d799c044a7acffcf94a9d86cc304a2fd3ace1961) | fix | **slide-toggle:** fix m3 slide-toggle handle ([#28503](https://github.com/angular/components/pull/28503)) |
+| [130afedf1c](https://github.com/angular/components/commit/130afedf1c823c2d24eda2bedd1ebe5e3b33e6fa) | fix | **slide-toggle:** m3 slide-toggle track ([#28539](https://github.com/angular/components/pull/28539)) |
+| [63c6b841b4](https://github.com/angular/components/commit/63c6b841b43ba1b4efd8ec9a00305833cd5c5498) | fix | **slide-toggle:** m3 track outline and handle opacity ([#28565](https://github.com/angular/components/pull/28565)) |
+| [2455a42d3c](https://github.com/angular/components/commit/2455a42d3c5866e122421f144f08ae6fa4df4198) | fix | **stepper:** Update token values for M3 and add color variant support ([#28430](https://github.com/angular/components/pull/28430)) |
+| [f9621a7c8c](https://github.com/angular/components/commit/f9621a7c8c4bf96c12003e2c092b79c76b023efc) | fix | **tabs:** prevent page scroll on space press ([#28532](https://github.com/angular/components/pull/28532)) |
 ### material-experimental
 | Commit | Type | Description |
 | -- | -- | -- |
-| [b6e0b20e1](https://github.com/angular/components/commit/b6e0b20e1f72f48622179f0a8859b76df056b484) | fix | **theming:** Fix chip trailing icon opacity in M3 ([#28530](https://github.com/angular/components/pull/28530)) |
-| [8fab89229](https://github.com/angular/components/commit/8fab89229d3aad9109c5a22244f9f35ae3fc675f) | fix | **theming:** Make color API back-cmpat styles available ([#28526](https://github.com/angular/components/pull/28526)) |
-| [f1deb30a1](https://github.com/angular/components/commit/f1deb30a1768ac6a5e87872a1b790f1b93b5b2c7) | fix | **theming:** Make M3 work with typography-hierarchy ([#28540](https://github.com/angular/components/pull/28540)) |
+| [d16e8ac5de](https://github.com/angular/components/commit/d16e8ac5de0191da06089e5668067c8d6e608d61) | feat | **theming:** add M3 tokens for pseudo checkbox ([#28407](https://github.com/angular/components/pull/28407)) |
+| [4742a175ab](https://github.com/angular/components/commit/4742a175ab3b971aae9b6f6ad87a2cafd3257eb9) | fix | **theming:** Add more tests for M3 theme tokens ([#28561](https://github.com/angular/components/pull/28561)) |
+| [1f1dac5e57](https://github.com/angular/components/commit/1f1dac5e57019d5faf044875c1b10be8e0fb1dd1) | fix | **theming:** Add support for color variants in badge, button-toggle, button, pseudo-checkbox, and chips ([#28457](https://github.com/angular/components/pull/28457)) |
+| [08c97ab648](https://github.com/angular/components/commit/08c97ab648245d5369e0d3164e0b05c1abc9d193) | fix | **theming:** Add support for color variants in option, checkbox, and fab ([#28412](https://github.com/angular/components/pull/28412)) |
+| [715877a13d](https://github.com/angular/components/commit/715877a13d8f60af3a1f26bf9f6a5f0cc2aee0ee) | fix | **theming:** Add support for color variants in progress-spiner, progress-bar, list, form-field, and datepicker ([#28451](https://github.com/angular/components/pull/28451)) |
+| [29a1e5d8a1](https://github.com/angular/components/commit/29a1e5d8a13e1e81b9aa2e1dd89d54fb063fc191) | fix | **theming:** Add support for color variants in slide-toggle, select, and radio ([#28445](https://github.com/angular/components/pull/28445)) |
+| [e45e210055](https://github.com/angular/components/commit/e45e210055eff26bd74956560b10f2681d4f2ac6) | fix | **theming:** Add support for color variants in tabs and slider ([#28417](https://github.com/angular/components/pull/28417)) |
+| [9ab104b804](https://github.com/angular/components/commit/9ab104b8041ad6bd3f7529a88a6bdefcc219248a) | fix | **theming:** align dialog with M3 |
+| [957bc487bf](https://github.com/angular/components/commit/957bc487bf8077cd4b657baa3d4ed64aebff9196) | fix | **theming:** align fab with M3 spec |
+| [ba3680ed48](https://github.com/angular/components/commit/ba3680ed489e36c106578f790459084649e74bd0) | fix | **theming:** align M3 icon buttons with spec |
+| [601a745fc8](https://github.com/angular/components/commit/601a745fc8e19ab7be93379297ea5fef58d5327e) | fix | **theming:** cap icon button size |
+| [339905c5af](https://github.com/angular/components/commit/339905c5af8a0abe632c2abcdc9f19e9a480677e) | fix | **theming:** disabled radio button incorrect label color ([#28415](https://github.com/angular/components/pull/28415)) |
+| [b6e0b20e1f](https://github.com/angular/components/commit/b6e0b20e1f72f48622179f0a8859b76df056b484) | fix | **theming:** Fix chip trailing icon opacity in M3 ([#28530](https://github.com/angular/components/pull/28530)) |
+| [fdd16e6675](https://github.com/angular/components/commit/fdd16e667550690d554bba49888bfc6929bc97b2) | fix | **theming:** fix filled text field |
+| [06c81e38c7](https://github.com/angular/components/commit/06c81e38c719b7b051aeae2ef339b904cc45015e) | fix | **theming:** fix paginator in M3 |
+| [59b93b44ab](https://github.com/angular/components/commit/59b93b44ab807a55ce182599e30dc52609debaf8) | fix | **theming:** Fix token causing test failure on CI ([#28569](https://github.com/angular/components/pull/28569)) |
+| [1e48cd431f](https://github.com/angular/components/commit/1e48cd431fb11f0e0172251d719340b2bc9aa39b) | fix | **theming:** fix up M3 checkbox |
+| [056e2221ec](https://github.com/angular/components/commit/056e2221ecfd75808c74e2ef9a783bcb82a25c03) | fix | **theming:** implement M3 badge ([#28460](https://github.com/angular/components/pull/28460)) |
+| [93f3421538](https://github.com/angular/components/commit/93f3421538118ef9187c2bcd4a2aec24a8fcfc01) | fix | **theming:** incorrect track color for alternate progress bar palettes ([#28484](https://github.com/angular/components/pull/28484)) |
+| [935eda0872](https://github.com/angular/components/commit/935eda0872ffdafbf0273b931d6df04e49030369) | fix | **theming:** incorrect validation for density scale |
+| [8fab89229d](https://github.com/angular/components/commit/8fab89229d3aad9109c5a22244f9f35ae3fc675f) | fix | **theming:** Make color API back-cmpat styles available ([#28526](https://github.com/angular/components/pull/28526)) |
+| [f1deb30a17](https://github.com/angular/components/commit/f1deb30a1768ac6a5e87872a1b790f1b93b5b2c7) | fix | **theming:** Make M3 work with typography-hierarchy ([#28540](https://github.com/angular/components/pull/28540)) |
+| [5f1a7ea1ee](https://github.com/angular/components/commit/5f1a7ea1ee6eecc5b4e2b3fd52445e5adb5911a6) | fix | **theming:** resolve M3 issues in mat-option ([#28482](https://github.com/angular/components/pull/28482)) |
+| [dabb96765a](https://github.com/angular/components/commit/dabb96765a80c29067d07240d46d7852fbc580fa) | fix | **theming:** set up core theme and app tokens ([#28431](https://github.com/angular/components/pull/28431)) |
+| [d26a51e3a5](https://github.com/angular/components/commit/d26a51e3a54b71928bc98df175c54997f8a31929) | fix | **theming:** set up internal form field in M3 ([#28414](https://github.com/angular/components/pull/28414)) |
+| [42f2cc9ad8](https://github.com/angular/components/commit/42f2cc9ad8a2a4f2e38531cb299ef7f89e104d92) | fix | **theming:** set up padding tokens |
+| [0da585f730](https://github.com/angular/components/commit/0da585f7307ea98b5575d520d3b6da79769827c4) | fix | **theming:** Update color palettes ([#28472](https://github.com/angular/components/pull/28472)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -28,23 +80,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="17.2.0-next.1"></a>
-# 17.2.0-next.1 "resin-rings" (2024-01-31)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0a1c8eedb4](https://github.com/angular/components/commit/0a1c8eedb45c3e24247539abe489ea835d19a0d7) | fix | **chips:** Tokenize chip outline and disabled opacity ([#28488](https://github.com/angular/components/pull/28488)) |
-| [82ecf0d24a](https://github.com/angular/components/commit/82ecf0d24aabbb156463903c45667a10b5606a79) | fix | **form-field:** insufficient color contrast text to input fill ([#28274](https://github.com/angular/components/pull/28274)) |
-| [2d43f93fe4](https://github.com/angular/components/commit/2d43f93fe4beb8bfd27fd7a48e3e811e11f99bcc) | fix | **slide-toggle:** Emit token values under current selector or root ([#28390](https://github.com/angular/components/pull/28390)) |
-| [41766330b6](https://github.com/angular/components/commit/41766330b6993628dc511bf8595b8d58dd495c22) | fix | **slider:** error if slider is destroyed before first change detection ([#28494](https://github.com/angular/components/pull/28494)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [93f3421538](https://github.com/angular/components/commit/93f3421538118ef9187c2bcd4a2aec24a8fcfc01) | fix | **theming:** incorrect track color for alternate progress bar palettes ([#28484](https://github.com/angular/components/pull/28484)) |
-| [5f1a7ea1ee](https://github.com/angular/components/commit/5f1a7ea1ee6eecc5b4e2b3fd52445e5adb5911a6) | fix | **theming:** resolve M3 issues in mat-option ([#28482](https://github.com/angular/components/pull/28482)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="17.1.2"></a>
 # 17.1.2 "acrylic-aquarium" (2024-01-31)
 ### material
@@ -54,42 +89,6 @@
 | [b6a9ac8214](https://github.com/angular/components/commit/b6a9ac8214a19b31776e73d56c811663c712b1e3) | fix | **schematics:** import async animations and remove deprecated function usages ([#28481](https://github.com/angular/components/pull/28481)) |
 | [251293f950](https://github.com/angular/components/commit/251293f9502d8dbe39a3dc2c2399082ffeea2d49) | fix | **slide-toggle:** Emit token values under current selector or root ([#28390](https://github.com/angular/components/pull/28390)) |
 | [9e02a1135b](https://github.com/angular/components/commit/9e02a1135bd108a3443e796f6c19385bce963495) | fix | **slider:** error if slider is destroyed before first change detection ([#28494](https://github.com/angular/components/pull/28494)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="17.2.0-next.0"></a>
-# 17.2.0-next.0 "metal-spatula" (2024-01-26)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e05795dde0](https://github.com/angular/components/commit/e05795dde0ca56be3398f34cb834df007f18da1a) | fix | **button:** calculate icon button padding based on tokens |
-| [a496855f30](https://github.com/angular/components/commit/a496855f303acbf4b82821be029467c577976729) | fix | **button:** generate separate tokens for mini fab |
-| [cbeeb3ae17](https://github.com/angular/components/commit/cbeeb3ae1771c4ccbd6c5677cf73ac3d21c593c5) | fix | **checkbox:** use token for disabled label color |
-| [f6d3f1bc21](https://github.com/angular/components/commit/f6d3f1bc21e0ee734432f0609f0ea17016cfdbe1) | fix | **schematics:** import async animations and remove deprecated function usages ([#28424](https://github.com/angular/components/pull/28424)) |
-| [2455a42d3c](https://github.com/angular/components/commit/2455a42d3c5866e122421f144f08ae6fa4df4198) | fix | **stepper:** Update token values for M3 and add color variant support ([#28430](https://github.com/angular/components/pull/28430)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [d16e8ac5de](https://github.com/angular/components/commit/d16e8ac5de0191da06089e5668067c8d6e608d61) | feat | **theming:** add M3 tokens for pseudo checkbox ([#28407](https://github.com/angular/components/pull/28407)) |
-| [1f1dac5e57](https://github.com/angular/components/commit/1f1dac5e57019d5faf044875c1b10be8e0fb1dd1) | fix | **theming:** Add support for color variants in badge, button-toggle, button, pseudo-checkbox, and chips ([#28457](https://github.com/angular/components/pull/28457)) |
-| [08c97ab648](https://github.com/angular/components/commit/08c97ab648245d5369e0d3164e0b05c1abc9d193) | fix | **theming:** Add support for color variants in option, checkbox, and fab ([#28412](https://github.com/angular/components/pull/28412)) |
-| [715877a13d](https://github.com/angular/components/commit/715877a13d8f60af3a1f26bf9f6a5f0cc2aee0ee) | fix | **theming:** Add support for color variants in progress-spiner, progress-bar, list, form-field, and datepicker ([#28451](https://github.com/angular/components/pull/28451)) |
-| [29a1e5d8a1](https://github.com/angular/components/commit/29a1e5d8a13e1e81b9aa2e1dd89d54fb063fc191) | fix | **theming:** Add support for color variants in slide-toggle, select, and radio ([#28445](https://github.com/angular/components/pull/28445)) |
-| [e45e210055](https://github.com/angular/components/commit/e45e210055eff26bd74956560b10f2681d4f2ac6) | fix | **theming:** Add support for color variants in tabs and slider ([#28417](https://github.com/angular/components/pull/28417)) |
-| [9ab104b804](https://github.com/angular/components/commit/9ab104b8041ad6bd3f7529a88a6bdefcc219248a) | fix | **theming:** align dialog with M3 |
-| [957bc487bf](https://github.com/angular/components/commit/957bc487bf8077cd4b657baa3d4ed64aebff9196) | fix | **theming:** align fab with M3 spec |
-| [ba3680ed48](https://github.com/angular/components/commit/ba3680ed489e36c106578f790459084649e74bd0) | fix | **theming:** align M3 icon buttons with spec |
-| [601a745fc8](https://github.com/angular/components/commit/601a745fc8e19ab7be93379297ea5fef58d5327e) | fix | **theming:** cap icon button size |
-| [339905c5af](https://github.com/angular/components/commit/339905c5af8a0abe632c2abcdc9f19e9a480677e) | fix | **theming:** disabled radio button incorrect label color ([#28415](https://github.com/angular/components/pull/28415)) |
-| [fdd16e6675](https://github.com/angular/components/commit/fdd16e667550690d554bba49888bfc6929bc97b2) | fix | **theming:** fix filled text field |
-| [06c81e38c7](https://github.com/angular/components/commit/06c81e38c719b7b051aeae2ef339b904cc45015e) | fix | **theming:** fix paginator in M3 |
-| [1e48cd431f](https://github.com/angular/components/commit/1e48cd431fb11f0e0172251d719340b2bc9aa39b) | fix | **theming:** fix up M3 checkbox |
-| [056e2221ec](https://github.com/angular/components/commit/056e2221ecfd75808c74e2ef9a783bcb82a25c03) | fix | **theming:** implement M3 badge ([#28460](https://github.com/angular/components/pull/28460)) |
-| [935eda0872](https://github.com/angular/components/commit/935eda0872ffdafbf0273b931d6df04e49030369) | fix | **theming:** incorrect validation for density scale |
-| [dabb96765a](https://github.com/angular/components/commit/dabb96765a80c29067d07240d46d7852fbc580fa) | fix | **theming:** set up core theme and app tokens ([#28431](https://github.com/angular/components/pull/28431)) |
-| [d26a51e3a5](https://github.com/angular/components/commit/d26a51e3a54b71928bc98df175c54997f8a31929) | fix | **theming:** set up internal form field in M3 ([#28414](https://github.com/angular/components/pull/28414)) |
-| [42f2cc9ad8](https://github.com/angular/components/commit/42f2cc9ad8a2a4f2e38531cb299ef7f89e104d92) | fix | **theming:** set up padding tokens |
-| [0da585f730](https://github.com/angular/components/commit/0da585f7307ea98b5575d520d3b6da79769827c4) | fix | **theming:** Update color palettes ([#28472](https://github.com/angular/components/pull/28472)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
