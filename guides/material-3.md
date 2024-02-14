@@ -403,4 +403,9 @@ We may make changes to the custom property names before moving the API out of ex
 these changes would be accompanied by a schematic to find & replace the old name with the new name
 across your app.
 
-<!-- TODO(andrewjs): Fill in info on M2 support -->
+### Are the Material 2 styles and APIs going away?
+Material 2 styles and their APIs will continue to be supported, and we do not have any immediate 
+plans to deprecate them. We understand that it will take time for applications to switch to the 
+latest Material 3 styles, and we want to provide enough time for migrations. When we do decide to 
+remove these APIs, they will be marked as deprecated and continue to be supported in the following 
+two major releases. As of now, they are not considered deprecated.
