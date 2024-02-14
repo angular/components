@@ -79,6 +79,12 @@ const GUIDES = [
     name: 'Migrating to MDC-based Components',
     document: '/docs-content/guides/v15-mdc-migration.html',
     overview: 'Learn how to migrate your app to the new MDC-based components available in v15.'
+  },
+  {
+    id: 'material-3',
+    name: 'Using Material 3 Themes (Experimental)',
+    document: '/docs-content/guides/material-3.html',
+    overview: 'Learn how to use Material 3 themes in your app.'
   }
 ];
 
