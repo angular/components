@@ -7,7 +7,11 @@ $prefix: (mat, list);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    // active indicator themable with M3
+    active-indicator-color: transparent,
+    active-indicator-shape: 0,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.

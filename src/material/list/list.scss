@@ -206,4 +206,12 @@ mat-action-list button {
     @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
     @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);
   }
+
+  a.mdc-list-item.mdc-list-item--activated {
+    @include token-utils.create-token-slot(background-color, active-indicator-color);
+    // active-indicator-shape overrides list-item-container-shape
+    &.mdc-list-item {
+      @include token-utils.create-token-slot(border-radius, active-indicator-shape);
+    }
+  }
 }
