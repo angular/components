@@ -26,9 +26,9 @@ if (process.env['WEB_TEST_METADATA'] === undefined) {
   process.exit(1);
 }
 
-const webTestMetadata: WebTestMetadata = require(runfiles.resolve(
-  process.env['WEB_TEST_METADATA'],
-));
+const webTestMetadata: WebTestMetadata = require(
+  runfiles.resolve(process.env['WEB_TEST_METADATA']),
+);
 const port = process.env['TEST_SERVER_PORT'];
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
@@ -60,6 +60,7 @@ describe('WebDriverHarnessEnvironment', () => {
       .usingServer(process.env['WEB_TEST_WEBDRIVER_SERVER']!)
       .withCapabilities(webTestMetadata.capabilities)
       .build();
+    await wd.manage().timeouts().implicitlyWait(0);
   });
 
   afterAll(async () => {
@@ -87,9 +88,8 @@ describe('WebDriverHarnessEnvironment', () => {
       let harness: MainComponentHarness;
 
       beforeEach(async () => {
-        harness = await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(
-          MainComponentHarness,
-        );
+        harness =
+          await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness);
       });
 
       it('can get elements outside of host', async () => {
@@ -113,9 +113,8 @@ describe('WebDriverHarnessEnvironment', () => {
 
     describe('shadow DOM interaction', () => {
       it('should not pierce shadow boundary by default', async () => {
-        const harness = await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(
-          MainComponentHarness,
-        );
+        const harness =
+          await SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness);
         expect(await harness.shadows()).toEqual([]);
       });
 
