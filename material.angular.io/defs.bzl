@@ -112,10 +112,6 @@ LINT_DEPS = APPLICATION_DEPS + [
 ]
 
 
-ARCHITEXT_ENV = {
-  "NG_BUILD_LEGACY_SASS": "1",
-}
-
 def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], **kwargs):
     """
     Macro for Angular applications, creating various targets aligning with the Angular CLI.
@@ -263,7 +259,6 @@ def _architect_build(project_name, configuration = None, args = [], srcs = [], *
         args = args,
         out_dirs = [output_dir],
         srcs = srcs,
-        env = ARCHITEXT_ENV,
         **kwargs,
     )
 
@@ -276,7 +271,6 @@ def _architect_test(project_name, command, configuration = None, args = [], srcs
         "CHROME_BIN": to_root + "$(CHROMIUM)",
         "CHROMEDRIVER_BIN": to_root + "$(CHROMEDRIVER)",
     }
-    env.update(ARCHITEXT_ENV)
 
     architect_cli.architect_test(
         name = "%s%s" % (command, ".%s" % configuration if configuration else ""),
@@ -301,7 +295,6 @@ def _architect_binary(project_name, command, configuration = None, args = [], sr
           "%s:%s%s" % (project_name, command, ":%s" % configuration if configuration else "")
         ] + args,
         data = srcs,
-        env = ARCHITEXT_ENV,
         **kwargs,
     )
 
