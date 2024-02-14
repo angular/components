@@ -1,6 +1,7 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
@@ -86,6 +87,8 @@
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mdc-circular-progress-tokens:
       token-utils.get-tokens-for($tokens, tokens-mdc-circular-progress.$prefix, $options...);
   @include mdc-circular-progress-theme.theme($mdc-circular-progress-tokens);
