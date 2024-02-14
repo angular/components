@@ -79,7 +79,11 @@ $_standard-tokens: (
 
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(color, text-color);
-    @include token-utils.create-token-slot(font-family, text-font);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
 
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
@@ -116,7 +120,11 @@ $_standard-tokens: (
     $divider-color: var(#{token-utils.get-token-variable(divider-color)});
     @include token-utils.create-token-slot(color, text-color);
     @include token-utils.create-token-slot(background-color, background-color);
-    @include token-utils.create-token-slot(font-family, text-font);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
 
     .mat-button-toggle-group-appearance-standard & + & {
       border-left: solid 1px $divider-color;
