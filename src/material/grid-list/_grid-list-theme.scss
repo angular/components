@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
 @use '../core/style/sass-utils';
@@ -61,6 +62,8 @@
 }
 
 @mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
         tokens-mat-grid-list.$prefix, map.get($tokens, tokens-mat-grid-list.$prefix));

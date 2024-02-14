@@ -119,4 +119,10 @@ describe('M3 theme', () => {
       .withContext('Did you forget to wrap these in `_hardcode()`?')
       .toEqual([]);
   });
+
+  it('should throw if theme included at root', () => {
+    expect(() => transpile(`@include mat.all-component-themes($theme)`)).toThrowError(
+      /Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector/,
+    );
+  });
 });
