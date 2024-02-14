@@ -5,6 +5,7 @@
 
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
@@ -78,6 +79,8 @@
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mdc-text-button-tokens:
       token-utils.get-tokens-for($tokens, tokens-mdc-text-button.$prefix, $options...);
   $mdc-protected-button-tokens:

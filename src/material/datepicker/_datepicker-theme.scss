@@ -3,6 +3,7 @@
 @use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
@@ -159,6 +160,8 @@ $calendar-weekday-table-font-size: 11px !default;
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mat-datepicker-tokens:
       token-utils.get-tokens-for($tokens, tokens-mat-datepicker.$prefix, $options...);
   @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $mat-datepicker-tokens);
