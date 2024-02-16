@@ -7,15 +7,7 @@
  */
 
 import {Directive, ElementRef, Input, booleanAttribute} from '@angular/core';
-import {mixinInkBarItem} from './ink-bar';
-
-// Boilerplate for applying mixins to MatTabLabelWrapper.
-/** @docs-private */
-const _MatTabLabelWrapperMixinBase = mixinInkBarItem(
-  class {
-    elementRef: ElementRef;
-  },
-);
+import {InkBarItem} from './ink-bar';
 
 /**
  * Used in the `mat-tab-group` view to display tab labels.
@@ -30,12 +22,12 @@ const _MatTabLabelWrapperMixinBase = mixinInkBarItem(
   },
   standalone: true,
 })
-export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase {
+export class MatTabLabelWrapper extends InkBarItem {
   /** Whether the tab is disabled. */
   @Input({transform: booleanAttribute})
   disabled: boolean = false;
 
-  constructor(override elementRef: ElementRef) {
+  constructor(public elementRef: ElementRef) {
     super();
   }
 
