@@ -467,6 +467,8 @@
     _generate-typography-tokens($systems, container-text, body-large),
     (
       container-shape: _hardcode(12px, $exclude-hardcoded),
+      legacy-header-indicator-display: _hardcode(none, $exclude-hardcoded),
+      header-indicator-display: _hardcode(inline-block, $exclude-hardcoded),
       container-background-color: map.get($systems, md-sys-color, surface),
       container-text-color: map.get($systems, md-sys-color, on-surface),
       actions-divider-color: map.get($systems, md-sys-color, outline-variant),
