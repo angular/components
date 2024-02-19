@@ -89,7 +89,7 @@ export class GoogleMapDemo {
   @ViewChild(MapCircle) circle: MapCircle;
 
   center = {lat: 24, lng: 12};
-  mapAdvancedMarkerPosition = {lat: 24, lng: 16};
+  mapAdvancedMarkerPosition = {lat: 22, lng: 21};
   markerOptions = {draggable: false};
   markerPositions: google.maps.LatLngLiteral[] = [];
   zoom = 4;
@@ -145,6 +145,7 @@ export class GoogleMapDemo {
   isTrafficLayerDisplayed = false;
   isTransitLayerDisplayed = false;
   isBicyclingLayerDisplayed = false;
+  hasAdvancedMarker = false;
 
   mapTypeId: google.maps.MapTypeId;
   mapTypeIds = ['hybrid', 'roadmap', 'satellite', 'terrain'] as google.maps.MapTypeId[];
@@ -262,6 +263,10 @@ export class GoogleMapDemo {
 
   toggleBicyclingLayerDisplay() {
     this.isBicyclingLayerDisplayed = !this.isBicyclingLayerDisplayed;
+  }
+
+  toggleAdvancedMarker() {
+    this.hasAdvancedMarker = !this.hasAdvancedMarker;
   }
 
   calculateDirections() {
