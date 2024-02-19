@@ -225,6 +225,10 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     this.markerInitialized.complete();
     this._eventManager.destroy();
+
+    if (this.advancedMarker) {
+      this.advancedMarker.map = null;
+    }
   }
 
   /** Creates a combined options object using the passed-in options and the individual inputs. */
