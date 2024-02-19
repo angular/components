@@ -531,6 +531,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       // Passing in an undefined `mapTypeId` seems to break tile loading
       // so make sure that we have some kind of default (see #22082).
       mapTypeId: this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId,
+      mapId: this.mapId || options.mapId,
     };
   }
 

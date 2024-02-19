@@ -52,7 +52,10 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe(DEFAULT_HEIGHT);
     expect(container.nativeElement.style.width).toBe(DEFAULT_WIDTH);
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapId: undefined,
+    });
   });
 
   it('sets height and width of the map', () => {
@@ -67,7 +70,10 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe('750px');
     expect(container.nativeElement.style.width).toBe('400px');
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapId: undefined,
+    });
 
     fixture.componentInstance.height = '650px';
     fixture.componentInstance.width = '350px';
@@ -118,6 +124,7 @@ describe('GoogleMap', () => {
       center: {lat: 3, lng: 5},
       zoom: 7,
       mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: undefined,
     };
     mapSpy = createMapSpy(options);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
@@ -344,6 +351,20 @@ describe('GoogleMap', () => {
     expect(mapSpy.setMapTypeId).toHaveBeenCalledWith('roadmap');
   });
 
+  it('should set the map ID', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.componentInstance.mapId = '123';
+    fixture.detectChanges();
+
+    expect(mapConstructorSpy).toHaveBeenCalledWith(
+      jasmine.any(HTMLElement),
+      jasmine.objectContaining({mapId: '123'}),
+    );
+  });
+
   it('sets mapTypeId through the options', () => {
     const options = {mapTypeId: 'satellite'};
     mapSpy = createMapSpy(options);
@@ -401,6 +422,7 @@ describe('GoogleMap', () => {
       [zoom]="zoom"
       [options]="options"
       [mapTypeId]="mapTypeId"
+      [mapId]="mapId"
       (mapClick)="handleClick($event)"
       (centerChanged)="handleCenterChanged()"
       (mapRightclick)="handleRightclick($event)"
@@ -417,6 +439,7 @@ class TestApp {
   zoom?: number;
   options?: google.maps.MapOptions;
   mapTypeId?: google.maps.MapTypeId;
+  mapId?: string;
 
   handleClick(event: google.maps.MapMouseEvent) {}
   handleCenterChanged() {}
