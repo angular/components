@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   ComponentFixture,
@@ -616,6 +616,18 @@ describe('Overlay directives', () => {
       expect(latestCall.args[0] instanceof ConnectedOverlayPositionChange)
         .withContext(`Expected directive to emit an instance of ConnectedOverlayPositionChange.`)
         .toBe(true);
+    });
+
+    it('should emit the position change handler inside the zone', () => {
+      let callsInZone: boolean[] = [];
+
+      fixture.componentInstance.positionChangeHandler.and.callFake(() => {
+        callsInZone.push(NgZone.isInAngularZone());
+      });
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(callsInZone).toEqual([true]);
     });
 
     it('should emit when attached', () => {
