@@ -115,6 +115,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The last position to have been calculated as the best fit position. */
   private _lastPosition: ConnectedPosition | null;
 
+  /** The last calculated scroll visibility. Only tracked  */
+  private _lastScrollVisibility: ScrollingVisibility | null;
+
   /** Subject that emits whenever the position changes. */
   private readonly _positionChanges = new Subject<ConnectedOverlayPositionChange>();
 
@@ -710,18 +713,28 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       this._addPanelClasses(position.panelClass);
     }
 
-    // Save the last connected position in case the position needs to be re-calculated.
-    this._lastPosition = position;
-
     // Notify that the position has been changed along with its change properties.
     // We only emit if we've got any subscriptions, because the scroll visibility
     // calculations can be somewhat expensive.
     if (this._positionChanges.observers.length) {
-      const scrollableViewProperties = this._getScrollVisibility();
-      const changeEvent = new ConnectedOverlayPositionChange(position, scrollableViewProperties);
-      this._positionChanges.next(changeEvent);
+      const scrollVisibility = this._getScrollVisibility();
+
+      // We're recalculating on scroll, but we only want to emit if anything
+      // changed since downstream code might be hitting the `NgZone`.
+      if (
+        position !== this._lastPosition ||
+        !this._lastScrollVisibility ||
+        !compareScrollVisibility(this._lastScrollVisibility, scrollVisibility)
+      ) {
+        const changeEvent = new ConnectedOverlayPositionChange(position, scrollVisibility);
+        this._positionChanges.next(changeEvent);
+      }
+
+      this._lastScrollVisibility = scrollVisibility;
     }
 
+    // Save the last connected position in case the position needs to be re-calculated.
+    this._lastPosition = position;
     this._isInitialRender = false;
   }
 
@@ -1287,6 +1300,20 @@ function getRoundedBoundingClientRect(clientRect: Dimensions): Dimensions {
     width: Math.floor(clientRect.width),
     height: Math.floor(clientRect.height),
   };
+}
+
+/** Returns whether two `ScrollingVisibility` objects are identical. */
+function compareScrollVisibility(a: ScrollingVisibility, b: ScrollingVisibility): boolean {
+  if (a === b) {
+    return true;
+  }
+
+  return (
+    a.isOriginClipped === b.isOriginClipped &&
+    a.isOriginOutsideView === b.isOriginOutsideView &&
+    a.isOverlayClipped === b.isOverlayClipped &&
+    a.isOverlayOutsideView === b.isOverlayOutsideView
+  );
 }
 
 export const STANDARD_DROPDOWN_BELOW_POSITIONS: ConnectedPosition[] = [
