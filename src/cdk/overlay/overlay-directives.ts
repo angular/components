@@ -16,6 +16,7 @@ import {
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   Optional,
@@ -116,6 +117,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _position: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory: () => ScrollStrategy;
   private _disposeOnNavigation = false;
+  private _ngZone = inject(NgZone);
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin')
@@ -421,7 +423,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this._positionSubscription = this._position.positionChanges
         .pipe(takeWhile(() => this.positionChange.observers.length > 0))
         .subscribe(position => {
-          this.positionChange.emit(position);
+          this._ngZone.run(() => this.positionChange.emit(position));
 
           if (this.positionChange.observers.length === 0) {
             this._positionSubscription.unsubscribe();
