@@ -380,7 +380,7 @@ export class MatTabLabel extends CdkPortal {
 }
 
 // @public
-export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase {
+export class MatTabLabelWrapper extends InkBarItem {
     constructor(elementRef: ElementRef);
     disabled: boolean;
     // (undocumented)
@@ -399,7 +399,7 @@ export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase {
 }
 
 // @public
-export class MatTabLink extends _MatTabLinkMixinBase implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption {
+export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption {
     constructor(_tabNavBar: MatTabNav,
     elementRef: ElementRef, globalRippleOptions: RippleGlobalOptions | null, tabIndex: string, _focusMonitor: FocusMonitor, animationMode?: string);
     get active(): boolean;
