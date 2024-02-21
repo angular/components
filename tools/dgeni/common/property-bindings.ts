@@ -40,13 +40,20 @@ function getBindingPropertyData(
   decoratorName: string,
 ) {
   if (metadata) {
-    const metadataValues: string[] = metadata.get(propertyName) || [];
-    const foundValue = metadataValues.find(value => value.split(':')[0] === doc.name);
+    const metadataValues: (string | {name: string; alias?: string})[] =
+      metadata.get(propertyName) || [];
+    const foundValue = metadataValues.find(value => {
+      const name = typeof value === 'string' ? value.split(':')[0] : value.name;
+      return name === doc.name;
+    });
 
     if (foundValue) {
       return {
         name: doc.name,
-        alias: foundValue.split(':')[1],
+        alias:
+          typeof foundValue === 'string'
+            ? foundValue.split(':')[1]
+            : foundValue.alias || foundValue.name,
       };
     }
   }
