@@ -21,9 +21,6 @@ export interface CanStick {
   /** Whether sticky positioning should be applied. */
   sticky: boolean;
 
-  /** Whether the sticky input has changed since it was last checked. */
-  _hasStickyChanged: boolean;
-
   /** Whether the sticky value has changed since this was last called. */
   hasStickyChanged(): boolean;
 

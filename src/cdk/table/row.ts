@@ -21,8 +21,10 @@ import {
   ViewEncapsulation,
   Inject,
   Optional,
+  Input,
+  booleanAttribute,
 } from '@angular/core';
-import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
+import {CanStick} from './can-stick';
 import {CdkCellDef, CdkColumnDef} from './cell';
 import {CDK_TABLE} from './tokens';
 
@@ -80,22 +82,31 @@ export abstract class BaseRowDef implements OnChanges {
   }
 }
 
-// Boilerplate for applying mixins to CdkHeaderRowDef.
-/** @docs-private */
-class CdkHeaderRowDefBase extends BaseRowDef {}
-const _CdkHeaderRowDefBase: CanStickCtor & typeof CdkHeaderRowDefBase =
-  mixinHasStickyInput(CdkHeaderRowDefBase);
-
 /**
  * Header row definition for the CDK table.
  * Captures the header row's template and other header properties such as the columns to display.
  */
 @Directive({
   selector: '[cdkHeaderRowDef]',
-  inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
+  inputs: [{name: 'columns', alias: 'cdkHeaderRowDef'}],
   standalone: true,
 })
-export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
+export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
+  private _hasStickyChanged = false;
+
+  /** Whether the row is sticky. */
+  @Input({alias: 'cdkHeaderRowDefSticky', transform: booleanAttribute})
+  get sticky(): boolean {
+    return this._sticky;
+  }
+  set sticky(value: boolean) {
+    if (value !== this._sticky) {
+      this._sticky = value;
+      this._hasStickyChanged = true;
+    }
+  }
+  private _sticky = false;
+
   constructor(
     template: TemplateRef<any>,
     _differs: IterableDiffers,
@@ -109,13 +120,19 @@ export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, O
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
   }
-}
 
-// Boilerplate for applying mixins to CdkFooterRowDef.
-/** @docs-private */
-class CdkFooterRowDefBase extends BaseRowDef {}
-const _CdkFooterRowDefBase: CanStickCtor & typeof CdkFooterRowDefBase =
-  mixinHasStickyInput(CdkFooterRowDefBase);
+  /** Whether the sticky state has changed. */
+  hasStickyChanged(): boolean {
+    const hasStickyChanged = this._hasStickyChanged;
+    this.resetStickyChanged();
+    return hasStickyChanged;
+  }
+
+  /** Resets the sticky changed state. */
+  resetStickyChanged(): void {
+    this._hasStickyChanged = false;
+  }
+}
 
 /**
  * Footer row definition for the CDK table.
@@ -123,10 +140,25 @@ const _CdkFooterRowDefBase: CanStickCtor & typeof CdkFooterRowDefBase =
  */
 @Directive({
   selector: '[cdkFooterRowDef]',
-  inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
+  inputs: [{name: 'columns', alias: 'cdkFooterRowDef'}],
   standalone: true,
 })
-export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
+export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
+  private _hasStickyChanged = false;
+
+  /** Whether the row is sticky. */
+  @Input({alias: 'cdkFooterRowDefSticky', transform: booleanAttribute})
+  get sticky(): boolean {
+    return this._sticky;
+  }
+  set sticky(value: boolean) {
+    if (value !== this._sticky) {
+      this._sticky = value;
+      this._hasStickyChanged = true;
+    }
+  }
+  private _sticky = false;
+
   constructor(
     template: TemplateRef<any>,
     _differs: IterableDiffers,
@@ -139,6 +171,18 @@ export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, O
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
+  }
+
+  /** Whether the sticky state has changed. */
+  hasStickyChanged(): boolean {
+    const hasStickyChanged = this._hasStickyChanged;
+    this.resetStickyChanged();
+    return hasStickyChanged;
+  }
+
+  /** Resets the sticky changed state. */
+  resetStickyChanged(): void {
+    this._hasStickyChanged = false;
   }
 }
 
@@ -149,7 +193,10 @@ export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, O
  */
 @Directive({
   selector: '[cdkRowDef]',
-  inputs: ['columns: cdkRowDefColumns', 'when: cdkRowDefWhen'],
+  inputs: [
+    {name: 'columns', alias: 'cdkRowDefColumns'},
+    {name: 'when', alias: 'cdkRowDefWhen'},
+  ],
   standalone: true,
 })
 export class CdkRowDef<T> extends BaseRowDef {

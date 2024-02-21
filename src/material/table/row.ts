@@ -16,7 +16,13 @@ import {
   CdkNoDataRow,
   CdkCellOutlet,
 } from '@angular/cdk/table';
-import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  ViewEncapsulation,
+  booleanAttribute,
+} from '@angular/core';
 
 // We can't reuse `CDK_ROW_TEMPLATE` because it's incompatible with local compilation mode.
 const ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
@@ -28,7 +34,10 @@ const ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
 @Directive({
   selector: '[matHeaderRowDef]',
   providers: [{provide: CdkHeaderRowDef, useExisting: MatHeaderRowDef}],
-  inputs: ['columns: matHeaderRowDef', 'sticky: matHeaderRowDefSticky'],
+  inputs: [
+    {name: 'columns', alias: 'matHeaderRowDef'},
+    {name: 'sticky', alias: 'matHeaderRowDefSticky', transform: booleanAttribute},
+  ],
   standalone: true,
 })
 export class MatHeaderRowDef extends CdkHeaderRowDef {}
@@ -40,7 +49,10 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {}
 @Directive({
   selector: '[matFooterRowDef]',
   providers: [{provide: CdkFooterRowDef, useExisting: MatFooterRowDef}],
-  inputs: ['columns: matFooterRowDef', 'sticky: matFooterRowDefSticky'],
+  inputs: [
+    {name: 'columns', alias: 'matFooterRowDef'},
+    {name: 'sticky', alias: 'matFooterRowDefSticky', transform: booleanAttribute},
+  ],
   standalone: true,
 })
 export class MatFooterRowDef extends CdkFooterRowDef {}
@@ -53,7 +65,10 @@ export class MatFooterRowDef extends CdkFooterRowDef {}
 @Directive({
   selector: '[matRowDef]',
   providers: [{provide: CdkRowDef, useExisting: MatRowDef}],
-  inputs: ['columns: matRowDefColumns', 'when: matRowDefWhen'],
+  inputs: [
+    {name: 'columns', alias: 'matRowDefColumns'},
+    {name: 'when', alias: 'matRowDefWhen'},
+  ],
   standalone: true,
 })
 export class MatRowDef<T> extends CdkRowDef<T> {}
