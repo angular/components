@@ -1215,7 +1215,7 @@
     hidden-track-transition: _hardcode(opacity 75ms, $exclude-hardcoded),
     track-outline-width: _hardcode(2px, $exclude-hardcoded),
     track-outline-color:  map.get($systems, md-sys-color, outline),
-    selected-track-outline-width: 0,
+    selected-track-outline-width: _hardcode(0, $exclude-hardcoded),
     disabled-unselected-track-outline-width: _hardcode(2px, $exclude-hardcoded),
     disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
   ), ();
