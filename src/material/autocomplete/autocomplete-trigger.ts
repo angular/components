@@ -14,7 +14,6 @@ import {
   Directive,
   ElementRef,
   forwardRef,
-  Host,
   inject,
   Inject,
   InjectionToken,
@@ -232,7 +231,7 @@ export class MatAutocompleteTrigger
     private _changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dir: Directionality | null,
-    @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField | null,
+    @Optional() @Inject(MAT_FORM_FIELD) private _formField: MatFormField | null,
     @Optional() @Inject(DOCUMENT) private _document: any,
     private _viewportRuler: ViewportRuler,
     @Optional()
