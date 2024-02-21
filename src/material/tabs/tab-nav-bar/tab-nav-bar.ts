@@ -40,7 +40,7 @@ import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
-import {MatInkBar, mixinInkBarItem} from '../ink-bar';
+import {MatInkBar, InkBarItem} from '../ink-bar';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
@@ -228,13 +228,6 @@ export class MatTabNav
   }
 }
 
-// Boilerplate for applying mixins to MatTabLink.
-const _MatTabLinkMixinBase = mixinInkBarItem(
-  class {
-    elementRef: ElementRef;
-  },
-);
-
 /**
  * Link inside a `mat-tab-nav-bar`.
  */
@@ -263,7 +256,7 @@ const _MatTabLinkMixinBase = mixinInkBarItem(
   imports: [MatRipple],
 })
 export class MatTabLink
-  extends _MatTabLinkMixinBase
+  extends InkBarItem
   implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption
 {
   private readonly _destroyed = new Subject<void>();
@@ -323,7 +316,7 @@ export class MatTabLink
 
   constructor(
     private _tabNavBar: MatTabNav,
-    /** @docs-private */ override elementRef: ElementRef,
+    /** @docs-private */ public elementRef: ElementRef,
     @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions | null,
     @Attribute('tabindex') tabIndex: string,
     private _focusMonitor: FocusMonitor,
