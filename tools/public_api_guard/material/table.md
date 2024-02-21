@@ -51,7 +51,7 @@ export class MatColumnDef extends CdkColumnDef {
     set name(name: string);
     protected _updateColumnCssClassName(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatColumnDef, "[matColumnDef]", never, { "sticky": { "alias": "sticky"; "required": false; }; "name": { "alias": "matColumnDef"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatColumnDef, "[matColumnDef]", never, { "name": { "alias": "matColumnDef"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatColumnDef, never>;
 }
@@ -82,6 +82,8 @@ export class MatFooterRow extends CdkFooterRow {
 
 // @public
 export class MatFooterRowDef extends CdkFooterRowDef {
+    // (undocumented)
+    static ngAcceptInputType_sticky: unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatFooterRowDef, "[matFooterRowDef]", never, { "columns": { "alias": "matFooterRowDef"; "required": false; }; "sticky": { "alias": "matFooterRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -114,6 +116,8 @@ export class MatHeaderRow extends CdkHeaderRow {
 
 // @public
 export class MatHeaderRowDef extends CdkHeaderRowDef {
+    // (undocumented)
+    static ngAcceptInputType_sticky: unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatHeaderRowDef, "[matHeaderRowDef]", never, { "columns": { "alias": "matHeaderRowDef"; "required": false; }; "sticky": { "alias": "matHeaderRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)

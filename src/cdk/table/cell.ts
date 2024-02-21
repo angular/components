@@ -16,7 +16,7 @@ import {
   TemplateRef,
   booleanAttribute,
 } from '@angular/core';
-import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
+import {CanStick} from './can-stick';
 import {CDK_TABLE} from './tokens';
 
 /** Base interface for a cell definition. Captures a column's cell template definition. */
@@ -60,23 +60,18 @@ export class CdkFooterCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) {}
 }
 
-// Boilerplate for applying mixins to CdkColumnDef.
-/** @docs-private */
-class CdkColumnDefBase {}
-const _CdkColumnDefBase: CanStickCtor & typeof CdkColumnDefBase =
-  mixinHasStickyInput(CdkColumnDefBase);
-
 /**
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.
  */
 @Directive({
   selector: '[cdkColumnDef]',
-  inputs: ['sticky'],
   providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
   standalone: true,
 })
-export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
+export class CdkColumnDef implements CanStick {
+  private _hasStickyChanged = false;
+
   /** Unique name for this column. */
   @Input('cdkColumnDef')
   get name(): string {
@@ -86,6 +81,19 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     this._setNameInput(name);
   }
   protected _name: string;
+
+  /** Whether the cell is sticky. */
+  @Input({transform: booleanAttribute})
+  get sticky(): boolean {
+    return this._sticky;
+  }
+  set sticky(value: boolean) {
+    if (value !== this._sticky) {
+      this._sticky = value;
+      this._hasStickyChanged = true;
+    }
+  }
+  private _sticky = false;
 
   /**
    * Whether this column should be sticky positioned on the end of the row. Should make sure
@@ -126,8 +134,18 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
    */
   _columnCssClassName: string[];
 
-  constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {
-    super();
+  constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {}
+
+  /** Whether the sticky state has changed. */
+  hasStickyChanged(): boolean {
+    const hasStickyChanged = this._hasStickyChanged;
+    this.resetStickyChanged();
+    return hasStickyChanged;
+  }
+
+  /** Resets the sticky changed state. */
+  resetStickyChanged(): void {
+    this._hasStickyChanged = false;
   }
 
   /**
