@@ -140,18 +140,41 @@
 
 // Creates the expansion indicator arrow. Done using ::after
 // rather than havingadditional nodes in the template.
-.mat-expansion-indicator::after {
-  border-style: solid;
-  border-width: 0 2px 2px 0;
-  content: '';
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(45deg);
-  vertical-align: middle;
+.mat-expansion-indicator {
+  &::after {
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    content: '';
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    vertical-align: middle;
 
-  @include token-utils.use-tokens(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-    @include token-utils.create-token-slot(color, header-indicator-color);
+    @include token-utils.use-tokens(
+      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+      @include token-utils.create-token-slot(color, header-indicator-color);
+      @include token-utils.create-token-slot(display, legacy-header-indicator-display,
+        inline-block);
+    }
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+
+    // The SVG icon isn't edge-to-edge so we need to offset
+    // it slightly so it's aligned correctly horizontally.
+    margin: 0 -8px;
+
+    // Since the container is `display: inline`, we need to set this to center the arrow.
+    // Ideally we'd make the container `inline-flex`, but that affects M2.
+    vertical-align: middle;
+
+    @include token-utils.use-tokens(
+      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+      @include token-utils.create-token-slot(fill, header-indicator-color);
+      @include token-utils.create-token-slot(display, header-indicator-display, none);
+    }
   }
 }
 

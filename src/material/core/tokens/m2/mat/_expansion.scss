@@ -12,6 +12,8 @@ $prefix: (mat, expansion);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 4px,
+    legacy-header-indicator-display: inline-block,
+    header-indicator-display: none,
   );
 }
 

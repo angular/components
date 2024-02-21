@@ -5,5 +5,13 @@
 </span>
 
 @if (_showToggle()) {
-  <span [@indicatorRotate]="_getExpandedState()" class="mat-expansion-indicator"></span>
+  <span [@indicatorRotate]="_getExpandedState()" class="mat-expansion-indicator">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 -960 960 960"
+      aria-hidden="true"
+      focusable="false">
+      <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>
+    </svg>
+  </span>
 }
