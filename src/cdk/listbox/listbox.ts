@@ -113,7 +113,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
    * The text used to locate this item during listbox typeahead. If not specified,
    * the `textContent` of the item will be used.
    */
-  @Input('cdkOptionTypeaheadLabel') typeaheadLabel: string;
+  @Input('cdkOptionTypeaheadLabel') typeaheadLabel: string | null;
 
   /** Whether this option is disabled. */
   @Input({alias: 'cdkOptionDisabled', transform: booleanAttribute})

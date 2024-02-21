@@ -127,7 +127,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     setActiveStyles(): void;
     setInactiveStyles(): void;
     toggle(): void;
-    typeaheadLabel: string;
+    typeaheadLabel: string | null;
     value: T;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkOption<any>, "[cdkOption]", ["cdkOption"], { "id": { "alias": "id"; "required": false; }; "value": { "alias": "cdkOption"; "required": false; }; "typeaheadLabel": { "alias": "cdkOptionTypeaheadLabel"; "required": false; }; "disabled": { "alias": "cdkOptionDisabled"; "required": false; }; "enabledTabIndex": { "alias": "tabindex"; "required": false; }; }, {}, never, never, true, never>;
