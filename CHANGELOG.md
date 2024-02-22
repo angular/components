@@ -1,3 +1,14 @@
+<a name="17.3.0-next.0"></a>
+# 17.3.0-next.0 "allanite-apricot" (2024-02-22)
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b4b91be04](https://github.com/angular/components/commit/b4b91be04e23296060b5e7a041bbf8eeae325ee9) | feat | add advanced marker ([#28525](https://github.com/angular/components/pull/28525)) |
+| [cc618b450](https://github.com/angular/components/commit/cc618b4501284e10ad5bb93f358f3d8de2c8e7b7) | fix | advanced marker not destroyed |
+| [5269e0f9d](https://github.com/angular/components/commit/5269e0f9d42bd045bc28be144cc7bdd457bacd1e) | fix | mapId not being set |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.2.1"></a>
 # 17.2.1 "allactite-acorn" (2024-02-22)
 ### cdk
