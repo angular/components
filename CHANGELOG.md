@@ -1,3 +1,18 @@
+<a name="17.2.1"></a>
+# 17.2.1 "allactite-acorn" (2024-02-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c617cd7c8](https://github.com/angular/components/commit/c617cd7c815cfcebebc608aa4e1c75ea8e6b0629) | fix | **listbox:** make typeahead label nullable ([#28602](https://github.com/angular/components/pull/28602)) |
+| [67956e065](https://github.com/angular/components/commit/67956e065178f33ba052ae6e1a148612b3d56f41) | fix | **overlay:** only emit positionChanges when position is different |
+| [d5d856348](https://github.com/angular/components/commit/d5d8563489f521490e3a4b04519767b308c33739) | fix | **overlay:** run positionChange event inside the zone |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0c5781bfc](https://github.com/angular/components/commit/0c5781bfce0e96789d5c415586a0382d64ac3daa) | fix | **expansion:** center indicator icon in M3 ([#28603](https://github.com/angular/components/pull/28603)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.2.0"></a>
 # 17.2.0 "polymer-prism" (2024-02-14)
 ### cdk
