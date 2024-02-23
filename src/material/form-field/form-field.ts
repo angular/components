@@ -19,6 +19,8 @@ import {
   ElementRef,
   Inject,
   InjectionToken,
+  Injector,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -27,6 +29,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
+  afterRender,
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
@@ -245,7 +248,7 @@ export class MatFormField
       // If the appearance has been switched to `outline`, the label offset needs to be updated.
       // The update can happen once the view has been re-checked, but not immediately because
       // the view has not been updated and the notched-outline floating label is not present.
-      this._needsOutlineLabelOffsetUpdateOnStable = true;
+      this._needsOutlineLabelOffsetUpdate = true;
     }
   }
   private _appearance: MatFormFieldAppearance = DEFAULT_APPEARANCE;
@@ -300,12 +303,18 @@ export class MatFormField
   private _destroyed = new Subject<void>();
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
-  private _needsOutlineLabelOffsetUpdateOnStable = false;
+  private _needsOutlineLabelOffsetUpdate = false;
+
+  private _injector = inject(Injector);
 
   constructor(
     public _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone,
+    /**
+     * @deprecated not needed, to be removed.
+     * @breaking-change 19.0.0 remove this param
+     */
+    _unusedNgZone: NgZone,
     private _dir: Directionality,
     private _platform: Platform,
     @Optional()
@@ -485,30 +494,30 @@ export class MatFormField
    * The floating label in the docked state needs to account for prefixes. The horizontal offset
    * is calculated whenever the appearance changes to `outline`, the prefixes change, or when the
    * form field is added to the DOM. This method sets up all subscriptions which are needed to
-   * trigger the label offset update. In general, we want to avoid performing measurements often,
-   * so we rely on the `NgZone` as indicator when the offset should be recalculated, instead of
-   * checking every change detection cycle.
+   * trigger the label offset update.
    */
   private _initializeOutlineLabelOffsetSubscriptions() {
     // Whenever the prefix changes, schedule an update of the label offset.
-    this._prefixChildren.changes.subscribe(
-      () => (this._needsOutlineLabelOffsetUpdateOnStable = true),
-    );
+    // TODO(mmalerba): Use ResizeObserver to better support dynamically changing prefix content.
+    this._prefixChildren.changes.subscribe(() => (this._needsOutlineLabelOffsetUpdate = true));
 
-    // Note that we have to run outside of the `NgZone` explicitly, in order to avoid
-    // throwing users into an infinite loop if `zone-patch-rxjs` is included.
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.pipe(takeUntil(this._destroyed)).subscribe(() => {
-        if (this._needsOutlineLabelOffsetUpdateOnStable) {
-          this._needsOutlineLabelOffsetUpdateOnStable = false;
+    // TODO(mmalerba): Split this into separate `afterRender` calls using the `EarlyRead` and
+    //  `Write` phases.
+    afterRender(
+      () => {
+        if (this._needsOutlineLabelOffsetUpdate) {
+          this._needsOutlineLabelOffsetUpdate = false;
           this._updateOutlineLabelOffset();
         }
-      });
-    });
+      },
+      {
+        injector: this._injector,
+      },
+    );
 
     this._dir.change
       .pipe(takeUntil(this._destroyed))
-      .subscribe(() => (this._needsOutlineLabelOffsetUpdateOnStable = true));
+      .subscribe(() => (this._needsOutlineLabelOffsetUpdate = true));
   }
 
   /** Whether the floating label should always float or not. */
@@ -653,7 +662,7 @@ export class MatFormField
    * incorporate the horizontal offset into their default text-field styles.
    */
   private _updateOutlineLabelOffset() {
-    if (!this._platform.isBrowser || !this._hasOutline() || !this._floatingLabel) {
+    if (!this._hasOutline() || !this._floatingLabel) {
       return;
     }
     const floatingLabel = this._floatingLabel.element;
@@ -666,7 +675,7 @@ export class MatFormField
     // If the form field is not attached to the DOM yet (e.g. in a tab), we defer
     // the label offset update until the zone stabilizes.
     if (!this._isAttachedToDom()) {
-      this._needsOutlineLabelOffsetUpdateOnStable = true;
+      this._needsOutlineLabelOffsetUpdate = true;
       return;
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
