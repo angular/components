@@ -18,7 +18,6 @@ import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -33,7 +32,7 @@ export const CDK_DRAG_CONFIG: InjectionToken<DragDropConfig>;
 export const CDK_DRAG_HANDLE: InjectionToken<CdkDragHandle>;
 
 // @public
-export const CDK_DRAG_PARENT: InjectionToken<{}>;
+export const CDK_DRAG_PARENT: InjectionToken<CdkDrag<any>>;
 
 // @public
 export const CDK_DRAG_PLACEHOLDER: InjectionToken<CdkDragPlaceholder<any>>;
@@ -53,6 +52,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     element: ElementRef<HTMLElement>,
     dropContainer: CdkDropList,
     _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragDropConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _selfHandle?: CdkDragHandle | undefined, _parentDrag?: CdkDrag<any> | undefined);
+    // (undocumented)
+    _addHandle(handle: CdkDragHandle): void;
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
     data: T;
@@ -70,7 +71,6 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     getFreeDragPosition(): Readonly<Point>;
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
-    _handles: QueryList<CdkDragHandle>;
     lockAxis: DragAxis;
     readonly moved: Observable<CdkDragMove<T>>;
     // (undocumented)
@@ -81,17 +81,25 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
-    _placeholderTemplate: CdkDragPlaceholder;
     previewClass: string | string[];
     previewContainer: PreviewContainer;
-    _previewTemplate: CdkDragPreview;
     readonly released: EventEmitter<CdkDragRelease>;
+    // (undocumented)
+    _removeHandle(handle: CdkDragHandle): void;
     reset(): void;
+    // (undocumented)
+    _resetPlaceholderTemplate(placeholder: CdkDragPlaceholder): void;
+    // (undocumented)
+    _resetPreviewTemplate(preview: CdkDragPreview): void;
     rootElementSelector: string;
     setFreeDragPosition(value: Point): void;
+    // (undocumented)
+    _setPlaceholderTemplate(placeholder: CdkDragPlaceholder): void;
+    // (undocumented)
+    _setPreviewTemplate(preview: CdkDragPreview): void;
     readonly started: EventEmitter<CdkDragStart>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": { "alias": "cdkDragData"; "required": false; }; "lockAxis": { "alias": "cdkDragLockAxis"; "required": false; }; "rootElementSelector": { "alias": "cdkDragRootElement"; "required": false; }; "boundaryElement": { "alias": "cdkDragBoundary"; "required": false; }; "dragStartDelay": { "alias": "cdkDragStartDelay"; "required": false; }; "freeDragPosition": { "alias": "cdkDragFreeDragPosition"; "required": false; }; "disabled": { "alias": "cdkDragDisabled"; "required": false; }; "constrainPosition": { "alias": "cdkDragConstrainPosition"; "required": false; }; "previewClass": { "alias": "cdkDragPreviewClass"; "required": false; }; "previewContainer": { "alias": "cdkDragPreviewContainer"; "required": false; }; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, ["_previewTemplate", "_placeholderTemplate", "_handles"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": { "alias": "cdkDragData"; "required": false; }; "lockAxis": { "alias": "cdkDragLockAxis"; "required": false; }; "rootElementSelector": { "alias": "cdkDragRootElement"; "required": false; }; "boundaryElement": { "alias": "cdkDragBoundary"; "required": false; }; "dragStartDelay": { "alias": "cdkDragStartDelay"; "required": false; }; "freeDragPosition": { "alias": "cdkDragFreeDragPosition"; "required": false; }; "disabled": { "alias": "cdkDragDisabled"; "required": false; }; "constrainPosition": { "alias": "cdkDragConstrainPosition"; "required": false; }; "previewClass": { "alias": "cdkDragPreviewClass"; "required": false; }; "previewContainer": { "alias": "cdkDragPreviewContainer"; "required": false; }; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDrag<any>, [null, { optional: true; skipSelf: true; }, null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; self: true; }, { optional: true; skipSelf: true; }]>;
 }
@@ -144,7 +152,7 @@ export interface CdkDragExit<T = any, I = T> {
 
 // @public
 export class CdkDragHandle implements OnDestroy {
-    constructor(element: ElementRef<HTMLElement>, parentDrag?: any);
+    constructor(element: ElementRef<HTMLElement>, _parentDrag?: CdkDrag<any> | undefined);
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -153,7 +161,6 @@ export class CdkDragHandle implements OnDestroy {
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
-    _parentDrag: {} | undefined;
     readonly _stateChanges: Subject<CdkDragHandle>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDragHandle, "[cdkDragHandle]", never, { "disabled": { "alias": "cdkDragHandleDisabled"; "required": false; }; }, {}, never, never, true, never>;
@@ -180,9 +187,11 @@ export interface CdkDragMove<T = any> {
 }
 
 // @public
-export class CdkDragPlaceholder<T = any> {
+export class CdkDragPlaceholder<T = any> implements OnDestroy {
     constructor(templateRef: TemplateRef<T>);
     data: T;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     templateRef: TemplateRef<T>;
     // (undocumented)
@@ -192,12 +201,14 @@ export class CdkDragPlaceholder<T = any> {
 }
 
 // @public
-export class CdkDragPreview<T = any> {
+export class CdkDragPreview<T = any> implements OnDestroy {
     constructor(templateRef: TemplateRef<T>);
     data: T;
     matchSize: boolean;
     // (undocumented)
     static ngAcceptInputType_matchSize: unknown;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     templateRef: TemplateRef<T>;
     // (undocumented)

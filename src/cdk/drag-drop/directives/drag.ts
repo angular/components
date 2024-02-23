@@ -10,8 +10,6 @@ import {Directionality} from '@angular/cdk/bidi';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
-  ContentChild,
-  ContentChildren,
   Directive,
   ElementRef,
   EventEmitter,
@@ -21,7 +19,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  QueryList,
   SkipSelf,
   ViewContainerRef,
   OnChanges,
@@ -32,7 +29,7 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import {coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
-import {Observable, Observer, Subject, merge} from 'rxjs';
+import {BehaviorSubject, Observable, Observer, Subject, merge} from 'rxjs';
 import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
 import type {
   CdkDragDrop,
@@ -44,8 +41,8 @@ import type {
   CdkDragRelease,
 } from '../drag-events';
 import {CDK_DRAG_HANDLE, CdkDragHandle} from './drag-handle';
-import {CDK_DRAG_PLACEHOLDER, CdkDragPlaceholder} from './drag-placeholder';
-import {CDK_DRAG_PREVIEW, CdkDragPreview} from './drag-preview';
+import {CdkDragPlaceholder} from './drag-placeholder';
+import {CdkDragPreview} from './drag-preview';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import type {CdkDropList} from './drop-list';
@@ -77,18 +74,12 @@ export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
 export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   private readonly _destroyed = new Subject<void>();
   private static _dragInstances: CdkDrag[] = [];
+  private _handles = new BehaviorSubject<CdkDragHandle[]>([]);
+  private _previewTemplate: CdkDragPreview | null;
+  private _placeholderTemplate: CdkDragPlaceholder | null;
 
   /** Reference to the underlying drag instance. */
   _dragRef: DragRef<CdkDrag<T>>;
-
-  /** Elements that can be used to drag the draggable item. */
-  @ContentChildren(CDK_DRAG_HANDLE, {descendants: true}) _handles: QueryList<CdkDragHandle>;
-
-  /** Element that will be used as a template to create the draggable item's preview. */
-  @ContentChild(CDK_DRAG_PREVIEW) _previewTemplate: CdkDragPreview;
-
-  /** Template for placeholder element rendered to show where a draggable would be dropped. */
-  @ContentChild(CDK_DRAG_PLACEHOLDER) _placeholderTemplate: CdkDragPlaceholder;
 
   /** Arbitrary data to attach to this drag instance. */
   @Input('cdkDragData') data: T;
@@ -351,10 +342,47 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
     // Unnecessary in most cases, but used to avoid extra change detections with `zone-paths-rxjs`.
     this._ngZone.runOutsideAngular(() => {
+      this._handles.complete();
       this._destroyed.next();
       this._destroyed.complete();
       this._dragRef.dispose();
     });
+  }
+
+  _addHandle(handle: CdkDragHandle) {
+    const handles = this._handles.getValue();
+    handles.push(handle);
+    this._handles.next(handles);
+  }
+
+  _removeHandle(handle: CdkDragHandle) {
+    const handles = this._handles.getValue();
+    const index = handles.indexOf(handle);
+
+    if (index > -1) {
+      handles.splice(index, 1);
+      this._handles.next(handles);
+    }
+  }
+
+  _setPreviewTemplate(preview: CdkDragPreview) {
+    this._previewTemplate = preview;
+  }
+
+  _resetPreviewTemplate(preview: CdkDragPreview) {
+    if (preview === this._previewTemplate) {
+      this._previewTemplate = null;
+    }
+  }
+
+  _setPlaceholderTemplate(placeholder: CdkDragPlaceholder) {
+    this._placeholderTemplate = placeholder;
+  }
+
+  _resetPlaceholderTemplate(placeholder: CdkDragPlaceholder) {
+    if (placeholder === this._placeholderTemplate) {
+      this._placeholderTemplate = null;
+    }
   }
 
   /** Syncs the root element with the `DragRef`. */
@@ -559,30 +587,25 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Sets up the listener that syncs the handles with the drag ref. */
   private _setupHandlesListener() {
     // Listen for any newly-added handles.
-    this._handles.changes
+    this._handles
       .pipe(
-        startWith(this._handles),
         // Sync the new handles with the DragRef.
-        tap((handles: QueryList<CdkDragHandle>) => {
-          const childHandleElements = handles
-            .filter(handle => handle._parentDrag === this)
-            .map(handle => handle.element);
+        tap(handles => {
+          const handleElements = handles.map(handle => handle.element);
 
           // Usually handles are only allowed to be a descendant of the drag element, but if
           // the consumer defined a different drag root, we should allow the drag element
           // itself to be a handle too.
           if (this._selfHandle && this.rootElementSelector) {
-            childHandleElements.push(this.element);
+            handleElements.push(this.element);
           }
 
-          this._dragRef.withHandles(childHandleElements);
+          this._dragRef.withHandles(handleElements);
         }),
         // Listen if the state of any of the handles changes.
-        switchMap((handles: QueryList<CdkDragHandle>) => {
+        switchMap((handles: CdkDragHandle[]) => {
           return merge(
-            ...handles.map(item => {
-              return item._stateChanges.pipe(startWith(item));
-            }),
+            ...handles.map(item => item._stateChanges.pipe(startWith(item))),
           ) as Observable<CdkDragHandle>;
         }),
         takeUntil(this._destroyed),
