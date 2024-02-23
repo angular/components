@@ -220,6 +220,11 @@
     @include token-utils.create-token-slot(border-color, track-outline-color);
   }
 
+  .mdc-switch--selected .mdc-switch__track::after,
+  .mdc-switch--selected .mdc-switch__track::before {
+    @include token-utils.create-token-slot(border-width, selected-track-outline-width);
+  }
+
   .mdc-switch--disabled .mdc-switch__track::after,
   .mdc-switch--disabled .mdc-switch__track::before {
     @include token-utils.create-token-slot(border-width, disabled-unselected-track-outline-width);
