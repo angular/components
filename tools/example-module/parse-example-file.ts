@@ -22,9 +22,9 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
   const visitNode = (node: any): void => {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
       const decorators = ts.getDecorators(node);
-      const meta: any = {
+      const meta = {
         componentName: node.name.text,
-      };
+      } as ParsedMetadata;
 
       if (node.jsDoc && node.jsDoc.length) {
         for (const doc of node.jsDoc) {
@@ -68,11 +68,13 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
               meta[propName] = prop.initializer.elements.map(
                 literal => (literal as ts.StringLiteralLike).text,
               );
+            } else if (propName === 'styleUrl' && ts.isStringLiteralLike(prop.initializer)) {
+              meta.styleUrls = [prop.initializer.text];
             } else if (
               ts.isStringLiteralLike(prop.initializer) ||
               ts.isIdentifier(prop.initializer)
             ) {
-              meta[propName] = prop.initializer.text;
+              (meta as any)[propName] = prop.initializer.text;
             }
           }
 
