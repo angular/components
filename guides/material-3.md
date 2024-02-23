@@ -38,8 +38,8 @@ $theme: matx.define-theme((
     primary: matx.$m3-violet-palette,
   ),
   typography: (
-    brand: 'Comic Sans',
-    bold: 900
+    brand-family: 'Comic Sans',
+    bold-weight: 900
   ),
   density: (
     scale: -1
