@@ -161,10 +161,10 @@ const POPOVER_EDIT_HOST_BINDINGS = {
 };
 
 const POPOVER_EDIT_INPUTS = [
-  'template: cdkPopoverEdit',
-  'context: cdkPopoverEditContext',
-  'colspan: cdkPopoverEditColspan',
-  'disabled: cdkPopoverEditDisabled',
+  {name: 'template', alias: 'cdkPopoverEdit'},
+  {name: 'context', alias: 'cdkPopoverEditContext'},
+  {name: 'colspan', alias: 'cdkPopoverEditColspan'},
+  {name: 'disabled', alias: 'cdkPopoverEditDisabled'},
 ];
 
 /**

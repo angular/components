@@ -15,7 +15,6 @@ import {InkBarItem} from './ink-bar';
  */
 @Directive({
   selector: '[matTabLabelWrapper]',
-  inputs: ['fitInkBarToContent'],
   host: {
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[attr.aria-disabled]': '!!disabled',

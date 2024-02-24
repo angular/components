@@ -63,9 +63,9 @@ export type ContextMenuCoordinates = {x: number; y: number};
     '(contextmenu)': '_openOnContextMenu($event)',
   },
   inputs: [
-    'menuTemplateRef: cdkContextMenuTriggerFor',
-    'menuPosition: cdkContextMenuPosition',
-    'menuData: cdkContextMenuTriggerData',
+    {name: 'menuTemplateRef', alias: 'cdkContextMenuTriggerFor'},
+    {name: 'menuPosition', alias: 'cdkContextMenuPosition'},
+    {name: 'menuData', alias: 'cdkContextMenuTriggerData'},
   ],
   outputs: ['opened: cdkContextMenuOpened', 'closed: cdkContextMenuClosed'],
   providers: [

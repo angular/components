@@ -25,9 +25,9 @@ export type PopoverEditClickOutBehavior = 'close' | 'submit' | 'noop';
 @Directive({
   selector: 'form[cdkEditControl]',
   inputs: [
-    'clickOutBehavior: cdkEditControlClickOutBehavior',
-    'preservedFormValue: cdkEditControlPreservedFormValue',
-    'ignoreSubmitUnlessValid: cdkEditControlIgnoreSubmitUnlessValid',
+    {name: 'clickOutBehavior', alias: 'cdkEditControlClickOutBehavior'},
+    {name: 'preservedFormValue', alias: 'cdkEditControlPreservedFormValue'},
+    {name: 'ignoreSubmitUnlessValid', alias: 'cdkEditControlIgnoreSubmitUnlessValid'},
   ],
   outputs: ['preservedFormValueChange: cdkEditControlPreservedFormValueChange'],
   providers: [EditRef],

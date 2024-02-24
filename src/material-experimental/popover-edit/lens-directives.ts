@@ -27,9 +27,9 @@ import {
     'class': 'mat-edit-lens',
   },
   inputs: [
-    'clickOutBehavior: matEditLensClickOutBehavior',
-    'preservedFormValue: matEditLensPreservedFormValue',
-    'ignoreSubmitUnlessValid: matEditLensIgnoreSubmitUnlessValid',
+    {name: 'clickOutBehavior', alias: 'matEditLensClickOutBehavior'},
+    {name: 'preservedFormValue', alias: 'matEditLensPreservedFormValue'},
+    {name: 'ignoreSubmitUnlessValid', alias: 'matEditLensIgnoreSubmitUnlessValid'},
   ],
   outputs: ['preservedFormValueChange: matEditLensPreservedFormValueChange'],
   providers: [EditRef],

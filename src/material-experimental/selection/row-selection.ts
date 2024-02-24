@@ -23,7 +23,7 @@ import {Input, Directive} from '@angular/core';
     '[attr.aria-selected]': '_selection.isSelected(this.value, this.index)',
   },
   providers: [{provide: CdkRowSelection, useExisting: MatRowSelection}],
-  inputs: ['index: matRowSelectionIndex'],
+  inputs: [{name: 'index', alias: 'matRowSelectionIndex'}],
   standalone: true,
 })
 export class MatRowSelection<T> extends CdkRowSelection<T> {

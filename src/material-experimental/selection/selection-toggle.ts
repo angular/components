@@ -22,7 +22,7 @@ import {Directive, Input} from '@angular/core';
 @Directive({
   selector: '[matSelectionToggle]',
   exportAs: 'matSelectionToggle',
-  inputs: ['index: matSelectionToggleIndex'],
+  inputs: [{name: 'index', alias: 'matSelectionToggleIndex'}],
   providers: [{provide: CdkSelectionToggle, useExisting: MatSelectionToggle}],
   standalone: true,
 })
