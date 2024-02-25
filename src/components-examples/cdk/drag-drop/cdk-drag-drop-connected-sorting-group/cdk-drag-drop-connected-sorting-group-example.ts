@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'cdk-drag-drop-connected-sorting-group-example',
   templateUrl: 'cdk-drag-drop-connected-sorting-group-example.html',
-  styleUrls: ['cdk-drag-drop-connected-sorting-group-example.css'],
+  styleUrl: 'cdk-drag-drop-connected-sorting-group-example.css',
   standalone: true,
   imports: [CdkDropListGroup, CdkDropList, CdkDrag],
 })

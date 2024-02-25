@@ -25,7 +25,7 @@ export interface TextOnlySnackBar {
 @Component({
   selector: 'simple-snack-bar',
   templateUrl: 'simple-snack-bar.html',
-  styleUrls: ['simple-snack-bar.css'],
+  styleUrl: 'simple-snack-bar.css',
   exportAs: 'matSnackBar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

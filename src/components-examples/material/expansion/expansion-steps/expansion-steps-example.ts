@@ -13,7 +13,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'expansion-steps-example',
   templateUrl: 'expansion-steps-example.html',
-  styleUrls: ['expansion-steps-example.css'],
+  styleUrl: 'expansion-steps-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [

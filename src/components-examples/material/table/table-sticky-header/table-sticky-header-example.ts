@@ -6,7 +6,7 @@ import {MatTableModule} from '@angular/material/table';
  */
 @Component({
   selector: 'table-sticky-header-example',
-  styleUrls: ['table-sticky-header-example.css'],
+  styleUrl: 'table-sticky-header-example.css',
   templateUrl: 'table-sticky-header-example.html',
   standalone: true,
   imports: [MatTableModule],

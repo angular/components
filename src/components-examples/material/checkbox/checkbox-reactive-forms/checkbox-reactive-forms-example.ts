@@ -7,7 +7,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'checkbox-reactive-forms-example',
   templateUrl: 'checkbox-reactive-forms-example.html',
-  styleUrls: ['checkbox-reactive-forms-example.css'],
+  styleUrl: 'checkbox-reactive-forms-example.css',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatCheckboxModule, JsonPipe],
 })

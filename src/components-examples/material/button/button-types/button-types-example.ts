@@ -9,7 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'button-types-example',
   templateUrl: 'button-types-example.html',
-  styleUrls: ['button-types-example.css'],
+  styleUrl: 'button-types-example.css',
   standalone: true,
   imports: [MatButtonModule, MatTooltipModule, MatIconModule],
 })

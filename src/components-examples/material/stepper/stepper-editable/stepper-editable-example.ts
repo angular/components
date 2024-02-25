@@ -11,7 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'stepper-editable-example',
   templateUrl: 'stepper-editable-example.html',
-  styleUrls: ['stepper-editable-example.css'],
+  styleUrl: 'stepper-editable-example.css',
   standalone: true,
   imports: [
     MatButtonModule,

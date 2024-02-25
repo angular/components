@@ -12,7 +12,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 @Component({
   selector: 'chips-form-control-example',
   templateUrl: 'chips-form-control-example.html',
-  styleUrls: ['chips-form-control-example.css'],
+  styleUrl: 'chips-form-control-example.css',
   standalone: true,
   imports: [
     MatButtonModule,

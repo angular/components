@@ -26,7 +26,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-flex-large-row-example',
-  styleUrls: ['table-flex-large-row-example.css'],
+  styleUrl: 'table-flex-large-row-example.css',
   templateUrl: 'table-flex-large-row-example.html',
   standalone: true,
   imports: [MatTableModule],

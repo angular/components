@@ -7,7 +7,7 @@ import {MatSliderModule} from '@angular/material/slider';
 @Component({
   selector: 'slider-formatting-example',
   templateUrl: 'slider-formatting-example.html',
-  styleUrls: ['slider-formatting-example.css'],
+  styleUrl: 'slider-formatting-example.css',
   standalone: true,
   imports: [MatSliderModule],
 })

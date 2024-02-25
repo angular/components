@@ -17,7 +17,7 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'grid-list-demo',
   templateUrl: 'grid-list-demo.html',
-  styleUrls: ['grid-list-demo.css'],
+  styleUrl: 'grid-list-demo.css',
   standalone: true,
   imports: [
     CommonModule,

@@ -6,7 +6,7 @@ import {MatTableModule} from '@angular/material/table';
  */
 @Component({
   selector: 'table-row-context-example',
-  styleUrls: ['table-row-context-example.css'],
+  styleUrl: 'table-row-context-example.css',
   templateUrl: 'table-row-context-example.html',
   standalone: true,
   imports: [MatTableModule],

@@ -7,7 +7,7 @@ import {takeUntil} from 'rxjs/operators';
 @Component({
   selector: 'breakpoint-observer-overview-example',
   templateUrl: 'breakpoint-observer-overview-example.html',
-  styleUrls: ['breakpoint-observer-overview-example.css'],
+  styleUrl: 'breakpoint-observer-overview-example.css',
   standalone: true,
 })
 export class BreakpointObserverOverviewExample implements OnDestroy {

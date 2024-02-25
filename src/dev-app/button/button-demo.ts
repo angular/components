@@ -25,7 +25,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
 @Component({
   selector: 'button-demo',
   templateUrl: 'button-demo.html',
-  styleUrls: ['button-demo.css'],
+  styleUrl: 'button-demo.css',
   standalone: true,
   imports: [
     MatButton,

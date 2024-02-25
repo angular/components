@@ -9,7 +9,7 @@ import {MatTableModule} from '@angular/material/table';
  */
 @Component({
   selector: 'table-expandable-rows-example',
-  styleUrls: ['table-expandable-rows-example.css'],
+  styleUrl: 'table-expandable-rows-example.css',
   templateUrl: 'table-expandable-rows-example.html',
   animations: [
     trigger('detailExpand', [

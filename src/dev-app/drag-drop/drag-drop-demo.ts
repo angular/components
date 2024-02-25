@@ -26,7 +26,7 @@ import {MatSelectModule} from '@angular/material/select';
 @Component({
   selector: 'drag-drop-demo',
   templateUrl: 'drag-drop-demo.html',
-  styleUrls: ['drag-drop-demo.css'],
+  styleUrl: 'drag-drop-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

@@ -16,7 +16,7 @@ import {CommonModule} from '@angular/common';
 @Component({
   selector: 'radio-demo',
   templateUrl: 'radio-demo.html',
-  styleUrls: ['radio-demo.css'],
+  styleUrl: 'radio-demo.css',
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule, MatButtonModule, MatCheckboxModule],
 })

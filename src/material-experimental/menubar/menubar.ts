@@ -17,7 +17,7 @@ import {CDK_MENU, CdkMenuBar, CdkMenuGroup, MENU_STACK, MenuStack} from '@angula
   selector: 'mat-menubar',
   exportAs: 'matMenubar',
   templateUrl: 'menubar.html',
-  styleUrls: ['menubar.css'],
+  styleUrl: 'menubar.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

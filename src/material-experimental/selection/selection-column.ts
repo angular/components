@@ -59,7 +59,7 @@ import {MatSelectAll} from './select-all';
     </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['selection-column.css'],
+  styleUrl: 'selection-column.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [

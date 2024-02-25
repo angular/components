@@ -8,7 +8,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 @Component({
   selector: 'sidenav-autosize-example',
   templateUrl: 'sidenav-autosize-example.html',
-  styleUrls: ['sidenav-autosize-example.css'],
+  styleUrl: 'sidenav-autosize-example.css',
   standalone: true,
   imports: [MatSidenavModule, MatButtonModule],
 })

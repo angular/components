@@ -9,7 +9,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'toolbar-basic-example',
   templateUrl: 'toolbar-basic-example.html',
-  styleUrls: ['toolbar-basic-example.css'],
+  styleUrl: 'toolbar-basic-example.css',
   standalone: true,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule],
 })

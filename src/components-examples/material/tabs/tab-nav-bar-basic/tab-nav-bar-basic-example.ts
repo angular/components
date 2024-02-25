@@ -9,7 +9,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-nav-bar-basic-example',
   templateUrl: 'tab-nav-bar-basic-example.html',
-  styleUrls: ['tab-nav-bar-basic-example.css'],
+  styleUrl: 'tab-nav-bar-basic-example.css',
   standalone: true,
   imports: [MatTabsModule, MatButtonModule],
 })

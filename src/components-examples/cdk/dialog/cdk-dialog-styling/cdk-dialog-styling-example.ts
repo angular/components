@@ -21,7 +21,7 @@ export class CdkDialogStylingExample {
 @Component({
   selector: 'cdk-dialog-styling-example-dialog',
   templateUrl: 'cdk-dialog-styling-example-dialog.html',
-  styleUrls: ['cdk-dialog-styling-example-dialog.css'],
+  styleUrl: 'cdk-dialog-styling-example-dialog.css',
   standalone: true,
 })
 export class CdkDialogStylingExampleDialog {

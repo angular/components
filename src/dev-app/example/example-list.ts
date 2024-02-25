@@ -36,8 +36,7 @@ import {Example} from './example';
       }
     </mat-accordion>
   `,
-  styles: [
-    `
+  styles: `
     mat-expansion-panel {
       box-shadow: none !important;
       border-radius: 0 !important;
@@ -59,7 +58,6 @@ import {Example} from './example';
       font-size: 12px;
     }
   `,
-  ],
 })
 export class ExampleList {
   /** Type of examples being displayed. */

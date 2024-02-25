@@ -28,7 +28,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-filtering-example',
-  styleUrls: ['table-filtering-example.css'],
+  styleUrl: 'table-filtering-example.css',
   templateUrl: 'table-filtering-example.html',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule],

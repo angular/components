@@ -7,7 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'form-field-overview-example',
   templateUrl: 'form-field-overview-example.html',
-  styleUrls: ['form-field-overview-example.css'],
+  styleUrl: 'form-field-overview-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule],
 })

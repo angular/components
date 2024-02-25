@@ -8,7 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'text-field-autofill-monitor-example',
   templateUrl: './text-field-autofill-monitor-example.html',
-  styleUrls: ['./text-field-autofill-monitor-example.css'],
+  styleUrl: './text-field-autofill-monitor-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule],
 })

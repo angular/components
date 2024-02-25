@@ -32,7 +32,7 @@ export interface DemoColor {
 @Component({
   selector: 'chips-demo',
   templateUrl: 'chips-demo.html',
-  styleUrls: ['chips-demo.css'],
+  styleUrl: 'chips-demo.css',
   standalone: true,
   imports: [
     CommonModule,

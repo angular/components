@@ -22,7 +22,7 @@ import {
 @Component({
   selector: 'paginator-demo',
   templateUrl: 'paginator-demo.html',
-  styleUrls: ['paginator-demo.css'],
+  styleUrl: 'paginator-demo.css',
   standalone: true,
   imports: [
     CommonModule,

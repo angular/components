@@ -59,7 +59,7 @@ const SCROLL_SCHEDULER =
 @Component({
   selector: 'cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.html',
-  styleUrls: ['virtual-scroll-viewport.css'],
+  styleUrl: 'virtual-scroll-viewport.css',
   host: {
     'class': 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',

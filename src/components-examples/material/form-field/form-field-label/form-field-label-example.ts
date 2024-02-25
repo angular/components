@@ -11,7 +11,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'form-field-label-example',
   templateUrl: 'form-field-label-example.html',
-  styleUrls: ['form-field-label-example.css'],
+  styleUrl: 'form-field-label-example.css',
   standalone: true,
   imports: [
     FormsModule,

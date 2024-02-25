@@ -17,7 +17,7 @@ const formatter = new Intl.DateTimeFormat(undefined, {
   selector: 'cdk-listbox-compare-with-example',
   exportAs: 'cdkListboxCompareWithExample',
   templateUrl: 'cdk-listbox-compare-with-example.html',
-  styleUrls: ['cdk-listbox-compare-with-example.css'],
+  styleUrl: 'cdk-listbox-compare-with-example.css',
   standalone: true,
   imports: [CdkListbox, CdkOption, JsonPipe],
 })

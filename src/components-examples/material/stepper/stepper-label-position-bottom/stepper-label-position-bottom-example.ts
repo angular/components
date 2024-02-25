@@ -11,7 +11,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({
   selector: 'stepper-label-position-bottom-example',
   templateUrl: 'stepper-label-position-bottom-example.html',
-  styleUrls: ['stepper-label-position-bottom-example.css'],
+  styleUrl: 'stepper-label-position-bottom-example.css',
   standalone: true,
   imports: [
     MatStepperModule,

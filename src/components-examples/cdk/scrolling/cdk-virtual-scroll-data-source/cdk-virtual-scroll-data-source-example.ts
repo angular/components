@@ -6,7 +6,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 /** @title Virtual scroll with a custom data source */
 @Component({
   selector: 'cdk-virtual-scroll-data-source-example',
-  styleUrls: ['cdk-virtual-scroll-data-source-example.css'],
+  styleUrl: 'cdk-virtual-scroll-data-source-example.css',
   templateUrl: 'cdk-virtual-scroll-data-source-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -52,13 +52,18 @@ export class MyDataSource extends DataSource<string | undefined> {
     this._fetchedPages.add(page);
 
     // Use `setTimeout` to simulate fetching data from server.
-    setTimeout(() => {
-      this._cachedData.splice(
-        page * this._pageSize,
-        this._pageSize,
-        ...Array.from({length: this._pageSize}).map((_, i) => `Item #${page * this._pageSize + i}`),
-      );
-      this._dataStream.next(this._cachedData);
-    }, Math.random() * 1000 + 200);
+    setTimeout(
+      () => {
+        this._cachedData.splice(
+          page * this._pageSize,
+          this._pageSize,
+          ...Array.from({length: this._pageSize}).map(
+            (_, i) => `Item #${page * this._pageSize + i}`,
+          ),
+        );
+        this._dataStream.next(this._cachedData);
+      },
+      Math.random() * 1000 + 200,
+    );
   }
 }

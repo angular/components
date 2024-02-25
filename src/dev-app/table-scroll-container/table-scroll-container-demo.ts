@@ -18,7 +18,7 @@ import {MatTableModule} from '@angular/material/table';
  */
 @Component({
   selector: 'table-scroll-container-demo',
-  styleUrls: ['table-scroll-container-demo.css'],
+  styleUrl: 'table-scroll-container-demo.css',
   templateUrl: 'table-scroll-container-demo.html',
   standalone: true,
   imports: [

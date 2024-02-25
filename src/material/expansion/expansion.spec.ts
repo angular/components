@@ -605,11 +605,9 @@ class PanelWithContentInNgIf {
 }
 
 @Component({
-  styles: [
-    `mat-expansion-panel {
+  styles: `mat-expansion-panel {
       margin: 13px 37px;
     }`,
-  ],
   template: `
   <mat-expansion-panel [expanded]="expanded">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta

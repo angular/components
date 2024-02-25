@@ -38,7 +38,7 @@ export class CdkDialogOverviewExample {
 @Component({
   selector: 'cdk-dialog-overview-example-dialog',
   templateUrl: 'cdk-dialog-overview-example-dialog.html',
-  styleUrls: ['cdk-dialog-overview-example-dialog.css'],
+  styleUrl: 'cdk-dialog-overview-example-dialog.css',
   standalone: true,
   imports: [FormsModule],
 })

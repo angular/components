@@ -8,7 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'text-field-autofill-directive-example',
   templateUrl: './text-field-autofill-directive-example.html',
-  styleUrls: ['./text-field-autofill-directive-example.css'],
+  styleUrl: './text-field-autofill-directive-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, TextFieldModule, MatButtonModule],
 })

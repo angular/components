@@ -383,7 +383,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 @Component({
   selector: 'mat-button-toggle',
   templateUrl: 'button-toggle.html',
-  styleUrls: ['button-toggle.css'],
+  styleUrl: 'button-toggle.css',
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,

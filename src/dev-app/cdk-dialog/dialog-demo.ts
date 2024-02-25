@@ -15,7 +15,7 @@ const defaultDialogConfig = new DialogConfig();
 @Component({
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
-  styleUrls: ['dialog-demo.css'],
+  styleUrl: 'dialog-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [DialogModule, FormsModule],
@@ -75,8 +75,7 @@ export class DialogDemo {
       <button (click)="temporarilyHide()">Hide for 2 seconds</button>
     </div>
   `,
-  styles: [
-    `
+  styles: `
     :host {
       background: white;
       padding: 20px;
@@ -92,13 +91,15 @@ export class DialogDemo {
       opacity: 0;
     }
   `,
-  ],
   standalone: true,
 })
 export class JazzDialog {
   private _dimensionToggle = false;
 
-  constructor(public dialogRef: DialogRef<string>, @Inject(DIALOG_DATA) public data: any) {}
+  constructor(
+    public dialogRef: DialogRef<string>,
+    @Inject(DIALOG_DATA) public data: any,
+  ) {}
 
   togglePosition(): void {
     this._dimensionToggle = !this._dimensionToggle;

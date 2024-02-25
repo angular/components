@@ -66,7 +66,7 @@ const ENABLE_BACKGROUND_INPUT = true;
   selector: 'mat-tab-group',
   exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
-  styleUrls: ['tab-group.css'],
+  styleUrl: 'tab-group.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,

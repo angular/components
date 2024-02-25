@@ -36,7 +36,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
 @Component({
   selector: 'input-demo',
   templateUrl: 'input-demo.html',
-  styleUrls: ['input-demo.css'],
+  styleUrl: 'input-demo.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [

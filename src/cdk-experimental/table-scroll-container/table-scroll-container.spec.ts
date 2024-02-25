@@ -276,15 +276,13 @@ class FakeDataSource extends DataSource<TestData> {
   `,
   standalone: true,
   imports: [CdkTableModule, CdkTableScrollContainerModule],
-  styles: [
-    `
+  styles: `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {
       display: block;
       width: 20px;
       box-sizing: border-box;
     }
   `,
-  ],
 })
 class StickyNativeLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();

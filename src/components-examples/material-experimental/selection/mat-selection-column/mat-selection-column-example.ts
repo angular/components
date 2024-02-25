@@ -8,7 +8,7 @@ import {MatTableModule} from '@angular/material/table';
 @Component({
   selector: 'mat-selection-column-example',
   templateUrl: 'mat-selection-column-example.html',
-  styleUrls: ['mat-selection-column-example.css'],
+  styleUrl: 'mat-selection-column-example.css',
   standalone: true,
   imports: [MatTableModule, MatSelectionModule],
 })

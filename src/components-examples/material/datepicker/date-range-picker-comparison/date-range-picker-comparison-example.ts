@@ -12,7 +12,7 @@ const year = today.getFullYear();
 @Component({
   selector: 'date-range-picker-comparison-example',
   templateUrl: 'date-range-picker-comparison-example.html',
-  styleUrls: ['date-range-picker-comparison-example.css'],
+  styleUrl: 'date-range-picker-comparison-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule],

@@ -73,7 +73,7 @@ interface MatSortHeaderColumnDef {
   selector: '[mat-sort-header]',
   exportAs: 'matSortHeader',
   templateUrl: 'sort-header.html',
-  styleUrls: ['sort-header.css'],
+  styleUrl: 'sort-header.css',
   host: {
     'class': 'mat-sort-header',
     '(click)': '_handleClick()',

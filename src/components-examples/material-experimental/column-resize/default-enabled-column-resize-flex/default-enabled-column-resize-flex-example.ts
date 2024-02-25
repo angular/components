@@ -46,7 +46,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'default-enabled-column-resize-flex-example',
   templateUrl: 'default-enabled-column-resize-flex-example.html',
-  styleUrls: ['default-enabled-column-resize-flex-example.css'],
+  styleUrl: 'default-enabled-column-resize-flex-example.css',
   standalone: true,
   imports: [MatDefaultEnabledColumnResizeModule, MatTableModule],
 })

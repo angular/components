@@ -39,7 +39,7 @@ const TREE_DATA: FoodNode[] = [
 @Component({
   selector: 'cdk-tree-nested-example',
   templateUrl: 'cdk-tree-nested-example.html',
-  styleUrls: ['cdk-tree-nested-example.css'],
+  styleUrl: 'cdk-tree-nested-example.css',
   standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
 })

@@ -17,7 +17,7 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'progress-spinner-demo',
   templateUrl: 'progress-spinner-demo.html',
-  styleUrls: ['progress-spinner-demo.css'],
+  styleUrl: 'progress-spinner-demo.css',
   standalone: true,
   imports: [
     MatButtonModule,

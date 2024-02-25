@@ -47,7 +47,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-wrapped-example',
-  styleUrls: ['table-wrapped-example.css'],
+  styleUrl: 'table-wrapped-example.css',
   templateUrl: 'table-wrapped-example.html',
   standalone: true,
   imports: [MatButtonModule, forwardRef(() => WrapperTable), MatSortModule, MatTableModule],
@@ -78,13 +78,11 @@ export class TableWrappedExample implements AfterViewInit {
 @Component({
   selector: 'wrapper-table',
   templateUrl: 'wrapper-table.html',
-  styles: [
-    `
+  styles: `
     table {
       width: 100%;
     }
   `,
-  ],
   standalone: true,
   imports: [MatTableModule, MatSortModule],
 })

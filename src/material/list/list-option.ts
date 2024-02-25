@@ -63,7 +63,7 @@ export interface SelectionList extends MatListBase {
 @Component({
   selector: 'mat-list-option',
   exportAs: 'matListOption',
-  styleUrls: ['list-option.css'],
+  styleUrl: 'list-option.css',
   host: {
     'class': 'mat-mdc-list-item mat-mdc-list-option mdc-list-item',
     'role': 'option',

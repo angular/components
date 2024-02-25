@@ -27,7 +27,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-dynamic-columns-example',
-  styleUrls: ['table-dynamic-columns-example.css'],
+  styleUrl: 'table-dynamic-columns-example.css',
   templateUrl: 'table-dynamic-columns-example.html',
   standalone: true,
   imports: [MatButtonModule, MatTableModule],

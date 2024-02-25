@@ -133,7 +133,7 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
   selector: 'mat-form-field',
   exportAs: 'matFormField',
   templateUrl: './form-field.html',
-  styleUrls: ['./form-field.css'],
+  styleUrl: './form-field.css',
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-mdc-form-field',

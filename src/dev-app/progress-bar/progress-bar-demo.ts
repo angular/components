@@ -17,7 +17,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'progress-bar-demo',
   templateUrl: 'progress-bar-demo.html',
-  styleUrls: ['progress-bar-demo.css'],
+  styleUrl: 'progress-bar-demo.css',
   standalone: true,
   imports: [
     CommonModule,

@@ -45,7 +45,7 @@ import {MatRipple} from '@angular/material/core';
 @Component({
   selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
-  styleUrls: ['tab-header.css'],
+  styleUrl: 'tab-header.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,

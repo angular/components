@@ -7,7 +7,7 @@ import {MatSliderModule} from '@angular/material/slider';
 @Component({
   selector: 'slider-overview-example',
   templateUrl: 'slider-overview-example.html',
-  styleUrls: ['slider-overview-example.css'],
+  styleUrl: 'slider-overview-example.css',
   standalone: true,
   imports: [MatSliderModule],
 })

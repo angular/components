@@ -8,7 +8,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'datepicker-date-class-example',
   templateUrl: 'datepicker-date-class-example.html',
-  styleUrls: ['datepicker-date-class-example.css'],
+  styleUrl: 'datepicker-date-class-example.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   providers: [provideNativeDateAdapter()],

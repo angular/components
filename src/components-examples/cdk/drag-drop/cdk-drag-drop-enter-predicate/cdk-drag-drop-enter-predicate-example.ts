@@ -13,7 +13,7 @@ import {
 @Component({
   selector: 'cdk-drag-drop-enter-predicate-example',
   templateUrl: 'cdk-drag-drop-enter-predicate-example.html',
-  styleUrls: ['cdk-drag-drop-enter-predicate-example.css'],
+  styleUrl: 'cdk-drag-drop-enter-predicate-example.css',
   standalone: true,
   imports: [CdkDropList, CdkDrag],
 })

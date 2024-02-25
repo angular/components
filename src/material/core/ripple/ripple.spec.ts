@@ -888,7 +888,7 @@ class RippleContainerWithNgIf {
 }
 
 @Component({
-  styles: [`* { transition: none !important; }`],
+  styles: `* { transition: none !important; }`,
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
@@ -897,7 +897,7 @@ class RippleContainerWithNgIf {
 class RippleCssTransitionNone {}
 
 @Component({
-  styles: [`* { transition-duration: 0ms !important; }`],
+  styles: `* { transition-duration: 0ms !important; }`,
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
   standalone: true,

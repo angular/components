@@ -13,7 +13,7 @@ export interface ChipColor {
 @Component({
   selector: 'chips-stacked-example',
   templateUrl: 'chips-stacked-example.html',
-  styleUrls: ['chips-stacked-example.css'],
+  styleUrl: 'chips-stacked-example.css',
   standalone: true,
   imports: [MatChipsModule],
 })

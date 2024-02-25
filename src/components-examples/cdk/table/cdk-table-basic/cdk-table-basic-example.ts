@@ -28,7 +28,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'cdk-table-basic-example',
-  styleUrls: ['cdk-table-basic-example.css'],
+  styleUrl: 'cdk-table-basic-example.css',
   templateUrl: 'cdk-table-basic-example.html',
   standalone: true,
   imports: [CdkTableModule],

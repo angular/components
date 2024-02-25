@@ -8,7 +8,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-subtitle-example',
   templateUrl: 'card-subtitle-example.html',
-  styleUrls: ['card-subtitle-example.css'],
+  styleUrl: 'card-subtitle-example.css',
   standalone: true,
   imports: [MatCardModule, MatButtonModule],
 })

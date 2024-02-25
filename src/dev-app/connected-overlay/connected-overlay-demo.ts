@@ -33,7 +33,7 @@ import {MatRadioModule} from '@angular/material/radio';
 @Component({
   selector: 'overlay-demo',
   templateUrl: 'connected-overlay-demo.html',
-  styleUrls: ['connected-overlay-demo.css'],
+  styleUrl: 'connected-overlay-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [

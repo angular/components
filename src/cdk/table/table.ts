@@ -265,7 +265,7 @@ export interface RenderRow<T> {
   selector: 'cdk-table, table[cdk-table]',
   exportAs: 'cdkTable',
   template: CDK_TABLE_TEMPLATE,
-  styleUrls: ['table.css'],
+  styleUrl: 'table.css',
   host: {
     'class': 'cdk-table',
     '[class.cdk-table-fixed-layout]': 'fixedLayout',

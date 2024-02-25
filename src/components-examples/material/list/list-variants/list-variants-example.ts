@@ -7,7 +7,7 @@ import {MatListModule} from '@angular/material/list';
 @Component({
   selector: 'list-variants-example',
   templateUrl: 'list-variants-example.html',
-  styleUrls: ['./list-variants-example.css'],
+  styleUrl: './list-variants-example.css',
   standalone: true,
   imports: [MatListModule],
 })

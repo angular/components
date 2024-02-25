@@ -41,7 +41,7 @@ const MAT_FIT_MODE = 'fit';
   selector: 'mat-grid-list',
   exportAs: 'matGridList',
   templateUrl: 'grid-list.html',
-  styleUrls: ['grid-list.css'],
+  styleUrl: 'grid-list.css',
   host: {
     'class': 'mat-grid-list',
     // Ensures that the "cols" input value is reflected in the DOM. This is

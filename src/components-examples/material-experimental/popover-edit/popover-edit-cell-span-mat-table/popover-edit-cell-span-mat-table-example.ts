@@ -34,7 +34,7 @@ const PERSON_DATA: Person[] = [
  */
 @Component({
   selector: 'popover-edit-cell-span-mat-table-example',
-  styleUrls: ['popover-edit-cell-span-mat-table-example.css'],
+  styleUrl: 'popover-edit-cell-span-mat-table-example.css',
   templateUrl: 'popover-edit-cell-span-mat-table-example.html',
   standalone: true,
   imports: [

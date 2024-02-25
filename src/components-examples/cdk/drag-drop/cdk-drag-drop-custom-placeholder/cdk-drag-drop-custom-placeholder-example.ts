@@ -13,7 +13,7 @@ import {
 @Component({
   selector: 'cdk-drag-drop-custom-placeholder-example',
   templateUrl: 'cdk-drag-drop-custom-placeholder-example.html',
-  styleUrls: ['cdk-drag-drop-custom-placeholder-example.css'],
+  styleUrl: 'cdk-drag-drop-custom-placeholder-example.css',
   standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })

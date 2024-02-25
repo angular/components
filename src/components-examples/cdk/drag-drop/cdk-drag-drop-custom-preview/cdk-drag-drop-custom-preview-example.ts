@@ -13,7 +13,7 @@ import {
 @Component({
   selector: 'cdk-drag-drop-custom-preview-example',
   templateUrl: 'cdk-drag-drop-custom-preview-example.html',
-  styleUrls: ['cdk-drag-drop-custom-preview-example.css'],
+  styleUrl: 'cdk-drag-drop-custom-preview-example.css',
   standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })

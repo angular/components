@@ -8,7 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'form-field-prefix-suffix-example',
   templateUrl: 'form-field-prefix-suffix-example.html',
-  styleUrls: ['form-field-prefix-suffix-example.css'],
+  styleUrl: 'form-field-prefix-suffix-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
 })

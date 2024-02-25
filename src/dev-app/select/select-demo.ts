@@ -33,7 +33,7 @@ type DisableDrinkOption = 'none' | 'first-middle-last' | 'all';
 @Component({
   selector: 'select-demo',
   templateUrl: 'select-demo.html',
-  styleUrls: ['select-demo.css'],
+  styleUrl: 'select-demo.css',
   standalone: true,
   imports: [
     CommonModule,

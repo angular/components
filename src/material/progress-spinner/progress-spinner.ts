@@ -84,7 +84,7 @@ const BASE_STROKE_WIDTH = 10;
     '[attr.mode]': 'mode',
   },
   templateUrl: 'progress-spinner.html',
-  styleUrls: ['progress-spinner.css'],
+  styleUrl: 'progress-spinner.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   standalone: true,

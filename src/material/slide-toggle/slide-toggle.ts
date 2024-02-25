@@ -69,7 +69,7 @@ let nextUniqueId = 0;
 @Component({
   selector: 'mat-slide-toggle',
   templateUrl: 'slide-toggle.html',
-  styleUrls: ['slide-toggle.css'],
+  styleUrl: 'slide-toggle.css',
   host: {
     'class': 'mat-mdc-slide-toggle',
     '[id]': 'id',

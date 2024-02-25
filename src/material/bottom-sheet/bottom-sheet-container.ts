@@ -34,7 +34,7 @@ import {CdkPortalOutlet} from '@angular/cdk/portal';
 @Component({
   selector: 'mat-bottom-sheet-container',
   templateUrl: 'bottom-sheet-container.html',
-  styleUrls: ['bottom-sheet-container.css'],
+  styleUrl: 'bottom-sheet-container.css',
   // In Ivy embedded views will be change detected from their declaration place, rather than where
   // they were stamped out. This means that we can't have the bottom sheet container be OnPush,
   // because it might cause the sheets that were opened from a template not to be out of date.
