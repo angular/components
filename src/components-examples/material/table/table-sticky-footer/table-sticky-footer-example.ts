@@ -12,7 +12,7 @@ export interface Transaction {
  */
 @Component({
   selector: 'table-sticky-footer-example',
-  styleUrls: ['table-sticky-footer-example.css'],
+  styleUrl: 'table-sticky-footer-example.css',
   templateUrl: 'table-sticky-footer-example.html',
   standalone: true,
   imports: [MatTableModule, CurrencyPipe],

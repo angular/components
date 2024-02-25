@@ -102,7 +102,7 @@ export class CustomRangeStrategy {}
 @Component({
   selector: 'custom-header',
   templateUrl: 'custom-header.html',
-  styleUrls: ['custom-header.css'],
+  styleUrl: 'custom-header.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [MatIconModule, MatButtonModule],
@@ -172,7 +172,7 @@ export class CustomHeaderNgContent<D> {
 @Component({
   selector: 'datepicker-demo',
   templateUrl: 'datepicker-demo.html',
-  styleUrls: ['datepicker-demo.css'],
+  styleUrl: 'datepicker-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

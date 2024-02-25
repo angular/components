@@ -8,7 +8,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'datepicker-color-example',
   templateUrl: 'datepicker-color-example.html',
-  styleUrls: ['datepicker-color-example.css'],
+  styleUrl: 'datepicker-color-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],

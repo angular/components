@@ -8,7 +8,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'datepicker-events-example',
   templateUrl: 'datepicker-events-example.html',
-  styleUrls: ['datepicker-events-example.css'],
+  styleUrl: 'datepicker-events-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],

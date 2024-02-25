@@ -7,7 +7,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'datepicker-inline-calendar-example',
   templateUrl: 'datepicker-inline-calendar-example.html',
-  styleUrls: ['datepicker-inline-calendar-example.css'],
+  styleUrl: 'datepicker-inline-calendar-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatCardModule, MatDatepickerModule],

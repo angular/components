@@ -14,7 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
  */
 @Component({
   selector: 'dialog-animations-example',
-  styleUrls: ['dialog-animations-example.css'],
+  styleUrl: 'dialog-animations-example.css',
   templateUrl: 'dialog-animations-example.html',
   standalone: true,
   imports: [MatButtonModule],

@@ -109,7 +109,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
 @Component({
   selector: 'mat-autocomplete',
   templateUrl: 'autocomplete.html',
-  styleUrls: ['autocomplete.css'],
+  styleUrl: 'autocomplete.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'matAutocomplete',

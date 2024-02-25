@@ -4,7 +4,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 /** @title Virtual scrolling window */
 @Component({
   selector: 'cdk-virtual-scroll-window-scrolling-example',
-  styleUrls: ['cdk-virtual-scroll-window-scrolling-example.css'],
+  styleUrl: 'cdk-virtual-scroll-window-scrolling-example.css',
   templateUrl: 'cdk-virtual-scroll-window-scrolling-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

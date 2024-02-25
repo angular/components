@@ -45,7 +45,7 @@ let nextUniqueId = 0;
 @Component({
   selector: 'mat-date-range-input',
   templateUrl: 'date-range-input.html',
-  styleUrls: ['date-range-input.css'],
+  styleUrl: 'date-range-input.css',
   exportAs: 'matDateRangeInput',
   host: {
     'class': 'mat-date-range-input',

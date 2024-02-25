@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'slide-toggle-forms-example',
   templateUrl: './slide-toggle-forms-example.html',
-  styleUrls: ['./slide-toggle-forms-example.css'],
+  styleUrl: './slide-toggle-forms-example.css',
   standalone: true,
   imports: [
     MatSlideToggleModule,

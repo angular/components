@@ -1225,8 +1225,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -1249,7 +1248,6 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
       margin-bottom: 10px;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule],
@@ -1297,8 +1295,7 @@ class FixedSizeVirtualScroll {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -1317,7 +1314,6 @@ class FixedSizeVirtualScroll {
       border: 1px dashed #ccc;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule],
@@ -1354,8 +1350,7 @@ class FixedSizeVirtualScrollWithRtlDirection {
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-viewport {
       background-color: #f5f5f5;
     }
@@ -1365,7 +1360,6 @@ class FixedSizeVirtualScrollWithRtlDirection {
       border: 1px dashed #ccc;
     }
   `,
-  ],
   standalone: true,
   imports: [ScrollingModule],
 })
@@ -1387,8 +1381,7 @@ class InjectsViewContainer {
       <div injects-view-container class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -1407,7 +1400,6 @@ class InjectsViewContainer {
       border: 1px dashed #ccc;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule],
@@ -1428,8 +1420,7 @@ class VirtualScrollWithItemInjectingViewContainer {
       }
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -1448,7 +1439,6 @@ class VirtualScrollWithItemInjectingViewContainer {
       border: 1px dashed #ccc;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule, CommonModule],
@@ -1469,8 +1459,7 @@ class DelayedInitializationVirtualScroll {
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -1489,7 +1478,6 @@ class DelayedInitializationVirtualScroll {
       border: 1px dashed #ccc;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule, CommonModule],
@@ -1510,8 +1498,7 @@ class VirtualScrollWithAppendOnly {
       </cdk-virtual-scroll-viewport>
     </div>
   `,
-  styles: [
-    `
+  styles: `
         .cdk-virtual-scroll-content-wrapper {
             display: flex;
             flex-direction: column;
@@ -1534,7 +1521,6 @@ class VirtualScrollWithAppendOnly {
             padding-top: 50px;
         }
     `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule],
@@ -1554,8 +1540,7 @@ class VirtualScrollWithCustomScrollingElement {
       <div class="item" *cdkVirtualFor="let item of items">{{item}}</div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
         .cdk-virtual-scroll-content-wrapper {
             display: flex;
             flex-direction: column;
@@ -1578,7 +1563,6 @@ class VirtualScrollWithCustomScrollingElement {
             height: 50px;
         }
     `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule],

@@ -11,7 +11,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @Component({
   selector: 'autocomplete-plain-input-example',
   templateUrl: 'autocomplete-plain-input-example.html',
-  styleUrls: ['autocomplete-plain-input-example.css'],
+  styleUrl: 'autocomplete-plain-input-example.css',
   standalone: true,
   imports: [FormsModule, MatAutocompleteModule, ReactiveFormsModule, AsyncPipe],
 })

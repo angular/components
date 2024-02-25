@@ -7,7 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-media-size-example',
   templateUrl: 'card-media-size-example.html',
-  styleUrls: ['card-media-size-example.css'],
+  styleUrl: 'card-media-size-example.css',
   standalone: true,
   imports: [MatCardModule],
 })

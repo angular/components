@@ -13,7 +13,7 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'typography-demo',
   templateUrl: 'typography-demo.html',
-  styleUrls: ['typography-demo.css'],
+  styleUrl: 'typography-demo.css',
   imports: [MatCheckboxModule, FormsModule],
   standalone: true,
 })

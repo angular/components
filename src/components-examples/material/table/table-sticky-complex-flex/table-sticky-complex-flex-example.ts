@@ -8,7 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
  */
 @Component({
   selector: 'table-sticky-complex-flex-example',
-  styleUrls: ['table-sticky-complex-flex-example.css'],
+  styleUrl: 'table-sticky-complex-flex-example.css',
   templateUrl: 'table-sticky-complex-flex-example.html',
   standalone: true,
   imports: [MatButtonModule, MatButtonToggleModule, MatTableModule],

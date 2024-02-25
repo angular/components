@@ -131,7 +131,7 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   template: '<ng-content></ng-content>',
   selector: 'mat-icon',
   exportAs: 'matIcon',
-  styleUrls: ['icon.css'],
+  styleUrl: 'icon.css',
   host: {
     'role': 'img',
     'class': 'mat-icon notranslate',

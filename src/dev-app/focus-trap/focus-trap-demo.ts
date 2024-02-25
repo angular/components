@@ -41,7 +41,7 @@ export class FocusTrapShadowDomDemo {}
 @Component({
   selector: 'focus-trap-demo',
   templateUrl: 'focus-trap-demo.html',
-  styleUrls: ['focus-trap-demo.css'],
+  styleUrl: 'focus-trap-demo.css',
   standalone: true,
   imports: [
     A11yModule,
@@ -93,7 +93,7 @@ let dialogCount = 0;
 
 @Component({
   selector: 'focus-trap-dialog-demo',
-  styleUrls: ['focus-trap-dialog-demo.css'],
+  styleUrl: 'focus-trap-dialog-demo.css',
   templateUrl: 'focus-trap-dialog-demo.html',
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],

@@ -11,7 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'tooltip-position-example',
   templateUrl: 'tooltip-position-example.html',
-  styleUrls: ['tooltip-position-example.css'],
+  styleUrl: 'tooltip-position-example.css',
   standalone: true,
   imports: [
     MatFormFieldModule,

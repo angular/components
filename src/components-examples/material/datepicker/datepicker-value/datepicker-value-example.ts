@@ -9,7 +9,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'datepicker-value-example',
   templateUrl: 'datepicker-value-example.html',
-  styleUrls: ['datepicker-value-example.css'],
+  styleUrl: 'datepicker-value-example.css',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [

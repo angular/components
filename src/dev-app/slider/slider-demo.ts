@@ -40,7 +40,7 @@ interface DialogData {
     MatTabsModule,
     ReactiveFormsModule,
   ],
-  styleUrls: ['slider-demo.css'],
+  styleUrl: 'slider-demo.css',
 })
 export class SliderDemo {
   discrete = true;
@@ -121,7 +121,7 @@ export class SliderDemo {
 
 @Component({
   selector: 'slider-dialog-demo',
-  styleUrls: ['slider-demo.css'],
+  styleUrl: 'slider-demo.css',
   template: `
   <h2 mat-dialog-title>Slider in a dialog</h2>
   <mat-dialog-content class="demo-dialog-content">

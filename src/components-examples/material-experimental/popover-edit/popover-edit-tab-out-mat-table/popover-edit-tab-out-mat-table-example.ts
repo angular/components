@@ -43,7 +43,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'popover-edit-tab-out-mat-table-example',
-  styleUrls: ['popover-edit-tab-out-mat-table-example.css'],
+  styleUrl: 'popover-edit-tab-out-mat-table-example.css',
   templateUrl: 'popover-edit-tab-out-mat-table-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

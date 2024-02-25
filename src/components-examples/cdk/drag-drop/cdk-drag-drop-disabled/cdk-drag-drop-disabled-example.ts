@@ -7,7 +7,7 @@ import {CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray} from '@angular/cdk/d
 @Component({
   selector: 'cdk-drag-drop-disabled-example',
   templateUrl: 'cdk-drag-drop-disabled-example.html',
-  styleUrls: ['cdk-drag-drop-disabled-example.css'],
+  styleUrl: 'cdk-drag-drop-disabled-example.css',
   standalone: true,
   imports: [CdkDropList, CdkDrag],
 })

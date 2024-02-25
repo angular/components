@@ -108,7 +108,7 @@ export type MatTabBodyPositionState =
 @Component({
   selector: 'mat-tab-body',
   templateUrl: 'tab-body.html',
-  styleUrls: ['tab-body.css'],
+  styleUrl: 'tab-body.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,

@@ -35,8 +35,7 @@ export class DatepickerCustomHeaderExample {
 /** Custom header component for datepicker. */
 @Component({
   selector: 'example-header',
-  styles: [
-    `
+  styles: `
     .example-header {
       display: flex;
       align-items: center;
@@ -50,7 +49,6 @@ export class DatepickerCustomHeaderExample {
       text-align: center;
     }
   `,
-  ],
   template: `
     <div class="example-header">
       <button mat-icon-button (click)="previousClicked('year')">

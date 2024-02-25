@@ -29,7 +29,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-dynamic-observable-data-example',
-  styleUrls: ['table-dynamic-observable-data-example.css'],
+  styleUrl: 'table-dynamic-observable-data-example.css',
   templateUrl: 'table-dynamic-observable-data-example.html',
   standalone: true,
   imports: [MatButtonModule, MatTableModule],

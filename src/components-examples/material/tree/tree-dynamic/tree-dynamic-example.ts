@@ -139,7 +139,7 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
 @Component({
   selector: 'tree-dynamic-example',
   templateUrl: 'tree-dynamic-example.html',
-  styleUrls: ['tree-dynamic-example.css'],
+  styleUrl: 'tree-dynamic-example.css',
   standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule, MatProgressBarModule],
 })

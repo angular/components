@@ -8,7 +8,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 @Component({
   selector: 'cdk-selection-column-example',
   templateUrl: 'cdk-selection-column-example.html',
-  styleUrls: ['cdk-selection-column-example.css'],
+  styleUrl: 'cdk-selection-column-example.css',
   standalone: true,
   imports: [CdkTableModule, CdkSelectionModule],
 })

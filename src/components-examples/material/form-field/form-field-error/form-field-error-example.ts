@@ -7,7 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'form-field-error-example',
   templateUrl: 'form-field-error-example.html',
-  styleUrls: ['form-field-error-example.css'],
+  styleUrl: 'form-field-error-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
 })

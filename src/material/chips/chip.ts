@@ -65,7 +65,7 @@ export interface MatChipEvent {
   selector: 'mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]',
   exportAs: 'matChip',
   templateUrl: 'chip.html',
-  styleUrls: ['chip.css'],
+  styleUrl: 'chip.css',
   host: {
     'class': 'mat-mdc-chip',
     '[class]': '"mat-" + (color || "primary")',

@@ -34,7 +34,7 @@ import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
     '[attr.colspan]': 'colspan',
   },
   templateUrl: 'grid-tile.html',
-  styleUrls: ['grid-list.css'],
+  styleUrl: 'grid-list.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

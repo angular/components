@@ -13,7 +13,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 @Component({
   selector: 'mat-icon-demo',
   templateUrl: 'icon-demo.html',
-  styleUrls: ['icon-demo.css'],
+  styleUrl: 'icon-demo.css',
   standalone: true,
   imports: [MatIconModule],
 })

@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'cdk-portal-overview-example',
   templateUrl: 'cdk-portal-overview-example.html',
-  styleUrls: ['cdk-portal-overview-example.css'],
+  styleUrl: 'cdk-portal-overview-example.css',
   standalone: true,
   imports: [PortalModule],
 })

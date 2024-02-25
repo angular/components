@@ -40,7 +40,7 @@ import {MatChipAction} from './chip-action';
       <ng-content></ng-content>
     </div>
   `,
-  styleUrls: ['chip-set.css'],
+  styleUrl: 'chip-set.css',
   host: {
     'class': 'mat-mdc-chip-set mdc-evolution-chip-set',
     '(keydown)': '_handleKeydown($event)',

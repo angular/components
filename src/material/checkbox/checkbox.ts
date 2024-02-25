@@ -86,7 +86,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 @Component({
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
-  styleUrls: ['checkbox.css'],
+  styleUrl: 'checkbox.css',
   host: {
     'class': 'mat-mdc-checkbox',
     '[attr.tabindex]': 'null',

@@ -12,7 +12,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({
   selector: 'stepper-errors-example',
   templateUrl: 'stepper-errors-example.html',
-  styleUrls: ['stepper-errors-example.css'],
+  styleUrl: 'stepper-errors-example.css',
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,

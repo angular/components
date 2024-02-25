@@ -14,7 +14,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'snack-bar-position-example',
   templateUrl: 'snack-bar-position-example.html',
-  styleUrls: ['snack-bar-position-example.css'],
+  styleUrl: 'snack-bar-position-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatButtonModule],
 })

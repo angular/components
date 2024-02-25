@@ -24,7 +24,7 @@ import {take} from 'rxjs/operators';
 @Component({
   selector: 'performance-demo',
   templateUrl: 'performance-demo.html',
-  styleUrls: ['performance-demo.css'],
+  styleUrl: 'performance-demo.css',
   standalone: true,
   imports: [
     CommonModule,

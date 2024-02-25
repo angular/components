@@ -40,7 +40,7 @@ import {
  */
 @Component({
   selector: 'mat-expansion-panel-header',
-  styleUrls: ['expansion-panel-header.css'],
+  styleUrl: 'expansion-panel-header.css',
   templateUrl: 'expansion-panel-header.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

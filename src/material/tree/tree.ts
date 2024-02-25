@@ -21,7 +21,7 @@ import {MatTreeNodeOutlet} from './outlet';
     'class': 'mat-tree',
     'role': 'tree',
   },
-  styleUrls: ['tree.css'],
+  styleUrl: 'tree.css',
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTree for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators

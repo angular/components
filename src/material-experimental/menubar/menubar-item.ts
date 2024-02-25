@@ -25,7 +25,7 @@ function removeIcons(element: Element) {
   selector: 'mat-menubar-item',
   exportAs: 'matMenubarItem',
   templateUrl: 'menubar-item.html',
-  styleUrls: ['menubar-item.css'],
+  styleUrl: 'menubar-item.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

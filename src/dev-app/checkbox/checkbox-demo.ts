@@ -43,13 +43,11 @@ export class AnimationsNoop {}
 
 @Component({
   selector: 'mat-checkbox-demo-nested-checklist',
-  styles: [
-    `
+  styles: `
     li {
       margin-bottom: 4px;
     }
   `,
-  ],
   templateUrl: 'nested-checklist.html',
   standalone: true,
   imports: [CommonModule, MatCheckboxModule, FormsModule],
@@ -101,7 +99,7 @@ export class MatCheckboxDemoNestedChecklist {
 @Component({
   selector: 'checkbox-demo',
   templateUrl: 'checkbox-demo.html',
-  styleUrls: ['checkbox-demo.css'],
+  styleUrl: 'checkbox-demo.css',
   standalone: true,
   imports: [
     CommonModule,

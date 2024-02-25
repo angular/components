@@ -101,7 +101,7 @@ let nextUniqueId = 0;
   selector: 'mat-paginator',
   exportAs: 'matPaginator',
   templateUrl: 'paginator.html',
-  styleUrls: ['paginator.css'],
+  styleUrl: 'paginator.css',
   host: {
     'class': 'mat-mdc-paginator',
     'role': 'group',

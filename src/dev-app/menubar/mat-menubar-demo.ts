@@ -26,7 +26,7 @@ import {MatMenuBarModule} from '@angular/material-experimental/menubar';
     {provide: CdkMenuGroup, useExisting: DemoMenu},
     {provide: CDK_MENU, useExisting: DemoMenu},
   ],
-  styleUrls: ['mat-menubar-demo.css'],
+  styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
 })
@@ -44,7 +44,7 @@ export class DemoMenu extends CdkMenu {}
     '[attr.aria-disabled]': 'disabled || null',
   },
   template: '<ng-content></ng-content>',
-  styleUrls: ['mat-menubar-demo.css'],
+  styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
 })

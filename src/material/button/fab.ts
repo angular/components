@@ -60,7 +60,7 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
 @Component({
   selector: `button[mat-fab]`,
   templateUrl: 'button.html',
-  styleUrls: ['fab.css'],
+  styleUrl: 'fab.css',
   host: {
     ...MAT_BUTTON_HOST,
     '[class.mdc-fab--extended]': 'extended',
@@ -97,7 +97,7 @@ export class MatFabButton extends MatButtonBase {
 @Component({
   selector: `button[mat-mini-fab]`,
   templateUrl: 'button.html',
-  styleUrls: ['fab.css'],
+  styleUrl: 'fab.css',
   host: MAT_BUTTON_HOST,
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
@@ -130,7 +130,7 @@ export class MatMiniFabButton extends MatButtonBase {
 @Component({
   selector: `a[mat-fab]`,
   templateUrl: 'button.html',
-  styleUrls: ['fab.css'],
+  styleUrl: 'fab.css',
   host: {
     ...MAT_ANCHOR_HOST,
     '[class.mdc-fab--extended]': 'extended',
@@ -167,7 +167,7 @@ export class MatFabAnchor extends MatAnchor {
 @Component({
   selector: `a[mat-mini-fab]`,
   templateUrl: 'button.html',
-  styleUrls: ['fab.css'],
+  styleUrl: 'fab.css',
   host: MAT_ANCHOR_HOST,
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,

@@ -6833,8 +6833,7 @@ class StandaloneDraggableWithShadowInsideHandle {
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  styles: [
-    `
+  styles: `
     .cdk-drag-handle {
       position: absolute;
       top: 0;
@@ -6843,7 +6842,6 @@ class StandaloneDraggableWithShadowInsideHandle {
       height: 10px;
     }
   `,
-  ],
   template: `
     <div #dragElement cdkDrag
       style="width: 100px; height: 100px; background: red; position: relative">
@@ -6936,15 +6934,13 @@ class ConnectedDropListsInOnPush {}
 
   // Note that it needs a margin to ensure that it's not flush against the viewport
   // edge which will cause the viewport to scroll, rather than the list.
-  styles: [
-    `
+  styles: `
     .drop-list {
       max-height: 200px;
       overflow: auto;
       margin: 10vw 0 0 10vw;
     }
   `,
-  ],
 })
 class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
   constructor(elementRef: ElementRef) {
@@ -6965,15 +6961,13 @@ class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
 
   // Note that it needs a margin to ensure that it's not flush against the viewport
   // edge which will cause the viewport to scroll, rather than the list.
-  styles: [
-    `
+  styles: `
     .scroll-container {
       max-height: 200px;
       overflow: auto;
       margin: 10vw 0 0 10vw;
     }
   `,
-  ],
 })
 class DraggableInScrollableParentContainer extends DraggableInDropZone implements AfterViewInit {
   @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
@@ -7058,7 +7052,7 @@ const HORIZONTAL_FIXTURE_TEMPLATE = `
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  styles: [HORIZONTAL_FIXTURE_STYLES],
+  styles: HORIZONTAL_FIXTURE_STYLES,
   template: HORIZONTAL_FIXTURE_TEMPLATE,
 })
 class DraggableInHorizontalDropZone implements AfterViewInit {
@@ -7211,13 +7205,11 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
       }
     </div>
   `,
-  styles: [
-    `
+  styles: `
     .tall-placeholder {
       height: ${ITEM_HEIGHT * 3}px;
     }
   `,
-  ],
 })
 class DraggableInDropZoneWithCustomPlaceholder {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
@@ -7364,8 +7356,7 @@ class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  styles: [
-    `
+  styles: `
     .cdk-drop-list {
       display: block;
       width: 100px;
@@ -7379,7 +7370,6 @@ class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
       background: red;
     }
   `,
-  ],
   template: `
     <div cdkDropListGroup [cdkDropListGroupDisabled]="groupDisabled">
       <div
@@ -7426,8 +7416,7 @@ class DraggableWithAlternateRoot {
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  styles: [
-    `
+  styles: `
     .cdk-drop-list {
       display: block;
       width: 100px;
@@ -7441,7 +7430,6 @@ class DraggableWithAlternateRoot {
       background: red;
     }
   `,
-  ],
   template: `
     <div
       cdkDropList
@@ -7534,8 +7522,7 @@ class DraggableInDropZoneWithoutEvents {
 
 @Component({
   encapsulation: ViewEncapsulation.None,
-  styles: [
-    `
+  styles: `
     .cdk-drop-list {
       display: block;
       width: 100px;
@@ -7549,7 +7536,6 @@ class DraggableInDropZoneWithoutEvents {
       background: red;
     }
   `,
-  ],
   template: `
     <div cdkDropListGroup>
       <wrapped-drop-container [items]="todo"></wrapped-drop-container>
@@ -7659,8 +7645,7 @@ class WrappedDropContainerComponent {
 }
 
 @Component({
-  styles: [
-    `
+  styles: `
     :host {
       height: 400px;
       width: 400px;
@@ -7677,7 +7662,6 @@ class WrappedDropContainerComponent {
       position: absolute;
     }
   `,
-  ],
   template: `
     <div
       cdkDrag
@@ -7709,8 +7693,7 @@ class NestedDragsComponent {
 }
 
 @Component({
-  styles: [
-    `
+  styles: `
     :host {
       height: 400px;
       width: 400px;
@@ -7727,7 +7710,6 @@ class NestedDragsComponent {
       position: absolute;
     }
   `,
-  ],
   template: `
     <div
       cdkDrag
@@ -7757,14 +7739,12 @@ class NestedDragsThroughTemplate {
 }
 
 @Component({
-  styles: [
-    `
+  styles: `
     .drop-list {
       width: 100px;
       background: pink;
     }
   `,
-  ],
   template: `
     <div cdkDropList class="drop-list" #outerList>
       <div cdkDropList class="drop-list" #innerList>
@@ -7799,8 +7779,7 @@ class PlainStandaloneDropList {
 }
 
 @Component({
-  styles: [
-    `
+  styles: `
     .list {
       display: flex;
       width: 100px;
@@ -7814,7 +7793,6 @@ class PlainStandaloneDropList {
       min-height: 50px;
     }
   `,
-  ],
   template: `
     <div class="list" cdkDropList cdkDropListOrientation="horizontal">
       @for (item of items; track item) {

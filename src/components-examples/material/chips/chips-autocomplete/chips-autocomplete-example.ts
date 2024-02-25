@@ -16,7 +16,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 @Component({
   selector: 'chips-autocomplete-example',
   templateUrl: 'chips-autocomplete-example.html',
-  styleUrls: ['chips-autocomplete-example.css'],
+  styleUrl: 'chips-autocomplete-example.css',
   standalone: true,
   imports: [
     FormsModule,

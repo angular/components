@@ -42,7 +42,7 @@ export const MAT_LIST = new InjectionToken<MatList>('MatList');
   host: {
     'class': 'mat-mdc-list mat-mdc-list-base mdc-list',
   },
-  styleUrls: ['list.css'],
+  styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatList}],

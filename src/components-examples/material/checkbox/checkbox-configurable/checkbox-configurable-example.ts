@@ -10,7 +10,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'checkbox-configurable-example',
   templateUrl: 'checkbox-configurable-example.html',
-  styleUrls: ['checkbox-configurable-example.css'],
+  styleUrl: 'checkbox-configurable-example.css',
   standalone: true,
   imports: [MatCardModule, MatCheckboxModule, FormsModule, MatRadioModule],
 })

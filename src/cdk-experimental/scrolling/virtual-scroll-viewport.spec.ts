@@ -80,8 +80,7 @@ function finishInit(fixture: ComponentFixture<any>) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -91,7 +90,6 @@ function finishInit(fixture: ComponentFixture<any>) {
       flex-direction: row;
     }
   `,
-  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [ScrollingModule, ExperimentalScrollingModule],

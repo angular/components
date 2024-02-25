@@ -5,7 +5,7 @@ import {CdkContextMenuTrigger, CdkMenuItem, CdkMenu} from '@angular/cdk/menu';
 @Component({
   selector: 'cdk-menu-context-example',
   exportAs: 'cdkMenuContextExample',
-  styleUrls: ['cdk-menu-context-example.css'],
+  styleUrl: 'cdk-menu-context-example.css',
   templateUrl: 'cdk-menu-context-example.html',
   standalone: true,
   imports: [CdkContextMenuTrigger, CdkMenu, CdkMenuItem],

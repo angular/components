@@ -12,7 +12,7 @@ import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'clipboard-demo',
-  styleUrls: ['clipboard-demo.css'],
+  styleUrl: 'clipboard-demo.css',
   templateUrl: 'clipboard-demo.html',
   standalone: true,
   imports: [ClipboardModule, FormsModule],

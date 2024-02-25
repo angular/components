@@ -17,7 +17,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'sidenav-demo',
   templateUrl: 'sidenav-demo.html',
-  styleUrls: ['sidenav-demo.css'],
+  styleUrl: 'sidenav-demo.css',
   standalone: true,
   imports: [
     CommonModule,

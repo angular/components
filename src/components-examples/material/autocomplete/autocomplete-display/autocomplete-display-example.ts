@@ -17,7 +17,7 @@ export interface User {
 @Component({
   selector: 'autocomplete-display-example',
   templateUrl: 'autocomplete-display-example.html',
-  styleUrls: ['autocomplete-display-example.css'],
+  styleUrl: 'autocomplete-display-example.css',
   standalone: true,
   imports: [
     FormsModule,

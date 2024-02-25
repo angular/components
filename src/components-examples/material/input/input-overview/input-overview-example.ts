@@ -8,7 +8,7 @@ import {FormsModule} from '@angular/forms';
  */
 @Component({
   selector: 'input-overview-example',
-  styleUrls: ['input-overview-example.css'],
+  styleUrl: 'input-overview-example.css',
   templateUrl: 'input-overview-example.html',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule],

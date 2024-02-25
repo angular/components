@@ -33,7 +33,7 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
 @Component({
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
-  styleUrls: ['autocomplete-demo.css'],
+  styleUrl: 'autocomplete-demo.css',
   standalone: true,
   imports: [
     CommonModule,
@@ -232,8 +232,7 @@ export class AutocompleteDemo {
       <button type="submit" mat-button>Close</button>
     </form>
   `,
-  styles: [
-    `
+  styles: `
     :host {
       display: block;
       padding: 20px;
@@ -245,7 +244,6 @@ export class AutocompleteDemo {
       align-items: flex-start;
     }
   `,
-  ],
   standalone: true,
   imports: [CommonModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
 })

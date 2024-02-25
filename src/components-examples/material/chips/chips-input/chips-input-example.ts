@@ -15,7 +15,7 @@ export interface Fruit {
 @Component({
   selector: 'chips-input-example',
   templateUrl: 'chips-input-example.html',
-  styleUrls: ['chips-input-example.css'],
+  styleUrl: 'chips-input-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatChipsModule, MatIconModule],
 })

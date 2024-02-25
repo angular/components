@@ -18,7 +18,7 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'ripple-demo',
   templateUrl: 'ripple-demo.html',
-  styleUrls: ['ripple-demo.css'],
+  styleUrl: 'ripple-demo.css',
   standalone: true,
   imports: [
     RippleOverviewExample,

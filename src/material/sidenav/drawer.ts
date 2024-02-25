@@ -642,7 +642,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   selector: 'mat-drawer-container',
   exportAs: 'matDrawerContainer',
   templateUrl: 'drawer-container.html',
-  styleUrls: ['drawer.css'],
+  styleUrl: 'drawer.css',
   host: {
     'class': 'mat-drawer-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',

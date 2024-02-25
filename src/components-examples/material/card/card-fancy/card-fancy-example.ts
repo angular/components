@@ -8,7 +8,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-fancy-example',
   templateUrl: 'card-fancy-example.html',
-  styleUrls: ['card-fancy-example.css'],
+  styleUrl: 'card-fancy-example.css',
   standalone: true,
   imports: [MatCardModule, MatButtonModule],
 })

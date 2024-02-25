@@ -20,7 +20,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'toolbar-demo',
   templateUrl: 'toolbar-demo.html',
-  styleUrls: ['toolbar-demo.css'],
+  styleUrl: 'toolbar-demo.css',
   standalone: true,
   imports: [
     MatButtonModule,

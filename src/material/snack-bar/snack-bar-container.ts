@@ -43,7 +43,7 @@ let uniqueId = 0;
 @Component({
   selector: 'mat-snack-bar-container',
   templateUrl: 'snack-bar-container.html',
-  styleUrls: ['snack-bar-container.css'],
+  styleUrl: 'snack-bar-container.css',
   // In Ivy embedded views will be change detected from their declaration place, rather than
   // where they were stamped out. This means that we can't have the snack bar container be OnPush,
   // because it might cause snack bars that were opened from a template not to be out of date.

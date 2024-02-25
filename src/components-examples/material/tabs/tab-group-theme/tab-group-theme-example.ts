@@ -8,7 +8,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'tab-group-theme-example',
   templateUrl: 'tab-group-theme-example.html',
-  styleUrls: ['tab-group-theme-example.css'],
+  styleUrl: 'tab-group-theme-example.css',
   standalone: true,
   imports: [MatButtonToggleModule, MatTabsModule],
 })

@@ -51,7 +51,7 @@ export class MatDatepickerCancel {
  */
 @Component({
   selector: 'mat-datepicker-actions, mat-date-range-picker-actions',
-  styleUrls: ['datepicker-actions.css'],
+  styleUrl: 'datepicker-actions.css',
   template: `
     <ng-template>
       <div class="mat-datepicker-actions">

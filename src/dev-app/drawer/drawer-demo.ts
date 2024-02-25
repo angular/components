@@ -14,7 +14,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 @Component({
   selector: 'drawer-demo',
   templateUrl: 'drawer-demo.html',
-  styleUrls: ['drawer-demo.css'],
+  styleUrl: 'drawer-demo.css',
   standalone: true,
   imports: [MatButtonModule, MatListModule, MatSidenavModule],
 })

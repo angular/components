@@ -11,7 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'autocomplete-require-selection-example',
   templateUrl: 'autocomplete-require-selection-example.html',
-  styleUrls: ['autocomplete-require-selection-example.css'],
+  styleUrl: 'autocomplete-require-selection-example.css',
   standalone: true,
   imports: [
     FormsModule,

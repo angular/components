@@ -13,7 +13,7 @@ import {DatePipe} from '@angular/common';
  */
 @Component({
   selector: 'table-http-example',
-  styleUrls: ['table-http-example.css'],
+  styleUrl: 'table-http-example.css',
   templateUrl: 'table-http-example.html',
   standalone: true,
   imports: [MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe],

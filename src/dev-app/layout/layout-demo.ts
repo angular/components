@@ -13,7 +13,7 @@ import {BreakpointObserverOverviewExample} from '@angular/components-examples/cd
 @Component({
   selector: 'layout-demo',
   templateUrl: 'layout-demo.html',
-  styleUrls: ['layout-demo.css'],
+  styleUrl: 'layout-demo.css',
   standalone: true,
   imports: [CommonModule, BreakpointObserverOverviewExample],
 })

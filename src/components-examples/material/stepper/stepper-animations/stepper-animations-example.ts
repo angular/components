@@ -19,7 +19,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({
   selector: 'stepper-animations-example',
   templateUrl: 'stepper-animations-example.html',
-  styleUrls: ['stepper-animations-example.css'],
+  styleUrl: 'stepper-animations-example.css',
   standalone: true,
   imports: [
     MatStepperModule,

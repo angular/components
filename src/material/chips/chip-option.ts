@@ -42,7 +42,7 @@ export class MatChipSelectionChange {
 @Component({
   selector: 'mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]',
   templateUrl: 'chip-option.html',
-  styleUrls: ['chip.css'],
+  styleUrl: 'chip.css',
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-option',
     '[class.mdc-evolution-chip]': '!_isBasicChip',

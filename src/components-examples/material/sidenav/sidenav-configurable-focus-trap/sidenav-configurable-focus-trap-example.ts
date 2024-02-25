@@ -9,7 +9,7 @@ import {ConfigurableFocusTrapFactory, FocusTrapFactory} from '@angular/cdk/a11y'
 @Component({
   selector: 'sidenav-configurable-focus-trap-example',
   templateUrl: 'sidenav-configurable-focus-trap-example.html',
-  styleUrls: ['sidenav-configurable-focus-trap-example.css'],
+  styleUrl: 'sidenav-configurable-focus-trap-example.css',
   standalone: true,
   imports: [MatSidenavModule, MatButtonModule, MatRadioModule, FormsModule, ReactiveFormsModule],
   providers: [{provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory}],

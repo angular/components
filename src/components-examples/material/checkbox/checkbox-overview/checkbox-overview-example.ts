@@ -16,7 +16,7 @@ export interface Task {
 @Component({
   selector: 'checkbox-overview-example',
   templateUrl: 'checkbox-overview-example.html',
-  styleUrls: ['checkbox-overview-example.css'],
+  styleUrl: 'checkbox-overview-example.css',
   standalone: true,
   imports: [MatCheckboxModule, FormsModule],
 })

@@ -71,7 +71,7 @@ export class MatRecycleRows {}
       <ng-container footerRowOutlet/>
     }
   `,
-  styleUrls: ['table.css'],
+  styleUrl: 'table.css',
   host: {
     'class': 'mat-mdc-table mdc-data-table__table',
     '[class.mdc-table-fixed-layout]': 'fixedLayout',

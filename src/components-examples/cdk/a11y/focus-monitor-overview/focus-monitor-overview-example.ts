@@ -13,7 +13,7 @@ import {
 @Component({
   selector: 'focus-monitor-overview-example',
   templateUrl: 'focus-monitor-overview-example.html',
-  styleUrls: ['focus-monitor-overview-example.css'],
+  styleUrl: 'focus-monitor-overview-example.css',
   standalone: true,
 })
 export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {

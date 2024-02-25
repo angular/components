@@ -4,7 +4,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 /** @title Horizontal virtual scroll */
 @Component({
   selector: 'cdk-virtual-scroll-horizontal-example',
-  styleUrls: ['cdk-virtual-scroll-horizontal-example.css'],
+  styleUrl: 'cdk-virtual-scroll-horizontal-example.css',
   templateUrl: 'cdk-virtual-scroll-horizontal-example.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

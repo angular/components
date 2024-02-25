@@ -37,8 +37,7 @@ import {
       </div>
     }
   `,
-  styles: [
-    `
+  styles: `
     .label {
       display: flex;
       justify-content: space-between;
@@ -58,7 +57,6 @@ import {
       white-space: pre;
     }
   `,
-  ],
 })
 export class Example implements OnInit {
   /** ID of the material example to display. */

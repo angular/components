@@ -12,7 +12,7 @@ import 'moment/locale/fr';
 @Component({
   selector: 'datepicker-locale-example',
   templateUrl: 'datepicker-locale-example.html',
-  styleUrls: ['datepicker-locale-example.css'],
+  styleUrl: 'datepicker-locale-example.css',
   providers: [
     // The locale would typically be provided on the root module of your application. We do it at
     // the component level here, due to limitations of our example generation script.
