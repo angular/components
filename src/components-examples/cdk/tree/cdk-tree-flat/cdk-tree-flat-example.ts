@@ -76,7 +76,7 @@ interface ExampleFlatNode {
 @Component({
   selector: 'cdk-tree-flat-example',
   templateUrl: 'cdk-tree-flat-example.html',
-  styleUrls: ['cdk-tree-flat-example.css'],
+  styleUrl: 'cdk-tree-flat-example.css',
   standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
 })

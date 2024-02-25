@@ -8,7 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'form-field-theming-example',
   templateUrl: 'form-field-theming-example.html',
-  styleUrls: ['form-field-theming-example.css'],
+  styleUrl: 'form-field-theming-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
 })

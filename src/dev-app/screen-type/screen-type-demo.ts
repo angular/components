@@ -16,7 +16,7 @@ import {Observable} from 'rxjs';
 @Component({
   selector: 'screen-type',
   templateUrl: 'screen-type-demo.html',
-  styleUrls: ['screen-type-demo.css'],
+  styleUrl: 'screen-type-demo.css',
   standalone: true,
   imports: [CommonModule, LayoutModule, MatGridListModule, MatIconModule],
 })

@@ -30,7 +30,7 @@ import {NgTemplateOutlet} from '@angular/common';
 @Component({
   selector: 'mat-step-header',
   templateUrl: 'step-header.html',
-  styleUrls: ['step-header.css'],
+  styleUrl: 'step-header.css',
   host: {
     'class': 'mat-step-header',
     '[class]': '"mat-" + (color || "primary")',

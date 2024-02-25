@@ -10,7 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'tooltip-disabled-example',
   templateUrl: 'tooltip-disabled-example.html',
-  styleUrls: ['tooltip-disabled-example.css'],
+  styleUrl: 'tooltip-disabled-example.css',
   standalone: true,
   imports: [MatButtonModule, MatTooltipModule, MatCheckboxModule, FormsModule, ReactiveFormsModule],
 })

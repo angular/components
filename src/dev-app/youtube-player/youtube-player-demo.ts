@@ -76,7 +76,7 @@ const VIDEOS: Video[] = [
 @Component({
   selector: 'youtube-player-demo',
   templateUrl: 'youtube-player-demo.html',
-  styleUrls: ['youtube-player-demo.css'],
+  styleUrl: 'youtube-player-demo.css',
   standalone: true,
   imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
 })

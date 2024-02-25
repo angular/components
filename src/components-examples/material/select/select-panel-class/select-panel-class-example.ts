@@ -9,7 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'select-panel-class-example',
   templateUrl: 'select-panel-class-example.html',
-  styleUrls: ['select-panel-class-example.css'],
+  styleUrl: 'select-panel-class-example.css',
   // Encapsulation has to be disabled in order for the
   // component style to apply to the select panel.
   encapsulation: ViewEncapsulation.None,

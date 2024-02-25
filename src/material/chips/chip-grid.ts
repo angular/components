@@ -64,7 +64,7 @@ export class MatChipGridChange {
       <ng-content></ng-content>
     </div>
   `,
-  styleUrls: ['chip-set.css'],
+  styleUrl: 'chip-set.css',
   host: {
     'class': 'mat-mdc-chip-set mat-mdc-chip-grid mdc-evolution-chip-set',
     '[attr.role]': 'role',

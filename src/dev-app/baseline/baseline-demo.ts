@@ -19,7 +19,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'baseline-demo',
   templateUrl: 'baseline-demo.html',
-  styleUrls: ['baseline-demo.css'],
+  styleUrl: 'baseline-demo.css',
   standalone: true,
   imports: [
     CommonModule,

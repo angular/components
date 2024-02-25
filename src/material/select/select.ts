@@ -173,7 +173,7 @@ export class MatSelectChange {
   selector: 'mat-select',
   exportAs: 'matSelect',
   templateUrl: 'select.html',
-  styleUrls: ['select.css'],
+  styleUrl: 'select.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

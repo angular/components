@@ -24,7 +24,7 @@ import {getAppState, setAppState} from './dev-app-state';
 @Component({
   selector: 'dev-app-layout',
   templateUrl: 'dev-app-layout.html',
-  styleUrls: ['dev-app-layout.css'],
+  styleUrl: 'dev-app-layout.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [

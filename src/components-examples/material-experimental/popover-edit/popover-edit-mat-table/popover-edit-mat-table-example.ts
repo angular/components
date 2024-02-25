@@ -204,7 +204,7 @@ const FANTASY_ELEMENTS: readonly FantasyElement[] = [
  */
 @Component({
   selector: 'popover-edit-mat-table-example',
-  styleUrls: ['popover-edit-mat-table-example.css'],
+  styleUrl: 'popover-edit-mat-table-example.css',
   templateUrl: 'popover-edit-mat-table-example.html',
   standalone: true,
   imports: [

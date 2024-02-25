@@ -25,7 +25,7 @@ import {MatSliderModule} from '@angular/material/slider';
       <input aria-label="Range slider end thumb" matSliderEndThumb>
     </mat-slider>
     `,
-  styles: ['.mat-mdc-slider { width: 148px; }'],
+  styles: '.mat-mdc-slider { width: 148px; }',
   standalone: true,
   imports: [MatSliderModule],
 })

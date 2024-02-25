@@ -24,7 +24,7 @@ import {MatSelectModule} from '@angular/material/select';
 @Component({
   selector: 'snack-bar-demo',
   templateUrl: 'snack-bar-demo.html',
-  styleUrls: ['snack-bar-demo.css'],
+  styleUrl: 'snack-bar-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [

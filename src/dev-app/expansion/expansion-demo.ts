@@ -25,7 +25,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'expansion-demo',
-  styleUrls: ['expansion-demo.css'],
+  styleUrl: 'expansion-demo.css',
   templateUrl: 'expansion-demo.html',
   standalone: true,
   imports: [

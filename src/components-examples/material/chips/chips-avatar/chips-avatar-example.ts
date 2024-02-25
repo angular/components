@@ -8,7 +8,7 @@ import {MatChipsModule} from '@angular/material/chips';
 @Component({
   selector: 'chips-avatar-example',
   templateUrl: 'chips-avatar-example.html',
-  styleUrls: ['chips-avatar-example.css'],
+  styleUrl: 'chips-avatar-example.css',
   standalone: true,
   imports: [MatChipsModule],
 })

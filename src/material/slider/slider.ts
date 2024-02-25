@@ -58,7 +58,7 @@ import {MatSliderVisualThumb} from './slider-thumb';
 @Component({
   selector: 'mat-slider',
   templateUrl: 'slider.html',
-  styleUrls: ['slider.css'],
+  styleUrl: 'slider.css',
   host: {
     'class': 'mat-mdc-slider mdc-slider',
     '[class]': '"mat-" + (color || "primary")',

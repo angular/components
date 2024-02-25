@@ -19,7 +19,7 @@ export class ScienceJoke {}
 @Component({
   selector: 'portal-demo',
   templateUrl: 'portal-demo.html',
-  styleUrls: ['portal-demo.css'],
+  styleUrl: 'portal-demo.css',
   standalone: true,
   imports: [PortalModule, ScienceJoke],
 })

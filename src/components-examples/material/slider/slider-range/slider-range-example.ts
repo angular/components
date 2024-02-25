@@ -7,7 +7,7 @@ import {MatSliderModule} from '@angular/material/slider';
 @Component({
   selector: 'slider-range-example',
   templateUrl: 'slider-range-example.html',
-  styleUrls: ['slider-range-example.css'],
+  styleUrl: 'slider-range-example.css',
   standalone: true,
   imports: [MatSliderModule],
 })

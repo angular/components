@@ -41,7 +41,7 @@ import {Platform} from '@angular/cdk/platform';
 @Component({
   selector: 'mat-slider-visual-thumb',
   templateUrl: './slider-thumb.html',
-  styleUrls: ['slider-thumb.css'],
+  styleUrl: 'slider-thumb.css',
   host: {
     'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
   },

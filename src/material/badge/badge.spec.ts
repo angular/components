@@ -278,7 +278,7 @@ describe('MatBadge', () => {
 @Component({
   // Explicitly set the view encapsulation since we have a test that checks for it.
   encapsulation: ViewEncapsulation.Emulated,
-  styles: ['button { color: hotpink; }'],
+  styles: 'button { color: hotpink; }',
   template: `
     <button [matBadge]="badgeContent"
             [matBadgeColor]="badgeColor"

@@ -29,7 +29,7 @@ import {MatTreeModule} from '@angular/material/tree';
 @Component({
   selector: 'tree-demo',
   templateUrl: 'tree-demo.html',
-  styleUrls: ['tree-demo.css'],
+  styleUrl: 'tree-demo.css',
   standalone: true,
   imports: [
     CdkTreeModule,

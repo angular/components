@@ -7,7 +7,7 @@ import {MatRadioModule} from '@angular/material/radio';
 @Component({
   selector: 'radio-overview-example',
   templateUrl: 'radio-overview-example.html',
-  styleUrls: ['radio-overview-example.css'],
+  styleUrl: 'radio-overview-example.css',
   standalone: true,
   imports: [MatRadioModule],
 })

@@ -7,7 +7,7 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   selector: 'cdk-listbox-value-binding-example',
   exportAs: 'cdkListboxValueBindingExample',
   templateUrl: 'cdk-listbox-value-binding-example.html',
-  styleUrls: ['cdk-listbox-value-binding-example.css'],
+  styleUrl: 'cdk-listbox-value-binding-example.css',
   standalone: true,
   imports: [CdkListbox, CdkOption, JsonPipe],
 })

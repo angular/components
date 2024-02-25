@@ -11,7 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'input-clearable-example',
   templateUrl: './input-clearable-example.html',
-  styleUrls: ['./input-clearable-example.css'],
+  styleUrl: './input-clearable-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
 })

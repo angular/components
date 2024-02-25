@@ -37,7 +37,7 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
 @Component({
   selector: 'mat-card',
   templateUrl: 'card.html',
-  styleUrls: ['card.css'],
+  styleUrl: 'card.css',
   host: {
     'class': 'mat-mdc-card mdc-card',
     '[class.mat-mdc-card-outlined]': 'appearance === "outlined"',

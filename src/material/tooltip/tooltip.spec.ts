@@ -1673,7 +1673,7 @@ class TooltipDemoWithoutPositionBinding {
 
 @Component({
   selector: 'app',
-  styles: [`button { width: 500px; height: 500px; }`],
+  styles: `button { width: 500px; height: 500px; }`,
   template: `<button #button [matTooltip]="message">Button</button>`,
 })
 class WideTooltipDemo {

@@ -2467,8 +2467,7 @@ class StickyPositioningListenerTest implements StickyPositioningListener {
       </cdk-footer-row>
     </cdk-table>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {
       display: block;
       width: 20px;
@@ -2477,7 +2476,6 @@ class StickyPositioningListenerTest implements StickyPositioningListener {
       display: flex;
     }
   `,
-  ],
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyFlexLayoutCdkTableApp}],
 })
 class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
@@ -2527,15 +2525,13 @@ class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
       </tr>
     </table>
   `,
-  styles: [
-    `
+  styles: `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {
       display: block;
       width: 20px;
       box-sizing: border-box;
     }
   `,
-  ],
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyNativeLayoutCdkTableApp}],
 })
 class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {

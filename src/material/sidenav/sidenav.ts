@@ -126,7 +126,7 @@ export class MatSidenav extends MatDrawer {
   selector: 'mat-sidenav-container',
   exportAs: 'matSidenavContainer',
   templateUrl: 'sidenav-container.html',
-  styleUrls: ['drawer.css'],
+  styleUrl: 'drawer.css',
   host: {
     'class': 'mat-drawer-container mat-sidenav-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',

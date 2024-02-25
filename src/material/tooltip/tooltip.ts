@@ -892,7 +892,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 @Component({
   selector: 'mat-tooltip-component',
   templateUrl: 'tooltip.html',
-  styleUrls: ['tooltip.css'],
+  styleUrl: 'tooltip.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

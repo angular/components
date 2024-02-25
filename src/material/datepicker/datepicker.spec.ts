@@ -2494,7 +2494,7 @@ const inputFixedWidthStyles = `
       [xPosition]="xPosition"
       [yPosition]="yPosition"></mat-datepicker>
   `,
-  styles: [inputFixedWidthStyles],
+  styles: inputFixedWidthStyles,
 })
 class StandardDatepicker {
   opened = false;

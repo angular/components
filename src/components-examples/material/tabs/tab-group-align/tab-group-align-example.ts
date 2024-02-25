@@ -7,7 +7,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-align-example',
   templateUrl: 'tab-group-align-example.html',
-  styleUrls: ['tab-group-align-example.css'],
+  styleUrl: 'tab-group-align-example.css',
   standalone: true,
   imports: [MatTabsModule],
 })

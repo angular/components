@@ -12,7 +12,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'tab-group-dynamic-example',
   templateUrl: 'tab-group-dynamic-example.html',
-  styleUrls: ['tab-group-dynamic-example.css'],
+  styleUrl: 'tab-group-dynamic-example.css',
   standalone: true,
   imports: [
     MatFormFieldModule,

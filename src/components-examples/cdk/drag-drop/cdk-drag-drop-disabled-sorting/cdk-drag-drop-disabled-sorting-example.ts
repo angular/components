@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'cdk-drag-drop-disabled-sorting-example',
   templateUrl: 'cdk-drag-drop-disabled-sorting-example.html',
-  styleUrls: ['cdk-drag-drop-disabled-sorting-example.css'],
+  styleUrl: 'cdk-drag-drop-disabled-sorting-example.css',
   standalone: true,
   imports: [CdkDropListGroup, CdkDropList, CdkDrag],
 })

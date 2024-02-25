@@ -6,7 +6,7 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   selector: 'cdk-listbox-activedescendant-example',
   exportAs: 'cdkListboxActivedescendantExample',
   templateUrl: 'cdk-listbox-activedescendant-example.html',
-  styleUrls: ['cdk-listbox-activedescendant-example.css'],
+  styleUrl: 'cdk-listbox-activedescendant-example.css',
   standalone: true,
   imports: [CdkListbox, CdkOption],
 })

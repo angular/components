@@ -119,7 +119,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 @Component({
   selector: 'mat-datepicker-content',
   templateUrl: 'datepicker-content.html',
-  styleUrls: ['datepicker-content.css'],
+  styleUrl: 'datepicker-content.css',
   host: {
     'class': 'mat-datepicker-content',
     '[class]': 'color ? "mat-" + color : ""',

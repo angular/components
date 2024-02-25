@@ -12,7 +12,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'progress-bar-configurable-example',
   templateUrl: 'progress-bar-configurable-example.html',
-  styleUrls: ['progress-bar-configurable-example.css'],
+  styleUrl: 'progress-bar-configurable-example.css',
   standalone: true,
   imports: [MatCardModule, MatRadioModule, FormsModule, MatSliderModule, MatProgressBarModule],
 })

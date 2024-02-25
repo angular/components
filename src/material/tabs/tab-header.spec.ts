@@ -739,13 +739,11 @@ interface Tab {
     </mat-tab-header>
   </div>
   `,
-  styles: [
-    `
+  styles: `
     :host {
       width: 130px;
     }
   `,
-  ],
   standalone: true,
   imports: [Dir, MatTabHeader, MatTabLabelWrapper],
 })

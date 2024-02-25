@@ -6,7 +6,7 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   selector: 'cdk-listbox-custom-typeahead-example',
   exportAs: 'cdkListboxCustomTypeaheadExample',
   templateUrl: 'cdk-listbox-custom-typeahead-example.html',
-  styleUrls: ['cdk-listbox-custom-typeahead-example.css'],
+  styleUrl: 'cdk-listbox-custom-typeahead-example.css',
   standalone: true,
   imports: [CdkListbox, CdkOption],
 })

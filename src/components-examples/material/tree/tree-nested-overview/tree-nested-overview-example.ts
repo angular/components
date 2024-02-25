@@ -39,7 +39,7 @@ const TREE_DATA: FoodNode[] = [
 @Component({
   selector: 'tree-nested-overview-example',
   templateUrl: 'tree-nested-overview-example.html',
-  styleUrls: ['tree-nested-overview-example.css'],
+  styleUrl: 'tree-nested-overview-example.css',
   standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
 })

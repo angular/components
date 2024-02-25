@@ -18,7 +18,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   selector: 'div[mat-internal-form-field]',
   standalone: true,
   template: '<ng-content></ng-content>',
-  styleUrls: ['internal-form-field.css'],
+  styleUrl: 'internal-form-field.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

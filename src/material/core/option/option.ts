@@ -75,7 +75,7 @@ export class MatOptionSelectionChange<T = any> {
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-mdc-option mdc-list-item',
   },
-  styleUrls: ['option.css'],
+  styleUrl: 'option.css',
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

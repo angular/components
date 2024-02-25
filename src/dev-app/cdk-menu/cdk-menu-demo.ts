@@ -21,7 +21,7 @@ import {
 
 @Component({
   templateUrl: 'cdk-menu-demo.html',
-  styleUrls: ['cdk-menu-demo.css'],
+  styleUrl: 'cdk-menu-demo.css',
   standalone: true,
   imports: [
     CdkMenuModule,

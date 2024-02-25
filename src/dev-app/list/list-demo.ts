@@ -21,7 +21,7 @@ interface Link {
 @Component({
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
-  styleUrls: ['list-demo.css'],
+  styleUrl: 'list-demo.css',
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatListModule],
 })

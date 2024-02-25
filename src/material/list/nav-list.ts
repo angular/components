@@ -24,7 +24,7 @@ export const MAT_NAV_LIST = new InjectionToken<MatNavList>('MatNavList');
     'class': 'mat-mdc-nav-list mat-mdc-list-base mdc-list',
     'role': 'navigation',
   },
-  styleUrls: ['list.css'],
+  styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatNavList}],

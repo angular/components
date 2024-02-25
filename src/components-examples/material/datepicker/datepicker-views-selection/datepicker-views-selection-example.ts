@@ -33,7 +33,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'datepicker-views-selection-example',
   templateUrl: 'datepicker-views-selection-example.html',
-  styleUrls: ['datepicker-views-selection-example.css'],
+  styleUrl: 'datepicker-views-selection-example.css',
   providers: [
     // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
     // to your app config. We provide it at the component level here, due to limitations

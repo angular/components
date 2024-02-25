@@ -10,7 +10,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'sidenav-responsive-example',
   templateUrl: 'sidenav-responsive-example.html',
-  styleUrls: ['sidenav-responsive-example.css'],
+  styleUrl: 'sidenav-responsive-example.css',
   standalone: true,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
 })

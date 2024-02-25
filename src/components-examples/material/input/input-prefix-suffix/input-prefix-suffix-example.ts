@@ -10,7 +10,7 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'input-prefix-suffix-example',
   templateUrl: 'input-prefix-suffix-example.html',
-  styleUrls: ['input-prefix-suffix-example.css'],
+  styleUrl: 'input-prefix-suffix-example.css',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule, MatIconModule],
 })

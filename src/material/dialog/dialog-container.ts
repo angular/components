@@ -51,7 +51,7 @@ export const CLOSE_ANIMATION_DURATION = 75;
 @Component({
   selector: 'mat-dialog-container',
   templateUrl: 'dialog-container.html',
-  styleUrls: ['dialog.css'],
+  styleUrl: 'dialog.css',
   encapsulation: ViewEncapsulation.None,
   // Disabled for consistency with the non-MDC dialog container.
   // tslint:disable-next-line:validate-decorators

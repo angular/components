@@ -17,7 +17,7 @@ import {MatListBase} from './list-base';
     'class': 'mat-mdc-action-list mat-mdc-list-base mdc-list',
     'role': 'group',
   },
-  styleUrls: ['list.css'],
+  styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatActionList}],

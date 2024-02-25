@@ -59,7 +59,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  styleUrls: ['google-map-demo.css'],
+  styleUrl: 'google-map-demo.css',
   standalone: true,
   imports: [
     CommonModule,

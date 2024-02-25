@@ -10,7 +10,7 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-footer-example',
   templateUrl: 'card-footer-example.html',
-  styleUrls: ['card-footer-example.css'],
+  styleUrl: 'card-footer-example.css',
   standalone: true,
   imports: [MatCardModule, MatDividerModule, MatButtonModule, MatProgressBarModule],
 })

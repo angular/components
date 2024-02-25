@@ -227,8 +227,7 @@ describe('CdkScrollable', () => {
         <div #lastRowEnd class="cell"></div>
       </div>
     </div>`,
-  styles: [
-    `
+  styles: `
     .scroll-container {
       width: 100px;
       height: 100px;
@@ -246,7 +245,6 @@ describe('CdkScrollable', () => {
       height: 100px;
     }
   `,
-  ],
   standalone: true,
   imports: [ScrollingModule],
 })

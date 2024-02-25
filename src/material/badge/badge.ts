@@ -57,7 +57,7 @@ const badgeApps = new Set<ApplicationRef>();
  */
 @Component({
   standalone: true,
-  styleUrls: ['badge.css'],
+  styleUrl: 'badge.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,

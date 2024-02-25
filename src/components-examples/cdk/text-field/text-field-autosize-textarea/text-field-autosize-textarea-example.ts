@@ -9,7 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'text-field-autosize-textarea-example',
   templateUrl: './text-field-autosize-textarea-example.html',
-  styleUrls: ['./text-field-autosize-textarea-example.css'],
+  styleUrl: './text-field-autosize-textarea-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, TextFieldModule],
 })

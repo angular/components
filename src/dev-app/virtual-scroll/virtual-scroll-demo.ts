@@ -29,7 +29,7 @@ type State = {
 @Component({
   selector: 'virtual-scroll-demo',
   templateUrl: 'virtual-scroll-demo.html',
-  styleUrls: ['virtual-scroll-demo.css'],
+  styleUrl: 'virtual-scroll-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

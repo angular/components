@@ -8,7 +8,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 @Component({
   selector: 'button-disabled-interactive-example',
   templateUrl: 'button-disabled-interactive-example.html',
-  styleUrls: ['button-disabled-interactive-example.css'],
+  styleUrl: 'button-disabled-interactive-example.css',
   standalone: true,
   imports: [MatButton, MatTooltip],
 })

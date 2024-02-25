@@ -26,7 +26,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-sorting-example',
-  styleUrls: ['table-sorting-example.css'],
+  styleUrl: 'table-sorting-example.css',
   templateUrl: 'table-sorting-example.html',
   standalone: true,
   imports: [MatTableModule, MatSortModule],

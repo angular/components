@@ -30,7 +30,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
-  styleUrls: ['dialog-demo.css'],
+  styleUrl: 'dialog-demo.css',
   // View encapsulation is disabled since we add the legacy dialog padding
   // styles that need to target the dialog (not only the projected content).
   encapsulation: ViewEncapsulation.None,
@@ -159,7 +159,7 @@ export class DialogDemo {
     </div>
   `,
   encapsulation: ViewEncapsulation.None,
-  styles: [`.hidden-dialog { opacity: 0; }`],
+  styles: `.hidden-dialog { opacity: 0; }`,
   standalone: true,
   imports: [DragDropModule, MatInputModule, MatSelectModule],
 })
@@ -191,14 +191,12 @@ export class JazzDialog {
 
 @Component({
   selector: 'demo-content-element-dialog',
-  styles: [
-    `
+  styles: `
     img {
       max-width: 100%;
       max-height: 800px;
     }
   `,
-  ],
   template: `
     <h2 mat-dialog-title>Neptune</h2>
 
@@ -255,14 +253,12 @@ export class ContentElementDialog {
 
 @Component({
   selector: 'demo-iframe-dialog',
-  styles: [
-    `
+  styles: `
     iframe {
       width: 800px;
       height: 500px;
     }
   `,
-  ],
   template: `
     <h2 mat-dialog-title>Neptune</h2>
 

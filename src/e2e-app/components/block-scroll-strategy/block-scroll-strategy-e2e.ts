@@ -5,7 +5,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 @Component({
   selector: 'block-scroll-strategy-e2e',
   templateUrl: 'block-scroll-strategy-e2e.html',
-  styleUrls: ['block-scroll-strategy-e2e.css'],
+  styleUrl: 'block-scroll-strategy-e2e.css',
   standalone: true,
   imports: [ScrollingModule],
 })

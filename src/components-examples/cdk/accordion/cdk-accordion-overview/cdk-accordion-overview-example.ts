@@ -7,7 +7,7 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
 @Component({
   selector: 'cdk-accordion-overview-example',
   templateUrl: 'cdk-accordion-overview-example.html',
-  styleUrls: ['cdk-accordion-overview-example.css'],
+  styleUrl: 'cdk-accordion-overview-example.css',
   standalone: true,
   imports: [CdkAccordionModule],
 })

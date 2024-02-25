@@ -6,7 +6,7 @@ import {NgTemplateOutlet} from '@angular/common';
 @Component({
   selector: 'cdk-custom-stepper-without-form-example',
   templateUrl: './cdk-custom-stepper-without-form-example.html',
-  styleUrls: ['./cdk-custom-stepper-without-form-example.css'],
+  styleUrl: './cdk-custom-stepper-without-form-example.css',
   standalone: true,
   imports: [forwardRef(() => CustomStepper), CdkStepperModule],
 })
@@ -16,7 +16,7 @@ export class CdkCustomStepperWithoutFormExample {}
 @Component({
   selector: 'example-custom-stepper',
   templateUrl: './example-custom-stepper.html',
-  styleUrls: ['./example-custom-stepper.css'],
+  styleUrl: './example-custom-stepper.css',
   providers: [{provide: CdkStepper, useExisting: CustomStepper}],
   standalone: true,
   imports: [NgTemplateOutlet, CdkStepperModule],

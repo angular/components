@@ -57,7 +57,7 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   templateUrl: 'optgroup.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['optgroup.css'],
+  styleUrl: 'optgroup.css',
   host: {
     'class': 'mat-mdc-optgroup',
     '[attr.role]': '_inert ? null : "group"',

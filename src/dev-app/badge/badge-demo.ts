@@ -16,7 +16,7 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'badge-demo',
   templateUrl: 'badge-demo.html',
-  styleUrls: ['badge-demo.css'],
+  styleUrl: 'badge-demo.css',
   standalone: true,
   imports: [CommonModule, FormsModule, MatBadgeModule, MatButtonModule, MatIconModule],
 })

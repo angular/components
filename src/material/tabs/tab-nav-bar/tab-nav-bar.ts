@@ -59,7 +59,7 @@ let nextUniqueId = 0;
   selector: '[mat-tab-nav-bar]',
   exportAs: 'matTabNavBar, matTabNav',
   templateUrl: 'tab-nav-bar.html',
-  styleUrls: ['tab-nav-bar.css'],
+  styleUrl: 'tab-nav-bar.css',
   host: {
     '[attr.role]': '_getRole()',
     'class': 'mat-mdc-tab-nav-bar mat-mdc-tab-header',
@@ -237,7 +237,7 @@ export class MatTabNav
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',
-  styleUrls: ['tab-link.css'],
+  styleUrl: 'tab-link.css',
   host: {
     'class': 'mdc-tab mat-mdc-tab-link mat-mdc-focus-indicator',
     '[attr.aria-controls]': '_getAriaControls()',

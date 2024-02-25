@@ -97,7 +97,7 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
 @Component({
   selector: 'mat-menu',
   templateUrl: 'menu.html',
-  styleUrls: ['menu.css'],
+  styleUrl: 'menu.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matMenu',

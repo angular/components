@@ -7,7 +7,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-dynamic-height-example',
   templateUrl: 'tab-group-dynamic-height-example.html',
-  styleUrls: ['tab-group-dynamic-height-example.css'],
+  styleUrl: 'tab-group-dynamic-height-example.css',
   standalone: true,
   imports: [MatTabsModule],
 })

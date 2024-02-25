@@ -18,7 +18,7 @@ export class StepperIntl extends MatStepperIntl {
 @Component({
   selector: 'stepper-intl-example',
   templateUrl: 'stepper-intl-example.html',
-  styleUrls: ['stepper-intl-example.css'],
+  styleUrl: 'stepper-intl-example.css',
   providers: [{provide: MatStepperIntl, useClass: StepperIntl}],
   standalone: true,
   imports: [

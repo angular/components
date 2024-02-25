@@ -347,7 +347,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
 @Component({
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
-  styleUrls: ['radio.css'],
+  styleUrl: 'radio.css',
   host: {
     'class': 'mat-mdc-radio-button',
     '[attr.id]': 'id',

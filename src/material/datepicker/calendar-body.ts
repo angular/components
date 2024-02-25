@@ -80,7 +80,7 @@ const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
 @Component({
   selector: '[mat-calendar-body]',
   templateUrl: 'calendar-body.html',
-  styleUrls: ['calendar-body.css'],
+  styleUrl: 'calendar-body.css',
   host: {
     'class': 'mat-calendar-body',
   },

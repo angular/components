@@ -8,7 +8,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-exclusive-example',
   templateUrl: 'button-toggle-exclusive-example.html',
-  styleUrls: ['button-toggle-exclusive-example.css'],
+  styleUrl: 'button-toggle-exclusive-example.css',
   standalone: true,
   imports: [MatButtonToggleModule, MatIconModule],
 })

@@ -15,7 +15,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'focus-monitor-focus-via-example',
   templateUrl: 'focus-monitor-focus-via-example.html',
-  styleUrls: ['focus-monitor-focus-via-example.css'],
+  styleUrl: 'focus-monitor-focus-via-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatSelectModule],
 })

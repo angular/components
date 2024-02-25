@@ -20,7 +20,7 @@ export interface State {
 @Component({
   selector: 'autocomplete-overview-example',
   templateUrl: 'autocomplete-overview-example.html',
-  styleUrls: ['autocomplete-overview-example.css'],
+  styleUrl: 'autocomplete-overview-example.css',
   standalone: true,
   imports: [
     FormsModule,

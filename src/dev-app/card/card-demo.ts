@@ -15,7 +15,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'card-demo',
   templateUrl: 'card-demo.html',
-  styleUrls: ['card-demo.css'],
+  styleUrl: 'card-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [MatCardModule, MatButtonModule, MatCheckboxModule, FormsModule],

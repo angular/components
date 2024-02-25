@@ -15,7 +15,7 @@ import {AsyncPipe} from '@angular/common';
 @Component({
   selector: 'stepper-responsive-example',
   templateUrl: 'stepper-responsive-example.html',
-  styleUrls: ['stepper-responsive-example.css'],
+  styleUrl: 'stepper-responsive-example.css',
   standalone: true,
   imports: [
     MatStepperModule,

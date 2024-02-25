@@ -13,7 +13,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({
   selector: 'stepper-states-example',
   templateUrl: 'stepper-states-example.html',
-  styleUrls: ['stepper-states-example.css'],
+  styleUrl: 'stepper-states-example.css',
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,

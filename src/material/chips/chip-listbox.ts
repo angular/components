@@ -63,7 +63,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
       <ng-content></ng-content>
     </div>
   `,
-  styleUrls: ['chip-set.css'],
+  styleUrl: 'chip-set.css',
   host: {
     'class': 'mdc-evolution-chip-set mat-mdc-chip-listbox',
     '[attr.role]': 'role',

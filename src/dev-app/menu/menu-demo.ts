@@ -17,7 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'menu-demo',
   templateUrl: 'menu-demo.html',
-  styleUrls: ['menu-demo.css'],
+  styleUrl: 'menu-demo.css',
   standalone: true,
   imports: [
     CommonModule,

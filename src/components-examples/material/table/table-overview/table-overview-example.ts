@@ -50,7 +50,7 @@ const NAMES: string[] = [
  */
 @Component({
   selector: 'table-overview-example',
-  styleUrls: ['table-overview-example.css'],
+  styleUrl: 'table-overview-example.css',
   templateUrl: 'table-overview-example.html',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],

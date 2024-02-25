@@ -7,7 +7,7 @@ import {CdkDrag} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'cdk-drag-drop-free-drag-position-example',
   templateUrl: 'cdk-drag-drop-free-drag-position-example.html',
-  styleUrls: ['cdk-drag-drop-free-drag-position-example.css'],
+  styleUrl: 'cdk-drag-drop-free-drag-position-example.css',
   standalone: true,
   imports: [CdkDrag],
 })

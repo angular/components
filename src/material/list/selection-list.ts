@@ -61,7 +61,7 @@ export class MatSelectionListChange {
     '(keydown)': '_handleKeydown($event)',
   },
   template: '<ng-content></ng-content>',
-  styleUrls: ['list.css'],
+  styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
   providers: [
     MAT_SELECTION_LIST_VALUE_ACCESSOR,
