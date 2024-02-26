@@ -101,10 +101,13 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     accordion: MatAccordionBase;
     readonly afterCollapse: EventEmitter<void>;
     readonly afterExpand: EventEmitter<void>;
+    protected _animationDone(event: AnimationEvent_2): void;
     // (undocumented)
     _animationMode: string;
+    // (undocumented)
+    protected _animationsDisabled: boolean;
+    protected _animationStarted(event: AnimationEvent_2): void;
     _body: ElementRef<HTMLElement>;
-    readonly _bodyAnimationDone: Subject<AnimationEvent_2>;
     close(): void;
     _containsFocus(): boolean;
     _getExpandedState(): MatExpansionPanelState;
