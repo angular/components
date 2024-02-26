@@ -35,7 +35,9 @@ $${name}-theme: mat.define-light-theme((
     primary: $${name}-primary,
     accent: $${name}-accent,
     warn: $${name}-warn,
-  )
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
 ));
 
 // Include theme styles for core and each component used in your app.
