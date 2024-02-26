@@ -56,9 +56,9 @@ import {eventDispatchesNativeClick} from './event-detection';
     '(click)': '_handleClick()',
   },
   inputs: [
-    'menuTemplateRef: cdkMenuTriggerFor',
-    'menuPosition: cdkMenuPosition',
-    'menuData: cdkMenuTriggerData',
+    {name: 'menuTemplateRef', alias: 'cdkMenuTriggerFor'},
+    {name: 'menuPosition', alias: 'cdkMenuPosition'},
+    {name: 'menuData', alias: 'cdkMenuTriggerData'},
   ],
   outputs: ['opened: cdkMenuOpened', 'closed: cdkMenuClosed'],
   providers: [

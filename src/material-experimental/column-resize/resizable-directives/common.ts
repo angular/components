@@ -27,6 +27,6 @@ export const RESIZABLE_HOST_BINDINGS = {
 };
 
 export const RESIZABLE_INPUTS = [
-  'minWidthPx: matResizableMinWidthPx',
-  'maxWidthPx: matResizableMaxWidthPx',
+  {name: 'minWidthPx', alias: 'matResizableMinWidthPx'},
+  {name: 'maxWidthPx', alias: 'matResizableMaxWidthPx'},
 ];

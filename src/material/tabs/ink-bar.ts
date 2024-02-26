@@ -14,8 +14,8 @@ import {
   OnDestroy,
   OnInit,
   QueryList,
+  booleanAttribute,
   inject,
-  numberAttribute,
 } from '@angular/core';
 
 /**
@@ -79,7 +79,7 @@ export abstract class InkBarItem implements OnInit, OnDestroy {
   private _fitToContent = false;
 
   /** Whether the ink bar should fit to the entire tab or just its content. */
-  @Input({transform: numberAttribute})
+  @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
     return this._fitToContent;
   }

@@ -19,6 +19,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   Inject,
+  Input,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} from './portal';
@@ -70,7 +71,6 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 @Directive({
   selector: '[cdkPortalOutlet]',
   exportAs: 'cdkPortalOutlet',
-  inputs: ['portal: cdkPortalOutlet'],
   standalone: true,
 })
 export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestroy {
@@ -97,6 +97,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   }
 
   /** Portal associated with the Portal outlet. */
+  @Input('cdkPortalOutlet')
   get portal(): Portal<any> | null {
     return this._attachedPortal;
   }
@@ -251,7 +252,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
 @Directive({
   selector: '[cdkPortalHost], [portalHost]',
   exportAs: 'cdkPortalHost',
-  inputs: ['portal: cdkPortalHost'],
+  inputs: [{name: 'portal', alias: 'cdkPortalHost'}],
   providers: [
     {
       provide: CdkPortalOutlet,
