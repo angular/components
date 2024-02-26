@@ -101,6 +101,7 @@ export class MatExpansionPanel
   extends CdkAccordionItem
   implements AfterContentInit, OnChanges, OnDestroy
 {
+  private _disableToggle = false;
   private _document: Document;
 
   /** Whether the toggle indicator should be hidden. */
@@ -112,6 +113,15 @@ export class MatExpansionPanel
     this._hideToggle = value;
   }
   private _hideToggle = false;
+
+  /** Whether the toggle functionality should be disabled. */
+  @Input()
+  get disableToggle(): boolean {
+    return this._disableToggle || (this.accordion && this.accordion.disableToggle);
+  }
+  set disableToggle(value: BooleanInput) {
+    this._disableToggle = coerceBooleanProperty(value);
+  }
 
   /** The position of the expansion indicator. */
   @Input()
@@ -203,6 +213,9 @@ export class MatExpansionPanel
 
   /** Toggles the expanded state of the expansion panel. */
   override toggle(): void {
+    if (this.disableToggle) {
+      return;
+    }
     this.expanded = !this.expanded;
   }
 
