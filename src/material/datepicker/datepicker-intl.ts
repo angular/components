@@ -18,7 +18,11 @@ export class MatDatepickerIntl {
    */
   readonly changes: Subject<void> = new Subject<void>();
 
-  /** A label for the calendar popup (used by screen readers). */
+  /**
+   * A label for the calendar popup (used by screen readers).
+   * @deprecated Provide your own internationalization string.
+   * @breaking-change 20.0.0
+   */
   calendarLabel = 'Calendar';
 
   /** A label for the button used to open the calendar popup (used by screen readers). */
