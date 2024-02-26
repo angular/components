@@ -815,7 +815,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     let width: number, left: number, right: number;
 
     if (isBoundedByLeftViewportEdge) {
-      right = viewport.width - origin.x + this._viewportMargin;
+      right = viewport.width - origin.x + this._viewportMargin * 2;
       width = origin.x - this._viewportMargin;
     } else if (isBoundedByRightViewportEdge) {
       left = origin.x;
