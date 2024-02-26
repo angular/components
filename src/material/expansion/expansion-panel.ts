@@ -36,7 +36,7 @@ import {
   ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {Subject} from 'rxjs';
-import {distinctUntilChanged, filter, startWith, take} from 'rxjs/operators';
+import {filter, startWith, take} from 'rxjs/operators';
 import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
 import {matExpansionAnimations} from './expansion-animations';
 import {MAT_EXPANSION_PANEL} from './expansion-panel-base';
@@ -91,7 +91,7 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[class._mat-animation-noopable]': '_animationsDisabled',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
   standalone: true,
@@ -101,6 +101,7 @@ export class MatExpansionPanel
   extends CdkAccordionItem
   implements AfterContentInit, OnChanges, OnDestroy
 {
+  protected _animationsDisabled: boolean;
   private _document: Document;
 
   /** Whether the toggle indicator should be hidden. */
@@ -147,9 +148,6 @@ export class MatExpansionPanel
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;
 
-  /** Stream of body animation done events. */
-  readonly _bodyAnimationDone = new Subject<AnimationEvent>();
-
   constructor(
     @Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
     _changeDetectorRef: ChangeDetectorRef,
@@ -164,24 +162,7 @@ export class MatExpansionPanel
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
-
-    // We need a Subject with distinctUntilChanged, because the `done` event
-    // fires twice on some browsers. See https://github.com/angular/angular/issues/24084
-    this._bodyAnimationDone
-      .pipe(
-        distinctUntilChanged((x, y) => {
-          return x.fromState === y.fromState && x.toState === y.toState;
-        }),
-      )
-      .subscribe(event => {
-        if (event.fromState !== 'void') {
-          if (event.toState === 'expanded') {
-            this.afterExpand.emit();
-          } else if (event.toState === 'collapsed') {
-            this.afterCollapse.emit();
-          }
-        }
-      });
+    this._animationsDisabled = _animationMode === 'NoopAnimations';
 
     if (defaultOptions) {
       this.hideToggle = defaultOptions.hideToggle;
@@ -237,7 +218,6 @@ export class MatExpansionPanel
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-    this._bodyAnimationDone.complete();
     this._inputChanges.complete();
   }
 
@@ -251,6 +231,37 @@ export class MatExpansionPanel
 
     return false;
   }
+
+  /** Called when the expansion animation has started. */
+  protected _animationStarted(event: AnimationEvent) {
+    if (!isInitialAnimation(event) && !this._animationsDisabled && this._body) {
+      // Prevent the user from tabbing into the content while it's animating.
+      // TODO(crisbeto): maybe use `inert` to prevent focus from entering while closed as well
+      // instead of `visibility`? Will allow us to clean up some code but needs more testing.
+      this._body?.nativeElement.setAttribute('inert', '');
+    }
+  }
+
+  /** Called when the expansion animation has finished. */
+  protected _animationDone(event: AnimationEvent) {
+    if (!isInitialAnimation(event)) {
+      if (event.toState === 'expanded') {
+        this.afterExpand.emit();
+      } else if (event.toState === 'collapsed') {
+        this.afterCollapse.emit();
+      }
+
+      // Re-enable tabbing once the animation is finished.
+      if (!this._animationsDisabled && this._body) {
+        this._body.nativeElement.removeAttribute('inert');
+      }
+    }
+  }
+}
+
+/** Checks whether an animation is the initial setup animation. */
+function isInitialAnimation(event: AnimationEvent): boolean {
+  return event.fromState === 'void';
 }
 
 /**
