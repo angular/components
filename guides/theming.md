@@ -193,6 +193,7 @@ $my-theme: mat.define-light-theme((
    primary: $my-primary,
    accent: $my-accent,
  ),
+ typography: mat.define-typography-config(),
  density: 0,
 ));
 
@@ -536,14 +537,14 @@ the CSS in each shadow root, or by using [Constructable Stylesheets][constructab
 
 ## User preference media queries
 
-Angular Material does not apply styles based on user preference media queries, such as 
+Angular Material does not apply styles based on user preference media queries, such as
 `prefers-color-scheme` or `prefers-contrast`. Instead, Angular Material's Sass mixins give you the
 flexibility to apply theme styles to based on the conditions that make the most sense for your
 users. This may mean using media queries directly or reading a saved user preference.
 
 ## Style customization outside the theming system
 
-Angular Material supports customizing color, typography, and density as outlined in this document. 
-Angular strongly discourages, and does not directly support, overriding component CSS outside the 
-theming APIs described above. Component DOM structure and CSS classes are considered private 
+Angular Material supports customizing color, typography, and density as outlined in this document.
+Angular strongly discourages, and does not directly support, overriding component CSS outside the
+theming APIs described above. Component DOM structure and CSS classes are considered private
 implementation details that may change at any time.
