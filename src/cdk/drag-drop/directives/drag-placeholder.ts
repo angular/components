@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef, Input, InjectionToken} from '@angular/core';
+import {Directive, TemplateRef, Input, InjectionToken, inject, OnDestroy} from '@angular/core';
+import {CDK_DRAG_PARENT} from '../drag-parent';
 
 /**
  * Injection token that can be used to reference instances of `CdkDragPlaceholder`. It serves as
@@ -24,8 +25,17 @@ export const CDK_DRAG_PLACEHOLDER = new InjectionToken<CdkDragPlaceholder>('CdkD
   standalone: true,
   providers: [{provide: CDK_DRAG_PLACEHOLDER, useExisting: CdkDragPlaceholder}],
 })
-export class CdkDragPlaceholder<T = any> {
+export class CdkDragPlaceholder<T = any> implements OnDestroy {
+  private _drag = inject(CDK_DRAG_PARENT);
+
   /** Context data to be added to the placeholder template instance. */
   @Input() data: T;
-  constructor(public templateRef: TemplateRef<T>) {}
+
+  constructor(public templateRef: TemplateRef<T>) {
+    this._drag._setPlaceholderTemplate(this);
+  }
+
+  ngOnDestroy(): void {
+    this._drag._resetPlaceholderTemplate(this);
+  }
 }

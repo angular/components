@@ -18,6 +18,7 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import {Subject} from 'rxjs';
+import type {CdkDrag} from './drag';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {assertElementNode} from './assertions';
 
@@ -38,9 +39,6 @@ export const CDK_DRAG_HANDLE = new InjectionToken<CdkDragHandle>('CdkDragHandle'
   providers: [{provide: CDK_DRAG_HANDLE, useExisting: CdkDragHandle}],
 })
 export class CdkDragHandle implements OnDestroy {
-  /** Closest parent draggable instance. */
-  _parentDrag: {} | undefined;
-
   /** Emits when the state of the handle has changed. */
   readonly _stateChanges = new Subject<CdkDragHandle>();
 
@@ -57,16 +55,17 @@ export class CdkDragHandle implements OnDestroy {
 
   constructor(
     public element: ElementRef<HTMLElement>,
-    @Inject(CDK_DRAG_PARENT) @Optional() @SkipSelf() parentDrag?: any,
+    @Inject(CDK_DRAG_PARENT) @Optional() @SkipSelf() private _parentDrag?: CdkDrag,
   ) {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       assertElementNode(element.nativeElement, 'cdkDragHandle');
     }
 
-    this._parentDrag = parentDrag;
+    _parentDrag?._addHandle(this);
   }
 
   ngOnDestroy() {
+    this._parentDrag?._removeHandle(this);
     this._stateChanges.complete();
   }
 }
