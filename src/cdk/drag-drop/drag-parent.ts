@@ -7,6 +7,7 @@
  */
 
 import {InjectionToken} from '@angular/core';
+import type {CdkDrag} from './directives/drag';
 
 /**
  * Injection token that can be used for a `CdkDrag` to provide itself as a parent to the
@@ -14,4 +15,4 @@ import {InjectionToken} from '@angular/core';
  * to avoid circular imports.
  * @docs-private
  */
-export const CDK_DRAG_PARENT = new InjectionToken<{}>('CDK_DRAG_PARENT');
+export const CDK_DRAG_PARENT = new InjectionToken<CdkDrag>('CDK_DRAG_PARENT');

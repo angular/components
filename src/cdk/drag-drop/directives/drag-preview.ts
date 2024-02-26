@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, InjectionToken, Input, TemplateRef, booleanAttribute} from '@angular/core';
+import {
+  Directive,
+  InjectionToken,
+  Input,
+  OnDestroy,
+  TemplateRef,
+  booleanAttribute,
+  inject,
+} from '@angular/core';
+import {CDK_DRAG_PARENT} from '../drag-parent';
 
 /**
  * Injection token that can be used to reference instances of `CdkDragPreview`. It serves as
@@ -24,12 +33,20 @@ export const CDK_DRAG_PREVIEW = new InjectionToken<CdkDragPreview>('CdkDragPrevi
   standalone: true,
   providers: [{provide: CDK_DRAG_PREVIEW, useExisting: CdkDragPreview}],
 })
-export class CdkDragPreview<T = any> {
+export class CdkDragPreview<T = any> implements OnDestroy {
+  private _drag = inject(CDK_DRAG_PARENT);
+
   /** Context data to be added to the preview template instance. */
   @Input() data: T;
 
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
 
-  constructor(public templateRef: TemplateRef<T>) {}
+  constructor(public templateRef: TemplateRef<T>) {
+    this._drag._setPreviewTemplate(this);
+  }
+
+  ngOnDestroy(): void {
+    this._drag._resetPreviewTemplate(this);
+  }
 }
