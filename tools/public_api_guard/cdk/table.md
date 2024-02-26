@@ -309,7 +309,7 @@ export class CdkRowDef<T> extends BaseRowDef {
 export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform, _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>, _coalescedStyleScheduler: _CoalescedStyleScheduler, _viewportRuler: ViewportRuler,
     _stickyPositioningListener: StickyPositioningListener,
-    _ngZone?: NgZone | undefined);
+    _unusedNgZone?: NgZone);
     addColumnDef(columnDef: CdkColumnDef): void;
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
@@ -360,8 +360,6 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // @deprecated (undocumented)
-    protected readonly _ngZone?: NgZone | undefined;
     _noDataRow: CdkNoDataRow;
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;

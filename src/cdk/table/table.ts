@@ -53,6 +53,8 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -62,7 +64,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from './coalesced-style-scheduler';
 import {
@@ -592,6 +594,8 @@ export class CdkTable<T>
   /** Row definition that will only be rendered if there's no data in the table. */
   @ContentChild(CdkNoDataRow) _noDataRow: CdkNoDataRow;
 
+  private _injector = inject(Injector);
+
   constructor(
     protected readonly _differs: IterableDiffers,
     protected readonly _changeDetectorRef: ChangeDetectorRef,
@@ -614,11 +618,10 @@ export class CdkTable<T>
     @Inject(STICKY_POSITIONING_LISTENER)
     protected readonly _stickyPositioningListener: StickyPositioningListener,
     /**
-     * @deprecated `_ngZone` parameter to become required.
-     * @breaking-change 14.0.0
+     * @deprecated `_unusedNgZone` parameter to be removed.
+     * @breaking-change 19.0.0
      */
-    @Optional()
-    protected readonly _ngZone?: NgZone,
+    @Optional() _unusedNgZone?: NgZone,
   ) {
     if (!role) {
       _elementRef.nativeElement.setAttribute('role', 'table');
@@ -732,15 +735,12 @@ export class CdkTable<T>
 
     this._updateNoDataRow();
 
-    // Allow the new row data to render before measuring it.
-    // @breaking-change 14.0.0 Remove undefined check once _ngZone is required.
-    if (this._ngZone && NgZone.isInAngularZone()) {
-      this._ngZone.onStable.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
+    afterNextRender(
+      () => {
         this.updateStickyColumnStyles();
-      });
-    } else {
-      this.updateStickyColumnStyles();
-    }
+      },
+      {injector: this._injector},
+    );
 
     this.contentChanged.next();
   }
