@@ -22,10 +22,10 @@ const POPOVER_EDIT_HOST_BINDINGS = {
 };
 
 const POPOVER_EDIT_INPUTS = [
-  'template: matPopoverEdit',
-  'context: matPopoverEditContext',
-  'colspan: matPopoverEditColspan',
-  'disabled: matPopoverEditDisabled',
+  {name: 'template', alias: 'matPopoverEdit'},
+  {name: 'context', alias: 'matPopoverEditContext'},
+  {name: 'colspan', alias: 'matPopoverEditColspan'},
+  {name: 'disabled', alias: 'matPopoverEditDisabled'},
 ];
 
 const EDIT_PANE_CLASS = 'mat-edit-pane';

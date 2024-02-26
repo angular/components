@@ -75,7 +75,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
  */
 @Directive({
   selector: '[matTreeNodeDef]',
-  inputs: ['when: matTreeNodeDefWhen'],
+  inputs: [{name: 'when', alias: 'matTreeNodeDefWhen'}],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
   standalone: true,
 })
