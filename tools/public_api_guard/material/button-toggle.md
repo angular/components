@@ -34,7 +34,6 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     set appearance(value: MatButtonToggleAppearance);
     ariaLabel: string;
     ariaLabelledby: string | null;
-    _buttonElement: ElementRef<HTMLButtonElement>;
     get buttonId(): string;
     buttonToggleGroup: MatButtonToggleGroup;
     readonly change: EventEmitter<MatButtonToggleChange>;
@@ -44,8 +43,10 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     set disabled(value: boolean);
     disableRipple: boolean;
     focus(options?: FocusOptions): void;
+    _getAriaPressed(): boolean | null;
     _getButtonName(): string | null;
     id: string;
+    _inputElement: ElementRef<HTMLInputElement>;
     _markForCheck(): void;
     name: string;
     // (undocumented)
@@ -61,7 +62,9 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     _onButtonClick(): void;
+    _onInteractionEvent(event: Event): void;
     tabIndex: number | null;
+    get type(): string;
     value: any;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatButtonToggle, "mat-button-toggle", ["matButtonToggle"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, never, ["*"], true, never>;

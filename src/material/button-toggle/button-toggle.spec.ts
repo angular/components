@@ -97,7 +97,7 @@ describe('MatButtonToggle with forms', () => {
       buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
       innerButtons = buttonToggleDebugElements.map(
-        debugEl => debugEl.query(By.css('button'))!.nativeElement,
+        debugEl => debugEl.query(By.css('input'))!.nativeElement,
       );
 
       fixture.detectChanges();
@@ -256,7 +256,7 @@ describe('MatButtonToggle with forms', () => {
     const fixture = TestBed.createComponent(ButtonToggleGroupWithIndirectDescendantToggles);
     fixture.detectChanges();
 
-    const button = fixture.nativeElement.querySelector('.mat-button-toggle button');
+    const button = fixture.nativeElement.querySelector('.mat-button-toggle input');
     const groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup))!;
     const groupInstance =
       groupDebugElement.injector.get<MatButtonToggleGroup>(MatButtonToggleGroup);
@@ -359,7 +359,7 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleNativeElements = buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
 
       buttonToggleLabelElements = fixture.debugElement
-        .queryAll(By.css('button'))
+        .queryAll(By.css('input'))
         .map(debugEl => debugEl.nativeElement);
 
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
@@ -401,7 +401,7 @@ describe('MatButtonToggle without forms', () => {
     });
 
     it('should disable the underlying button when the group is disabled', () => {
-      const buttons = buttonToggleNativeElements.map(toggle => toggle.querySelector('button')!);
+      const buttons = buttonToggleNativeElements.map(toggle => toggle.querySelector('input')!);
 
       expect(buttons.every(input => input.disabled)).toBe(false);
 
@@ -595,7 +595,7 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
       buttonToggleNativeElements = buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleLabelElements = fixture.debugElement
-        .queryAll(By.css('button'))
+        .queryAll(By.css('input'))
         .map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
     }));
@@ -612,7 +612,7 @@ describe('MatButtonToggle without forms', () => {
       expect(buttonToggleInstances.every(buttonToggle => !buttonToggle.checked)).toBe(true);
 
       const nativeCheckboxLabel = buttonToggleDebugElements[0].query(
-        By.css('button'),
+        By.css('input'),
       )!.nativeElement;
 
       nativeCheckboxLabel.click();
@@ -638,7 +638,7 @@ describe('MatButtonToggle without forms', () => {
 
     it('should check a button toggle upon interaction with underlying native checkbox', () => {
       const nativeCheckboxButton = buttonToggleDebugElements[0].query(
-        By.css('button'),
+        By.css('input'),
       )!.nativeElement;
 
       nativeCheckboxButton.click();
@@ -722,7 +722,7 @@ describe('MatButtonToggle without forms', () => {
       )!.nativeElement;
       buttonToggleInstance = buttonToggleDebugElement.componentInstance;
       buttonToggleButtonElement = buttonToggleNativeElement.querySelector(
-        'button',
+        'input',
       )! as HTMLButtonElement;
     }));
 
@@ -761,7 +761,7 @@ describe('MatButtonToggle without forms', () => {
     }));
 
     it('should focus on underlying input element when focus() is called', () => {
-      const nativeButton = buttonToggleDebugElement.query(By.css('button'))!.nativeElement;
+      const nativeButton = buttonToggleDebugElement.query(By.css('input'))!.nativeElement;
       expect(document.activeElement).not.toBe(nativeButton);
 
       buttonToggleInstance.focus();
@@ -790,7 +790,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(StandaloneButtonToggle);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
-      const buttonElement = checkboxNativeElement.querySelector('button') as HTMLButtonElement;
+      const buttonElement = checkboxNativeElement.querySelector('input') as HTMLButtonElement;
 
       fixture.detectChanges();
       expect(buttonElement.hasAttribute('aria-label')).toBe(false);
@@ -800,7 +800,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithAriaLabel);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
-      const buttonElement = checkboxNativeElement.querySelector('button') as HTMLButtonElement;
+      const buttonElement = checkboxNativeElement.querySelector('input') as HTMLButtonElement;
 
       fixture.detectChanges();
       expect(buttonElement.getAttribute('aria-label')).toBe('Super effective');
@@ -825,7 +825,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithAriaLabelledby);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
-      buttonElement = checkboxNativeElement.querySelector('button') as HTMLButtonElement;
+      buttonElement = checkboxNativeElement.querySelector('input') as HTMLButtonElement;
 
       fixture.detectChanges();
       expect(buttonElement.getAttribute('aria-labelledby')).toBe('some-id');
@@ -835,7 +835,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(StandaloneButtonToggle);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
-      buttonElement = checkboxNativeElement.querySelector('button') as HTMLButtonElement;
+      buttonElement = checkboxNativeElement.querySelector('input') as HTMLButtonElement;
 
       fixture.detectChanges();
       expect(buttonElement.getAttribute('aria-labelledby')).toBe(null);
@@ -847,7 +847,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
 
-      const button = fixture.nativeElement.querySelector('.mat-button-toggle button');
+      const button = fixture.nativeElement.querySelector('.mat-button-toggle input');
 
       expect(button.getAttribute('tabindex')).toBe('3');
     });
@@ -866,7 +866,7 @@ describe('MatButtonToggle without forms', () => {
       fixture.detectChanges();
 
       const host = fixture.nativeElement.querySelector('.mat-button-toggle');
-      const button = host.querySelector('button');
+      const button = host.querySelector('input');
 
       expect(document.activeElement).not.toBe(button);
 
@@ -891,7 +891,7 @@ describe('MatButtonToggle without forms', () => {
     const hostNode: HTMLElement = fixture.nativeElement.querySelector('.mat-button-toggle');
 
     expect(hostNode.hasAttribute('name')).toBe(false);
-    expect(hostNode.querySelector('button')!.getAttribute('name')).toBe('custom-name');
+    expect(hostNode.querySelector('input')!.getAttribute('name')).toBe('custom-name');
   });
 
   it(

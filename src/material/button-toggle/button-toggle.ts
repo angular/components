@@ -106,8 +106,8 @@ export class MatButtonToggleChange {
     {provide: MAT_BUTTON_TOGGLE_GROUP, useExisting: MatButtonToggleGroup},
   ],
   host: {
-    'role': 'group',
     'class': 'mat-button-toggle-group',
+    '[role]': "multiple ? 'group' : 'radiogroup'",
     '[attr.aria-disabled]': 'disabled',
     '[class.mat-button-toggle-vertical]': 'vertical',
     '[class.mat-button-toggle-group-appearance-standard]': 'appearance === "standard"',
@@ -417,8 +417,13 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
    */
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
+  /** Type of the button toggle. Either 'radio' or 'button'. */
+  get type(): string {
+    return this._isSingleSelector() ? 'radio' : 'button';
+  }
+
   /** Underlying native `button` element. */
-  @ViewChild('button') _buttonElement: ElementRef<HTMLButtonElement>;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MatButtonToggleGroup;
@@ -536,7 +541,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
   /** Focuses the button. */
   focus(options?: FocusOptions): void {
-    this._buttonElement.nativeElement.focus(options);
+    this._inputElement.nativeElement.focus(options);
   }
 
   /** Checks the button toggle due to an interaction with the underlying native button. */
@@ -552,6 +557,15 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     }
     // Emit a change event when it's the single selector
     this.change.emit(new MatButtonToggleChange(this, this.value));
+  }
+
+  /**
+   * Stop propagation on the change event.
+   * Otherwise the change event, from the input element, will bubble up and
+   * emit its event object to the `change` output.
+   */
+  _onInteractionEvent(event: Event) {
+    event.stopPropagation();
   }
 
   /**
@@ -571,6 +585,24 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
       return this.buttonToggleGroup.name;
     }
     return this.name || null;
+  }
+
+  /** Get the aria-pressed attribute value. */
+  _getAriaPressed(): boolean | null {
+    // When the toggle button stands alone, or in multiple selection mode, use aria-pressed attribute.
+    if (!this._isSingleSelector()) {
+      return this.checked;
+    }
+    return null;
+  }
+
+  /** Get the check property value. */
+  _getChecked(): boolean | null {
+    // When the toggle button is in single selection mode, use checked property.
+    if (this._isSingleSelector()) {
+      return this.checked;
+    }
+    return null;
   }
 
   /** Whether the toggle is in single selection mode. */
