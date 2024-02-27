@@ -4,17 +4,9 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-  MockNgZone,
 } from '@angular/cdk/testing/private';
-import {Component, NgZone} from '@angular/core';
-import {
-  fakeAsync,
-  waitForAsync,
-  ComponentFixture,
-  inject,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
@@ -23,16 +15,10 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
-  let zone: MockNgZone;
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],
-      providers: [
-        MatDatepickerIntl,
-        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
-        {provide: Directionality, useFactory: () => ({value: 'ltr'})},
-      ],
+      providers: [MatDatepickerIntl, {provide: Directionality, useFactory: () => ({value: 'ltr'})}],
       declarations: [
         // Test components.
         StandardCalendar,
@@ -183,19 +169,19 @@ describe('MatCalendar', () => {
           expect(calendarBodyEl.getAttribute('tabindex')).toBe('-1');
         });
 
-        it('should not move focus to the active cell on init', () => {
+        it('should not move focus to the active cell on init', waitForAsync(async () => {
           const activeCell = calendarBodyEl.querySelector(
             '.mat-calendar-body-active',
           )! as HTMLElement;
 
           spyOn(activeCell, 'focus').and.callThrough();
           fixture.detectChanges();
-          zone.simulateZoneExit();
+          await new Promise(resolve => setTimeout(resolve));
 
           expect(activeCell.focus).not.toHaveBeenCalled();
-        });
+        }));
 
-        it('should move focus to the active cell when the view changes', fakeAsync(() => {
+        it('should move focus to the active cell when the view changes', waitForAsync(async () => {
           calendarInstance.currentView = 'multi-year';
           fixture.detectChanges();
 
@@ -204,8 +190,7 @@ describe('MatCalendar', () => {
           )! as HTMLElement;
           spyOn(activeCell, 'focus').and.callThrough();
 
-          zone.simulateZoneExit();
-          tick();
+          await new Promise(resolve => setTimeout(resolve));
 
           expect(activeCell.focus).toHaveBeenCalled();
         }));

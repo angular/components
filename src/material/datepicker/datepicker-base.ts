@@ -51,6 +51,8 @@ import {
   OnInit,
   inject,
   booleanAttribute,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import {DateAdapter, ThemePalette} from '@angular/material/core';
 import {AnimationEvent} from '@angular/animations';
@@ -509,9 +511,15 @@ export abstract class MatDatepickerBase<
   /** Emits when the datepicker's state changes. */
   readonly stateChanges = new Subject<void>();
 
+  private _injector = inject(Injector);
+
   constructor(
     private _overlay: Overlay,
-    private _ngZone: NgZone,
+    /**
+     * @deprecated parameter is unused and will be removed
+     * @breaking-change 19.0.0
+     */
+    _unusedNgZone: NgZone,
     private _viewContainerRef: ViewContainerRef,
     @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dateAdapter: DateAdapter<D>,
@@ -749,7 +757,12 @@ export abstract class MatDatepickerBase<
 
     // Update the position once the calendar has rendered. Only relevant in dropdown mode.
     if (!isDialog) {
-      this._ngZone.onStable.pipe(take(1)).subscribe(() => overlayRef.updatePosition());
+      afterNextRender(
+        () => {
+          overlayRef.updatePosition();
+        },
+        {injector: this._injector},
+      );
     }
   }
 
