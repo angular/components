@@ -123,7 +123,7 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
-  /** Emits when the paginator is initialized. */
+  /** Emits when the sort is initialized. */
   initialized: Observable<void> = this._initializedStream;
 
   constructor(
