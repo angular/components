@@ -8,8 +8,8 @@
 
 import {
   ActiveDescendantKeyManager,
-  LiveAnnouncer,
   addAriaReferencedId,
+  LiveAnnouncer,
   removeAriaReferencedId,
 } from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -35,6 +35,7 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -45,9 +46,11 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
   Input,
   NgZone,
+  numberAttribute,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -58,9 +61,6 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  booleanAttribute,
-  inject,
-  numberAttribute,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -71,17 +71,17 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  _countGroupLabelsBeforeOption,
   _ErrorStateTracker,
+  _getOptionScrollPosition,
   ErrorStateMatcher,
+  MAT_OPTGROUP,
+  MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
-  MAT_OPTGROUP,
-  MAT_OPTION_PARENT_COMPONENT,
-  _countGroupLabelsBeforeOption,
-  _getOptionScrollPosition,
 } from '@angular/material/core';
-import {MatFormField, MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {
   distinctUntilChanged,
@@ -542,6 +542,8 @@ export class MatSelect
       ? this._defaultOptions.panelWidth
       : 'auto';
 
+  private _initialized = new Subject();
+
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
     const options = this.options;
@@ -553,11 +555,8 @@ export class MatSelect
       );
     }
 
-    return this._ngZone.onStable.pipe(
-      take(1),
-      switchMap(() => this.optionSelectionChanges),
-    );
-  }) as Observable<MatOptionSelectionChange>;
+    return this._initialized.pipe(switchMap(() => this.optionSelectionChanges));
+  });
 
   /** Event emitted when the select panel has been toggled. */
   @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -587,7 +586,11 @@ export class MatSelect
   constructor(
     protected _viewportRuler: ViewportRuler,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _ngZone: NgZone,
+    /**
+     * @deprecated Unused param, will be removed.
+     * @breaking-change 19.0.0
+     */
+    _unusedNgZone: NgZone,
     defaultErrorStateMatcher: ErrorStateMatcher,
     readonly _elementRef: ElementRef,
     @Optional() private _dir: Directionality,
@@ -650,6 +653,9 @@ export class MatSelect
   }
 
   ngAfterContentInit() {
+    this._initialized.next();
+    this._initialized.complete();
+
     this._initKeyManager();
 
     this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
