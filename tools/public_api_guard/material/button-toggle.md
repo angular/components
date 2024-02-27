@@ -24,6 +24,9 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatButtonToggleDe
 // @public
 export const MAT_BUTTON_TOGGLE_GROUP: InjectionToken<MatButtonToggleGroup>;
 
+// @public (undocumented)
+export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions;
+
 // @public
 export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
@@ -84,6 +87,8 @@ export class MatButtonToggleChange {
 // @public
 export interface MatButtonToggleDefaultOptions {
     appearance?: MatButtonToggleAppearance;
+    hideMultipleSelectionIndicator?: boolean;
+    hideSingleSelectionIndicator?: boolean;
 }
 
 // @public
@@ -96,6 +101,10 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get disabled(): boolean;
     set disabled(value: boolean);
     _emitChangeEvent(toggle: MatButtonToggle): void;
+    get hideMultipleSelectionIndicator(): boolean;
+    set hideMultipleSelectionIndicator(value: boolean);
+    get hideSingleSelectionIndicator(): boolean;
+    set hideSingleSelectionIndicator(value: boolean);
     _isPrechecked(toggle: MatButtonToggle): boolean;
     _isSelected(toggle: MatButtonToggle): boolean;
     get multiple(): boolean;
@@ -104,6 +113,10 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set name(value: string);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hideMultipleSelectionIndicator: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hideSingleSelectionIndicator: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
@@ -127,7 +140,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     vertical: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatButtonToggleGroup, "mat-button-toggle-group", ["matButtonToggleGroup"], { "appearance": { "alias": "appearance"; "required": false; }; "name": { "alias": "name"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["_buttonToggles"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatButtonToggleGroup, "mat-button-toggle-group", ["matButtonToggleGroup"], { "appearance": { "alias": "appearance"; "required": false; }; "name": { "alias": "name"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "hideMultipleSelectionIndicator": { "alias": "hideMultipleSelectionIndicator"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["_buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggleGroup, [null, { optional: true; }]>;
 }

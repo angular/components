@@ -5,6 +5,7 @@ import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/t
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
+  MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
   MatButtonToggle,
   MatButtonToggleChange,
   MatButtonToggleGroup,
@@ -546,6 +547,13 @@ describe('MatButtonToggle without forms', () => {
       expect(groupInstance.value).toBeFalsy();
       expect(groupInstance.selected).toBeFalsy();
     }));
+
+    it('should show checkmark indicator by default', () => {
+      buttonToggleLabelElements[0].click();
+      fixture.detectChanges();
+
+      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(1);
+    });
   });
 
   describe('with initial value and change event', () => {
@@ -700,6 +708,14 @@ describe('MatButtonToggle without forms', () => {
       expect(() => {
         groupInstance.value = 'not-an-array';
       }).toThrowError(/Value must be an array/);
+    });
+
+    it('should show checkmark indicator by default', () => {
+      buttonToggleLabelElements[0].click();
+      buttonToggleLabelElements[1].click();
+      fixture.detectChanges();
+
+      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(2);
     });
   });
 
@@ -873,6 +889,52 @@ describe('MatButtonToggle without forms', () => {
       host.focus();
 
       expect(document.activeElement).toBe(button);
+    });
+  });
+
+  describe('with tokens to hide checkmark selection indicators', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          MatButtonToggleModule,
+          ButtonTogglesInsideButtonToggleGroup,
+          ButtonTogglesInsideButtonToggleGroupMultiple,
+        ],
+        providers: [
+          {
+            provide: MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
+            useValue: {
+              hideSingleSelectionIndicator: true,
+              hideMultipleSelectionIndicator: true,
+            },
+          },
+        ],
+      });
+
+      TestBed.compileComponents();
+    });
+
+    it('should hide checkmark indicator for single selection', () => {
+      const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroup);
+      fixture.detectChanges();
+
+      fixture.debugElement.query(By.css('button')).nativeElement.click();
+      fixture.detectChanges();
+
+      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(0);
+    });
+
+    it('should hide checkmark indicator for multiple selection', () => {
+      const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+      fixture.detectChanges();
+
+      // Check all button toggles in the group
+      fixture.debugElement
+        .queryAll(By.css('button'))
+        .forEach(toggleButton => toggleButton.nativeElement.click());
+      fixture.detectChanges();
+
+      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(0);
     });
   });
 
