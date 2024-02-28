@@ -4,6 +4,14 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
+// TODO(b/263527625): should be removed when this is addressed on the MDC side.
+// MDC sets a will-change on this element, because of the animation. This can cause
+// scrolling performance degradation on pages with a lot of form fields so we reset it.
+// The animation is on a `transform` which is hardware-accelerated already.
+// This flag is used to re-add the `will-change` internally since removing it causes a
+// lot of screenshot diffs.
+$_enable-form-field-will-change-reset: true;
+
 // Mixin that can be included to override the default MDC text-field
 // styles to fit our needs. See individual comments for context on why
 // certain MDC styles need to be modified.
@@ -36,6 +44,10 @@
     // and makes migration from the legacy form-field easier for tests that were depending on
     // clicking the label to focus the input.
     pointer-events: all;
+
+    @if ($_enable-form-field-will-change-reset) {
+      will-change: auto;
+    }
   }
 
   .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
@@ -68,6 +80,10 @@
   .mat-mdc-text-field-wrapper {
     height: auto;
     flex: auto;
+
+    @if ($_enable-form-field-will-change-reset) {
+      will-change: auto;
+    }
   }
 
   // The icon prefix/suffix is closer to the edge of the form-field than the infix is in a
