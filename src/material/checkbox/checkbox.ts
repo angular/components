@@ -92,6 +92,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
+    '[attr.name]': 'null',
     '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
     '[class.mdc-checkbox--disabled]': 'disabled',
     '[id]': 'id',

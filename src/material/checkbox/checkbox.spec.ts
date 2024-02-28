@@ -959,6 +959,12 @@ describe('MDC-based MatCheckbox', () => {
 
       expect(inputElement.getAttribute('name')).toBe('test-name');
     }));
+
+    it('should clear the name attribute from the host node', () => {
+      const checkboxElement = fixture.debugElement.query(By.directive(MatCheckbox));
+
+      expect(checkboxElement.nativeElement.getAttribute('name')).toBeFalsy();
+    });
   });
 
   describe('with form control', () => {
