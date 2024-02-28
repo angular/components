@@ -503,7 +503,7 @@
 
   // DO NOT REMOVE
   // This function is used internally.
-  $systems: format-tokens.format($systems);
+  $systems: format-tokens.private-internal-format($systems);
 
   // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
   //  material-experimental. This is a hack for now because there is no good way to get the token

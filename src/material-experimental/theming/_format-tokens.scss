@@ -1,5 +1,5 @@
 // DO NOT REMOVE
 // This function is used internally.
-@function format($systems) {
+@function private-internal-format($systems) {
   @return $systems;
 }
