@@ -1,5 +1,5 @@
 // DO NOT REMOVE
 // This function is used internally.
-@function private-internal-format($systems) {
+@function private-format-tokens($systems) {
   @return $systems;
 }
