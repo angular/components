@@ -75,8 +75,8 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 @function get-theme-color($theme, $args...) {
   $version: get-theme-version($theme);
   $args-count: list.length($args);
-  @if $args-count != 1 and $args-count != 2 {
-    @error #{'Expected 2 or 3 arguments. Got:'} $args-count + 1;
+  @if $args-count != 1 and $args-count != 2 and $args-count != 3 {
+    @error #{'Expected between 2 and 4 arguments. Got:'} $args-count + 1;
   }
 
   @if $version == 0 {

@@ -51,26 +51,36 @@ $prefix: (mdc, filled-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
-  $on-surface: if($is-dark, #fff, #000);
 
   @return (
-    container-color: $surface,
-    label-text-color: $on-surface,
-    disabled-container-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
+    container-color: inspection.get-theme-color($theme, background, card),
+    label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    disabled-container-color: inspection.get-theme-color($theme, foreground, disabled-button,
+      0.12),
+    disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button,
+      if($is-dark, 0.5, 0.38)),
   );
 }
 
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
   $container-color: inspection.get-theme-color($theme, $palette-name, default);
-  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+  $label-text-color: null;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  @if (token-utils.$private-is-internal-build) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $label-text-color: if($contrast-tone == 'dark', #000, #fff);
+  }
+  @else {
+    $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  }
 
   @return (
     container-color: $container-color,
-    label-text-color: if($contrast-tone == 'dark', #000, #fff),
+    label-text-color: $label-text-color,
   );
 }
 

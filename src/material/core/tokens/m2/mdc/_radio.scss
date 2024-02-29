@@ -45,15 +45,14 @@ $prefix: (mdc, radio);
 @function get-color-tokens($theme, $palette-name: accent) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $palette-color: inspection.get-theme-color($theme, $palette-name, default);
-  $on-surface: if($is-dark, #fff, #000);
   $icon-color: theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
 
   @return (
-    disabled-selected-icon-color: $on-surface,
-    disabled-unselected-icon-color: $on-surface,
+    disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
+    disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
     unselected-hover-icon-color: $icon-color,
-    unselected-icon-color: rgba($on-surface, 0.54),
-    unselected-pressed-icon-color: rgba($on-surface, 0.54),
+    unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
+    unselected-pressed-icon-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
     selected-focus-icon-color: $palette-color,
     selected-hover-icon-color: $palette-color,
     selected-icon-color: $palette-color,

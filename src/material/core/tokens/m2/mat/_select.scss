@@ -19,19 +19,29 @@ $prefix: (mat, select);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary) {
   $is-dark: inspection.get-theme-type($theme) == dark;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $on-surface: if($is-dark, #fff, #000);
+  $text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, text, 1));
+  $disabled-text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, disabled-text, 1));
+  $icon-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return (
     panel-background-color: inspection.get-theme-color($theme, background, card),
-    enabled-trigger-text-color: rgba($on-surface, 0.87),
-    disabled-trigger-text-color: rgba($on-surface, 0.38),
-    placeholder-text-color: rgba($on-surface, 0.6),
-    enabled-arrow-color: rgba($on-surface, 0.54),
-    disabled-arrow-color: rgba($on-surface, 0.38),
+    enabled-trigger-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    disabled-trigger-text-color:
+      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    placeholder-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    enabled-arrow-color: sass-utils.safe-color-change($icon-color-base, $alpha: 0.54),
+    disabled-arrow-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.38),
     focused-arrow-color: sass-utils.safe-color-change(
-        inspection.get-theme-color($theme, $palette-name, default), $alpha: 0.87),
+      inspection.get-theme-color($theme, $palette-name, default), $alpha: 0.87),
     invalid-arrow-color: sass-utils.safe-color-change(
-        inspection.get-theme-color($theme, warn, default), $alpha: 0.87),
+      inspection.get-theme-color($theme, warn, default), $alpha: 0.87),
   );
 }
 
