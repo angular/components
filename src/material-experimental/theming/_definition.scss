@@ -51,10 +51,10 @@ $theme-version: 1;
         tertiary: map.remove($tertiary, neutral, neutral-variant, secondary),
         neutral: map.get($primary, neutral),
         neutral-variant: map.get($primary, neutral-variant),
-        error: m3-palettes.$private-error-palette,
+        error: map.get($primary, error),
       ),
       color-tokens: m3-tokens.generate-color-tokens(
-          $type, $primary, $tertiary, m3-palettes.$private-error-palette)
+          $type, $primary, $tertiary, map.get($primary, error))
     )
   );
 }
