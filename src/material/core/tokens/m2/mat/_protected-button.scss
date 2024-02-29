@@ -28,7 +28,6 @@ $prefix: (mat, protected-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
   $ripple-opacities: if($is-dark,
     mdc-ripple-theme.$light-ink-opacities,
     mdc-ripple-theme.$dark-ink-opacities
@@ -36,13 +35,13 @@ $prefix: (mat, protected-button);
 
   @return (
     // Color of the element that shows the hover, focus and pressed states.
-    state-layer-color: $on-surface,
+    state-layer-color: inspection.get-theme-color($theme, foreground, base),
 
     // Color of the element that shows the hover, focus and pressed states while disabled.
-    disabled-state-layer-color: $on-surface,
+    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
 
     // Color of the ripple element.
-    ripple-color: rgba($on-surface, 0.1),
+    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
 
     // Opacity of the ripple when the button is hovered.
     hover-state-layer-opacity: map.get($ripple-opacities, hover),
@@ -57,14 +56,27 @@ $prefix: (mat, protected-button);
 
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $container-color: inspection.get-theme-color($theme, $palette-name);
-  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
-  $color: if($contrast-tone == 'dark', #000, #fff);
+  $state-layer-color: null;
+  $ripple-color: null;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  @if (token-utils.$private-is-internal-build) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+    $container-color: inspection.get-theme-color($theme, $palette-name);
+    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $color: if($contrast-tone == 'dark', #000, #fff);
+    $state-layer-color: $color;
+    $ripple-color: rgba($color, 0.1);
+  }
+  @else {
+    $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+    $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
+  }
 
   @return (
-    state-layer-color: $color,
-    ripple-color: rgba($color, 0.1),
+    state-layer-color: $state-layer-color,
+    ripple-color: $ripple-color,
   );
 }
 

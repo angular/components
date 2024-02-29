@@ -31,7 +31,6 @@ $prefix: (mat, text-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
   $ripple-opacities: if($is-dark,
     mdc-ripple-theme.$light-ink-opacities,
     mdc-ripple-theme.$dark-ink-opacities
@@ -39,13 +38,13 @@ $prefix: (mat, text-button);
 
   @return (
     // Color of the element that shows the hover, focus and pressed states.
-    state-layer-color: $on-surface,
+    state-layer-color: inspection.get-theme-color($theme, foreground, base),
 
     // Color of the element that shows the hover, focus and pressed states while disabled.
-    disabled-state-layer-color: $on-surface,
+    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
 
     // Color of the ripple element.
-    ripple-color: rgba($on-surface, 0.1),
+    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
 
     // Opacity of the ripple when the button is hovered.
     hover-state-layer-opacity: map.get($ripple-opacities, hover),

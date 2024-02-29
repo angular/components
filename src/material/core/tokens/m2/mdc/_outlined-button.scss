@@ -3,7 +3,6 @@
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, outlined-button);
@@ -55,15 +54,20 @@ $prefix: (mdc, outlined-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
-  $contrast-tone: mdc-helpers.variable-safe-contrast-tone($surface, $is-dark);
-  $on-surface: if($contrast-tone == 'dark', #000, #fff);
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $outline: if(token-utils.$private-is-internal-build,
+    rgba(if($is-dark, #fff, #000), 0.12),
+    inspection.get-theme-color($theme, foreground, divider)
+  );
 
   @return (
-    disabled-outline-color: rgba($on-surface, 0.12),
-    disabled-label-text-color: rgba($on-surface, if($is-dark, 0.5, 0.38)),
-    label-text-color: if($is-dark, #fff, #000),
-    outline-color: rgba($on-surface, 0.12)
+    disabled-outline-color: $outline,
+    disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button,
+      if($is-dark, 0.5, 0.38)),
+    label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    outline-color: $outline,
   );
 }
 

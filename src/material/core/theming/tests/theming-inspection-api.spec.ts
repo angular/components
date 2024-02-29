@@ -328,7 +328,7 @@ describe('theming inspection api', () => {
             color: mat.get-theme-color($theme);
           }
         `),
-      ).toThrowError(/Expected 2 or 3 arguments. Got: 1/);
+      ).toThrowError(/Expected between 2 and 4 arguments\. Got: 1/);
     });
 
     it('should get typography properties from theme', () => {
