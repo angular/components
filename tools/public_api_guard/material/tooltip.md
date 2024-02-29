@@ -125,6 +125,7 @@ export interface MatTooltipDefaultOptions {
     showDelay: number;
     touchendHideDelay: number;
     touchGestures?: TooltipTouchGestures;
+    touchLongPressShowDelay?: number;
 }
 
 // @public (undocumented)
