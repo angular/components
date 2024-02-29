@@ -24,8 +24,8 @@ $prefix: (mat, menu);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
-  $active-state-layer-color: rgba($on-surface, if($is-dark, 0.08, 0.04));
+  $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
+    if($is-dark, 0.08, 0.04));
   $text-color: inspection.get-theme-color($theme, foreground, text);
 
   @return (

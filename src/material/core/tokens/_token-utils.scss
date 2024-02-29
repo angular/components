@@ -9,6 +9,9 @@
 @use '../theming/theming';
 @use '../typography/typography';
 
+// Indicates whether we're building internally. Used for backwards compatibility.
+$private-is-internal-build: false;
+
 $_placeholder-color-palette: theming.define-palette(palette.$red-palette);
 
 // Placeholder color config that can be passed to token getter functions when generating token

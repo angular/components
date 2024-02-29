@@ -55,15 +55,21 @@ $prefix: (mdc, dialog);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $text-base: if(token-utils.$private-is-internal-build,
+    if($is-dark, #fff, #000),
+    inspection.get-theme-color($theme, foreground, text, 1)
+  );
 
   @return (
     // Background color of the container.
     container-color: inspection.get-theme-color($theme, background, dialog),
     // Color of the dialog header.
-    subhead-color: rgba($on-surface, 0.87),
+    subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
     // Color of the dialog body text.
-    supporting-text-color: rgba($on-surface, 0.6),
+    supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
   );
 }
 

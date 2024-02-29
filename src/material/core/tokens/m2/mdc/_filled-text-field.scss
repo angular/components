@@ -93,30 +93,42 @@ $prefix: (mdc, filled-text-field);
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $surface: inspection.get-theme-color($theme, background, card);
-  $on-surface: if($is-dark, #fff, #000);
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
+  $on-surface: if($is-dark, #fff, #000);
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, text, 1));
+  $disabled-text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, disabled-text, 1));
+  $divider-base: if(token-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return map.merge($color-tokens, (
     container-color: _variable-safe-mix($on-surface, $surface, 4%),
     disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
 
-    label-text-color: rgba($on-surface, 0.6),
-    hover-label-text-color: rgba($on-surface, 0.6),
-    disabled-label-text-color: rgba($on-surface, 0.38),
+    label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    disabled-label-text-color:
+      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
 
-    input-text-color: rgba($on-surface, 0.87),
-    disabled-input-text-color: rgba($on-surface, 0.38),
-    input-text-placeholder-color: rgba($on-surface, 0.6),
+    input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    disabled-input-text-color:
+      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    input-text-placeholder-color:
+      sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
 
     error-hover-label-text-color: $warn-color,
     error-focus-label-text-color: $warn-color,
     error-label-text-color: $warn-color,
     error-caret-color: $warn-color,
 
-    active-indicator-color: rgba($on-surface, 0.42),
-    disabled-active-indicator-color: rgba($on-surface, 0.06),
-    hover-active-indicator-color: rgba($on-surface, 0.87),
+    active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.42),
+    disabled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    hover-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
     error-active-indicator-color: $warn-color,
     error-focus-active-indicator-color: $warn-color,
     error-hover-active-indicator-color: $warn-color,

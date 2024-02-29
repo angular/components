@@ -14,10 +14,8 @@ $prefix: (mat, radio);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: accent) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-
   @return (
-    ripple-color: if($is-dark, #fff, #000),
+    ripple-color: inspection.get-theme-color($theme, foreground, base),
     checked-ripple-color: inspection.get-theme-color($theme, $palette-name, default),
     disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
   );

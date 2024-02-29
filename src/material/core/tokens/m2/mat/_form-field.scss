@@ -20,13 +20,13 @@ $prefix: (mat, form-field);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
-    disabled-input-text-placeholder-color: rgba($on-surface, 0.38),
-    state-layer-color: rgba($on-surface, 0.87),
+    disabled-input-text-placeholder-color:
+      inspection.get-theme-color($theme, foreground, icon, 0.38),
+    state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
     error-text-color: inspection.get-theme-color($theme, warn),
 
     // On dark themes we set the native `select` color to some shade of white,
@@ -56,8 +56,8 @@ $prefix: (mat, form-field);
 
     // These values are taken from the MDC select implementation:
     // https://github.com/material-components/material-components-web/blob/master/packages/mdc-select/_select-theme.scss
-    enabled-select-arrow-color: rgba($on-surface, 0.54),
-    disabled-select-arrow-color: rgba($on-surface, 0.38),
+    enabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
+    disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
 
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     focus-state-layer-opacity: if($is-dark, 0.24, 0.08),

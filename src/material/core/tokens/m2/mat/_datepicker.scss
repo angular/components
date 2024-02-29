@@ -50,7 +50,6 @@ $private-default-overlap-color: #a8dab5;
   $preview-outline-color: $divider-color;
   $today-disabled-outline-color: null;
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
 
   $primary-color: inspection.get-theme-color($theme, primary);
   $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
@@ -75,7 +74,7 @@ $private-default-overlap-color: #a8dab5;
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
     toggle-icon-color: $inactive-icon-color,
     calendar-body-label-text-color: $secondary-text-color,
-    calendar-period-button-text-color: $on-surface,
+    calendar-period-button-text-color: inspection.get-theme-color($theme, foreground, text, 1),
     calendar-period-button-icon-color: $inactive-icon-color,
     calendar-navigation-button-icon-color: $inactive-icon-color,
     calendar-header-divider-color: $divider-color,
