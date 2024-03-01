@@ -6,11 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {chain, noop, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {chain, noop, Rule, SchematicContext, Tree, callRule} from '@angular-devkit/schematics';
 import {getProjectFromWorkspace, getProjectStyleFile} from '@angular/cdk/schematics';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {addRootProvider} from '@schematics/angular/utility';
 import {ProjectType} from '@schematics/angular/utility/workspace-models';
+import {of as observableOf} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {addFontsToIndex} from './fonts/material-fonts';
 import {Schema} from './schema';
 import {addThemeToAppStyles, addTypographyClass} from './theming/theming';
@@ -28,14 +30,7 @@ export default function (options: Schema): Rule {
 
     if (project.extensions['projectType'] === ProjectType.Application) {
       return chain([
-        options.animations === 'excluded'
-          ? noop()
-          : addRootProvider(options.project, ({code, external}) => {
-              return code`${external(
-                'provideAnimationsAsync',
-                '@angular/platform-browser/animations/async',
-              )}(${options.animations === 'disabled' ? `'noop'` : ''})`;
-            }),
+        addAnimations(options),
         addThemeToAppStyles(options),
         addFontsToIndex(options),
         addMaterialAppStyles(options),
@@ -94,5 +89,34 @@ function addMaterialAppStyles(options: Schema) {
 
     recorder.insertLeft(htmlContent.length, insertion);
     host.commitUpdate(recorder);
+  };
+}
+
+/** Adds the animations package to the project based on the conffiguration. */
+function addAnimations(options: Schema): Rule {
+  return (host: Tree, context: SchematicContext) => {
+    const animationsRule =
+      options.animations === 'excluded'
+        ? noop()
+        : addRootProvider(options.project, ({code, external}) => {
+            return code`${external(
+              'provideAnimationsAsync',
+              '@angular/platform-browser/animations/async',
+            )}(${options.animations === 'disabled' ? `'noop'` : ''})`;
+          });
+
+    // The `addRootProvider` rule can throw in some custom scenarios (see #28640).
+    // Add some error handling around it so the setup isn't interrupted.
+    return callRule(animationsRule, host, context).pipe(
+      catchError(() => {
+        context.logger.error(
+          'Failed to add animations to project. Continuing with the Angular Material setup.',
+        );
+        context.logger.info(
+          'Read more about setting up the animations manually: https://angular.io/guide/animations',
+        );
+        return observableOf(host);
+      }),
+    );
   };
 }
