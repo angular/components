@@ -9,6 +9,7 @@ import {FocusTrap} from '@angular/cdk/a11y';
 import {OverlayRef, OverlaySizeConfig, PositionStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
+  afterRender,
   AfterViewInit,
   Directive,
   ElementRef,
@@ -68,12 +69,18 @@ const MOUSE_MOVE_THROTTLE_TIME_MS = 10;
 export class CdkEditable implements AfterViewInit, OnDestroy {
   protected readonly destroyed = new Subject<void>();
 
+  private _rendered = new Subject();
+
   constructor(
     protected readonly elementRef: ElementRef,
     protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
     protected readonly focusDispatcher: FocusDispatcher,
     protected readonly ngZone: NgZone,
-  ) {}
+  ) {
+    afterRender(() => {
+      this._rendered.next();
+    });
+  }
 
   ngAfterViewInit(): void {
     this._listenForTableEvents();
@@ -82,6 +89,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
+    this._rendered.complete();
   }
 
   private _listenForTableEvents(): void {
@@ -126,7 +134,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
       // Keep track of rows within the table. This is used to know which rows with hover content
       // are first or last in the table. They are kept focusable in case focus enters from above
       // or below the table.
-      this.ngZone.onStable
+      this._rendered
         .pipe(
           // Optimization: ignore dom changes while focus is within the table as we already
           // ensure that rows above and below the focused/active row are tabbable.
