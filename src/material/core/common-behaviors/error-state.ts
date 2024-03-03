@@ -14,7 +14,11 @@ import {AbstractConstructor, Constructor} from './constructor';
 // Declare ErrorStateMatcher as an interface to have compatibility with Closure Compiler.
 interface ErrorStateMatcher extends _ErrorStateMatcher {}
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated Will be removed together with `mixinErrorState`.
+ * @breaking-change 19.0.0
+ */
 export interface CanUpdateErrorState {
   /** Updates the error state based on the provided error state matcher. */
   updateErrorState(): void;
@@ -28,7 +32,7 @@ type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState> &
   AbstractConstructor<CanUpdateErrorState>;
 
 /** @docs-private */
-export interface HasErrorState {
+interface HasErrorState {
   _parentFormGroup: FormGroupDirective;
   _parentForm: NgForm;
   _defaultErrorStateMatcher: ErrorStateMatcher;
@@ -77,6 +81,8 @@ export class _ErrorStateTracker {
 /**
  * Mixin to augment a directive with updateErrorState method.
  * For component with `errorState` and need to update `errorState`.
+ * @deprecated Implement the `updateErrorState` method directly.
+ * @breaking-change 19.0.0
  */
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(
   base: T,

@@ -9,7 +9,11 @@
 import {AbstractConstructor, Constructor} from './constructor';
 import {ElementRef} from '@angular/core';
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated Will be removed together with `mixinColor`.
+ * @breaking-change 19.0.0
+ */
 export interface CanColor {
   /** Theme color palette for the component. */
   color: ThemePalette;
@@ -21,14 +25,18 @@ export interface CanColor {
 type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
 
 /** @docs-private */
-export interface HasElementRef {
+interface HasElementRef {
   _elementRef: ElementRef;
 }
 
 /** Possible color palette values. */
 export type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 
-/** Mixin to augment a directive with a `color` property. */
+/**
+ * Mixin to augment a directive with a `color` property.
+ * @deprecated Use a plain input and host bindings instead.
+ * @breaking-change 19.0.0
+ */
 export function mixinColor<T extends AbstractConstructor<HasElementRef>>(
   base: T,
   defaultColor?: ThemePalette,

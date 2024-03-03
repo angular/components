@@ -496,7 +496,7 @@ export class HeaderRowOutlet implements RowOutlet {
     static ɵfac: i0.ɵɵFactoryDeclaration<HeaderRowOutlet, never>;
 }
 
-// @public
+// @public @deprecated
 export function mixinHasStickyInput<T extends Constructor<{}>>(base: T): CanStickCtor & T;
 
 // @public

@@ -10,7 +10,11 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Constructor, AbstractConstructor} from './constructor';
 import {CanDisable} from './disabled';
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated Will be removed together with `mixinTabIndex`.
+ * @breaking-change 19.0.0
+ */
 export interface HasTabIndex {
   /** Tabindex of the component. */
   tabIndex: number;
@@ -21,7 +25,11 @@ export interface HasTabIndex {
 
 type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
-/** Mixin to augment a directive with a `tabIndex` property. */
+/**
+ * Mixin to augment a directive with a `tabIndex` property.
+ * @deprecated Use an input with a transform instead.
+ * @breaking-change 19.0.0
+ */
 export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(
   base: T,
   defaultTabIndex?: number,
