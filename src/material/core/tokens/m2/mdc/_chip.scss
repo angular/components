@@ -2,7 +2,6 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../token-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
@@ -230,15 +229,10 @@ $prefix: (mdc, chip);
     $foreground: if($is-dark, $grey-50, $grey-900);
 
     $surface: inspection.get-theme-color($theme, background, card);
-    $on-surface: if(
-        mdc-helpers.variable-safe-contrast-tone($surface, $is-dark) == 'dark',
-        #000,
-        #fff
-    );
     $background: if(
-        meta.type-of($on-surface) == color and meta.type-of($surface) == color,
-        color.mix($on-surface, $surface, 12%),
-        $on-surface
+        meta.type-of($state-layer-color) == color and meta.type-of($surface) == color,
+        color.mix($state-layer-color, $surface, 12%),
+        $state-layer-color
     );
   }
   @else {
