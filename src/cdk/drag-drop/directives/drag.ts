@@ -9,7 +9,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {DOCUMENT} from '@angular/common';
 import {
-  AfterViewInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -27,6 +26,10 @@ import {
   Self,
   InjectionToken,
   booleanAttribute,
+  afterNextRender,
+  AfterViewInit,
+  inject,
+  Injector,
 } from '@angular/core';
 import {coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Observable, Observer, Subject, merge} from 'rxjs';
@@ -207,6 +210,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     },
   );
 
+  private _injector = inject(Injector);
+
   constructor(
     /** Element that the draggable is attached to. */
     public element: ElementRef<HTMLElement>,
@@ -296,22 +301,21 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // Normally this isn't in the zone, but it can cause major performance regressions for apps
-    // using `zone-patch-rxjs` because it'll trigger a change detection when it unsubscribes.
-    this._ngZone.runOutsideAngular(() => {
-      // We need to wait for the zone to stabilize, in order for the reference
-      // element to be in the proper place in the DOM. This is mostly relevant
-      // for draggable elements inside portals since they get stamped out in
-      // their original DOM position and then they get transferred to the portal.
-      this._ngZone.onStable.pipe(take(1), takeUntil(this._destroyed)).subscribe(() => {
+    // We need to wait until after render, in order for the reference
+    // element to be in the proper place in the DOM. This is mostly relevant
+    // for draggable elements inside portals since they get stamped out in
+    // their original DOM position, and then they get transferred to the portal.
+    afterNextRender(
+      () => {
         this._updateRootElement();
         this._setupHandlesListener();
 
         if (this.freeDragPosition) {
           this._dragRef.setFreeDragPosition(this.freeDragPosition);
         }
-      });
-    });
+      },
+      {injector: this._injector},
+    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -319,12 +323,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     const positionChange = changes['freeDragPosition'];
 
     // We don't have to react to the first change since it's being
-    // handled in `ngAfterViewInit` where it needs to be deferred.
+    // handled in the `afterNextRender` queued up in the constructor.
     if (rootSelectorChange && !rootSelectorChange.firstChange) {
       this._updateRootElement();
     }
 
-    // Skip the first change since it's being handled in `ngAfterViewInit`.
+    // Skip the first change since it's being handled in the `afterNextRender` queued up in the
+    // constructor.
     if (positionChange && !positionChange.firstChange && this.freeDragPosition) {
       this._dragRef.setFreeDragPosition(this.freeDragPosition);
     }
