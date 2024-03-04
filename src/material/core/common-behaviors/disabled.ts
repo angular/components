@@ -9,7 +9,11 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractConstructor, Constructor} from './constructor';
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated Will be removed together with `mixinDisabled`.
+ * @breaking-change 19.0.0
+ */
 export interface CanDisable {
   /** Whether the component is disabled. */
   disabled: boolean;
@@ -17,7 +21,11 @@ export interface CanDisable {
 
 type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
-/** Mixin to augment a directive with a `disabled` property. */
+/**
+ * Mixin to augment a directive with a `disabled` property.
+ * @deprecated Use an input with a transform instead.
+ * @breaking-change 19.0.0
+ */
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 export function mixinDisabled<T extends Constructor<{}>>(base: T): CanDisableCtor & T {
   return class extends base {

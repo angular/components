@@ -36,6 +36,8 @@ export type CanStickCtor = Constructor<CanStick>;
  * changed since the last time the function was called. Essentially adds a dirty-check to the
  * sticky value.
  * @docs-private
+ * @deprecated Implement the `CanStick` interface instead.
+ * @breaking-change 19.0.0
  */
 export function mixinHasStickyInput<T extends Constructor<{}>>(base: T): CanStickCtor & T {
   return class extends base {
