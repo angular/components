@@ -22,7 +22,10 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
   AfterContentInit,
+  afterNextRender,
+  AfterRenderPhase,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -32,8 +35,10 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
@@ -42,18 +47,17 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {
   debounceTime,
+  distinctUntilChanged,
   filter,
   map,
+  mapTo,
   startWith,
   take,
   takeUntil,
-  distinctUntilChanged,
-  mapTo,
 } from 'rxjs/operators';
 import {matDrawerAnimations} from './drawer-animations';
 
@@ -750,6 +754,8 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     return this._userContent || this._content;
   }
 
+  private _injector = inject(Injector);
+
   constructor(
     @Optional() private _dir: Directionality,
     private _element: ElementRef<HTMLElement>,
@@ -933,9 +939,12 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping positions at the same time.
     drawer.onPositionChanged.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
-      this._ngZone.onMicrotaskEmpty.pipe(take(1)).subscribe(() => {
-        this._validateDrawers();
-      });
+      afterNextRender(
+        () => {
+          this._validateDrawers();
+        },
+        {injector: this._injector, phase: AfterRenderPhase.Read},
+      );
     });
   }
 

@@ -7,7 +7,7 @@ import {
   discardPeriodicTasks,
   flush,
 } from '@angular/core/testing';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
@@ -461,6 +461,18 @@ describe('MatDrawer', () => {
     });
 
     it('should throw when multiple drawers have the same position', fakeAsync(() => {
+      const errorHandler = jasmine.createSpyObj(['handleError']);
+
+      TestBed.configureTestingModule({
+        imports: [DrawerDynamicPosition],
+        providers: [
+          {
+            provide: ErrorHandler,
+            useValue: errorHandler,
+          },
+        ],
+      }).compileComponents();
+
       const fixture = TestBed.createComponent(DrawerDynamicPosition);
       fixture.detectChanges();
       tick();
@@ -468,14 +480,10 @@ describe('MatDrawer', () => {
       const testComponent: DrawerDynamicPosition = fixture.debugElement.componentInstance;
       testComponent.drawer1Position = 'end';
 
-      expect(() => {
-        try {
-          fixture.detectChanges();
-          tick(0);
-        } catch {
-          tick(0);
-        }
-      }).toThrow();
+      fixture.detectChanges();
+      tick();
+
+      expect(errorHandler.handleError).toHaveBeenCalled();
     }));
 
     it('should not throw when drawers swap positions', () => {
