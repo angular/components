@@ -53,23 +53,23 @@ export class AnimationDurations {
     static EXITING: string;
 }
 
-// @public
+// @public @deprecated
 export interface CanColor {
     color: ThemePalette;
     defaultColor: ThemePalette | undefined;
 }
 
-// @public
+// @public @deprecated
 export interface CanDisable {
     disabled: boolean;
 }
 
-// @public
+// @public @deprecated
 export interface CanDisableRipple {
     disableRipple: boolean;
 }
 
-// @public
+// @public @deprecated
 export interface CanUpdateErrorState {
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher_2;
@@ -157,13 +157,13 @@ export interface GranularSanityChecks {
     version: boolean;
 }
 
-// @public
+// @public @deprecated
 export interface HasInitialized {
     initialized: Observable<void>;
     _markInitialized: () => void;
 }
 
-// @public
+// @public @deprecated
 export interface HasTabIndex {
     defaultTabIndex: number;
     tabIndex: number;
@@ -431,22 +431,22 @@ export class MatRippleModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof i1_2.MatCommonModule, typeof i2.MatRipple], [typeof i2.MatRipple, typeof i1_2.MatCommonModule]>;
 }
 
-// @public
+// @public @deprecated
 export function mixinColor<T extends _AbstractConstructor<HasElementRef>>(base: T, defaultColor?: ThemePalette): CanColorCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinDisabled<T extends _AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinDisableRipple<T extends _AbstractConstructor<{}>>(base: T): CanDisableRippleCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinErrorState<T extends _AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinInitialized<T extends _Constructor<{}>>(base: T): HasInitializedCtor & T;
 
-// @public
+// @public @deprecated
 export function mixinTabIndex<T extends _AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
 
 // @public

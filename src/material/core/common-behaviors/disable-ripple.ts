@@ -9,7 +9,11 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractConstructor, Constructor} from './constructor';
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated Will be removed together with `mixinDisableRipple`.
+ * @breaking-change 19.0.0
+ */
 export interface CanDisableRipple {
   /** Whether ripples are disabled. */
   disableRipple: boolean;
@@ -17,7 +21,11 @@ export interface CanDisableRipple {
 
 type CanDisableRippleCtor = Constructor<CanDisableRipple> & AbstractConstructor<CanDisableRipple>;
 
-/** Mixin to augment a directive with a `disableRipple` property. */
+/**
+ * Mixin to augment a directive with a `disableRipple` property.
+ * @deprecated Use an input with a transform instead.
+ * @breaking-change 19.0.0
+ */
 export function mixinDisableRipple<T extends AbstractConstructor<{}>>(
   base: T,
 ): CanDisableRippleCtor & T;
