@@ -3,21 +3,11 @@
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
+@use '../../../mdc-helpers/mdc-helpers';
 @use '../../token-utils';
-@use '@material/theme/theme-color' as mdc-theme-color;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, checkbox);
-
-// MDC logs a warning if the `contrast-tone` function is called with a CSS variable.
-// This function falls back to determining the tone based on whether the theme is light or dark.
-@function _contrast-tone($value, $is-dark, $light-color: '#fff', $dark-color: '#000') {
-  @if ($value == 'dark' or $value == 'light' or type-of($value) == 'color') {
-    @return if(mdc-theme-color.contrast-tone($value) == 'dark', $dark-color, $light-color);
-  }
-
-  @return if($is-dark, $light-color, $dark-color);
-}
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -62,6 +52,18 @@ $prefix: (mdc, checkbox);
       inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
   $active-border-color:
     theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
+  $selected-checkmark-color: null;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  @if (token-utils.$private-is-internal-build) {
+    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($palette-selected, $is-dark);
+    $selected-checkmark-color: if($contrast-tone == 'dark', #000, #fff);
+  }
+  @else {
+    $selected-checkmark-color:
+      inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  }
 
   @return (
     // The color of the checkbox fill when the checkbox is selected and disabled.
@@ -69,7 +71,7 @@ $prefix: (mdc, checkbox);
     // The color of the checkbox border when the checkbox is unselected and disabled.
     disabled-unselected-icon-color: $disabled-color,
     // The color of the checkmark when the checkbox is selected.
-    selected-checkmark-color: _contrast-tone($palette-selected, $is-dark),
+    selected-checkmark-color: $selected-checkmark-color,
     // The color of the checkbox fill when the checkbox is selected and focused.
     selected-focus-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected and hovered.
