@@ -46,6 +46,7 @@ div.mat-mdc-autocomplete-panel {
 
   &.mat-mdc-autocomplete-hidden {
     visibility: hidden;
+    pointer-events: none;
   }
 }
 
