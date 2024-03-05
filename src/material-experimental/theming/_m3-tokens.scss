@@ -5,6 +5,7 @@
 @use '@material/tokens/v0_161' as mdc-tokens;
 @use './m3-density';
 @use './custom-tokens';
+@use './format-tokens';
 
 // TODO(mmalerba): Split up this file into smaller pieces.
 
@@ -499,6 +500,10 @@
     md-sys-typescale: ()
   ), $systems);
   $exclude-hardcoded: not $include-non-systemized;
+
+  // DO NOT REMOVE
+  // This function is used internally.
+  $systems: format-tokens.private-format-tokens($systems);
 
   // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
   //  material-experimental. This is a hack for now because there is no good way to get the token
