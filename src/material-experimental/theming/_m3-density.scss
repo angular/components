@@ -85,10 +85,11 @@ $_density-tokens: (
   ),
   (mat, form-field): (
     container-height: (56px, 52px, 48px, 44px, 40px, 36px),
-    filled-label-display: (block, block, none, none, none, none),
+    filled-label-display: (block, block, block, block, block, block),
     container-vertical-padding: (16px, 14px, 12px, 10px, 8px, 6px),
     filled-with-label-container-padding-top: (24px, 22px, 12px, 10px, 8px, 6px),
     filled-with-label-container-padding-bottom: (8px, 6px, 12px, 10px, 8px, 6px),
+    filled-with-label-position-top: (28px, 27px, 26px, 25px, 24px, 23px),
   ),
   (mat, grid-list): (),
   (mat, icon): (),
