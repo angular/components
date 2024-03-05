@@ -141,6 +141,7 @@ $prefix: (mat, form-field);
   $filled-with-label-padding-top: 24px - $vertical-deduction;
   $filled-with-label-padding-bottom: 8px - $vertical-deduction;
   $vertical-padding: 16px - $vertical-deduction;
+  $filled-with-label-position-top: 28px - math.div($vertical-deduction, 2);
 
   @return (
     container-height: $height,
@@ -150,6 +151,7 @@ $prefix: (mat, form-field);
       if($hide-label, $vertical-padding, $filled-with-label-padding-top),
     filled-with-label-container-padding-bottom:
       if($hide-label, $vertical-padding, $filled-with-label-padding-bottom),
+    filled-with-label-position-top: $filled-with-label-position-top,
   );
 }
 
