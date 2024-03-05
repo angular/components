@@ -39,6 +39,7 @@
       top: calc(var(#{$height}) / 2);
     }
 
+    // We need to adjust the floating label position for filled text-fields to support showing label in all densities.
     .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label.mdc-floating-label--float-above {
       top: var(#{token-utils.get-token-variable(filled-with-label-position-top)}, 28px);
     }
