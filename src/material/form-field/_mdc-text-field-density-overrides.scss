@@ -52,8 +52,7 @@
     // For the outline appearance, we re-create the active floating label transform. This is
     // necessary because the transform for docked floating labels can be updated to account for
     // the width of prefix container.
-    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded
-      .mdc-floating-label--float-above {
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
       // Needs to be in a string form to work around an internal check that incorrectly flags this
       // interpolation in `calc` as unnecessary. If we don't have it, Sass won't evaluate it.
       $translate: 'calc(#{mdc-textfield.get-outlined-label-position-y(var(#{$height}))} * -1)';
