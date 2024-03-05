@@ -27,8 +27,39 @@
   @return $palette;
 }
 
+/// Adds the error colors to the given palette.
+@function _patch-error-palette($palette) {
+  @return map.merge(
+    $palette,
+    (
+      error: (
+        0: #000000,
+        10: #410002,
+        20: #690005,
+        25: #7e0007,
+        30: #93000a,
+        35: #a80710,
+        40: #ba1a1a,
+        50: #de3730,
+        60: #ff5449,
+        70: #ff897d,
+        80: #ffb4ab,
+        90: #ffdad6,
+        95: #ffedea,
+        98: #fff8f7,
+        99: #fffbff,
+        100: #ffffff,
+      ),
+    )
+  );
+}
+
+@function _apply-patches($palette) {
+  @return _patch-missing-hues(_patch-error-palette($palette));
+}
+
 /// Red color palette to be used as primary or tertiary palette.
-$red-palette: _patch-missing-hues((
+$red-palette: _apply-patches((
   0: #000000,
   10: #410000,
   20: #690100,
@@ -102,7 +133,7 @@ $red-palette: _patch-missing-hues((
 ));
 
 /// Green color palette to be used as primary or tertiary palette.
-$green-palette: _patch-missing-hues((
+$green-palette: _apply-patches((
   0: #000000,
   10: #002200,
   20: #013a00,
@@ -176,7 +207,7 @@ $green-palette: _patch-missing-hues((
 ));
 
 /// Blue color palette to be used as primary or tertiary palette.
-$blue-palette: _patch-missing-hues((
+$blue-palette: _apply-patches((
   0: #000000,
   10: #00006e,
   20: #0001ac,
@@ -250,7 +281,7 @@ $blue-palette: _patch-missing-hues((
 ));
 
 /// Yellow color palette to be used as primary or tertiary palette.
-$yellow-palette: _patch-missing-hues((
+$yellow-palette: _apply-patches((
   0: #000000,
   10: #1d1d00,
   20: #323200,
@@ -324,7 +355,7 @@ $yellow-palette: _patch-missing-hues((
 ));
 
 /// Cyan color palette to be used as primary or tertiary palette.
-$cyan-palette: _patch-missing-hues((
+$cyan-palette: _apply-patches((
   0: #000000,
   10: #002020,
   20: #003737,
@@ -398,7 +429,7 @@ $cyan-palette: _patch-missing-hues((
 ));
 
 /// Magenta color palette to be used as primary or tertiary palette.
-$magenta-palette: _patch-missing-hues((
+$magenta-palette: _apply-patches((
   0: #000000,
   10: #380038,
   20: #5b005b,
@@ -472,7 +503,7 @@ $magenta-palette: _patch-missing-hues((
 ));
 
 /// Orange color palette to be used as primary or tertiary palette.
-$orange-palette: _patch-missing-hues((
+$orange-palette: _apply-patches((
   0: #000000,
   10: #311300,
   20: #502400,
@@ -546,7 +577,7 @@ $orange-palette: _patch-missing-hues((
 ));
 
 /// Chartreuse color palette to be used as primary or tertiary palette.
-$chartreuse-palette: _patch-missing-hues((
+$chartreuse-palette: _apply-patches((
   0: #000000,
   10: #0b2000,
   20: #173800,
@@ -620,7 +651,7 @@ $chartreuse-palette: _patch-missing-hues((
 ));
 
 /// Spring Green color palette to be used as primary or tertiary palette.
-$spring-green-palette: _patch-missing-hues((
+$spring-green-palette: _apply-patches((
   0: #000000,
   10: #00210b,
   20: #003917,
@@ -694,7 +725,7 @@ $spring-green-palette: _patch-missing-hues((
 ));
 
 /// Azure color palette to be used as primary or tertiary palette.
-$azure-palette: _patch-missing-hues((
+$azure-palette: _apply-patches((
   0: #000000,
   10: #001b3f,
   20: #002f65,
@@ -768,7 +799,7 @@ $azure-palette: _patch-missing-hues((
 ));
 
 /// Violet color palette to be used as primary or tertiary palette.
-$violet-palette: _patch-missing-hues((
+$violet-palette: _apply-patches((
   0: #000000,
   10: #270057,
   20: #42008a,
@@ -842,7 +873,7 @@ $violet-palette: _patch-missing-hues((
 ));
 
 /// Rose color palette to be used as primary or tertiary palette.
-$rose-palette: _patch-missing-hues((
+$rose-palette: _apply-patches((
   0: #000000,
   10: #3f001b,
   20: #65002f,
@@ -914,23 +945,3 @@ $rose-palette: _patch-missing-hues((
     100: #ffffff,
   ),
 ));
-
-/// Color palette to be used for error colors.
-$private-error-palette: (
-  0: #000000,
-  10: #410002,
-  20: #690005,
-  25: #7e0007,
-  30: #93000a,
-  35: #a80710,
-  40: #ba1a1a,
-  50: #de3730,
-  60: #ff5449,
-  70: #ff897d,
-  80: #ffb4ab,
-  90: #ffdad6,
-  95: #ffedea,
-  98: #fff8f7,
-  99: #fffbff,
-  100: #ffffff,
-);
