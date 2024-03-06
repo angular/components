@@ -1,3 +1,36 @@
+<a name="17.2.2"></a>
+# 17.2.2 "metal-marble" (2024-03-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4af777a189](https://github.com/angular/components/commit/4af777a189ca0bd80a5158dafa3d9cf4f60b6bf2) | fix | **drag-drop:** resolve helper directives with DI for proper hostDirectives support ([#28633](https://github.com/angular/components/pull/28633)) |
+| [94eafc134f](https://github.com/angular/components/commit/94eafc134fdcb27f4d85fa9ad07a44aadd9b393a) | fix | **overlay:** fix overlay margin in isBoundedByLeftViewportEdge ('left-ward') mode ([#28233](https://github.com/angular/components/pull/28233)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [65aaaf3abf](https://github.com/angular/components/commit/65aaaf3abf137a6c7eb0ff6017eb5977602dd774) | fix | **autocomplete:** prevent hidden overlay from blocking clicks ([#28677](https://github.com/angular/components/pull/28677)) |
+| [d08ddaab81](https://github.com/angular/components/commit/d08ddaab818244cdedfe44121dd0d4499587bc46) | fix | **autocomplete:** requireSelection sometimes not clearing value when editing after selection ([#28628](https://github.com/angular/components/pull/28628)) |
+| [5b3210bfda](https://github.com/angular/components/commit/5b3210bfda60b4f9e42b33cb2b06fce2a86706e0) | fix | **checkbox:** derive checkmark color from palette |
+| [fb20320b82](https://github.com/angular/components/commit/fb20320b823eb6a2880d61b25da29aa9e3262d06) | fix | **chips:** derive surface color from palette |
+| [fe01e298a0](https://github.com/angular/components/commit/fe01e298a06fafef21a47f80bd961bd71a7559e9) | fix | **core:** mark fields on HasErrorState as nullable ([#28689](https://github.com/angular/components/pull/28689)) |
+| [afbb34e415](https://github.com/angular/components/commit/afbb34e41570428a7003508b552c39accbc1fc9e) | fix | **datepicker:** always move caret to the end of the start input on backspace ([#28669](https://github.com/angular/components/pull/28669)) |
+| [ec6f8e2e62](https://github.com/angular/components/commit/ec6f8e2e62341647fda7c8e2bbcbe977165a255f) | fix | **datepicker:** datepicker doesn't announce newly selected range in firefox ([#28529](https://github.com/angular/components/pull/28529)) |
+| [ba6e809761](https://github.com/angular/components/commit/ba6e809761cf24efb1037340ca76a336d5ebdcab) | fix | **expansion:** prevent focus from entering the panel while it's animating ([#28646](https://github.com/angular/components/pull/28646)) |
+| [07f5ed9dc6](https://github.com/angular/components/commit/07f5ed9dc6f722cee2941e49ad63f04041a3314d) | fix | **schematics:** add typography and density to custom theme ([#28645](https://github.com/angular/components/pull/28645)) |
+| [6d8160c166](https://github.com/angular/components/commit/6d8160c1660cbf519c8f709ebb05059e7a9a5865) | fix | **schematics:** don't interrupt ng add if adding the animations module fails ([#28675](https://github.com/angular/components/pull/28675)) |
+| [9655ecb872](https://github.com/angular/components/commit/9655ecb87223728af4459157a58eda26c6c9eaf2) | fix | **slide-toggle:** m3 selected track outline ([#28625](https://github.com/angular/components/pull/28625)) ([#28634](https://github.com/angular/components/pull/28634)) |
+| [7d352fbf88](https://github.com/angular/components/commit/7d352fbf886dfaa476ce99440f9f6edc80498077) | perf | **form-field:** resolve scrolling performance issues ([#27251](https://github.com/angular/components/pull/27251)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f18ef99785](https://github.com/angular/components/commit/f18ef99785e097ec66f7236d5cfe210ea37e8e52) | feat | **theming:** provide hook for formatting toke… ([#28660](https://github.com/angular/components/pull/28660)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [14c055fe07](https://github.com/angular/components/commit/14c055fe0725f6429beabf2be27e3c4486c29164) | fix | derive all token values from theme ([#28664](https://github.com/angular/components/pull/28664)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.2.1"></a>
 # 17.2.1 "allactite-acorn" (2024-02-22)
 ### cdk
