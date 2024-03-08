@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AfterViewInit, Component, NgZone, ViewChild} from '@angular/core';
+import {
+  afterNextRender,
+  AfterViewInit,
+  Component,
+  inject,
+  Injector,
+  ViewChild,
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
@@ -18,8 +25,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-
-import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'performance-demo',
@@ -67,6 +72,8 @@ export class PerformanceDemo implements AfterViewInit {
   /** Used in an `@for` to render the desired number of comonents. */
   componentArray = [].constructor(this.componentCount);
 
+  private _injector = inject(Injector);
+
   /** The standard deviation of the recorded samples. */
   get stdev(): number | undefined {
     if (!this.allSamples.length) {
@@ -85,8 +92,6 @@ export class PerformanceDemo implements AfterViewInit {
     }
     return this.allSamples.reduce((a, b) => a + b) / this.allSamples.length;
   }
-
-  constructor(private _ngZone: NgZone) {}
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
@@ -131,11 +136,14 @@ export class PerformanceDemo implements AfterViewInit {
       setTimeout(() => {
         this.show = true;
         const start = performance.now();
-        this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-          const end = performance.now();
-          this.show = false;
-          res(end - start);
-        });
+        afterNextRender(
+          () => {
+            const end = performance.now();
+            this.show = false;
+            res(end - start);
+          },
+          {injector: this._injector},
+        );
       });
     });
   }
