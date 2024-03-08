@@ -8,10 +8,16 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
+import {
+  ComponentRef,
+  EmbeddedViewRef,
+  EnvironmentInjector,
+  NgZone,
+  afterNextRender,
+} from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
@@ -65,6 +71,7 @@ export class OverlayRef implements PortalOutlet {
     private _location: Location,
     private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
     private _animationsDisabled = false,
+    private _injector: EnvironmentInjector,
   ) {
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
@@ -125,15 +132,17 @@ export class OverlayRef implements PortalOutlet {
       this._scrollStrategy.enable();
     }
 
-    // Update the position once the zone is stable so that the overlay will be fully rendered
-    // before attempting to position it, as the position may depend on the size of the rendered
-    // content.
-    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-      // The overlay could've been detached before the zone has stabilized.
-      if (this.hasAttached()) {
-        this.updatePosition();
-      }
-    });
+    // Update the position once the overlay is fully rendered before attempting to position it,
+    // as the position may depend on the size of the rendered content.
+    afterNextRender(
+      () => {
+        // The overlay could've been detached before the callback executed.
+        if (this.hasAttached()) {
+          this.updatePosition();
+        }
+      },
+      {injector: this._injector},
+    );
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);

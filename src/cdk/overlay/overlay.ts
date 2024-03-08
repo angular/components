@@ -18,6 +18,7 @@ import {
   NgZone,
   ANIMATION_MODULE_TYPE,
   Optional,
+  EnvironmentInjector,
 } from '@angular/core';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
@@ -85,6 +86,7 @@ export class Overlay {
       this._location,
       this._outsideClickDispatcher,
       this._animationsModuleType === 'NoopAnimations',
+      this._injector.get(EnvironmentInjector),
     );
   }
 
