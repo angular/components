@@ -31,21 +31,15 @@ Material.
 
 If you'd like to contribute, please follow our [contributing guidelines][contributing]. Please see
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
-contribution. You can also use the [`good first issue`][good-first-issue] label to find issues 
+contribution. You can also use the [`good first issue`][good-first-issue] label to find issues
 if you are just starting to contribute to the project.
-
-## What we're working on now (Q2 2023):
-* Investigating and fixing reported regressions for the new components launched in v15
-* Creating a new more flexible theming API in collaboration with [MDC Web](https://github.com/material-components/material-components-web/)
-* Continuing to focus on improving the accessibility of Angular Material components
-* Improving the performance of our components in large applications
 
 ## About the team
 The Angular Components team is part of the Angular team at Google. The team includes both Google
 employees and community contributors from around the globe.
 
 Our team has two primary goals:
-* Build high-quality UI components that developers can drop into existing applications 
+* Build high-quality UI components that developers can drop into existing applications
 * Provide tools that help developers build their own custom components with common interaction
 patterns
 
