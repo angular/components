@@ -432,9 +432,10 @@ $_internals: _mat-theming-internals-do-not-access;
 // Checks for duplicate styles in a `theme-version: 0` style theme.
 @mixin _check-duplicate-theme-styles-v0($theme-or-color-config, $id) {
   $theme: private-legacy-get-theme($theme-or-color-config);
-  $color-config: get-color-config($theme);
-  $density-config: get-density-config($theme);
-  $typography-config: get-typography-config($theme);
+  $color-config: map.get($theme, $_internals, m2-config, color) or get-color-config($theme);
+  $density-config: map.get($theme, $_internals, m2-config, density) or get-density-config($theme);
+  $typography-config:
+    map.get($theme, $_internals, m2-config, typography) or get-typography-config($theme);
   // Lists of previous `color`, `density` and `typography` configurations.
   $previous-color: map.get($_emitted-color, $id) or ();
   $previous-typography: map.get($_emitted-typography, $id) or ();
