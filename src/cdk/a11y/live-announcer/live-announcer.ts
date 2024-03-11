@@ -135,7 +135,9 @@ export class LiveAnnouncer implements OnDestroy {
           this._previousTimeout = setTimeout(() => this.clear(), duration);
         }
 
-        this._currentResolve!();
+        // For some reason in tests this can be undefined
+        // Probably related to ZoneJS and every other thing that patches browser APIs in tests
+        this._currentResolve?.();
         this._currentPromise = this._currentResolve = undefined;
       }, 100);
 
