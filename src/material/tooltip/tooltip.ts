@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -31,6 +31,8 @@ import {
   ViewEncapsulation,
   inject,
   ANIMATION_MODULE_TYPE,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import {DOCUMENT, NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
@@ -350,6 +352,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
+
+  private _injector = inject(Injector);
 
   constructor(
     private _overlay: Overlay,
@@ -678,11 +682,16 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.pipe(take(1), takeUntil(this._destroyed)).subscribe(() => {
-        if (this._tooltipInstance) {
-          this._overlayRef!.updatePosition();
-        }
-      });
+      afterNextRender(
+        () => {
+          if (this._tooltipInstance) {
+            this._overlayRef!.updatePosition();
+          }
+        },
+        {
+          injector: this._injector,
+        },
+      );
     }
   }
 
