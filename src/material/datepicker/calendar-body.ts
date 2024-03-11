@@ -21,8 +21,9 @@ import {
   OnDestroy,
   AfterViewChecked,
   inject,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
-import {take} from 'rxjs/operators';
 import {NgClass} from '@angular/common';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
@@ -189,6 +190,8 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
   private _didDragSinceMouseDown = false;
 
+  private _injector = inject(Injector);
+
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
@@ -309,8 +312,8 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
    * Adding delay also complicates writing tests.
    */
   _focusActiveCell(movePreview = true) {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+    afterNextRender(
+      () => {
         setTimeout(() => {
           const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
             '.mat-calendar-body-active',
@@ -324,8 +327,9 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
             activeCell.focus();
           }
         });
-      });
-    });
+      },
+      {injector: this._injector},
+    );
   }
 
   /** Focuses the active cell after change detection has run and the microtask queue is empty. */
