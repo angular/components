@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, OnDestroy, Self, NgZone} from '@angular/core';
+import {Injectable, OnDestroy, Self, afterNextRender, inject, Injector} from '@angular/core';
 import {ControlContainer} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
-import {take} from 'rxjs/operators';
 
 import {EditEventDispatcher} from './edit-event-dispatcher';
 
@@ -30,10 +29,11 @@ export class EditRef<FormValue> implements OnDestroy {
   /** The value to set the form back to on revert. */
   private _revertFormValue: FormValue;
 
+  private _injector = inject(Injector);
+
   constructor(
     @Self() private readonly _form: ControlContainer,
     private readonly _editEventDispatcher: EditEventDispatcher<EditRef<FormValue>>,
-    private readonly _ngZone: NgZone,
   ) {
     this._editEventDispatcher.setActiveEditRef(this);
   }
@@ -44,14 +44,17 @@ export class EditRef<FormValue> implements OnDestroy {
    * applicable.
    */
   init(previousFormValue: FormValue | undefined): void {
-    // Wait for the zone to stabilize before caching the initial value.
+    // Wait for the next render before caching the initial value.
     // This ensures that all form controls have been initialized.
-    this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this.updateRevertValue();
-      if (previousFormValue) {
-        this.reset(previousFormValue);
-      }
-    });
+    afterNextRender(
+      () => {
+        this.updateRevertValue();
+        if (previousFormValue) {
+          this.reset(previousFormValue);
+        }
+      },
+      {injector: this._injector},
+    );
   }
 
   ngOnDestroy(): void {
