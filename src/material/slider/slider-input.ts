@@ -340,6 +340,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _onFocus(): void {
+    this._slider._setTransition(false);
+    this._slider._updateTrackUI(this);
     this._setIsFocused(true);
   }
 
