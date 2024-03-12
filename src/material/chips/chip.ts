@@ -32,6 +32,8 @@ import {
   booleanAttribute,
   numberAttribute,
   ANIMATION_MODULE_TYPE,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -42,7 +44,6 @@ import {
 } from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {merge, Subject, Subscription} from 'rxjs';
-import {take} from 'rxjs/operators';
 import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
 import {MatChipAction} from './chip-action';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
@@ -239,6 +240,8 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    */
   _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
+  private _injector = inject(Injector);
+
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,
     public _elementRef: ElementRef<HTMLElement>,
@@ -407,10 +410,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
           // When animations are enabled, Angular may end up removing the chip from the DOM a little
           // earlier than usual, causing it to be blurred and throwing off the logic in the chip list
           // that moves focus not the next item. To work around the issue, we defer marking the chip
-          // as not focused until the next time the zone stabilizes.
-          this._ngZone.onStable
-            .pipe(take(1))
-            .subscribe(() => this._ngZone.run(() => this._onBlur.next({chip: this})));
+          // as not focused until after the next render.
+          afterNextRender(() => this._ngZone.run(() => this._onBlur.next({chip: this})), {
+            injector: this._injector,
+          });
         }
       }
     });
