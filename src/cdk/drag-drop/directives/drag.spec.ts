@@ -12,6 +12,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  ErrorHandler,
   Input,
   NgZone,
   Provider,
@@ -1166,12 +1167,18 @@ describe('CdkDrag', () => {
       expect(Math.floor(elementRect.left)).toBe(50);
     }));
 
-    it('should throw if drag item is attached to an ng-container', fakeAsync(() => {
-      expect(() => {
-        createComponent(DraggableOnNgContainer).detectChanges();
-        flush();
-      }).toThrowError(/^cdkDrag must be attached to an element node/);
-    }));
+    it('should throw if drag item is attached to an ng-container', () => {
+      const errorHandler = jasmine.createSpyObj(['handleError']);
+      createComponent(DraggableOnNgContainer, [
+        {
+          provide: ErrorHandler,
+          useValue: errorHandler,
+        },
+      ]).detectChanges();
+      expect(errorHandler.handleError.calls.mostRecent().args[0].message).toMatch(
+        /^cdkDrag must be attached to an element node/,
+      );
+    });
 
     it('should cancel drag if the mouse moves before the delay is elapsed', fakeAsync(() => {
       // We can't use Jasmine's `clock` because Zone.js interferes with it.
