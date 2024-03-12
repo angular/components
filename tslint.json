@@ -157,7 +157,26 @@
     ],
     "no-unescaped-html-tag": true,
     // Ensures that all rxjs imports come only from `rxjs` and `rxjs/operators`.
-    "import-blacklist": [true, ["^rxjs(?!$|/operators$).*", "^@material/"]]
+    "import-blacklist": [true, ["^rxjs(?!$|/operators$).*", "^@material/"]],
+    "no-zone-dependencies": [
+      true,
+      [
+        // Tests may need to verify behavior with zones.
+        "**/*.spec.ts",
+        // TODO(mmalerba): following files to be cleaned up and removed from this list:
+        "**/cdk/a11y/focus-trap/focus-trap.ts",
+        "**/cdk/drag-drop/directives/drag.ts",
+        "**/cdk/overlay/overlay-ref.ts",
+        "**/cdk/table/coalesced-style-scheduler.ts",
+        "**/cdk/table/table.ts",
+        "**/material/autocomplete/autocomplete-trigger.ts",
+        "**/material/chips/chip.ts",
+        "**/material/form-field/form-field.ts",
+        "**/material/menu/menu.ts",
+        "**/material/sidenav/drawer.ts",
+        "**/material/tabs/paginated-tab-header.ts"
+      ]
+    ]
   },
   "linterOptions": {
     "exclude": [
