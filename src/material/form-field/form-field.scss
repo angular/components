@@ -127,6 +127,9 @@ $_icon-prefix-infix-padding: 4px;
   // The MDC text-field should stretch to the width of the host `<mat-form-field>` element.
   // This allows developers to control the width without needing custom CSS overrides.
   width: 100%;
+  // Avoids stacking issues due to the absolutely-positioned
+  // descendants of the form field (see #28708)
+  z-index: 0;
 }
 
 .mat-mdc-form-field-icon-prefix,
@@ -139,7 +142,7 @@ $_icon-prefix-infix-padding: 4px;
   // MDC applies `pointer-events: none` to the `.mdc-text-field--disabled`. This breaks clicking on
   // prefix and suffix buttons, so we override `pointer-events` to always allow clicking.
   pointer-events: auto;
-  // Needs a z-index to ensure it's on top of other content clickable. See #27043.
+  // Needs a z-index to ensure it's on top of other clickable content. See #27043.
   position: relative;
   z-index: 1;
 
