@@ -428,7 +428,10 @@ export class MatAutocompleteTrigger
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
-    Promise.resolve(null).then(() => this._assignOptionValue(value));
+    this._updateMarkedSelection(value);
+    Promise.resolve(null).then(() => {
+      this._assignOptionValue(value);
+    });
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -727,6 +730,26 @@ export class MatAutocompleteTrigger
     }
 
     this.closePanel();
+  }
+
+  /**
+   * This method updates the options so that only those matching the display of the
+   * specified value are marked as selected.
+   */
+  private _updateMarkedSelection(value: any) {
+    const displayWith = this.autocomplete?.displayWith ?? (value => value);
+    const valueDisplay = displayWith(value);
+
+    // Null checks are necessary here, because the autocomplete
+    // or its options may not have been assigned yet.
+    this.autocomplete?.options?.forEach(option => {
+      const optionDisplay = displayWith(option.value);
+      if (option.selected && optionDisplay !== valueDisplay) {
+        option.deselect(false);
+      } else if (!option.selected && optionDisplay === valueDisplay) {
+        option.select(false);
+      }
+    });
   }
 
   /**
