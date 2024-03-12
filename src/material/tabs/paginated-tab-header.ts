@@ -24,6 +24,9 @@ import {
   numberAttribute,
   Output,
   ANIMATION_MODULE_TYPE,
+  afterNextRender,
+  inject,
+  Injector,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -39,7 +42,7 @@ import {
   timer,
   fromEvent,
 } from 'rxjs';
-import {take, switchMap, startWith, skip, takeUntil, filter} from 'rxjs/operators';
+import {switchMap, startWith, skip, takeUntil, filter} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 
 /** Config used to bind passive event listeners */
@@ -153,6 +156,8 @@ export abstract class MatPaginatedTabHeader
   /** Event emitted when a label is focused. */
   @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
+  private _injector = inject(Injector);
+
   constructor(
     protected _elementRef: ElementRef<HTMLElement>,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -209,9 +214,9 @@ export abstract class MatPaginatedTabHeader
 
     // Defer the first call in order to allow for slower browsers to lay out the elements.
     // This helps in cases where the user lands directly on a page with paginated tabs.
-    // Note that we use `onStable` instead of `requestAnimationFrame`, because the latter
-    // can hold up tests that are in a background tab.
-    this._ngZone.onStable.pipe(take(1)).subscribe(realign);
+    // TODO(mmalerba): Consider breaking this into multiple `afterNextRender` calls with explicit
+    //  phase.
+    afterNextRender(realign, {injector: this._injector});
 
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
