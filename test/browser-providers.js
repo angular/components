@@ -6,7 +6,7 @@
  */
 const browserConfig = {
   'iOS15': {unitTest: {target: 'saucelabs'}},
-  'Safari15': {unitTest: {target: 'browserstack'}},
+  'Safari16': {unitTest: {target: 'browserstack'}},
 };
 
 /** Exports all available custom Karma browsers. */

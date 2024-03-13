@@ -8,11 +8,11 @@
     "platformName": "iOS",
     "deviceName": "iPhone 13 Pro Max Simulator"
   },
-  "BROWSERSTACK_SAFARI15": {
+  "BROWSERSTACK_SAFARI16": {
     "base": "BrowserStack",
     "browser": "Safari",
-    "browser_version": "15.0",
+    "browser_version": "16.0",
     "os": "OS X",
-    "os_version": "Monterey"
+    "os_version": "Ventura"
   }
 }
