@@ -539,6 +539,7 @@ export type RippleConfig = {
 export interface RippleGlobalOptions {
     animation?: RippleAnimationConfig;
     disabled?: boolean;
+    namespace?: string;
     terminateOnPointerUp?: boolean;
 }
 
