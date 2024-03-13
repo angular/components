@@ -310,7 +310,12 @@ export class MatAutocompleteTrigger
 
     if (this.panelOpen) {
       // Only emit if the panel was visible.
-      this.autocomplete.closed.emit();
+      // `afterNextRender` always runs outside of the Angular zone, so all the subscriptions from
+      // `_subscribeToClosingActions()` are also outside of the Angular zone.
+      // We should manually run in Angular zone to update UI after panel closing.
+      this._zone.run(() => {
+        this.autocomplete.closed.emit();
+      });
     }
 
     this.autocomplete._isOpen = this._overlayAttached = false;
@@ -614,33 +619,38 @@ export class MatAutocompleteTrigger
         .pipe(
           // create a new stream of panelClosingActions, replacing any previous streams
           // that were created, and flatten it so our stream only emits closing events...
-          switchMap(() => {
-            const wasOpen = this.panelOpen;
-            this._resetActiveItem();
-            this._updatePanelState();
-            this._changeDetectorRef.detectChanges();
+          switchMap(() =>
+            this._zone.run(() => {
+              // `afterNextRender` always runs outside of the Angular zone, thus we have to re-enter
+              // the Angular zone. This will lead to change detection being called outside of the Angular
+              // zone and the `autocomplete.opened` will also emit outside of the Angular.
+              const wasOpen = this.panelOpen;
+              this._resetActiveItem();
+              this._updatePanelState();
+              this._changeDetectorRef.detectChanges();
 
-            if (this.panelOpen) {
-              this._overlayRef!.updatePosition();
-            }
-
-            if (wasOpen !== this.panelOpen) {
-              // If the `panelOpen` state changed, we need to make sure to emit the `opened` or
-              // `closed` event, because we may not have emitted it. This can happen
-              // - if the users opens the panel and there are no options, but the
-              //   options come in slightly later or as a result of the value changing,
-              // - if the panel is closed after the user entered a string that did not match any
-              //   of the available options,
-              // - if a valid string is entered after an invalid one.
               if (this.panelOpen) {
-                this._emitOpened();
-              } else {
-                this.autocomplete.closed.emit();
+                this._overlayRef!.updatePosition();
               }
-            }
 
-            return this.panelClosingActions;
-          }),
+              if (wasOpen !== this.panelOpen) {
+                // If the `panelOpen` state changed, we need to make sure to emit the `opened` or
+                // `closed` event, because we may not have emitted it. This can happen
+                // - if the users opens the panel and there are no options, but the
+                //   options come in slightly later or as a result of the value changing,
+                // - if the panel is closed after the user entered a string that did not match any
+                //   of the available options,
+                // - if a valid string is entered after an invalid one.
+                if (this.panelOpen) {
+                  this._emitOpened();
+                } else {
+                  this.autocomplete.closed.emit();
+                }
+              }
+
+              return this.panelClosingActions;
+            }),
+          ),
           // when the first closing event occurs...
           take(1),
         )
