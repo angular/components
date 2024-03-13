@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '@material/ripple/ripple-theme' as mdc-ripple-theme;
 @use '../../token-utils';
 @use '../../../theming/theming';
@@ -58,10 +59,11 @@ $prefix: (mat, filled-button);
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
   $state-layer-color: null;
   $ripple-color: null;
+  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
 
   // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  @if (token-utils.$private-is-internal-build) {
+  @if (token-utils.$private-is-internal-build or meta.type-of($contrast-color) != 'color') {
     $is-dark: inspection.get-theme-type($theme) == dark;
     $container-color: inspection.get-theme-color($theme, $palette-name);
     $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);

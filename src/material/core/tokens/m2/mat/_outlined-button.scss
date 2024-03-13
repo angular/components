@@ -57,10 +57,14 @@ $prefix: (mat, outlined-button);
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
   $color: inspection.get-theme-color($theme, $palette-name);
+  $ripple-opacity: 0.1;
 
   @return (
     state-layer-color: $color,
-    ripple-color: if(meta.type-of($color) == color, rgba($color, 0.1), $color),
+    ripple-color: if(
+      meta.type-of($color) == color,
+      rgba($color, $ripple-opacity),
+      inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
   );
 }
 
