@@ -14,6 +14,7 @@ import {
   EnvironmentInjector,
   NgZone,
   afterNextRender,
+  afterRender,
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
@@ -60,6 +61,8 @@ export class OverlayRef implements PortalOutlet {
   /** Stream of mouse outside events dispatched to this overlay. */
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
 
+  private _renders = new Subject<void>();
+
   constructor(
     private _portalOutlet: PortalOutlet,
     private _host: HTMLElement,
@@ -79,6 +82,8 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._positionStrategy = _config.positionStrategy;
+
+    afterRender(() => this._renders.next(), {injector: this._injector});
   }
 
   /** The overlay's HTML element */
@@ -223,7 +228,7 @@ export class OverlayRef implements PortalOutlet {
 
     // Keeping the host element in the DOM can cause scroll jank, because it still gets
     // rendered, even though it's transparent and unclickable which is why we remove it.
-    this._detachContentWhenStable();
+    this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
     return detachmentResult;
@@ -256,6 +261,7 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._detachments.complete();
+    this._renders.complete();
   }
 
   /** Whether the overlay has attached content. */
@@ -490,34 +496,29 @@ export class OverlayRef implements PortalOutlet {
     }
   }
 
-  /** Detaches the overlay content next time the zone stabilizes. */
-  private _detachContentWhenStable() {
-    // Normally we wouldn't have to explicitly run this outside the `NgZone`, however
-    // if the consumer is using `zone-patch-rxjs`, the `Subscription.unsubscribe` call will
-    // be patched to run inside the zone, which will throw us into an infinite loop.
-    this._ngZone.runOutsideAngular(() => {
-      // We can't remove the host here immediately, because the overlay pane's content
-      // might still be animating. This stream helps us avoid interrupting the animation
-      // by waiting for the pane to become empty.
-      const subscription = this._ngZone.onStable
-        .pipe(takeUntil(merge(this._attachments, this._detachments)))
-        .subscribe(() => {
-          // Needs a couple of checks for the pane and host, because
-          // they may have been removed by the time the zone stabilizes.
-          if (!this._pane || !this._host || this._pane.children.length === 0) {
-            if (this._pane && this._config.panelClass) {
-              this._toggleClasses(this._pane, this._config.panelClass, false);
-            }
-
-            if (this._host && this._host.parentElement) {
-              this._previousHostParent = this._host.parentElement;
-              this._host.remove();
-            }
-
-            subscription.unsubscribe();
+  /** Detaches the overlay content when the pane becomes empty. */
+  private _detachContentWhenEmpty() {
+    // We can't remove the host here immediately, because the overlay pane's content
+    // might still be animating. This stream helps us avoid interrupting the animation
+    // by waiting for the pane to become empty.
+    const subscription = this._renders
+      .pipe(takeUntil(merge(this._attachments, this._detachments)))
+      .subscribe(() => {
+        // Needs a couple of checks for the pane and host, because
+        // they may have been removed by the time the pane is empty.
+        if (!this._pane || !this._host || this._pane.children.length === 0) {
+          if (this._pane && this._config.panelClass) {
+            this._toggleClasses(this._pane, this._config.panelClass, false);
           }
-        });
-    });
+
+          if (this._host && this._host.parentElement) {
+            this._previousHostParent = this._host.parentElement;
+            this._host.remove();
+          }
+
+          subscription.unsubscribe();
+        }
+      });
   }
 
   /** Disposes of a scroll strategy. */
