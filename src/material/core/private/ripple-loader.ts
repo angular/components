@@ -88,7 +88,7 @@ export class MatRippleLoader implements OnDestroy {
     },
   ): void {
     // Indicates that the ripple has not yet been rendered for this component.
-    host.setAttribute(matRippleUninitialized, '');
+    host.setAttribute(matRippleUninitialized, this._globalRippleOptions?.namespace ?? '');
 
     // Store the additional class name(s) that should be added to the ripple element.
     if (config.className || !host.hasAttribute(matRippleClassName)) {
@@ -139,7 +139,9 @@ export class MatRippleLoader implements OnDestroy {
 
     // TODO(wagnermaciel): Consider batching these events to improve runtime performance.
 
-    const element = eventTarget.closest(`[${matRippleUninitialized}]`);
+    const element = eventTarget.closest(
+      `[${matRippleUninitialized}="${this._globalRippleOptions?.namespace ?? ''}"]`,
+    );
     if (element) {
       this._createRipple(element as HTMLElement);
     }
