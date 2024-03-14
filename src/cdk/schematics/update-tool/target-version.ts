@@ -10,7 +10,7 @@
 
 // tslint:disable-next-line:prefer-const-enum
 export enum TargetVersion {
-  V17 = 'version 17',
+  V18 = 'version 18',
 }
 
 /**
