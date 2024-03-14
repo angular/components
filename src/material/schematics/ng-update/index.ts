@@ -13,24 +13,20 @@ import {
   TargetVersion,
 } from '@angular/cdk/schematics';
 
-import {legacyImportsError} from './migrations/legacy-imports-error';
 import {materialUpgradeData} from './upgrade-data';
-import {ThemeBaseMigration} from './migrations/theme-base-v17';
 
-const materialMigrations: NullableDevkitMigration[] = [ThemeBaseMigration];
+const materialMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular Material v17 */
-export function updateToV17(): Rule {
-  // We pass the v17 migration rule as a callback, instead of using `chain()`, because the
+/** Entry point for the migration schematics with target of Angular Material v18 */
+export function updateToV18(): Rule {
+  // We pass the v18 migration rule as a callback, instead of using `chain()`, because the
   // legacy imports error only logs an error message, it doesn't actually interrupt the migration
   // process and we don't want to execute migrations if there are leftover legacy imports.
-  return legacyImportsError(
-    createMigrationSchematicRule(
-      TargetVersion.V17,
-      materialMigrations,
-      materialUpgradeData,
-      onMigrationComplete,
-    ),
+  return createMigrationSchematicRule(
+    TargetVersion.V18,
+    materialMigrations,
+    materialUpgradeData,
+    onMigrationComplete,
   );
 }
 
