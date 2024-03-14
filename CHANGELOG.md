@@ -1,3 +1,12 @@
+<a name="18.0.0-next.0"></a>
+# 18.0.0-next.0 "diamond-dachshund" (2024-03-14)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e2a45bf1e](https://github.com/angular/components/commit/e2a45bf1e5e49daf2c23c6f737ee959f57b41cf9) | feat | **core:** Allow namespacing ripple-loader event handler ([#28699](https://github.com/angular/components/pull/28699)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.0"></a>
 # 17.3.0 "cobalt-catfish" (2024-03-14)
 ### material
