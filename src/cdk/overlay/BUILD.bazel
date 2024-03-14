@@ -23,6 +23,7 @@ ng_module(
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
+        "//src/cdk/observers",
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/scrolling",

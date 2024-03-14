@@ -14,7 +14,6 @@ import {
   EnvironmentInjector,
   NgZone,
   afterNextRender,
-  afterRender,
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
@@ -25,6 +24,7 @@ import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 
 /** An object where all of its properties cannot be written. */
 export type ImmutableObject<T> = {
@@ -61,7 +61,9 @@ export class OverlayRef implements PortalOutlet {
   /** Stream of mouse outside events dispatched to this overlay. */
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
 
-  private _renders = new Subject<void>();
+  private _paneContentChanged = new Subject<void>();
+
+  private _paneContentObserver: MutationObserver | null;
 
   constructor(
     private _portalOutlet: PortalOutlet,
@@ -75,6 +77,7 @@ export class OverlayRef implements PortalOutlet {
     private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
     private _animationsDisabled = false,
     private _injector: EnvironmentInjector,
+    private _mutationObserverFactory: MutationObserverFactory,
   ) {
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
@@ -83,7 +86,9 @@ export class OverlayRef implements PortalOutlet {
 
     this._positionStrategy = _config.positionStrategy;
 
-    afterRender(() => this._renders.next(), {injector: this._injector});
+    this._paneContentObserver = this._ngZone.runOutsideAngular(() =>
+      this._mutationObserverFactory.create(() => this._paneContentChanged.next()),
+    );
   }
 
   /** The overlay's HTML element */
@@ -261,7 +266,8 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._detachments.complete();
-    this._renders.complete();
+    this._paneContentObserver?.disconnect();
+    this._paneContentChanged.complete();
   }
 
   /** Whether the overlay has attached content. */
@@ -498,10 +504,28 @@ export class OverlayRef implements PortalOutlet {
 
   /** Detaches the overlay content when the pane becomes empty. */
   private _detachContentWhenEmpty() {
+    // Observe the overlay child elements.
+    if (this._pane) {
+      this._paneContentObserver?.observe(this._pane, {childList: true});
+    }
+    if (this._host) {
+      this._paneContentObserver?.observe(this._host, {childList: true});
+    }
+
+    // Create a stream for the next render.
+    const nextRender = new Subject();
+    afterNextRender(
+      () => {
+        nextRender.next();
+        nextRender.complete();
+      },
+      {injector: this._injector},
+    );
+
     // We can't remove the host here immediately, because the overlay pane's content
     // might still be animating. This stream helps us avoid interrupting the animation
     // by waiting for the pane to become empty.
-    const subscription = this._renders
+    const subscription = merge(nextRender, this._paneContentChanged)
       .pipe(takeUntil(merge(this._attachments, this._detachments)))
       .subscribe(() => {
         // Needs a couple of checks for the pane and host, because
@@ -518,6 +542,10 @@ export class OverlayRef implements PortalOutlet {
 
           subscription.unsubscribe();
         }
+
+        return () => {
+          this._paneContentObserver?.disconnect();
+        };
       });
   }
 

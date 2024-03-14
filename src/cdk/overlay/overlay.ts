@@ -19,6 +19,7 @@ import {
   ANIMATION_MODULE_TYPE,
   Optional,
   EnvironmentInjector,
+  inject,
 } from '@angular/core';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
@@ -27,6 +28,7 @@ import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -45,6 +47,8 @@ let nextUniqueId = 0;
 @Injectable({providedIn: 'root'})
 export class Overlay {
   private _appRef: ApplicationRef;
+
+  private _mutationObserverFactory = inject(MutationObserverFactory);
 
   constructor(
     /** Scrolling strategies that can be used when creating an overlay. */
@@ -87,6 +91,7 @@ export class Overlay {
       this._outsideClickDispatcher,
       this._animationsModuleType === 'NoopAnimations',
       this._injector.get(EnvironmentInjector),
+      this._mutationObserverFactory,
     );
   }
 
