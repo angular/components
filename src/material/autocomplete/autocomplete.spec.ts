@@ -2546,6 +2546,10 @@ describe('MDC-based MatAutocomplete', () => {
         fixture.detectChanges();
         await new Promise(r => setTimeout(r));
         fixture.detectChanges();
+        await new Promise(r => setTimeout(r));
+        fixture.detectChanges();
+        await new Promise(r => setTimeout(r));
+        fixture.detectChanges();
       };
 
       await flushPosition();

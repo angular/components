@@ -333,7 +333,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
     @Optional() @Inject(DOCUMENT) private _doc: any,
     @Optional() @Inject(MAT_DRAWER_CONTAINER) public _container?: MatDrawerContainer,
   ) {
-    this.openedChange.subscribe((opened: boolean) => {
+    this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
         if (this._doc) {
           this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
