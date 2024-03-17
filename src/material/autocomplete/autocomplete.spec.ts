@@ -2544,6 +2544,8 @@ describe('MDC-based MatAutocomplete', () => {
         // Safari seems to require an extra round that other browsers don't.
         await new Promise(r => setTimeout(r));
         fixture.detectChanges();
+        await new Promise(r => setTimeout(r));
+        fixture.detectChanges();
       };
 
       await flushPosition();
