@@ -393,11 +393,6 @@ describe('Overlay', () => {
       .toBeTruthy();
 
     overlayRef.detach();
-
-    expect(overlayRef.hostElement.parentElement)
-      .withContext('Expected host element not to have been removed immediately.')
-      .toBeTruthy();
-
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
@@ -959,13 +954,7 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
-      // Stable emits after zone.run
-      TestBed.inject(NgZone).run(() => {
-        viewContainerFixture.detectChanges();
-        expect(pane.classList)
-          .withContext('Expected class not to be removed immediately')
-          .toContain('custom-panel-class');
-      });
+      viewContainerFixture.detectChanges();
 
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')

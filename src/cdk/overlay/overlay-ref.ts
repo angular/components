@@ -504,6 +504,11 @@ export class OverlayRef implements PortalOutlet {
 
   /** Detaches the overlay content when the pane becomes empty. */
   private _detachContentWhenEmpty() {
+    if (this._readyToDetach()) {
+      this._detach();
+      return;
+    }
+
     // Observe the overlay child elements.
     if (this._pane) {
       this._paneContentObserver?.observe(this._pane, {childList: true});
@@ -512,34 +517,16 @@ export class OverlayRef implements PortalOutlet {
       this._paneContentObserver?.observe(this._host, {childList: true});
     }
 
-    // Create a stream for the next render.
-    const nextRender = new Subject();
-    afterNextRender(
-      () => {
-        nextRender.next();
-        nextRender.complete();
-      },
-      {injector: this._injector},
-    );
-
     // We can't remove the host here immediately, because the overlay pane's content
     // might still be animating. This stream helps us avoid interrupting the animation
     // by waiting for the pane to become empty.
-    const subscription = merge(nextRender, this._paneContentChanged)
+    const subscription = this._paneContentChanged
       .pipe(takeUntil(merge(this._attachments, this._detachments)))
       .subscribe(() => {
         // Needs a couple of checks for the pane and host, because
         // they may have been removed by the time the pane is empty.
-        if (!this._pane || !this._host || this._pane.children.length === 0) {
-          if (this._pane && this._config.panelClass) {
-            this._toggleClasses(this._pane, this._config.panelClass, false);
-          }
-
-          if (this._host && this._host.parentElement) {
-            this._previousHostParent = this._host.parentElement;
-            this._host.remove();
-          }
-
+        if (!this._readyToDetach()) {
+          this._detach();
           subscription.unsubscribe();
         }
 
@@ -547,6 +534,24 @@ export class OverlayRef implements PortalOutlet {
           this._paneContentObserver?.disconnect();
         };
       });
+  }
+
+  private _readyToDetach() {
+    // Needs a couple of checks for the pane and host, because
+    // they may have been removed by the time the pane is empty.
+    return !this._pane || !this._host || this._pane.children.length === 0;
+  }
+
+  /** Attempts to detach and returns whether it was successful. */
+  private _detach() {
+    if (this._pane && this._config.panelClass) {
+      this._toggleClasses(this._pane, this._config.panelClass, false);
+    }
+
+    if (this._host && this._host.parentElement) {
+      this._previousHostParent = this._host.parentElement;
+      this._host.remove();
+    }
   }
 
   /** Disposes of a scroll strategy. */
