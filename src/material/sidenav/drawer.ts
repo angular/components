@@ -321,6 +321,8 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
    */
   readonly _modeChanged = new Subject<void>();
 
+  private _injector = inject(Injector);
+
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
     private _focusTrapFactory: FocusTrapFactory,
@@ -331,12 +333,11 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
     @Optional() @Inject(DOCUMENT) private _doc: any,
     @Optional() @Inject(MAT_DRAWER_CONTAINER) public _container?: MatDrawerContainer,
   ) {
-    this.openedChange.subscribe((opened: boolean) => {
+    this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
         if (this._doc) {
           this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
         }
-
         this._takeFocus();
       } else if (this._isFocusWithinDrawer()) {
         this._restoreFocus(this._openedVia || 'program');
@@ -441,11 +442,15 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
         return;
       case true:
       case 'first-tabbable':
-        this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
-          if (!hasMovedFocus && typeof this._elementRef.nativeElement.focus === 'function') {
-            element.focus();
-          }
-        });
+        afterNextRender(
+          () => {
+            const hasMovedFocus = this._focusTrap!.focusInitialElement();
+            if (!hasMovedFocus && typeof element.focus === 'function') {
+              element.focus();
+            }
+          },
+          {injector: this._injector},
+        );
         break;
       case 'first-heading':
         this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
