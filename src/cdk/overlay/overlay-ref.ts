@@ -525,7 +525,7 @@ export class OverlayRef implements PortalOutlet {
       .subscribe(() => {
         // Needs a couple of checks for the pane and host, because
         // they may have been removed by the time the pane is empty.
-        if (!this._readyToDetach()) {
+        if (this._readyToDetach()) {
           this._detach();
           subscription.unsubscribe();
         }
