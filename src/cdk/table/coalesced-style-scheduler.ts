@@ -6,9 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken} from '@angular/core';
-import {from, Subject} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {
+  EnvironmentInjector,
+  Injectable,
+  InjectionToken,
+  NgZone,
+  afterNextRender,
+  inject,
+} from '@angular/core';
 
 /**
  * @docs-private
@@ -31,11 +36,11 @@ export const _COALESCED_STYLE_SCHEDULER = new InjectionToken<_CoalescedStyleSche
  * @docs-private
  */
 @Injectable()
-export class _CoalescedStyleScheduler implements OnDestroy {
+export class _CoalescedStyleScheduler {
   private _currentSchedule: _Schedule | null = null;
-  private readonly _destroyed = new Subject<void>();
+  private _injector = inject(EnvironmentInjector);
 
-  constructor(private readonly _ngZone: NgZone) {}
+  constructor(_unusedNgZone?: NgZone) {}
 
   /**
    * Schedules the specified task to run at the end of the current VM turn.
@@ -56,12 +61,6 @@ export class _CoalescedStyleScheduler implements OnDestroy {
     this._currentSchedule!.endTasks.push(task);
   }
 
-  /** Prevent any further tasks from running. */
-  ngOnDestroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
-  }
-
   private _createScheduleIfNeeded() {
     if (this._currentSchedule) {
       return;
@@ -69,9 +68,8 @@ export class _CoalescedStyleScheduler implements OnDestroy {
 
     this._currentSchedule = new _Schedule();
 
-    this._getScheduleObservable()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
+    afterNextRender(
+      () => {
         while (this._currentSchedule!.tasks.length || this._currentSchedule!.endTasks.length) {
           const schedule = this._currentSchedule!;
 
@@ -88,14 +86,8 @@ export class _CoalescedStyleScheduler implements OnDestroy {
         }
 
         this._currentSchedule = null;
-      });
-  }
-
-  private _getScheduleObservable() {
-    // Use onStable when in the context of an ongoing change detection cycle so that we
-    // do not accidentally trigger additional cycles.
-    return this._ngZone.isStable
-      ? from(Promise.resolve(undefined))
-      : this._ngZone.onStable.pipe(take(1));
+      },
+      {injector: this._injector},
+    );
   }
 }

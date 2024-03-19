@@ -1,6 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Component, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CdkTable, CdkTableModule} from '@angular/cdk/table';
@@ -48,10 +48,10 @@ describe('CdkTableScrollContainer', () => {
     dataRows = getRows(tableElement);
   });
 
-  it('sets scrollbar track margin for sticky headers', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky headers', waitForAsync(async () => {
     component.stickyHeaders = ['header-1', 'header-3'];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -66,7 +66,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyHeaders = [];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -74,10 +74,10 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky footers', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky footers', waitForAsync(async () => {
     component.stickyFooters = ['footer-1', 'footer-3'];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -92,7 +92,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyFooters = [];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -100,10 +100,10 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky start columns', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky start columns', waitForAsync(async () => {
     component.stickyStartColumns = ['column-1', 'column-3'];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -120,7 +120,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyStartColumns = [];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -128,10 +128,10 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky end columns', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky end columns', waitForAsync(async () => {
     component.stickyEndColumns = ['column-4', 'column-6'];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -148,7 +148,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyEndColumns = [];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -156,13 +156,13 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for a combination of sticky rows and columns', fakeAsync(() => {
+  it('sets scrollbar track margin for a combination of sticky rows and columns', waitForAsync(async () => {
     component.stickyHeaders = ['header-1'];
     component.stickyFooters = ['footer-3'];
     component.stickyStartColumns = ['column-1'];
     component.stickyEndColumns = ['column-6'];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -184,7 +184,7 @@ describe('CdkTableScrollContainer', () => {
     component.stickyStartColumns = [];
     component.stickyEndColumns = [];
     fixture.detectChanges();
-    flushMicrotasks();
+    await new Promise(r => setTimeout(r));
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
