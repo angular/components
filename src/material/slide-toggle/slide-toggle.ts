@@ -277,6 +277,7 @@ export class MatSlideToggle
   toggle(): void {
     this.checked = !this.checked;
     this._onChange(this.checked);
+    this.change.emit(this._createChangeEvent(this.checked));
   }
 
   /**
