@@ -14,6 +14,9 @@ import {
   EnvironmentInjector,
   NgZone,
   afterNextRender,
+  afterRender,
+  untracked,
+  AfterRenderRef,
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
@@ -60,6 +63,10 @@ export class OverlayRef implements PortalOutlet {
   /** Stream of mouse outside events dispatched to this overlay. */
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
 
+  private _renders = new Subject<void>();
+
+  private _afterRenderRef: AfterRenderRef;
+
   constructor(
     private _portalOutlet: PortalOutlet,
     private _host: HTMLElement,
@@ -79,6 +86,18 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._positionStrategy = _config.positionStrategy;
+
+    // Users could open the overlay from an `effect`, in which case we need to
+    // run the `afterRender` as `untracked`. We don't recommend that users do
+    // this, but we also don't want to break users who are doing it.
+    this._afterRenderRef = untracked(() =>
+      afterRender(
+        () => {
+          this._renders.next();
+        },
+        {injector: this._injector},
+      ),
+    );
   }
 
   /** The overlay's HTML element */
@@ -223,7 +242,7 @@ export class OverlayRef implements PortalOutlet {
 
     // Keeping the host element in the DOM can cause scroll jank, because it still gets
     // rendered, even though it's transparent and unclickable which is why we remove it.
-    this._detachContentWhenStable();
+    this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
     return detachmentResult;
@@ -256,6 +275,8 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._detachments.complete();
+    this._afterRenderRef.destroy();
+    this._renders.complete();
   }
 
   /** Whether the overlay has attached content. */
@@ -491,7 +512,7 @@ export class OverlayRef implements PortalOutlet {
   }
 
   /** Detaches the overlay content next time the zone stabilizes. */
-  private _detachContentWhenStable() {
+  private _detachContentWhenEmpty() {
     // Normally we wouldn't have to explicitly run this outside the `NgZone`, however
     // if the consumer is using `zone-patch-rxjs`, the `Subscription.unsubscribe` call will
     // be patched to run inside the zone, which will throw us into an infinite loop.
@@ -499,7 +520,7 @@ export class OverlayRef implements PortalOutlet {
       // We can't remove the host here immediately, because the overlay pane's content
       // might still be animating. This stream helps us avoid interrupting the animation
       // by waiting for the pane to become empty.
-      const subscription = this._ngZone.onStable
+      const subscription = this._renders
         .pipe(takeUntil(merge(this._attachments, this._detachments)))
         .subscribe(() => {
           // Needs a couple of checks for the pane and host, because
