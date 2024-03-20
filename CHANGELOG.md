@@ -1,3 +1,12 @@
+<a name="17.3.1"></a>
+# 17.3.1 "clay-paradox" (2024-03-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [31e30883a3](https://github.com/angular/components/commit/31e30883a33d89d277d710a97f81b26b1972c8ba) | fix | **drag-drop:** optionally inject parent drag in preview and placeholder ([#28750](https://github.com/angular/components/pull/28750)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-next.0"></a>
 # 18.0.0-next.0 "diamond-dachshund" (2024-03-14)
 ### material
