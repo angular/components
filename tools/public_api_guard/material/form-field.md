@@ -66,7 +66,8 @@ export class MatError {
 
 // @public
 export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _dir: Directionality, _platform: Platform, _defaults?: MatFormFieldDefaultOptions | undefined, _animationMode?: string | undefined,
+    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef,
+    _unusedNgZone: NgZone, _dir: Directionality, _platform: Platform, _defaults?: MatFormFieldDefaultOptions | undefined, _animationMode?: string | undefined,
     _unusedDocument?: any);
     _animateAndLockLabel(): void;
     // (undocumented)
