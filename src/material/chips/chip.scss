@@ -366,9 +366,9 @@
   }
 
   .mat-icon {
-    width: inherit;
-    height: inherit;
-    font-size: inherit;
+    width: mdc-chip-theme.$trailing-action-size;
+    height: mdc-chip-theme.$trailing-action-size;
+    font-size: mdc-chip-theme.$trailing-action-size;
     box-sizing: content-box;
   }
 }
