@@ -34,7 +34,7 @@ export const CDK_DRAG_PREVIEW = new InjectionToken<CdkDragPreview>('CdkDragPrevi
   providers: [{provide: CDK_DRAG_PREVIEW, useExisting: CdkDragPreview}],
 })
 export class CdkDragPreview<T = any> implements OnDestroy {
-  private _drag = inject(CDK_DRAG_PARENT);
+  private _drag = inject(CDK_DRAG_PARENT, {optional: true});
 
   /** Context data to be added to the preview template instance. */
   @Input() data: T;
@@ -43,10 +43,10 @@ export class CdkDragPreview<T = any> implements OnDestroy {
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
 
   constructor(public templateRef: TemplateRef<T>) {
-    this._drag._setPreviewTemplate(this);
+    this._drag?._setPreviewTemplate(this);
   }
 
   ngOnDestroy(): void {
-    this._drag._resetPreviewTemplate(this);
+    this._drag?._resetPreviewTemplate(this);
   }
 }
