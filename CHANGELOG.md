@@ -1,3 +1,13 @@
+<a name="18.0.0-next.1"></a>
+# 18.0.0-next.1 "basalt-solitude" (2024-03-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9343131450](https://github.com/angular/components/commit/93431314507b11ce8191a632547eee9f2a288775) | fix | **drag-drop:** optionally inject parent drag in preview and placeholder ([#28750](https://github.com/angular/components/pull/28750)) |
+| [108cce33bf](https://github.com/angular/components/commit/108cce33bfb331fcdce18527480b3a89f5f81a28) | fix | **overlay:** Remove use of zone onStable to detach content ([#28740](https://github.com/angular/components/pull/28740)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.1"></a>
 # 17.3.1 "clay-paradox" (2024-03-20)
 ### cdk
