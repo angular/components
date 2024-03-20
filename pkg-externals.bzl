@@ -19,6 +19,7 @@ PKG_EXTERNALS = [
     "@angular/common/http/testing",
     "@angular/common/testing",
     "@angular/core",
+    "@angular/core/rxjs-interop",
     "@angular/core/testing",
     "@angular/forms",
     "@angular/platform-browser",
