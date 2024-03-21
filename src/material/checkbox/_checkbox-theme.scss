@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use 'sass:list';
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '../core/style/sass-utils';
@@ -13,9 +15,9 @@
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-checkbox.
 /// @param {Map} $theme The theme to generate base styles for.
-@mixin base($theme) {
+@mixin base($theme, $custom-tokens: ()) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base), $custom-tokens);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -31,9 +33,13 @@
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
 ///   $color-variant: The color variant to use for the checkbox: primary, secondary, tertiary, or
 ///     error (If not specified, default primary color will be used).
-@mixin color($theme, $options...) {
+@mixin color($theme, $custom-tokens: (), $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+    @include _theme-from-tokens(
+      inspection.get-theme-tokens($theme, color),
+      $custom-tokens,
+      $options...
+    );
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -58,9 +64,9 @@
 
 /// Outputs typography theme styles for the mat-checkbox.
 /// @param {Map} $theme The theme to generate typography styles for.
-@mixin typography($theme) {
+@mixin typography($theme, $custom-tokens: ()) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography), $custom-tokens);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -77,11 +83,11 @@
 
 /// Outputs density theme styles for the mat-checkbox.
 /// @param {Map} $theme The theme to generate density styles for.
-@mixin density($theme) {
+@mixin density($theme, $custom-tokens: ()) {
   $density-scale: inspection.get-theme-density($theme);
 
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density), $custom-tokens);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -97,27 +103,27 @@
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
 ///   $color-variant: The color variant to use for the checkbox: primary, secondary, tertiary, or
 ///     error (If not specified, default primary color will be used).
-@mixin theme($theme, $options...) {
+@mixin theme($theme, $custom-tokens: (), $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-checkbox') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $custom-tokens, $options...);
     }
     @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
-        @include color($theme);
+        @include color($theme, $custom-tokens);
       }
       @if inspection.theme-has($theme, density) {
-        @include density($theme);
+        @include density($theme, $custom-tokens);
       }
       @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
+        @include typography($theme, $custom-tokens);
       }
     }
   }
 }
 
-@mixin _theme-from-tokens($tokens, $options...) {
+@mixin _theme-from-tokens($tokens, $custom-tokens, $options...) {
   @include validation.selector-defined(
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mdc-checkbox-tokens: token-utils.get-tokens-for(
@@ -126,7 +132,46 @@
   // only the mdc-checkbox does.
   $mdc-form-field-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-form-field.$prefix);
   $mat-checkbox-tokens: token-utils.get-tokens-for($tokens, tokens-mat-checkbox.$prefix);
+
+  @include _validate-custom-tokens($custom-tokens, $mat-checkbox-tokens, $mdc-checkbox-tokens);
+
+  $mat-checkbox-tokens: _set-custom-tokens($custom-tokens, $mat-checkbox-tokens);
+  $mdc-checkbox-tokens: _set-custom-tokens($custom-tokens, $mdc-checkbox-tokens);
+
   @include mdc-checkbox-theme.theme($mdc-checkbox-tokens);
   @include mdc-form-field-theme.theme($mdc-form-field-tokens);
   @include token-utils.create-token-values(tokens-mat-checkbox.$prefix, $mat-checkbox-tokens);
+}
+
+@mixin _validate-custom-tokens($custom-tokens, $mat-tokens, $mdc-tokens) {
+  $custom-tokens: if($custom-tokens == null, (), $custom-tokens);
+  $mat-and-mdc-tokens: map.merge($mat-tokens, $mdc-tokens);
+
+  @each $name, $value in $mat-and-mdc-tokens {
+    @if ($value == null) {
+      $mat-and-mdc-tokens: map.remove($mat-and-mdc-tokens, $name);
+    }
+  }
+
+  $valid-token-names: map.keys($mat-and-mdc-tokens);
+
+  @each $name, $_ in $custom-tokens {
+    @if (list.index($valid-token-names, $name) == null) {
+      @error (
+        'Invalid token: "' + $name + '"'
+        'Valid tokens include: ' $valid-token-names
+      );
+    }
+  }
+}
+
+/// Replaces the values in $tokens with the ones from $custom-tokens.
+@function _set-custom-tokens($custom-tokens, $tokens) {
+  $custom-tokens: if($custom-tokens == null, (), $custom-tokens);
+  @each $name, $value in $custom-tokens {
+    @if (map.get($tokens, $name) != null) {
+      $tokens: map.set($tokens, $name, $value);
+    }
+  }
+  @return $tokens;
 }
