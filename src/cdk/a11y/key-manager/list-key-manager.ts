@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {QueryList} from '@angular/core';
+import {EffectRef, Injector, QueryList, Signal, effect, isSignal} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {
   UP_ARROW,
@@ -54,6 +54,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
   private _homeAndEnd = false;
   private _pageUpAndDown = {enabled: false, delta: 10};
+  private _effectRef: EffectRef | undefined;
 
   /**
    * Predicate function that can be used to check whether an item should be skipped
@@ -64,21 +65,25 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
   private _pressedLetters: string[] = [];
 
-  constructor(private _items: QueryList<T> | T[]) {
+  constructor(items: QueryList<T> | T[] | readonly T[]);
+  constructor(items: Signal<T[]> | Signal<readonly T[]>, injector: Injector);
+  constructor(
+    private _items: QueryList<T> | T[] | readonly T[] | Signal<T[]> | Signal<readonly T[]>,
+    injector?: Injector,
+  ) {
     // We allow for the items to be an array because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (_items instanceof QueryList) {
-      this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) => {
-        if (this._activeItem) {
-          const itemArray = newItems.toArray();
-          const newIndex = itemArray.indexOf(this._activeItem);
+      this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) =>
+        this._itemsChanged(newItems.toArray()),
+      );
+    } else if (isSignal(_items)) {
+      if (!injector && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        throw new Error('ListKeyManager constructed with a signal must receive an injector');
+      }
 
-          if (newIndex > -1 && newIndex !== this._activeItemIndex) {
-            this._activeItemIndex = newIndex;
-          }
-        }
-      });
+      this._effectRef = effect(() => this._itemsChanged(_items()), {injector});
     }
   }
 
@@ -144,12 +149,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
   withTypeAhead(debounceInterval: number = 200): this {
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      this._items.length &&
-      this._items.some(item => typeof item.getLabel !== 'function')
-    ) {
-      throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      const items = this._getItemsArray();
+      if (items.length > 0 && items.some(item => typeof item.getLabel !== 'function')) {
+        throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
+      }
     }
 
     this._typeaheadSubscription.unsubscribe();
@@ -403,6 +407,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   destroy() {
     this._typeaheadSubscription.unsubscribe();
     this._itemChangesSubscription?.unsubscribe();
+    this._effectRef?.destroy();
     this._letterKeyStream.complete();
     this.tabOut.complete();
     this.change.complete();
@@ -470,7 +475,22 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /** Returns the items as an array. */
-  private _getItemsArray(): T[] {
+  private _getItemsArray(): T[] | readonly T[] {
+    if (isSignal(this._items)) {
+      return this._items();
+    }
+
     return this._items instanceof QueryList ? this._items.toArray() : this._items;
+  }
+
+  /** Callback for when the items have changed. */
+  private _itemsChanged(newItems: T[] | readonly T[]) {
+    if (this._activeItem) {
+      const newIndex = newItems.indexOf(this._activeItem);
+
+      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+        this._activeItemIndex = newIndex;
+      }
+    }
   }
 }

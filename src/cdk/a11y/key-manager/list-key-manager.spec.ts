@@ -1,7 +1,7 @@
 import {DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '../../testing/private';
-import {QueryList} from '@angular/core';
-import {fakeAsync, tick} from '@angular/core/testing';
+import {Component, QueryList, signal} from '@angular/core';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {take} from 'rxjs/operators';
 import {FocusOrigin} from '../focus-monitor/focus-monitor';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
@@ -104,6 +104,33 @@ describe('Key managers', () => {
     it('should set the activeItem to null if an invalid index is passed in', () => {
       keyManager.setActiveItem(1337);
       expect(keyManager.activeItem).toBeNull();
+    });
+
+    it('should maintain the active item when the signal-based items change', () => {
+      keyManager.destroy();
+
+      @Component({template: '', standalone: true})
+      class App {}
+
+      const fixture = TestBed.createComponent(App);
+      fixture.detectChanges();
+      const items = signal([
+        new FakeFocusable('one'),
+        new FakeFocusable('two'),
+        new FakeFocusable('three'),
+      ]);
+
+      keyManager = new ListKeyManager<FakeFocusable>(items, fixture.componentRef.injector);
+      keyManager.setFirstItemActive();
+      spyOn(keyManager, 'setActiveItem').and.callThrough();
+
+      expect(keyManager.activeItemIndex).toBe(0);
+      expect(keyManager.activeItem!.getLabel()).toBe('one');
+      items.update(current => [new FakeFocusable('zero'), ...current]);
+      fixture.detectChanges();
+
+      expect(keyManager.activeItemIndex).toBe(1);
+      expect(keyManager.activeItem!.getLabel()).toBe('one');
     });
 
     describe('Key events', () => {
