@@ -80,13 +80,13 @@ the theme configuration object (see the
 [M3 typography spec](https://m3.material.io/styles/typography/type-scale-tokens) to learn more about
 these terms):
 
-| Typography Property | Description                                                          |
-|---------------------|----------------------------------------------------------------------|
-| `plain`             | [Optional] The font family to use for plain text, such as body text. |
-| `brand`             | [Optional] The font family to use for brand text, such as headlines. |
-| `bold`              | [Optional] The font weight to use for bold text.                     |
-| `medium`            | [Optional] The font weight to use for medium text.                   |
-| `regular`           | [Optional] The font weight to use for regular text.                  |
+| Typography Property      | Description                                                          |
+|--------------------------|----------------------------------------------------------------------|
+| `plain-family`           | [Optional] The font family to use for plain text, such as body text. |
+| `brand-family`           | [Optional] The font family to use for brand text, such as headlines. |
+| `bold-weight`            | [Optional] The font weight to use for bold text.                     |
+| `medium-weight`          | [Optional] The font weight to use for medium text.                   |
+| `regular-weight`         | [Optional] The font weight to use for regular text.                  |
 
 #### Customizing your density
 The following aspects of your app's density can be customized via the `density` property of the
