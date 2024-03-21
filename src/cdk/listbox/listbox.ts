@@ -40,6 +40,7 @@ import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Directionality} from '@angular/cdk/bidi';
+import {Platform} from '@angular/cdk/platform';
 
 /** The next id to use for creating unique DOM IDs. */
 let nextId = 0;
@@ -402,6 +403,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /** The directionality of the page. */
   private readonly _dir = inject(Directionality, {optional: true});
 
+  /** Whether the component is being rendered in the browser. */
+  private readonly _isBrowser: boolean = inject(Platform).isBrowser;
+
   /** A predicate that skips disabled options. */
   private readonly _skipDisabledPredicate = (option: CdkOption<T>) => option.disabled;
 
@@ -415,7 +419,9 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   private _previousActiveOption: CdkOption<T> | null = null;
 
   constructor() {
-    this._setPreviousActiveOptionAsActiveOptionOnWindowBlur();
+    if (this._isBrowser) {
+      this._setPreviousActiveOptionAsActiveOptionOnWindowBlur();
+    }
   }
 
   ngAfterContentInit() {
