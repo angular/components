@@ -1,5 +1,6 @@
 import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkListboxModule} from '@angular/cdk/listbox';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
 import {Component, ElementRef, InjectionToken, inject} from '@angular/core';
@@ -95,6 +96,37 @@ export class TestEntryComponent {}
       border: 1px solid black;
     }
 
+    .test-cdk-listbox {
+      display: block;
+      width: 100%;
+
+      > label {
+        display: block;
+        padding: 5px;
+      }
+
+      > ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        > li {
+          position: relative;
+          padding: 5px 5px 5px 25px;
+
+          &:focus {
+            background: rgba(0, 0, 0, 0.2);
+          }
+
+          &[aria-selected='true']::before {
+            content: "✔";
+            position: absolute;
+            left: 2px;
+          }
+        }
+      }
+    }
+
     .test-cdk-table {
       display: table;
       width: 100%;
@@ -146,6 +178,7 @@ export class TestEntryComponent {}
     ScrollingModule,
 
     // CDK Modules
+    CdkListboxModule,
     CdkTableModule,
     DragDropModule,
     A11yModule,
