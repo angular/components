@@ -11,7 +11,7 @@ projectDir="$(dirname ${0})/../.."
 cd ${projectDir}
 
 # Decode access token and make it accessible for child processes.
-export BROWSER_STACK_ACCESS_KEY=`echo ${BROWSER_STACK_ACCESS_KEY} | rev`
+export BROWSER_STACK_ACCESS_KEY=`echo ${BROWSER_STACK_ACCESS_KEY}`
 
 # Setup the test platform environment variable that will be read
 # by the Karma configuration script.

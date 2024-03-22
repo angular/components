@@ -8,7 +8,7 @@ set -e
 cd $(dirname ${0})/../..
 
 # Decode access token and make it accessible for child processes.
-export SAUCE_ACCESS_KEY=`echo ${SAUCE_ACCESS_KEY} | rev`
+export SAUCE_ACCESS_KEY=`echo ${SAUCE_ACCESS_KEY}`
 
 # Start tunnel and wait for it being ready.
 ./scripts/saucelabs/start-tunnel.sh &

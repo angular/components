@@ -300,3 +300,48 @@ jobs:
         with:
           JOB_NAME: 'Docs site deployment'
           SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  saucelabs:
+    runs-on: ubuntu-latest
+    env:
+      KARMA_PARALLEL_BROWSERS: 2
+      CI_NODE_INDEX: 0
+      CI_NODE_TOTAL: 1
+      CI_RUNNER_NUMBER: ${{ github.run_id }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Saucelabs Variables
+        uses: angular/dev-infra/github-actions/saucelabs@4b433074a806bbbd4d319264430740cd46e62f27
+      - name: Run tests on Saucelabs
+        run: ./scripts/circleci/run-saucelabs-tests.sh
+
+  browserstack:
+    runs-on: ubuntu-latest
+    env:
+      CI_NODE_INDEX: 0
+      CI_NODE_TOTAL: 1
+      CI_RUNNER_NUMBER: ${{ github.run_id }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+        with:
+          cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@2113cd7f66a089ac0208ea84eee672b2529f4f6c
+      - name: Setup Saucelabs Variables
+        uses: angular/dev-infra/github-actions/browserstack@4b433074a806bbbd4d319264430740cd46e62f27
+      - name: Run tests on Browserstack
+        run: ./scripts/circleci/run-browserstack-tests.sh
