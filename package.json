@@ -122,6 +122,7 @@
     "@material/line-ripple": "15.0.0-canary.7f224ddd4.0",
     "@material/linear-progress": "15.0.0-canary.7f224ddd4.0",
     "@material/list": "15.0.0-canary.7f224ddd4.0",
+    "@material/material-color-utilities": "^0.2.7",
     "@material/menu": "15.0.0-canary.7f224ddd4.0",
     "@material/menu-surface": "15.0.0-canary.7f224ddd4.0",
     "@material/notched-outline": "15.0.0-canary.7f224ddd4.0",

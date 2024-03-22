@@ -78,6 +78,34 @@ used with the `primary` and `tertiary` options:
 - `$m3-violet-palette`
 - `$m3-rose-palette`
 
+For more customization, you can run a schematic to generate a scss file with
+theme(s) that use custom colors. You can specify a color to represent the
+primary color palette and the rest of the color palettes (secondary, tertiary,
+neutral) are generated from Material. The generated color palettes are
+optimized to have enough contrast to be more accessible, for more context you
+can read here: [Science of Color Design](https://material.io/blog/science-of-color-design).
+
+You can also specify colors to represent the other color palettes if you want
+more customization. It is recommended to choose colors that are contrastful,
+Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/accessible-design/patterns).
+
+```shell
+ng generate @angular/material:m3-theme
+```
+
+You can then import the generated theme scss file to use `$m3-light-theme` and/or
+`$m3-dark-theme` to where you apply your themes.
+
+```scss
+@import './path/to/m3-theme';
+
+html {
+  // Apply the base theme at the root, so it will be inherited by the whole app.
+  @include mat.all-component-themes($m3-light-theme);
+  @include mat.all-component-themes($m3-dark-theme);
+}
+```
+
 <!-- TODO(mmalerba): Illustrate palettes with example. -->
 
 #### Customizing your typography
@@ -268,7 +296,6 @@ provided by Angular Material to access properties of the theme.
 ```
 
 ### Reading tonal palette colors
-
 To read a
 [tonal palette color](https://m3.material.io/styles/color/system/how-the-system-works#3ce9da92-a118-4692-8b2c-c5c52a413fa6)
 from the theme, use the `get-theme-color` function with three arguments:
@@ -439,7 +466,6 @@ these changes would be accompanied by a schematic to find & replace the old name
 across your app.
 
 ### Are the Material 2 styles and APIs going away?
-
 Material 2 styles and their APIs will continue to be supported, and we do not have any immediate
 plans to deprecate them. We understand that it will take time for applications to switch to the
 latest Material 3 styles, and we want to provide enough time for migrations. When we do decide to
