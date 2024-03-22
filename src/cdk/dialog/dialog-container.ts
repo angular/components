@@ -31,14 +31,14 @@ import {
   ElementRef,
   EmbeddedViewRef,
   Inject,
+  Injector,
   NgZone,
   OnDestroy,
   Optional,
   ViewChild,
   ViewEncapsulation,
-  inject,
   afterNextRender,
-  Injector,
+  inject,
 } from '@angular/core';
 import {DialogConfig} from './dialog-config';
 
@@ -272,12 +272,16 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
       case 'first-tabbable':
         afterNextRender(
           () => {
-            const focusedSuccessfully = this._focusTrap?.focusInitialElement();
-            // If we weren't able to find a focusable element in the dialog, then focus the dialog
-            // container instead.
-            if (!focusedSuccessfully) {
-              this._focusDialogContainer();
-            }
+            this._ngZone.run(() =>
+              queueMicrotask(() => {
+                const focusedSuccessfully = this._focusTrap?.focusInitialElement();
+                // If we weren't able to find a focusable element in the dialog, then focus the dialog
+                // container instead.
+                if (!focusedSuccessfully) {
+                  this._focusDialogContainer();
+                }
+              }),
+            );
           },
           {injector: this._injector},
         );

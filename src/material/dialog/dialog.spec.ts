@@ -18,7 +18,6 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
-  createNgModuleRef,
   Directive,
   Inject,
   Injectable,
@@ -29,35 +28,35 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  createNgModuleRef,
   forwardRef,
   signal,
 } from '@angular/core';
 import {
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
   flushMicrotasks,
   inject,
-  TestBed,
   tick,
-  waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
+import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 import {
-  MatDialog,
-  MatDialogState,
-  MatDialogModule,
-  MatDialogRef,
   MAT_DIALOG_DATA,
   MAT_DIALOG_DEFAULT_OPTIONS,
-  MatDialogContent,
-  MatDialogTitle,
+  MatDialog,
   MatDialogActions,
   MatDialogClose,
+  MatDialogContent,
+  MatDialogModule,
+  MatDialogRef,
+  MatDialogState,
+  MatDialogTitle,
 } from './index';
-import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 
 describe('MDC-based MatDialog', () => {
   let dialog: MatDialog;
@@ -968,6 +967,7 @@ describe('MDC-based MatDialog', () => {
       viewContainerFixture.detectChanges();
       flush();
       viewContainerFixture.detectChanges();
+      flush();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       let input = overlayContainerElement.querySelector('input') as HTMLInputElement;
@@ -998,6 +998,7 @@ describe('MDC-based MatDialog', () => {
         viewContainerFixture.detectChanges();
         flush();
         viewContainerFixture.detectChanges();
+        flush();
 
         let backdrop = overlayContainerElement.querySelector(
           '.cdk-overlay-backdrop',
@@ -1184,6 +1185,7 @@ describe('MDC-based MatDialog', () => {
       viewContainerFixture.detectChanges();
       flush();
       viewContainerFixture.detectChanges();
+      flush();
 
       expect(document.activeElement!.tagName)
         .withContext('Expected first tabbable element (input) in the dialog to be focused.')
@@ -1511,6 +1513,7 @@ describe('MDC-based MatDialog', () => {
       viewContainerFixture.detectChanges();
       flush();
       viewContainerFixture.detectChanges();
+      flush();
 
       expect(document.activeElement!.tagName)
         .withContext('Expected dialog container to be focused.')
