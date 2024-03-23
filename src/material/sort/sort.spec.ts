@@ -502,6 +502,56 @@ describe('MatSort', () => {
       expect(containerA.classList.contains('mat-sort-header-position-before')).toBe(true);
       expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
     });
+
+    it('should correctly sort when passing same direction twice to sort method', () => {
+      const matSortWithArrowPositionFixture = TestBed.createComponent(MatSortWithArrowPosition);
+      matSortWithArrowPositionFixture.detectChanges();
+      const matSortWithArrowPositionComponent = matSortWithArrowPositionFixture.componentInstance;
+
+      matSortWithArrowPositionComponent.matSort.sort({
+        id: 'defaultA',
+        direction: 'desc',
+        disableClear: false,
+      });
+
+      matSortWithArrowPositionComponent.matSort.sort({
+        id: 'defaultA',
+        direction: 'desc',
+        disableClear: false,
+      });
+
+      expect(matSortWithArrowPositionComponent.matSort.direction).toBe('desc');
+    });
+
+    it('should correctly sort when passing going desc -> asc -> desc', () => {
+      const matSortWithArrowPositionFixture = TestBed.createComponent(MatSortWithArrowPosition);
+      matSortWithArrowPositionFixture.detectChanges();
+      const matSortWithArrowPositionComponent = matSortWithArrowPositionFixture.componentInstance;
+
+      matSortWithArrowPositionComponent.matSort.sort({
+        id: 'defaultA',
+        direction: 'desc',
+        disableClear: false,
+      });
+
+      expect(matSortWithArrowPositionComponent.matSort.direction).toBe('desc');
+
+      matSortWithArrowPositionComponent.matSort.sort({
+        id: 'defaultA',
+        direction: 'asc',
+        disableClear: false,
+      });
+
+      expect(matSortWithArrowPositionComponent.matSort.direction).toBe('asc');
+
+      matSortWithArrowPositionComponent.matSort.sort({
+        id: 'defaultA',
+        direction: 'desc',
+        disableClear: false,
+      });
+
+      expect(matSortWithArrowPositionComponent.matSort.direction).toBe('desc');
+    });
   });
 
   describe('with default options', () => {
