@@ -1,12 +1,11 @@
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
+load("//tools:integration.bzl", "CLI_PROJECT_MAPPINGS")
 load("//tools:defaults.bzl", "node_integration_test")
 
 # TODO(mmalerba): Consider extracting infrastructure for running golden tests against other future migrations.
 
 npmPackageMappings = dicts.add(
-    # TODO(crisbeto): temporarily disabled until Tooling makes an 18.x release.
-    # CLI_PROJECT_MAPPINGS,
-    {},
+    CLI_PROJECT_MAPPINGS,
     {
         "//src/cdk:npm_package_archive": "@angular/cdk",
         "//src/material:npm_package_archive": "@angular/material",
