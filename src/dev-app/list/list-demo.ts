@@ -12,6 +12,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {CommonModule} from '@angular/common';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 interface Link {
   name: string;
@@ -23,7 +24,14 @@ interface Link {
   templateUrl: 'list-demo.html',
   styleUrl: 'list-demo.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatListModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatSlideToggleModule,
+  ],
 })
 export class ListDemo {
   items: string[] = ['Pepper', 'Salt', 'Paprika'];
@@ -65,6 +73,7 @@ export class ListDemo {
   ];
 
   thirdLine = false;
+  showSwitch = false;
   showBoxes = false;
   infoClicked = false;
   selectionListDisabled = false;
