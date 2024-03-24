@@ -5,8 +5,8 @@
     [rangePicker]="campaignOnePicker"
     [comparisonStart]="campaignTwo.value.start"
     [comparisonEnd]="campaignTwo.value.end">
-    <input matStartDate placeholder="Start date" formControlName="start">
-    <input matEndDate placeholder="End date" formControlName="end">
+    <input matStartDate placeholder="Start date" aria-label="Start date" formControlName="start">
+    <input matEndDate placeholder="End date" aria-label="End date" formControlName="end">
   </mat-date-range-input>
   <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
   <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
@@ -20,8 +20,8 @@
     [rangePicker]="campaignTwoPicker"
     [comparisonStart]="campaignOne.value.start"
     [comparisonEnd]="campaignOne.value.end">
-    <input matStartDate placeholder="Start date" formControlName="start">
-    <input matEndDate placeholder="End date" formControlName="end">
+    <input matStartDate placeholder="Start date" aria-label="Start date" formControlName="start">
+    <input matEndDate placeholder="End date" aria-label="Start date" formControlName="end">
   </mat-date-range-input>
   <mat-datepicker-toggle matIconSuffix [for]="campaignTwoPicker"></mat-datepicker-toggle>
   <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
