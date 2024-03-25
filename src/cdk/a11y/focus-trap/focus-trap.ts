@@ -32,9 +32,6 @@ import {InteractivityChecker} from '../interactivity-checker/interactivity-check
  * This class currently uses a relatively simple approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
  * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause the two to be misaligned.
- *
- * @deprecated Use `ConfigurableFocusTrap` instead.
- * @breaking-change 11.0.0
  */
 export class FocusTrap {
   private _startAnchor: HTMLElement | null;
@@ -368,8 +365,6 @@ export class FocusTrap {
 
 /**
  * Factory that allows easy instantiation of focus traps.
- * @deprecated Use `ConfigurableFocusTrapFactory` instead.
- * @breaking-change 11.0.0
  */
 @Injectable({providedIn: 'root'})
 export class FocusTrapFactory {
