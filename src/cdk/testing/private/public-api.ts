@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './wrapped-error-message';
-export * from './mock-ng-zone';
 export * from './text-dedent';
+export * from './wrapped-error-message';
 
 // Re-exported for convenience.
 export * from '../testbed/fake-events';

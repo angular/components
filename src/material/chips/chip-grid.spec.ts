@@ -15,21 +15,19 @@ import {
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-  MockNgZone,
   patchElementFocus,
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
-  NgZone,
+  EventEmitter,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
-  EventEmitter,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -42,7 +40,6 @@ describe('MDC-based MatChipGrid', () => {
   let chipGridNativeElement: HTMLElement;
   let chipGridInstance: MatChipGrid;
   let chips: QueryList<MatChipRow>;
-  let zone: MockNgZone;
   let testComponent: StandardChipGrid;
   let directionality: {value: Direction; change: EventEmitter<Direction>};
   let primaryActions: NodeListOf<HTMLElement>;
@@ -194,7 +191,6 @@ describe('MDC-based MatChipGrid', () => {
           midItem.focus();
           (document.activeElement as HTMLElement).blur();
           tick();
-          zone.simulateZoneExit();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
@@ -720,7 +716,6 @@ describe('MDC-based MatChipGrid', () => {
       firstAction.blur();
       fixture.detectChanges();
       fixture.detectChanges();
-      zone.simulateZoneExit();
       fixture.detectChanges();
       flush();
 
@@ -1007,10 +1002,7 @@ describe('MDC-based MatChipGrid', () => {
         MatInputModule,
         animationsModule,
       ],
-      providers: [
-        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
-        {provide: Directionality, useValue: directionality},
-      ],
+      providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
     }).compileComponents();
 

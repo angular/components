@@ -3,20 +3,18 @@ import {END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB} from '@angular/cdk/keyco
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-  MockNgZone,
   patchElementFocus,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
-  NgZone,
+  EventEmitter,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
-  EventEmitter,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
@@ -28,7 +26,6 @@ describe('MDC-based MatChipListbox', () => {
   let chipListboxInstance: MatChipListbox;
   let testComponent: StandardChipListbox;
   let chips: QueryList<MatChipOption>;
-  let zone: MockNgZone;
   let directionality: {value: Direction; change: EventEmitter<Direction>};
   let primaryActions: NodeListOf<HTMLElement>;
 
@@ -223,7 +220,6 @@ describe('MDC-based MatChipListbox', () => {
           midItem.focus();
           (document.activeElement as HTMLElement).blur();
           tick();
-          zone.simulateZoneExit();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
@@ -850,10 +846,7 @@ describe('MDC-based MatChipListbox', () => {
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
-      providers: [
-        {provide: NgZone, useFactory: () => (zone = new MockNgZone())},
-        {provide: Directionality, useValue: directionality},
-      ],
+      providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
     }).compileComponents();
 
