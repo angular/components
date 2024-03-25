@@ -27,6 +27,10 @@ import {
   OnInit,
   ChangeDetectorRef,
   booleanAttribute,
+  afterNextRender,
+  AfterRenderRef,
+  inject,
+  Injector,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
@@ -39,8 +43,8 @@ import {
   UP_ARROW,
   hasModifierKey,
 } from '@angular/cdk/keycodes';
-import {merge, Observable, Subject, Subscription} from 'rxjs';
-import {startWith, switchMap, take} from 'rxjs/operators';
+import {merge, Observable, Subject} from 'rxjs';
+import {startWith, switchMap} from 'rxjs/operators';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
@@ -115,7 +119,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
-  private _firstItemFocusSubscription?: Subscription;
+  private _firstItemFocusRef?: AfterRenderRef;
   private _previousElevation: string;
   private _elevationPrefix = 'mat-elevation-z';
   private _baseElevation = 8;
@@ -267,6 +271,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   readonly panelId = `mat-menu-panel-${menuPanelUid++}`;
 
+  private _injector = inject(Injector);
+
   constructor(
     elementRef: ElementRef<HTMLElement>,
     ngZone: NgZone,
@@ -287,7 +293,11 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
+    /**
+     * @deprecated Unused param, will be removed.
+     * @breaking-change 19.0.0
+     */
+    _unusedNgZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions,
     // @breaking-change 15.0.0 `_changeDetectorRef` to become a required parameter.
     private _changeDetectorRef?: ChangeDetectorRef,
@@ -345,7 +355,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     this._keyManager?.destroy();
     this._directDescendantItems.destroy();
     this.closed.complete();
-    this._firstItemFocusSubscription?.unsubscribe();
+    this._firstItemFocusRef?.destroy();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
@@ -415,32 +425,35 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * @param origin Action from which the focus originated. Used to set the correct styling.
    */
   focusFirstItem(origin: FocusOrigin = 'program'): void {
-    // Wait for `onStable` to ensure iOS VoiceOver screen reader focuses the first item (#24735).
-    this._firstItemFocusSubscription?.unsubscribe();
-    this._firstItemFocusSubscription = this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-      let menuPanel: HTMLElement | null = null;
+    // Wait for `afterNextRender` to ensure iOS VoiceOver screen reader focuses the first item (#24735).
+    this._firstItemFocusRef?.destroy();
+    this._firstItemFocusRef = afterNextRender(
+      () => {
+        let menuPanel: HTMLElement | null = null;
 
-      if (this._directDescendantItems.length) {
-        // Because the `mat-menuPanel` is at the DOM insertion point, not inside the overlay, we don't
-        // have a nice way of getting a hold of the menuPanel panel. We can't use a `ViewChild` either
-        // because the panel is inside an `ng-template`. We work around it by starting from one of
-        // the items and walking up the DOM.
-        menuPanel = this._directDescendantItems.first!._getHostElement().closest('[role="menu"]');
-      }
-
-      // If an item in the menuPanel is already focused, avoid overriding the focus.
-      if (!menuPanel || !menuPanel.contains(document.activeElement)) {
-        const manager = this._keyManager;
-        manager.setFocusOrigin(origin).setFirstItemActive();
-
-        // If there's no active item at this point, it means that all the items are disabled.
-        // Move focus to the menuPanel panel so keyboard events like Escape still work. Also this will
-        // give _some_ feedback to screen readers.
-        if (!manager.activeItem && menuPanel) {
-          menuPanel.focus();
+        if (this._directDescendantItems.length) {
+          // Because the `mat-menuPanel` is at the DOM insertion point, not inside the overlay, we don't
+          // have a nice way of getting a hold of the menuPanel panel. We can't use a `ViewChild` either
+          // because the panel is inside an `ng-template`. We work around it by starting from one of
+          // the items and walking up the DOM.
+          menuPanel = this._directDescendantItems.first!._getHostElement().closest('[role="menu"]');
         }
-      }
-    });
+
+        // If an item in the menuPanel is already focused, avoid overriding the focus.
+        if (!menuPanel || !menuPanel.contains(document.activeElement)) {
+          const manager = this._keyManager;
+          manager.setFocusOrigin(origin).setFirstItemActive();
+
+          // If there's no active item at this point, it means that all the items are disabled.
+          // Move focus to the menuPanel panel so keyboard events like Escape still work. Also this will
+          // give _some_ feedback to screen readers.
+          if (!manager.activeItem && menuPanel) {
+            menuPanel.focus();
+          }
+        }
+      },
+      {injector: this._injector},
+    );
   }
 
   /**

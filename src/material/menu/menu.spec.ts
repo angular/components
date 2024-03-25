@@ -1,55 +1,53 @@
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  ESCAPE,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  TAB,
+} from '@angular/cdk/keycodes';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   Output,
-  NgZone,
+  Provider,
+  QueryList,
   TemplateRef,
+  Type,
   ViewChild,
   ViewChildren,
-  QueryList,
-  Type,
-  Provider,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {
-  ESCAPE,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  DOWN_ARROW,
-  TAB,
-  HOME,
-  END,
-  ENTER,
-} from '@angular/cdk/keycodes';
-import {MatMenu, MatMenuModule, MatMenuItem} from './index';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {MatRipple} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs';
 import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
-  dispatchEvent,
   createKeyboardEvent,
   createMouseEvent,
+  dispatchEvent,
   dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
   patchElementFocus,
-  MockNgZone,
 } from '../../cdk/testing/private';
-import {Subject} from 'rxjs';
-import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {MatMenu, MatMenuItem, MatMenuModule} from './index';
 import {
+  MAT_MENU_DEFAULT_OPTIONS,
   MAT_MENU_SCROLL_STRATEGY,
+  MatMenuPanel,
   MatMenuTrigger,
   MenuPositionX,
   MenuPositionY,
-  MatMenuPanel,
-  MAT_MENU_DEFAULT_OPTIONS,
 } from './public-api';
 
 const MENU_PANEL_TOP_PADDING = 8;
@@ -772,27 +770,14 @@ describe('MDC-based MatMenu', () => {
   }));
 
   it('should set the proper origin when calling focusFirstItem after the opening sequence has started', () => {
-    let zone: MockNgZone;
-    const fixture = createComponent(
-      SimpleMenu,
-      [
-        {
-          provide: NgZone,
-          useFactory: () => (zone = new MockNgZone()),
-        },
-      ],
-      [FakeIcon],
-    );
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
     spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
 
-    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
-
-    dispatchMouseEvent(triggerEl, 'mousedown');
-    triggerEl.click();
-    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.componentInstance.menu.focusFirstItem('mouse');
     fixture.componentInstance.menu.focusFirstItem('touch');
-    zone!.onStable.next();
+    fixture.detectChanges();
 
     expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledOnceWith('touch');
   });
@@ -1304,30 +1289,18 @@ describe('MDC-based MatMenu', () => {
       expect(trigger.menuOpen).withContext('Expected menu to be closed').toBe(false);
     }));
 
-    it('should focus the first menu item when opening a lazy menu via keyboard', fakeAsync(() => {
-      let zone: MockNgZone;
-      let fixture = createComponent(SimpleLazyMenu, [
-        {
-          provide: NgZone,
-          useFactory: () => (zone = new MockNgZone()),
-        },
-      ]);
-
-      fixture.detectChanges();
+    it('should focus the first menu item when opening a lazy menu via keyboard', async () => {
+      const fixture = createComponent(SimpleLazyMenu);
+      fixture.autoDetectChanges();
 
       // A click without a mousedown before it is considered a keyboard open.
       fixture.componentInstance.triggerEl.nativeElement.click();
-      fixture.detectChanges();
-      tick(500);
-      zone!.simulateZoneExit();
-
-      // Flush due to the additional tick that is necessary for the FocusMonitor.
-      flush();
+      await fixture.whenStable();
 
       const item = document.querySelector('.mat-mdc-menu-panel [mat-menu-item]')!;
 
       expect(document.activeElement).withContext('Expected first item to be focused').toBe(item);
-    }));
+    });
 
     it('should be able to open the same menu with a different context', fakeAsync(() => {
       const fixture = createComponent(LazyMenuWithContext);
