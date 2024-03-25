@@ -206,3 +206,59 @@ $_component-prefix: null;
   }
   @return map.merge($values, $overrides);
 }
+
+/// Emits new token values for the given tokens.
+/// Verifies that the tokens passed in are valid tokens.
+/// New token values are emitted under the current selector or root.
+@mixin batch-create-token-values(
+  $tokens: (),
+  $mat-prefix: '',
+  $mdc-prefix: '',
+  $mat-tokens: (),
+  $mdc-tokens: ()
+) {
+  $custom-mat-tokens: ();
+  $custom-mdc-tokens: ();
+
+  $mat-token-names: map.keys($mat-tokens);
+  $mdc-token-names: map.keys($mdc-tokens);
+  $valid-token-names: _get-valid-token-names($mat-tokens, $mdc-tokens);
+
+  @each $name, $value in $tokens {
+    $is-mat-token: list.index($mat-token-names, $name) != null;
+    $is-mdc-token: list.index($mdc-token-names, $name) != null;
+
+    @if ($is-mat-token) {
+      $custom-mat-tokens: map.set($custom-mat-tokens, $name, $value);
+    }
+
+    @if ($is-mdc-token) {
+      $custom-mdc-tokens: map.set($custom-mdc-tokens, $name, $value);
+    }
+
+    @if (list.index($valid-token-names, $name) == null) {
+      @error (
+        'Invalid token: "' + $name + '"'
+        'Valid tokens include: ' $valid-token-names
+      );
+    }
+  }
+
+  @include sass-utils.current-selector-or-root() {
+    @include create-token-values($mat-prefix, $custom-mat-tokens);
+    @include create-token-values($mdc-prefix, $custom-mdc-tokens);
+  }
+}
+
+/// Returns the union of token names whose values are not null.
+@function _get-valid-token-names($mat-tokens, $mdc-tokens) {
+  $mat-and-mdc-tokens: map.merge($mat-tokens, $mdc-tokens);
+
+  @each $name, $value in $mat-and-mdc-tokens {
+    @if ($value == null) {
+      $mat-and-mdc-tokens: map.remove($mat-and-mdc-tokens, $name);
+    }
+  }
+
+  @return map.keys($mat-and-mdc-tokens);
+}
