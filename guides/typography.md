@@ -41,20 +41,20 @@ font weight, font size, and letter spacing. Angular Material uses the [typograph
 from the 2018 version of the Material Design specification][2018-typography], outlined in the
 table below.
 
-| Name            | Description                                                  |
-|-----------------|--------------------------------------------------------------|
-| `headline-1`     | One-off header, usually at the top of the page (e.g. a hero header). |
-| `headline-2`     | One-off header, usually at the top of the page (e.g. a hero header). |
-| `headline-3`     | One-off header, usually at the top of the page (e.g. a hero header). |
-| `headline-4`     | One-off header, usually at the top of the page (e.g. a hero header). |
-| `headline-5`     | Section heading corresponding to the `<h1>` tag.             |
-| `headline-6`     | Section heading corresponding to the `<h2>` tag.             |
-| `subtitle-1`     | Section heading corresponding to the `<h3>` tag.             |
-| `subtitle-2`     | Section heading corresponding to the `<h4>` tag.             |
-| `body-1`         | Base body text.                                              |
-| `body-2`         | Secondary body text.                                         |
-| `caption`        | Smaller body and hint text.                                  |
-| `button`         | Buttons and anchors.                                         |
+| Level Name       | CSS Class         | Description                |
+|------------------|-------------------|----------------------------|
+| `headline-1`     | `.mat-headline-1` | H1                         |
+| `headline-2`     | `.mat-headline-2` | H2                         |
+| `headline-3`     | `.mat-headline-3` | H3                         |
+| `headline-4`     | `.mat-headline-4` | H4                         |
+| `headline-5`     | `.mat-headline-5` | H5                         |
+| `headline-6`     | `.mat-headline-6` | H6                         |
+| `subtitle-1`     | `.mat-subtitle-1` | Subtitle 1                 |
+| `subtitle-2`     | `.mat-subtitle-2` | Subtitle 2                 |
+| `body-1`         | `.mat-body-1`     | Large body text            |
+| `body-2`         | `.mat-body-2`     | Medium body text           |
+| `caption`        | `.mat-caption`    | Smaller body and hint text |
+| `button`         | N/A               | Button text                |
 
 [2018-typography]: https://m2.material.io/design/typography/the-type-system.html#type-scale
 
@@ -179,21 +179,19 @@ $my-typography: mat.define-typography-config();
 
 The table below lists the CSS classes emitted and the native elements styled.
 
-| CSS class                                | Level name     | Native elements |
-|------------------------------------------|----------------|-----------------|
-| `.mat-headline-1`                        | `headline-1`   | None            |
-| `.mat-headline-2`                        | `headline-2`   | None            |
-| `.mat-headline-3`                        | `headline-3`   | None            |
-| `.mat-headline-4`                        | `headline-4`   | None            |
-| `.mat-h1` or `.mat-headline-5`           | `headline-5`   | `<h1>`          |
-| `.mat-h2` or `.mat-headline-6`           | `headline-6`   | `<h2>`          |
-| `.mat-h3` or `.mat-subtitle-1`           | `subtitle-1`   | `<h3>`          |
-| `.mat-h4` or `.mat-body-1`               | `body-1`       | `<h4>`          |
-| `.mat-h5`                                | None           | `<h5>`          |
-| `.mat-h6`                                | None           | `<h6>`          |
-| `.mat-body` or `.mat-body-2`             | `body-2`       | Body text       |
-| `.mat-body-strong` or `.mat-subtitle-2`  | `subtitle-2`   | None            |
-| `.mat-small` or `.mat-caption`           | `caption`      | None            |
+| CSS class                                 | Level name     | Native elements |
+|-------------------------------------------|----------------|-----------------|
+| `.mat-headline-1`                         | `headline-1`   | None            |
+| `.mat-headline-2`                         | `headline-2`   | None            |
+| `.mat-headline-3`                         | `headline-3`   | None            |
+| `.mat-headline-4`                         | `headline-4`   | None            |
+| `.mat-headline-5` (or `.mat-h1`)          | `headline-5`   | `<h1>`          |
+| `.mat-headline-6` (or `.mat-h2`)          | `headline-6`   | `<h2>`          |
+| `.mat-subtitle-1` (or `.mat-h3`)          | `subtitle-1`   | `<h3>`          |
+| `.mat-body-1` (or `.mat-h4`)              | `body-1`       | `<h4>`          |
+| `.mat-body-2` (or `.mat-body`)            | `body-2`       | Body text       |
+| `.mat-subtitle-2` (or `.mat-body-strong`) | `subtitle-2`   | None            |
+| `.mat-caption` (or `.mat-small`)          | `caption`      | None            |
 
 In addition to the typographic styles, these style rules also include a `margin-bottom` for
 headers and paragraphs. For `body` styles, text is styled within the provided CSS selector.
