@@ -4,6 +4,10 @@ app-component-sidenav {
   display: flex;
   flex-direction: column;
   overflow: auto;
+
+  .docs-component-viewer-footer {
+    margin-top: 0;
+  }
 }
 
 .docs-component-viewer-sidenav-container {
@@ -33,6 +37,7 @@ app-component-sidenav {
 
   .docs-component-viewer-nav-content {
     width: constants.$sidenav-width;
+    padding: 16px 0;
     height: calc(100vh - 56px);
     overflow: auto;
 
@@ -95,7 +100,8 @@ div.docs-component-viewer-nav-content .mat-nav-list .mat-mdc-list-item .mat-list
     top: 0;
 
     .docs-component-viewer-nav-content {
-      box-sizing: border-box;
+      width: 100%;
+      border: none;
       margin: 0;
       max-height: initial;
     }

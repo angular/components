@@ -1,18 +1,18 @@
 @use '@angular/material' as mat;
 
-@use 'sass:map';
 @use './app/pages/component-category-list/component-category-list-theme';
 @use './app/pages/component-sidenav/component-sidenav-theme';
 @use './app/pages/component-viewer/component-viewer-theme';
 @use './app/pages/guide-list/guide-list-theme';
 @use './app/pages/homepage/homepage-theme';
 @use './app/pages/not-found/not-found-theme';
-@use './app/shared/carousel/carousel-theme';
+@use './app/pages/component-page-header/component-page-header-theme';
 @use './app/shared/example-viewer/example-viewer-theme';
 @use './app/shared/footer/footer-theme';
 @use './app/shared/navbar/navbar-theme';
 @use './app/shared/table-of-contents/table-of-contents-theme';
 @use './app/shared/cookie-popup/cookie-popup-theme';
+@use './app/shared/theme-picker/theme-picker-theme';
 @use './styles/api-theme';
 @use './styles/markdown-theme';
 @use './styles/svg-theme';
@@ -20,43 +20,18 @@
 
 // Styles for the docs app that are based on the current theme.
 @mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
-  $next-theme: mat.define-palette(mat.$red-palette);
-
   .docs-app-background {
-    background: mat.get-color-from-palette($background, background);
-  }
-
-  .docs-primary-header {
-    background: mat.get-color-from-palette($primary);
-
-    h1 {
-      color: mat.get-color-from-palette($primary, default-contrast);
-    }
-  }
-
-  .docs-footer {
-    background: mat.get-color-from-palette($primary);
-    color: mat.get-color-from-palette($primary, default-contrast);
+    background: mat.get-theme-color($theme, surface);
   }
 
   .docs-help-support {
-    color: mat.get-color-from-palette($foreground, secondary-text);
+    color: mat.get-theme-color($theme, on-surface);
 
     a {
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.get-theme-color($theme, on-surface-variant);
     }
   }
 
-  .is-next-version {
-    background: mat.get-color-from-palette($next-theme, 900) !important;
-  }
-
-  @include carousel-theme.theme($theme);
   @include component-category-list-theme.theme($theme);
   @include component-sidenav-theme.theme($theme);
   @include component-viewer-theme.theme($theme);
@@ -72,4 +47,6 @@
   @include navbar-theme.theme($theme);
   @include table-of-contents-theme.theme($theme);
   @include cookie-popup-theme.theme($theme);
+  @include theme-picker-theme.theme($theme);
+  @include component-page-header-theme.theme($theme);
 }

@@ -3,17 +3,17 @@ import {ThemeStorage, DocsSiteTheme} from './theme-storage';
 
 const testStorageKey = ThemeStorage.storageKey;
 const testTheme: DocsSiteTheme = {
-  primary: '#000000',
-  accent: '#ffffff',
+  color: '#000000',
+  background: '#ffffff',
   name: 'test-theme'
 };
 
 describe('ThemeStorage Service', () => {
   const service = new ThemeStorage();
   const getCurrTheme = () => window.localStorage.getItem(testStorageKey);
-  const secondTestTheme = {
-    primary: '#666666',
-    accent: '#333333',
+  const secondTestTheme: DocsSiteTheme = {
+    color: '#666666',
+    background: '#333333',
     name: 'other-test-theme'
   };
 

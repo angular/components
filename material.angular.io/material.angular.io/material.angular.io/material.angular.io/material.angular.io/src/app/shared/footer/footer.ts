@@ -1,14 +1,13 @@
 import {Component} from '@angular/core';
-import {VERSION} from '@angular/material/core';
+import {AppLogo} from '../logo/logo';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.html',
   styleUrls: ['./footer.scss'],
+  imports: [AppLogo],
   standalone: true
 })
 export class Footer {
-  isNextVersion = location.hostname === 'next.material.angular.io';
-  version = VERSION.full;
   year = new Date().getFullYear();
 }

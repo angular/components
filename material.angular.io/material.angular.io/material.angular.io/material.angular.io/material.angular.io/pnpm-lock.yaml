@@ -109,6 +109,9 @@ devDependencies:
   '@bazel/bazelisk':
     specifier: ^1.12.1
     version: 1.12.1
+  '@material/tokens':
+    specifier: 15.0.0-canary.7f224ddd4.0
+    version: 15.0.0-canary.7f224ddd4.0
   '@types/imagemin':
     specifier: ^7.0.0
     version: 7.0.1
@@ -2826,7 +2829,6 @@ packages:
     resolution: {integrity: sha512-1GSJaPKef+7HRuV+HusVZHps64cmZuOItDbt40tjJVaikcaZvwmHlcTxRIqzcRoCdt5ZKHh3NoO7GB9Khg4Jnw==}
     dependencies:
       tslib: 2.6.2
-    dev: false
 
   /@material/auto-init@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-t7ZGpRJ3ec0QDUO0nJu/SMgLW7qcuG2KqIsEYD1Ej8qhI2xpdR2ydSDQOkVEitXmKoGol1oq4nYSBjTlB65GqA==}
@@ -2856,7 +2858,6 @@ packages:
     resolution: {integrity: sha512-I9KQOKXpLfJkP8MqZyr8wZIzdPHrwPjFvGd9zSK91/vPyE4hzHRJc/0njsh9g8Lm9PRYLbifXX+719uTbHxx+A==}
     dependencies:
       tslib: 2.6.2
-    dev: false
 
   /@material/button@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-BHB7iyHgRVH+JF16+iscR+Qaic+p7LU1FOLgP8KucRlpF9tTwIxQA6mJwGRi5gUtcG+vyCmzVS+hIQ6DqT/7BA==}
@@ -3025,7 +3026,6 @@ packages:
       '@material/rtl': 15.0.0-canary.7f224ddd4.0
       '@material/theme': 15.0.0-canary.7f224ddd4.0
       tslib: 2.6.2
-    dev: false
 
   /@material/fab@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-4h76QrzfZTcPdd+awDPZ4Q0YdSqsXQnS540TPtyXUJ/5G99V6VwGpjMPIxAsW0y+pmI9UkLL/srrMaJec+7r4Q==}
@@ -3049,7 +3049,6 @@ packages:
     resolution: {integrity: sha512-SAjtxYh6YlKZriU83diDEQ7jNSP2MnxKsER0TvFeyG1vX/DWsUyYDOIJTOEa9K1N+fgJEBkNK8hY55QhQaspew==}
     dependencies:
       tslib: 2.6.2
-    dev: false
 
   /@material/floating-label@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-0KMo5ijjYaEHPiZ2pCVIcbaTS2LycvH9zEhEMKwPPGssBCX7iz5ffYQFk7e5yrQand1r3jnQQgYfHAwtykArnQ==}
@@ -3235,7 +3234,6 @@ packages:
     dependencies:
       '@material/theme': 15.0.0-canary.7f224ddd4.0
       tslib: 2.6.2
-    dev: false
 
   /@material/segmented-button@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-LCnVRUSAhELTKI/9hSvyvIvQIpPpqF29BV+O9yM4WoNNmNWqTulvuiv7grHZl6Z+kJuxSg4BGbsPxxb9dXozPg==}
@@ -3416,13 +3414,11 @@ packages:
     dependencies:
       '@material/feature-targeting': 15.0.0-canary.7f224ddd4.0
       tslib: 2.6.2
-    dev: false
 
   /@material/tokens@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-r9TDoicmcT7FhUXC4eYMFnt9TZsz0G8T3wXvkKncLppYvZ517gPyD/1+yhuGfGOxAzxTrM66S/oEc1fFE2q4hw==}
     dependencies:
       '@material/elevation': 15.0.0-canary.7f224ddd4.0
-    dev: false
 
   /@material/tooltip@15.0.0-canary.7f224ddd4.0:
     resolution: {integrity: sha512-8qNk3pmPLTnam3XYC1sZuplQXW9xLn4Z4MI3D+U17Q7pfNZfoOugGr+d2cLA9yWAEjVJYB0mj8Yu86+udo4N9w==}
@@ -11856,7 +11852,7 @@ packages:
   /puppeteer@21.1.0:
     resolution: {integrity: sha512-x0KfxVd7Hsefq8nzH1AAdSnYw5HEKI4QPeexBmx7nO29jDoEKNE+75G8zQ0E57ZOny/vAZZptCFdD3A7PkeESQ==}
     engines: {node: '>=16.3.0'}
-    deprecated: < 21.5.0 is no longer supported
+    deprecated: < 21.8.0 is no longer supported
     requiresBuild: true
     dependencies:
       '@puppeteer/browsers': 1.7.0

@@ -1,14 +1,15 @@
 <header focusOnNavigation class="docs-header-background"
-        [class.is-next-version]="isNextVersion" aria-label="Get started" id="homepage-header">
+        aria-label="Get started" id="homepage-header">
   <div class="docs-header-section">
     <div class="docs-header-headline">
       <h1 class="mat-h1">Angular Material</h1>
-      <h2> Material Design components for Angular</h2>
+      <h2>Material Design components for Angular</h2>
     </div>
     <div class="docs-header-start">
       <a mat-raised-button class="docs-button" routerLink="/guide/getting-started">Get started</a>
     </div>
   </div>
+  <app-logo class="docs-homepage-logo"/>
 </header>
 
 <main class="docs-homepage-promo">
@@ -46,9 +47,9 @@
     <div class="docs-homepage-header">
       <h2>Featured components</h2>
 
-      <a class="docs-link" routerLink="/components">
+      <a mat-button routerLink="/components">
         View all components
-        <mat-icon>chevron_right</mat-icon>
+        <mat-icon matButtonIcon iconPositionEnd>chevron_right</mat-icon>
       </a>
     </div>
     <app-carousel [aria-label]="'Featured components'">
@@ -68,20 +69,18 @@
     <div class="docs-homepage-header">
       <h2>Guides</h2>
 
-      <a class="docs-link" routerLink="/guides">
+      <a mat-button routerLink="/guides">
         View all guides
-        <mat-icon>chevron_right</mat-icon>
+        <mat-icon matButtonIcon iconPositionEnd>chevron_right</mat-icon>
       </a>
     </div>
-    <app-carousel [aria-label]="'Guides'">
-      <a carousel-item class="carousel-item docs-homepage-guides-carousel-item" *ngFor="let guide of guideItems.getAllItems()"
-         routerLink='/guide/{{guide.id}}'>
-        <mat-card class="docs-homepage-guides-card">
+    <app-carousel aria-label="Guides">
+      <a carousel-item class="carousel-item docs-homepage-guides-carousel-item"
+         *ngFor="let guide of guideItems.getAllItems()"
+         routerLink="/guide/{{guide.id}}">
+        <mat-card class="docs-homepage-guides-card" appearance="outlined">
           <mat-card-title>{{guide.name}}</mat-card-title>
-          <div class="docs-homepage-guides-card-divider"></div>
-          <mat-card-content class="docs-component-category-list-card-summary">
-            {{guide.overview}}
-          </mat-card-content>
+          <mat-card-content class="docs-component-category-list-card-summary">{{guide.overview}}</mat-card-content>
         </mat-card>
       </a>
     </app-carousel>

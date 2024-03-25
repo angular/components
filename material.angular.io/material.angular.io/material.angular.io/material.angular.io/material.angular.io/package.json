@@ -63,6 +63,7 @@
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
     "@angular-eslint/template-parser": "^14.0.0",
+    "@material/tokens": "15.0.0-canary.7f224ddd4.0",
     "@angular/cli": "^17.3.0",
     "@angular/compiler-cli": "^17.3.0",
     "@bazel/bazelisk": "^1.12.1",

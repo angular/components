@@ -4,8 +4,9 @@
 }
 
 .docs-example-viewer-wrapper {
-  border-radius: 4px;
-  margin: 24px 0;
+  border-radius: 12px;
+  margin: 16px 0;
+
   h3 {
     margin-top: 10px;
   }
@@ -16,7 +17,7 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 8px 8px 8px 16px;
+  padding: 16px 16px 0 24px;
 }
 
 .docs-example-viewer-title-spacer {
@@ -24,7 +25,7 @@
 }
 
 .docs-example-viewer-body {
-  padding: 30px;
+  padding: 16px 24px;
 }
 
 .button-bar {
@@ -42,4 +43,5 @@ code-snippet {
   margin: 0;
   border: none;
   background: none;
+  overflow: auto;
 }

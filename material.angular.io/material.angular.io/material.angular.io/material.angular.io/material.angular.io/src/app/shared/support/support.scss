@@ -1,7 +1,7 @@
 .docs-help-support {
   width: 75%;
   margin: auto;
-  padding-bottom: 40px;
+  padding: 20px 0;
 }
 
 .docs-help-support ul {
@@ -27,7 +27,8 @@
   text-decoration: underline;
 }
 
-.docs-help-support ul li a img {
+.docs-help-support ul li a img,
+app-logo {
   display: block;
   margin: 10px auto;
   width: 50px;
@@ -51,7 +52,8 @@
     display: flex;
     align-items: center;
   }
-  .docs-help-support ul li a img {
+  .docs-help-support ul li a img,
+  app-logo {
     margin: 10px;
 
   }

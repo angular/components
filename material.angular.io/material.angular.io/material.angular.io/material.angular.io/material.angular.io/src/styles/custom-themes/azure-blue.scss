@@ -1,10 +1,6 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
-@use './app-theme';
-@use './styles/api';
-@use './styles/markdown';
-@use './styles/tables';
-@use './styles/general';
+@use '../../app-theme';
 
 $theme: matx.define-theme((
   color: (
@@ -14,8 +10,6 @@ $theme: matx.define-theme((
   )
 ));
 
-// Include material core styles.
-@include mat.core();
 @include matx.color-variants-back-compat($theme);
 @include app-theme.theme($theme);
 

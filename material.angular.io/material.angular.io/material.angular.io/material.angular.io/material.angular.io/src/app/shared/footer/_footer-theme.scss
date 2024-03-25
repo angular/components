@@ -1,16 +1,13 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 
 @mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
-
   app-footer {
-    .docs-footer-links a {
-      color: mat.get-color-from-palette($primary, default-contrast);
+    footer {
+      border-top: solid 1px mat.get-theme-color($theme, outline-variant);
+    }
+
+    &, a {
+      color: mat.get-theme-color($theme, on-surface-variant);
     }
   }
 }

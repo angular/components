@@ -1,4 +1,4 @@
-@use 'sass:map';
+@use 'sass:color';
 @use '@angular/material' as mat;
 
 // Mixin to create a css class for each fill, stroke, and stop-color for a given color.
@@ -18,25 +18,18 @@
 
 // Mixin to apply theme colors for generated API docs.
 @mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
-  $is-dark-theme: map.get($theme, is-dark);
-
-  @include _svgColorProperties(primary, mat.get-color-from-palette($primary));
-  @include _svgColorProperties(accent, mat.get-color-from-palette($accent));
+  @include _svgColorProperties(primary, mat.get-theme-color($theme, primary));
+  @include _svgColorProperties(accent, mat.get-theme-color($theme, secondary));
 
   // Use sass's `lighten` and `darken` to create gradient colors for the docs SVGs.
   // This is specifically tailored to the SVGs in this app and is not a general approach.
-  $base: mat.get-color-from-palette($primary);
-  @include _svgColorProperties(primary-dark-30,  scale_color($base, $lightness: -30%));
-  @include _svgColorProperties(primary-dark-40,  scale_color($base, $lightness: -40%));
-  @include _svgColorProperties(primary-light-20, scale_color($base, $lightness: +20%));
-  @include _svgColorProperties(primary-light-30, scale_color($base, $lightness: +30%));
-  @include _svgColorProperties(primary-light-40, scale_color($base, $lightness: +40%));
-  @include _svgColorProperties(primary-light-60, scale_color($base, $lightness: +60%));
-  @include _svgColorProperties(primary-light-80, scale_color($base, $lightness: +80%));
-  @include _svgColorProperties(primary-light-85, scale_color($base, $lightness: +85%));
+  $base: mat.get-theme-color($theme, primary);
+  @include _svgColorProperties(primary-dark-30,  color.scale($base, $lightness: -30%));
+  @include _svgColorProperties(primary-dark-40,  color.scale($base, $lightness: -40%));
+  @include _svgColorProperties(primary-light-20, color.scale($base, $lightness: +20%));
+  @include _svgColorProperties(primary-light-30, color.scale($base, $lightness: +30%));
+  @include _svgColorProperties(primary-light-40, color.scale($base, $lightness: +40%));
+  @include _svgColorProperties(primary-light-60, color.scale($base, $lightness: +60%));
+  @include _svgColorProperties(primary-light-80, color.scale($base, $lightness: +80%));
+  @include _svgColorProperties(primary-light-85, color.scale($base, $lightness: +85%));
 }
