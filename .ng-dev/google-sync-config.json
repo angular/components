@@ -35,5 +35,6 @@
     "src/material/expansion/index.ts",
     "src/material-experimental/theming/_format-tokens.scss",
     "**/*import.scss"
-  ]
+  ],
+  "separateFilePatterns": []
 }
