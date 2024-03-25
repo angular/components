@@ -2,7 +2,7 @@
   "name": "Angular Material",
   "short_name": "Angular Material",
   "theme_color": "#FFFFFF",
-  "background_color": "#3F51B5",
+  "background_color": "#d7e3ff",
   "start_url": "/",
   "display": "standalone",
   "icons": [

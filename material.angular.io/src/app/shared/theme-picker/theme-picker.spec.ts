@@ -12,7 +12,7 @@ describe('ThemePicker', () => {
   it('should install theme based on name', () => {
     const fixture = TestBed.createComponent(ThemePicker);
     const component = fixture.componentInstance;
-    const name = 'pink-bluegrey';
+    const name = 'magenta-violet';
     spyOn(component.styleManager, 'setStyle');
     component.selectTheme(name);
     expect(component.styleManager.setStyle).toHaveBeenCalled();

@@ -51,6 +51,7 @@ APPLICATION_CONFIG = COMMON_CONFIG + [
     ":ng-app-config",
 ]
 APPLICATION_DEPS = [
+    "//:node_modules/@material/tokens",
 ]
 
 # Common dependencies of Angular CLI test suites
@@ -68,6 +69,7 @@ TEST_CONFIG = COMMON_CONFIG + [
     "//:node_modules/karma-coverage-istanbul-reporter",
 ]
 TEST_DEPS = [
+    "//:node_modules/@material/tokens",
     "//:node_modules/@types/jasmine",
     "//:node_modules/@types/node",
     "//:node_modules/@angular/compiler",

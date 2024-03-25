@@ -14,6 +14,7 @@ import {NgFor} from '@angular/common';
 
 import {Support} from '../../shared/support/support';
 import {Carousel, CarouselItem} from '../../shared/carousel/carousel';
+import {AppLogo} from '../../shared/logo/logo';
 
 const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button'];
 
@@ -34,13 +35,12 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
     MatCardModule,
     Support,
     Footer,
+    AppLogo,
   ],
 })
 export class Homepage implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
   @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
-
-  isNextVersion = location.hostname === 'next.material.angular.io';
 
   constructor(
     public _componentPageTitle: ComponentPageTitle,

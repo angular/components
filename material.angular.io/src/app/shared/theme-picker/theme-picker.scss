@@ -1,62 +1,19 @@
+button.docs-theme-picker-trigger {
+  color: inherit;
+}
+
 .docs-theme-picker-menu {
   .mat-mdc-menu-item {
-    .mat-icon.theme-example-icon {
+    .theme-example-icon {
       margin-right: 0;
-      margin-left: auto;
-      padding-left: 8px;
+      margin-left: 24px;
       order: 1;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
 
       svg {
         vertical-align: middle;
-      }
-
-      // The below colors need to align with the themes defined in ThemePicker
-      &.deeppurple-amber svg {
-        .docs-theme-icon-background {
-          fill: #fafafa;
-        }
-        .docs-theme-icon-button {
-          fill: #FFC107;
-        }
-        .docs-theme-icon-toolbar {
-          fill: #673AB7;
-        }
-      }
-
-      &.indigo-pink svg {
-        .docs-theme-icon-background {
-          fill: #fafafa;
-        }
-        .docs-theme-icon-button {
-          fill: #E91E63;
-        }
-        .docs-theme-icon-toolbar {
-          fill: #3F51B5;
-        }
-      }
-
-      &.pink-bluegrey svg {
-        .docs-theme-icon-background {
-          fill: #303030;
-        }
-        .docs-theme-icon-button {
-          fill: #607D8B;
-        }
-        .docs-theme-icon-toolbar {
-          fill: #E91E63;
-        }
-      }
-
-      &.purple-green svg {
-        .docs-theme-icon-background {
-          fill: #303030;
-        }
-        .docs-theme-icon-button {
-          fill: #4CAF50;
-        }
-        .docs-theme-icon-toolbar {
-          fill: #9C27B0;
-        }
       }
     }
   }

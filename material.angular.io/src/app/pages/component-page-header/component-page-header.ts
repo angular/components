@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {ComponentPageTitle} from '../page-title/page-title';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -12,11 +11,5 @@ import {MatIconModule} from '@angular/material/icon';
   imports: [MatButtonModule, MatIconModule]
 })
 export class ComponentPageHeader {
-  constructor(public _componentPageTitle: ComponentPageTitle) {}
-
   @Output() toggleSidenav = new EventEmitter<void>();
-
-  getTitle() {
-    return this._componentPageTitle.title;
-  }
 }

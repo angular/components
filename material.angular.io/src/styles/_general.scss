@@ -16,17 +16,6 @@ h1, h2 {
   font-weight: 400;
 }
 
-.docs-primary-header {
-  padding-left: 20px;
-
-  h1 {
-    font-weight: 300;
-    margin: 0;
-    padding: 28px 8px;
-    font-size: 20px;
-  }
-}
-
 // These styles are for controlling SVGs without using the ::ng-deep selector
 
 .docs-component-category-list-card-image svg {

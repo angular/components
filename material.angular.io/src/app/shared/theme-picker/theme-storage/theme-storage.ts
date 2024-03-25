@@ -3,9 +3,8 @@ import {Injectable, EventEmitter} from '@angular/core';
 export interface DocsSiteTheme {
   name: string;
   displayName?: string;
-  accent: string;
-  primary: string;
-  isDark?: boolean;
+  color: string;
+  background: string;
   isDefault?: boolean;
 }
 

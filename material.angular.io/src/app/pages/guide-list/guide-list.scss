@@ -11,34 +11,28 @@
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
-  padding-top: 15px;
+  padding-top: 48px;
 }
 
 .docs-guide-item {
   text-decoration: none;
-
   display: flex;
-  margin: 15px;
+  margin: 16px;
 }
 
 .docs-guide-card.mat-mdc-card {
   text-align: center;
-  width: 240px;
-  height: 240px;
-  padding: 16px 0;
+  width: 300px;
+  height: 250px;
+  padding: 8px;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
 .docs-guide-card .mat-mdc-card-title {
-  height: 33%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
-}
-
-
-.docs-guide-card-divider {
-  width: 40%;
-  height: 7px;
-  margin: 15px auto;
+  margin-bottom: 16px;
 }

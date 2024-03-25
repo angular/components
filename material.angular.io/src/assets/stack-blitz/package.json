@@ -17,6 +17,7 @@
     "@angular/core": "^17.3.0",
     "@angular/forms": "^17.3.0",
     "@angular/material": "${version}",
+    "@angular/material-experimental": "${version}",
     "@angular/material-moment-adapter": "${version}",
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",

@@ -51,23 +51,23 @@
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/pink-bluegrey.scss",
-                "bundleName": "pink-bluegrey"
+                "input": "src/styles/custom-themes/magenta-violet.scss",
+                "bundleName": "magenta-violet"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/deeppurple-amber.scss",
-                "bundleName": "deeppurple-amber"
+                "input": "src/styles/custom-themes/rose-red.scss",
+                "bundleName": "rose-red"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/indigo-pink.scss",
-                "bundleName": "indigo-pink"
+                "input": "src/styles/custom-themes/azure-blue.scss",
+                "bundleName": "azure-blue"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/purple-green.scss",
-                "bundleName": "purple-green"
+                "input": "src/styles/custom-themes/cyan-orange.scss",
+                "bundleName": "cyan-orange"
               }
             ],
             "stylePreprocessorOptions": {
@@ -143,23 +143,23 @@
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/pink-bluegrey.scss",
-                "bundleName": "pink-bluegrey"
+                "input": "src/styles/custom-themes/magenta-violet.scss",
+                "bundleName": "magenta-violet"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/deeppurple-amber.scss",
-                "bundleName": "deeppurple-amber"
+                "input": "src/styles/custom-themes/rose-red.scss",
+                "bundleName": "rose-red"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/indigo-pink.scss",
-                "bundleName": "indigo-pink"
+                "input": "src/styles/custom-themes/azure-blue.scss",
+                "bundleName": "azure-blue"
               },
               {
                 "inject": false,
-                "input": "src/styles/custom-themes/purple-green.scss",
-                "bundleName": "purple-green"
+                "input": "src/styles/custom-themes/cyan-orange.scss",
+                "bundleName": "cyan-orange"
               }
             ],
             "stylePreprocessorOptions": {

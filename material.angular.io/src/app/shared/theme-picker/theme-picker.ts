@@ -8,14 +8,13 @@ import {
 import {StyleManager} from '../style-manager';
 import {DocsSiteTheme, ThemeStorage} from './theme-storage/theme-storage';
 import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NgFor} from '@angular/common';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {DomSanitizer} from '@angular/platform-browser';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
@@ -34,45 +33,36 @@ export class ThemePicker implements OnInit, OnDestroy {
   // The below colors need to align with the themes defined in theme-picker.scss
   themes: DocsSiteTheme[] = [
     {
-      primary: '#673AB7',
-      accent: '#FFC107',
-      displayName: 'Deep Purple & Amber',
-      name: 'deeppurple-amber',
-      isDark: false,
+      color: '#ffd9e1',
+      displayName: 'Rose & Red',
+      name: 'rose-red',
+      background: '#fffbff',
     },
     {
-      primary: '#3F51B5',
-      accent: '#E91E63',
-      displayName: 'Indigo & Pink',
-      name: 'indigo-pink',
-      isDark: false,
+      color: '#d7e3ff',
+      displayName: 'Azure & Blue',
+      name: 'azure-blue',
+      background: '#fdfbff',
       isDefault: true,
     },
     {
-      primary: '#E91E63',
-      accent: '#607D8B',
-      displayName: 'Pink & Blue-grey',
-      name: 'pink-bluegrey',
-      isDark: true,
+      color: '#810081',
+      displayName: 'Magenta & Violet',
+      name: 'magenta-violet',
+      background: '#1e1a1d',
     },
     {
-      primary: '#9C27B0',
-      accent: '#4CAF50',
-      displayName: 'Purple & Green',
-      name: 'purple-green',
-      isDark: true,
+      color: '#004f4f',
+      displayName: 'Cyan & Orange',
+      name: 'cyan-orange',
+      background: '#191c1c',
     },
   ];
 
   constructor(public styleManager: StyleManager,
               private _themeStorage: ThemeStorage,
               private _activatedRoute: ActivatedRoute,
-              private liveAnnouncer: LiveAnnouncer,
-              iconRegistry: MatIconRegistry,
-              sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon('theme-example',
-                            sanitizer.bypassSecurityTrustResourceUrl(
-                                'assets/img/theme-demo-icon.svg'));
+              private liveAnnouncer: LiveAnnouncer) {
     const themeName = this._themeStorage.getStoredThemeName();
     if (themeName) {
       this.selectTheme(themeName);
@@ -100,11 +90,8 @@ export class ThemePicker implements OnInit, OnDestroy {
   }
 
   selectTheme(themeName: string) {
-    const theme = this.themes.find(currentTheme => currentTheme.name === themeName);
-
-    if (!theme) {
-      return;
-    }
+    const theme = this.themes.find(currentTheme => currentTheme.name === themeName) ||
+      this.themes.find(currentTheme => currentTheme.isDefault)!;
 
     this.currentTheme = theme;
 

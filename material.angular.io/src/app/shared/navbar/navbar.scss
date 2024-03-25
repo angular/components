@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 4px 16px;
+  padding: 8px 16px;
 
   > .mat-mdc-button {
     &:last-child {
@@ -11,17 +11,19 @@
   }
 }
 
-.mat-mdc-button-base:not(:disabled) {
+.mat-mdc-icon-button {
   color: inherit;
+}
+
+.github-logo,
+app-logo {
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
 }
 
 .flex-spacer {
   flex-grow: 1;
-}
-
-.logo {
-  height: 26px;
-  margin-right: 6px;
 }
 
 .docs-navbar-link {
@@ -45,10 +47,8 @@
   border-radius: 5px;
 }
 
-/**
-  * Rules for when the device is detected to be a small screen.
-  * Moves content two rows instead of one.
-  */
+// Rules for when the device is detected to be a small screen.
+// Moves content two rows instead of one.
 @media (max-width: 720px) {
   .docs-navbar-hide-small {
     display: none;
@@ -62,7 +62,7 @@
     display: flex;
   }
 
-  .docs-navbar--github-logo {
+  .github-logo {
     margin: 0;
   }
 }

@@ -5,8 +5,8 @@
 }
 
 .docs-component-category-list-summary {
-  padding: 25px 40px 0;
-  font-size: 18px;
+  padding: 40px 40px 0;
+  font-size: 16px;
   line-height: 1.5;
   display: flex;
   justify-content: center;
@@ -27,7 +27,7 @@
 .docs-component-category-list {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
+  padding: 20px 20px 100px;
   justify-content: center;
 }
 
@@ -40,7 +40,7 @@
   .docs-component-category-list-card-title {
     align-items: center;
     display: flex;
-    padding: 15px;
+    padding: 16px;
     font-size: 20px;
     font-weight: 500;
   }
@@ -52,6 +52,7 @@
 
 .docs-component-category-list-card {
   overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 .docs-component-category-list-card-image-wrapper {
@@ -59,9 +60,9 @@
 }
 
 .docs-component-category-list-card-summary {
-  padding: 0 15px 15px 15px;
+  padding: 0 16px 16px;
   min-height: 2.4em;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 

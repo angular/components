@@ -13,25 +13,19 @@ main {
   padding: $vertical-spacing;
 }
 
-svg {
-  height: 300px;
+.frown {
+  font-size: 150px;
+  width: 150px;
+  height: 150px;
   max-width: 100%;
   margin-right: $horizontal-spacing;
+
+  @media (max-width: 720px) {
+    display: none;
+  }
 }
 
 a + a {
   margin-left: 16px;
 }
 
-@media (max-width: 720px) {
-  .wrapper {
-    flex-direction: column;
-  }
-
-  svg {
-    height: auto;
-    max-height: 300px;
-    margin-right: 0;
-    margin-bottom: $vertical-spacing;
-  }
-}

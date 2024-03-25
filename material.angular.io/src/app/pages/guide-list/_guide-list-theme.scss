@@ -1,30 +1,18 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 
 @mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
-  $is-dark-theme: map.get($theme, is-dark);
-
   .docs-guide-list .docs-guide-item {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.get-theme-color($theme, on-surface-variant);
   }
 
-  .docs-guide-card-divider {
-    background: mat.get-color-from-palette($accent);
-  }
+  .docs-guide-item {
+    &:focus,
+    &:hover {
+      outline: none;
 
-  .docs-guide-card:hover {
-    background: mat.get-color-from-palette($background, hover);
-  }
-
-  .docs-guide-item:focus {
-    .docs-guide-card {
-      background: mat.get-color-from-palette($background, focused-button);
+      .docs-guide-card {
+        background: mat.get-theme-color($theme, surface-dim);
+      }
     }
-    outline: none;
   }
 }

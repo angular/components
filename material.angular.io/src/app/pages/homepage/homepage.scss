@@ -8,18 +8,16 @@ $margin-promotion-sections-small: 15px;
   height: 420px;
 }
 
-.docs-header-background::before {
-  content: '';
+.docs-homepage-logo {
   position: absolute;
-  background-image: url('../../../assets/img/homepage/angular-white-transparent.svg');
-  background-size: 600px;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-repeat: no-repeat;
-  background-position: 80% 20px;
-  opacity: 0.2;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.1;
+  margin-left: 330px;
+  width: 500px;
+  height: 500px;
+  pointer-events: none;
 }
 
 .docs-header-section {
@@ -35,7 +33,7 @@ $margin-promotion-sections-small: 15px;
 .docs-header-headline {
   h1 {
     font-size: 56px;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 56px;
     margin: 15px 5px;
   }
@@ -132,37 +130,27 @@ $margin-promotion-sections-small: 15px;
 }
 
 .docs-homepage-guides {
-  .docs-homepage-guides-card-divider {
-    width: 30%;
-    height: 5px;
-    margin: 15px auto;
-  }
-
   .docs-homepage-guides-carousel-item {
     display: flex;
     text-decoration: none;
     box-sizing: border-box;
 
-    // We need a slight padding so the box shadow doesn't get cut off by the carousel.
-    padding: 3px;
-
     .mat-mdc-card {
       // Ensures that the cards stretch to the full width of the item.
       width: 100%;
-      min-height: 140px;
+      min-height: 200px;
+      justify-content: center;
+      text-align: center;
+      transition: background 0.3s ease;
     }
   }
 
-  .docs-homepage-guides-card.mat-mdc-card {
-    text-align: center;
-  }
-
   .docs-homepage-guides-card .mat-mdc-card-title {
-    height: 35%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
+    margin-bottom: 16px;
   }
 }
 
@@ -218,16 +206,16 @@ $margin-promotion-sections-small: 15px;
   .docs-header-background {
     height: 330px;
   }
-  .docs-header-background:before {
-    background-image: none;
+  .docs-homepage-logo {
+    display: none;
   }
 }
 
 @media (max-width: 850px) {
-
-  .docs-header-background:before {
-    background-image: none;
+  .docs-homepage-logo {
+    display: none;
   }
+
   .docs-introduction {
     flex-direction: column;
   }

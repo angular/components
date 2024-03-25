@@ -1,21 +1,16 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
-@use './app-theme';
-@use './styles/api';
-@use './styles/markdown';
-@use './styles/tables';
-@use './styles/general';
+@use '../../app-theme';
+@use '../../highlightjs/material-dark';
 
 $theme: matx.define-theme((
   color: (
-    theme-type: light,
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-blue-palette,
+    theme-type: dark,
+    primary: matx.$m3-magenta-palette,
+    tertiary: matx.$m3-violet-palette,
   )
 ));
 
-// Include material core styles.
-@include mat.core();
 @include matx.color-variants-back-compat($theme);
 @include app-theme.theme($theme);
 

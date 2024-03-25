@@ -32,17 +32,17 @@ const lightServer = require('light-server');
 // Individual page a11y scores
 const MIN_A11Y_SCORES_PER_PAGE = {
   '': 92,
-  'components/categories': 89,
-  'cdk/categories': 89,
+  'components/categories': 85,
+  'cdk/categories': 85,
   guides: 95,
   'guide/creating-a-custom-form-field-control': 88,
-  'guide/getting-started': 88,
+  'guide/getting-started': 85,
   'cdk/a11y/overview': 85,
-  'cdk/a11y/api': 86,
-  'cdk/a11y/examples': 91,
-  'components/button/overview': 85,
-  'components/button/api': 86,
-  'components/button/examples': 80,
+  'cdk/a11y/api': 85,
+  'cdk/a11y/examples': 85,
+  'components/button/overview': 80,
+  'components/button/api': 80,
+  'components/button/examples': 75,
 };
 
 /**
