@@ -124,6 +124,13 @@ export abstract class CdkMenuBase
   focusFirstItem(focusOrigin: FocusOrigin = 'program') {
     this.keyManager.setFocusOrigin(focusOrigin);
     this.keyManager.setFirstItemActive();
+
+    // If there's no active item at this point, it means that all the items are disabled.
+    // Move focus to the menuPanel panel so keyboard events like Escape and closing child menus using arrow keys still works.
+    // Also, this will give _some_ feedback to screen readers.
+    if (!this.nativeElement.contains(document.activeElement)) {
+      this.nativeElement.focus();
+    }
   }
 
   /**

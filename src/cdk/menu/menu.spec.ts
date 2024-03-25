@@ -7,7 +7,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {TAB} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {
   createMouseEvent,
   dispatchEvent,
@@ -133,6 +133,8 @@ describe('Menu', () => {
 
       let nativeShareTrigger: HTMLElement | undefined;
 
+      let nativeDownloadTrigger: HTMLElement | undefined;
+
       let nativeMenus: HTMLElement[];
 
       beforeEach(waitForAsync(() => {
@@ -159,6 +161,8 @@ describe('Menu', () => {
           ?.nativeElement.querySelectorAll('button');
 
         nativeShareTrigger = fixture.componentInstance.nativeShareTrigger?.nativeElement;
+
+        nativeDownloadTrigger = fixture.componentInstance.nativeDownloadTrigger?.nativeElement;
 
         nativeMenus = fixture.componentInstance.menus.map(m => m.nativeElement);
       }
@@ -312,6 +316,20 @@ describe('Menu', () => {
         expect(numEnters).toBeGreaterThan(2);
         expect(nativeMenus.length).toBe(1);
       }));
+
+      it('should close the download menu when it is open and right arrow key is pressed', () => {
+        openFileMenu();
+        if (nativeDownloadTrigger) {
+          dispatchKeyboardEvent(nativeDownloadTrigger, 'keydown', RIGHT_ARROW);
+          detectChanges();
+
+          const downloadMenu = nativeMenus[1];
+          dispatchKeyboardEvent(downloadMenu, 'keydown', LEFT_ARROW);
+          detectChanges();
+
+          expect(nativeMenus.length).toBe(1);
+        }
+      });
     });
 
     describe('with rtl layout and menu at bottom of page moving up and left', () => {
@@ -323,6 +341,8 @@ describe('Menu', () => {
       let nativeEditButtons: HTMLElement[] | undefined;
 
       let nativeShareTrigger: HTMLElement | undefined;
+
+      let nativeDownloadTrigger: HTMLElement | undefined;
 
       let nativeMenus: HTMLElement[];
 
@@ -358,6 +378,8 @@ describe('Menu', () => {
           ?.nativeElement.querySelectorAll('button');
 
         nativeShareTrigger = fixture.componentInstance.nativeShareTrigger?.nativeElement;
+
+        nativeDownloadTrigger = fixture.componentInstance.nativeDownloadTrigger?.nativeElement;
 
         nativeMenus = fixture.componentInstance.menus.map(m => m.nativeElement);
       }
@@ -500,6 +522,20 @@ describe('Menu', () => {
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('edit_menu');
       }));
+
+      it('should close the download menu when it is open and right arrow key is pressed in rtl', () => {
+        openFileMenu();
+        if (nativeDownloadTrigger) {
+          dispatchKeyboardEvent(nativeDownloadTrigger, 'keydown', LEFT_ARROW);
+          detectChanges();
+
+          const downloadMenu = nativeMenus[1];
+          dispatchKeyboardEvent(downloadMenu, 'keydown', RIGHT_ARROW);
+          detectChanges();
+
+          expect(nativeMenus.length).toBe(1);
+        }
+      });
     });
   });
 });
@@ -554,6 +590,7 @@ class InlineMenu {}
       >
         <button #edit_trigger cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
         <button #share_trigger cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
+        <button #download_trigger cdkMenuItem [cdkMenuTriggerFor]="download">Download</button>
         <button cdkMenuItem>Open</button>
         <button cdkMenuItem>Rename</button>
         <button cdkMenuItem>Print</button>
@@ -587,6 +624,18 @@ class InlineMenu {}
         <button cdkMenuItem>Twitter</button>
       </div>
     </ng-template>
+
+    <ng-template #download>
+      <div
+        id="download_menu"
+        style="display: flex; flex-direction: column;"
+        cdkMenu
+        cdkTargetMenuAim
+      >
+        <button cdkMenuItem disabled>Via Server 1</button>
+        <button cdkMenuItem disabled>Via Server 2</button>
+      </div>
+    </ng-template>
   `,
   standalone: true,
   imports: [CdkMenuModule],
@@ -595,6 +644,8 @@ class WithComplexNestedMenus {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;
   @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger?: ElementRef<HTMLElement>;
   @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
+  @ViewChild('download_trigger', {read: ElementRef})
+  nativeDownloadTrigger?: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
 }
@@ -617,6 +668,7 @@ class WithComplexNestedMenus {
         <button cdkMenuItem>Open</button>
         <button #share_trigger cdkMenuItem [cdkMenuTriggerFor]="share">Share</button>
         <button #edit_trigger cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
+        <button #download_trigger cdkMenuItem [cdkMenuTriggerFor]="download">Download</button>
       </div>
     </ng-template>
 
@@ -648,6 +700,17 @@ class WithComplexNestedMenus {
         <button cdkMenuItem>Facebook</button>
       </div>
     </ng-template>
+    <ng-template #download>
+      <div
+        id="download_menu"
+        style="display: flex; flex-direction: column;"
+        cdkMenu
+        cdkTargetMenuAim
+      >
+        <button cdkMenuItem disabled>Via Server 1</button>
+        <button cdkMenuItem disabled>Via Server 2</button>
+      </div>
+    </ng-template>
   `,
   standalone: true,
   imports: [CdkMenuModule],
@@ -656,6 +719,8 @@ class WithComplexNestedMenusOnBottom {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;
   @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger?: ElementRef<HTMLElement>;
   @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
+  @ViewChild('download_trigger', {read: ElementRef})
+  nativeDownloadTrigger?: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
 }
