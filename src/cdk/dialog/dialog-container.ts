@@ -31,11 +31,13 @@ import {
   ElementRef,
   EmbeddedViewRef,
   Inject,
+  Injector,
   NgZone,
   OnDestroy,
   Optional,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   inject,
 } from '@angular/core';
 import {DialogConfig} from './dialog-config';
@@ -101,6 +103,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   _ariaLabelledByQueue: string[] = [];
 
   protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
+  private _injector = inject(Injector);
 
   constructor(
     protected _elementRef: ElementRef,
@@ -266,13 +270,21 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         break;
       case true:
       case 'first-tabbable':
-        this._focusTrap?.focusInitialElementWhenReady().then(focusedSuccessfully => {
-          // If we weren't able to find a focusable element in the dialog, then focus the dialog
-          // container instead.
-          if (!focusedSuccessfully) {
-            this._focusDialogContainer();
-          }
-        });
+        afterNextRender(
+          () => {
+            this._ngZone.run(() =>
+              queueMicrotask(() => {
+                const focusedSuccessfully = this._focusTrap?.focusInitialElement();
+                // If we weren't able to find a focusable element in the dialog, then focus the dialog
+                // container instead.
+                if (!focusedSuccessfully) {
+                  this._focusDialogContainer();
+                }
+              }),
+            );
+          },
+          {injector: this._injector},
+        );
         break;
       case 'first-heading':
         this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
