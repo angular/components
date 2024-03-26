@@ -439,8 +439,9 @@ export interface CellDef {
 export const _COALESCED_STYLE_SCHEDULER: InjectionToken<_CoalescedStyleScheduler>;
 
 // @public
-export class _CoalescedStyleScheduler {
-    constructor(_unusedNgZone?: NgZone);
+export class _CoalescedStyleScheduler implements OnDestroy {
+    constructor(_ngZone: NgZone);
+    ngOnDestroy(): void;
     schedule(task: () => unknown): void;
     scheduleEnd(task: () => unknown): void;
     // (undocumented)
