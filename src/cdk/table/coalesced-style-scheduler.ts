@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EnvironmentInjector, Injectable, InjectionToken, NgZone, inject} from '@angular/core';
+import {Injectable, InjectionToken, NgZone, inject} from '@angular/core';
 
 /**
  * @docs-private
@@ -31,7 +31,6 @@ export const _COALESCED_STYLE_SCHEDULER = new InjectionToken<_CoalescedStyleSche
 @Injectable()
 export class _CoalescedStyleScheduler {
   private _currentSchedule: _Schedule | null = null;
-  private _injector = inject(EnvironmentInjector);
   private _ngZone = inject(NgZone);
 
   constructor(_unusedNgZone?: NgZone) {}

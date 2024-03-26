@@ -545,6 +545,7 @@ describe('Material Popover Edit', () => {
 
         component.resizeColumnWithMouse(1, 5);
         fixture.detectChanges();
+        flushMicrotasks();
 
         expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5} as any);
 
