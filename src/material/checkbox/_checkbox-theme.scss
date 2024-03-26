@@ -92,6 +92,18 @@
   }
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    $mat-prefix: tokens-mat-checkbox.$prefix,
+    $mdc-prefix: tokens-mdc-checkbox.$prefix,
+    $mat-tokens: tokens-mat-checkbox.get-token-slots(),
+    $mdc-tokens: tokens-mdc-checkbox.get-token-slots(),
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
