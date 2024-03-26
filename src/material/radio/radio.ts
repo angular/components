@@ -431,14 +431,17 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   }
   set value(value: any) {
     if (this._value !== value) {
+      const group = this.radioGroup;
       this._value = value;
-      if (this.radioGroup !== null) {
-        if (!this.checked) {
-          // Update checked when the value changed to match the radio group's value
-          this.checked = this.radioGroup.value === value;
-        }
+
+      if (group) {
+        // Update `checked`, because the button's value might not match up with the group anymore.
+        this.checked = group.value === value;
+
         if (this.checked) {
-          this.radioGroup.selected = this;
+          group.selected = this;
+        } else if (group.selected === this) {
+          group.selected = null;
         }
       }
     }
