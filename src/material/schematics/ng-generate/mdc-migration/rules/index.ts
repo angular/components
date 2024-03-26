@@ -20,6 +20,7 @@ import {DialogStylesMigrator} from './components/dialog/dialog-styles';
 import {FormFieldStylesMigrator} from './components/form-field/form-field-styles';
 import {InputStylesMigrator} from './components/input/input-styles';
 import {ListStylesMigrator} from './components/list/list-styles';
+import {ListTemplateMigrator} from './components/list/list-template';
 import {MenuStylesMigrator} from './components/menu/menu-styles';
 import {PaginatorStylesMigrator} from './components/paginator/paginator-styles';
 import {ProgressBarStylesMigrator} from './components/progress-bar/progress-bar-styles';
@@ -134,6 +135,7 @@ export const MIGRATORS: ComponentMigrator[] = [
   {
     component: 'list',
     styles: new ListStylesMigrator(),
+    template: new ListTemplateMigrator(),
   },
   {
     component: 'menu',
