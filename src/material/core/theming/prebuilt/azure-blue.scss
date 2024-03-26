@@ -1,0 +1,24 @@
+@use '@angular/material-experimental' as matx;
+@use '../all-theme';
+@use '../../core';
+@use '../../typography/typography';
+
+@include core.core();
+
+$theme: matx.define-theme((
+  color: (
+    theme-type: light,
+    primary: matx.$m3-azure-palette,
+    tertiary: matx.$m3-blue-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+html {
+  @include all-theme.all-component-themes($theme);
+}
+
+@include matx.color-variants-back-compat($theme);
+@include typography.typography-hierarchy($theme);

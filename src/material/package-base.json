@@ -34,6 +34,18 @@
     "./prebuilt-themes/purple-green.css": {
       "style": "./prebuilt-themes/purple-green.css"
     },
+    "./prebuilt-themes/azure-blue.css": {
+      "style": "./prebuilt-themes/azure-blue.css"
+    },
+    "./prebuilt-themes/rose-red.css": {
+      "style": "./prebuilt-themes/rose-red.css"
+    },
+    "./prebuilt-themes/cyan-orange.css": {
+      "style": "./prebuilt-themes/cyan-orange.css"
+    },
+    "./prebuilt-themes/magenta-violet.css": {
+      "style": "./prebuilt-themes/magenta-violet.css"
+    },
     "./prebuilt-themes/*": {
       "style": "./prebuilt-themes/*.css"
     }
