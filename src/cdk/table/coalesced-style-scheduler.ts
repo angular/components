@@ -6,9 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken} from '@angular/core';
-import {from, Subject} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {EnvironmentInjector, Injectable, InjectionToken, NgZone, inject} from '@angular/core';
 
 /**
  * @docs-private
@@ -31,11 +29,12 @@ export const _COALESCED_STYLE_SCHEDULER = new InjectionToken<_CoalescedStyleSche
  * @docs-private
  */
 @Injectable()
-export class _CoalescedStyleScheduler implements OnDestroy {
+export class _CoalescedStyleScheduler {
   private _currentSchedule: _Schedule | null = null;
-  private readonly _destroyed = new Subject<void>();
+  private _injector = inject(EnvironmentInjector);
+  private _ngZone = inject(NgZone);
 
-  constructor(private readonly _ngZone: NgZone) {}
+  constructor(_unusedNgZone?: NgZone) {}
 
   /**
    * Schedules the specified task to run at the end of the current VM turn.
@@ -56,12 +55,6 @@ export class _CoalescedStyleScheduler implements OnDestroy {
     this._currentSchedule!.endTasks.push(task);
   }
 
-  /** Prevent any further tasks from running. */
-  ngOnDestroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
-  }
-
   private _createScheduleIfNeeded() {
     if (this._currentSchedule) {
       return;
@@ -69,9 +62,12 @@ export class _CoalescedStyleScheduler implements OnDestroy {
 
     this._currentSchedule = new _Schedule();
 
-    this._getScheduleObservable()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
+    this._ngZone.runOutsideAngular(() =>
+      // TODO(mmalerba): Scheduling this using something that runs less frequently
+      //  (e.g. requestAnimationFrame, setTimeout, etc.) causes noticeable jank with the column
+      //  resizer. We should audit the usages of schedule / scheduleEnd in that component and see
+      //  if we can refactor it so that we don't need to flush the tasks quite so frequently.
+      queueMicrotask(() => {
         while (this._currentSchedule!.tasks.length || this._currentSchedule!.endTasks.length) {
           const schedule = this._currentSchedule!;
 
@@ -88,14 +84,7 @@ export class _CoalescedStyleScheduler implements OnDestroy {
         }
 
         this._currentSchedule = null;
-      });
-  }
-
-  private _getScheduleObservable() {
-    // Use onStable when in the context of an ongoing change detection cycle so that we
-    // do not accidentally trigger additional cycles.
-    return this._ngZone.isStable
-      ? from(Promise.resolve(undefined))
-      : this._ngZone.onStable.pipe(take(1));
+      }),
+    );
   }
 }
