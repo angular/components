@@ -95,6 +95,44 @@ sass_binary(
     deps = [":core_scss_lib"],
 )
 
+# M3 themes
+sass_binary(
+    name = "azure_blue_prebuilt",
+    src = "theming/prebuilt/azure-blue.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "rose_red_prebuilt",
+    src = "theming/prebuilt/rose-red.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "cyan_orange_prebuilt",
+    src = "theming/prebuilt/cyan-orange.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "magenta_violet_prebuilt",
+    src = "theming/prebuilt/magenta-violet.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+# Legacy M2 themes
 sass_binary(
     name = "indigo_pink_prebuilt",
     src = "theming/prebuilt/indigo-pink.scss",

@@ -34,3 +34,31 @@ genrule(
     outs = ["purple-green.css"],
     cmd = "cp $< $@",
 )
+
+genrule(
+    name = "azure-blue",
+    srcs = ["//src/material/core:theming/prebuilt/azure-blue.css"],
+    outs = ["azure-blue.css"],
+    cmd = "cp $< $@",
+)
+
+genrule(
+    name = "rose-red",
+    srcs = ["//src/material/core:theming/prebuilt/rose-red.css"],
+    outs = ["rose-red.css"],
+    cmd = "cp $< $@",
+)
+
+genrule(
+    name = "cyan-orange",
+    srcs = ["//src/material/core:theming/prebuilt/cyan-orange.css"],
+    outs = ["cyan-orange.css"],
+    cmd = "cp $< $@",
+)
+
+genrule(
+    name = "magenta-violet",
+    srcs = ["//src/material/core:theming/prebuilt/magenta-violet.css"],
+    outs = ["magenta-violet.css"],
+    cmd = "cp $< $@",
+)
