@@ -185,16 +185,19 @@ $_component-prefix: null;
 /// @param {List} $prefix The component prefix to get the token values for.
 /// @param {ArgList} Any additional options
 ///   Currently the additional supported options are:
-//     - $color-variant (The color variant to use for the component)
+//     - $color-variant - The color variant to use for the component
+//     - $emit-overrides-only - Whether to emit *only* the overrides for the
+//                              specific color variant, or all color styles. Defaults to false.
 /// @throws If given options are invalid
 /// @return {Map} The token values for the requested component.
 @function get-tokens-for($tokens, $prefix, $options...) {
-  $options: sass-utils.validate-keyword-args($options, (color-variant));
+  $options: sass-utils.validate-keyword-args($options, (color-variant, emit-overrides-only));
   @if $tokens == () {
     @return ();
   }
   $values: map.get($tokens, $prefix);
   $color-variant: map.get($options, color-variant);
+  $emit-overrides-only: map.get($options, emit-overrides-only);
   @if $color-variant == null {
     @return $values;
   }
@@ -204,5 +207,5 @@ $_component-prefix: null;
       _supported-color-variants($tokens, $prefix)
     }#{'.'};
   }
-  @return map.merge($values, $overrides);
+  @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
 }

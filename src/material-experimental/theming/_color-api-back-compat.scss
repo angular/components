@@ -1,75 +1,85 @@
 @use '@angular/material' as mat;
 
+// We want to emit only the overrides, because the backwards compatibility styles are usually
+// emitted after all the tokens have been included once already. This allows us to save ~50kb
+// from the bundle.
+$_overrides-only: true;
+
 @mixin color-variant-styles($theme, $color-variant) {
+  $primary-options: (color-variant: $color-variant, emit-overrides-only: $_overrides-only);
+
   // Some components use the secondary color rather than primary color for `.mat-primary`.
   // Those components should use the $secondary-color-variant.
-  $secondary-color-variant: if($color-variant == primary, secondary, $color-variant);
+  $secondary-options: (
+    color-variant: if($color-variant == primary, secondary, $color-variant),
+    emit-overrides-only: $_overrides-only
+  );
 
-  @include mat.option-color($theme, $color-variant: $secondary-color-variant);
-  @include mat.progress-spinner-color($theme, $color-variant: $color-variant);
-  @include mat.pseudo-checkbox-color($theme, $color-variant: $color-variant);
-  @include mat.stepper-color($theme, $color-variant: $color-variant);
+  @include mat.option-color($theme, $secondary-options...);
+  @include mat.progress-spinner-color($theme, $primary-options...);
+  @include mat.pseudo-checkbox-color($theme, $primary-options...);
+  @include mat.stepper-color($theme, $primary-options...);
 
   &.mat-icon {
-    @include mat.icon-color($theme, $color-variant: $color-variant);
+    @include mat.icon-color($theme, $primary-options...);
   }
 
   &.mat-mdc-checkbox {
-    @include mat.checkbox-color($theme, $color-variant: $color-variant);
+    @include mat.checkbox-color($theme, $primary-options...);
   }
 
   &.mat-mdc-slider {
-    @include mat.slider-color($theme, $color-variant: $color-variant);
+    @include mat.slider-color($theme, $primary-options...);
   }
 
   &.mat-mdc-tab-group,
   &.mat-mdc-tab-nav-bar {
-    @include mat.tabs-color($theme, $color-variant: $color-variant);
+    @include mat.tabs-color($theme, $primary-options...);
   }
 
   &.mat-mdc-slide-toggle {
-    @include mat.slide-toggle-color($theme, $color-variant: $color-variant);
+    @include mat.slide-toggle-color($theme, $primary-options...);
   }
 
   &.mat-mdc-form-field {
-    @include mat.select-color($theme, $color-variant: $color-variant);
+    @include mat.select-color($theme, $primary-options...);
   }
 
   &.mat-mdc-radio-button {
-    @include mat.radio-color($theme, $color-variant: $color-variant);
+    @include mat.radio-color($theme, $primary-options...);
   }
 
   &.mat-mdc-progress-bar {
-    @include mat.progress-bar-color($theme, $color-variant: $color-variant);
+    @include mat.progress-bar-color($theme, $primary-options...);
   }
 
   &.mat-mdc-form-field {
-    @include mat.form-field-color($theme, $color-variant: $color-variant);
+    @include mat.form-field-color($theme, $primary-options...);
   }
 
   &.mat-datepicker-content {
-    @include mat.datepicker-color($theme, $color-variant: $color-variant);
+    @include mat.datepicker-color($theme, $primary-options...);
   }
 
   &.mat-mdc-button-base {
-    @include mat.button-color($theme, $color-variant: $color-variant);
+    @include mat.button-color($theme, $primary-options...);
   }
 
   &.mat-mdc-standard-chip {
-    @include mat.chips-color($theme, $color-variant: $secondary-color-variant);
+    @include mat.chips-color($theme, $secondary-options...);
   }
 
   .mdc-list-item__start,
   .mdc-list-item__end {
-    @include mat.checkbox-color($theme, $color-variant: $color-variant);
-    @include mat.radio-color($theme, $color-variant: $color-variant);
+    @include mat.checkbox-color($theme, $primary-options...);
+    @include mat.radio-color($theme, $primary-options...);
   }
 
   // M3 dropped support for warn/error color FABs.
   @if $color-variant != error {
     &.mat-mdc-fab,
     &.mat-mdc-mini-fab {
-      @include mat.fab-color($theme, $color-variant: $color-variant);
+      @include mat.fab-color($theme, $primary-options...);
     }
   }
 }
@@ -79,20 +89,23 @@
     @include color-variant-styles($theme, primary);
   }
   .mat-badge {
-    @include mat.badge-color($theme, $color-variant: primary);
+    @include mat.badge-color($theme, $color-variant: primary,
+      $emit-overrides-only: $_overrides-only);
   }
 
   .mat-accent {
     @include color-variant-styles($theme, tertiary);
   }
   .mat-badge-accent {
-    @include mat.badge-color($theme, $color-variant: tertiary);
+    @include mat.badge-color($theme, $color-variant: tertiary,
+      $emit-overrides-only: $_overrides-only);
   }
 
   .mat-warn {
     @include color-variant-styles($theme, error);
   }
   .mat-badge-warn {
-    @include mat.badge-color($theme, $color-variant: error);
+    @include mat.badge-color($theme, $color-variant: error,
+      $emit-overrides-only: $_overrides-only);
   }
 }
