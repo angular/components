@@ -206,11 +206,11 @@ export abstract class MatPaginatedTabHeader
     // re-align.
     const resize = this._sharedResizeObserver
       .observe(this._elementRef.nativeElement)
-      .pipe(debounceTime(32));
+      .pipe(debounceTime(32), takeUntil(this._destroyed));
     // Note: We do not actually need to watch these events for proper functioning of the tabs,
     // the resize events above should capture any viewport resize that we care about. However,
     // removing this is fairly breaking for screenshot tests, so we're leaving it here for now.
-    const viewportResize = this._viewportRuler.change(150);
+    const viewportResize = this._viewportRuler.change(150).pipe(takeUntil(this._destroyed));
 
     const realign = () => {
       this.updatePagination();
