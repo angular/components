@@ -24,6 +24,7 @@ import {
   OnDestroy,
   Optional,
   QueryList,
+  signal,
   ViewChild,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
@@ -211,7 +212,7 @@ export class MatTabNav
         this._changeDetectorRef.markForCheck();
 
         if (this.tabPanel) {
-          this.tabPanel._activeTabId = items[i].id;
+          this.tabPanel._activeTabId.set(items[i].id);
         }
 
         return;
@@ -415,7 +416,7 @@ export class MatTabLink
   exportAs: 'matTabNavPanel',
   template: '<ng-content></ng-content>',
   host: {
-    '[attr.aria-labelledby]': '_activeTabId',
+    '[attr.aria-labelledby]': '_activeTabId()',
     '[attr.id]': 'id',
     'class': 'mat-mdc-tab-nav-panel',
     'role': 'tabpanel',
@@ -429,5 +430,5 @@ export class MatTabNavPanel {
   @Input() id = `mat-tab-nav-panel-${nextUniqueId++}`;
 
   /** Id of the active tab in the nav bar. */
-  _activeTabId?: string;
+  _activeTabId = signal<string | undefined>(undefined);
 }
