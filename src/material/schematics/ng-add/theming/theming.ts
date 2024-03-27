@@ -39,7 +39,7 @@ const defaultCustomThemeFilename = 'custom-theme.scss';
 /** Add pre-built styles to the main project style file. */
 export function addThemeToAppStyles(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-    const themeName = options.theme || 'indigo-pink';
+    const themeName = options.theme || 'azure-blue';
     return themeName === 'custom'
       ? insertCustomTheme(options.project, host, context.logger)
       : insertPrebuiltTheme(options.project, themeName, context.logger);

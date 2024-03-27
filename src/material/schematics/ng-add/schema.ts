@@ -14,7 +14,7 @@ export interface Schema {
   animations: 'enabled' | 'disabled' | 'excluded';
 
   /** Name of pre-built theme to install. */
-  theme: 'indigo-pink' | 'deeppurple-amber' | 'pink-bluegrey' | 'purple-green' | 'custom';
+  theme: 'azure-blue' | 'rose-red' | 'magenta-violet' | 'cyan-orange' | 'custom';
 
   /** Whether to set up global typography styles. */
   typography: boolean;
