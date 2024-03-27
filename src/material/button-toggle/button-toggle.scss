@@ -318,14 +318,16 @@ $_standard-tokens: (
 
 // Change the border-radius of the focus indicator to
 // match the border-radius of the button-toggle-group.
-.mat-button-toggle-group-appearance-standard .mat-button-toggle {
-  &:last-of-type .mat-button-toggle-button:before {
-    border-top-right-radius: var(--mat-standard-button-toggle-shape);
-    border-bottom-right-radius: var(--mat-standard-button-toggle-shape);
-  }
+@include token-utils.use-tokens($_standard-tokens...) {
+  .mat-button-toggle-group-appearance-standard .mat-button-toggle {
+    &:last-of-type .mat-button-toggle-button:before {
+      @include token-utils.create-token-slot(border-top-right-radius, shape);
+      @include token-utils.create-token-slot(border-bottom-right-radius, shape);
+    }
 
-  &:first-of-type .mat-button-toggle-button:before {
-    border-top-left-radius: var(--mat-standard-button-toggle-shape);
-    border-bottom-left-radius: var(--mat-standard-button-toggle-shape);
+    &:first-of-type .mat-button-toggle-button:before {
+      @include token-utils.create-token-slot(border-top-left-radius, shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, shape);
+    }
   }
 }
