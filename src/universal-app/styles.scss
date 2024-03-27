@@ -1,27 +1,24 @@
 @use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 
-// Plus imports for other components in your app.
-
-// Disable legacy API compatibility, since universal-app is fully migrated to theme inspection API.
-mat.$theme-legacy-inspection-api-compatibility: false;
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// **Be sure that you only ever include this mixin once!**
 @include mat.core();
 
-// Define the default theme (same as the example above).
-$candy-app-primary: mat.define-palette(mat.$indigo-palette);
-$candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$candy-app-theme: mat.define-light-theme((
-  color: (primary: $candy-app-primary, accent: $candy-app-accent),
-  typography: mat.define-typography-config(),
-  density: 0
+$theme: matx.define-theme((
+  color: (
+    theme-type: light,
+    primary: matx.$m3-azure-palette,
+    tertiary: matx.$m3-blue-palette,
+  ),
+  density: (
+    scale: 0,
+  )
 ));
 
-// Include the default theme styles.
-@include mat.all-component-themes($candy-app-theme);
-@include mat.typography-hierarchy($candy-app-theme);
+html {
+  @include mat.all-component-themes($theme);
+}
+
+@include mat.typography-hierarchy($theme);
 
 body.test-automated {
   // Make sure bottom sheet doesn't obscure components.
@@ -38,4 +35,3 @@ body.test-automated {
     background: lime;
   }
 }
-
