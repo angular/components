@@ -12,6 +12,7 @@ export function createCustomTheme(name: string = 'app') {
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -19,31 +20,30 @@ export function createCustomTheme(name: string = 'app') {
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$${name}-primary: mat.define-palette(mat.$indigo-palette);
-$${name}-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$${name}-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$${name}-theme: mat.define-light-theme((
+// Define the theme object.
+$${name}-theme: matx.define-theme((
   color: (
-    primary: $${name}-primary,
-    accent: $${name}-accent,
-    warn: $${name}-warn,
+    theme-type: light,
+    primary: matx.$m3-azure-palette,
+    tertiary: matx.$m3-blue-palette,
   ),
-  typography: mat.define-typography-config(),
-  density: 0
+  density: (
+    scale: 0,
+  )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($${name}-theme);
+:root {
+  @include mat.all-component-themes($${name}-theme);
+}
 
+// Comment out the line below if you want to use the pre-defined typography utility classes.
+// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
+// @include mat.typography-hierarchy($theme);
+
+// Comment out the line below if you want to use the deprecated \`color\` inputs.
+// @include matx.color-variants-back-compat($theme);
 `;
 }

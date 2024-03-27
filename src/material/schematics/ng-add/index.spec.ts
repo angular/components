@@ -104,7 +104,7 @@ describe('ng-add schematic', () => {
     const workspace = await getWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-    expectProjectStyleFile(project, '@angular/material/prebuilt-themes/indigo-pink.css');
+    expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
   });
 
   it('should support adding a custom theme', async () => {
@@ -124,7 +124,8 @@ describe('ng-add schematic', () => {
     const themeContent = buffer!.toString();
 
     expect(themeContent).toContain(`@use '@angular/material' as mat;`);
-    expect(themeContent).toContain(`$material-primary: mat.define-palette(`);
+    expect(themeContent).toContain(`@use '@angular/material-experimental' as matx;`);
+    expect(themeContent).toContain(`$material-theme: matx.define-theme((`);
   });
 
   it('should create a custom theme file if no SCSS file could be found', async () => {
@@ -312,7 +313,7 @@ describe('ng-add schematic', () => {
 
   describe('theme files', () => {
     /** Path to the default prebuilt theme file that will be added when running ng-add. */
-    const defaultPrebuiltThemePath = '@angular/material/prebuilt-themes/indigo-pink.css';
+    const defaultPrebuiltThemePath = '@angular/material/prebuilt-themes/azure-blue.css';
 
     /** Writes a specific style file to the workspace in the given tree */
     function writeStyleFileToWorkspace(tree: Tree, stylePath: string) {
@@ -560,7 +561,7 @@ describe('ng-add schematic', () => {
       const workspace = await getWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-      expectProjectStyleFile(project, '@angular/material/prebuilt-themes/indigo-pink.css');
+      expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
     });
 
     it('should add material app styles', async () => {
@@ -630,7 +631,7 @@ describe('ng-add schematic', () => {
       const workspace = await getWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-      expectProjectStyleFile(project, '@angular/material/prebuilt-themes/indigo-pink.css');
+      expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
     });
 
     it('should add material app styles', async () => {
