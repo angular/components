@@ -314,16 +314,16 @@ $_standard-tokens: (
 // radius of the button-toggle-group or standalone button-toggle.
 @include token-utils.use-tokens($_standard-tokens...) {
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
-    --mat-focus-indicator-border-radius: #{token-utils.get-token-variable-reference(shape)};
+    @include token-utils.create-token-slot(--mat-focus-indicator-border-radius, shape);
   }
 
   .mat-button-toggle-group-appearance-standard .mat-button-toggle {
-    &:last-of-type .mat-button-toggle-button:before {
+    &:last-of-type .mat-button-toggle-button::before {
       @include token-utils.create-token-slot(border-top-right-radius, shape);
       @include token-utils.create-token-slot(border-bottom-right-radius, shape);
     }
 
-    &:first-of-type .mat-button-toggle-button:before {
+    &:first-of-type .mat-button-toggle-button::before {
       @include token-utils.create-token-slot(border-top-left-radius, shape);
       @include token-utils.create-token-slot(border-bottom-left-radius, shape);
     }
