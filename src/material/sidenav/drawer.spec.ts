@@ -985,8 +985,10 @@ describe('MatDrawerContainer', () => {
 
   it('should recalculate the margin if a drawer changes size while open in autosize mode', fakeAsync(() => {
     const fixture = TestBed.createComponent(AutosizeDrawer);
-
     fixture.detectChanges();
+
+    // In M3 the drawer has a fixed default width.
+    fixture.nativeElement.querySelector('.mat-drawer').style.width = 'auto';
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
     tick();
