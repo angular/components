@@ -309,3 +309,23 @@ $_standard-tokens: (
     border: 0;
   }
 }
+
+// Change the border-radius of the focus indicator to
+// match the border-radius of the standalone-button-toggle.
+.mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
+  --mat-focus-indicator-border-radius: var(--mat-standard-button-toggle-shape);
+}
+
+// Change the border-radius of the focus indicator to
+// match the border-radius of the button-toggle-group.
+.mat-button-toggle-group-appearance-standard .mat-button-toggle {
+  &:last-of-type .mat-button-toggle-button:before {
+    border-top-right-radius: var(--mat-standard-button-toggle-shape);
+    border-bottom-right-radius: var(--mat-standard-button-toggle-shape);
+  }
+
+  &:first-of-type .mat-button-toggle-button:before {
+    border-top-left-radius: var(--mat-standard-button-toggle-shape);
+    border-bottom-left-radius: var(--mat-standard-button-toggle-shape);
+  }
+}
