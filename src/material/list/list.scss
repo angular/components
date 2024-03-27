@@ -200,12 +200,7 @@ mat-action-list button {
   }
 }
 
-.mat-mdc-nav-list .mat-mdc-list-item {
-  --mat-mdc-focus-indicator-border-radius: var(--mat-list-active-indicator-shape);
-}
-
-@include token-utils.use-tokens(m2-mat-list.$prefix,
-  m2-mat-list.get-token-slots()) {
+@include token-utils.use-tokens(m2-mat-list.$prefix, m2-mat-list.get-token-slots()) {
   .mdc-list-item--with-leading-icon .mdc-list-item__start {
     @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
     @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);
@@ -213,6 +208,7 @@ mat-action-list button {
 
   .mat-mdc-nav-list .mat-mdc-list-item {
     @include token-utils.create-token-slot(border-radius, active-indicator-shape);
+    @include token-utils.create-token-slot(--mat-mdc-focus-indicator-border-radius, active-indicator-shape);
 
     &.mdc-list-item--activated {
       @include token-utils.create-token-slot(background-color, active-indicator-color);
