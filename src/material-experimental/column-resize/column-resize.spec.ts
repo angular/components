@@ -1,13 +1,14 @@
-import {Component, Directive, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks} from '@angular/core/testing';
 import {BidiModule} from '@angular/cdk/bidi';
 import {DataSource} from '@angular/cdk/collections';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {ChangeDetectionStrategy, Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 
 import {ColumnSize} from '@angular/cdk-experimental/column-resize';
+import {AbstractMatColumnResize} from './column-resize-directives/common';
 import {
   MatColumnResize,
   MatColumnResizeFlex,
@@ -16,7 +17,6 @@ import {
   MatDefaultEnabledColumnResizeFlex,
   MatDefaultEnabledColumnResizeModule,
 } from './index';
-import {AbstractMatColumnResize} from './column-resize-directives/common';
 
 function getDefaultEnabledDirectiveStrings() {
   return {
@@ -444,6 +444,7 @@ describe('Material Popover Edit', () => {
 
         const initialThumbPosition = component.getOverlayThumbPosition(1);
         component.updateResizeWithMouseInProgress(5);
+        fixture.detectChanges();
         flushMicrotasks();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
@@ -461,6 +462,7 @@ describe('Material Popover Edit', () => {
         (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 5);
 
         component.updateResizeWithMouseInProgress(1);
+        fixture.detectChanges();
         flushMicrotasks();
 
         thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
@@ -506,6 +508,7 @@ describe('Material Popover Edit', () => {
         const initialThumbPosition = component.getOverlayThumbPosition(1);
 
         component.updateResizeWithMouseInProgress(5);
+        fixture.detectChanges();
         flushMicrotasks();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
@@ -541,6 +544,7 @@ describe('Material Popover Edit', () => {
         expect(resize).toBe(null);
 
         component.resizeColumnWithMouse(1, 5);
+        fixture.detectChanges();
         flushMicrotasks();
 
         expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5} as any);
