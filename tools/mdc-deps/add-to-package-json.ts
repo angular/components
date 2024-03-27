@@ -23,8 +23,8 @@ async function main(basePackageJsonPath: string) {
     await fs.promises.readFile(projectPkgJsonPath, 'utf8'),
   ) as PackageJson;
 
-  const mdcDeps = Object.keys(projectPkgJson.devDependencies ?? []).filter(pkgName =>
-    pkgName.startsWith('@material/'),
+  const mdcDeps = Object.keys(projectPkgJson.devDependencies ?? []).filter(
+    pkgName => pkgName.startsWith('@material/') && pkgName !== '@material/material-color-utilities',
   );
 
   if (mdcDeps.length === 0) {
