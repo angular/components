@@ -37,7 +37,7 @@ __metadata:
 
 "@angular-devkit/build-angular@file:../../node_modules/@angular-devkit/build-angular::locator=yarn-pnp-compat%40workspace%3A.":
   version: 18.0.0-next.0
-  resolution: "@angular-devkit/build-angular@file:../../node_modules/@angular-devkit/build-angular#../../node_modules/@angular-devkit/build-angular::hash=51b922&locator=yarn-pnp-compat%40workspace%3A."
+  resolution: "@angular-devkit/build-angular@file:../../node_modules/@angular-devkit/build-angular#../../node_modules/@angular-devkit/build-angular::hash=436be7&locator=yarn-pnp-compat%40workspace%3A."
   dependencies:
     "@ampproject/remapping": "npm:2.3.0"
     "@angular-devkit/architect": "npm:0.1800.0-next.0"
@@ -143,7 +143,7 @@ __metadata:
       optional: true
     tailwindcss:
       optional: true
-  checksum: 012a687006b225d5b2a42849a5dcf42f8b76985693756fdf2b6ccbe63b650fa9536f0b70bcff1521cad5d4c7e3acb66a2a257ae8c5f259ddb67a1e2b3a6e6454
+  checksum: 091432126601cbc430109d7f816b14f0f9c53a3a6f44046c0299424af8212d55715e6bf5b218ad192d38ae3061f996135472f97be284ae7be6b1f5a08a53a6d5
   languageName: node
   linkType: hard
 
@@ -204,19 +204,19 @@ __metadata:
   linkType: hard
 
 "@angular/cdk@file:../../dist/releases/cdk::locator=yarn-pnp-compat%40workspace%3A.":
-  version: 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-  resolution: "@angular/cdk@file:../../dist/releases/cdk#../../dist/releases/cdk::hash=608b76&locator=yarn-pnp-compat%40workspace%3A."
+  version: 18.0.0-next.1+sha-315f6cd-with-local-changes
+  resolution: "@angular/cdk@file:../../dist/releases/cdk#../../dist/releases/cdk::hash=aa9313&locator=yarn-pnp-compat%40workspace%3A."
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/core": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
+    "@angular/common": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/core": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     rxjs: ^6.5.3 || ^7.4.0
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: b049f905806f5016c6c0fe394cbd40d293d822ee226953fdf311dc271f3f1a886f080cb1b97c1b2b68ce9f8df30df841ccd96efd4e3b9172c9b09af3260d59fb
+  checksum: f8d0efccc964ccc373f114125cb1790b4fe5849271e33725ce46ab502fb6e1bc586356213c72c55505384287994d76eed44df5e7d0bcb97c0780d04bff2a094c
   languageName: node
   linkType: hard
 
@@ -262,7 +262,7 @@ __metadata:
 
 "@angular/compiler-cli@file:../../node_modules/@angular/compiler-cli::locator=yarn-pnp-compat%40workspace%3A.":
   version: 18.0.0-next.1
-  resolution: "@angular/compiler-cli@file:../../node_modules/@angular/compiler-cli#../../node_modules/@angular/compiler-cli::hash=1f6afb&locator=yarn-pnp-compat%40workspace%3A."
+  resolution: "@angular/compiler-cli@file:../../node_modules/@angular/compiler-cli#../../node_modules/@angular/compiler-cli::hash=bcefac&locator=yarn-pnp-compat%40workspace%3A."
   dependencies:
     "@babel/core": "npm:7.24.1"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
@@ -279,7 +279,7 @@ __metadata:
     ng-xi18n: ./bundles/src/bin/ng_xi18n.js
     ngc: ./bundles/src/bin/ngc.js
     ngcc: ./bundles/ngcc/index.js
-  checksum: d6b474215a6925870d845459f46e12c9738e10356bc67b1cbfa2dd39a4ecfd98d643c5b496d73fdeeb79f3a1506e272fb8348dc85bd1f6a592ea751db5e346d8
+  checksum: 03acfaa72cb38be42ec99e255cd75bbdde2052f7792b33c29d74776c93494f00dc7bfb1c0fdec21799f92c345439ec74c97d76c349bc1ca21f7a9ae741893e90
   languageName: node
   linkType: hard
 
@@ -324,8 +324,8 @@ __metadata:
   linkType: hard
 
 "@angular/material-experimental@file:../../dist/releases/material-experimental::locator=yarn-pnp-compat%40workspace%3A.":
-  version: 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-  resolution: "@angular/material-experimental@file:../../dist/releases/material-experimental#../../dist/releases/material-experimental::hash=f879ff&locator=yarn-pnp-compat%40workspace%3A."
+  version: 18.0.0-next.1+sha-315f6cd-with-local-changes
+  resolution: "@angular/material-experimental@file:../../dist/releases/material-experimental#../../dist/releases/material-experimental::hash=57f480&locator=yarn-pnp-compat%40workspace%3A."
   dependencies:
     "@material/animation": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/auto-init": "npm:15.0.0-canary.7f224ddd4.0"
@@ -376,20 +376,20 @@ __metadata:
     "@material/typography": "npm:15.0.0-canary.7f224ddd4.0"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/animations": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/cdk": 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-    "@angular/common": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/core": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/forms": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/material": 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-    "@angular/platform-browser": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-  checksum: 1ad7bc44c486bcdcf299728378632dc2450f0c1b1629036d8c27019b477b14b24c52929063c42cec14c4c91ffb66ced161596d2c9b2c17e6367238c2aa83d756
+    "@angular/animations": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/cdk": 18.0.0-next.1+sha-315f6cd-with-local-changes
+    "@angular/common": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/core": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/forms": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/material": 18.0.0-next.1+sha-315f6cd-with-local-changes
+    "@angular/platform-browser": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+  checksum: 01ab012bc8bdc032b41f912d02524c5077a85d02efafcb4457ce88fb9750151857d545ca8f07cc7aee95794853e2af6f74dc520a0e5fb11e81265522eff7ce26
   languageName: node
   linkType: hard
 
 "@angular/material@file:../../dist/releases/material::locator=yarn-pnp-compat%40workspace%3A.":
-  version: 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-  resolution: "@angular/material@file:../../dist/releases/material#../../dist/releases/material::hash=b495ab&locator=yarn-pnp-compat%40workspace%3A."
+  version: 18.0.0-next.1+sha-315f6cd-with-local-changes
+  resolution: "@angular/material@file:../../dist/releases/material#../../dist/releases/material::hash=c71c4c&locator=yarn-pnp-compat%40workspace%3A."
   dependencies:
     "@material/animation": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/auto-init": "npm:15.0.0-canary.7f224ddd4.0"
@@ -440,14 +440,14 @@ __metadata:
     "@material/typography": "npm:15.0.0-canary.7f224ddd4.0"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/animations": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/cdk": 17.3.0-next.0+sha-cfdfa9a-with-local-changes
-    "@angular/common": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/core": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/forms": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/platform-browser": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
+    "@angular/animations": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/cdk": 18.0.0-next.1+sha-315f6cd-with-local-changes
+    "@angular/common": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/core": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/forms": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
+    "@angular/platform-browser": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: e1e0e57b6a5d07c0bb479a29b4699339b0ca75f99badeab0be7bbd08e4e69bc791f4808d75ad077204898d253ae52e8ea1b40286ce0362b9fcb674818cce5141
+  checksum: 84aef02512eae35746c72f057edf2169a3e9201c36e9b3ed4d49873a135d73f01819ab75e85f1a940f2f255443c7e33ef495a8cabfdf36e5ac5603aaf4f83a2f
   languageName: node
   linkType: hard
 
@@ -9401,23 +9401,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~5.3.2":
-  version: 5.3.2
-  resolution: "typescript@npm:5.3.2"
+"typescript@npm:~5.4.2":
+  version: 5.4.3
+  resolution: "typescript@npm:5.4.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 415e5fb6611f5713e460bad48039f00bcfdbde53a2f911727862d5aa9c5d5edd250059a419df382d8f031709e15a169c41eb62b6a401da5eec7ac0f4e359d6ac
+  checksum: de4c69f49a7ad4b1ea66a6dcc8b055ac34eb56af059a069d8988dd811c5e649be07e042e5bf573e8d0ac3ec2f30e6c999aa651cd09f6e9cbc6113749e8b6be20
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~5.3.2#optional!builtin<compat/typescript>":
-  version: 5.3.2
-  resolution: "typescript@patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"
+"typescript@patch:typescript@npm%3A~5.4.2#optional!builtin<compat/typescript>":
+  version: 5.4.3
+  resolution: "typescript@patch:typescript@npm%3A5.4.3#optional!builtin<compat/typescript>::version=5.4.3&hash=e012d7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 1b45cdfb577a78ae7a9a9d0b77a7b772142cb98ba05e4e5aefba7044a028ded885bcecef63166407a5986645cea816fe4986894336aacd5e791796ea79a6a7ed
+  checksum: 3abea475798fdf7ee46e75dafc50c85f30fd1e7061559ec2af61646f23d16c91742703f04f0ac55be52f58ca05c02f77404b7b94bbad16278c9a54c9eeb4f4ea
   languageName: node
   linkType: hard
 
@@ -10010,7 +10010,7 @@ __metadata:
     karma-jasmine-html-reporter: "npm:~1.7.0"
     rxjs: "npm:^7.5.5"
     tslib: "npm:^2.3.0"
-    typescript: "npm:~5.3.2"
+    typescript: "npm:~5.4.2"
     zone.js: "npm:~0.14.0"
   languageName: unknown
   linkType: soft
