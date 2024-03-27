@@ -8,6 +8,7 @@ CDK_ENTRYPOINTS = [
     "collections",
     "dialog",
     "drag-drop",
+    "global-listener",
     "keycodes",
     "layout",
     "listbox",

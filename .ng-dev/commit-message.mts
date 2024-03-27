@@ -23,6 +23,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk/collections',
     'cdk/dialog',
     'cdk/drag-drop',
+    'cdk/global-listener',
     'cdk/keycodes',
     'cdk/layout',
     'cdk/listbox',
