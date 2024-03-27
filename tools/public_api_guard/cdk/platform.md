@@ -63,6 +63,9 @@ export enum RtlScrollAxisType {
 }
 
 // @public
+export function _supportsInert(): boolean;
+
+// @public
 export function supportsPassiveEventListeners(): boolean;
 
 // @public
