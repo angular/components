@@ -310,15 +310,13 @@ $_standard-tokens: (
   }
 }
 
-// Change the border-radius of the focus indicator to
-// match the border-radius of the standalone-button-toggle.
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
-  --mat-focus-indicator-border-radius: var(--mat-standard-button-toggle-shape);
-}
-
-// Change the border-radius of the focus indicator to
-// match the border-radius of the button-toggle-group.
+// Change the border-radius of the focus indicator to match the
+// radius of the button-toggle-group or standalone button-toggle.
 @include token-utils.use-tokens($_standard-tokens...) {
+  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
+    --mat-focus-indicator-border-radius: var(#{token-utils.get-token-variable(shape)});
+  }
+
   .mat-button-toggle-group-appearance-standard .mat-button-toggle {
     &:last-of-type .mat-button-toggle-button:before {
       @include token-utils.create-token-slot(border-top-right-radius, shape);
