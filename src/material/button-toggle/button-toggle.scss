@@ -314,7 +314,7 @@ $_standard-tokens: (
 // radius of the button-toggle-group or standalone button-toggle.
 @include token-utils.use-tokens($_standard-tokens...) {
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
-    --mat-focus-indicator-border-radius: var(#{token-utils.get-token-variable(shape)});
+    --mat-focus-indicator-border-radius: #{token-utils.get-token-variable-reference(shape)};
   }
 
   .mat-button-toggle-group-appearance-standard .mat-button-toggle {
