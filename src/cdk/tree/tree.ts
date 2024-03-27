@@ -15,6 +15,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -153,8 +154,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     this._onDestroy.next();
     this._onDestroy.complete();
 
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
+    if (this._dataSource && isDataSource(this._dataSource)) {
+      this._dataSource.disconnect(this);
     }
 
     if (this._dataSubscription) {
@@ -184,8 +185,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * clearing the node outlet. Otherwise start listening for new data.
    */
   private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
+    if (this._dataSource && isDataSource(this._dataSource)) {
+      this._dataSource.disconnect(this);
     }
 
     if (this._dataSubscription) {
@@ -254,6 +255,15 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
         }
       },
     );
+
+    changes.forEachIdentityChange(record => {
+      if (record.currentIndex !== null) {
+        const viewRef = <EmbeddedViewRef<CdkTreeNodeOutletContext<T>>>(
+          viewContainer.get(record.currentIndex)
+        );
+        viewRef.context.$implicit = record.item;
+      }
+    });
 
     this._changeDetectorRef.detectChanges();
   }

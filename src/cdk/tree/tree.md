@@ -176,3 +176,10 @@ tree how to uniquely identify nodes to track how the data changes with each upda
 ```html
 <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackByFn">
 ```
+
+Make sure to also provide a similar `trackBy` function on the `TreeControl`. For example:
+```ts
+const treeControl = new NestedTreeControl<FoodNode, string>(node => node.children, {
+  trackBy: (node) => node.id
+});
+```
