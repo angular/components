@@ -138,7 +138,7 @@ describe('MDC-based MatProgressSpinner', () => {
       .toBe(32);
     expect(svgElement.getAttribute('viewBox'))
       .withContext('Expected the custom diameter to be applied to the svg viewBox.')
-      .toBe('0 0 25.2 25.2');
+      .toBe('0 0 32 32');
   });
 
   it('should allow a custom stroke width', () => {
@@ -158,7 +158,7 @@ describe('MDC-based MatProgressSpinner', () => {
       .toBe(40);
     expect(svgElement.getAttribute('viewBox'))
       .withContext('Expected the viewBox to be adjusted based on the stroke width.')
-      .toBe('0 0 130 130');
+      .toBe('0 0 100 100');
   });
 
   it('should allow floating point values for custom diameter', () => {
@@ -184,7 +184,7 @@ describe('MDC-based MatProgressSpinner', () => {
       .toBe(33);
     expect(svgElement.getAttribute('viewBox'))
       .withContext('Expected the custom diameter to be applied to the svg viewBox.')
-      .toBe('0 0 25.75 25.75');
+      .toBe('0 0 32.5 32.5');
   });
 
   it('should allow floating point values for custom stroke width', () => {
@@ -204,7 +204,7 @@ describe('MDC-based MatProgressSpinner', () => {
       .toBe(40.5);
     expect(svgElement.getAttribute('viewBox'))
       .withContext('Expected the viewBox to be adjusted based on the stroke width.')
-      .toBe('0 0 130.5 130.5');
+      .toBe('0 0 100 100');
   });
 
   it('should expand the host element if the stroke width is greater than the default', () => {
@@ -283,7 +283,7 @@ describe('MDC-based MatProgressSpinner', () => {
 
     expect(svgElement.clientWidth).toBe(37);
     expect(svgElement.clientHeight).toBe(37);
-    expect(svgElement.getAttribute('viewBox')).toBe('0 0 38 38');
+    expect(svgElement.getAttribute('viewBox')).toBe('0 0 37 37');
   });
 
   it('should update the element size when changed dynamically', () => {
