@@ -11,8 +11,8 @@ mat.$theme-legacy-inspection-api-compatibility: false;
   @return matx.define-theme((
     color: (
       theme-type: $type,
-      primary: matx.$m3-green-palette,
-      tertiary: matx.$m3-violet-palette,
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-blue-palette,
     ),
     density: (
       scale: $density
