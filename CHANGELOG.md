@@ -1,3 +1,18 @@
+<a name="17.3.2"></a>
+# 17.3.2 "benitoite-biscuit" (2024-03-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [de2388190](https://github.com/angular/components/commit/de2388190eae18689f63f07f96fbfe460fe9e047) | fix | **a11y:** support signals in ListKeyManager ([#28757](https://github.com/angular/components/pull/28757)) |
+| [38a12a9f0](https://github.com/angular/components/commit/38a12a9f057a7b8fef6d7a8f0014e4c15a74af4d) | fix | **listbox:** improve SSR compatibility by adding an _isBrowser check before calling _setPreviousActiveOptionAsActiveOptionOnWindowBlur ([#28746](https://github.com/angular/components/pull/28746)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aee721ec6](https://github.com/angular/components/commit/aee721ec6979538469e5080fac0cfae4f01fa035) | fix | **chips:** use concrete value for remove icon size ([#28751](https://github.com/angular/components/pull/28751)) |
+| [4ca9ac56b](https://github.com/angular/components/commit/4ca9ac56b4e5ef38321277bc919b097089b1a28c) | fix | **datepicker:** datepicker row count inaccurate for screen reader ([#28760](https://github.com/angular/components/pull/28760)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.1"></a>
 # 17.3.1 "clay-paradox" (2024-03-20)
 ### cdk
