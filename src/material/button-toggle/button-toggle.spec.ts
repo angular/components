@@ -366,6 +366,24 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
     });
 
+    it('should initialize the tab index correctly', () => {
+      buttonToggleLabelElements.forEach((buttonToggle, index) => {
+        if (index === 0) {
+          expect(buttonToggle.getAttribute('tabindex')).toBe('0');
+        } else {
+          expect(buttonToggle.getAttribute('tabindex')).toBe('-1');
+        }
+      });
+    });
+
+    it('should update the tab index correctly', () => {
+      buttonToggleLabelElements[1].click();
+      fixture.detectChanges();
+
+      expect(buttonToggleLabelElements[0].getAttribute('tabindex')).toBe('-1');
+      expect(buttonToggleLabelElements[1].getAttribute('tabindex')).toBe('0');
+    });
+
     it('should set individual button toggle names based on the group name', () => {
       expect(groupInstance.name).toBeTruthy();
       for (let buttonToggle of buttonToggleLabelElements) {
