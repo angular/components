@@ -1,3 +1,25 @@
+<a name="18.0.0-next.2"></a>
+# 18.0.0-next.2 "gahnite-globe" (2024-03-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [da980a80b](https://github.com/angular/components/commit/da980a80b8775dac782eae0df468de4157550ca6) | fix | **a11y:** support signals in ListKeyManager ([#28757](https://github.com/angular/components/pull/28757)) |
+| [9c4e451da](https://github.com/angular/components/commit/9c4e451daa15aff937d021df1ce6e2bc0dee29dd) | fix | **listbox:** improve SSR compatibility by adding an _isBrowser check before calling _setPreviousActiveOptionAsActiveOptionOnWindowBlur ([#28746](https://github.com/angular/components/pull/28746)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4473a379f](https://github.com/angular/components/commit/4473a379f1f3a004526eca97aa7b75b82d60ae2d) | feat | **core:** add prebuilt themes based on M3 |
+| [b312b9491](https://github.com/angular/components/commit/b312b9491e736953ad29756b74e9f74df49ff88b) | feat | **schematics:** use M3 themes in schematics |
+| [b9d4048c5](https://github.com/angular/components/commit/b9d4048c5ff14bbad260fff5e635785233d9c294) | fix | **chips:** use concrete value for remove icon size ([#28751](https://github.com/angular/components/pull/28751)) |
+| [457ce698f](https://github.com/angular/components/commit/457ce698f76e714209964dcdbc1e7423d3f41791) | fix | **datepicker:** datepicker row count inaccurate for screen reader ([#28760](https://github.com/angular/components/pull/28760)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c345df788](https://github.com/angular/components/commit/c345df7889c4f08076657ed37f901c975f762c3c) | feat | **theming:** add mixin for customizing checkbox tokens ([#28759](https://github.com/angular/components/pull/28759)) |
+| [c932512ba](https://github.com/angular/components/commit/c932512bab15b59883453b3e6dc9f896239fd65d) | fix | **theming:** avoid re-emitting the same tokens from the backwards-compatibility styles |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-next.1"></a>
 # 18.0.0-next.1 "basalt-solitude" (2024-03-20)
 ### cdk
