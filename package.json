@@ -9,17 +9,17 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0 <20.0.0",
+    "node": "^18.19.1 || >=20.11.1",
     "yarn": "^1.22.17",
     "npm": "Please use Yarn instead of NPM to install dependencies. See: https://yarnpkg.com/lang/en/docs/install/"
   },
   "scripts": {
     "postinstall": "patch-package --patch-dir tools/postinstall/patches && node tools/postinstall/apply-patches.js",
-    "ng-dev": "ts-node --esm --project .ng-dev/tsconfig.json --transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
+    "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
     "ng-dev:stamp": "yarn -s ng-dev release build-env-stamp --additional-stamping-script=tools/bazel-additional-stamp.mjs",
-    "build": "ts-node --esm --project scripts/tsconfig.json ./scripts/build-packages-dist-main.mts",
-    "build-docs-content": "ts-node --esm --project scripts/tsconfig.json ./scripts/build-docs-content-main.mts",
-    "build-and-check-release-output": "ts-node --esm --project scripts/tsconfig.json scripts/build-and-check-release-output.mts",
+    "build": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-packages-dist-main.mts",
+    "build-docs-content": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-docs-content-main.mts",
+    "build-and-check-release-output": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/build-and-check-release-output.mts",
     "dev-app": "ibazel run //src/dev-app:devserver",
     "universal-app": "bazel run //src/universal-app:server",
     "test": "node ./scripts/run-component-tests.js",
