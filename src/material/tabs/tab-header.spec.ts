@@ -1,33 +1,37 @@
 import {Dir, Direction} from '@angular/cdk/bidi';
 import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {MutationObserverFactory, ObserversModule} from '@angular/cdk/observers';
+import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {PortalModule} from '@angular/cdk/portal';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {
+  createKeyboardEvent,
+  createMouseEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-  createMouseEvent,
 } from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   discardPeriodicTasks,
   fakeAsync,
-  TestBed,
+  flushMicrotasks,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {ObserversModule, MutationObserverFactory} from '@angular/cdk/observers';
 
 describe('MDC-based MatTabHeader', () => {
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
+  let resizeEvents: Subject<ResizeObserverEntry[]>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -45,6 +49,9 @@ describe('MDC-based MatTabHeader', () => {
     });
 
     TestBed.compileComponents();
+
+    resizeEvents = new Subject();
+    spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
   }));
 
   describe('focusing', () => {
@@ -650,7 +657,7 @@ describe('MDC-based MatTabHeader', () => {
       expect(inkBar.alignToElement).toHaveBeenCalled();
     }));
 
-    it('should re-align the ink bar when the window is resized', fakeAsync(() => {
+    it('should re-align the ink bar when the header is resized', fakeAsync(() => {
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
       fixture.detectChanges();
 
@@ -658,24 +665,24 @@ describe('MDC-based MatTabHeader', () => {
 
       spyOn(inkBar, 'alignToElement');
 
-      dispatchFakeEvent(window, 'resize');
-      tick(150);
+      resizeEvents.next([]);
       fixture.detectChanges();
+      tick(32);
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
       discardPeriodicTasks();
     }));
 
-    it('should update arrows when the window is resized', fakeAsync(() => {
+    it('should update arrows when the header is resized', fakeAsync(() => {
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
 
       const header = fixture.componentInstance.tabHeader;
 
       spyOn(header, '_checkPaginationEnabled');
 
-      dispatchFakeEvent(window, 'resize');
-      tick(10);
+      resizeEvents.next([]);
       fixture.detectChanges();
+      flushMicrotasks();
 
       expect(header._checkPaginationEnabled).toHaveBeenCalled();
       discardPeriodicTasks();
@@ -683,15 +690,12 @@ describe('MDC-based MatTabHeader', () => {
 
     it('should update the pagination state if the content of the labels changes', () => {
       const mutationCallbacks: Function[] = [];
-      TestBed.overrideProvider(MutationObserverFactory, {
-        useValue: {
-          // Stub out the MutationObserver since the native one is async.
-          create: function (callback: Function) {
-            mutationCallbacks.push(callback);
-            return {observe: () => {}, disconnect: () => {}};
-          },
+      spyOn(TestBed.inject(MutationObserverFactory), 'create').and.callFake(
+        (callback: Function) => {
+          mutationCallbacks.push(callback);
+          return {observe: () => {}, disconnect: () => {}} as any;
         },
-      });
+      );
 
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
       fixture.detectChanges();

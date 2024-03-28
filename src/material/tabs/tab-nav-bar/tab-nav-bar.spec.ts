@@ -1,24 +1,26 @@
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
-import {By} from '@angular/platform-browser';
+import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
+import {MAT_TABS_CONFIG} from '../index';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MAT_TABS_CONFIG} from '../index';
 
 describe('MDC-based MatTabNavBar', () => {
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
+  let resizeEvents: Subject<ResizeObserverEntry[]>;
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
@@ -37,6 +39,9 @@ describe('MDC-based MatTabNavBar', () => {
     });
 
     TestBed.compileComponents();
+
+    resizeEvents = new Subject();
+    spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
   }));
 
   describe('basic behavior', () => {
@@ -174,14 +179,14 @@ describe('MDC-based MatTabNavBar', () => {
       expect(spy.calls.any()).toBe(false);
     });
 
-    it('should re-align the ink bar when the window is resized', fakeAsync(() => {
+    it('should re-align the ink bar when the nav bar is resized', fakeAsync(() => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
-      dispatchFakeEvent(window, 'resize');
-      tick(150);
+      resizeEvents.next([]);
       fixture.detectChanges();
+      tick(32);
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
     }));
