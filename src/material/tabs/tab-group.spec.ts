@@ -624,6 +624,20 @@ describe('MDC-based MatTabGroup', () => {
       expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
     }));
 
+    it('should update selectedIndex when the amount of tabs changes', fakeAsync(() => {
+      fixture.detectChanges();
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+
+      // Remove the first tab
+      fixture.componentInstance.tabs.shift();
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedIndex).toBe(0);
+    }));
+
     it('should update the newly-selected tab if the previously-selected tab is replaced', fakeAsync(() => {
       const component: MatTabGroup = fixture.debugElement.query(
         By.css('mat-tab-group'),
