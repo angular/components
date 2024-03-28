@@ -68,6 +68,7 @@ export class _MatBadgeStyleLoader {}
 @Directive({
   selector: '[matBadge]',
   host: {
+    '[attr.aria-hidden]': '_isPlacedOnMatIcon ? (hidden || !content) : _initialAriaHidden',
     'class': 'mat-badge',
     '[class.mat-badge-overlap]': 'overlap',
     '[class.mat-badge-above]': 'isAbove()',
@@ -135,6 +136,12 @@ export class MatBadge implements OnInit, OnDestroy {
   /** Unique id for the badge */
   _id: number = nextId++;
 
+  /** Whether the badge is displayed on a mat-icon */
+  _isPlacedOnMatIcon: boolean;
+
+  /** The initial value of attr.aria-hidden */
+  _initialAriaHidden: boolean;
+
   /** Visible badge element. */
   private _badgeElement: HTMLElement | undefined;
 
@@ -180,20 +187,8 @@ export class MatBadge implements OnInit, OnDestroy {
       }
 
       const matIconTagName: string = 'mat-icon';
-
-      // Heads-up for developers to avoid putting matBadge on <mat-icon>
-      // as it is aria-hidden by default docs mention this at:
-      // https://material.angular.io/components/badge/overview#accessibility
-      if (
-        nativeElement.tagName.toLowerCase() === matIconTagName &&
-        nativeElement.getAttribute('aria-hidden') === 'true'
-      ) {
-        console.warn(
-          `Detected a matBadge on an "aria-hidden" "<mat-icon>". ` +
-            `Consider setting aria-hidden="false" in order to surface the information assistive technology.` +
-            `\n${nativeElement.outerHTML}`,
-        );
-      }
+      this._initialAriaHidden = booleanAttribute(nativeElement.getAttribute('aria-hidden'));
+      this._isPlacedOnMatIcon = nativeElement.tagName.toLowerCase() === matIconTagName;
     }
   }
 
