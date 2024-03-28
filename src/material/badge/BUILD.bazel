@@ -57,6 +57,7 @@ ng_test_library(
     deps = [
         ":badge",
         "//src/material/core",
+        "//src/material/icon",
         "@npm//@angular/platform-browser",
     ],
 )
