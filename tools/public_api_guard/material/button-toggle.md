@@ -8,6 +8,8 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -49,6 +51,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     focus(options?: FocusOptions): void;
     _getButtonName(): string | null;
     id: string;
+    isSingleSelector(): boolean;
     _markForCheck(): void;
     name: string;
     // (undocumented)
@@ -64,7 +67,8 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     _onButtonClick(): void;
-    tabIndex: number | null;
+    get tabIndex(): number | null;
+    set tabIndex(value: number | null);
     value: any;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatButtonToggle, "mat-button-toggle", ["matButtonToggle"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, never, ["*"], true, never>;
@@ -93,11 +97,12 @@ export interface MatButtonToggleDefaultOptions {
 
 // @public
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    constructor(_changeDetector: ChangeDetectorRef, defaultOptions?: MatButtonToggleDefaultOptions);
+    constructor(_changeDetector: ChangeDetectorRef, defaultOptions?: MatButtonToggleDefaultOptions, _dir?: Directionality | undefined);
     appearance: MatButtonToggleAppearance;
     _buttonToggles: QueryList<MatButtonToggle>;
     readonly change: EventEmitter<MatButtonToggleChange>;
     _controlValueAccessorChangeFn: (value: any) => void;
+    get dir(): Direction;
     get disabled(): boolean;
     set disabled(value: boolean);
     _emitChangeEvent(toggle: MatButtonToggle): void;
@@ -107,6 +112,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set hideSingleSelectionIndicator(value: boolean);
     _isPrechecked(toggle: MatButtonToggle): boolean;
     _isSelected(toggle: MatButtonToggle): boolean;
+    protected _keydown(event: KeyboardEvent): void;
     get multiple(): boolean;
     set multiple(value: boolean);
     get name(): string;
@@ -142,7 +148,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatButtonToggleGroup, "mat-button-toggle-group", ["matButtonToggleGroup"], { "appearance": { "alias": "appearance"; "required": false; }; "name": { "alias": "name"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "hideMultipleSelectionIndicator": { "alias": "hideMultipleSelectionIndicator"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["_buttonToggles"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggleGroup, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggleGroup, [null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
