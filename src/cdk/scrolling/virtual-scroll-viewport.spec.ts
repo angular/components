@@ -150,7 +150,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should measure range size', fakeAsync(() => {
       finishInit(fixture);
 
-      expect(viewport.measureRangeSize({start: 1, end: 3}))
+      expect(viewport.measureRangeSize({start: 2, end: 3}))
         .withContext('combined size of 2 50px items should be 100px')
         .toBe(testComponent.itemSize * 2);
     }));
@@ -159,7 +159,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.componentInstance.hasMargin = true;
       finishInit(fixture);
 
-      expect(viewport.measureRangeSize({start: 1, end: 3}))
+      expect(viewport.measureRangeSize({start: 2, end: 3}))
         .withContext('combined size of 2 50px items with a 10px margin should be 110px')
         .toBe(testComponent.itemSize * 2 + 10);
     }));

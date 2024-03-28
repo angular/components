@@ -100,11 +100,27 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private _lastRenderedContentOffset: number;
 
   /**
+   * The last rendered total content size based on the estimated item size.
+   *  Initialized with zero, as it will be used before properly calculated the first time.
+   */
+  private _lastRenderedTotalContentSize = 0;
+
+  /**
    * The number of consecutive cycles where removing extra items has failed. Failure here means that
    * we estimated how many items we could safely remove, but our estimate turned out to be too much
    * and it wasn't safe to remove that many elements.
    */
   private _removalFailures = 0;
+
+  /** Target information when scrolling to an index. */
+  private _scrollToIndexTarget?: {
+    readonly index: number;
+    readonly fromIndex: number;
+    readonly offset: number;
+    readonly delta: number;
+    forceRenderedContentAdjustment?: boolean;
+    optimalOffsetAdjustmentDone?: boolean;
+  };
 
   /**
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).
@@ -165,13 +181,94 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Scroll to the offset for the given index. */
-  scrollToIndex(): void {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      // TODO(mmalerba): Implement.
-      throw Error(
-        'cdk-virtual-scroll: scrollToIndex is currently not supported for the autosize' +
-          ' scroll strategy',
-      );
+  scrollToIndex(index: number, behavior: ScrollBehavior): void {
+    if (this._viewport) {
+      const viewport = this._viewport;
+      const itemSize = this._averager.getAverageItemSize();
+      const renderedRange = viewport.getRenderedRange();
+      const currentIndex = this._getFirstVisibleIndex();
+
+      if (this._isIndexInRange(index, renderedRange)) {
+        // Index is within the rendered range, so we scroll by the exact amount of pixels
+        const toOffset = Math.round(
+          viewport.measureRangeSize({start: renderedRange.start, end: index - 1}) +
+            this._lastRenderedContentOffset,
+        );
+        this._scrollToIndexTarget = {
+          index,
+          fromIndex: currentIndex,
+          offset: toOffset,
+          delta: Math.abs(toOffset - this._lastScrollOffset),
+        };
+      } else {
+        // Index is out of rendered range, so the target offset is estimated.
+
+        let targetOffset: number;
+        const estimatedTargetOffset = Math.min(
+          this._getScrollOffsetForIndex(index),
+          this._lastRenderedTotalContentSize - viewport.getViewportSize(),
+        );
+        const predictedContentOffset = this._getScrollOffsetForIndex(renderedRange.start);
+        const contentOffsetDifference = predictedContentOffset - this._lastRenderedContentOffset;
+        const estimatedScrollMagnitude = Math.abs(this._lastScrollOffset - estimatedTargetOffset);
+        let relativeAdjustment: number;
+        if (index < renderedRange.start) {
+          // scrolling to start
+          // The corrected amount is relative to the amount from the scroll magnitude to remaining space to the top (=target offset).
+          relativeAdjustment = Math.min(estimatedTargetOffset / estimatedScrollMagnitude, 1);
+        } else {
+          // scrolling to end
+          // The corrected amount is relative to the amount from the scroll magnitude to remaining space to the bottom.
+          relativeAdjustment = Math.min(
+            (this._lastRenderedTotalContentSize -
+              viewport.getViewportSize() -
+              estimatedTargetOffset) /
+              estimatedScrollMagnitude,
+            1,
+          );
+        }
+        const offsetCorrection = contentOffsetDifference * relativeAdjustment;
+        targetOffset = estimatedTargetOffset - offsetCorrection;
+
+        if (
+          targetOffset > this._lastRenderedContentOffset &&
+          targetOffset < this._lastRenderedContentOffset + this._lastRenderedContentSize
+        ) {
+          // We are not scrolling beyond the current rendered content, but we should as our target index is not rendered yet.
+          // Adjusting the targetOffset, to scroll at least beyond the current rendered content.
+          if (index < renderedRange.start) {
+            const renderedContentSizeBeforeCurrentIndex = viewport.measureRangeSize({
+              start: renderedRange.start,
+              end: currentIndex - 1,
+            });
+            targetOffset =
+              this._lastScrollOffset -
+              renderedContentSizeBeforeCurrentIndex -
+              renderedContentSizeBeforeCurrentIndex +
+              this._lastRenderedContentOffset -
+              this._lastScrollOffset - // portion of the current index, which already scrolled away
+              (renderedRange.start - index - 1) * itemSize;
+          } else {
+            targetOffset =
+              this._lastScrollOffset +
+              viewport.measureRangeSize({
+                start: currentIndex,
+                end: renderedRange.end,
+              }) +
+              itemSize / 2 +
+              (index - renderedRange.end) * itemSize;
+          }
+        }
+
+        const toOffset = Math.round(targetOffset);
+        this._scrollToIndexTarget = {
+          index,
+          fromIndex: currentIndex,
+          offset: toOffset,
+          delta: Math.abs(toOffset - this._lastScrollOffset),
+        };
+      }
+      viewport.scrollToOffset(this._scrollToIndexTarget.offset, behavior);
     }
   }
 
@@ -206,8 +303,9 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     // If we're scrolling toward the top, we need to account for the fact that the predicted amount
     // of content and the actual amount of scrollable space may differ. We address this by slowly
     // correcting the difference on each scroll event.
+    // When scrolling to an index, the offset must not be corrected. As we need to scroll precisely in this case.
     let offsetCorrection = 0;
-    if (scrollDelta < 0) {
+    if (scrollDelta < 0 && !this._scrollToIndexTarget) {
       // The content offset we would expect based on the average item size.
       const predictedOffset = renderedRange.start * this._averager.getAverageItemSize();
       // The difference between the predicted size of the un-rendered content at the beginning and
@@ -231,6 +329,18 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       scrollMagnitude = Math.abs(scrollDelta);
     }
 
+    if (this._scrollToIndexTarget) {
+      const correctedRange = this._getCorrectedRangeForIndexScrolling(scrollOffset);
+      // We need force rendering the content when the target item is entering the rendered range the first time.
+      // Even if there is currently no sufficient underscan or the scroll magnitude is smaller than the viewport.
+      // We do this, so that we can calculate the optimal offset as early as possible, so that we can
+      // reduce the jitterness when adjusting the content.
+      this._scrollToIndexTarget.forceRenderedContentAdjustment =
+        this._isIndexInRange(this._scrollToIndexTarget.index, correctedRange) &&
+        (!this._isIndexInRange(this._scrollToIndexTarget.index, renderedRange) ||
+          !this._scrollToIndexTarget.optimalOffsetAdjustmentDone);
+    }
+
     // The current amount of buffer past the start of the viewport.
     const startBuffer = this._lastScrollOffset - this._lastRenderedContentOffset;
     // The current amount of buffer past the end of the viewport.
@@ -244,13 +354,19 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       scrollMagnitude + this._minBufferPx - (scrollDelta < 0 ? startBuffer : endBuffer);
 
     // Check if there's unfilled space that we need to render new elements to fill.
-    if (underscan > 0) {
+    if (
+      (underscan > 0 || this._scrollToIndexTarget?.forceRenderedContentAdjustment) &&
+      !this._scrollToIndexTarget?.optimalOffsetAdjustmentDone
+    ) {
       // Check if the scroll magnitude was larger than the viewport size. In this case the user
       // won't notice a discontinuity if we just jump to the new estimated position in the list.
       // However, if the scroll magnitude is smaller than the viewport the user might notice some
       // jitteriness if we just jump to the estimated position. Instead we make sure to scroll by
       // the same number of pixels as the scroll magnitude.
-      if (scrollMagnitude >= viewport.getViewportSize()) {
+      if (
+        scrollMagnitude >= viewport.getViewportSize() ||
+        this._scrollToIndexTarget?.forceRenderedContentAdjustment
+      ) {
         this._renderContentForCurrentOffset();
       } else {
         // The number of new items to render on the side the user is scrolling towards. Rather than
@@ -301,7 +417,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         if (scrollDelta < 0) {
           let removedSize = viewport.measureRangeSize({
             start: range.end,
-            end: renderedRange.end,
+            end: renderedRange.end - 1,
           });
           // Check that we're not removing too much.
           if (removedSize <= overscan) {
@@ -319,7 +435,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         } else {
           const removedSize = viewport.measureRangeSize({
             start: renderedRange.start,
-            end: range.start,
+            end: range.start - 1,
           });
           // Check that we're not removing too much.
           if (removedSize <= overscan) {
@@ -345,6 +461,10 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       viewport.setRenderedContentOffset(this._lastRenderedContentOffset + offsetCorrection);
     }
 
+    if (this._scrollToIndexTarget?.offset === scrollOffset) {
+      Promise.resolve().then(() => (this._scrollToIndexTarget = undefined));
+    }
+
     // Save the scroll offset to be compared to the new value on the next scroll event.
     this._lastScrollOffset = scrollOffset;
   }
@@ -357,7 +477,12 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     const viewport = this._viewport!;
     this._lastRenderedContentSize = viewport.measureRenderedContentSize();
     this._averager.addSample(viewport.getRenderedRange(), this._lastRenderedContentSize);
-    this._updateTotalContentSize(this._lastRenderedContentSize);
+
+    // We cannot update the total content size when scrolling to an index which is after the current offset.
+    // Otherwise, we may add space after the last item.
+    if (!this._scrollToIndexTarget || this._scrollToIndexTarget.offset < this._lastScrollOffset) {
+      this._updateTotalContentSize(this._lastRenderedContentSize);
+    }
   }
 
   /** Checks the currently rendered content offset and saves the value for later use. */
@@ -368,28 +493,173 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /**
    * Recalculates the rendered content based on our estimate of what should be shown at the current
-   * scroll offset.
+   * scroll offset or, if present, based on the scrollToIndexTarget.
    */
   private _renderContentForCurrentOffset() {
     const viewport = this._viewport!;
     const scrollOffset = viewport.measureScrollOffset();
+    const itemSize = this._averager.getAverageItemSize();
+    const bufferSize = Math.ceil(this._maxBufferPx / itemSize);
     this._lastScrollOffset = scrollOffset;
     this._removalFailures = 0;
 
-    const itemSize = this._averager.getAverageItemSize();
+    // The first index is based on the scroll offset in relation to the total content size
     const firstVisibleIndex = Math.min(
       viewport.getDataLength() - 1,
-      Math.floor(scrollOffset / itemSize),
+      Math.round(
+        (scrollOffset / (this._lastRenderedTotalContentSize - viewport.getViewportSize())) *
+          viewport.getDataLength(),
+      ),
     );
-    const bufferSize = Math.ceil(this._maxBufferPx / itemSize);
+
     const range = this._expandRange(
       this._getVisibleRangeForIndex(firstVisibleIndex),
       bufferSize,
       bufferSize,
     );
 
-    viewport.setRenderedRange(range);
-    viewport.setRenderedContentOffset(itemSize * range.start);
+    let correctedRange = range;
+    let offsetCorrection = 0;
+    let optimalOffsetAdjustmentDoing = false;
+
+    if (this._scrollToIndexTarget) {
+      // scrolling to a specific index
+      // In this case, we must ensure, that we precisely scroll to a specific item.
+
+      // we adjust the content within this block, so we need to reset the force flag
+      this._scrollToIndexTarget.forceRenderedContentAdjustment = false;
+
+      const {offset: targetOffset, index: targetIndex} = this._scrollToIndexTarget;
+      correctedRange = this._getCorrectedRangeForIndexScrolling(scrollOffset);
+      if (
+        this._isIndexInRange(targetIndex, correctedRange) &&
+        !this._scrollToIndexTarget.optimalOffsetAdjustmentDone
+      ) {
+        // We need to correct the content offset, in case the scroll strategy does not provide exact item sizes.
+        // Without this, the target index might not be on top in the viewport, if the preceding visible items
+        // have a different size than estimated.
+        // correctedRange = this._expandRange(correctedRange, 1, 0);
+        optimalOffsetAdjustmentDoing = true;
+        this._scrollToIndexTarget.optimalOffsetAdjustmentDone = true;
+        setTimeout(() => {
+          const renderedRange = viewport.getRenderedRange();
+          if (
+            renderedRange.end === viewport.getDataLength() &&
+            viewport.measureRangeSize({start: targetIndex, end: renderedRange.end}) <
+              viewport.getViewportSize()
+          ) {
+            // No more items left to the end and our target is estimated to be within the viewport when we reach the end,
+            // so we must perfectly align with the end of the viewport.
+            viewport.setRenderedContentOffset(
+              this._lastRenderedTotalContentSize - this._lastRenderedContentSize,
+            );
+          } else {
+            // This is the first time, our target index is rendered. We can now calculate the optimal content offset
+            // so that we can perfectly scroll to it.
+            const optimalOffset =
+              scrollOffset -
+              this._viewport!.measureRangeSize({
+                start: renderedRange.start,
+                end: targetIndex - 1,
+              }) +
+              targetOffset -
+              scrollOffset;
+
+            // The rendered range needs to be adopted to reflect our offset modification. Otherwise, we may have unfilled space in the viewport.
+            // We only append items if there are not enough. Prepending and removing items would require offset adjustment and may cause jitterness.
+            if (optimalOffset < this._lastRenderedContentOffset) {
+              const bufferExtend = Math.ceil(
+                (this._lastRenderedContentOffset - optimalOffset) / itemSize,
+              );
+              viewport.setRenderedRange(this._expandRange(renderedRange, 0, bufferExtend));
+            }
+
+            this._viewport!.setRenderedContentOffset(
+              this._lastScrollOffset -
+                this._viewport!.measureRangeSize({
+                  start: renderedRange.start,
+                  end: targetIndex - 1,
+                }) +
+                targetOffset -
+                scrollOffset,
+            );
+          }
+        });
+      }
+    }
+
+    if (!this._scrollToIndexTarget?.optimalOffsetAdjustmentDone || optimalOffsetAdjustmentDoing) {
+      console.log('regular adjustment', correctedRange);
+      console.log(this._scrollToIndexTarget);
+      viewport.setRenderedRange(correctedRange);
+      viewport.setRenderedContentOffset(
+        (this._lastRenderedTotalContentSize / viewport.getDataLength()) * range.start -
+          offsetCorrection,
+      );
+    }
+  }
+
+  /**
+   * Get the range to render when scrolling to specific index for a scroll offset
+   * Note: can only be called when scrolling to an index
+   * @param scrollOffset the scroll offset to get the range for
+   * @return a range that contains items the should be visible for the provided scroll offset
+   */
+  private _getCorrectedRangeForIndexScrolling(scrollOffset: number) {
+    const {delta, offset: targetOffset, index, fromIndex} = this._scrollToIndexTarget!;
+    const bufferSize = Math.ceil(this._maxBufferPx / this._averager.getAverageItemSize());
+
+    const relativeProgress = (delta - targetOffset + scrollOffset) / delta;
+    const currentIndex = (index - fromIndex) * relativeProgress + fromIndex;
+    return this._expandRange(
+      this._getVisibleRangeForIndex(Math.round(currentIndex)),
+      bufferSize,
+      bufferSize,
+    );
+  }
+
+  /** Calculates the scrollOffset for an index based on the available max scroll offset */
+  private _getScrollOffsetForIndex(index: number) {
+    const viewport = this._viewport!;
+    return Math.round(
+      (index / viewport.getDataLength()) *
+        (this._lastRenderedTotalContentSize - viewport.getViewportSize()),
+    );
+  }
+
+  /** Precisely reads the first visible index */
+  private _getFirstVisibleIndex() {
+    const viewport = this._viewport!;
+    const renderedRange = viewport.getRenderedRange();
+    const itemSize = this._averager.getAverageItemSize();
+
+    let renderedStartOverflow = Math.round(
+      this._lastScrollOffset - this._lastRenderedContentOffset,
+    );
+    let firstVisibleIndex = Math.min(
+      Math.floor(renderedStartOverflow / itemSize) + renderedRange.start,
+      renderedRange.end - 1,
+    );
+
+    let corrected = true;
+    do {
+      const itemStart = Math.round(
+        viewport.measureRangeSize({start: renderedRange.start, end: firstVisibleIndex - 1}),
+      );
+      const itemEnd = Math.round(
+        viewport.measureRangeSize({start: renderedRange.start, end: firstVisibleIndex}),
+      );
+
+      if (itemStart > renderedStartOverflow) {
+        firstVisibleIndex--;
+      } else if (itemEnd < renderedStartOverflow) {
+        firstVisibleIndex++;
+      } else {
+        corrected = false;
+      }
+    } while (corrected);
+
+    return firstVisibleIndex;
   }
 
   // TODO: maybe move to base class, can probably share with fixed size strategy.
@@ -414,6 +684,11 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     return range;
   }
 
+  /** Checks if index is in the given range. */
+  private _isIndexInRange(index: number, range: ListRange) {
+    return range.start <= index && range.end > index;
+  }
+
   // TODO: maybe move to base class, can probably share with fixed size strategy.
   /**
    * Expand the given range by the given amount in either direction.
@@ -434,11 +709,28 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private _updateTotalContentSize(renderedContentSize: number) {
     const viewport = this._viewport!;
     const renderedRange = viewport.getRenderedRange();
-    const totalSize =
-      renderedContentSize +
-      (viewport.getDataLength() - (renderedRange.end - renderedRange.start)) *
-        this._averager.getAverageItemSize();
-    viewport.setTotalContentSize(totalSize);
+    const itemSize = this._averager.getAverageItemSize();
+
+    if (!this._lastRenderedTotalContentSize) {
+      // initially use the estimated item size to calculate the total size
+      this._lastRenderedTotalContentSize =
+        renderedContentSize +
+        (viewport.getDataLength() - (renderedRange.end - renderedRange.start)) * itemSize;
+    }
+
+    // The total content size might be completely off, as it is not updated when scrolling to an index.
+    // We only update it slightly by just adding/removing space based on what is missing from the currently rendered range.
+    // This ensures that we do not add more space at the end than we have content to fill it.
+    const neededSpace = Math.round((viewport.getDataLength() - renderedRange.end) * itemSize);
+    const availableSpace =
+      this._lastRenderedTotalContentSize - this._lastRenderedContentOffset - renderedContentSize;
+    const correction = Math.round(neededSpace - availableSpace);
+
+    if (correction) {
+      this._lastRenderedTotalContentSize += correction;
+    }
+
+    viewport.setTotalContentSize(this._lastRenderedTotalContentSize);
   }
 }
 
@@ -473,9 +765,11 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
   get minBufferPx(): number {
     return this._minBufferPx;
   }
+
   set minBufferPx(value: NumberInput) {
     this._minBufferPx = coerceNumberProperty(value);
   }
+
   _minBufferPx = 100;
 
   /**
@@ -488,9 +782,11 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
   get maxBufferPx(): number {
     return this._maxBufferPx;
   }
+
   set maxBufferPx(value: NumberInput) {
     this._maxBufferPx = coerceNumberProperty(value);
   }
+
   _maxBufferPx = 200;
 
   /** The scroll strategy used by this directive. */

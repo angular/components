@@ -48,8 +48,8 @@ type State = {
 })
 export class VirtualScrollDemo implements OnDestroy {
   scrollToOffset = 0;
-  scrollToIndex = 0;
-  scrollToBehavior: ScrollBehavior = 'auto';
+  scrollToIndex = 9999;
+  scrollToBehavior: ScrollBehavior = 'smooth';
   scrolledIndex = new Map<CdkVirtualScrollViewport, number>();
   fixedSizeData = Array(10000).fill(50);
   increasingSizeData = Array(10000)
