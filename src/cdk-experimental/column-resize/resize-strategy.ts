@@ -238,7 +238,7 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
       this._styleElement = this._document.createElement('style');
 
       if (this._nonce) {
-        this._styleElement.nonce = this._nonce;
+        this._styleElement.setAttribute('nonce', this._nonce);
       }
 
       this._styleElement.appendChild(this._document.createTextNode(''));
