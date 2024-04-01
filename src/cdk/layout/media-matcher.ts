@@ -65,7 +65,7 @@ function createEmptyStyleRule(query: string, nonce: string | undefined | null) {
       mediaQueryStyleNode = document.createElement('style');
 
       if (nonce) {
-        mediaQueryStyleNode.nonce = nonce;
+        mediaQueryStyleNode.setAttribute('nonce', nonce);
       }
 
       mediaQueryStyleNode.setAttribute('type', 'text/css');

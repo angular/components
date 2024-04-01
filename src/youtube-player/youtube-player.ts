@@ -719,7 +719,7 @@ function loadApi(nonce: string | null): void {
   script.async = true;
 
   if (nonce) {
-    script.nonce = nonce;
+    script.setAttribute('nonce', nonce);
   }
 
   // Set this immediately to true so we don't start loading another script
