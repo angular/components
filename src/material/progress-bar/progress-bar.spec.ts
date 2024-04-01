@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {ApplicationRef, Component, DebugElement, Provider, Type} from '@angular/core';
+import {Component, DebugElement, Provider, DoCheck, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {MatProgressBarModule, MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './index';
@@ -301,18 +301,17 @@ describe('MDC-based MatProgressBar', () => {
       });
 
       it('should not run change detection if there are no `animationEnd` observers', () => {
-        fixture.detectChanges();
+        fixture.autoDetectChanges();
 
         const animationEndSpy = jasmine.createSpy();
-        const appRef = TestBed.inject(ApplicationRef);
-        spyOn(appRef, 'tick');
+        const initialCheckCount = fixture.componentInstance.checked;
 
         progressComponent.value = 30;
         progressComponent.bufferValue = 60;
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend', true);
 
-        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(fixture.componentInstance.checked).toEqual(initialCheckCount);
 
         progressComponent.animationEnd.subscribe(animationEndSpy);
 
@@ -321,7 +320,7 @@ describe('MDC-based MatProgressBar', () => {
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend', true);
 
-        expect(appRef.tick).toHaveBeenCalled();
+        expect(fixture.componentInstance.checked).toEqual(initialCheckCount + 1);
         expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
       });
     });
@@ -340,4 +339,9 @@ class BasicProgressBar {}
   standalone: true,
   imports: [MatProgressBar],
 })
-class BufferProgressBar {}
+class BufferProgressBar implements DoCheck {
+  checked = 0;
+  ngDoCheck() {
+    this.checked++;
+  }
+}

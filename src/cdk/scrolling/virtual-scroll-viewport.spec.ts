@@ -17,6 +17,7 @@ import {
   Directive,
   ViewContainerRef,
   ApplicationRef,
+  DoCheck,
 } from '@angular/core';
 import {
   waitForAsync,
@@ -827,15 +828,14 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.virtualForOf.viewChange.subscribe();
         finishInit(fixture);
         testComponent.items = Array(10).fill(0);
-        fixture.detectChanges();
+        fixture.autoDetectChanges();
         flush();
 
-        spyOn(appRef, 'tick');
-
+        const initialCheckCount = fixture.componentInstance.checked;
         viewport.scrollToIndex(5);
         triggerScroll(viewport);
 
-        expect(appRef.tick).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.checked).toEqual(initialCheckCount + 1);
       }));
     });
   });
@@ -1252,7 +1252,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   standalone: true,
   imports: [ScrollingModule],
 })
-class FixedSizeVirtualScroll {
+class FixedSizeVirtualScroll implements DoCheck {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
   // Casting virtualForOf as any so we can spy on private methods
   @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
@@ -1271,6 +1271,11 @@ class FixedSizeVirtualScroll {
 
   scrolledToIndex = 0;
   hasMargin = false;
+  checked = 0;
+
+  ngDoCheck() {
+    this.checked++;
+  }
 
   get viewportWidth() {
     return this.orientation == 'horizontal' ? this.viewportSize : this.viewportCrossSize;
