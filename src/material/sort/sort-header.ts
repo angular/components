@@ -230,6 +230,10 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._sort.deregister(this);
     this._rerenderSubscription.unsubscribe();
+
+    if (this._sortButton) {
+      this._ariaDescriber?.removeDescription(this._sortButton, this._sortActionDescription);
+    }
   }
 
   /**
