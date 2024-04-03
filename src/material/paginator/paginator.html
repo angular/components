@@ -14,7 +14,7 @@
             <mat-select
               [value]="pageSize"
               [disabled]="disabled"
-              [aria-labelledby]="_pageSizeLabelId"
+              [aria-label]="_intl.itemsPerPageLabel + pageSize"
               [panelClass]="selectConfig.panelClass || ''"
               [disableOptionCentering]="selectConfig.disableOptionCentering"
               (selectionChange)="_changePageSize($event.value)"
