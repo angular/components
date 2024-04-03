@@ -1,3 +1,17 @@
+<a name="17.3.3"></a>
+# 17.3.3 "metal-fork" (2024-04-03)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7ccc392936](https://github.com/angular/components/commit/7ccc3929362a96e29d59a5904dc2fba5495bdbcb) | fix | **button-toggle:** standard button toggle strong focus bord… ([#28790](https://github.com/angular/components/pull/28790)) |
+| [8b92fda61f](https://github.com/angular/components/commit/8b92fda61fa8299022d1cfd71607908d4fdcb2d1) | fix | **sort:** clear aria description on destroy ([#28801](https://github.com/angular/components/pull/28801)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6b5b0c5db3](https://github.com/angular/components/commit/6b5b0c5db3d3157f1b9f8d0a6a71fdcdfc003cc1) | fix | set nonce using setAttribute ([#28800](https://github.com/angular/components/pull/28800)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.2"></a>
 # 17.3.2 "benitoite-biscuit" (2024-03-28)
 ### cdk
