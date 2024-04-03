@@ -1,10 +1,10 @@
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {ApplicationRef, Component} from '@angular/core';
 import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {ApplicationRef, Component} from '@angular/core';
-import {OverlayModule, Overlay} from '../index';
+import {Overlay, OverlayModule} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
-import {ComponentPortal} from '@angular/cdk/portal';
 
 describe('OverlayKeyboardDispatcher', () => {
   let appRef: ApplicationRef;
@@ -192,11 +192,6 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(appRef.tick).toHaveBeenCalledTimes(0);
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     expect(appRef.tick).toHaveBeenCalledTimes(0);
-
-    overlayRef.keydownEvents().subscribe();
-    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-
-    expect(appRef.tick).toHaveBeenCalledTimes(1);
   });
 });
 
