@@ -1,3 +1,19 @@
+<a name="18.0.0-next.3"></a>
+# 18.0.0-next.3 "plastic-spoon" (2024-04-03)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [46db6a6ba5](https://github.com/angular/components/commit/46db6a6ba5619cddffc1dbf7a78696d5249abf50) | fix | **button-toggle:** standard button toggle strong focus bord… ([#28790](https://github.com/angular/components/pull/28790)) |
+| [49901c6400](https://github.com/angular/components/commit/49901c640083039291acd6eb1a596c7d6d3d6f92) | fix | **button-toggle:** use radio pattern for single select Mat toggle button group ([#28548](https://github.com/angular/components/pull/28548)) |
+| [ced93a94db](https://github.com/angular/components/commit/ced93a94dbc5be2ca50a7387e03cc6d6ddcf9939) | fix | **sort:** clear aria description on destroy ([#28801](https://github.com/angular/components/pull/28801)) |
+| [d4e61e2330](https://github.com/angular/components/commit/d4e61e233088ce0d5bbfb6cf3ff652e303e7e38d) | fix | **table:** use ResizeObserver to react to size changes ([#28783](https://github.com/angular/components/pull/28783)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [452cde2ad9](https://github.com/angular/components/commit/452cde2ad9a34165689811dcba2a08288c2f24cc) | fix | set nonce using setAttribute ([#28800](https://github.com/angular/components/pull/28800)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.3"></a>
 # 17.3.3 "metal-fork" (2024-04-03)
 ### material
