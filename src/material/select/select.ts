@@ -140,6 +140,12 @@ export interface MatSelectConfig {
    * If set to null or an empty string, the panel will grow to match the longest option's text.
    */
   panelWidth?: string | number | null;
+
+  /**
+   * Whether form-field value order in aria-labelledby should be reversed,
+   * ie. b/286094434 Mat-paginator.
+   */
+  reverseLabelledByValueOrder?: boolean | false;
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -396,6 +402,9 @@ export class MatSelect
   /** Whether ripples in the select are disabled. */
   @Input({transform: booleanAttribute})
   disableRipple: boolean = false;
+
+  /** Whether aria-labelledby string should be reversed. */
+  @Input() reverseLabelledByValueOrder: boolean | false;
 
   /** Tab index of the select. */
   @Input({
@@ -1381,7 +1390,11 @@ export class MatSelect
     let value = (labelId ? labelId + ' ' : '') + this._valueId;
 
     if (this.ariaLabelledby) {
-      value += ' ' + this.ariaLabelledby;
+      if (this.reverseLabelledByValueOrder) {
+        value = this.ariaLabelledby + ' ' + value;
+      } else {
+        value += ' ' + this.ariaLabelledby;
+      }
     }
 
     return value;

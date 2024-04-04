@@ -14,6 +14,7 @@
             <mat-select
               [value]="pageSize"
               [disabled]="disabled"
+              [reverseLabelledByValueOrder]="true"
               [aria-labelledby]="_pageSizeLabelId"
               [panelClass]="selectConfig.panelClass || ''"
               [disableOptionCentering]="selectConfig.disableOptionCentering"
