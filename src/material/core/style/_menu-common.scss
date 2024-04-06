@@ -63,12 +63,18 @@ $icon-margin: 16px !default;
   width: $icon-size;
   height: 10px;
   fill: currentColor;
+
+  // We use `padding` here, because the margin can collapse depending on the other content.
   padding-left: $item-spacing;
 
   [dir='rtl'] & {
-    right: auto;
     padding-right: $item-spacing;
     padding-left: 0;
+
+    // Invert the arrow direction.
+    polygon {
+      transform: scaleX(-1);
+    }
   }
 
   // Fix for Chromium-based browsers blending in the `currentColor` with the background.
