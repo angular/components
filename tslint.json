@@ -90,41 +90,65 @@
     "validate-decorators": [
       true,
       {
-        "Component": {
-          "argument": 0,
-          "properties": {
-            "!preserveWhitespaces": ".*",
-            "!styles": ".*",
-            "!moduleId": ".*",
-            "changeDetection": "\\.OnPush$",
-            "encapsulation": "\\.None$",
-            "standalone": "^true$"
+        "Component": [
+          {
+            "argument": 0,
+            "properties": {
+              "!preserveWhitespaces": ".*",
+              "!styles": ".*",
+              "!moduleId": ".*",
+              "encapsulation": "\\.None$"
+            },
+            "excludeFiles": ["**/dev-app/**"]
+          },
+          // Enforce OnPush & standalone even in the dev-app.
+          {
+            "argument": 0,
+            "properties": {
+              "changeDetection": "\\.OnPush$",
+              "standalone": "^true$"
+            }
           }
-        },
-        "Directive": {
-          "argument": 0,
-          "properties": {
-            "!host": "\\[class\\]",
-            "standalone": "^true$"
+        ],
+        "Directive": [
+          {
+            "argument": 0,
+            "properties": {
+              "!host": "\\[class\\]"
+            },
+            "excludeFiles": ["**/dev-app/**"]
+          },
+          // Enforce standalone even in the dev-app.
+          {
+            "argument": 0,
+            "properties": {
+              "standalone": "^true$"
+            }
           }
-        },
-        "NgModule": {
-          "argument": 0,
-          "properties": {
-            "*": "^(?!\\s*$).+"
+        ],
+        "NgModule": [
+          {
+            "argument": 0,
+            "properties": {
+              "*": "^(?!\\s*$).+"
+            },
+            "excludeFiles": ["**/dev-app/**"]
           }
-        },
-        "ContentChildren": {
-          "argument": 1,
-          "required": true,
-          "properties": {
-            "descendants": "^(true|false)$"
+        ],
+        "ContentChildren": [
+          {
+            "argument": 1,
+            "required": true,
+            "properties": {
+              "descendants": "^(true|false)$"
+            },
+            "excludeFiles": ["**/dev-app/**"]
           }
-        }
+        ]
       },
       [
         // Internal code that doesn't need to follow the same standards.
-        "**/+(e2e-app|components-examples|universal-app|dev-app|integration)/**",
+        "**/+(e2e-app|components-examples|universal-app|integration)/**",
         "**/*.spec.ts"
       ]
     ],
