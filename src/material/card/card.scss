@@ -115,9 +115,7 @@ $mat-card-default-padding: 16px !default;
 
 // Footer section at the bottom of a card. MDC does not have a pre-made footer section for cards.
 // Maintained here for backwards compatibility with the previous generation MatCard.
-.mat-mdc-card-header {
-  display: flex;
-
+.mat-mdc-card-footer {
   // Apply default padding for the footer region. Omit any bottom padding because we assume
   // this region will be followed by another region that includes top padding.
   padding: $mat-card-default-padding $mat-card-default-padding 0;
