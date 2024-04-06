@@ -672,7 +672,9 @@ export class DragRef<T = any> {
         if (!container || (!container.isDragging() && !container.isReceiving())) {
           // Prevent the default action as soon as the dragging sequence is considered as
           // "started" since waiting for the next event can allow the device to begin scrolling.
-          event.preventDefault();
+          if (event.cancelable) {
+            event.preventDefault();
+          }
           this._hasStartedDragging = true;
           this._ngZone.run(() => this._startDragSequence(event));
         }
@@ -684,7 +686,9 @@ export class DragRef<T = any> {
     // We prevent the default action down here so that we know that dragging has started. This is
     // important for touch devices where doing this too early can unnecessarily block scrolling,
     // if there's a dragging delay.
-    event.preventDefault();
+    if (event.cancelable) {
+      event.preventDefault();
+    }
 
     const constrainedPointerPosition = this._getConstrainedPointerPosition(pointerPosition);
     this._hasMoved = true;
