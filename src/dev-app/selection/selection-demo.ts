@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {
   CdkSelectionColumnExample,
   CdkSelectionListExample,
@@ -15,6 +14,7 @@ import {
   MatSelectionColumnExample,
   MatSelectionListExample,
 } from '@angular/components-examples/material-experimental/selection';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -39,5 +39,6 @@ import {FormsModule} from '@angular/forms';
     MatSelectionListExample,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionDemo {}

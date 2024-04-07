@@ -19,6 +19,7 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {CdkOverlayBasicExample} from '@angular/components-examples/cdk/overlay';
 import {
+  ChangeDetectionStrategy,
   Component,
   TemplateRef,
   ViewChild,
@@ -45,6 +46,7 @@ import {MatRadioModule} from '@angular/material/radio';
     MatRadioModule,
     OverlayModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedOverlayDemo {
   @ViewChild(CdkOverlayOrigin) _overlayOrigin: CdkOverlayOrigin;

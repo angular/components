@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, inject, ViewChild} from '@angular/core';
-import {FormControl, NgModel, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject, ViewChild} from '@angular/core';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatInputModule} from '@angular/material/input';
 import {ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatInputModule} from '@angular/material/input';
 
 export interface State {
   code: string;
@@ -45,6 +45,7 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatInputModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemo {
   stateCtrl = new FormControl();
@@ -246,6 +247,7 @@ export class AutocompleteDemo {
   `,
   standalone: true,
   imports: [CommonModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemoExampleDialog {
   constructor(public dialogRef: MatDialogRef<AutocompleteDemoExampleDialog>) {}

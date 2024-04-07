@@ -6,15 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CommonModule} from '@angular/common';
 import {
   afterNextRender,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   Injector,
   ViewChild,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 import {MatButtonModule} from '@angular/material/button';
@@ -43,6 +45,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
     MatSelectModule,
     MatTableModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDemo implements AfterViewInit {
   /** Controls the rendering of components. */
@@ -73,6 +76,8 @@ export class PerformanceDemo implements AfterViewInit {
   componentArray = [].constructor(this.componentCount);
 
   private _injector = inject(Injector);
+
+  readonly cdr = inject(ChangeDetectorRef);
 
   /** The standard deviation of the recorded samples. */
   get stdev(): number | undefined {
@@ -123,6 +128,7 @@ export class PerformanceDemo implements AfterViewInit {
     this.allSamples.push(...samples);
     this.isRunningBenchmark = false;
     this.computedResults = this.getTotalRenderTime();
+    this.cdr.markForCheck();
   }
 
   clearMetrics() {
@@ -135,11 +141,13 @@ export class PerformanceDemo implements AfterViewInit {
     return new Promise(res => {
       setTimeout(() => {
         this.show = true;
+        this.cdr.markForCheck();
         const start = performance.now();
         afterNextRender(
           () => {
             const end = performance.now();
             this.show = false;
+            this.cdr.markForCheck();
             res(end - start);
           },
           {injector: this._injector},

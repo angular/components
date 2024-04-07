@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
 
@@ -19,5 +19,6 @@ import {RouterModule} from '@angular/router';
   host: {'class': 'mat-typography'},
   standalone: true,
   imports: [MatButtonModule, RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevApp404 {}

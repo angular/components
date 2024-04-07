@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
-import {CommonModule} from '@angular/common';
+import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list';
+import {ActivatedRoute} from '@angular/router';
 
 interface Link {
   name: string;
@@ -24,6 +25,7 @@ interface Link {
   styleUrl: 'list-demo.css',
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatListModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListDemo {
   items: string[] = ['Pepper', 'Salt', 'Paprika'];
@@ -74,6 +76,15 @@ export class ListDemo {
   selectedOptions: string[] = ['apples'];
   changeEventCount = 0;
   modelChangeEventCount = 0;
+
+  readonly cdr = inject(ChangeDetectorRef);
+  readonly activatedRoute = inject(ActivatedRoute);
+
+  constructor() {
+    this.activatedRoute.url.subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
 
   onSelectedOptionsChange(values: string[]) {
     this.selectedOptions = values;

@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Directive, ANIMATION_MODULE_TYPE} from '@angular/core';
-import {MatCheckboxModule, MAT_CHECKBOX_DEFAULT_OPTIONS} from '@angular/material/checkbox';
+import {CommonModule} from '@angular/common';
+import {ANIMATION_MODULE_TYPE, ChangeDetectionStrategy, Component, Directive} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material/checkbox';
 import {MatPseudoCheckboxModule, ThemePalette} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {CommonModule} from '@angular/common';
 
 export interface Task {
   name: string;
@@ -51,6 +51,7 @@ export class AnimationsNoop {}
   templateUrl: 'nested-checklist.html',
   standalone: true,
   imports: [CommonModule, MatCheckboxModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCheckboxDemoNestedChecklist {
   tasks: Task[] = [
@@ -114,6 +115,7 @@ export class MatCheckboxDemoNestedChecklist {
     ClickActionCheck,
     AnimationsNoop,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxDemo {
   isIndeterminate: boolean = false;

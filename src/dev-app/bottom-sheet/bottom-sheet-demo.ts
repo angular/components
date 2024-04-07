@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatBottomSheet,
@@ -44,6 +44,7 @@ const defaultConfig = new MatBottomSheetConfig();
     MatSelectModule,
     MatListModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BottomSheetDemo {
   config: MatBottomSheetConfig = {
@@ -80,6 +81,7 @@ export class BottomSheetDemo {
   `,
   standalone: true,
   imports: [CommonModule, MatListModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleBottomSheet {
   constructor(private _bottomSheet: MatBottomSheetRef) {}

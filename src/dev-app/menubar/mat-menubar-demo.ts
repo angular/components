@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
-import {CdkMenu, CdkMenuItem, CdkMenuGroup, CDK_MENU, CdkMenuModule} from '@angular/cdk/menu';
+import {CDK_MENU, CdkMenu, CdkMenuGroup, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {MatMenuBarModule} from '@angular/material-experimental/menubar';
 
 // TODO: Remove the fake when mat-menu is re-built with CdkMenu directives
@@ -29,6 +29,7 @@ import {MatMenuBarModule} from '@angular/material-experimental/menubar';
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenu extends CdkMenu {}
 
@@ -47,6 +48,7 @@ export class DemoMenu extends CdkMenu {}
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenuItem extends CdkMenuItem {}
 
@@ -54,5 +56,6 @@ export class DemoMenuItem extends CdkMenuItem {}
   templateUrl: 'mat-menubar-demo.html',
   standalone: true,
   imports: [CdkMenuModule, MatMenuBarModule, DemoMenu, DemoMenuItem],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatMenuBarDemo {}

@@ -6,16 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
+import {_supportsShadowDom} from '@angular/cdk/platform';
+import {CommonModule} from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewChildren,
   QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 import {
   MatDialog,
   MatDialogActions,
@@ -23,10 +30,6 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {_supportsShadowDom} from '@angular/cdk/platform';
-import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 @Component({
@@ -35,6 +38,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   host: {'class': 'demo-focus-trap-shadow-root'},
   encapsulation: ViewEncapsulation.ShadowDom,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapShadowDomDemo {}
 
@@ -51,6 +55,7 @@ export class FocusTrapShadowDomDemo {}
     MatToolbarModule,
     FocusTrapShadowDomDemo,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDemo implements AfterViewInit {
   @ViewChild('newElements')
@@ -61,6 +66,8 @@ export class FocusTrapDemo implements AfterViewInit {
 
   _supportsShadowDom = _supportsShadowDom();
 
+  readonly cdr = inject(ChangeDetectorRef);
+
   constructor(public dialog: MatDialog) {}
 
   ngAfterViewInit() {
@@ -68,6 +75,7 @@ export class FocusTrapDemo implements AfterViewInit {
     // the view will result in "changed after checked" errors so we defer it to the next tick.
     setTimeout(() => {
       this._focusTraps.forEach(trap => (trap.enabled = false));
+      this.cdr.markForCheck();
     });
   }
 
@@ -97,6 +105,7 @@ let dialogCount = 0;
   templateUrl: 'focus-trap-dialog-demo.html',
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDialogDemo {
   id = dialogCount++;

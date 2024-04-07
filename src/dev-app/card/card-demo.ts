@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
-import {MatCardAppearance, MatCardModule} from '@angular/material/card';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardAppearance, MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
@@ -19,6 +19,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [MatCardModule, MatButtonModule, MatCheckboxModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardDemo {
   appearance: MatCardAppearance = 'raised';

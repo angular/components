@@ -6,21 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
-  MatButton,
   MatAnchor,
-  MatFabButton,
+  MatButton,
   MatFabAnchor,
-  MatIconButton,
+  MatFabButton,
   MatIconAnchor,
-  MatMiniFabButton,
+  MatIconButton,
   MatMiniFabAnchor,
+  MatMiniFabButton,
 } from '@angular/material/button';
+import {MatCheckbox} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
-import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'button-demo',
@@ -41,6 +41,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatCheckbox,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonDemo {
   isDisabled = false;

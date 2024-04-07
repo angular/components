@@ -11,6 +11,7 @@ import {CommonModule} from '@angular/common';
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {loadExample} from '@angular/components-examples/private';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -57,6 +58,7 @@ import {
       white-space: pre;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Example implements OnInit {
   /** ID of the material example to display. */
@@ -84,6 +86,6 @@ export class Example implements OnInit {
 
     const example = await loadExample(this.id, this._injector);
     this._viewContainerRef.createComponent(example.component, {injector: example.injector});
-    this._changeDetectorRef.detectChanges();
+    this._changeDetectorRef.markForCheck();
   }
 }

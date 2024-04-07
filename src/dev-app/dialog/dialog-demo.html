@@ -25,33 +25,33 @@
     <p>
       <mat-form-field>
         <mat-label>Width</mat-label>
-        <input matInput [(ngModel)]="config.width">
+        <input matInput [(ngModel)]="config.width" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Height</mat-label>
-        <input matInput [(ngModel)]="config.height">
+        <input matInput [(ngModel)]="config.height" />
       </mat-form-field>
     </p>
 
     <p>
       <mat-form-field>
         <mat-label>Min width</mat-label>
-        <input matInput [(ngModel)]="config.minWidth">
+        <input matInput [(ngModel)]="config.minWidth" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Min height</mat-label>
-        <input matInput [(ngModel)]="config.minHeight">
+        <input matInput [(ngModel)]="config.minHeight" />
       </mat-form-field>
     </p>
 
     <p>
       <mat-form-field>
         <mat-label>Max width</mat-label>
-        <input matInput [(ngModel)]="config.maxWidth">
+        <input matInput [(ngModel)]="config.maxWidth" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Max height</mat-label>
-        <input matInput [(ngModel)]="config.maxHeight">
+        <input matInput [(ngModel)]="config.maxHeight" />
       </mat-form-field>
     </p>
 
@@ -60,22 +60,22 @@
     <p>
       <mat-form-field>
         <mat-label>Top</mat-label>
-        <input matInput [(ngModel)]="config.position.top" (change)="config.position.bottom = ''">
+        <input matInput [(ngModel)]="config.position.top" (change)="config.position.bottom = ''" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Bottom</mat-label>
-        <input matInput [(ngModel)]="config.position.bottom" (change)="config.position.top = ''">
+        <input matInput [(ngModel)]="config.position.bottom" (change)="config.position.top = ''" />
       </mat-form-field>
     </p>
 
     <p>
       <mat-form-field>
         <mat-label>Left</mat-label>
-        <input matInput [(ngModel)]="config.position.left" (change)="config.position.right = ''">
+        <input matInput [(ngModel)]="config.position.left" (change)="config.position.right = ''" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Right</mat-label>
-        <input matInput [(ngModel)]="config.position.right" (change)="config.position.left = ''">
+        <input matInput [(ngModel)]="config.position.right" (change)="config.position.left = ''" />
       </mat-form-field>
     </p>
 
@@ -84,7 +84,7 @@
     <p>
       <mat-form-field>
         <mat-label>Backdrop class</mat-label>
-        <input matInput [(ngModel)]="config.backdropClass">
+        <input matInput [(ngModel)]="config.backdropClass" />
       </mat-form-field>
     </p>
 
@@ -106,7 +106,7 @@
     <p>
       <mat-form-field>
         <mat-label>Dialog message</mat-label>
-        <input matInput [(ngModel)]="config.data.message">
+        <input matInput [(ngModel)]="config.data.message" />
       </mat-form-field>
     </p>
 
@@ -116,15 +116,15 @@
   </mat-card-content>
 </mat-card>
 
-<p>Last afterClosed result: {{lastAfterClosedResult}}</p>
-<p>Last beforeClose result: {{lastBeforeCloseResult}}</p>
+<p>Last afterClosed result: {{lastAfterClosedResult | json}}</p>
+<p>Last beforeClose result: {{lastBeforeCloseResult | json}}</p>
 
 <ng-template let-data let-dialogRef="dialogRef">
   <p>Order printer ink refills.</p>
 
   <mat-form-field>
     <mat-label>How many?</mat-label>
-    <input matInput #howMuch>
+    <input matInput #howMuch />
   </mat-form-field>
 
   <mat-form-field>
@@ -138,16 +138,22 @@
     </mat-select>
   </mat-form-field>
 
-  <p> {{ data.message }} </p>
+  <p>{{ data.message }}</p>
 
   <p>I'm a template dialog. I've been opened {{numTemplateOpens}} times!</p>
 
-  <button type="button" class="demo-dialog-button" cdkFocusInitial
-          (click)="dialogRef.close({ quantity: howMuch.value, color: whatColor.value })">
+  <button
+    type="button"
+    class="demo-dialog-button"
+    cdkFocusInitial
+    (click)="dialogRef.close({ quantity: howMuch.value, color: whatColor.value })"
+  >
     Close dialog
   </button>
-  <button (click)="dialogRef.updateSize('500px', '500px').updatePosition({top: '25px', left: '25px'});"
-          class="demo-dialog-button">
+  <button
+    (click)="dialogRef.updateSize('500px', '500px').updatePosition({top: '25px', left: '25px'});"
+    class="demo-dialog-button"
+  >
     Change dimensions
   </button>
 </ng-template>

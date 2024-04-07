@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {CdkTableScrollContainerModule} from '@angular/cdk-experimental/table-scroll-container';
+import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleGroup, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatTableModule} from '@angular/material/table';
@@ -28,6 +28,7 @@ import {MatTableModule} from '@angular/material/table';
     MatButtonToggleModule,
     MatTableModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableScrollContainerDemo {
   displayedColumns: string[] = [];

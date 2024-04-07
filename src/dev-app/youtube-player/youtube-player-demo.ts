@@ -8,6 +8,7 @@
 
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -15,9 +16,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {PlaceholderImageQuality, YouTubePlayer} from '@angular/youtube-player';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 
 interface Video {
   id: string;
@@ -79,6 +80,7 @@ const VIDEOS: Video[] = [
   styleUrl: 'youtube-player-demo.css',
   standalone: true,
   imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   @ViewChild('demoYouTubePlayer') demoYouTubePlayer: ElementRef<HTMLDivElement>;
@@ -106,7 +108,7 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
     // Automatically expand the video to fit the page up to 1200px x 720px
     this.videoWidth = Math.min(this.demoYouTubePlayer.nativeElement.clientWidth, 1200);
     this.videoHeight = this.videoWidth * 0.6;
-    this._changeDetectorRef.detectChanges();
+    this._changeDetectorRef.markForCheck();
   };
 
   ngOnDestroy(): void {

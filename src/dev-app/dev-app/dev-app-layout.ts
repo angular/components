@@ -6,19 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-import {CommonModule, DOCUMENT} from '@angular/common';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import {CommonModule, DOCUMENT} from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {RouterModule} from '@angular/router';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
+import {RouterModule} from '@angular/router';
 import {DevAppDirectionality} from './dev-app-directionality';
-import {DevAppRippleOptions} from './ripple-options';
 import {getAppState, setAppState} from './dev-app-state';
+import {DevAppRippleOptions} from './ripple-options';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -37,6 +44,7 @@ import {getAppState, setAppState} from './dev-app-state';
     MatTooltipModule,
     RouterModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
   state = getAppState();
