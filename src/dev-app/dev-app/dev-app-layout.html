@@ -8,22 +8,18 @@
           routerLinkActive
           #routerLinkActiveInstance="routerLinkActive"
           [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-          [routerLink]="[navItem.route]">{{navItem.name}}</a>
+          [routerLink]="[navItem.route]"
+          >{{navItem.name}}</a
+        >
       }
 
       <mat-divider></mat-divider>
 
-      <a mat-list-item
-          tabindex="-1"
-          (click)="navigation.close()"
-          [routerLink]="['/baseline']">
+      <a mat-list-item tabindex="-1" (click)="navigation.close()" [routerLink]="['/baseline']">
         Baseline
       </a>
 
-      <a mat-list-item
-         tabindex="-1"
-         (click)="navigation.close()"
-         [routerLink]="['/performance']">
+      <a mat-list-item tabindex="-1" (click)="navigation.close()" [routerLink]="['/performance']">
         Performance
       </a>
     </mat-nav-list>
@@ -47,22 +43,21 @@
         <div class="demo-config-buttons">
           @if (state.m3Enabled) {
             <button
-                mat-icon-button
-                (click)="toggleColorApiBackCompat()"
-                matTooltip="{{state.colorApiBackCompat ? 'Disable' : 'Enable'}} color API back-compat">
+              mat-icon-button
+              (click)="toggleColorApiBackCompat()"
+              matTooltip="{{state.colorApiBackCompat ? 'Disable' : 'Enable'}} color API back-compat"
+            >
               <mat-icon>colorize</mat-icon>
             </button>
           }
-          <button
-            mat-icon-button
-            (click)="toggleFullscreen()"
-            matTooltip="Toggle fullscreen">
+          <button mat-icon-button (click)="toggleFullscreen()" matTooltip="Toggle fullscreen">
             <mat-icon>fullscreen</mat-icon>
           </button>
           <button
             mat-icon-button
             (click)="toggleM3()"
-            [matTooltip]="state.m3Enabled ? 'Use M2 theme' : 'Use M3 theme'">
+            [matTooltip]="state.m3Enabled ? 'Use M2 theme' : 'Use M3 theme'"
+          >
             @if (state.m3Enabled) {
               <mat-icon>invert_colors_off</mat-icon>
             } @else {
@@ -71,8 +66,20 @@
           </button>
           <button
             mat-icon-button
+            (click)="toggleZoneless()"
+            [matTooltip]="isZoneless ? 'Use zones' : 'Use zoneless'"
+          >
+            @if (isZoneless) {
+              <mat-icon>visibility</mat-icon>
+            } @else {
+              <mat-icon>visibility_off</mat-icon>
+            }
+          </button>
+          <button
+            mat-icon-button
             (click)="toggleAnimations()"
-            [matTooltip]="state.animations ? 'Disable animations' : 'Enable animations'">
+            [matTooltip]="state.animations ? 'Disable animations' : 'Enable animations'"
+          >
             @if (state.animations) {
               <mat-icon>pause_circle</mat-icon>
             } @else {
@@ -82,7 +89,8 @@
           <button
             mat-icon-button
             (click)="toggleTheme()"
-            [matTooltip]="state.darkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
+            [matTooltip]="state.darkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
+          >
             @if (state.darkTheme) {
               <mat-icon>light_mode</mat-icon>
             } @else {
@@ -92,7 +100,8 @@
           <button
             mat-icon-button
             (click)="toggleRippleDisabled()"
-            [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'">
+            [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'"
+          >
             @if (state.rippleDisabled) {
               <mat-icon>waves</mat-icon>
             } @else {
@@ -102,7 +111,8 @@
           <button
             mat-icon-button
             (click)="toggleStrongFocus()"
-            [matTooltip]="state.strongFocusEnabled ? 'Disable strong focus' : 'Enable strong focus'">
+            [matTooltip]="state.strongFocusEnabled ? 'Disable strong focus' : 'Enable strong focus'"
+          >
             @if (state.strongFocusEnabled) {
               <mat-icon>not_accessible</mat-icon>
             } @else {
@@ -112,7 +122,8 @@
           <button
             mat-icon-button
             (click)="toggleDirection()"
-            [matTooltip]="state.direction === 'rtl' ? 'Switch to LTR' : 'Switch to RTL'">
+            [matTooltip]="state.direction === 'rtl' ? 'Switch to LTR' : 'Switch to RTL'"
+          >
             @if (state.direction === 'rtl') {
               <mat-icon>west</mat-icon>
             } @else {
@@ -123,7 +134,8 @@
             #densityTooltip="matTooltip"
             mat-icon-button
             (click)="toggleDensity(undefined, densityTooltip)"
-            [matTooltip]="'Density: ' + state.density">
+            [matTooltip]="'Density: ' + state.density"
+          >
             <mat-icon>grid_on</mat-icon>
           </button>
         </div>

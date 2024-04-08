@@ -9,21 +9,25 @@
 // Load `$localize` for examples using it.
 import '@angular/localize/init';
 
-import {importProvidersFrom} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
+import {
+  importProvidersFrom,
+  provideZoneChangeDetection,
+  ɵprovideZonelessChangeDetection,
+} from '@angular/core';
+import {bootstrapApplication} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {bootstrapApplication} from '@angular/platform-browser';
 
-import {MAT_RIPPLE_GLOBAL_OPTIONS, provideNativeDateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, FullscreenOverlayContainer} from '@angular/cdk/overlay';
+import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, provideNativeDateAdapter} from '@angular/material/core';
 
 import {DevApp} from './dev-app';
 import {DevAppDirectionality} from './dev-app/dev-app-directionality';
+import {getAppState} from './dev-app/dev-app-state';
 import {DevAppRippleOptions} from './dev-app/ripple-options';
 import {DEV_APP_ROUTES} from './routes';
-import {getAppState} from './dev-app/dev-app-state';
 
 // We need to insert this stylesheet manually since it depends on the value from the app state.
 // It uses a different file, instead of toggling a class, to avoid other styles from bleeding in.
@@ -47,5 +51,8 @@ bootstrapApplication(DevApp, {
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
     {provide: Directionality, useClass: DevAppDirectionality},
+    cachedAppState.zoneless
+      ? ɵprovideZonelessChangeDetection()
+      : provideZoneChangeDetection({eventCoalescing: true}),
   ],
 });
