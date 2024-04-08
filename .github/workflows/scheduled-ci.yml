@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@4a904a92b839e4529f3d768df02148398a5fcdb6
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/setup@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setting up Angular snapshot builds
         # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
@@ -44,13 +44,13 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@4a904a92b839e4529f3d768df02148398a5fcdb6
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/setup@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setting up Angular snapshot builds
         # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
@@ -71,13 +71,13 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@4a904a92b839e4529f3d768df02148398a5fcdb6
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/setup@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@4a904a92b839e4529f3d768df02148398a5fcdb6
       - name: Setting up Angular snapshot builds
         # Angular snapshots must be set up first so that the yarn install properly
         # updates the yarn.lock as expected with the changes
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@804107deac3621184db54fab3e7cfe7f735a0d74
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@4a904a92b839e4529f3d768df02148398a5fcdb6
         with:
           cache-node-modules: true
       - name: Install node modules
