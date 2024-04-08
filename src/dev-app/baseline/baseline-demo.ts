@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -31,6 +31,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatSelectModule,
     MatToolbarModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineDemo {
   name: string;

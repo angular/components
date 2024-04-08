@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -16,6 +16,7 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'clipboard-demo.html',
   standalone: true,
   imports: [ClipboardModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipboardDemo {
   attempts = 3;

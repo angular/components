@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BreakpointObserverOverviewExample} from '@angular/components-examples/cdk/layout';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   selector: 'layout-demo',
@@ -16,5 +16,6 @@ import {BreakpointObserverOverviewExample} from '@angular/components-examples/cd
   styleUrl: 'layout-demo.css',
   standalone: true,
   imports: [CommonModule, BreakpointObserverOverviewExample],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutDemo {}

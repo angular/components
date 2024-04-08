@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {
   ToolbarBasicExample,
+  ToolbarHarnessExample,
   ToolbarMultirowExample,
   ToolbarOverviewExample,
-  ToolbarHarnessExample,
 } from '@angular/components-examples/material/toolbar';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -31,5 +31,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     ToolbarOverviewExample,
     ToolbarHarnessExample,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarDemo {}

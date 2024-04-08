@@ -6,20 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {
-  MatDialog,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
 import {ThemePalette} from '@angular/material/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatTabsModule} from '@angular/material/tabs';
 
 interface DialogData {
   color: ThemePalette;
@@ -41,13 +41,13 @@ interface DialogData {
     ReactiveFormsModule,
   ],
   styleUrl: 'slider-demo.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderDemo {
   discrete = true;
   showTickMarks = true;
   colorModel: ThemePalette = 'primary';
 
-  noop = () => {};
   min = '0';
   max = '100';
   step = '0';
@@ -136,6 +136,7 @@ export class SliderDemo {
   `,
   standalone: true,
   imports: [MatSliderModule, MatDialogTitle, MatDialogContent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderDialogDemo {
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}

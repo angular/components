@@ -6,13 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentPortal, Portal, CdkPortal, DomPortal, PortalModule} from '@angular/cdk/portal';
-import {Component, QueryList, ViewChildren, ElementRef, ViewChild} from '@angular/core';
+import {CdkPortal, ComponentPortal, DomPortal, Portal, PortalModule} from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 
 @Component({
   selector: 'science-joke',
   template: `<p> 100 kilopascals go into a bar. </p>`,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScienceJoke {}
 
@@ -22,6 +30,7 @@ export class ScienceJoke {}
   styleUrl: 'portal-demo.css',
   standalone: true,
   imports: [PortalModule, ScienceJoke],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortalDemo {
   @ViewChildren(CdkPortal) templatePortals: QueryList<Portal<any>>;

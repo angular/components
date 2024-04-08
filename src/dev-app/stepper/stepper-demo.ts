@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,10 +15,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {ThemePalette} from '@angular/material/core';
-import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {ThemePalette} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -38,6 +38,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatSelectModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperDemo {
   private _formBuilder = inject(FormBuilder);

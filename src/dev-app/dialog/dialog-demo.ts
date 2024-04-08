@@ -6,8 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Component, Inject, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {DOCUMENT, JsonPipe} from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -18,14 +32,9 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'dialog-demo',
@@ -43,7 +52,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    JsonPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDemo {
   dialogRef: MatDialogRef<JazzDialog> | null;
@@ -77,6 +88,8 @@ export class DialogDemo {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
+  readonly cdr = inject(ChangeDetectorRef);
+
   constructor(
     public dialog: MatDialog,
     @Inject(DOCUMENT) doc: any,
@@ -99,10 +112,12 @@ export class DialogDemo {
 
     this.dialogRef.beforeClosed().subscribe((result: string) => {
       this.lastBeforeCloseResult = result;
+      this.cdr.markForCheck();
     });
     this.dialogRef.afterClosed().subscribe((result: string) => {
       this.lastAfterClosedResult = result;
       this.dialogRef = null;
+      this.cdr.markForCheck();
     });
   }
 
@@ -162,6 +177,7 @@ export class DialogDemo {
   styles: `.hidden-dialog { opacity: 0; }`,
   standalone: true,
   imports: [DragDropModule, MatInputModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {
   private _dimensionToggle = false;
@@ -239,6 +255,7 @@ export class JazzDialog {
   `,
   standalone: true,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentElementDialog {
   actionsAlignment?: 'start' | 'center' | 'end';
@@ -275,5 +292,6 @@ export class ContentElementDialog {
   `,
   standalone: true,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IFrameDialog {}

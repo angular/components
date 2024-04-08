@@ -6,46 +6,46 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {
-  CdkTableFlexBasicExample,
   CdkTableBasicExample,
   CdkTableFixedLayoutExample,
+  CdkTableFlexBasicExample,
   CdkTableRecycleRowsExample,
 } from '@angular/components-examples/cdk/table';
 import {
-  TableFlexBasicExample,
   TableBasicExample,
+  TableColumnStylingExample,
+  TableDynamicArrayDataExample,
   TableDynamicColumnsExample,
+  TableDynamicObservableDataExample,
   TableExpandableRowsExample,
   TableFilteringExample,
+  TableFlexBasicExample,
+  TableFlexLargeRowExample,
   TableFooterRowExample,
+  TableGeneratedColumnsExample,
+  TableHarnessExample,
   TableHttpExample,
   TableMultipleHeaderFooterExample,
   TableOverviewExample,
   TablePaginationExample,
+  TableRecycleRowsExample,
+  TableReorderableExample,
+  TableRowBindingExample,
   TableRowContextExample,
   TableSelectionExample,
   TableSortingExample,
   TableStickyColumnsExample,
-  TableStickyComplexFlexExample,
   TableStickyComplexExample,
+  TableStickyComplexFlexExample,
   TableStickyFooterExample,
   TableStickyHeaderExample,
   TableTextColumnAdvancedExample,
   TableTextColumnExample,
-  TableWrappedExample,
-  TableReorderableExample,
-  TableRecycleRowsExample,
-  TableHarnessExample,
   TableWithRipplesExample,
-  TableColumnStylingExample,
-  TableRowBindingExample,
-  TableDynamicArrayDataExample,
-  TableDynamicObservableDataExample,
-  TableGeneratedColumnsExample,
-  TableFlexLargeRowExample,
+  TableWrappedExample,
 } from '@angular/components-examples/material/table';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: './table-demo.html',
@@ -87,5 +87,6 @@ import {
     TableGeneratedColumnsExample,
     TableFlexLargeRowExample,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableDemo {}

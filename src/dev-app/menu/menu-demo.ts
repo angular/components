@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'menu-demo',
@@ -27,6 +27,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatIconModule,
     MatDividerModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuDemo {
   selected = '';

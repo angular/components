@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -17,6 +17,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   styleUrl: 'slide-toggle-demo.css',
   standalone: true,
   imports: [FormsModule, MatButtonModule, MatSlideToggleModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideToggleDemo {
   firstToggle: boolean = false;

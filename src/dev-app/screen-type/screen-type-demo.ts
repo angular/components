@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {BreakpointObserver, Breakpoints, BreakpointState, LayoutModule} from '@angular/cdk/layout';
+import {BreakpointObserver, BreakpointState, Breakpoints, LayoutModule} from '@angular/cdk/layout';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
@@ -19,6 +19,7 @@ import {Observable} from 'rxjs';
   styleUrl: 'screen-type-demo.css',
   standalone: true,
   imports: [CommonModule, LayoutModule, MatGridListModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreenTypeDemo {
   isHandset: Observable<BreakpointState>;

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {DevAppLayout} from './dev-app/dev-app-layout';
 
@@ -17,5 +17,6 @@ import {DevAppLayout} from './dev-app/dev-app-layout';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [DevAppLayout, RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevApp {}

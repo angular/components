@@ -6,19 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-import {CommonModule, DOCUMENT} from '@angular/common';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import {CommonModule, DOCUMENT} from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  NgZone,
+  ViewEncapsulation,
+  inject,
+  ɵNoopNgZone,
+} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {RouterModule} from '@angular/router';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
+import {RouterModule} from '@angular/router';
 import {DevAppDirectionality} from './dev-app-directionality';
-import {DevAppRippleOptions} from './ripple-options';
 import {getAppState, setAppState} from './dev-app-state';
+import {DevAppRippleOptions} from './ripple-options';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -37,6 +47,7 @@ import {getAppState, setAppState} from './dev-app-state';
     MatTooltipModule,
     RouterModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
   state = getAppState();
@@ -104,6 +115,10 @@ export class DevAppLayout {
   /** List of possible global density scale values. */
   private _densityScales = [0, -1, -2, -3, -4, 'minimum', 'maximum'];
 
+  private _ngZone = inject(NgZone);
+
+  readonly isZoneless = this._ngZone instanceof ɵNoopNgZone;
+
   constructor(
     private _element: ElementRef<HTMLElement>,
     private _rippleOptions: DevAppRippleOptions,
@@ -135,6 +150,12 @@ export class DevAppLayout {
     this.state.strongFocusEnabled = value;
     this._document.body.classList.toggle('demo-strong-focus', value);
     setAppState(this.state);
+  }
+
+  toggleZoneless(value = !this.isZoneless) {
+    this.state.zoneless = value;
+    setAppState(this.state);
+    location.reload();
   }
 
   toggleAnimations() {

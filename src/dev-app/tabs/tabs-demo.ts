@@ -6,27 +6,27 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {MatTabsModule} from '@angular/material/tabs';
 import {
-  TabGroupInkBarExample,
-  TabGroupInvertedExample,
-  TabGroupPaginatedExample,
-  TabNavBarBasicExample,
-  TabGroupThemeExample,
-  TabGroupStretchedExample,
-  TabGroupPreserveContentExample,
-  TabGroupLazyLoadedExample,
-  TabGroupHeaderBelowExample,
-  TabGroupDynamicExample,
-  TabGroupHarnessExample,
   TabGroupAlignExample,
   TabGroupAnimationsExample,
   TabGroupAsyncExample,
   TabGroupBasicExample,
   TabGroupCustomLabelExample,
+  TabGroupDynamicExample,
   TabGroupDynamicHeightExample,
+  TabGroupHarnessExample,
+  TabGroupHeaderBelowExample,
+  TabGroupInkBarExample,
+  TabGroupInvertedExample,
+  TabGroupLazyLoadedExample,
+  TabGroupPaginatedExample,
+  TabGroupPreserveContentExample,
+  TabGroupStretchedExample,
+  TabGroupThemeExample,
+  TabNavBarBasicExample,
 } from '@angular/components-examples/material/tabs';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'tabs-demo',
@@ -52,5 +52,6 @@ import {
     TabGroupDynamicHeightExample,
     MatTabsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsDemo {}

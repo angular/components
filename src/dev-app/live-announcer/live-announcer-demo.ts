@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {A11yModule, LiveAnnouncer} from '@angular/cdk/a11y';
+import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -16,6 +16,7 @@ import {MatDialog} from '@angular/material/dialog';
   templateUrl: 'live-announcer-demo.html',
   standalone: true,
   imports: [A11yModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LiveAnnouncerDemo {
   constructor(

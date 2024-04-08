@@ -14,6 +14,7 @@ const KEY = 'MAT_DEV_APP_STATE';
 export interface DevAppState {
   density: string | number;
   animations: boolean;
+  zoneless: boolean;
   darkTheme: boolean;
   rippleDisabled: boolean;
   strongFocusEnabled: boolean;
@@ -39,6 +40,7 @@ export function getAppState(): DevAppState {
     value = {
       density: 0,
       animations: true,
+      zoneless: false,
       darkTheme: false,
       rippleDisabled: false,
       strongFocusEnabled: false,
@@ -56,7 +58,9 @@ export function getAppState(): DevAppState {
 /** Saves the state of the dev app apperance in local storage. */
 export function setAppState(newState: DevAppState): void {
   const currentState = getAppState();
-  const keys = Object.keys(currentState) as (keyof DevAppState)[];
+  const keys = new Set([...Object.keys(currentState), ...Object.keys(newState)]) as Set<
+    keyof DevAppState
+  >;
 
   // Only write to storage if something actually changed.
   for (const key of keys) {

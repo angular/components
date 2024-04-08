@@ -6,21 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {
-  CdkPopoverEditCdkTableFlexExample,
   CdkPopoverEditCdkTableExample,
+  CdkPopoverEditCdkTableFlexExample,
   CdkPopoverEditCellSpanVanillaTableExample,
   CdkPopoverEditTabOutVanillaTableExample,
   CdkPopoverEditVanillaTableExample,
 } from '@angular/components-examples/cdk-experimental/popover-edit';
 import {
   PopoverEditCellSpanMatTableExample,
-  PopoverEditMatTableFlexExample,
   PopoverEditMatTableExample,
+  PopoverEditMatTableFlexExample,
   PopoverEditTabOutMatTableExample,
 } from '@angular/components-examples/material-experimental/popover-edit';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   template: `
@@ -58,5 +58,6 @@ import {
     PopoverEditTabOutMatTableExample,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopoverEditDemo {}

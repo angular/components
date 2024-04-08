@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,6 +19,7 @@ import {MatIconModule} from '@angular/material/icon';
   styleUrl: 'badge-demo.css',
   standalone: true,
   imports: [CommonModule, FormsModule, MatBadgeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeDemo {
   visible = true;

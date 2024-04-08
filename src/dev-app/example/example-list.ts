@@ -9,7 +9,7 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CommonModule} from '@angular/common';
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {Example} from './example';
 
@@ -58,6 +58,7 @@ import {Example} from './example';
       font-size: 12px;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleList {
   /** Type of examples being displayed. */

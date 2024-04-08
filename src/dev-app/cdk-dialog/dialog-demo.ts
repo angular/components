@@ -6,8 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Inject, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {DIALOG_DATA, Dialog, DialogConfig, DialogRef, DialogModule} from '@angular/cdk/dialog';
+import {DIALOG_DATA, Dialog, DialogConfig, DialogModule, DialogRef} from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 const defaultDialogConfig = new DialogConfig();
@@ -19,6 +28,7 @@ const defaultDialogConfig = new DialogConfig();
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [DialogModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDemo {
   dialogRef: DialogRef<string> | null;
@@ -43,6 +53,8 @@ export class DialogDemo {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
+  readonly cdr = inject(ChangeDetectorRef);
+
   constructor(public dialog: Dialog) {}
 
   openJazz() {
@@ -51,12 +63,19 @@ export class DialogDemo {
     this.dialogRef.closed.subscribe(result => {
       this.result = result!;
       this.dialogRef = null;
+      this.cdr.markForCheck();
     });
   }
 
   openTemplate() {
     this.numTemplateOpens++;
-    this.dialog.open(this.template, this.config);
+    this.dialogRef = this.dialog.open(this.template, this.config);
+
+    this.dialogRef.closed.subscribe(result => {
+      this.result = result!;
+      this.dialogRef = null;
+      this.cdr.markForCheck();
+    });
   }
 }
 
@@ -92,6 +111,7 @@ export class DialogDemo {
     }
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {
   private _dimensionToggle = false;

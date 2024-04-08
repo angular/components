@@ -6,30 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CommonModule} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Directive,
   Inject,
+  Injectable,
   OnDestroy,
   Optional,
   ViewChild,
   ViewEncapsulation,
-  Directive,
-  Injectable,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {
+  DateRange,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatCalendar,
   MatCalendarHeader,
-  MatDatepickerInputEvent,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatDateRangeSelectionStrategy,
-  DateRange,
+  MatDatepickerInputEvent,
   MatDatepickerModule,
 } from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -146,7 +146,7 @@ export class CustomHeader<D> implements OnDestroy {
 }
 
 @Component({
-  selector: 'customer-header-ng-content',
+  selector: 'custom-header-ng-content',
   template: `
       <mat-calendar-header #header>
         <button mat-button type="button" (click)="todayClicked()">TODAY</button>
@@ -154,6 +154,7 @@ export class CustomHeader<D> implements OnDestroy {
     `,
   standalone: true,
   imports: [MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomHeaderNgContent<D> {
   @ViewChild(MatCalendarHeader)
@@ -238,8 +239,8 @@ export class DatepickerDemo {
     return !(date.getFullYear() % 2) && Boolean(date.getMonth() % 2) && !(date.getDate() % 2);
   };
 
-  onDateInput = (e: MatDatepickerInputEvent<Date>) => (this.lastDateInput = e.value);
-  onDateChange = (e: MatDatepickerInputEvent<Date>) => (this.lastDateChange = e.value);
+  onDateInput = (e: MatDatepickerInputEvent<Date, Date | null>) => (this.lastDateInput = e.value);
+  onDateChange = (e: MatDatepickerInputEvent<Date, Date | null>) => (this.lastDateChange = e.value);
 
   // pass custom header component type as input
   customHeader = CustomHeader;

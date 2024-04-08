@@ -7,9 +7,16 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {Component, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {
   GoogleMap,
+  MapAdvancedMarker,
   MapBicyclingLayer,
   MapCircle,
   MapDirectionsRenderer,
@@ -25,7 +32,6 @@ import {
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
-  MapAdvancedMarker,
 } from '@angular/google-maps';
 
 const POLYLINE_PATH: google.maps.LatLngLiteral[] = [
@@ -80,6 +86,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapTrafficLayer,
     MapTransitLayer,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
@@ -87,6 +94,7 @@ export class GoogleMapDemo {
   @ViewChild(MapPolygon) polygon: MapPolygon;
   @ViewChild(MapRectangle) rectangle: MapRectangle;
   @ViewChild(MapCircle) circle: MapCircle;
+  readonly cdr = inject(ChangeDetectorRef);
 
   center = {lat: 24, lng: 12};
   mapAdvancedMarkerPosition = {lat: 22, lng: 21};
@@ -278,6 +286,7 @@ export class GoogleMapDemo {
       };
       this._mapDirectionsService.route(request).subscribe(response => {
         this.directionsResult = response.result;
+        this.cdr.markForCheck();
       });
     }
   }
@@ -310,7 +319,10 @@ export class GoogleMapDemo {
     }
 
     apiLoadingPromise.then(
-      () => (this.hasLoaded = true),
+      () => {
+        this.hasLoaded = true;
+        this.cdr.markForCheck();
+      },
       error => console.error('Failed to load Google Maps API', error),
     );
   }
