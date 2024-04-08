@@ -91,6 +91,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     // (undocumented)
     _isOpen: boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
+    _latestOpeningTrigger: unknown;
     // (undocumented)
     static ngAcceptInputType_autoActiveFirstOption: unknown;
     // (undocumented)
