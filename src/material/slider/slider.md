@@ -11,7 +11,7 @@ respectively. The initial value is set to the minimum value unless otherwise spe
 
 ```html
 <mat-slider min="1" max="5" step="0.5">
-<input matSliderThumb value="1.5">
+  <input matSliderThumb value="1.5">
 </mat-slider>
 ```
 
