@@ -18,6 +18,7 @@
 @forward './core/typography/typography' show typography-hierarchy;
 @forward './core/typography/typography-utils' show font-shorthand;
 @forward './core/tokens/m2' show m2-tokens-from-theme;
+@forward './core/tokens/m3-tokens' show system-level-colors, system-level-typography;
 
 // Private/Internal
 @forward './core/density/private/all-density' show all-component-densities;

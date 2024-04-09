@@ -164,13 +164,13 @@
     $color: map.get($tokens, $color-key);
     $opacity: map.get($opacity-lookup, $opacity-key);
 
-    @if meta.type-of($color) == 'color' {
-      @if meta.type-of($opacity) != 'number' {
-        @error 'Cannot find valid opacity value for color token "#{$color-key}"';
-      }
-
+    @if(meta.type-of($color) == 'color') {
       $result: map.remove($result, $opacity-key);
       $result: map.set($result, $color-key, rgba($color, $opacity));
+    }
+    @else if($color != null) {
+      $result: map.remove($result, $opacity-key);
+      $result: map.set($result, $color-key, #{color(from #{$color} srgb r g b / #{$opacity})});
     }
   }
 
@@ -983,19 +983,225 @@
   @return $result;
 }
 
+@mixin system-level-colors($theme, $overrides: ()) {
+  $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
+  $base-palettes: (
+    neutral: map.get($palettes, neutral),
+    neutral-variant: map.get($palettes, neutral-variant),
+    secondary: map.get($palettes, secondary),
+    error: map.get($palettes, error),
+  );
+
+  $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
+  $primary: map.merge(map.get($palettes, primary), $base-palettes);
+  $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
+  $error: map.get($palettes, error);
+
+  $ref: (
+    md-ref-palette: _generate-ref-palette-tokens($primary, $tertiary, $error)
+  );
+
+  $sys-colors: if($type == dark,
+    mdc-tokens.md-sys-color-values-dark($ref),
+    mdc-tokens.md-sys-color-values-light($ref));
+
+  @each $name, $value in $sys-colors {
+    --sys-#{$name}: #{map.get($overrides, $name) or $value};
+  }
+}
+
+@mixin system-level-typography($theme, $overrides: ()) {
+  $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
+  $brand: map.get($font-definition, brand);
+  $plain: map.get($font-definition, plain);
+  $bold: map.get($font-definition, bold);
+  $medium: map.get($font-definition, medium);
+  $regular: map.get($font-definition, regular);
+
+  $ref: (
+    md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+
+  $sys-typescale: mdc-tokens.md-sys-typescale-values($ref);
+
+  @each $name, $value in $sys-typescale {
+    --sys-#{$name}: #{map.get($overrides, $name) or $value};
+  }
+}
+
+@function _get-sys-color($type, $use-sys-vars, $ref) {
+  @if $use-sys-vars {
+    @return (
+      'background': var(--sys-background),
+      'error': var(--sys-error),
+      'error-container': var(--sys-error-container),
+      'inverse-on-surface': var(--sys-inverse-on-surface),
+      'inverse-primary': var(--sys-inverse-primary),
+      'inverse-surface': var(--sys-inverse-surface),
+      'on-background': var(--sys-on-background),
+      'on-error': var(--sys-on-error),
+      'on-error-container': var(--sys-on-error-container),
+      'on-primary': var(--sys-on-primary),
+      'on-primary-container': var(--sys-on-primary-container),
+      'on-primary-fixed': var(--sys-on-primary-fixed),
+      'on-primary-fixed-variant': var(--sys-on-primary-fixed-variant),
+      'on-secondary': var(--sys-on-secondary),
+      'on-secondary-container': var(--sys-on-secondary-container),
+      'on-secondary-fixed': var(--sys-on-secondary-fixed),
+      'on-secondary-fixed-variant': var(--sys-on-secondary-fixed-variant),
+      'on-surface': var(--sys-on-surface),
+      'on-surface-variant': var(--sys-on-surface-variant),
+      'on-tertiary': var(--sys-on-tertiary),
+      'on-tertiary-container': var(--sys-on-tertiary-container),
+      'on-tertiary-fixed': var(--sys-on-tertiary-fixed),
+      'on-tertiary-fixed-variant': var(--sys-on-tertiary-fixed-variant),
+      'outline': var(--sys-outline),
+      'outline-variant': var(--sys-outline-variant),
+      'primary': var(--sys-primary),
+      'primary-container': var(--sys-primary-container),
+      'primary-fixed': var(--sys-primary-fixed),
+      'primary-fixed-dim': var(--sys-primary-fixed-dim),
+      'scrim': var(--sys-scrim),
+      'secondary': var(--sys-secondary),
+      'secondary-container': var(--sys-secondary-container),
+      'secondary-fixed': var(--sys-secondary-fixed),
+      'secondary-fixed-dim': var(--sys-secondary-fixed-dim),
+      'shadow': var(--sys-shadow),
+      'surface': var(--sys-surface),
+      'surface-bright': var(--sys-surface-bright),
+      'surface-container': var(--sys-surface-container),
+      'surface-container-high': var(--sys-surface-container-high),
+      'surface-container-highest': var(--sys-surface-container-highest),
+      'surface-container-low': var(--sys-surface-container-low),
+      'surface-container-lowest': var(--sys-surface-container-lowest),
+      'surface-dim': var(--sys-surface-dim),
+      'surface-tint': var(--sys-surface-tint),
+      'surface-variant': var(--sys-surface-variant),
+      'tertiary': var(--sys-tertiary),
+      'tertiary-container': var(--sys-tertiary-container),
+      'tertiary-fixed': var(--sys-tertiary-fixed),
+      'tertiary-fixed-dim': var(--sys-tertiary-fixed-dim),
+    );
+  }
+
+  @return if($type == dark,
+    mdc-tokens.md-sys-color-values-dark($ref),
+    mdc-tokens.md-sys-color-values-light($ref));
+}
+
+@function _get-sys-typeface($use-sys-vars, $ref) {
+  @if ($use-sys-vars) {
+    @return (
+      'body-large': var(--sys-body-large),
+      'body-large-font': var(--sys-body-large-font),
+      'body-large-line-height': var(--sys-body-large-line-height),
+      'body-large-size': var(--sys-body-large-size),
+      'body-large-tracking': var(--sys-body-large-tracking),
+      'body-large-weight': var(--sys-body-large-weight),
+      'body-medium': var(--sys-body-medium),
+      'body-medium-font': var(--sys-body-medium-font),
+      'body-medium-line-height': var(--sys-body-medium-line-height),
+      'body-medium-size': var(--sys-body-medium-size),
+      'body-medium-tracking': var(--sys-body-medium-tracking),
+      'body-medium-weight': var(--sys-body-medium-weight),
+      'body-small': var(--sys-body-small),
+      'body-small-font': var(--sys-body-small-font),
+      'body-small-line-height': var(--sys-body-small-line-height),
+      'body-small-size': var(--sys-body-small-size),
+      'body-small-tracking': var(--sys-body-small-tracking),
+      'body-small-weight': var(--sys-body-small-weight),
+      'display-large': var(--sys-display-large),
+      'display-large-font': var(--sys-display-large-font),
+      'display-large-line-height': var(--sys-display-large-line-height),
+      'display-large-size': var(--sys-display-large-size),
+      'display-large-tracking': var(--sys-display-large-tracking),
+      'display-large-weight': var(--sys-display-large-weight),
+      'display-medium': var(--sys-display-medium),
+      'display-medium-font': var(--sys-display-medium-font),
+      'display-medium-line-height': var(--sys-display-medium-line-height),
+      'display-medium-size': var(--sys-display-medium-size),
+      'display-medium-tracking': var(--sys-display-medium-tracking),
+      'display-medium-weight': var(--sys-display-medium-weight),
+      'display-small': var(--sys-display-small),
+      'display-small-font': var(--sys-display-small-font),
+      'display-small-line-height': var(--sys-display-small-line-height),
+      'display-small-size': var(--sys-display-small-size),
+      'display-small-tracking': var(--sys-display-small-tracking),
+      'display-small-weight': var(--sys-display-small-weight),
+      'headline-large': var(--sys-headline-large),
+      'headline-large-font': var(--sys-headline-large-font),
+      'headline-large-line-height': var(--sys-headline-large-line-height),
+      'headline-large-size': var(--sys-headline-large-size),
+      'headline-large-tracking': var(--sys-headline-large-tracking),
+      'headline-large-weight': var(--sys-headline-large-weight),
+      'headline-medium': var(--sys-headline-medium),
+      'headline-medium-font': var(--sys-headline-medium-font),
+      'headline-medium-line-height': var(--sys-headline-medium-line-height),
+      'headline-medium-size': var(--sys-headline-medium-size),
+      'headline-medium-tracking': var(--sys-headline-medium-tracking),
+      'headline-medium-weight': var(--sys-headline-medium-weight),
+      'headline-small': var(--sys-headline-small),
+      'headline-small-font': var(--sys-headline-small-font),
+      'headline-small-line-height': var(--sys-headline-small-line-height),
+      'headline-small-size': var(--sys-headline-small-size),
+      'headline-small-tracking': var(--sys-headline-small-tracking),
+      'headline-small-weight': var(--sys-headline-small-weight),
+      'label-large': var(--sys-label-large),
+      'label-large-font': var(--sys-label-large-font),
+      'label-large-line-height': var(--sys-label-large-line-height),
+      'label-large-size': var(--sys-label-large-size),
+      'label-large-tracking': var(--sys-label-large-tracking),
+      'label-large-weight': var(--sys-label-large-weight),
+      'label-large-weight-prominent': var(--sys-label-large-weight-prominent),
+      'label-medium': var(--sys-label-medium),
+      'label-medium-font': var(--sys-label-medium-font),
+      'label-medium-line-height': var(--sys-label-medium-line-height),
+      'label-medium-size': var(--sys-label-medium-size),
+      'label-medium-tracking': var(--sys-label-medium-tracking),
+      'label-medium-weight': var(--sys-label-medium-weight),
+      'label-medium-weight-prominent': var(--sys-label-medium-weight-prominent),
+      'label-small': var(--sys-label-small),
+      'label-small-font': var(--sys-label-small-font),
+      'label-small-line-height': var(--sys-label-small-line-height),
+      'label-small-size': var(--sys-label-small-size),
+      'label-small-tracking': var(--sys-label-small-tracking),
+      'label-small-weight': var(--sys-label-small-weight),
+      'title-large': var(--sys-title-large),
+      'title-large-font': var(--sys-title-large-font),
+      'title-large-line-height': var(--sys-title-large-line-height),
+      'title-large-size': var(--sys-title-large-size),
+      'title-large-tracking': var(--sys-title-large-tracking),
+      'title-large-weight': var(--sys-title-large-weight),
+      'title-medium': var(--sys-title-medium),
+      'title-medium-font': var(--sys-title-medium-font),
+      'title-medium-line-height': var(--sys-title-medium-line-height),
+      'title-medium-size': var(--sys-title-medium-size),
+      'title-medium-tracking': var(--sys-title-medium-tracking),
+      'title-medium-weight': var(--sys-title-medium-weight),
+      'title-small': var(--sys-title-small),
+      'title-small-font': var(--sys-title-small-font),
+      'title-small-line-height': var(--sys-title-small-line-height),
+      'title-small-size': var(--sys-title-small-size),
+      'title-small-tracking': var(--sys-title-small-tracking),
+      'title-small-weight': var(--sys-title-small-weight),
+    );
+  }
+  @return mdc-tokens.md-sys-typescale-values($ref);
+}
+
 /// Generates a set of namespaced color tokens for all components.
 /// @param {String} $type The type of theme system (light or dark)
 /// @param {Map} $primary The primary palette
 /// @param {Map} $tertiary The tertiary palette
 /// @param {Map} $error The error palette
 /// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $tertiary, $error) {
+@function generate-color-tokens($type, $primary, $tertiary, $error, $use-sys-vars) {
   $ref: (
     md-ref-palette: _generate-ref-palette-tokens($primary, $tertiary, $error)
   );
-  $sys-color: if($type == dark,
-    mdc-tokens.md-sys-color-values-dark($ref),
-    mdc-tokens.md-sys-color-values-light($ref));
+
+  $sys-color: _get-sys-color($type, $use-sys-vars, $ref);
+
   @return _generate-tokens(map.merge($ref, (
     md-sys-color: $sys-color,
     // Because the elevation values are always combined with color values to create the box shadow,
@@ -1016,12 +1222,13 @@
 /// @param {String|Number} $medium The medium font-weight
 /// @param {String|Number} $regular The regular font-weight
 /// @return {Map} A map of namespaced typography tokens
-@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular) {
+@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular, $use-sys-vars) {
   $ref: (
     md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
   );
+  $sys-typeface: _get-sys-typeface($use-sys-vars, $ref);
   @return _generate-tokens((
-    md-sys-typescale: mdc-tokens.md-sys-typescale-values($ref)
+    md-sys-typescale: $sys-typeface
   ));
 }
 
