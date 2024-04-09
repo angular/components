@@ -177,6 +177,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   private _injector = inject(Injector);
 
+  private _isDestroyed = false;
+
   constructor(
     public override elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -253,6 +255,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
     this._viewportChanges.unsubscribe();
+
+    this._isDestroyed = true;
 
     super.ngOnDestroy();
   }
@@ -502,6 +506,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Run change detection. */
   private _doChangeDetection() {
+    if (this._isDestroyed) {
+      return;
+    }
+
     this.ngZone.run(() => {
       this._changeDetectorRef.markForCheck();
       afterNextRender(
