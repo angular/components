@@ -1,3 +1,4 @@
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
 import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CdkListboxModule} from '@angular/cdk/listbox';
@@ -177,6 +178,7 @@ export class TestEntryComponent {}
     MatTableModule,
     MatStepperModule,
     ScrollingModule,
+    ExperimentalScrollingModule,
 
     // CDK Modules
     CdkListboxModule,

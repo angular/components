@@ -571,6 +571,15 @@
   </div>
 </cdk-virtual-scroll-viewport>
 
+<cdk-virtual-scroll-viewport autosize class="universal-viewport">
+  <div
+    *cdkVirtualFor="let size of virtualScrollData; let i = index"
+    [style.height.px]="i % 2 == 0 ? 50 : 25"
+  >
+    Item #{{i}}
+  </div>
+</cdk-virtual-scroll-viewport>
+
 <h2>YouTube player</h2>
 <youtube-player videoId="dQw4w9WgXcQ"></youtube-player>
 
