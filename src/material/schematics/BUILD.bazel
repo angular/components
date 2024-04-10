@@ -75,9 +75,6 @@ ts_library(
 pkg_npm(
     name = "npm_package",
     srcs = ["package.json"],
-    nested_packages = [
-        "//src/material/schematics/ng-generate/mdc-migration:npm_package",
-    ],
     deps = [
         ":collection_assets",
         ":ng_generate_assets",

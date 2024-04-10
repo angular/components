@@ -1,4 +1,0 @@
-/* Should not be migrated (filename is not .css or .scss) */
-.mat-button {
-  width: 100px;
-}
