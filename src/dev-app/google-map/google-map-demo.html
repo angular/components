@@ -9,8 +9,11 @@
                 (mapMousemove)="handleMove($event)"
                 (mapRightclick)="handleRightclick()"
                 [mapTypeId]="mapTypeId">
-      <map-marker-clusterer [imagePath]="markerClustererImagePath">
-        <map-marker #firstMarker="mapMarker"
+                
+      <!-- 
+        DEPRECATED: You should use advanced markers but standard map markers are still supported 
+        <map-marker-clusterer >
+          <map-marker #firstMarker="mapMarker"
                     [position]="center"
                     (mapClick)="clickMarker(firstMarker)"></map-marker>
         @for (markerPosition of markerPositions; track markerPosition) {
@@ -19,7 +22,29 @@
             [options]="markerOptions"
             (mapClick)="clickMarker(marker)"></map-marker>
         }
-      </map-marker-clusterer>
+      </map-marker-clusterer> -->
+
+      <map-marker-clusterer >
+        <map-advanced-marker #firstMarker="mapAdvancedMarker"
+                  [position]="center"
+                  (mapClick)="clickAdvancedMarker(firstMarker)"></map-advanced-marker>
+      @for (markerPosition of markerPositions; track markerPosition) {
+        <map-advanced-marker #marker="mapAdvancedMarker"
+          [position]="markerPosition"
+          [content]="advancedMarkerContent"
+          title="Advanced Marker dynamic list"
+          (mapClick)="clickAdvancedMarker(marker)">
+          <svg #advancedMarkerContent fill="oklch(69.02% .277 332.77)" viewBox="0 0 960 960" width="50px" height="50px" xml:space="preserve">
+            <g>
+              <polygon points="562.6,109.8 804.1,629.5 829.2,233.1 	"/>
+              <polygon points="624.9,655.9 334.3,655.9 297.2,745.8 479.6,849.8 662,745.8 	"/>
+              <polygon points="384.1,539.3 575.2,539.3 479.6,307 	"/>
+              <polygon points="396.6,109.8 130,233.1 155.1,629.5 	"/>
+            </g>
+          </svg></map-advanced-marker>
+      }
+    </map-marker-clusterer>
+
       @if (hasAdvancedMarker) {
         <map-advanced-marker
           #secondMarker="mapAdvancedMarker"

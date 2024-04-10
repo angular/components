@@ -150,9 +150,6 @@ export class GoogleMapDemo {
   mapTypeId: google.maps.MapTypeId;
   mapTypeIds = ['hybrid', 'roadmap', 'satellite', 'terrain'] as google.maps.MapTypeId[];
 
-  markerClustererImagePath =
-    'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
-
   directionsResult?: google.maps.DirectionsResult;
 
   constructor(private readonly _mapDirectionsService: MapDirectionsService) {
@@ -305,7 +302,7 @@ export class GoogleMapDemo {
 
     if (!apiLoadingPromise) {
       apiLoadingPromise = this._loadScript(
-        'https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js',
+        'https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js',
       );
     }
 
