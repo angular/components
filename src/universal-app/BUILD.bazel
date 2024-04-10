@@ -2,6 +2,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package_bin")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
+load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
 load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary", "ts_library")
@@ -21,7 +22,7 @@ ng_module(
         "//src/google-maps",
         "//src/youtube-player",
         "@npm//@angular/platform-server",
-    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS,
+    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
 )
 
 ts_library(

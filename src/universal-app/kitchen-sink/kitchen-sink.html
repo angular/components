@@ -2,7 +2,7 @@
 
 <mat-form-field>
   <mat-label>Computer scientists</mat-label>
-  <input matInput [matAutocomplete]="autocomplete">
+  <input matInput [matAutocomplete]="autocomplete" />
 </mat-form-field>
 
 <mat-autocomplete #autocomplete>
@@ -49,9 +49,7 @@
 
 <h3>Card</h3>
 
-<mat-card>
-  Simple card
-</mat-card>
+<mat-card> Simple card </mat-card>
 
 <mat-card>
   <mat-card-title>Complicated card</mat-card-title>
@@ -64,9 +62,7 @@
     <button mat-button>LIKE</button>
     <button mat-button>SHARE</button>
   </mat-card-actions>
-  <mat-card-footer>
-    Hurray
-  </mat-card-footer>
+  <mat-card-footer> Hurray </mat-card-footer>
 </mat-card>
 
 <h2>Checkbox</h2>
@@ -95,7 +91,7 @@
 <h2>Datepicker</h2>
 
 <mat-form-field>
-  <input type="text" matInput [matDatepicker]="birthday" placeholder="Birthday">
+  <input type="text" matInput [matDatepicker]="birthday" placeholder="Birthday" />
   <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
   <mat-datepicker #birthday></mat-datepicker>
 </mat-form-field>
@@ -103,7 +99,13 @@
 <h3>Disabled datepicker</h3>
 
 <mat-form-field>
-  <input type="text" disabled matInput [matDatepicker]="departureDate" placeholder="Departure date">
+  <input
+    type="text"
+    disabled
+    matInput
+    [matDatepicker]="departureDate"
+    placeholder="Departure date"
+  />
   <mat-datepicker-toggle matSuffix [for]="departureDate"></mat-datepicker-toggle>
   <mat-datepicker #departureDate></mat-datepicker>
 </mat-form-field>
@@ -127,18 +129,18 @@
 
 <mat-form-field>
   <mat-label>Label</mat-label>
-  <input matInput value="Initial value">
+  <input matInput value="Initial value" />
 </mat-form-field>
 <mat-form-field>
-  <input matInput placeholder="Placeholder">
+  <input matInput placeholder="Placeholder" />
 </mat-form-field>
 <mat-form-field floatLabel="always">
   <mat-label>Always floating</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field appearance="outline">
   <mat-label>Label</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field>
   <mat-label>Label</mat-label>
@@ -150,34 +152,34 @@
 </mat-form-field>
 <mat-form-field appearance="outline">
   <mat-label>Label</mat-label>
-  <input matInput value="Initial">
+  <input matInput value="Initial" />
 </mat-form-field>
 
 <h3>Prefix and Suffix</h3>
 <mat-form-field appearance="outline">
   <span matPrefix>+123&nbsp;</span>
   <mat-label>Phone Number</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field>
   <span matPrefix>+123&nbsp;</span>
   <mat-label>Phone Number</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field appearance="outline">
   <span matPrefix>+123&nbsp;</span>
   <mat-label>Phone Number</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field appearance="outline">
   <mat-icon matPrefix>calendar_today</mat-icon>
   <mat-label>Name</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 <mat-form-field>
   <mat-icon matPrefix>calendar_today</mat-icon>
   <mat-label>Name</mat-label>
-  <input matInput>
+  <input matInput />
 </mat-form-field>
 
 <h2>List</h2>
@@ -286,14 +288,14 @@
 <h2>Slider</h2>
 
 <mat-slider>
-  <input matSliderThumb value="60">
+  <input matSliderThumb value="60" />
 </mat-slider>
 <mat-slider>
-  <input matSliderThumb value="50" disabled>
+  <input matSliderThumb value="50" disabled />
 </mat-slider>
 <mat-slider min="200" max="500" step="100" discrete showTickMarks>
-  <input value="300" matSliderStartThumb>
-  <input value="400" matSliderEndThumb>
+  <input value="300" matSliderStartThumb />
+  <input value="400" matSliderEndThumb />
 </mat-slider>
 
 <h2>Snack bar</h2>
@@ -308,35 +310,47 @@
 <mat-tab-group [selectedIndex]="1">
   <mat-tab label="Overview">
     <h3>The overview</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque assumenda doloribus,
-      rerum temporibus fugit aliquid adipisci aliquam eaque sint voluptas dolore cumque voluptatibus
-      quam quod. Quasi adipisci officia similique in?</p>
-    <p>Deleniti neque placeat magnam, voluptatibus eligendi illo consectetur dolore minima dolorem
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque assumenda doloribus, rerum
+      temporibus fugit aliquid adipisci aliquam eaque sint voluptas dolore cumque voluptatibus quam
+      quod. Quasi adipisci officia similique in?
+    </p>
+    <p>
+      Deleniti neque placeat magnam, voluptatibus eligendi illo consectetur dolore minima dolorem
       nemo suscipit dolorum accusantium? Numquam officia culpa itaque qui repudiandae nulla,
-      laboriosam nihil molestiae ad aut perferendis alias amet.</p>
-    <p>Officia esse temporibus consequatur ipsa! Veritatis alias facere amet reiciendis sint
-      impedit atque iste doloremque dolor? Ullam, aspernatur? Alias, fuga! At dolorum odio
-      molestiae laudantium nihil alias inventore veritatis voluptatum.</p>
+      laboriosam nihil molestiae ad aut perferendis alias amet.
+    </p>
+    <p>
+      Officia esse temporibus consequatur ipsa! Veritatis alias facere amet reiciendis sint impedit
+      atque iste doloremque dolor? Ullam, aspernatur? Alias, fuga! At dolorum odio molestiae
+      laudantium nihil alias inventore veritatis voluptatum.
+    </p>
     <button mat-raised-button color="primary">See the overview</button>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>API docs</ng-template>
     <h3>The API docs</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum facere quasi natus rerum
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum facere quasi natus rerum
       quae, nisi, quis, voluptate assumenda necessitatibus labore illo. Illum ipsum consequatur,
-      excepturi aspernatur odio veritatis sint perferendis!</p>
-    <p>Dicta ex laborum repudiandae nesciunt. Ea asperiores quo totam velit! Aliquid cum laudantium
+      excepturi aspernatur odio veritatis sint perferendis!
+    </p>
+    <p>
+      Dicta ex laborum repudiandae nesciunt. Ea asperiores quo totam velit! Aliquid cum laudantium
       officiis molestias, excepturi odio, autem magni dignissimos perspiciatis, amet qui! Dolorem
-      molestiae similique necessitatibus cupiditate ipsa aspernatur?</p>
+      molestiae similique necessitatibus cupiditate ipsa aspernatur?
+    </p>
     <button mat-raised-button color="accent">See the API docs</button>
   </mat-tab>
 
   <mat-tab>
     <ng-template mat-tab-label>Examples</ng-template>
     <h3>The examples</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi animi saepe, optio sequi
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi animi saepe, optio sequi
       accusantium, eos perspiciatis reprehenderit, nobis exercitationem sunt ducimus molestiae
-      laborum inventore itaque incidunt. Neque dolorum adipisci quidem.</p>
+      laborum inventore itaque incidunt. Neque dolorum adipisci quidem.
+    </p>
     <button mat-raised-button color="warn">See the examples</button>
   </mat-tab>
 </mat-tab-group>
@@ -349,9 +363,7 @@
 
 <h2>Paginator</h2>
 
-<mat-paginator [length]="100"
-               [pageSizeOptions]="[5, 10, 25, 100]"
-               aria-label="Select page">
+<mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
 </mat-paginator>
 
 <h2>Toolbar</h2>
@@ -425,8 +437,8 @@
     <cdk-cell *cdkCellDef="let element">{{element.symbol}}</cdk-cell>
   </ng-container>
 
-  <cdk-header-row *cdkHeaderRowDef="tableColumns"/>
-  <cdk-row *cdkRowDef="let row; columns: tableColumns;"/>
+  <cdk-header-row *cdkHeaderRowDef="tableColumns" />
+  <cdk-row *cdkRowDef="let row; columns: tableColumns;" />
 </cdk-table>
 
 <h2>Material Table</h2>
@@ -452,8 +464,8 @@
     <mat-cell *matCellDef="let element">{{element.symbol}}</mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="tableColumns"/>
-  <mat-row *matRowDef="let row; columns: tableColumns;"/>
+  <mat-header-row *matHeaderRowDef="tableColumns" />
+  <mat-row *matRowDef="let row; columns: tableColumns;" />
 </mat-table>
 
 <h2>Native table with sticky header and footer</h2>
@@ -541,9 +553,7 @@
 
 <h2>Badge</h2>
 
-<button mat-raised-button matBadge="99">
-  Clicky thing
-</button>
+<button mat-raised-button matBadge="99">Clicky thing</button>
 
 <h2>Drag and Drop</h2>
 <button cdkDrag>Drag me around</button>
@@ -569,27 +579,35 @@
 <google-map height="400px" width="750px" style="position: relative">
   <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
   <map-info-window>Hello</map-info-window>
-  <map-polyline [options]="{
+  <map-polyline
+    [options]="{
     path: [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}],
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-polyline>
-  <map-polygon [options]="{
+  }"
+  ></map-polyline>
+  <map-polygon
+    [options]="{
     paths: [{lat: 20, lng: 21}, {lat: 22, lng: 23}, {lat: 24, lng: 25}],
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-polygon>
-  <map-rectangle [options]="{
+  }"
+  ></map-polygon>
+  <map-rectangle
+    [options]="{
     bounds: {east: 30, north: 15, west: 10, south: -5},
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-rectangle>
-  <map-circle [options]="{
+  }"
+  ></map-rectangle>
+  <map-circle
+    [options]="{
     center: {lat: 19, lng: 20},
     radius: 500000,
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-circle>
+  }"
+  ></map-circle>
   <map-ground-overlay
     url="https://angular.io/assets/images/logos/angular/angular.svg"
     [bounds]="{
@@ -597,24 +615,33 @@
       north: 15,
       west: 10,
       south: -5
-    }"></map-ground-overlay>
-    <map-kml-layer
-      url="https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml"></map-kml-layer>
-    <map-traffic-layer></map-traffic-layer>
-    <map-transit-layer></map-transit-layer>
-    <map-bicycling-layer></map-bicycling-layer>
-    <map-heatmap-layer [data]="[
+    }"
+  ></map-ground-overlay>
+  <map-kml-layer
+    url="https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml"
+  ></map-kml-layer>
+  <map-traffic-layer></map-traffic-layer>
+  <map-transit-layer></map-transit-layer>
+  <map-bicycling-layer></map-bicycling-layer>
+  <map-heatmap-layer
+    [data]="[
       {lat: 37.782, lng: -122.447},
       {lat: 37.782, lng: -122.445},
       {lat: 37.782, lng: -122.443}
-    ]"></map-heatmap-layer>
+    ]"
+  ></map-heatmap-layer>
 
-    <map-marker-clusterer imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m">
-      <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
-      <map-marker [position]="{lat: 12, lng: 24}"></map-marker>
-      <map-marker [position]="{lat: 12, lng: 12}"></map-marker>
-    </map-marker-clusterer>
+  <map-marker-clusterer
+    imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+  >
+    <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
+    <map-marker [position]="{lat: 12, lng: 24}"></map-marker>
+    <map-marker [position]="{lat: 12, lng: 12}"></map-marker>
+  </map-marker-clusterer>
 </google-map>
+
+<h2>Popover edit</h2>
+<cdk-popover-edit-cdk-table-example></cdk-popover-edit-cdk-table-example>
 
 <!-- Element used to determine when rendering is done. -->
 <div class="render-marker"></div>
