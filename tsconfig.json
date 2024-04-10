@@ -36,7 +36,9 @@
       "@angular/material-luxon-adapter": ["./src/material-luxon-adapter"],
       "@angular/material-date-fns-adapter": ["./src/material-date-fns-adapter"],
       "@angular/components-examples": ["./src/components-examples"],
-      "@angular/components-examples/*": ["./src/components-examples/*"]
+      "@angular/components-examples/*": ["./src/components-examples/*"],
+      "@angular/google-maps": ["./src/google-maps"],
+      "@angular/youtube-player": ["./src/youtube-player"]
     }
   },
   "angularCompilerOptions": {
