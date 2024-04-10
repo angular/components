@@ -366,7 +366,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Sets the active item to the last enabled item in the list. */
   setLastItemActive(): void {
-    this._setActiveItemByIndex(this._items.length - 1, -1);
+    this._setActiveItemByIndex(this._getItemsArray().length - 1, -1);
   }
 
   /** Sets the active item to the next enabled item in the list. */
