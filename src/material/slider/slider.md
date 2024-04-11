@@ -10,8 +10,8 @@ in increments of `1`. These values can be changed by setting the `min`, `max`, a
 respectively. The initial value is set to the minimum value unless otherwise specified.
 
 ```html
-<mat-slider min="1" max="5" step="0.5" value="1.5">
-  <input matSliderThumb>
+<mat-slider min="1" max="5" step="0.5">
+  <input matSliderThumb value="1.5">
 </mat-slider>
 ```
 
