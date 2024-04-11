@@ -1,11 +1,11 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   fakeAsync,
   inject,
-  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {ContentObserver, MutationObserverFactory, ObserversModule} from './observe-content';
 
@@ -112,9 +112,9 @@ describe('Observe content directive', () => {
     }));
 
     it('should debounce the content changes', fakeAsync(() => {
-      invokeCallbacks();
-      invokeCallbacks();
-      invokeCallbacks();
+      invokeCallbacks([{type: 'fake'}]);
+      invokeCallbacks([{type: 'fake'}]);
+      invokeCallbacks([{type: 'fake'}]);
 
       tick(500);
       expect(fixture.componentInstance.spy).toHaveBeenCalledTimes(1);
@@ -166,7 +166,7 @@ describe('ContentObserver injectable', () => {
       expect(spy).not.toHaveBeenCalled();
 
       fixture.componentInstance.text = 'text';
-      invokeCallbacks();
+      invokeCallbacks([{type: 'fake'}]);
 
       expect(spy).toHaveBeenCalled();
     }));
@@ -186,18 +186,89 @@ describe('ContentObserver injectable', () => {
         expect(mof.create).toHaveBeenCalledTimes(1);
 
         fixture.componentInstance.text = 'text';
-        invokeCallbacks();
+        invokeCallbacks([{type: 'fake'}]);
 
         expect(spy).toHaveBeenCalledTimes(2);
 
         spy.calls.reset();
         sub1.unsubscribe();
         fixture.componentInstance.text = 'text text';
-        invokeCallbacks();
+        invokeCallbacks([{type: 'fake'}]);
 
         expect(spy).toHaveBeenCalledTimes(1);
       }),
     ));
+  });
+
+  describe('real behavior', () => {
+    let spy: jasmine.Spy;
+    let contentEl: HTMLElement;
+    let contentObserver: ContentObserver;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [ObserversModule, UnobservedComponentWithTextContent],
+      });
+
+      TestBed.compileComponents();
+      const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+      fixture.autoDetectChanges();
+      spy = jasmine.createSpy('content observer');
+      contentObserver = TestBed.inject(ContentObserver);
+      contentEl = fixture.componentInstance.contentEl.nativeElement;
+      contentObserver.observe(contentEl).subscribe(spy);
+    }));
+
+    it('should ignore addition or removal of comments', waitForAsync(async () => {
+      const comment = document.createComment('cool');
+      await new Promise(r => setTimeout(r));
+
+      spy.calls.reset();
+      contentEl.appendChild(comment);
+      await new Promise(r => setTimeout(r));
+      expect(spy).not.toHaveBeenCalled();
+
+      comment.remove();
+      await new Promise(r => setTimeout(r));
+      expect(spy).not.toHaveBeenCalled();
+    }));
+
+    it('should not ignore addition or removal of text', waitForAsync(async () => {
+      const text = document.createTextNode('cool');
+      await new Promise(r => setTimeout(r));
+
+      spy.calls.reset();
+      contentEl.appendChild(text);
+      await new Promise(r => setTimeout(r));
+      expect(spy).toHaveBeenCalled();
+
+      spy.calls.reset();
+      text.remove();
+      await new Promise(r => setTimeout(r));
+      expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should ignore comment content change', waitForAsync(async () => {
+      const comment = document.createComment('cool');
+      contentEl.appendChild(comment);
+      await new Promise(r => setTimeout(r));
+
+      spy.calls.reset();
+      comment.textContent = 'beans';
+      await new Promise(r => setTimeout(r));
+      expect(spy).not.toHaveBeenCalled();
+    }));
+
+    it('should not ignore text content change', waitForAsync(async () => {
+      const text = document.createTextNode('cool');
+      contentEl.appendChild(text);
+      await new Promise(r => setTimeout(r));
+
+      spy.calls.reset();
+      text.textContent = 'beans';
+      await new Promise(r => setTimeout(r));
+      expect(spy).toHaveBeenCalled();
+    }));
   });
 });
 
