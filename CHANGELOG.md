@@ -1,3 +1,18 @@
+<a name="18.0.0-next.4"></a>
+# 18.0.0-next.4 "gold-gold" (2024-04-11)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [da302d2e6d](https://github.com/angular/components/commit/da302d2e6d4d55d3261c21654b968d2982eed922) | fix | **drag-drop:** make sure event is cancelable before calling "preventDefault" ([#28825](https://github.com/angular/components/pull/28825)) |
+| [d91d0d424b](https://github.com/angular/components/commit/d91d0d424b043c4da7b69d296967e62a751eac23) | fix | **scrolling:** fix virtual scrolling jankiness with run coalescing ([#28846](https://github.com/angular/components/pull/28846)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7165a45efa](https://github.com/angular/components/commit/7165a45efa9b9cdfefd991459d2f23849c601159) | fix | **list:** nav list item border-radius ([#28789](https://github.com/angular/components/pull/28789)) |
+| [752f5607cc](https://github.com/angular/components/commit/752f5607ccf1fe4890984d62e4358b758ad9d004) | fix | **menu:** invert arrow in RTL ([#28830](https://github.com/angular/components/pull/28830)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.4"></a>
 # 17.3.4 "aluminum-arrow" (2024-04-11)
 ### cdk
