@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty, coerceElement, NumberInput} from '@angular/cdk/coercion';
+import {NumberInput, coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Directive,
@@ -20,8 +20,35 @@ import {
   Output,
   booleanAttribute,
 } from '@angular/core';
-import {Observable, Subject, Subscription, Observer} from 'rxjs';
-import {debounceTime} from 'rxjs/operators';
+import {Observable, Observer, Subject, Subscription} from 'rxjs';
+import {debounceTime, filter, map} from 'rxjs/operators';
+
+// Angular may add, remove, or edit comment nodes during change detection. We don't care about
+// these changes because they don't affect the user-preceived content, and worse it can cause
+// infinite change detection cycles where the change detection updates a comment, triggering the
+// MutationObserver, triggering another change detection and kicking the cycle off again.
+function shouldIgnoreRecord(record: MutationRecord) {
+  // Ignore changes to comment text.
+  if (record.type === 'characterData' && record.target instanceof Comment) {
+    return true;
+  }
+  // Ignore addition / removal of comments.
+  if (record.type === 'childList') {
+    for (let i = 0; i < record.addedNodes.length; i++) {
+      if (!(record.addedNodes[i] instanceof Comment)) {
+        return false;
+      }
+    }
+    for (let i = 0; i < record.removedNodes.length; i++) {
+      if (!(record.removedNodes[i] instanceof Comment)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  // Observe everything else.
+  return false;
+}
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
@@ -70,7 +97,12 @@ export class ContentObserver implements OnDestroy {
 
     return new Observable((observer: Observer<MutationRecord[]>) => {
       const stream = this._observeElement(element);
-      const subscription = stream.subscribe(observer);
+      const subscription = stream
+        .pipe(
+          map(records => records.filter(record => !shouldIgnoreRecord(record))),
+          filter(records => !!records.length),
+        )
+        .subscribe(observer);
 
       return () => {
         subscription.unsubscribe();
