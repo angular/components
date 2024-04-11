@@ -1,3 +1,17 @@
+<a name="17.3.4"></a>
+# 17.3.4 "aluminum-arrow" (2024-04-11)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [09dcbd2ecf](https://github.com/angular/components/commit/09dcbd2ecfa4b9c93835fa95ce9c917f02858471) | fix | **drag-drop:** make sure event is cancelable before calling "preventDefault" ([#28825](https://github.com/angular/components/pull/28825)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [36a1d45e4e](https://github.com/angular/components/commit/36a1d45e4e0aabea40d6addfa4a11cec51c71f64) | fix | **list:** nav list item border-radius ([#28789](https://github.com/angular/components/pull/28789)) |
+| [317327d82b](https://github.com/angular/components/commit/317327d82ba3b67d14a135dde865f221f475647c) | fix | **menu:** invert arrow in RTL ([#28830](https://github.com/angular/components/pull/28830)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-next.3"></a>
 # 18.0.0-next.3 "plastic-spoon" (2024-04-03)
 ### material
