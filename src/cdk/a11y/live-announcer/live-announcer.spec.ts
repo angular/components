@@ -7,8 +7,8 @@ import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {
-  LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
+  LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LiveAnnouncerDefaultOptions,
 } from './live-announcer-tokens';
 
@@ -291,7 +291,7 @@ describe('CdkAriaLive', () => {
   let announcerSpy: jasmine.Spy;
   let fixture: ComponentFixture<DivWithCdkAriaLive>;
 
-  const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb());
+  const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb([{type: 'fake'}]));
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
