@@ -8,14 +8,13 @@ import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 
 // @public
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
-    constructor(_contentObserver: ContentObserver, _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
+    constructor(_contentObserver: ContentObserver, _elementRef: ElementRef<HTMLElement>);
     get debounce(): number;
     set debounce(value: NumberInput);
     get disabled(): boolean;

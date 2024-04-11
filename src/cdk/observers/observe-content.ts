@@ -15,7 +15,6 @@ import {
   Injectable,
   Input,
   NgModule,
-  NgZone,
   OnDestroy,
   Output,
   booleanAttribute,
@@ -202,7 +201,6 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   constructor(
     private _contentObserver: ContentObserver,
     private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
   ) {}
 
   ngAfterContentInit() {
@@ -219,15 +217,9 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     this._unsubscribe();
     const stream = this._contentObserver.observe(this._elementRef);
 
-    // TODO(mmalerba): We shouldn't be emitting on this @Output() outside the zone.
-    // Consider brining it back inside the zone next time we're making breaking changes.
-    // Bringing it back inside can cause things like infinite change detection loops and changed
-    // after checked errors if people's code isn't handling it properly.
-    this._ngZone.runOutsideAngular(() => {
-      this._currentSubscription = (
-        this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream
-      ).subscribe(this.event);
-    });
+    this._currentSubscription = (
+      this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream
+    ).subscribe(this.event);
   }
 
   private _unsubscribe() {
