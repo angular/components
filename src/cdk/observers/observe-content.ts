@@ -15,9 +15,11 @@ import {
   Injectable,
   Input,
   NgModule,
+  NgZone,
   OnDestroy,
   Output,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Observable, Observer, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
@@ -73,6 +75,8 @@ export class ContentObserver implements OnDestroy {
     }
   >();
 
+  private _ngZone = inject(NgZone);
+
   constructor(private _mutationObserverFactory: MutationObserverFactory) {}
 
   ngOnDestroy() {
@@ -101,7 +105,11 @@ export class ContentObserver implements OnDestroy {
           map(records => records.filter(record => !shouldIgnoreRecord(record))),
           filter(records => !!records.length),
         )
-        .subscribe(observer);
+        .subscribe(records => {
+          this._ngZone.run(() => {
+            observer.next(records);
+          });
+        });
 
       return () => {
         subscription.unsubscribe();
@@ -115,21 +123,23 @@ export class ContentObserver implements OnDestroy {
    * new one if not.
    */
   private _observeElement(element: Element): Subject<MutationRecord[]> {
-    if (!this._observedElements.has(element)) {
-      const stream = new Subject<MutationRecord[]>();
-      const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
-      if (observer) {
-        observer.observe(element, {
-          characterData: true,
-          childList: true,
-          subtree: true,
-        });
+    return this._ngZone.runOutsideAngular(() => {
+      if (!this._observedElements.has(element)) {
+        const stream = new Subject<MutationRecord[]>();
+        const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
+        if (observer) {
+          observer.observe(element, {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          });
+        }
+        this._observedElements.set(element, {observer, stream, count: 1});
+      } else {
+        this._observedElements.get(element)!.count++;
       }
-      this._observedElements.set(element, {observer, stream, count: 1});
-    } else {
-      this._observedElements.get(element)!.count++;
-    }
-    return this._observedElements.get(element)!.stream;
+      return this._observedElements.get(element)!.stream;
+    });
   }
 
   /**
