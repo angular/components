@@ -34,11 +34,9 @@ import {
   ThemePalette,
 } from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {coerceStringArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
-import {NgClass} from '@angular/common';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -119,16 +117,9 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
   animations: [panelAnimation],
   standalone: true,
-  imports: [NgClass],
 })
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _activeOptionChanges = Subscription.EMPTY;
-
-  /** Class to apply to the panel when it's visible. */
-  private _visibleClass = 'mat-mdc-autocomplete-visible';
-
-  /** Class to apply to the panel when it's hidden. */
-  private _hiddenClass = 'mat-mdc-autocomplete-hidden';
 
   /** Emits when the panel animation is done. Null if the panel doesn't animate. */
   _animationDone = new EventEmitter<AnimationEvent>();
@@ -148,10 +139,10 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   /** @docs-private Sets the theme color of the panel. */
   _setColor(value: ThemePalette) {
     this._color = value;
-    this._setThemeClasses(this._classList);
+    this._changeDetectorRef.markForCheck();
   }
   /** @docs-private theme color of the panel */
-  private _color: ThemePalette;
+  protected _color: ThemePalette;
 
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
@@ -224,23 +215,10 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
    */
   @Input('class')
   set classList(value: string | string[]) {
-    if (value && value.length) {
-      this._classList = coerceStringArray(value).reduce(
-        (classList, className) => {
-          classList[className] = true;
-          return classList;
-        },
-        {} as {[key: string]: boolean},
-      );
-    } else {
-      this._classList = {};
-    }
-
-    this._setVisibilityClasses(this._classList);
-    this._setThemeClasses(this._classList);
+    this._classList = value;
     this._elementRef.nativeElement.className = '';
   }
-  _classList: {[key: string]: boolean} = {};
+  _classList: string | string[];
 
   /** Whether checkmark indicator for single-selection options is hidden. */
   @Input({transform: booleanAttribute})
@@ -326,7 +304,6 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   /** Panel should hide itself when the option list is empty. */
   _setVisibility() {
     this.showPanel = !!this.options.length;
-    this._setVisibilityClasses(this._classList);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -344,19 +321,6 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
 
     const labelExpression = labelId ? labelId + ' ' : '';
     return this.ariaLabelledby ? labelExpression + this.ariaLabelledby : labelId;
-  }
-
-  /** Sets the autocomplete visibility classes on a classlist based on the panel is visible. */
-  private _setVisibilityClasses(classList: {[key: string]: boolean}) {
-    classList[this._visibleClass] = this.showPanel;
-    classList[this._hiddenClass] = !this.showPanel;
-  }
-
-  /** Sets the theming classes on a classlist based on the theme of the panel. */
-  private _setThemeClasses(classList: {[key: string]: boolean}) {
-    classList['mat-primary'] = this._color === 'primary';
-    classList['mat-warn'] = this._color === 'warn';
-    classList['mat-accent'] = this._color === 'accent';
   }
 
   // `skipPredicate` determines if key manager should avoid putting a given option in the tab
