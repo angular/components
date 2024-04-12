@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {BACKSPACE, ENTER, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   Directive,
   ElementRef,
@@ -18,11 +19,10 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
-import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
 
 /** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
@@ -155,6 +155,9 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
       if (!event.repeat) {
         this._chipGrid._focusLastChip();
       }
+      event.preventDefault();
+    } else if (event.keyCode === ENTER) {
+      // Prevent adding both the search string and the selected suggestion
       event.preventDefault();
     } else {
       this._emitChipEnd(event);
