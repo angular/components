@@ -28,7 +28,7 @@ theme configuration object. The configuration object may have the following prop
 | Property     | Description                                                                                                     |
 | ------------ | --------------------------------------------------------------------------------------------------------------- |
 | `color`      | [Optional] A map of color options. See [customizing your colors](#customizing-your-colors) for details.         |
-| `typography` | [Optional] A map of color options. See [customizing your typography](#customizing-your-typography) for details. |
+| `typography` | [Optional] A map of typography options. See [customizing your typography](#customizing-your-typography) for details. |
 | `density`    | [Optional] A map of density options. See [customizing your density](#customizing-your-density) for details.     |
 
 <!-- TODO(mmalerba): Upgrade to embedded example -->
