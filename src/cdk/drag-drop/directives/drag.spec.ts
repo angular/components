@@ -6527,6 +6527,46 @@ describe('CdkDrag', () => {
       });
     }));
 
+    it('should prevent selection at the shadow root level', fakeAsync(() => {
+      // This test is only relevant for Shadow DOM-supporting browsers.
+      if (!_supportsShadowDom()) {
+        return;
+      }
+
+      const fixture = createComponent(
+        ConnectedDropZones,
+        [],
+        undefined,
+        [],
+        ViewEncapsulation.ShadowDom,
+      );
+      fixture.detectChanges();
+
+      const shadowRoot = fixture.nativeElement.shadowRoot;
+      const item = fixture.componentInstance.groupedDragItems[0][1];
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.detectChanges();
+
+      const initialSelectStart = dispatchFakeEvent(
+        shadowRoot,
+        'selectstart',
+      );
+      fixture.detectChanges();
+      expect(initialSelectStart.defaultPrevented).toBe(true);
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+
+      const afterDropSelectStart = dispatchFakeEvent(
+        shadowRoot,
+        'selectstart',
+      );
+      fixture.detectChanges();
+      expect(afterDropSelectStart.defaultPrevented).toBe(false);
+    }));
+
     it('should not throw if its next sibling is removed while dragging', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZonesWithSingleItems);
       fixture.detectChanges();
