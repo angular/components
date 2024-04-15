@@ -72,10 +72,9 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     autoSelectActiveOption: boolean;
     set classList(value: string | string[]);
     // (undocumented)
-    _classList: {
-        [key: string]: boolean;
-    };
+    _classList: string | string[];
     readonly closed: EventEmitter<void>;
+    protected _color: ThemePalette;
     // (undocumented)
     protected _defaults: MatAutocompleteDefaultOptions;
     disableRipple: boolean;
