@@ -51,7 +51,6 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {matMenuAnimations} from './menu-animations';
-import {NgClass} from '@angular/common';
 
 let menuPanelUid = 0;
 
@@ -113,7 +112,6 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   animations: [matMenuAnimations.transformMenu, matMenuAnimations.fadeInItems],
   providers: [{provide: MAT_MENU_PANEL, useExisting: MatMenu}],
   standalone: true,
-  imports: [NgClass],
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
@@ -130,7 +128,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   /** Only the direct descendant menu items. */
   _directDescendantItems = new QueryList<MatMenuItem>();
 
-  /** Config object to be passed into the menu's ngClass */
+  /** Classes to be applied to the menu panel. */
   _classList: {[key: string]: boolean} = {};
 
   /** Current state of the panel animation. */
@@ -225,10 +223,11 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   @Input('class')
   set panelClass(classes: string) {
     const previousPanelClass = this._previousPanelClass;
+    const newClassList = {...this._classList};
 
     if (previousPanelClass && previousPanelClass.length) {
       previousPanelClass.split(' ').forEach((className: string) => {
-        this._classList[className] = false;
+        newClassList[className] = false;
       });
     }
 
@@ -236,11 +235,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
     if (classes && classes.length) {
       classes.split(' ').forEach((className: string) => {
-        this._classList[className] = true;
+        newClassList[className] = true;
       });
 
       this._elementRef.nativeElement.className = '';
     }
+
+    this._classList = newClassList;
   }
   private _previousPanelClass: string;
 
@@ -478,12 +479,15 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     });
 
     if (!customElevation || customElevation === this._previousElevation) {
+      const newClassList = {...this._classList};
+
       if (this._previousElevation) {
-        this._classList[this._previousElevation] = false;
+        newClassList[this._previousElevation] = false;
       }
 
-      this._classList[newElevation] = true;
+      newClassList[newElevation] = true;
       this._previousElevation = newElevation;
+      this._classList = newClassList;
     }
   }
 
@@ -495,11 +499,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * @docs-private
    */
   setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
-    const classes = this._classList;
-    classes['mat-menu-before'] = posX === 'before';
-    classes['mat-menu-after'] = posX === 'after';
-    classes['mat-menu-above'] = posY === 'above';
-    classes['mat-menu-below'] = posY === 'below';
+    this._classList = {
+      ...this._classList,
+      ['mat-menu-before']: posX === 'before',
+      ['mat-menu-after']: posX === 'after',
+      ['mat-menu-above']: posY === 'above',
+      ['mat-menu-below']: posY === 'below',
+    };
 
     // @breaking-change 15.0.0 Remove null check for `_changeDetectorRef`.
     this._changeDetectorRef?.markForCheck();
