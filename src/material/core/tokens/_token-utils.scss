@@ -200,9 +200,13 @@ $_component-prefix: null;
   }
   $overrides: map.get($tokens, list.append($prefix, $color-variant));
   @if $overrides == null {
-    @error #{'Invalid color variant: '}#{$color-variant}#{'. Supported color variants are: '}#{
-      _supported-color-variants($tokens, $prefix)
-    }#{'.'};
+    $variants: _supported-color-variants($tokens, $prefix);
+    $secondary-message: if($variants == (),
+      'Mixin does not support color variants',
+      'Supported color variants are: #{$variants}'
+    );
+
+    @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
   }
   @return map.merge($values, $overrides);
 }
