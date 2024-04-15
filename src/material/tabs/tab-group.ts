@@ -37,7 +37,6 @@ import {startWith} from 'rxjs/operators';
 import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
-import {NgClass} from '@angular/common';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
 
@@ -89,7 +88,6 @@ const ENABLE_BACKGROUND_INPUT = true;
     MatTabHeader,
     MatTabLabelWrapper,
     CdkMonitorFocus,
-    NgClass,
     MatRipple,
     CdkPortalOutlet,
     MatTabBody,

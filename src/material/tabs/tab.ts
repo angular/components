@@ -90,16 +90,10 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    */
   @Input('aria-labelledby') ariaLabelledby: string;
 
-  /**
-   * Classes to be passed to the tab label inside the mat-tab-header container.
-   * Supports string and string array values, same as `ngClass`.
-   */
+  /** Classes to be passed to the tab label inside the mat-tab-header container. */
   @Input() labelClass: string | string[];
 
-  /**
-   * Classes to be passed to the tab mat-tab-body container.
-   * Supports string and string array values, same as `ngClass`.
-   */
+  /** Classes to be passed to the tab mat-tab-body container. */
   @Input() bodyClass: string | string[];
 
   /** Portal that will be the hosted content of the tab */
