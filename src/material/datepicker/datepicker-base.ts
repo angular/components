@@ -72,7 +72,7 @@ import {
   MatDateRangeSelectionStrategy,
 } from './date-range-selection-strategy';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {DOCUMENT, NgClass} from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import {CdkTrapFocus} from '@angular/cdk/a11y';
 
@@ -133,7 +133,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CdkTrapFocus, MatCalendar, NgClass, CdkPortalOutlet, MatButton],
+  imports: [CdkTrapFocus, MatCalendar, CdkPortalOutlet, MatButton],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   implements OnInit, AfterViewInit, OnDestroy
@@ -444,10 +444,7 @@ export abstract class MatDatepickerBase<
   /** Emits when the datepicker has been closed. */
   @Output('closed') readonly closedStream = new EventEmitter<void>();
 
-  /**
-   * Classes to be passed to the date picker panel.
-   * Supports string and string array values, similar to `ngClass`.
-   */
+  /** Classes to be passed to the date picker panel. */
   @Input()
   get panelClass(): string | string[] {
     return this._panelClass;
