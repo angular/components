@@ -132,7 +132,7 @@ export function generateSCSSTheme(
   // from the palettes is a private function
   for (const themeType of themeTypes) {
     scss = scss.concat([
-      '$m3-' + themeType + '-theme: matx.define-theme((',
+      '$' + themeType + '-theme: matx.define-theme((',
       '  color: (',
       '    theme-type: ' + themeType + ',',
       '    primary: $_primary,',

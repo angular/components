@@ -288,14 +288,14 @@ $_rest: (
 $_primary: map.merge(map.get($_palettes, primary), $_rest);
 $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
-$m3-light-theme: matx.define-theme((
+$light-theme: matx.define-theme((
   color: (
     theme-type: light,
     primary: $_primary,
     tertiary: $_tertiary,
   )
 ));
-$m3-dark-theme: matx.define-theme((
+$dark-theme: matx.define-theme((
   color: (
     theme-type: dark,
     primary: $_primary,
@@ -332,11 +332,11 @@ describe('material-m3-theme-schematic', () => {
         ${content}
 
         html {
-          @if variable-exists(m3-light-theme) {
-            @include mat.all-component-colors($m3-light-theme);
+          @if variable-exists(light-theme) {
+            @include mat.all-component-colors($light-theme);
           }
-          @if variable-exists(m3-dark-theme) {
-            @include mat.all-component-colors($m3-dark-theme);
+          @if variable-exists(dark-theme) {
+            @include mat.all-component-colors($dark-theme);
           }
         }
         `,

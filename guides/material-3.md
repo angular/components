@@ -78,7 +78,7 @@ used with the `primary` and `tertiary` options:
 - `$m3-violet-palette`
 - `$m3-rose-palette`
 
-For more customization, you can run a schematic to generate a scss file with
+For more customization, you can run a [schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md) to generate a scss file with
 theme(s) that use custom colors. You can specify a color to represent the
 primary color palette and the rest of the color palettes (secondary, tertiary,
 neutral) are generated from Material. The generated color palettes are
@@ -93,16 +93,23 @@ Material has more detailed guidance for [accessible design](https://m3.material.
 ng generate @angular/material:m3-theme
 ```
 
-You can then import the generated theme scss file to use `$m3-light-theme` and/or
-`$m3-dark-theme` to where you apply your themes.
+You can then import the generated theme scss file to use `$light-theme` and/or
+`$dark-theme` to where you apply your themes.
 
 ```scss
-@import './path/to/m3-theme';
+@use '@angular/material' as mat;
+@use './path/to/m3-theme' as m3;
 
-html {
-  // Apply the base theme at the root, so it will be inherited by the whole app.
-  @include mat.all-component-themes($m3-light-theme);
-  @include mat.all-component-themes($m3-dark-theme);
+// Apply the light theme by default
+@include mat.core-theme(m3.$light-theme);
+@include mat.button-theme(m3.$light-theme);
+
+// Apply the dark theme only when the user prefers dark themes.
+@media (prefers-color-scheme: dark) {
+ // Use the `-color` mixins to only apply color styles without reapplying the same
+ // typography and density styles.
+ @include mat.core-color(m3.$dark-theme);
+ @include mat.button-color(m3.$dark-theme);
 }
 ```
 
@@ -296,6 +303,7 @@ provided by Angular Material to access properties of the theme.
 ```
 
 ### Reading tonal palette colors
+
 To read a
 [tonal palette color](https://m3.material.io/styles/color/system/how-the-system-works#3ce9da92-a118-4692-8b2c-c5c52a413fa6)
 from the theme, use the `get-theme-color` function with three arguments:
@@ -454,11 +462,6 @@ $theme: matx.define-theme();
 
 ## FAQ
 
-### Can I use colors other than the pre-defined Material 3 palettes?
-
-Currently, we only offer predefined palettes, but we plan to add support for using custom generated
-palettes as part of making the M3 APIs stable and available in `@angular/material`.
-
 ### Can I depend on the CSS custom property names being stable?
 
 We may make changes to the custom property names before moving the API out of experimental, but
@@ -466,6 +469,7 @@ these changes would be accompanied by a schematic to find & replace the old name
 across your app.
 
 ### Are the Material 2 styles and APIs going away?
+
 Material 2 styles and their APIs will continue to be supported, and we do not have any immediate
 plans to deprecate them. We understand that it will take time for applications to switch to the
 latest Material 3 styles, and we want to provide enough time for migrations. When we do decide to
