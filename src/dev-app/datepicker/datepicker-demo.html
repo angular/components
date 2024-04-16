@@ -91,18 +91,18 @@
         </mat-datepicker-actions>
       }
     </mat-datepicker>
-    @if (resultPickerModel.hasError('matDatepickerParse')) {
+    @if (resultPickerModel.errors?.['matDatepickerParse']) {
       <mat-error>
         "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!
       </mat-error>
     }
-    @if (resultPickerModel.hasError('matDatepickerMin')) {
+    @if (resultPickerModel.errors?.['matDatepickerMin']) {
       <mat-error>Too early!</mat-error>
     }
-    @if (resultPickerModel.hasError('matDatepickerMax')) {
+    @if (resultPickerModel.errors?.['matDatepickerMax']) {
       <mat-error>Too late!</mat-error>
     }
-    @if (resultPickerModel.hasError('matDatepickerFilter')) {
+    @if (resultPickerModel.errors?.['matDatepickerFilter']) {
       <mat-error>Date unavailable!</mat-error>
     }
   </mat-form-field>

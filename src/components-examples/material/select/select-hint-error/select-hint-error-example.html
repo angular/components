@@ -7,7 +7,7 @@
       <mat-option [value]="animal">{{animal.name}}</mat-option>
     }
   </mat-select>
-  @if (animalControl.hasError('required')) {
+  @if (animalControl.errors?.['required']) {
     <mat-error>Please choose an animal</mat-error>
   }
   <mat-hint>{{animalControl.value?.sound}}</mat-hint>
@@ -22,7 +22,7 @@
     <option value="mercedes">Mercedes</option>
     <option value="audi">Audi</option>
   </select>
-  @if (selectFormControl.hasError('required')) {
+  @if (selectFormControl.errors?.['required']) {
     <mat-error>This field is required</mat-error>
   }
   <mat-hint>You can pick up your favorite car here</mat-hint>

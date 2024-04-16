@@ -73,10 +73,10 @@
       <mat-form-field>
         <mat-label>Email</mat-label>
         <input matInput [formControl]="emailFormControl">
-        @if (emailFormControl.hasError('required')) {
+        @if (emailFormControl.errors?.['required']) {
           <mat-error>This field is required</mat-error>
         }
-        @if (emailFormControl.hasError('pattern')) {
+        @if (emailFormControl.errors?.['pattern']) {
           <mat-error>Please enter a valid email address</mat-error>
         }
       </mat-form-field>

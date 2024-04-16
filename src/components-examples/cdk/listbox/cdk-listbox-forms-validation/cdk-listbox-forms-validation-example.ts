@@ -42,13 +42,13 @@ export class CdkListboxFormsValidationExample {
 
   getErrors() {
     const errors = [];
-    if (this.signCtrl.hasError('required')) {
+    if (this.signCtrl.errors?.['required']) {
       errors.push('You must enter your zodiac sign');
     }
-    if (this.signCtrl.hasError('cdkListboxUnexpectedMultipleValues')) {
+    if (this.signCtrl.errors?.['cdkListboxUnexpectedMultipleValues']) {
       errors.push('You can only select one zodiac sign');
     }
-    if (this.signCtrl.hasError('cdkListboxUnexpectedOptionValues')) {
+    if (this.signCtrl.errors?.['cdkListboxUnexpectedOptionValues']) {
       const invalidOptions = this.signCtrl.getError('cdkListboxUnexpectedOptionValues').values;
       errors.push(`You entered an invalid zodiac sign: ${invalidOptions[0]}`);
     }

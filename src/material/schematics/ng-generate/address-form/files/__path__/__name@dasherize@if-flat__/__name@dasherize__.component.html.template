@@ -15,7 +15,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="First name" formControlName="firstName">
-            @if (addressForm.controls['firstName'].hasError('required')) {
+            @if (addressForm.controls['firstName'].errors?.['required']) {
               <mat-error>First name is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -23,7 +23,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="Last name" formControlName="lastName">
-            @if (addressForm.controls['lastName'].hasError('required')) {
+            @if (addressForm.controls['lastName'].errors?.['required']) {
               <mat-error>Last name is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -33,7 +33,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <textarea matInput placeholder="Address" formControlName="address"></textarea>
-            @if (addressForm.controls['address'].hasError('required')) {
+            @if (addressForm.controls['address'].errors?.['required']) {
               <mat-error>Address is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -56,7 +56,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="City" formControlName="city">
-            @if (addressForm.controls['city'].hasError('required')) {
+            @if (addressForm.controls['city'].errors?.['required']) {
               <mat-error>City is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -68,7 +68,7 @@
                 <mat-option [value]="state.abbreviation">{{ state.name }}</mat-option>
               }
             </mat-select>
-            @if (addressForm.controls['state'].hasError('required')) {
+            @if (addressForm.controls['state'].errors?.['required']) {
               <mat-error>State is <strong>required</strong></mat-error>
             }
           </mat-form-field>

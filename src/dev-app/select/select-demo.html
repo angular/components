@@ -356,7 +356,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
-        @if (selectFormControl.hasError('required')) {
+        @if (selectFormControl.errors?.['required']) {
           <mat-error>This field is required</mat-error>
         }
         <mat-hint>You can pick up your favorite car here</mat-hint>
@@ -371,7 +371,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
-        @if (selectFormControl.hasError('required')) {
+        @if (selectFormControl.errors?.['required']) {
           <mat-error>This field is required</mat-error>
         }
         <mat-hint>You can pick up your favorite car here</mat-hint>

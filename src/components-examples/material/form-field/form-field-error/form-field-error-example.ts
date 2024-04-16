@@ -25,9 +25,9 @@ export class FormFieldErrorExample {
   }
 
   updateErrorMessage() {
-    if (this.email.hasError('required')) {
+    if (this.email.errors?.['required']) {
       this.errorMessage = 'You must enter a value';
-    } else if (this.email.hasError('email')) {
+    } else if (this.email.errors?.['email']) {
       this.errorMessage = 'Not a valid email';
     } else {
       this.errorMessage = '';

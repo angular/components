@@ -7,10 +7,10 @@
     <mat-option value="invalid">Invalid option</mat-option>
   </mat-select>
   <mat-hint>Errors appear instantly!</mat-hint>
-  @if (selected.hasError('required')) {
+  @if (selected.errors?.['required']) {
     <mat-error>You must make a selection</mat-error>
   }
-  @if (selected.hasError('pattern') && !selected.hasError('required')) {
+  @if (selected.errors?.['pattern'] && !selected.errors?.['required']) {
     <mat-error>Your selection is invalid</mat-error>
   }
 </mat-form-field>
@@ -23,10 +23,10 @@
     <option value="valid" selected>Valid option</option>
     <option value="invalid">Invalid option</option>
   </select>
-  @if (nativeSelectFormControl.hasError('required')) {
+  @if (nativeSelectFormControl.errors?.['required']) {
     <mat-error>You must make a selection</mat-error>
   }
-  @if (nativeSelectFormControl.hasError('pattern') && !nativeSelectFormControl.hasError('required')) {
+  @if (nativeSelectFormControl.errors?.['pattern'] && !nativeSelectFormControl.errors?.['required']) {
     <mat-error>Your selection is invalid</mat-error>
   }
 </mat-form-field>

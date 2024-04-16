@@ -4,10 +4,10 @@
     <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
            placeholder="Ex. pat@example.com">
     <mat-hint>Errors appear instantly!</mat-hint>
-    @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+    @if (emailFormControl.errors?.['email'] && !emailFormControl.errors?.['required']) {
       <mat-error>Please enter a valid email address</mat-error>
     }
-    @if (emailFormControl.hasError('required')) {
+    @if (emailFormControl.errors?.['required']) {
       <mat-error>Email is <strong>required</strong></mat-error>
     }
   </mat-form-field>
