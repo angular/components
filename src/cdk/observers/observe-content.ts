@@ -19,6 +19,7 @@ import {
   OnDestroy,
   Output,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Observable, Observer, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
@@ -74,6 +75,8 @@ export class ContentObserver implements OnDestroy {
     }
   >();
 
+  private _ngZone = inject(NgZone);
+
   constructor(private _mutationObserverFactory: MutationObserverFactory) {}
 
   ngOnDestroy() {
@@ -102,7 +105,11 @@ export class ContentObserver implements OnDestroy {
           map(records => records.filter(record => !shouldIgnoreRecord(record))),
           filter(records => !!records.length),
         )
-        .subscribe(observer);
+        .subscribe(records => {
+          this._ngZone.run(() => {
+            observer.next(records);
+          });
+        });
 
       return () => {
         subscription.unsubscribe();
@@ -116,21 +123,23 @@ export class ContentObserver implements OnDestroy {
    * new one if not.
    */
   private _observeElement(element: Element): Subject<MutationRecord[]> {
-    if (!this._observedElements.has(element)) {
-      const stream = new Subject<MutationRecord[]>();
-      const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
-      if (observer) {
-        observer.observe(element, {
-          characterData: true,
-          childList: true,
-          subtree: true,
-        });
+    return this._ngZone.runOutsideAngular(() => {
+      if (!this._observedElements.has(element)) {
+        const stream = new Subject<MutationRecord[]>();
+        const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
+        if (observer) {
+          observer.observe(element, {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          });
+        }
+        this._observedElements.set(element, {observer, stream, count: 1});
+      } else {
+        this._observedElements.get(element)!.count++;
       }
-      this._observedElements.set(element, {observer, stream, count: 1});
-    } else {
-      this._observedElements.get(element)!.count++;
-    }
-    return this._observedElements.get(element)!.stream;
+      return this._observedElements.get(element)!.stream;
+    });
   }
 
   /**
@@ -202,7 +211,6 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   constructor(
     private _contentObserver: ContentObserver,
     private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
   ) {}
 
   ngAfterContentInit() {
@@ -219,15 +227,9 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     this._unsubscribe();
     const stream = this._contentObserver.observe(this._elementRef);
 
-    // TODO(mmalerba): We shouldn't be emitting on this @Output() outside the zone.
-    // Consider brining it back inside the zone next time we're making breaking changes.
-    // Bringing it back inside can cause things like infinite change detection loops and changed
-    // after checked errors if people's code isn't handling it properly.
-    this._ngZone.runOutsideAngular(() => {
-      this._currentSubscription = (
-        this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream
-      ).subscribe(this.event);
-    });
+    this._currentSubscription = (
+      this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream
+    ).subscribe(this.event);
   }
 
   private _unsubscribe() {
