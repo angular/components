@@ -98,7 +98,7 @@
     <div>
       <label for="polyline-checkbox">
         Toggle Polyline
-        <input type="checkbox" (click)="togglePolylineDisplay()">
+        <input type="checkbox" [(ngModel)]="isPolylineDisplayed">
       </label>
     </div>
     <div>
@@ -106,14 +106,15 @@
         Toggle Editable Polyline
         <input type="checkbox"
               [disabled]="!isPolylineDisplayed"
-              (click)="toggleEditablePolyline()">
+              [ngModel]="polylineOptions.editable"
+              (ngModelChange)="editablePolylineChanged($event)">
       </label>
     </div>
 
     <div>
       <label for="polygon-checkbox">
         Toggle Polygon
-        <input type="checkbox" (click)="togglePolygonDisplay()">
+        <input type="checkbox" [(ngModel)]="isPolygonDisplayed">
       </label>
     </div>
     <div>
@@ -121,14 +122,15 @@
         Toggle Editable Polygon
         <input type="checkbox"
               [disabled]="!isPolygonDisplayed"
-              (click)="toggleEditablePolygon()">
+              [ngModel]="polygonOptions.editable"
+              (ngModelChange)="editablePolygonChanged($event)">
       </label>
     </div>
 
     <div>
       <label for="rectangle-checkbox">
         Toggle Rectangle
-        <input type="checkbox" (click)="toggleRectangleDisplay()">
+        <input type="checkbox" [(ngModel)]="isRectangleDisplayed">
       </label>
     </div>
     <div>
@@ -136,27 +138,32 @@
         Toggle Editable Rectangle
         <input type="checkbox"
               [disabled]="!isRectangleDisplayed"
-              (click)="toggleEditableRectangle()">
+              [ngModel]="rectangleOptions.editable"
+              (ngModelChange)="editableRectangleChanged($event)">
       </label>
     </div>
 
     <div>
       <label for="circle-checkbox">
         Toggle Circle
-        <input type="checkbox" (click)="toggleCircleDisplay()">
+        <input type="checkbox" [(ngModel)]="isCircleDisplayed">
       </label>
     </div>
     <div>
       <label for="editable-circle-checkbox">
         Toggle Editable Circle
-        <input type="checkbox" [disabled]="!isCircleDisplayed" (click)="toggleEditableCircle()">
+        <input
+          type="checkbox"
+          [disabled]="!isCircleDisplayed"
+          [ngModel]="circleOptions.editable"
+          (ngModelChange)="editableCircleChanged($event)">
       </label>
     </div>
 
     <div>
       <label for="ground-overlay-checkbox">
         Toggle Ground Overlay
-        <input type="checkbox" (click)="toggleGroundOverlayDisplay()">
+        <input type="checkbox" [(ngModel)]="isGroundOverlayDisplayed">
       </label>
     </div>
 
@@ -164,7 +171,7 @@
       <label for="ground-overlay-image">
         Ground Overlay image
 
-        <select id="ground-overlay-image" (change)="groundOverlayUrlChanged($event)">
+        <select id="ground-overlay-image" [(ngModel)]="groundOverlayUrl">
           @for (image of groundOverlayImages; track image) {
             <option [value]="image.url">{{image.title}}</option>
           }
@@ -175,28 +182,28 @@
     <div>
       <label for="kml-layer-checkbox">
         Toggle KML Layer
-        <input type="checkbox" (click)="toggleKmlLayerDisplay()">
+        <input type="checkbox" [(ngModel)]="isKmlLayerDisplayed">
       </label>
     </div>
 
     <div>
       <label for="traffic-layer-checkbox">
         Toggle Traffic Layer
-        <input type="checkbox" (click)="toggleTrafficLayerDisplay()">
+        <input type="checkbox" [(ngModel)]="isTrafficLayerDisplayed">
       </label>
     </div>
 
     <div>
       <label for="transit-layer-checkbox">
         Toggle Transit Layer
-        <input type="checkbox" (click)="toggleTransitLayerDisplay()">
+        <input type="checkbox" [(ngModel)]="isTransitLayerDisplayed">
       </label>
     </div>
 
     <div>
       <label for="bicycling-layer-checkbox">
         Toggle Bicycling Layer
-        <input type="checkbox" (click)="toggleBicyclingLayerDisplay()">
+        <input type="checkbox" [(ngModel)]="isBicyclingLayerDisplayed">
       </label>
     </div>
 
@@ -210,14 +217,17 @@
     <div>
       <label>
         Toggle Advanced Marker
-        <input type="checkbox" (click)="toggleAdvancedMarker()">
+        <input type="checkbox" [(ngModel)]="hasAdvancedMarker">
       </label>
     </div>
 
     <div>
       <label>
         Toggle custom content for Advanced Marker
-        <input type="checkbox" (click)="toggleAdvancedMarkerCustomContent()">
+        <input
+          type="checkbox"
+          [(ngModel)]="hasAdvancedMarkerCustomContent"
+          [disabled]="!hasAdvancedMarker">
       </label>
     </div>
 
