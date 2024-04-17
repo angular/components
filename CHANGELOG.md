@@ -1,3 +1,26 @@
+<a name="17.3.5"></a>
+# 17.3.5 "titanium-bear" (2024-04-17)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8c8fe2b65](https://github.com/angular/components/commit/8c8fe2b6556d4ba7463e9ab51ca967568e1ca99f) | fix | **drag-drop:** text selection not disabled inside shadow dom on firefox ([#28835](https://github.com/angular/components/pull/28835)) |
+| [312d57a9b](https://github.com/angular/components/commit/312d57a9bcf267cb4c8c7147db8105553c084626) | fix | **observers:** don't observe content of comments ([#28871](https://github.com/angular/components/pull/28871)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80437d83b](https://github.com/angular/components/commit/80437d83b745242668891b17dbc5050d8588d6a8) | fix | **autocomplete:** panel not visible when opened from multiple triggers ([#28843](https://github.com/angular/components/pull/28843)) |
+| [69b5ded96](https://github.com/angular/components/commit/69b5ded96730c1cf15e92b8a1d577391b3d4d7de) | fix | **autocomplete:** remove dependency on NgClass ([#28849](https://github.com/angular/components/pull/28849)) |
+| [4a56d6afa](https://github.com/angular/components/commit/4a56d6afa4474c7229369853c91b493b29fdb6fb) | fix | **core:** throw better error when mixin doesn't support color variants ([#28880](https://github.com/angular/components/pull/28880)) |
+| [cbe0a78f7](https://github.com/angular/components/commit/cbe0a78f7f085817df96d24aa5dfa9d92317bba6) | fix | **datepicker:** remove dependency on NgClass ([#28865](https://github.com/angular/components/pull/28865)) |
+| [7a085c6e0](https://github.com/angular/components/commit/7a085c6e073741a350d2712d347172e4dc92ac29) | fix | **menu:** remove dependency on NgClass ([#28877](https://github.com/angular/components/pull/28877)) |
+| [4c16d2cd8](https://github.com/angular/components/commit/4c16d2cd8c1e4a1607482181c1a39ce73fb72856) | fix | **tabs:** remove dependency on NgClass ([#28875](https://github.com/angular/components/pull/28875)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d99167eb3](https://github.com/angular/components/commit/d99167eb3a4386a4d12d23f6d11a16911840a5de) | fix | make info window open method compatible with advanced marker |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.4"></a>
 # 17.3.4 "aluminum-arrow" (2024-04-11)
 ### cdk
