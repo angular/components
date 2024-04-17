@@ -1,19 +1,14 @@
-// Theming APIs
-@forward './core/theming/theming' show define-light-theme, define-dark-theme,
-  define-palette, get-contrast-color-from-palette, get-color-from-palette,
-  get-color-config, get-typography-config, get-density-config,
-  $theme-ignore-duplication-warnings, $theme-legacy-inspection-api-compatibility;
+// Expose the M2 APIs under an `m2-` prefix in order to distinguish them from the M3 APIs.
+@forward './core/m2' as m2-*;
+
+// New theming APIs
+@forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
+  get-theme-typography, get-theme-density, theme-has, theme-remove;
+
+@forward './core/theming/theming' show $theme-ignore-duplication-warnings,
+  $theme-legacy-inspection-api-compatibility;
 @forward './core/theming/theming' as private-* show private-clamp-density;
-@forward './core/theming/palette' show $red-palette, $pink-palette, $indigo-palette,
-  $purple-palette, $deep-purple-palette, $blue-palette, $light-blue-palette, $cyan-palette,
-  $teal-palette, $green-palette, $light-green-palette, $lime-palette, $yellow-palette,
-  $amber-palette, $orange-palette, $deep-orange-palette, $brown-palette, $grey-palette,
-  $gray-palette, $blue-grey-palette, $blue-gray-palette, $light-theme-background-palette,
-  $dark-theme-background-palette, $light-theme-foreground-palette, $dark-theme-foreground-palette;
-@forward './core/typography/typography' show define-typography-level, define-rem-typography-config,
-  define-typography-config, typography-hierarchy, define-legacy-typography-config;
-@forward './core/typography/typography-utils' show typography-level,
-  font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
+@forward './core/typography/typography' show typography-hierarchy;
 @forward './core/tokens/m2' show m2-tokens-from-theme;
 
 // Private/Internal
@@ -131,7 +126,3 @@
   tooltip-typography, tooltip-density, tooltip-base;
 @forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density,
   tree-base;
-
-// New theming APIs
-@forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
-  get-theme-typography, get-theme-density, theme-has, theme-remove;

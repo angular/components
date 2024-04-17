@@ -48,7 +48,7 @@
 /// @param {Map} $input Configuration for the "input" typographic level.
 /// @returns {Map} A typography config for the application.
 ///
-/// @deprecated Use `mat.define-typography-config` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
+/// @deprecated Use `mat.m2-define-typography-config` instead. See https://material.angular.io/guide/mdc-migration for information about migrating.
 /// @breaking-change 17.0.0
 @function define-legacy-typography-config(
   $font-family:   'Roboto, "Helvetica Neue", sans-serif',

@@ -45,13 +45,13 @@ describe('theming inspection api', () => {
     it('should get theme version', () => {
       expect(
         transpile(`
-          $theme: mat.define-light-theme((
+          $theme: mat.m2-define-light-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$red-palette),
-              warn: mat.define-palette(mat.$red-palette),
+              primary: mat.m2-define-palette(mat.$m2-red-palette),
+              accent: mat.m2-define-palette(mat.$m2-red-palette),
+              warn: mat.m2-define-palette(mat.$m2-red-palette),
             ),
-            typography: mat.define-typography-config(),
+            typography: mat.m2-define-typography-config(),
             density: 0,
           ));
           div {
@@ -64,10 +64,10 @@ describe('theming inspection api', () => {
     it('should get theme type', () => {
       expect(
         transpile(`
-          $theme: mat.define-dark-theme((
+          $theme: mat.m2-define-dark-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$red-palette),
+              primary: mat.m2-define-palette(mat.$m2-red-palette),
+              accent: mat.m2-define-palette(mat.$m2-red-palette),
             ),
           ));
           div {
@@ -80,10 +80,10 @@ describe('theming inspection api', () => {
     it('should get role color', () => {
       expect(
         transpile(`
-          $theme: mat.define-light-theme((
+          $theme: mat.m2-define-light-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$green-palette)
+              primary: mat.m2-define-palette(mat.$m2-red-palette),
+              accent: mat.m2-define-palette(mat.$m2-green-palette)
             )
           ));
           div {
@@ -96,10 +96,10 @@ describe('theming inspection api', () => {
     it('should get palette color', () => {
       expect(
         transpile(`
-          $theme: mat.define-light-theme((
+          $theme: mat.m2-define-light-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$green-palette)
+              primary: mat.m2-define-palette(mat.$m2-red-palette),
+              accent: mat.m2-define-palette(mat.$m2-green-palette)
             )
           ));
           div {
@@ -111,8 +111,8 @@ describe('theming inspection api', () => {
 
     it('should get typography properties from theme', () => {
       const css = transpile(`
-        $theme: mat.define-light-theme((
-          typography: mat.define-typography-config()
+        $theme: mat.m2-define-light-theme((
+          typography: mat.m2-define-typography-config()
         ));
         div {
           font: mat.get-theme-typography($theme, headline-1);
@@ -134,7 +134,7 @@ describe('theming inspection api', () => {
     it('should get density scale', () => {
       expect(
         transpile(`
-          $theme: mat.define-light-theme((
+          $theme: mat.m2-define-light-theme((
             density: -1
           ));
           div {
@@ -146,28 +146,28 @@ describe('theming inspection api', () => {
 
     it('should check what information the theme has', () => {
       const css = transpile(`
-        $theme: mat.define-light-theme((
+        $theme: mat.m2-define-light-theme((
           color: (
-            primary: mat.define-palette(mat.$red-palette),
-            accent: mat.define-palette(mat.$red-palette),
+            primary: mat.m2-define-palette(mat.$m2-red-palette),
+            accent: mat.m2-define-palette(mat.$m2-red-palette),
           ),
-          typography: mat.define-typography-config(),
+          typography: mat.m2-define-typography-config(),
           density: -1,
         ));
-        $color-only: mat.define-light-theme((
+        $color-only: mat.m2-define-light-theme((
           color: (
-            primary: mat.define-palette(mat.$red-palette),
-            accent: mat.define-palette(mat.$red-palette),
+            primary: mat.m2-define-palette(mat.$m2-red-palette),
+            accent: mat.m2-define-palette(mat.$m2-red-palette),
           ),
           typography: null,
           density: null,
         ));
-        $typography-only: mat.define-light-theme((
+        $typography-only: mat.m2-define-light-theme((
           color: null,
-          typography: mat.define-typography-config(),
+          typography: mat.m2-define-typography-config(),
           density: null,
         ));
-        $density-only: mat.define-light-theme((
+        $density-only: mat.m2-define-light-theme((
           color: null,
           typography: null,
           density: -1,
@@ -209,10 +209,10 @@ describe('theming inspection api', () => {
       expect(
         transpile(`
           mat.$theme-legacy-inspection-api-compatibility: false;
-          $theme: mat.define-dark-theme((
+          $theme: mat.m2-define-dark-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$red-palette),
+              primary: mat.m2-define-palette(mat.$m2-red-palette),
+              accent: mat.m2-define-palette(mat.$m2-red-palette),
             )
           ));
           div {
@@ -226,10 +226,10 @@ describe('theming inspection api', () => {
       expect(() =>
         transpile(`
           mat.$theme-legacy-inspection-api-compatibility: false;
-          $theme: mat.define-dark-theme((
+          $theme: mat.m2-define-dark-theme((
             color: (
-              primary: mat.define-palette(mat.$red-palette),
-              accent: mat.define-palette(mat.$red-palette),
+              primary: mat.m2-define-palette(mat.$red-palette),
+              accent: mat.m2-define-palette(mat.$red-palette),
             )
           ));
           $color-config: mat.get-color-config($theme);

@@ -45,10 +45,10 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      $theme: mat.define-light-theme((
+      $theme: mat.m2-define-light-theme((
         color: (
-          primary: mat.define-palette(mat.$red-palette),
-          accent: mat.define-palette(mat.$red-palette),
+          primary: mat.m2-define-palette(mat.$m2-red-palette),
+          accent: mat.m2-define-palette(mat.$m2-red-palette),
         )
       ));
 
@@ -65,16 +65,16 @@ describe('theming api', () => {
   it('should not warn if color styles and density are not duplicated', () => {
     const parsed = parse(
       transpile(`
-      $theme: mat.define-light-theme((
+      $theme: mat.m2-define-light-theme((
         color: (
-          primary: mat.define-palette(mat.$red-palette),
-          accent: mat.define-palette(mat.$red-palette),
+          primary: mat.m2-define-palette(mat.$m2-red-palette),
+          accent: mat.m2-define-palette(mat.$m2-red-palette),
         )
       ));
-      $theme2: mat.define-light-theme((
+      $theme2: mat.m2-define-light-theme((
         color: (
-          primary: mat.define-palette(mat.$red-palette),
-          accent: mat.define-palette(mat.$blue-palette),
+          primary: mat.m2-define-palette(mat.$m2-red-palette),
+          accent: mat.m2-define-palette(mat.$m2-blue-palette),
         )
       ));
 
@@ -93,10 +93,10 @@ describe('theming api', () => {
 
   it('should be possible to modify color configuration directly', () => {
     const result = transpile(`
-      $theme: mat.define-light-theme((
+      $theme: mat.m2-define-light-theme((
         color: (
-          primary: mat.define-palette(mat.$red-palette),
-          accent: mat.define-palette(mat.$blue-palette),
+          primary: mat.m2-define-palette(mat.$m2-red-palette),
+          accent: mat.m2-define-palette(mat.$m2-blue-palette),
         )
       ));
 
@@ -174,7 +174,7 @@ describe('theming api', () => {
     spyOn(process.stderr, 'write');
 
     transpile(`
-      $theme: (typography: mat.define-typography-config(), density: null);
+      $theme: (typography: mat.m2-define-typography-config(), density: null);
       @include mat.all-component-themes($theme);
 
       .dark-theme {
@@ -190,13 +190,13 @@ describe('theming api', () => {
 
     transpile(`
       @include mat.all-component-themes((
-        typography: mat.define-typography-config(),
+        typography: mat.m2-define-typography-config(),
         density: null,
       ));
 
       .dark-theme {
         @include mat.all-component-themes((
-          typography: mat.define-typography-config($font-family: "sans-serif"),
+          typography: mat.m2-define-typography-config($font-family: "sans-serif"),
           density: null,
         ));
       }
