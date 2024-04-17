@@ -135,10 +135,12 @@ export class GoogleMapsModule {
 export type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
 
 // @public
-export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
+export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
     advancedMarker: google.maps.marker.AdvancedMarkerElement;
-    set content(content: Node | google.maps.marker.PinElement);
+    set content(content: Node | google.maps.marker.PinElement | null);
+    // (undocumented)
+    getAnchor(): google.maps.marker.AdvancedMarkerElement;
     set gmpDraggable(draggable: boolean);
     readonly mapClick: Observable<google.maps.MapMouseEvent>;
     readonly mapDrag: Observable<google.maps.MapMouseEvent>;
@@ -164,7 +166,7 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
 // @public
 export interface MapAnchorPoint {
     // (undocumented)
-    getAnchor(): google.maps.MVCObject;
+    getAnchor(): google.maps.MVCObject | google.maps.marker.AdvancedMarkerElement;
 }
 
 // @public (undocumented)
@@ -391,7 +393,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    open(anchor?: MapAnchorPoint, shouldFocus?: boolean): void;
+    open(anchor?: MapAnchorPoint, shouldFocus?: boolean, content?: string | Element | Text): void;
+    // @deprecated
     openAdvancedMarkerElement(advancedMarkerElement: google.maps.marker.AdvancedMarkerElement, content?: string | Element | Text): void;
     // (undocumented)
     set options(options: google.maps.InfoWindowOptions);

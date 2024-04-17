@@ -8,38 +8,39 @@
                 (mapClick)="handleClick($event)"
                 (mapMousemove)="handleMove($event)"
                 (mapRightclick)="handleRightclick()"
-                [mapTypeId]="mapTypeId">
+                [mapTypeId]="mapTypeId"
+                [mapId]="mapId">
       <map-marker-clusterer [imagePath]="markerClustererImagePath">
         <map-marker #firstMarker="mapMarker"
                     [position]="center"
-                    (mapClick)="clickMarker(firstMarker)"></map-marker>
+                    (mapClick)="infoWindow.open(firstMarker)"></map-marker>
         @for (markerPosition of markerPositions; track markerPosition) {
           <map-marker #marker="mapMarker"
             [position]="markerPosition"
             [options]="markerOptions"
-            (mapClick)="clickMarker(marker)"></map-marker>
+            (mapClick)="infoWindow.open(marker)"></map-marker>
         }
       </map-marker-clusterer>
       @if (hasAdvancedMarker) {
         <map-advanced-marker
           #secondMarker="mapAdvancedMarker"
-          (mapClick)="clickAdvancedMarker(secondMarker)"
+          (mapClick)="infoWindow.open(secondMarker)"
           title="Advanced Marker"
           [gmpDraggable]="false"
-          [content]="advancedMarkerContent"
+          [content]="hasAdvancedMarkerCustomContent ? advancedMarkerContent : null"
           [position]="mapAdvancedMarkerPosition">
 
           <svg #advancedMarkerContent fill="oklch(69.02% .277 332.77)" viewBox="0 0 960 960" width="50px" height="50px" xml:space="preserve">
             <g>
-              <polygon points="562.6,109.8 804.1,629.5 829.2,233.1 	"/>
-              <polygon points="624.9,655.9 334.3,655.9 297.2,745.8 479.6,849.8 662,745.8 	"/>
-              <polygon points="384.1,539.3 575.2,539.3 479.6,307 	"/>
-              <polygon points="396.6,109.8 130,233.1 155.1,629.5 	"/>
+              <polygon points="562.6,109.8 804.1,629.5 829.2,233.1"/>
+              <polygon points="624.9,655.9 334.3,655.9 297.2,745.8 479.6,849.8 662,745.8"/>
+              <polygon points="384.1,539.3 575.2,539.3 479.6,307"/>
+              <polygon points="396.6,109.8 130,233.1 155.1,629.5"/>
             </g>
           </svg>
         </map-advanced-marker>
       }
-      <map-info-window>Testing 1 2 3</map-info-window>
+      <map-info-window #infoWindow="mapInfoWindow">Testing 1 2 3</map-info-window>
       @if (isPolylineDisplayed) {
         <map-polyline [options]="polylineOptions"></map-polyline>
       }
@@ -210,6 +211,13 @@
       <label>
         Toggle Advanced Marker
         <input type="checkbox" (click)="toggleAdvancedMarker()">
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Toggle custom content for Advanced Marker
+        <input type="checkbox" (click)="toggleAdvancedMarkerCustomContent()">
       </label>
     </div>
 

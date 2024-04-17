@@ -2,6 +2,8 @@
 
 The `MapMarker` component wraps the [`google.maps.Marker` class](https://developers.google.com/maps/documentation/javascript/reference/marker#Marker) from the Google Maps JavaScript API. The `MapMarker` component displays a marker on the map when it is a content child of a `GoogleMap` component. Like `GoogleMap`, this component offers an `options` input as well as convenience inputs for `position`, `title`, `label`, and `clickable`, and supports all `google.maps.Marker` events as outputs.
 
+**Note:** As of 2024, Google Maps has deprecated the `Marker` class. Consider using the `map-advanced-marker` instead.
+
 ## Example
 
 ```typescript
@@ -29,7 +31,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-map-demo.component.html -->
-<google-map 
+<google-map
   height="400px"
   width="750px"
   [center]="center"
