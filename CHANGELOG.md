@@ -1,3 +1,28 @@
+<a name="18.0.0-next.5"></a>
+# 18.0.0-next.5 "mercury-ant" (2024-04-17)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [42cb25fe9](https://github.com/angular/components/commit/42cb25fe9b67f8b244c01e15b9e174e869258573) | fix | **drag-drop:** text selection not disabled inside shadow dom on firefox ([#28835](https://github.com/angular/components/pull/28835)) |
+| [d8a6c3edd](https://github.com/angular/components/commit/d8a6c3edd8d406b3f1b1c26805612eac8856b745) | fix | **observers:** don't observe content of comments ([#28858](https://github.com/angular/components/pull/28858)) |
+| [81fe8f322](https://github.com/angular/components/commit/81fe8f32273b3769c92a7482fcd0383e3e2c80f3) | fix | **observers:** Run content changed callback in NgZone ([#28870](https://github.com/angular/components/pull/28870)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [295fd67fa](https://github.com/angular/components/commit/295fd67fa806d6f8687afdb998769718d4b103d1) | feat | **schematics:** Add custom M3 theme schematic ([#28766](https://github.com/angular/components/pull/28766)) |
+| [2f17c69b8](https://github.com/angular/components/commit/2f17c69b81f3f67ec9c179ac859a646f6306ce8c) | fix | **autocomplete:** panel not visible when opened from multiple triggers ([#28843](https://github.com/angular/components/pull/28843)) |
+| [d3ea71d30](https://github.com/angular/components/commit/d3ea71d30de65a22874d1f931e7eb550170997cb) | fix | **autocomplete:** remove dependency on NgClass ([#28849](https://github.com/angular/components/pull/28849)) |
+| [8ec47aa4b](https://github.com/angular/components/commit/8ec47aa4be765568b4f4ac772829913660e70362) | fix | **core:** throw better error when mixin doesn't support color variants ([#28880](https://github.com/angular/components/pull/28880)) |
+| [524fe6247](https://github.com/angular/components/commit/524fe6247a0dadcf590dd5ba1e6290cf29047c81) | fix | **datepicker:** remove dependency on NgClass ([#28865](https://github.com/angular/components/pull/28865)) |
+| [9381f9065](https://github.com/angular/components/commit/9381f90653c8e43d470f9f364f46744e04356c02) | fix | **menu:** remove dependency on NgClass ([#28877](https://github.com/angular/components/pull/28877)) |
+| [b3298f1b8](https://github.com/angular/components/commit/b3298f1b8eba33087bda2d72ae85e2d5f99e67b2) | fix | **tabs:** remove dependency on NgClass ([#28875](https://github.com/angular/components/pull/28875)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5bcf8e016](https://github.com/angular/components/commit/5bcf8e016df6e258d0ac5c1e3ce20f8cd25d2201) | fix | make info window open method compatible with advanced marker |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.5"></a>
 # 17.3.5 "titanium-bear" (2024-04-17)
 ### cdk
