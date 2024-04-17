@@ -78,40 +78,28 @@ used with the `primary` and `tertiary` options:
 - `$m3-violet-palette`
 - `$m3-rose-palette`
 
-For more customization, you can run a [schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md) to generate a scss file with
-theme(s) that use custom colors. You can specify a color to represent the
-primary color palette and the rest of the color palettes (secondary, tertiary,
-neutral) are generated from Material. The generated color palettes are
-optimized to have enough contrast to be more accessible, for more context you
-can read here: [Science of Color Design](https://material.io/blog/science-of-color-design).
-
-You can also specify colors to represent the other color palettes if you want
-more customization. It is recommended to choose colors that are contrastful,
-Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/accessible-design/patterns).
+Alternatively, a theme can be generated with a custom color with the following schematic:
 
 ```shell
 ng generate @angular/material:m3-theme
 ```
 
-You can then import the generated theme scss file to use `$light-theme` and/or
-`$dark-theme` to where you apply your themes.
+This schematic integrates with [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) to build a theme based on a generated set of palettes based on a single color. Optionally you can provide additional custom colors for the secondary, tertiary, and neutral palettes.
+
+The output of the schematic is a new Sass file that exports a theme or themes (if generating both a light and dark theme) that can be provided to component theme mixins.
 
 ```scss
 @use '@angular/material' as mat;
-@use './path/to/m3-theme' as m3;
+@use './path/to/m3-theme';
+
+@include mat.core();
 
 // Apply the light theme by default
-@include mat.core-theme(m3.$light-theme);
-@include mat.button-theme(m3.$light-theme);
-
-// Apply the dark theme only when the user prefers dark themes.
-@media (prefers-color-scheme: dark) {
- // Use the `-color` mixins to only apply color styles without reapplying the same
- // typography and density styles.
- @include mat.core-color(m3.$dark-theme);
- @include mat.button-color(m3.$dark-theme);
-}
+@include mat.core-theme(m3-theme.$light-theme);
+@include mat.button-theme(m3-theme.$light-theme);
 ```
+
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
 
 <!-- TODO(mmalerba): Illustrate palettes with example. -->
 

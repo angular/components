@@ -115,3 +115,14 @@ that uses the CDK drag and drop directives.
 ```
 ng generate @angular/cdk:drag-drop <component-name>
 ```
+
+### Material 3 Theme schematic
+
+The `m3-theme` schematic will generate a file with Material 3 themes created
+from custom colors.
+
+```
+ng generate @angular/material:m3-theme
+```
+
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
