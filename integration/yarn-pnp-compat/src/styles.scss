@@ -1,10 +1,10 @@
 @use '@angular/material' as mat;
 
-$primary: mat.define-palette(mat.$blue-palette);
-$accent: mat.define-palette(mat.$grey-palette);
-$theme: mat.define-light-theme((
+$primary: mat.m2-define-palette(mat.$m2-blue-palette);
+$accent: mat.m2-define-palette(mat.$m2-grey-palette);
+$theme: mat.m2-define-light-theme((
   color: (primary: $primary, accent: $accent),
-  typography: mat.define-typography-config(),
+  typography: mat.m2-define-typography-config(),
   density: 0
 ));
 

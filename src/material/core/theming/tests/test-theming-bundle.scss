@@ -11,16 +11,16 @@ mat.$theme-ignore-duplication-warnings: true;
 // test will be reported as failing.
 
 // Theme creation functions.
-$theme: mat.define-light-theme((
+$theme: mat.m2-define-light-theme((
     color: (
-        primary: mat.define-palette(mat.$red-palette),
-        accent: mat.define-palette(mat.$blue-palette),
+        primary: mat.m2-define-palette(mat.$m2-red-palette),
+        accent: mat.m2-define-palette(mat.$m2-blue-palette),
     ),
-    typography: mat.define-typography-config(),
+    typography: mat.m2-define-typography-config(),
     density: -2,
 ));
-$dark-theme: mat.define-dark-theme($theme);
-$rem-typography: mat.define-rem-typography-config();
+$dark-theme: mat.m2-define-dark-theme($theme);
+$rem-typography: mat.m2-define-rem-typography-config();
 
 // All-* mixins.
 @include mat.all-component-themes($theme);

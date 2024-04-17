@@ -508,13 +508,13 @@
   // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
   //  material-experimental. This is a hack for now because there is no good way to get the token
   //  slots in material-experimental without exposing them all from material.
-  $fake-theme: mat.define-light-theme((
+  $fake-theme: mat.m2-define-light-theme((
     color: (
-      primary: mat.define-palette(mat.$red-palette),
-      accent: mat.define-palette(mat.$red-palette),
-      warn: mat.define-palette(mat.$red-palette),
+      primary: mat.m2-define-palette(mat.$m2-red-palette),
+      accent: mat.m2-define-palette(mat.$m2-red-palette),
+      warn: mat.m2-define-palette(mat.$m2-red-palette),
     ),
-    typography: mat.define-typography-config(),
+    typography: mat.m2-define-typography-config(),
     density: 0
   ));
   $token-slots: mat.m2-tokens-from-theme($fake-theme);

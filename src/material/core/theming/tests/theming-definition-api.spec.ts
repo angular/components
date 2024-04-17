@@ -240,7 +240,7 @@ describe('theming definition api', () => {
 
     it('should throw for invalid palette', () => {
       expect(() =>
-        transpile(`$theme: matx.define-theme((color: (tertiary: mat.$red-palette)))`),
+        transpile(`$theme: matx.define-theme((color: (tertiary: mat.$m2-red-palette)))`),
       ).toThrowError(/Expected \$config\.color\.tertiary to be a valid M3 palette\. Got:/);
     });
 
