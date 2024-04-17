@@ -97,10 +97,8 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    $mat-prefix: tokens-mat-checkbox.$prefix,
-    $mdc-prefix: tokens-mdc-checkbox.$prefix,
-    $mat-tokens: tokens-mat-checkbox.get-token-slots(),
-    $mdc-tokens: tokens-mdc-checkbox.get-token-slots(),
+    (prefix: tokens-mat-checkbox.$prefix, tokens: tokens-mat-checkbox.get-token-slots()),
+    (prefix: tokens-mdc-checkbox.$prefix, tokens: tokens-mdc-checkbox.get-token-slots()),
   );
 }
 
