@@ -8,9 +8,7 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {ListRange} from '@angular/cdk/collections';
-import {Platform} from '@angular/cdk/platform';
 import {
-  afterNextRender,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,7 +16,6 @@ import {
   ElementRef,
   inject,
   Inject,
-  Injector,
   Input,
   NgZone,
   OnDestroy,
@@ -28,20 +25,21 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {Platform} from '@angular/cdk/platform';
 import {
   animationFrameScheduler,
   asapScheduler,
   Observable,
-  Observer,
   Subject,
+  Observer,
   Subscription,
 } from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
+import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
-import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /** Checks if the given ranges are equal. */
@@ -175,10 +173,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   /** Subscription to changes in the viewport size. */
   private _viewportChanges = Subscription.EMPTY;
 
-  private _injector = inject(Injector);
-
-  private _isDestroyed = false;
-
   constructor(
     public override elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -255,8 +249,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
     this._viewportChanges.unsubscribe();
-
-    this._isDestroyed = true;
 
     super.ngOnDestroy();
   }
@@ -506,29 +498,23 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Run change detection. */
   private _doChangeDetection() {
-    if (this._isDestroyed) {
-      return;
-    }
+    this._isChangeDetectionPending = false;
 
-    this.ngZone.run(() => {
-      this._changeDetectorRef.markForCheck();
-      afterNextRender(
-        () => {
-          this._isChangeDetectionPending = false;
-          // Apply the content transform. The transform can't be set via an Angular binding because
-          // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-          // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-          // the `Number` function first to coerce it to a numeric value.
-          this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
-          const runAfterChangeDetection = this._runAfterChangeDetection;
-          this._runAfterChangeDetection = [];
-          for (const fn of runAfterChangeDetection) {
-            fn();
-          }
-        },
-        {injector: this._injector},
-      );
-    });
+    // Apply the content transform. The transform can't be set via an Angular binding because
+    // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+    // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+    // the `Number` function first to coerce it to a numeric value.
+    this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+    // from the root, since the repeated items are content projected in. Calling `detectChanges`
+    // instead does not properly check the projected content.
+    this.ngZone.run(() => this._changeDetectorRef.markForCheck());
+
+    const runAfterChangeDetection = this._runAfterChangeDetection;
+    this._runAfterChangeDetection = [];
+    for (const fn of runAfterChangeDetection) {
+      fn();
+    }
   }
 
   /** Calculates the `style.width` and `style.height` for the spacer element. */
