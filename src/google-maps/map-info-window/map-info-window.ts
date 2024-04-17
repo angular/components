@@ -195,29 +195,36 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   /**
    * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+   * @deprecated Use the `open` method instead.
+   * @breaking-change 20.0.0
    */
   openAdvancedMarkerElement(
     advancedMarkerElement: google.maps.marker.AdvancedMarkerElement,
     content?: string | Element | Text,
   ): void {
-    this._assertInitialized();
-    if (!advancedMarkerElement) {
-      return;
-    }
-
-    this.infoWindow.close();
-    if (content) {
-      this.infoWindow.setContent(content);
-    }
-    this.infoWindow.open(this._googleMap.googleMap, advancedMarkerElement);
+    this.open(
+      {
+        getAnchor: () => advancedMarkerElement,
+      },
+      undefined,
+      content,
+    );
   }
 
   /**
    * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
    * then the position property of the options input is used instead.
    */
-  open(anchor?: MapAnchorPoint, shouldFocus?: boolean) {
+  open(anchor?: MapAnchorPoint, shouldFocus?: boolean, content?: string | Element | Text): void {
     this._assertInitialized();
+
+    if ((typeof ngDevMode === 'undefined' || ngDevMode) && anchor && !anchor.getAnchor) {
+      throw new Error(
+        'Specified anchor does not implement the `getAnchor` method. ' +
+          'It cannot be used to open an info window.',
+      );
+    }
+
     const anchorObject = anchor ? anchor.getAnchor() : undefined;
 
     // Prevent the info window from initializing when trying to reopen on the same anchor.
@@ -226,6 +233,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // case where the window doesn't have an anchor, but is placed at a particular position.
     if (this.infoWindow.get('anchor') !== anchorObject || !anchorObject) {
       this._elementRef.nativeElement.style.display = '';
+      if (content) {
+        this.infoWindow.setContent(content);
+      }
       this.infoWindow.open({
         map: this._googleMap.googleMap,
         anchor: anchorObject,

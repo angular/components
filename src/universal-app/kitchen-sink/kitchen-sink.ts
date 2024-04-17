@@ -22,6 +22,7 @@ import {
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
+  MapAdvancedMarker,
 } from '@angular/google-maps';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBadgeModule} from '@angular/material/badge';
@@ -196,6 +197,7 @@ export class TestEntryComponent {}
     MapInfoWindow,
     MapKmlLayer,
     MapMarker,
+    MapAdvancedMarker,
     MapMarkerClusterer,
     MapPolygon,
     MapPolyline,
