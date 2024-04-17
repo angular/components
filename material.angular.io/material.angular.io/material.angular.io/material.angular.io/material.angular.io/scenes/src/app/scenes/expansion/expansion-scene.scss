@@ -8,3 +8,7 @@ mat-panel-description,
 .docs-expansion-scene-content mat-icon {
   margin-right: 5px;
 }
+
+mat-accordion mat-expansion-panel {
+  width: 300px;
+}

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatCardModule} from '@angular/material/card';
 import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
@@ -20,7 +21,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './table-scene.html',
   styleUrls: ['./table-scene.scss'],
   standalone: true,
-  imports: [MatTableModule]
+  imports: [MatCardModule, MatTableModule]
 })
 export class TableScene {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

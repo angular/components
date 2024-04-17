@@ -1,12 +1,6 @@
 .mat-bottom-sheet-container {
   min-width: 0 !important;
   width: 250px;
-}
-
-.mat-icon {
-  margin-right: 24px;
-}
-
-.cdk-overlay-backdrop {
-  opacity: 0 !important;
+  border-top-left-radius: var(--mat-bottom-sheet-container-shape);
+  border-top-right-radius: var(--mat-bottom-sheet-container-shape);
 }
