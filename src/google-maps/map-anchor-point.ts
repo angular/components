@@ -10,5 +10,5 @@
 /// <reference types="google.maps" />
 
 export interface MapAnchorPoint {
-  getAnchor(): google.maps.MVCObject;
+  getAnchor(): google.maps.MVCObject | google.maps.marker.AdvancedMarkerElement;
 }

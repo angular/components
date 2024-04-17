@@ -585,8 +585,9 @@
 
 <h2>Google Map</h2>
 <!-- position: relative prevents the "Map failed to load" element from leaving the container -->
-<google-map height="400px" width="750px" style="position: relative">
+<google-map height="400px" width="750px" mapId="123" style="position: relative">
   <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
+  <map-advanced-marker [position]="{lat: 12, lng: 12}"></map-advanced-marker>
   <map-info-window>Hello</map-info-window>
   <map-polyline
     [options]="{

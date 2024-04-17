@@ -25,6 +25,7 @@ import {
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {Observable} from 'rxjs';
+import {MapAnchorPoint} from '../map-anchor-point';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -44,7 +45,7 @@ export const DEFAULT_MARKER_OPTIONS = {
   exportAs: 'mapAdvancedMarker',
   standalone: true,
 })
-export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
+export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   private _eventManager = new MapEventManager(inject(NgZone));
 
   /**
@@ -80,10 +81,10 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
    * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.content
    */
   @Input()
-  set content(content: Node | google.maps.marker.PinElement) {
+  set content(content: Node | google.maps.marker.PinElement | null) {
     this._content = content;
   }
-  private _content: Node;
+  private _content: Node | null;
 
   /**
    * If true, the AdvancedMarkerElement can be dragged.
@@ -229,6 +230,11 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
     if (this.advancedMarker) {
       this.advancedMarker.map = null;
     }
+  }
+
+  getAnchor(): google.maps.marker.AdvancedMarkerElement {
+    this._assertInitialized();
+    return this.advancedMarker;
   }
 
   /** Creates a combined options object using the passed-in options and the individual inputs. */

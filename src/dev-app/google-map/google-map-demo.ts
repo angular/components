@@ -89,7 +89,6 @@ let apiLoadingPromise: Promise<unknown> | null = null;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
   @ViewChild(MapPolyline) polyline: MapPolyline;
   @ViewChild(MapPolygon) polygon: MapPolygon;
   @ViewChild(MapRectangle) rectangle: MapRectangle;
@@ -154,6 +153,9 @@ export class GoogleMapDemo {
   isTransitLayerDisplayed = false;
   isBicyclingLayerDisplayed = false;
   hasAdvancedMarker = false;
+  hasAdvancedMarkerCustomContent = true;
+  // This is necessary for testing advanced markers. It seems like any value works locally.
+  mapId = '123';
 
   mapTypeId: google.maps.MapTypeId;
   mapTypeIds = ['hybrid', 'roadmap', 'satellite', 'terrain'] as google.maps.MapTypeId[];
@@ -179,17 +181,6 @@ export class GoogleMapDemo {
 
   handleMove(event: google.maps.MapMouseEvent) {
     this.display = event.latLng?.toJSON();
-  }
-
-  clickMarker(marker: MapMarker) {
-    this.infoWindow.open(marker);
-  }
-
-  clickAdvancedMarker(advancedMarker: MapAdvancedMarker) {
-    this.infoWindow.openAdvancedMarkerElement(
-      advancedMarker.advancedMarker,
-      advancedMarker.advancedMarker.title,
-    );
   }
 
   handleRightclick() {
@@ -275,6 +266,10 @@ export class GoogleMapDemo {
 
   toggleAdvancedMarker() {
     this.hasAdvancedMarker = !this.hasAdvancedMarker;
+  }
+
+  toggleAdvancedMarkerCustomContent() {
+    this.hasAdvancedMarkerCustomContent = !this.hasAdvancedMarkerCustomContent;
   }
 
   calculateDirections() {
