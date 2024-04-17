@@ -78,6 +78,29 @@ used with the `primary` and `tertiary` options:
 - `$m3-violet-palette`
 - `$m3-rose-palette`
 
+Alternatively, a theme can be generated with a custom color with the following schematic:
+
+```shell
+ng generate @angular/material:m3-theme
+```
+
+This schematic integrates with [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) to build a theme based on a generated set of palettes based on a single color. Optionally you can provide additional custom colors for the secondary, tertiary, and neutral palettes.
+
+The output of the schematic is a new Sass file that exports a theme or themes (if generating both a light and dark theme) that can be provided to component theme mixins.
+
+```scss
+@use '@angular/material' as mat;
+@use './path/to/m3-theme';
+
+@include mat.core();
+
+// Apply the light theme by default
+@include mat.core-theme(m3-theme.$light-theme);
+@include mat.button-theme(m3-theme.$light-theme);
+```
+
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
+
 <!-- TODO(mmalerba): Illustrate palettes with example. -->
 
 #### Customizing your typography
@@ -426,11 +449,6 @@ $theme: matx.define-theme();
 ```
 
 ## FAQ
-
-### Can I use colors other than the pre-defined Material 3 palettes?
-
-Currently, we only offer predefined palettes, but we plan to add support for using custom generated
-palettes as part of making the M3 APIs stable and available in `@angular/material`.
 
 ### Can I depend on the CSS custom property names being stable?
 

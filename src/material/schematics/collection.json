@@ -44,6 +44,12 @@
       "factory": "./ng-generate/address-form/index",
       "schema": "./ng-generate/address-form/schema.json",
       "aliases": ["address-form", "material-address-form", "material-addressForm"]
+    },
+    "m3Theme": {
+      "description": "Generate M3 theme",
+      "factory": "./ng-generate/m3-theme/index_bundled",
+      "schema": "./ng-generate/m3-theme/schema.json",
+      "aliases": ["m3-theme", "M3-theme"]
     }
   }
 }
