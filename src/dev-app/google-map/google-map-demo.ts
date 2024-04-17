@@ -14,6 +14,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {
   GoogleMap,
   MapAdvancedMarker,
@@ -85,6 +86,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapRectangle,
     MapTrafficLayer,
     MapTransitLayer,
+    FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -187,50 +189,34 @@ export class GoogleMapDemo {
     this.markerPositions.pop();
   }
 
-  togglePolylineDisplay() {
-    this.isPolylineDisplayed = !this.isPolylineDisplayed;
-  }
-
-  toggleEditablePolyline() {
+  editablePolylineChanged(editable: boolean) {
     this.polylineOptions = {
       ...this.polylineOptions,
-      editable: !this.polylineOptions.editable,
+      editable,
       path: this.polyline.getPath(),
     };
   }
 
-  togglePolygonDisplay() {
-    this.isPolygonDisplayed = !this.isPolygonDisplayed;
-  }
-
-  toggleEditablePolygon() {
+  editablePolygonChanged(editable: boolean) {
     this.polygonOptions = {
       ...this.polygonOptions,
-      editable: !this.polygonOptions.editable,
+      editable,
       paths: this.polygon.getPaths(),
     };
   }
 
-  toggleRectangleDisplay() {
-    this.isRectangleDisplayed = !this.isRectangleDisplayed;
-  }
-
-  toggleEditableRectangle() {
+  editableRectangleChanged(editable: boolean) {
     this.rectangleOptions = {
       ...this.rectangleOptions,
-      editable: !this.rectangleOptions.editable,
+      editable,
       bounds: this.rectangle.getBounds(),
     };
   }
 
-  toggleCircleDisplay() {
-    this.isCircleDisplayed = !this.isCircleDisplayed;
-  }
-
-  toggleEditableCircle() {
+  editableCircleChanged(editable: boolean) {
     this.circleOptions = {
       ...this.circleOptions,
-      editable: !this.circleOptions.editable,
+      editable,
       center: this.circle.getCenter(),
       radius: this.circle.getRadius(),
     };
@@ -238,38 +224,6 @@ export class GoogleMapDemo {
 
   mapTypeChanged(event: Event) {
     this.mapTypeId = (event.target as HTMLSelectElement).value as unknown as google.maps.MapTypeId;
-  }
-
-  toggleGroundOverlayDisplay() {
-    this.isGroundOverlayDisplayed = !this.isGroundOverlayDisplayed;
-  }
-
-  groundOverlayUrlChanged(event: Event) {
-    this.groundOverlayUrl = (event.target as HTMLSelectElement).value;
-  }
-
-  toggleKmlLayerDisplay() {
-    this.isKmlLayerDisplayed = !this.isKmlLayerDisplayed;
-  }
-
-  toggleTrafficLayerDisplay() {
-    this.isTrafficLayerDisplayed = !this.isTrafficLayerDisplayed;
-  }
-
-  toggleTransitLayerDisplay() {
-    this.isTransitLayerDisplayed = !this.isTransitLayerDisplayed;
-  }
-
-  toggleBicyclingLayerDisplay() {
-    this.isBicyclingLayerDisplayed = !this.isBicyclingLayerDisplayed;
-  }
-
-  toggleAdvancedMarker() {
-    this.hasAdvancedMarker = !this.hasAdvancedMarker;
-  }
-
-  toggleAdvancedMarkerCustomContent() {
-    this.hasAdvancedMarkerCustomContent = !this.hasAdvancedMarkerCustomContent;
   }
 
   calculateDirections() {
