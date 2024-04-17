@@ -1,40 +1,21 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '@angular//material-experimental' as matx;
 
-@include mat.all-component-typographies();
 @include mat.core();
 
-$_primary: mat.define-palette(mat.$red-palette, 500, 200, 900);
-$_accent: mat.define-palette(mat.$red-palette, 500, 200, 700);
-$_warn: mat.define-palette(mat.$red-palette);
+$theme: matx.define-theme((
+  color: (
+    theme-type: light,
+    primary: matx.$m3-red-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+  ),
+));
 
-$_theme: mat.define-light-theme($_primary, $_accent, $_warn);
-$_background-color: #fff2f4;
-
-$_background: map.get($_theme, background);
-$_background: map.merge($_background, (
-  background: $_background-color,
-  disabled-button: rgba(red, 0.5),
-  selected-button: rgba(red, 0.23)));
-$_theme: map.merge($_theme, (background: $_background));
-
-$_secondary-text-color: map_get(mat.$red-palette, 600);
-
-$_foreground: map.get($_theme, foreground);
-$_foreground: map.merge($_foreground, (
-  disabled-button: rgba(red, 0.45),
-  text: $_secondary-text-color,
-  divider: $_secondary-text-color,
-  secondary-text: $_secondary-text-color,
-  dsiabled-text: $_secondary-text-color,
-  hint-text: $_secondary-text-color,
-  icon: $_secondary-text-color));
-$_theme: map.merge($_theme, (foreground: $_foreground));
-
-@include mat.all-component-themes($_theme);
-
-body {
-  margin: 0;
-  color: red;
-  font-family: Roboto, Arial, sans-serif;
+html {
+  font-family: 'Roboto';
+  @include mat.all-component-themes($theme);
+  @include mat.icon-color($theme, $color-variant: primary);
 }

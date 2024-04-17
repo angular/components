@@ -2,7 +2,7 @@ import {importProvidersFrom} from '@angular/core';
 
 import {AppComponent} from './app/app.component';
 import {MatNativeDateModule} from '@angular/material/core';
-import {provideAnimations} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {routes} from './app/app-routes';
 import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
 import {DOCUMENT} from '@angular/common';
@@ -15,14 +15,14 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(
       BrowserModule,
-      MatNativeDateModule
+      MatNativeDateModule,
+      NoopAnimationsModule,
     ),
     {
       provide: OverlayContainer,
       useFactory: (doc: any, platform: Platform) => new SceneOverlayContainer(doc, platform),
       deps: [DOCUMENT, Platform]
     },
-    provideAnimations(),
     provideRouter(routes),
   ]
 }).catch(err => console.error(err));

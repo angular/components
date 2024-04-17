@@ -14,9 +14,7 @@ export class DialogScene {
   }
 
   openDialog() {
-    this.dialog.open(DialogSceneExampleDialog, {
-      hasBackdrop: false
-    });
+    this.dialog.open(DialogSceneExampleDialog);
   }
 }
 

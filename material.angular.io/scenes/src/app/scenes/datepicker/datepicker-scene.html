@@ -1,2 +1,9 @@
-<mat-calendar class="scene-datepicker-left"></mat-calendar>
-<mat-calendar class="scene-datepicker-right"></mat-calendar>
+<div class="calendar-wrapper">
+  <mat-calendar
+    class="calendar"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [selected]="selectedDate"
+  >
+  </mat-calendar>
+</div>

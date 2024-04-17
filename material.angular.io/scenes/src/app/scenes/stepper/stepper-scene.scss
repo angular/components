@@ -1,7 +1,7 @@
 .scene-stepper {
-  background: transparent;
-  margin-left: 80px;
-  margin-top: 80px;
+  --mat-stepper-container-color: transparent;
+  margin-left: 64px;
+  margin-top: 44px;
 }
 
 .scene-stepper-input {

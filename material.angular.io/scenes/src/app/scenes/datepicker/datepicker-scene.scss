@@ -1,15 +1,13 @@
-.scene-datepicker-left {
-  top: -220px;
-  left: -240px;
-}
-
-.scene-datepicker-right {
-  top: -80px;
+.calendar {
+  margin-top: 140px;
   background: rgba(white, 0.8);
 }
 
-mat-calendar {
-  position: absolute;
-  border: 1px solid;
-  border-radius: 4px;
+.calendar-wrapper {
+  display: flex;
+
+  mat-calendar {
+    width: 300px;
+    border-radius: 16px;
+  }
 }

@@ -6,6 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-button-toggle-scene',
   templateUrl: './button-toggle-scene.html',
+  styleUrls: ['./button-toggle-scene.scss'],
   standalone: true,
   imports: [MatButtonToggleModule, MatIconModule],
 })
