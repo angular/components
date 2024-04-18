@@ -214,35 +214,39 @@ $_component-prefix: null;
   @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
 }
 
-/// Emits new token values for the given tokens.
-/// Verifies that the tokens passed in are valid tokens.
+/// Emits new token values for the given token overrides.
+/// Verifies that the overrides passed in are valid tokens.
 /// New token values are emitted under the current selector or root.
-@mixin batch-create-token-values(
-  $tokens: (),
-  $mat-prefix: '',
-  $mdc-prefix: '',
-  $mat-tokens: (),
-  $mdc-tokens: ()
-) {
-  $custom-mat-tokens: ();
-  $custom-mdc-tokens: ();
+@mixin batch-create-token-values($overrides: (), $token-maps...) {
+  @include _validate-token-overrides($overrides, $token-maps);
 
-  $mat-token-names: map.keys($mat-tokens);
-  $mdc-token-names: map.keys($mdc-tokens);
-  $valid-token-names: _get-valid-token-names($mat-tokens, $mdc-tokens);
+  @each $token-map in $token-maps {
+    $prefix: map.get($token-map, prefix);
+    $tokens: map.get($token-map, tokens);
 
-  @each $name, $value in $tokens {
-    $is-mat-token: list.index($mat-token-names, $name) != null;
-    $is-mdc-token: list.index($mdc-token-names, $name) != null;
-
-    @if ($is-mat-token) {
-      $custom-mat-tokens: map.set($custom-mat-tokens, $name, $value);
+    @each $name, $value in $tokens {
+      $tokens: map.set($tokens, $name, map.get($overrides, $name));
     }
 
-    @if ($is-mdc-token) {
-      $custom-mdc-tokens: map.set($custom-mdc-tokens, $name, $value);
+    @include sass-utils.current-selector-or-root() {
+      @include create-token-values($prefix, $tokens);
     }
+  }
+}
 
+/// Verifies that the token overrides exist and are used in one of the given token maps.
+@mixin _validate-token-overrides($overrides: (), $token-maps) {
+  $valid-token-names: ();
+
+  @each $token-map in $token-maps {
+    @each $name, $value in map.get($token-map, tokens) {
+      @if ($value != null and list.index($valid-token-names, $name) == null) {
+        $valid-token-names: list.append($valid-token-names, $name);
+      }
+    }
+  }
+
+  @each $name in map.keys($overrides) {
     @if (list.index($valid-token-names, $name) == null) {
       @error (
         'Invalid token: "' + $name + '"'
@@ -250,22 +254,4 @@ $_component-prefix: null;
       );
     }
   }
-
-  @include sass-utils.current-selector-or-root() {
-    @include create-token-values($mat-prefix, $custom-mat-tokens);
-    @include create-token-values($mdc-prefix, $custom-mdc-tokens);
-  }
-}
-
-/// Returns the union of token names whose values are not null.
-@function _get-valid-token-names($mat-tokens, $mdc-tokens) {
-  $mat-and-mdc-tokens: map.merge($mat-tokens, $mdc-tokens);
-
-  @each $name, $value in $mat-and-mdc-tokens {
-    @if ($value == null) {
-      $mat-and-mdc-tokens: map.remove($mat-and-mdc-tokens, $name);
-    }
-  }
-
-  @return map.keys($mat-and-mdc-tokens);
 }
