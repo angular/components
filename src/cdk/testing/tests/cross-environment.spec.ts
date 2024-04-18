@@ -428,10 +428,17 @@ export function crossEnvironmentSpecs(
 
     it('should be able to click at a specific position with shift and meta modifiers', async () => {
       const clickTest = await harness.clickTest();
+      console.log('clickTest', clickTest);
       const modifiersResult = await harness.clickModifiersResult();
+      console.log('modifiersResult', modifiersResult);
 
-      await clickTest.click(10, 10, {shift: true, meta: true});
-      expect(await modifiersResult.text()).toBe('shift---meta');
+      const click = await clickTest.click(10, 10, {shift: true, meta: true});
+      console.log('click', click);
+
+      const modifiersText = await modifiersResult.text();
+      console.log('modifiersText', modifiersText);
+
+      expect(modifiersText).toBe('shift---meta');
     });
 
     it('should be able to click the center of an element', async () => {
