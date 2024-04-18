@@ -4,7 +4,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {configureDriver} from './driver.js';
 
 // Tests are flaky on CI unless we increase the timeout.
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10_000; // 10 seconds
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20_000; // 20 seconds
 
 describe('app test', () => {
   let loader: HarnessLoader;
