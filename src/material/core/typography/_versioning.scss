@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use './definition';
+@use '../m2/typography' as m2-typography;
 
 // Whether a config is for the Material Design 2018 typography system.
 @function private-typography-is-2018-config($config) {
@@ -44,7 +44,7 @@
         $non-null-args: map.merge($non-null-args, ($key: $value));
       }
     }
-    @return definition.define-legacy-typography-config($non-null-args...);
+    @return m2-typography.define-legacy-typography-config($non-null-args...);
   }
   @return $config;
 }
@@ -83,7 +83,7 @@
       button: map.get($config, button),
       caption: map.get($config, caption),
       overline: if(map.get($config, overline), map.get($config, overline),
-        definition.define-typography-level(12px, 32px, 500)
+        m2-typography.define-typography-level(12px, 32px, 500)
       )
     );
   }

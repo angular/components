@@ -6,7 +6,7 @@
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
-@use '../../../theming/palette';
+@use '../../../m2/palette' as m2-palette;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
@@ -34,10 +34,10 @@ $prefix: (mat, form-field);
     // always on a white background inside the dropdown, causing them to blend in.
     // Since we can't change background of the dropdown, we need to explicitly
     // reset the color of the options to something dark.
-    select-option-text-color: if($is-dark, palette.$dark-primary-text, inherit),
+    select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
     // Note the spelling of the `GrayText` here which is a system color. See:
     // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
-    select-disabled-option-text-color: if($is-dark, palette.$dark-disabled-text, GrayText),
+    select-disabled-option-text-color: if($is-dark, m2-palette.$dark-disabled-text, GrayText),
 
     // These tokens are necessary for M3. MDC has them built in already, but:
     // 1. They are too specific, breaking a lot of internal clients.

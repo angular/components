@@ -1,5 +1,6 @@
 @use 'sass:map';
-@use '../../../theming/palette';
+@use '../../../m2/palette' as m2-palette;
+@use '../../../m2/theming' as m2-theming;
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
@@ -45,7 +46,7 @@ $prefix: (mdc, radio);
 @function get-color-tokens($theme, $palette-name: accent) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $palette-color: inspection.get-theme-color($theme, $palette-name, default);
-  $icon-color: theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
+  $icon-color: m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
 
   @return (
     disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),

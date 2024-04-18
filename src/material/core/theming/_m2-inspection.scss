@@ -2,7 +2,8 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use './theming';
-@use '../typography/property-getters' as typography-getters;
+@use '../m2/theming' as m2-theming;
+@use '../m2/typography-utils' as m2-typography-utils;
 @use '../typography/versioning' as typography-versioning;
 
 /// Key used to access the Angular Material theme internals.
@@ -92,11 +93,11 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
-  $colors: theming.get-color-config($theme);
+  $colors: m2-theming.get-color-config($theme);
   // Some apps seem to have mistakenly created nested color themes that somehow work with our old
   // theme normalization logic. This check allows those apps to keep working.
   @if theme-has($colors, color) {
-    $colors: theming.get-color-config($colors);
+    $colors: m2-theming.get-color-config($colors);
   }
   @return if(map.get($colors, is-dark), dark, light);
 }
@@ -115,18 +116,18 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
-  $colors: theming.get-color-config($theme);
+  $colors: m2-theming.get-color-config($theme);
   // Some apps seem to have mistakenly created nested color themes that somehow work with our old
   // theme normalization logic. This check allows those apps to keep working.
   @if theme-has($colors, color) {
-    $colors: theming.get-color-config($colors);
+    $colors: m2-theming.get-color-config($colors);
   }
   $palette: map.get($colors, $palette-name);
   @if not $palette {
     @error $palette-name $args $theme;
     @error #{'Unrecognized palette name:'} $palette-name;
   }
-  @return theming.get-color-from-palette($palette, $args...);
+  @return m2-theming.get-color-from-palette($palette, $args...);
 }
 
 /// Gets a typography value from a theme object.
@@ -141,29 +142,29 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @error 'Typography information is not available on this theme.';
   }
   $typography: typography-versioning.private-typography-to-2018-config(
-      theming.get-typography-config($theme));
+      m2-theming.get-typography-config($theme));
   @if $property == font {
-    $font-weight: typography-getters.font-weight($typography, $typescale);
-    $font-size: typography-getters.font-size($typography, $typescale);
-    $line-height: typography-getters.line-height($typography, $typescale);
-    $font-family: typography-getters.font-family($typography, $typescale);
+    $font-weight: m2-typography-utils.font-weight($typography, $typescale);
+    $font-size: m2-typography-utils.font-size($typography, $typescale);
+    $line-height: m2-typography-utils.line-height($typography, $typescale);
+    $font-family: m2-typography-utils.font-family($typography, $typescale);
     @return ($font-weight list.slash($font-size, $line-height) $font-family);
   }
   @else if $property == font-family {
-    $result: typography-getters.font-family($typography, $typescale);
-    @return $result or typography-getters.font-family($typography);
+    $result: m2-typography-utils.font-family($typography, $typescale);
+    @return $result or m2-typography-utils.font-family($typography);
   }
   @else if $property == font-size {
-    @return typography-getters.font-size($typography, $typescale);
+    @return m2-typography-utils.font-size($typography, $typescale);
   }
   @else if $property == font-weight {
-    @return typography-getters.font-weight($typography, $typescale);
+    @return m2-typography-utils.font-weight($typography, $typescale);
   }
   @else if $property == line-height {
-    @return typography-getters.line-height($typography, $typescale);
+    @return m2-typography-utils.line-height($typography, $typescale);
   }
   @else if $property == letter-spacing {
-    @return typography-getters.letter-spacing($typography, $typescale);
+    @return m2-typography-utils.letter-spacing($typography, $typescale);
   }
   @else {
     @error #{'Valid typography properties are: #{$_typography-properties}. Got:'} $property;
@@ -178,7 +179,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, density) {
     @error 'Density information is not available on this theme.';
   }
-  $scale: theming.get-density-config($theme);
+  $scale: m2-theming.get-density-config($theme);
   @return theming.clamp-density($scale, -5);
 }
 
@@ -192,11 +193,11 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return true;
   }
   @if $system == color {
-    $color: theming.get-color-config($theme);
+    $color: m2-theming.get-color-config($theme);
     @return $color != null and _has-any-key($color, $_color-keys);
   }
   @if $system == typography {
-    $typography: theming.get-typography-config($theme);
+    $typography: m2-theming.get-typography-config($theme);
     @return $typography != null and _has-any-key($typography, $_typography-keys);
   }
   @if $system == density {
@@ -205,7 +206,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @if meta.type-of($theme) == 'map' and map.get($theme, density) {
       @return true;
     }
-    $density: theming.get-density-config($theme);
+    $density: m2-theming.get-density-config($theme);
     @return $density != null and _is-density-value($density);
   }
   @error 'Valid systems are: base, color, typography, density. Got:' $system;
@@ -247,7 +248,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   $internal: map.get($theme, $_internals, m2-config);
   $theme: map.remove($theme, $_internals);
   @if theme-has($theme, typography) {
-    $typography-config: theming.get-typography-config($theme);
+    $typography-config: m2-theming.get-typography-config($theme);
     // gmat configs have both 2018 and 2014 keys.
     @if (not typography-versioning.private-typography-is-2014-config($typography-config)) or
         (not typography-versioning.private-typography-is-2018-config($typography-config)) {

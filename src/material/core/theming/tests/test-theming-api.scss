@@ -4,8 +4,10 @@
 @use '../../typography/all-typography';
 @use '../all-theme';
 @use '../../typography/typography';
-@use '../palette';
 @use '../theming';
+@use '../../m2/typography' as m2-typography;
+@use '../../m2/palette' as m2-palette;
+@use '../../m2/theming' as m2-theming;
 
 // Disable theme style duplication warnings. This test intentionally generates
 // the same themes multiple times.
@@ -15,10 +17,10 @@ theming.$theme-ignore-duplication-warnings: true;
 // API is backwards compatible, so that the old pattern for configuring themes can be still
 // used. The Sass compilation of this file will fail if one of the tests/assertions fails.
 
-$primary: theming.define-palette(palette.$blue-palette);
-$accent: theming.define-palette(palette.$grey-palette);
-$warn: theming.define-palette(palette.$indigo-palette);
-$default-warn: theming.define-palette(palette.$red-palette);
+$primary: m2-theming.define-palette(m2-palette.$blue-palette);
+$accent: m2-theming.define-palette(m2-palette.$grey-palette);
+$warn: m2-theming.define-palette(m2-palette.$indigo-palette);
+$default-warn: m2-theming.define-palette(m2-palette.$red-palette);
 
 // Asserts that a given value matches the expected value. If not, an error is
 // thrown with the given error message.
@@ -41,30 +43,30 @@ $default-warn: theming.define-palette(palette.$red-palette);
       'Expected color config `is-dark` to be: #{$is-dark}');
 }
 
-$legacy-light-theme: theming.define-light-theme($primary, $accent, $warn);
-$legacy-dark-theme: theming.define-dark-theme($primary, $accent, $warn);
-$legacy-light-theme-default-warn: theming.define-light-theme($primary, $accent);
-$legacy-dark-theme-default-warn: theming.define-dark-theme($primary, $accent);
+$legacy-light-theme: m2-theming.define-light-theme($primary, $accent, $warn);
+$legacy-dark-theme: m2-theming.define-dark-theme($primary, $accent, $warn);
+$legacy-light-theme-default-warn: m2-theming.define-light-theme($primary, $accent);
+$legacy-dark-theme-default-warn: m2-theming.define-dark-theme($primary, $accent);
 
-$new-api-light-theme: theming.define-light-theme((
+$new-api-light-theme: m2-theming.define-light-theme((
   color: (primary: $primary, accent: $accent, warn: $warn)
 ));
-$new-api-dark-theme: theming.define-dark-theme((
+$new-api-dark-theme: m2-theming.define-dark-theme((
   color: (primary: $primary, accent: $accent, warn: $warn)
 ));
-$new-api-light-theme-default-warn: theming.define-light-theme((
+$new-api-light-theme-default-warn: m2-theming.define-light-theme((
   color: (primary: $primary, accent: $accent)
 ));
-$new-api-dark-theme-default-warn: theming.define-dark-theme((
+$new-api-dark-theme-default-warn: m2-theming.define-dark-theme((
   color: (primary: $primary, accent: $accent)
 ));
 
-$light-theme-only-density: theming.define-light-theme((density: -2));
-$dark-theme-only-density: theming.define-dark-theme((density: -2));
+$light-theme-only-density: m2-theming.define-light-theme((density: -2));
+$dark-theme-only-density: m2-theming.define-dark-theme((density: -2));
 
-$typography-config: typography.define-typography-config();
-$light-theme-only-typography: theming.define-light-theme((typography: $typography-config));
-$dark-theme-only-typography: theming.define-dark-theme((typography: $typography-config));
+$typography-config: m2-typography.define-typography-config();
+$light-theme-only-typography: m2-theming.define-light-theme((typography: $typography-config));
+$dark-theme-only-typography: m2-theming.define-dark-theme((typography: $typography-config));
 
 // Test which ensures that constructed themes by default do not set configurations
 // for the individual parts of the theming system (color, density, typography).
@@ -118,23 +120,23 @@ $dark-theme-only-typography: theming.define-dark-theme((typography: $typography-
 // theme objects passed to individual component theme mixins.
 @mixin test-get-color-config() {
   $color-config: map.get($legacy-light-theme, color);
-  $no-color-light-theme: theming.define-light-theme((color: null));
-  $no-color-dark-theme: theming.define-dark-theme((color: null));
-  @include assert(theming.get-color-config($color-config), $color-config,
+  $no-color-light-theme: m2-theming.define-light-theme((color: null));
+  $no-color-dark-theme: m2-theming.define-dark-theme((color: null));
+  @include assert(m2-theming.get-color-config($color-config), $color-config,
       'Expected that passing a color config to a theme will work for backwards compatibility.');
   // For legacy constructed themes, the color configuration is the actual `$theme` object.
   // This is done for backwards compatibility because developers could modify colors directly
   // by updating immediate properties on the `$theme` object.
-  @include assert(theming.get-color-config($legacy-light-theme), $legacy-light-theme,
+  @include assert(m2-theming.get-color-config($legacy-light-theme), $legacy-light-theme,
       'Expected that the theme object is used for the color configuration.');
-  @include assert(theming.get-color-config($new-api-dark-theme),
+  @include assert(m2-theming.get-color-config($new-api-dark-theme),
     map.get($new-api-dark-theme, color),
     'Expected that a color config can be read from a theme object.');
-  @include assert(theming.get-color-config($light-theme-only-density), null,
+  @include assert(m2-theming.get-color-config($light-theme-only-density), null,
       'Expected that by default, no color configuration is used.');
-  @include assert(theming.get-color-config($no-color-light-theme), null,
+  @include assert(m2-theming.get-color-config($no-color-light-theme), null,
       'Expected that no color configuration can be explicitly specified.');
-  @include assert(theming.get-color-config($no-color-dark-theme), null,
+  @include assert(m2-theming.get-color-config($no-color-dark-theme), null,
     'Expected that no color configuration can be explicitly specified.');
 }
 
@@ -142,30 +144,30 @@ $dark-theme-only-typography: theming.define-dark-theme((typography: $typography-
 // theme objects passed to individual component theme mixins.
 @mixin test-get-density-config() {
   $density-config: map.get($light-theme-only-density, density);
-  $no-density-light-theme: theming.define-light-theme((density: null));
-  $no-density-dark-theme: theming.define-dark-theme((density: null));
-  @include assert(theming.get-density-config($light-theme-only-density), -2,
+  $no-density-light-theme: m2-theming.define-light-theme((density: null));
+  $no-density-dark-theme: m2-theming.define-dark-theme((density: null));
+  @include assert(m2-theming.get-density-config($light-theme-only-density), -2,
     'Expected that a density config can be read from a theme object.');
-  @include assert(theming.get-density-config($light-theme-only-typography), 0,
+  @include assert(m2-theming.get-density-config($light-theme-only-typography), 0,
     'Expected that by default, the density system will be configured.');
-  @include assert(theming.get-density-config($no-density-light-theme), null,
+  @include assert(m2-theming.get-density-config($no-density-light-theme), null,
     'Expected that no density configuration can be explicitly specified.');
-  @include assert(theming.get-density-config($no-density-dark-theme), null,
+  @include assert(m2-theming.get-density-config($no-density-dark-theme), null,
     'Expected that no density configuration can be explicitly specified.');
 }
 
 // Test which ensures that typography configurations can be properly read from
 // theme objects passed to individual component theme mixins.
 @mixin test-get-typography-config() {
-  $no-typography-light-theme: theming.define-light-theme((density: null));
-  $no-typography-dark-theme: theming.define-dark-theme((density: null));
-  @include assert(theming.get-typography-config($light-theme-only-typography), $typography-config,
-    'Expected that a typography config can be read from a theme object.');
-  @include assert(theming.get-typography-config($legacy-light-theme), null,
+  $no-typography-light-theme: m2-theming.define-light-theme((density: null));
+  $no-typography-dark-theme: m2-theming.define-dark-theme((density: null));
+  @include assert(m2-theming.get-typography-config($light-theme-only-typography),
+    $typography-config, 'Expected that a typography config can be read from a theme object.');
+  @include assert(m2-theming.get-typography-config($legacy-light-theme), null,
     'Expected that by default, no typography configuration is used.');
-  @include assert(theming.get-typography-config($no-typography-light-theme), null,
+  @include assert(m2-theming.get-typography-config($no-typography-light-theme), null,
     'Expected that no typography configuration can be explicitly specified.');
-  @include assert(theming.get-typography-config($no-typography-dark-theme), null,
+  @include assert(m2-theming.get-typography-config($no-typography-dark-theme), null,
     'Expected that no typography configuration can be explicitly specified.');
 }
 
@@ -190,20 +192,20 @@ $dark-theme-only-typography: theming.define-dark-theme((typography: $typography-
 // This replicates a custom theme that expects legacy theme objects.
 @mixin _my-custom-theme-legacy($theme) {
   .demo-custom-comp {
-    border-color: theming.get-color-from-palette(map.get($theme, primary));
+    border-color: m2-theming.get-color-from-palette(map.get($theme, primary));
   }
 }
 
 @mixin _my-custom-theme-new-api-color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
+  $config: m2-theming.get-color-config($config-or-theme);
 
   .demo-custom-comp {
-    border-color: theming.get-color-from-palette(map.get($config, primary));
+    border-color: m2-theming.get-color-from-palette(map.get($config, primary));
   }
 }
 
 @mixin _my-custom-theme-new-api-density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
+  $density-scale: m2-theming.get-density-config($config-or-theme);
 
   .demo-custom-comp {
     // Simulates logic for computing density according to the Material Design
@@ -215,8 +217,8 @@ $dark-theme-only-typography: theming.define-dark-theme((typography: $typography-
 // Custom theme mixin used by the custom theme backwards compatibility test.
 @mixin _my-custom-theme-new-api($theme-or-color-config) {
   $theme: theming.private-legacy-get-theme($theme-or-color-config);
-  $color: theming.get-color-config($theme);
-  $density: theming.get-density-config($theme);
+  $color: m2-theming.get-color-config($theme);
+  $density: m2-theming.get-density-config($theme);
 
   @if $color != null {
     @include _my-custom-theme-new-api-color($color);

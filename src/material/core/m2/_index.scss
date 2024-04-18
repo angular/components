@@ -1,6 +1,6 @@
 // M2-specific theming APIs which are separated out into this file so they
 // can be renamed conditionally depending on whether we're in 1P or 3P.
-@forward './theming/theming' show
+@forward './theming' show
   define-light-theme,
   define-dark-theme,
   define-palette,
@@ -10,7 +10,7 @@
   get-typography-config,
   get-density-config;
 
-@forward './theming/palette' show
+@forward './palette' show
   $red-palette,
   $pink-palette,
   $indigo-palette,
@@ -37,18 +37,16 @@
   $light-theme-foreground-palette,
   $dark-theme-foreground-palette;
 
-
-@forward './typography/typography' show
+@forward './typography' show
   define-typography-level,
   define-rem-typography-config,
   define-typography-config,
   define-legacy-typography-config;
 
-@forward './typography/typography-utils' show
+@forward './typography-utils' show
   typography-level,
   font-size,
   line-height,
   font-weight,
   letter-spacing,
-  font-family,
-  font-shorthand;
+  font-family;

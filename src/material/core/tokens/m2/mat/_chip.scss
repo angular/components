@@ -2,7 +2,7 @@
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../theming/palette';
+@use '../../../m2/palette' as m2-palette;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, chip);
@@ -26,8 +26,8 @@ $prefix: (mat, chip);
   $foreground: null;
   @if $palette-name == null {
     $is-dark: inspection.get-theme-type($theme) == dark;
-    $grey-50: map.get(palette.$grey-palette, 50);
-    $grey-900: map.get(palette.$grey-palette, 900);
+    $grey-50: map.get(m2-palette.$grey-palette, 50);
+    $grey-900: map.get(m2-palette.$grey-palette, 900);
     $foreground: if($is-dark, $grey-50, $grey-900);
   }
   @else {

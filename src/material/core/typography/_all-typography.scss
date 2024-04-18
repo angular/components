@@ -1,4 +1,5 @@
 @use './typography';
+@use '../m2/typography' as m2-typography;
 @use '../../autocomplete/autocomplete-theme';
 @use '../../badge/badge-theme';
 @use '../../bottom-sheet/bottom-sheet-theme';
@@ -40,9 +41,9 @@
 
 // Includes all of the typographic styles.
 @mixin all-component-typographies($theme: null) {
-  // If no actual color configuration has been specified, create a default one.
+  // If no actual typography configuration has been specified, create a default one.
   @if not inspection.theme-has($theme, typography) {
-    $theme: typography.define-typography-config();
+    $theme: m2-typography.define-typography-config();
   }
 
   // TODO: COMP-309: Do not use individual mixins. Instead, use the all-theme mixin and only

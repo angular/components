@@ -1,9 +1,9 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../all-theme';
-@use '../../typography/typography';
-@use '../palette';
-@use '../theming';
+@use '../../m2/typography' as m2-typography;
+@use '../../m2/palette' as m2-palette;
+@use '../../m2/theming' as m2-theming;
 
 // Recursively replaces all of the values inside a Sass map with a different value.
 @function _replace-all-values($palette, $replacement) {
@@ -25,14 +25,14 @@
 
 // Theme used to test that our themes would compile if the colors were specified as CSS variables.
 ._demo-css-variables-theme {
-  $palette: theming.define-palette(palette.$blue-grey-palette);
-  $theme: theming.define-dark-theme((
+  $palette: m2-theming.define-palette(m2-palette.$blue-grey-palette);
+  $theme: m2-theming.define-dark-theme((
     color: (
       primary: $palette,
       accent: $palette,
       warn: $palette
     ),
-    typography: typography.define-typography-config(),
+    typography: m2-typography.define-typography-config(),
   ));
   $css-var-theme: _replace-all-values($theme, var(--test-var));
   @include all-theme.all-component-themes($css-var-theme);

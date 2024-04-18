@@ -9,6 +9,7 @@
   $theme-legacy-inspection-api-compatibility;
 @forward './core/theming/theming' as private-* show private-clamp-density;
 @forward './core/typography/typography' show typography-hierarchy;
+@forward './core/typography/typography-utils' show font-shorthand;
 @forward './core/tokens/m2' show m2-tokens-from-theme;
 
 // Private/Internal

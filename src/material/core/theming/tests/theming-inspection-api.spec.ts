@@ -235,7 +235,7 @@ describe('theming inspection api', () => {
           $color-config: mat.get-color-config($theme);
           $primary: map.get($color-config, primary);
           div {
-            color: #{mat.get-color-from-palette($primary)};
+            color: #{mat.m2-get-color-from-palette($primary)};
           }
         `),
       ).toThrow();
