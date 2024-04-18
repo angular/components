@@ -4,6 +4,7 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 
@@ -59,6 +60,13 @@
       @include mdc-plain-tooltip-theme.theme($mdc-tooltip-density-tokens);
     }
   }
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mdc-plain-tooltip.$prefix, tokens: tokens-mdc-plain-tooltip.get-token-slots()),
+  );
 }
 
 @mixin theme($theme) {

@@ -273,6 +273,31 @@
   }
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  $mdc-filled-button-tokens: tokens-mdc-filled-button.get-token-slots();
+  $mat-filled-button-tokens: tokens-mat-filled-button.get-token-slots();
+  $mdc-outlined-button-tokens: tokens-mdc-outlined-button.get-token-slots();
+  $mat-outlined-button-tokens: tokens-mat-outlined-button.get-token-slots();
+  $mdc-protected-button-tokens: tokens-mdc-protected-button.get-token-slots();
+  $mat-protected-button-tokens: tokens-mat-protected-button.get-token-slots();
+  $mdc-text-button-tokens: tokens-mdc-text-button.get-token-slots();
+  $mat-text-button-tokens: tokens-mat-text-button.get-token-slots();
+
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mdc-filled-button.$prefix, tokens: $mdc-filled-button-tokens),
+    (prefix: tokens-mat-filled-button.$prefix, tokens: $mat-filled-button-tokens),
+    (prefix: tokens-mdc-outlined-button.$prefix, tokens: $mdc-outlined-button-tokens),
+    (prefix: tokens-mat-outlined-button.$prefix, tokens: $mat-outlined-button-tokens),
+    (prefix: tokens-mdc-protected-button.$prefix, tokens: $mdc-protected-button-tokens),
+    (prefix: tokens-mat-protected-button.$prefix, tokens: $mat-protected-button-tokens),
+    (prefix: tokens-mdc-text-button.$prefix, tokens: $mdc-text-button-tokens),
+    (prefix: tokens-mat-text-button.$prefix, tokens: $mat-text-button-tokens),
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):

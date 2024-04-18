@@ -72,6 +72,15 @@
   }
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-toolbar.$prefix, tokens: tokens-mat-toolbar.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-toolbar') {
     @if inspection.get-theme-version($theme) == 1 {

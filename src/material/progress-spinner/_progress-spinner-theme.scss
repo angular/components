@@ -61,6 +61,17 @@
 @mixin density($theme) {
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  $circular-progress-tokens: tokens-mdc-circular-progress.get-token-slots();
+
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mdc-circular-progress.$prefix, tokens: $circular-progress-tokens),
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-progress-spinner.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):

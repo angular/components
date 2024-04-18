@@ -2,6 +2,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/typography/typography';
+@use '../core/tokens/token-utils';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -29,6 +30,13 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {}
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: '', tokens: ()),
+  );
 }
 
 @mixin theme($theme) {

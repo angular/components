@@ -49,6 +49,16 @@
 
 @mixin density($theme) {}
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mdc-snack-bar.$prefix, tokens: tokens-mdc-snack-bar.get-token-slots()),
+    (prefix: tokens-mat-snack-bar.$prefix, tokens: tokens-mat-snack-bar.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-snack-bar') {
     @if inspection.get-theme-version($theme) == 1 {

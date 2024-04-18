@@ -79,6 +79,18 @@
   }
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  $legacy-tokens: tokens-mat-legacy-button-toggle.get-token-slots();
+  $standard-tokens: tokens-mat-standard-button-toggle.get-token-slots();
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-legacy-button-toggle.$prefix, tokens: $legacy-tokens),
+    (prefix: tokens-mat-standard-button-toggle.$prefix, tokens: $standard-tokens),
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button-toggle.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):

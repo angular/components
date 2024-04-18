@@ -55,6 +55,13 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-autocomplete.$prefix, tokens: tokens-mat-autocomplete.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-autocomplete') {
     @if inspection.get-theme-version($theme) == 1 {

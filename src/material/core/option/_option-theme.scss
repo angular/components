@@ -66,6 +66,15 @@
   @else {}
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-option.$prefix, tokens: tokens-mat-option.get-token-slots()),
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-option.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):

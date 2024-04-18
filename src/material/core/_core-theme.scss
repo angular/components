@@ -88,6 +88,23 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  $app-tokens: tokens-mat-app.get-token-slots();
+  $ripple-tokens: tokens-mat-ripple.get-token-slots();
+  $option-tokens: tokens-mat-option.get-token-slots();
+  $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
+  $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
+
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-app.$prefix, tokens: $app-tokens),
+    (prefix: tokens-mat-ripple.$prefix, tokens: $ripple-tokens),
+    (prefix: tokens-mat-option.$prefix, tokens: $option-tokens),
+    (prefix: tokens-mat-full-pseudo-checkbox.$prefix, tokens: $full-pseudo-checkbox-tokens),
+    (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens),
+  );
+}
+
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin theme($theme, $options...) {
   // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
