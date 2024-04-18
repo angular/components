@@ -1,6 +1,8 @@
 .example-container {
-  width: 400px;
+  width: auto;
   height: 200px;
   margin: 10px;
   border: 1px solid #555;
+  /* The background property is added to clearly distinguish the borders between drawer and main content */
+  background: #eee;
 }
