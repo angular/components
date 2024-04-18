@@ -1,5 +1,6 @@
 @use 'sass:map';
-@use '../../../theming/palette';
+@use '../../../m2/palette' as m2-palette;
+@use '../../../m2/theming' as m2-theming;
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
@@ -51,7 +52,7 @@ $prefix: (mdc, checkbox);
   $border-color: sass-utils.safe-color-change(
       inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
   $active-border-color:
-    theming.get-color-from-palette(palette.$gray-palette, if($is-dark, 200, 900));
+    m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
   $selected-checkmark-color: null;
 
   // Ideally we would derive all values directly from the theme, but it causes a lot of regressions

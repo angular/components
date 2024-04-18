@@ -2,6 +2,20 @@
 @use 'sass:meta';
 @use 'sass:string';
 
+/// Emits CSS styles for the given typography level.
+/// @param {Map} $config A typography config.
+/// @param {Map} $level A typography level.
+@mixin typography-level($config, $level) {
+  // we deliberately do not use the font shorthand here because it overrides
+  // certain font properties that can't be configured in the current typography
+  // config, e.g. the font-variant-caps or font-feature-settings property
+  font-size: font-size($config, $level);
+  font-weight: font-weight($config, $level);
+  line-height: line-height($config, $level);
+  font-family: font-family($config, $level);
+  letter-spacing: letter-spacing($config, $level);
+}
+
 // Utility for fetching a nested value from a typography config.
 @function _mat-get-type-value($config, $level, $name) {
   @if meta.type-of($config) != 'map' {

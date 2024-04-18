@@ -3,12 +3,10 @@
 @use 'sass:string';
 @use 'typography-utils';
 @use '../theming/inspection';
-@use './versioning';
 
 // Definition and versioning functions live in their own files to avoid circular dependencies, but
 // we re-export them here so that historical imports from this file continue to work without needing
 // to be updated.
-@forward './definition';
 @forward './versioning';
 
 @mixin typography-hierarchy($theme, $selector: '.mat-typography', $back-compat: false) {

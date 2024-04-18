@@ -5,14 +5,14 @@
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
 @use '../style/sass-utils';
-@use '../theming/palette';
-@use '../theming/theming';
-@use '../typography/typography';
+@use '../m2/palette' as m2-palette;
+@use '../m2/theming' as m2-theming;
+@use '../m2/typography' as m2-typography;
 
 // Indicates whether we're building internally. Used for backwards compatibility.
 $private-is-internal-build: false;
 
-$_placeholder-color-palette: theming.define-palette(palette.$red-palette);
+$_placeholder-color-palette: m2-theming.define-palette(m2-palette.$red-palette);
 
 // Placeholder color config that can be passed to token getter functions when generating token
 // slots.
@@ -21,11 +21,11 @@ $placeholder-color-config: (
   accent: $_placeholder-color-palette,
   warn: $_placeholder-color-palette,
   is-dark: false,
-  foreground: palette.$light-theme-foreground-palette,
-  background: palette.$light-theme-background-palette,
+  foreground: m2-palette.$light-theme-foreground-palette,
+  background: m2-palette.$light-theme-background-palette,
 );
 
-$_placeholder-typography-level-config: typography.typography-config-level-from-mdc(body1);
+$_placeholder-typography-level-config: m2-typography.typography-config-level-from-mdc(body1);
 
 // Placeholder typography config that can be passed to token getter functions when generating token
 // slots.
