@@ -158,7 +158,7 @@
     "@types/marked": "^2.0.0",
     "@types/node": "^16.10.9",
     "@types/node-fetch": "^2.5.5",
-    "@types/selenium-webdriver": "^3.0.17",
+    "@types/selenium-webdriver": "4.1.22",
     "@types/semver": "^7.3.9",
     "@types/send": "^0.17.1",
     "@types/shelljs": "^0.8.11",
@@ -207,7 +207,7 @@
     "rollup": "^2.66.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "sass": "^1.68.0",
-    "selenium-webdriver": "^3.6.0",
+    "selenium-webdriver": "4.19.0",
     "semver": "^7.3.5",
     "send": "^0.17.2",
     "shelljs": "^0.8.5",
@@ -225,6 +225,7 @@
     "zx": "^6.2.4"
   },
   "resolutions": {
+    "protractor/@types/selenium-webdriver": "4.1.22",
     "@angular/build-tooling/typescript": "5.4.2",
     "@angular/ng-dev/typescript": "5.4.2",
     "browser-sync-client": "2.26.13",

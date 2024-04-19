@@ -88,13 +88,13 @@ export class SeleniumWebDriverElement implements TestElement {
 
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
-    await this._actions().mouseMove(this.element()).perform();
+    await this._actions().move({origin: this.element()}).perform();
     await this._stabilize();
   }
 
   /** Moves the mouse away from the element. */
   async mouseAway(): Promise<void> {
-    await this._actions().mouseMove(this.element(), {x: -1, y: -1}).perform();
+    await this._actions().move({x: -1, y: -1, origin: this.element()}).perform();
     await this._stabilize();
   }
 
@@ -290,7 +290,7 @@ export class SeleniumWebDriverElement implements TestElement {
   /** Dispatches all the events that are part of a click event sequence. */
   private async _dispatchClickEventSequence(
     args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
-    button: string,
+    button: webdriver.Button,
   ) {
     let modifiers: ModifierKeys = {};
     if (args.length && typeof args[args.length - 1] === 'object') {
@@ -301,16 +301,26 @@ export class SeleniumWebDriverElement implements TestElement {
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if
     // no args remain after popping the modifiers from the args passed to this function.
-    const offsetArgs = (args.length === 2 ? [{x: args[0], y: args[1]}] : []) as [
-      {x: number; y: number},
-    ];
+    const offset =
+      args.length === 2
+        ? {
+            x: args[0] as number,
+            y: args[1] as number,
+          }
+        : {};
 
-    let actions = this._actions().mouseMove(this.element(), ...offsetArgs);
+    let actions = this._actions().move({...offset, origin: this.element()});
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);
     }
-    actions = actions.click(button);
+
+    if (button === webdriver.Button.RIGHT) {
+      actions = actions.contextClick();
+    } else if (button !== webdriver.Button.LEFT) {
+      throw new Error('Unsupported mouse interaction.');
+    }
+
     for (const modifierKey of modifierKeys) {
       actions = actions.keyUp(modifierKey);
     }

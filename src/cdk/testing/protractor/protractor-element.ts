@@ -81,12 +81,12 @@ export class ProtractorElement implements TestElement {
 
   /** Blur the element. */
   async blur(): Promise<void> {
-    return browser.executeScript('arguments[0].blur()', this.element);
+    return browser['executeScript']('arguments[0].blur()', this.element);
   }
 
   /** Clear the element's input (for input and textarea elements only). */
   async clear(): Promise<void> {
-    return this.element.clear();
+    return this.element['clear']();
   }
 
   /**
@@ -125,26 +125,24 @@ export class ProtractorElement implements TestElement {
 
   /** Focus the element. */
   async focus(): Promise<void> {
-    return browser.executeScript('arguments[0].focus()', this.element);
+    return browser['executeScript']('arguments[0].focus()', this.element);
   }
 
   /** Get the computed value of the given CSS property for the element. */
   async getCssValue(property: string): Promise<string> {
-    return this.element.getCssValue(property);
+    return this.element['getCssValue'](property);
   }
 
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
-    return browser
-      .actions()
+    return browser['actions']()
       .mouseMove(await this.element.getWebElement())
       .perform();
   }
 
   /** Moves the mouse away from the element. */
   async mouseAway(): Promise<void> {
-    return browser
-      .actions()
+    return browser['actions']()
       .mouseMove(await this.element.getWebElement(), {x: -1, y: -1})
       .perform();
   }
@@ -185,7 +183,7 @@ export class ProtractorElement implements TestElement {
       throw getNoKeysSpecifiedError();
     }
 
-    return this.element.sendKeys(...keys);
+    return this.element['sendKeys'](...keys);
   }
 
   /**
@@ -194,10 +192,10 @@ export class ProtractorElement implements TestElement {
    */
   async text(options?: TextOptions): Promise<string> {
     if (options?.exclude) {
-      return browser.executeScript(_getTextWithExcludedElements, this.element, options.exclude);
+      return browser['executeScript'](_getTextWithExcludedElements, this.element, options.exclude);
     }
     // We don't go through Protractor's `getText`, because it excludes text from hidden elements.
-    return browser.executeScript(`return (arguments[0].textContent || '').trim()`, this.element);
+    return browser['executeScript'](`return (arguments[0].textContent || '').trim()`, this.element);
   }
 
   /**
@@ -211,12 +209,16 @@ export class ProtractorElement implements TestElement {
       throw new Error('setContenteditableValue can only be called on a `contenteditable` element.');
     }
 
-    return browser.executeScript(`arguments[0].textContent = arguments[1];`, this.element, value);
+    return browser['executeScript'](
+      `arguments[0].textContent = arguments[1];`,
+      this.element,
+      value,
+    );
   }
 
   /** Gets the value for the given attribute from the element. */
   async getAttribute(name: string): Promise<string | null> {
-    return browser.executeScript(
+    return browser['executeScript'](
       `return arguments[0].getAttribute(arguments[1])`,
       this.element,
       name,
@@ -231,19 +233,19 @@ export class ProtractorElement implements TestElement {
 
   /** Gets the dimensions of the element. */
   async getDimensions(): Promise<ElementDimensions> {
-    const {width, height} = await this.element.getSize();
-    const {x: left, y: top} = await this.element.getLocation();
+    const {width, height} = await this.element['getSize']();
+    const {x: left, y: top} = await this.element['getLocation']();
     return {width, height, left, top};
   }
 
   /** Gets the value of a property of an element. */
   async getProperty<T = any>(name: string): Promise<T> {
-    return browser.executeScript(`return arguments[0][arguments[1]]`, this.element, name);
+    return browser['executeScript'](`return arguments[0][arguments[1]]`, this.element, name);
   }
 
   /** Sets the value of a property of an input. */
   async setInputValue(value: string): Promise<void> {
-    return browser.executeScript(`arguments[0].value = arguments[1]`, this.element, value);
+    return browser['executeScript'](`arguments[0].value = arguments[1]`, this.element, value);
   }
 
   /** Selects the options at the specified indexes inside of a native `select` element. */
@@ -260,9 +262,9 @@ export class ProtractorElement implements TestElement {
         if (indexes.has(i)) {
           // We have to hold the control key while clicking on options so that multiple can be
           // selected in multi-selection mode. The key doesn't do anything for single selection.
-          await browser.actions().keyDown(Key.CONTROL).perform();
+          await browser['actions']().keyDown(Key.CONTROL).perform();
           await options[i].click();
-          await browser.actions().keyUp(Key.CONTROL).perform();
+          await browser['actions']().keyUp(Key.CONTROL).perform();
         }
       }
     }
@@ -270,7 +272,7 @@ export class ProtractorElement implements TestElement {
 
   /** Checks whether this element matches the given selector. */
   async matchesSelector(selector: string): Promise<boolean> {
-    return browser.executeScript(
+    return browser['executeScript'](
       `
           return (Element.prototype.matches ||
                   Element.prototype.msMatchesSelector).call(arguments[0], arguments[1])
@@ -282,7 +284,7 @@ export class ProtractorElement implements TestElement {
 
   /** Checks whether the element is focused. */
   async isFocused(): Promise<boolean> {
-    return this.element.equals(browser.driver.switchTo().activeElement());
+    return this.element.equals((browser.driver as any)['switchTo']().activeElement());
   }
 
   /**
@@ -290,7 +292,7 @@ export class ProtractorElement implements TestElement {
    * @param name Name of the event to be dispatched.
    */
   async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
-    return browser.executeScript(_dispatchEvent, name, this.element, data);
+    return browser['executeScript'](_dispatchEvent, name, this.element, data);
   }
 
   /** Dispatches all the events that are part of a click event sequence. */
@@ -311,7 +313,7 @@ export class ProtractorElement implements TestElement {
       {x: number; y: number},
     ];
 
-    let actions = browser.actions().mouseMove(await this.element.getWebElement(), ...offsetArgs);
+    let actions = browser['actions']().mouseMove(await this.element.getWebElement(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);

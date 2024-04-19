@@ -60,7 +60,6 @@ describe('WebDriverHarnessEnvironment', () => {
       .usingServer(process.env['WEB_TEST_WEBDRIVER_SERVER']!)
       .withCapabilities(webTestMetadata.capabilities)
       .build();
-    await wd.manage().timeouts().implicitlyWait(0);
   });
 
   afterAll(async () => {
