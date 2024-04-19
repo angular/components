@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
 // Plus imports for other components in your app.
 
@@ -8,11 +7,11 @@ mat.$theme-legacy-inspection-api-compatibility: false;
 
 // Create a theme with the specified color type and density.
 @function create-theme($type: light, $density: 0) {
-  @return matx.define-theme((
+  @return mat.define-theme((
     color: (
       theme-type: $type,
-      primary: matx.$m3-azure-palette,
-      tertiary: matx.$m3-blue-palette,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
     ),
     density: (
       scale: $density
@@ -78,11 +77,11 @@ $density-scales: (-1, -2, -3, -4, minimum, maximum);
 
 // Enable back-compat CSS for color="..." API & typography hierarchy.
 .demo-color-api-back-compat {
-  @include matx.color-variants-back-compat($light-theme);
+  @include mat.color-variants-backwards-compatibility($light-theme);
   @include mat.typography-hierarchy($light-theme, $back-compat: true);
 
   &.demo-unicorn-dark-theme {
-    @include matx.color-variants-back-compat($dark-theme);
+    @include mat.color-variants-backwards-compatibility($dark-theme);
   }
 }
 

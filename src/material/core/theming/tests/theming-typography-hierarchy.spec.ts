@@ -28,11 +28,10 @@ function transpile(content: string) {
   return compileString(
     `
         @use '../../../index' as mat;
-        @use '../../../../material-experimental/index' as matx;
 
         $internals: _mat-theming-internals-do-not-access;
 
-        $theme: matx.define-theme();
+        $theme: mat.define-theme();
 
         ${content}
       `,

@@ -142,6 +142,7 @@
     "@material/textfield": "15.0.0-canary.7f224ddd4.0",
     "@material/theme": "15.0.0-canary.7f224ddd4.0",
     "@material/tooltip": "15.0.0-canary.7f224ddd4.0",
+    "@material/tokens": "15.0.0-canary.7f224ddd4.0",
     "@material/top-app-bar": "15.0.0-canary.7f224ddd4.0",
     "@material/touch-target": "15.0.0-canary.7f224ddd4.0",
     "@material/typography": "15.0.0-canary.7f224ddd4.0",

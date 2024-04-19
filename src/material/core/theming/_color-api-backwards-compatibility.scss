@@ -1,0 +1,128 @@
+@use '../../badge/badge-theme';
+@use '../../button/button-theme';
+@use '../../button/fab-theme';
+@use '../../checkbox/checkbox-theme';
+@use '../../chips/chips-theme';
+@use '../../datepicker/datepicker-theme';
+@use '../../icon/icon-theme';
+@use '../../progress-bar/progress-bar-theme';
+@use '../../progress-spinner/progress-spinner-theme';
+@use '../../radio/radio-theme';
+@use '../../select/select-theme';
+@use '../../slide-toggle/slide-toggle-theme';
+@use '../../slider/slider-theme';
+@use '../../stepper/stepper-theme';
+@use '../../tabs/tabs-theme';
+@use '../../form-field/form-field-theme';
+@use '../option/option-theme';
+@use '../selection/pseudo-checkbox/pseudo-checkbox-theme';
+
+// We want to emit only the overrides, because the backwards compatibility styles are usually
+// emitted after all the tokens have been included once already. This allows us to save ~50kb
+// from the bundle.
+$_overrides-only: true;
+
+@mixin color-variant-styles($theme, $color-variant) {
+  $primary-options: (color-variant: $color-variant, emit-overrides-only: $_overrides-only);
+
+  // Some components use the secondary color rather than primary color for `.mat-primary`.
+  // Those components should use the $secondary-color-variant.
+  $secondary-options: (
+    color-variant: if($color-variant == primary, secondary, $color-variant),
+    emit-overrides-only: $_overrides-only
+  );
+
+  @include option-theme.color($theme, $secondary-options...);
+  @include progress-spinner-theme.color($theme, $primary-options...);
+  @include pseudo-checkbox-theme.color($theme, $primary-options...);
+  @include stepper-theme.color($theme, $primary-options...);
+
+  &.mat-icon {
+    @include icon-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-checkbox {
+    @include checkbox-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-slider {
+    @include slider-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-tab-group,
+  &.mat-mdc-tab-nav-bar {
+    @include tabs-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-slide-toggle {
+    @include slide-toggle-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-form-field {
+    @include select-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-radio-button {
+    @include radio-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-progress-bar {
+    @include progress-bar-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-form-field {
+    @include form-field-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-datepicker-content {
+    @include datepicker-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-button-base {
+    @include button-theme.color($theme, $primary-options...);
+  }
+
+  &.mat-mdc-standard-chip {
+    @include chips-theme.color($theme, $secondary-options...);
+  }
+
+  .mdc-list-item__start,
+  .mdc-list-item__end {
+    @include checkbox-theme.color($theme, $primary-options...);
+    @include radio-theme.color($theme, $primary-options...);
+  }
+
+  // M3 dropped support for warn/error color FABs.
+  @if $color-variant != error {
+    &.mat-mdc-fab,
+    &.mat-mdc-mini-fab {
+      @include fab-theme.color($theme, $primary-options...);
+    }
+  }
+}
+
+@mixin color-variants-backwards-compatibility($theme) {
+  .mat-primary {
+    @include color-variant-styles($theme, primary);
+  }
+  .mat-badge {
+    @include badge-theme.color($theme, $color-variant: primary,
+      $emit-overrides-only: $_overrides-only);
+  }
+
+  .mat-accent {
+    @include color-variant-styles($theme, tertiary);
+  }
+  .mat-badge-accent {
+    @include badge-theme.color($theme, $color-variant: tertiary,
+      $emit-overrides-only: $_overrides-only);
+  }
+
+  .mat-warn {
+    @include color-variant-styles($theme, error);
+  }
+  .mat-badge-warn {
+    @include badge-theme.color($theme, $color-variant: error,
+      $emit-overrides-only: $_overrides-only);
+  }
+}

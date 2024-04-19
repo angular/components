@@ -75,6 +75,7 @@ MDC_PACKAGES = [
     "@material/textfield",
     "@material/theme",
     "@material/tooltip",
+    "@material/tokens",
     "@material/top-app-bar",
     "@material/touch-target",
     "@material/typography",

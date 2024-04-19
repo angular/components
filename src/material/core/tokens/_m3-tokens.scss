@@ -1,9 +1,11 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
-@use '@angular/material' as mat;
 @use '@material/tokens/v0_161' as mdc-tokens;
-@use './m3-density';
+@use '../style/sass-utils';
+@use '../m2' as m2-theming;
+@use '../tokens/m2' as m2-tokens;
+@use './density';
 @use './custom-tokens';
 @use './format-tokens';
 
@@ -64,7 +66,7 @@
 
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
 /// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map|(Map, Map)} $m3-values A map of M3 token values for the given prefix.
+/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
 ///  This param may also be a tuple of maps, the first one representing the default M3 token values,
 //   and the second containing overrides for different color variants.
 //   Single map example:
@@ -80,17 +82,17 @@
 /// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
 /// @param {String|null} $variant The name of the variant the token values are for.
 /// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function _namespace-tokens($prefix, $m3-values, $slots, $variant: null) {
+@function _namespace-tokens($prefix, $values, $slots, $variant: null) {
   $result: ();
-  @if $variant == null and meta.type-of($m3-values) == 'list' and list.length($m3-values == 2) {
-    $variants: list.nth($m3-values, 2);
-    $m3-values: list.nth($m3-values, 1);
+  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
+    $variants: list.nth($values, 2);
+    $values: list.nth($values, 1);
     @each $variant, $overrides in $variants {
       $result: map.merge($result, _namespace-tokens($prefix, $overrides, $slots, $variant));
     }
   }
   $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
-  $used-m3-tokens: _pick(_filter-nulls($m3-values), $used-token-names);
+  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
   $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
   @return map.merge($result, ($prefix: $used-m3-tokens));
 }
@@ -116,7 +118,7 @@
 /// @param {Map} $error The error palette
 /// @return {Map} A set of `md-ref-palette` tokens
 @function _generate-ref-palette-tokens($primary, $tertiary, $error) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
       (black: #000, white: #fff),
       _generate-palette-tokens($primary, primary),
       _generate-palette-tokens(map.get($primary, secondary), secondary),
@@ -508,19 +510,19 @@
   // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
   //  material-experimental. This is a hack for now because there is no good way to get the token
   //  slots in material-experimental without exposing them all from material.
-  $fake-theme: mat.m2-define-light-theme((
+  $fake-theme: m2-theming.define-light-theme((
     color: (
-      primary: mat.m2-define-palette(mat.$m2-red-palette),
-      accent: mat.m2-define-palette(mat.$m2-red-palette),
-      warn: mat.m2-define-palette(mat.$m2-red-palette),
+      primary: m2-theming.define-palette(m2-theming.$red-palette),
+      accent: m2-theming.define-palette(m2-theming.$red-palette),
+      warn: m2-theming.define-palette(m2-theming.$red-palette),
     ),
-    typography: mat.m2-define-typography-config(),
+    typography: m2-theming.define-typography-config(),
     density: 0
   ));
-  $token-slots: mat.m2-tokens-from-theme($fake-theme);
+  $token-slots: m2-tokens.m2-tokens-from-theme($fake-theme);
 
   // TODO(mmalerba): Fill in remaining tokens.
-  $result: mat.private-deep-merge-all(
+  $result: sass-utils.deep-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
     (
       (mdc, theme): map.get($systems, md-sys-color),
@@ -972,7 +974,7 @@
   // Strip out tokens that are systemized by our made up density system.
   @each $namespace, $tokens in $result {
     @each $token, $value in $tokens {
-      @if m3-density.is-systemized($namespace, $token) {
+      @if density.is-systemized($namespace, $token) {
         $tokens: map.remove($tokens, $token);
       }
     }
@@ -1027,7 +1029,7 @@
 /// @param {String|Number} $scale The regular font-weight
 /// @return {Map} A map of namespaced density tokens
 @function generate-density-tokens($scale) {
-  @return m3-density.get-tokens-for-scale($scale);
+  @return density.get-tokens-for-scale($scale);
 }
 
 /// Generates a set of namespaced tokens not related to color, typography, or density for all
