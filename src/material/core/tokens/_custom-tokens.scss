@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '@angular/material' as mat;
+@use '../style/sass-utils';
 @use '@material/elevation/elevation-theme' as mdc-elevation;
 
 /// Hardcode the given value, or null if hardcoded values are excluded.
@@ -54,7 +54,7 @@
   @return ((
     background-color: map.get($systems, md-sys-color, error),
     text-color: map.get($systems, md-sys-color, on-error),
-    disabled-state-background-color: mat.private-safe-color-change(
+    disabled-state-background-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, error),
       $alpha: 0.38,
     ),
@@ -86,7 +86,7 @@
     primary: (
       background-color: map.get($systems, md-sys-color, primary),
       text-color: map.get($systems, md-sys-color, on-primary),
-      disabled-state-background-color: mat.private-safe-color-change(
+      disabled-state-background-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary),
         $alpha: 0.38,
       ),
@@ -95,7 +95,7 @@
     secondary: (
       background-color: map.get($systems, md-sys-color, secondary),
       text-color: map.get($systems, md-sys-color, on-secondary),
-      disabled-state-background-color: mat.private-safe-color-change(
+      disabled-state-background-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, secondary),
         $alpha: 0.38,
       ),
@@ -104,7 +104,7 @@
     tertiary: (
       background-color: map.get($systems, md-sys-color, tertiary),
       text-color: map.get($systems, md-sys-color, on-tertiary),
-      disabled-state-background-color: mat.private-safe-color-change(
+      disabled-state-background-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, tertiary),
         $alpha: 0.38,
       ),
@@ -119,7 +119,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-bottom-sheet
 @function bottom-sheet($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, container-text, body-large),
     (
       container-shape: _hardcode(28px, $exclude-hardcoded),
@@ -134,7 +134,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-button-toggle
 @function button-toggle($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, label-text, label-large),
   (
     shape: map.get($systems, md-sys-shape, corner-full),
@@ -145,16 +145,16 @@
     state-layer-color: map.get($systems, md-sys-color, on-surface),
     selected-state-background-color: map.get($systems, md-sys-color, secondary-container),
     selected-state-text-color: map.get($systems, md-sys-color, on-secondary-container),
-    disabled-state-text-color: mat.private-safe-color-change(
+    disabled-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38,
     ),
     disabled-state-background-color: _hardcode(transparent, $exclude-hardcoded),
-    disabled-selected-state-text-color: mat.private-safe-color-change(
+    disabled-selected-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38,
     ),
-    disabled-selected-state-background-color: mat.private-safe-color-change(
+    disabled-selected-state-background-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.12,
     ),
@@ -182,7 +182,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-card
 @function card($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, title-text, title-large),
     _generate-typography-tokens($systems, subtitle-text, title-medium),
     (
@@ -236,7 +236,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mdc-chip
 @function mdc-chip($systems, $exclude-hardcoded) {
-  @return (mat.private-merge-all(
+  @return (sass-utils.merge-all(
     _generate-typography-tokens($systems, label-text, label-large),
     (
       container-shape: _hardcode((
@@ -245,7 +245,7 @@
       ), $exclude-hardcoded),
       with-avatar-avatar-size: _hardcode(24px, $exclude-hardcoded),
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-label-text-color: mat.private-safe-color-change(
+      disabled-label-text-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: 0.38,
       ),
@@ -259,7 +259,7 @@
       focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
       outline-width: _hardcode(1px, $exclude-hardcoded),
       outline-color: map.get($systems, md-sys-color, outline),
-      disabled-outline-color: mat.private-safe-color-change(
+      disabled-outline-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: 0.12,
       ),
@@ -270,7 +270,7 @@
       elevated-selected-container-color: map.get($systems, md-sys-color, secondary-container),
       flat-selected-outline-width: _hardcode(0, $exclude-hardcoded),
       selected-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
-      flat-disabled-selected-container-color: mat.private-safe-color-change(
+      flat-disabled-selected-container-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: 0.12,
       ),
@@ -326,16 +326,16 @@
       map.get($systems, md-sys-color, secondary),
     calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-primary),
     calendar-date-selected-state-background-color: map.get($systems, md-sys-color, primary),
-    calendar-date-selected-disabled-state-background-color: mat.private-safe-color-change(
+    calendar-date-selected-disabled-state-background-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
     ),
     calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, primary),
-    calendar-date-focus-state-background-color: mat.private-safe-color-change(
+    calendar-date-focus-state-background-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
     ),
-    calendar-date-hover-state-background-color: mat.private-safe-color-change(
+    calendar-date-hover-state-background-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
     ),
@@ -348,23 +348,23 @@
     calendar-header-divider-color: _hardcode(transparent, $exclude-hardcoded),
     calendar-header-text-color: map.get($systems, md-sys-color, on-surface-variant),
     calendar-date-today-outline-color: map.get($systems, md-sys-color, primary),
-    calendar-date-today-disabled-state-outline-color: mat.private-safe-color-change(
+    calendar-date-today-disabled-state-outline-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
     ),
     calendar-date-text-color: map.get($systems, md-sys-color, on-surface),
     calendar-date-outline-color: _hardcode(transparent, $exclude-hardcoded),
-    calendar-date-disabled-state-text-color: mat.private-safe-color-change(
+    calendar-date-disabled-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
     ),
     calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, primary),
     range-input-separator-color: map.get($systems, md-sys-color, on-surface),
-    range-input-disabled-state-separator-color: mat.private-safe-color-change(
+    range-input-disabled-state-separator-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
     ),
-    range-input-disabled-state-text-color: mat.private-safe-color-change(
+    range-input-disabled-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
     ),
@@ -462,7 +462,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-expansion
 @function expansion($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, header-text, title-medium),
     _generate-typography-tokens($systems, container-text, body-large),
     (
@@ -472,15 +472,15 @@
       container-background-color: map.get($systems, md-sys-color, surface),
       container-text-color: map.get($systems, md-sys-color, on-surface),
       actions-divider-color: map.get($systems, md-sys-color, outline-variant),
-      header-hover-state-layer-color: mat.private-safe-color-change(
+      header-hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
       ),
-      header-focus-state-layer-color: mat.private-safe-color-change(
+      header-focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
-      header-disabled-state-text-color: mat.private-safe-color-change(
+      header-disabled-state-text-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       header-text-color: map.get($systems, md-sys-color, on-surface),
       header-description-color: map.get($systems, md-sys-color, on-surface-variant),
@@ -497,16 +497,16 @@
   @return ((
     foreground-color: map.get($systems, md-sys-color, on-primary-container),
     state-layer-color: map.get($systems, md-sys-color, on-primary-container),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-primary-container),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    disabled-state-container-color: mat.private-safe-color-change(
+    disabled-state-container-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    disabled-state-foreground-color: mat.private-safe-color-change(
+    disabled-state-foreground-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
   ), (
     // Color variants
@@ -514,7 +514,7 @@
     secondary: (
       foreground-color: map.get($systems, md-sys-color, on-secondary-container),
       state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-secondary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -522,7 +522,7 @@
     tertiary: (
       foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
       state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-tertiary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -538,16 +538,16 @@
   @return ((
     foreground-color: map.get($systems, md-sys-color, on-primary-container),
     state-layer-color: map.get($systems, md-sys-color, on-primary-container),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-primary-container),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    disabled-state-container-color: mat.private-safe-color-change(
+    disabled-state-container-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    disabled-state-foreground-color: mat.private-safe-color-change(
+    disabled-state-foreground-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
   ), (
     // Color variants
@@ -555,7 +555,7 @@
     secondary: (
       foreground-color: map.get($systems, md-sys-color, on-secondary-container),
       state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-secondary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -563,7 +563,7 @@
     tertiary: (
       foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
       state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-tertiary-container),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -576,19 +576,19 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-form-field
 @function form-field($systems, $exclude-hardcoded) {
-  @return (mat.private-merge-all(
+  @return (sass-utils.merge-all(
     _generate-typography-tokens($systems, container-text, body-large),
     _generate-typography-tokens($systems, subscript-text, body-small),
     (
-      disabled-input-text-placeholder-color: mat.private-safe-color-change(
+      disabled-input-text-placeholder-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       state-layer-color: map.get($systems, md-sys-color, on-surface),
       error-text-color: map.get($systems, md-sys-color, error),
       select-option-text-color: map.get($systems, md-ref-palette, neutral10),
-      select-disabled-option-text-color: mat.private-safe-color-change(
+      select-disabled-option-text-color: sass-utils.safe-color-change(
           map.get($systems, md-ref-palette, neutral10), $alpha: 0.38),
       enabled-select-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-select-arrow-color: mat.private-safe-color-change(
+      disabled-select-arrow-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       focus-state-layer-opacity: _hardcode(0, $exclude-hardcoded),
@@ -596,11 +596,11 @@
       outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
 
       leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-leading-icon-color: mat.private-safe-color-change(
+      disabled-leading-icon-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
 
       trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-trailing-icon-color: mat.private-safe-color-change(
+      disabled-trailing-icon-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       error-focus-trailing-icon-color: map.get($systems, md-sys-color, error),
       error-hover-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
@@ -682,7 +682,7 @@
     icon-offset: _hardcode(-4px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, primary),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
@@ -694,21 +694,21 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       state-layer-color: map.get($systems, md-sys-color, secondary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, secondary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       )
     ),
     tertiary: (
       state-layer-color: map.get($systems, md-sys-color, tertiary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, tertiary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       )
     ),
     error: (
       state-layer-color: map.get($systems, md-sys-color, error),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, error),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       )
@@ -727,7 +727,7 @@
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, on-primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-primary),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
@@ -739,21 +739,21 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       state-layer-color: map.get($systems, md-sys-color, on-secondary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-secondary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     tertiary: (
       state-layer-color: map.get($systems, md-sys-color, on-tertiary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-tertiary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     error: (
       state-layer-color: map.get($systems, md-sys-color, on-error),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-error),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -772,7 +772,7 @@
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, primary),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
@@ -784,21 +784,21 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       state-layer-color: map.get($systems, md-sys-color, secondary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, secondary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     tertiary: (
       state-layer-color: map.get($systems, md-sys-color, tertiary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, tertiary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     error: (
       state-layer-color: map.get($systems, md-sys-color, error),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, error),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -817,7 +817,7 @@
     icon-offset: _hardcode(-8px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, primary),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
@@ -829,21 +829,21 @@
     primary: (), // Default, no overrides needed.
     secondary: (
       state-layer-color: map.get($systems, md-sys-color, secondary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, secondary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     tertiary: (
       state-layer-color: map.get($systems, md-sys-color, tertiary),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, tertiary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
     ),
     error: (
       state-layer-color: map.get($systems, md-sys-color, error),
-      ripple-color: mat.private-safe-color-change(
+      ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, error),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
@@ -859,7 +859,7 @@
   @return (
     state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: mat.private-safe-color-change(
+    ripple-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface-variant),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
@@ -874,7 +874,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-menu
 @function menu($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, item-label-text, label-large),
     (
       container-shape: map.get($systems, md-sys-shape, corner-extra-small),
@@ -884,11 +884,11 @@
       item-label-text-color: map.get($systems, md-sys-color, on-surface),
       item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
       item-icon-size: _hardcode(24px, $exclude-hardcoded),
-      item-hover-state-layer-color: mat.private-safe-color-change(
+      item-hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
       ),
-      item-focus-state-layer-color: mat.private-safe-color-change(
+      item-focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
@@ -907,7 +907,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-optgroup
 @function optgroup($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
@@ -923,11 +923,11 @@
   @return ((
       selected-state-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
       label-text-color: map.get($systems, md-sys-color, on-surface),
-      hover-state-layer-color: mat.private-safe-color-change(
+      hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
       ),
-      focus-state-layer-color: mat.private-safe-color-change(
+      focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
@@ -966,13 +966,13 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-paginator
 @function paginator($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, container-text, body-small),
     (
       container-text-color: map.get($systems, md-sys-color, on-surface),
       container-background-color: map.get($systems, md-sys-color, surface),
       enabled-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-icon-color: mat.private-safe-color-change(
+      disabled-icon-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       select-trigger-text-size: map.get($systems, md-sys-typescale, body-small-size),
     )
@@ -984,7 +984,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the full variant of mat-pseudo-checkbox
 @function full-pseudo-checkbox($systems, $exclude-hardcoded) {
-  $disabled-color: mat.private-safe-color-change(
+  $disabled-color: sass-utils.safe-color-change(
     map.get($systems, md-sys-color, on-surface), $alpha: 0.38);
 
   @return ((
@@ -1019,7 +1019,7 @@
 @function minimal-pseudo-checkbox($systems, $exclude-hardcoded) {
   @return ((
     selected-checkmark-color: map.get($systems, md-sys-color, primary),
-    disabled-selected-checkmark-color: mat.private-safe-color-change(
+    disabled-selected-checkmark-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
   ), (
     // Color variants:
@@ -1042,7 +1042,7 @@
 /// @return {Map} A set of custom tokens for mat-checkbox
 @function checkbox($systems, $exclude-hardcoded) {
   @return (
-    disabled-label-color: mat.private-safe-color-change(
+    disabled-label-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
   );
 }
@@ -1056,7 +1056,7 @@
   @return ((
     ripple-color: map.get($systems, md-sys-color, on-surface),
     checked-ripple-color: map.get($systems, md-sys-color, primary),
-    disabled-label-color: mat.private-safe-color-change(
+    disabled-label-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
   ), (
     // Color variants:
@@ -1079,7 +1079,7 @@
 /// @return {Map} A set of custom tokens for the mat-ripple
 @function ripple($systems, $exclude-hardcoded) {
   @return (
-    color: mat.private-safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.1),
+    color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.1),
   );
 }
 
@@ -1088,16 +1088,16 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-select
 @function select($systems, $exclude-hardcoded) {
-  @return (mat.private-merge-all(
+  @return (sass-utils.merge-all(
     _generate-typography-tokens($systems, trigger-text, body-large),
     (
       panel-background-color: map.get($systems, md-sys-color, surface-container),
       enabled-trigger-text-color: map.get($systems, md-sys-color, on-surface),
-      disabled-trigger-text-color: mat.private-safe-color-change(
+      disabled-trigger-text-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       placeholder-text-color: map.get($systems, md-sys-color, on-surface-variant),
       enabled-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-arrow-color: mat.private-safe-color-change(
+      disabled-arrow-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       focused-arrow-color: map.get($systems, md-sys-color, primary),
       invalid-arrow-color: map.get($systems, md-sys-color, error),
@@ -1133,7 +1133,7 @@
     container-text-color: map.get($systems, md-sys-color, on-surface-variant),
     content-background-color: map.get($systems, md-sys-color, background),
     content-text-color: map.get($systems, md-sys-color, on-background),
-    scrim-color: mat.private-safe-color-change(
+    scrim-color: sass-utils.safe-color-change(
         map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
   );
 }
@@ -1145,9 +1145,9 @@
 @function slider($systems, $exclude-hardcoded) {
   @return ((
     ripple-color: map.get($systems, md-sys-color, primary),
-    hover-state-layer-color: mat.private-safe-color-change(
+    hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary), $alpha: 0.05),
-    focus-state-layer-color: mat.private-safe-color-change(
+    focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary), $alpha: 0.2),
     value-indicator-opacity: _hardcode(1, $exclude-hardcoded),
     value-indicator-padding: _hardcode(0, $exclude-hardcoded),
@@ -1163,23 +1163,23 @@
     primary: (), // Default, no overrides needed
     secondary: (
       ripple-color: map.get($systems, md-sys-color, secondary),
-      hover-state-layer-color: mat.private-safe-color-change(
+      hover-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, secondary), $alpha: 0.05),
-      focus-state-layer-color: mat.private-safe-color-change(
+      focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, secondary), $alpha: 0.2),
     ),
     tertiary: (
       ripple-color: map.get($systems, md-sys-color, tertiary),
-      hover-state-layer-color: mat.private-safe-color-change(
+      hover-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, tertiary), $alpha: 0.05),
-      focus-state-layer-color: mat.private-safe-color-change(
+      focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, tertiary), $alpha: 0.2),
     ),
     error: (
       ripple-color: map.get($systems, md-sys-color, error),
-      hover-state-layer-color: mat.private-safe-color-change(
+      hover-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, error), $alpha: 0.05),
-      focus-state-layer-color: mat.private-safe-color-change(
+      focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, error), $alpha: 0.2),
     ),
   ));
@@ -1250,11 +1250,11 @@
     (
       container-color: map.get($systems, md-sys-color, surface),
       line-color: map.get($systems, md-sys-color, outline-variant),
-      header-hover-state-layer-color: mat.private-safe-color-change(
+      header-hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, inverse-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
       ),
-      header-focus-state-layer-color: mat.private-safe-color-change(
+      header-focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, inverse-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
@@ -1315,7 +1315,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-tab-header
 @function tab-header($systems, $exclude-hardcoded) {
-  @return (mat.private-merge-all(
+  @return (sass-utils.merge-all(
     _generate-typography-tokens($systems, label-text, title-small),
     (
       divider-color: map.get($systems, md-sys-color, surface-variant),
@@ -1382,7 +1382,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-table
 @function table($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, header-headline, title-small),
     _generate-typography-tokens($systems, row-item-label-text, body-medium),
     _generate-typography-tokens($systems, footer-supporting-text, body-medium),
@@ -1401,7 +1401,7 @@
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {Map} A set of custom tokens for the mat-toolbar
 @function toolbar($systems, $exclude-hardcoded) {
-  @return mat.private-merge-all(
+  @return sass-utils.merge-all(
     _generate-typography-tokens($systems, title-text, title-large),
     (
       container-background-color: map.get($systems, md-sys-color, surface),

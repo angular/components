@@ -4,6 +4,13 @@
 // New theming APIs
 @forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
   get-theme-typography, get-theme-density, theme-has, theme-remove;
+@forward './core/theming/definition' show define-theme, define-colors, define-typography,
+  define-density;
+@forward './core/theming/palettes' show $red-palette, $green-palette, $blue-palette,
+  $yellow-palette, $cyan-palette, $magenta-palette, $orange-palette,
+  $chartreuse-palette, $azure-palette, $violet-palette, $rose-palette;
+@forward './core/theming/color-api-backwards-compatibility' show
+  color-variants-backwards-compatibility;
 
 @forward './core/theming/theming' show $theme-ignore-duplication-warnings,
   $theme-legacy-inspection-api-compatibility;

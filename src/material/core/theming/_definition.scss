@@ -1,9 +1,9 @@
 // This file contains functions used to define Angular Material theme objects.
 
 @use 'sass:map';
-@use '@angular/material' as mat;
-@use './m3-palettes';
-@use './m3-tokens';
+@use '../style/sass-utils';
+@use './palettes';
+@use '../tokens/m3-tokens';
 @use './config-validation';
 
 /// Map key used to store internals of theme config.
@@ -20,7 +20,7 @@ $theme-version: 1;
     @error $err;
   }
 
-  @return mat.private-deep-merge-all(
+  @return sass-utils.deep-merge-all(
       define-colors(map.get($config, color) or ()),
       define-typography(map.get($config, typography) or ()),
       define-density(map.get($config, density) or ()),
@@ -38,7 +38,7 @@ $theme-version: 1;
   }
 
   $type: map.get($config, theme-type) or light;
-  $primary: map.get($config, primary) or m3-palettes.$violet-palette;
+  $primary: map.get($config, primary) or palettes.$violet-palette;
   $tertiary: map.get($config, tertiary) or $primary;
 
   @return (

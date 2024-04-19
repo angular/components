@@ -4,11 +4,4 @@
 @forward './popover-edit/popover-edit-theme' as popover-edit-* show popover-edit-color,
   popover-edit-typography, popover-edit-density, popover-edit-theme;
 
-// Token-based theming API
-@forward './theming/definition' show define-theme, define-colors, define-typography, define-density;
-@forward './theming/m3-palettes' as m3-* show $m3-red-palette, $m3-green-palette, $m3-blue-palette,
-  $m3-yellow-palette, $m3-cyan-palette, $m3-magenta-palette, $m3-orange-palette,
-  $m3-chartreuse-palette, $m3-azure-palette, $m3-violet-palette, $m3-rose-palette;
-@forward './theming/color-api-back-compat' show color-variants-back-compat;
-
 // Additional public APIs for individual components

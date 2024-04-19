@@ -29,7 +29,6 @@ function transpile(content: string) {
     `
         @use 'sass:map';
         @use '../../../index' as mat;
-        @use '../../../../material-experimental/index' as matx;
 
         ${content}
       `,
@@ -246,7 +245,7 @@ describe('theming inspection api', () => {
     it('should get theme version', () => {
       expect(
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             --theme-version: #{mat.get-theme-version($theme)};
           }
@@ -257,7 +256,7 @@ describe('theming inspection api', () => {
     it('should get theme type', () => {
       expect(
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             --theme-type: #{mat.get-theme-type($theme)};
           }
@@ -268,7 +267,7 @@ describe('theming inspection api', () => {
     it('should get role color', () => {
       expect(
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme, primary-container);
           }
@@ -279,7 +278,7 @@ describe('theming inspection api', () => {
     it('should error on invalid color role', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme, fake-role);
           }
@@ -290,7 +289,7 @@ describe('theming inspection api', () => {
     it('should get palette color', () => {
       expect(
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme, tertiary, 20);
           }
@@ -301,7 +300,7 @@ describe('theming inspection api', () => {
     it('should error on invalid color palette', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme, fake-palette, 20);
           }
@@ -312,7 +311,7 @@ describe('theming inspection api', () => {
     it('should error on invalid color hue', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme, neutral, 11);
           }
@@ -323,7 +322,7 @@ describe('theming inspection api', () => {
     it('should error on wrong number of get-color-theme args', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             color: mat.get-theme-color($theme);
           }
@@ -333,7 +332,7 @@ describe('theming inspection api', () => {
 
     it('should get typography properties from theme', () => {
       const css = transpile(`
-        $theme: matx.define-theme();
+        $theme: mat.define-theme();
         div {
           font: mat.get-theme-typography($theme, headline-large);
           font-family: mat.get-theme-typography($theme, headline-large, font-family);
@@ -354,7 +353,7 @@ describe('theming inspection api', () => {
     it('should error on invalid typescale', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             font: mat.get-theme-typography($theme, subtitle-large);
           }
@@ -365,7 +364,7 @@ describe('theming inspection api', () => {
     it('should error on invalid typography property', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             text-transform: mat.get-theme-typography($theme, body-small, text-transform);
           }
@@ -376,7 +375,7 @@ describe('theming inspection api', () => {
     it('should get density scale', () => {
       expect(
         transpile(`
-          $theme: matx.define-theme();
+          $theme: mat.define-theme();
           div {
             --density-scale: #{mat.get-theme-density($theme)};
           }
@@ -386,10 +385,10 @@ describe('theming inspection api', () => {
 
     it('should check what information the theme has', () => {
       const css = transpile(`
-        $theme: matx.define-theme();
-        $color-only: matx.define-colors();
-        $typography-only: matx.define-typography();
-        $density-only: matx.define-density();
+        $theme: mat.define-theme();
+        $color-only: mat.define-colors();
+        $typography-only: mat.define-typography();
+        $density-only: mat.define-density();
         div {
           --base: #{(
             mat.theme-has($theme, base),
@@ -426,7 +425,7 @@ describe('theming inspection api', () => {
     it('should error when reading theme type from a theme with no color information', () => {
       expect(() =>
         transpile(`
-        $theme: matx.define-density();
+        $theme: mat.define-density();
         div {
           color: mat.get-theme-type($theme);
         }
@@ -437,7 +436,7 @@ describe('theming inspection api', () => {
     it('should error when reading color from a theme with no color information', () => {
       expect(() =>
         transpile(`
-        $theme: matx.define-density();
+        $theme: mat.define-density();
         div {
           color: mat.get-theme-color($theme, primary);
         }
@@ -448,7 +447,7 @@ describe('theming inspection api', () => {
     it('should error when reading typography from a theme with no typography information', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-density();
+          $theme: mat.define-density();
           div {
             font: mat.get-theme-typography($theme, body-small);
           }
@@ -459,7 +458,7 @@ describe('theming inspection api', () => {
     it('should error when reading density from a theme with no density information', () => {
       expect(() =>
         transpile(`
-          $theme: matx.define-colors();
+          $theme: mat.define-colors();
           div {
             --density: #{mat.get-theme-density($theme)};
           }
@@ -469,7 +468,7 @@ describe('theming inspection api', () => {
 
     it('should not emit styles for removed theme dimensions', () => {
       const css = transpile(`
-        $theme: mat.theme-remove(matx.define-theme(), base, color, typography, density);
+        $theme: mat.theme-remove(mat.define-theme(), base, color, typography, density);
         div {
           @include mat.all-component-themes($theme);
         }`);

@@ -12,7 +12,6 @@ export function createCustomTheme(name: string = 'app') {
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -21,11 +20,11 @@ export function createCustomTheme(name: string = 'app') {
 @include mat.core();
 
 // Define the theme object.
-$${name}-theme: matx.define-theme((
+$${name}-theme: mat.define-theme((
   color: (
     theme-type: light,
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-blue-palette,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
   ),
   density: (
     scale: 0,
@@ -44,6 +43,6 @@ $${name}-theme: matx.define-theme((
 // @include mat.typography-hierarchy($theme);
 
 // Comment out the line below if you want to use the deprecated \`color\` inputs.
-// @include matx.color-variants-back-compat($theme);
+// @include mat.color-variants-backwards-compatibility($theme);
 `;
 }

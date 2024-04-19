@@ -112,7 +112,7 @@ export function generateSCSSTheme(
     '// Proceed with caution if making changes to this file.',
     '',
     "@use 'sass:map';",
-    "@use '@angular/material-experimental' as matx;",
+    "@use '@angular/material' as mat;",
     '',
     '// Note: ' + colorComment,
     '$_palettes: ' + getColorPalettesSCSS(colorPalettes),
@@ -132,7 +132,7 @@ export function generateSCSSTheme(
   // from the palettes is a private function
   for (const themeType of themeTypes) {
     scss = scss.concat([
-      '$' + themeType + '-theme: matx.define-theme((',
+      '$' + themeType + '-theme: mat.define-theme((',
       '  color: (',
       '    theme-type: ' + themeType + ',',
       '    primary: $_primary,',

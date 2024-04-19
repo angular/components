@@ -1,6 +1,6 @@
 @use 'sass:list';
 @use 'sass:map';
-@use '@angular/material' as mat;
+@use '../theming/theming';
 
 /// Maps namespaced tokens to per-density-scale values.
 /// This is used as a temporary solution for density, since Material Design currently does not have
@@ -163,7 +163,7 @@ $_density-tokens: (
 /// @param {Number} $scale The density scale to get the value for.
 /// @return {*} The value for the given scale.
 @function _get-value-for-scale($density-values, $scale) {
-  $scale: mat.private-clamp-density($scale, -1 * list.length($density-values) + 1);
+  $scale: theming.clamp-density($scale, -1 * list.length($density-values) + 1);
   $index: -$scale + 1;
   @return list.nth($density-values, $index);
 }

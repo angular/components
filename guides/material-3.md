@@ -6,21 +6,17 @@
 system, Material Design. It is the successor to [Material 2 (M2)](https://m2.material.io/), the
 design system which Angular Material has followed.
 
-As of v17.2.0, Angular Material includes experimental support for M3 styling in addition to M2. The
-team plans to stabilize support for M3 after a brief period in experimental in order to get feedback
-on the design and API.
-
 ## How to use Material 3 in your app
 
 M3 is implemented in Angular Material as an alternate Sass theme for the same set of Angular
 Material components already used by many apps. To use M3 with Angular Material, create your theme
-using the `define-theme` function from `@angular/material-experimental`, as opposed to the
+using the `define-theme` function from `@angular/material`, as opposed to the
 `define-light-theme` or `define-dark-theme` from `@angular/material` that are used to create M2
 themes.
 
 ### Defining your theme
 
-The simplest usage of the API, `$theme: matx.define-theme()` defines a theme with default values.
+The simplest usage of the API, `$theme: mat.define-theme()` defines a theme with default values.
 However, like its M2 counterparts, `define-theme` allows you to configure the appearance of your
 Angular Material app along three theming dimensions: color, typography, and density, by passing a
 theme configuration object. The configuration object may have the following properties.
@@ -34,12 +30,12 @@ theme configuration object. The configuration object may have the following prop
 <!-- TODO(mmalerba): Upgrade to embedded example -->
 
 ```scss
-@use '@angular/material-experimental' as matx;
+@use '@angular/material' as mat;
 
-$theme: matx.define-theme((
+$theme: mat.define-theme((
   color: (
     theme-type: dark,
-    primary: matx.$m3-violet-palette,
+    primary: mat.$violet-palette,
   ),
   typography: (
     brand-family: 'Comic Sans',
@@ -63,20 +59,20 @@ more about these terms):
 | `primary`      | [Optional] Specifies the palette to use for the app's primary color palette. (Note: the secondary, neutral, and neutral-variant palettes described in the M3 spec will be automatically chosen based on your primary palette, to ensure a harmonious color combination). |
 | `tertiary`     | [Optional] Specifies the palette to use for the app's tertiary color palette.                                                                                                                                                                                            |
 
-There are a number of color palettes available in `@angular/material-experimental` that can be
+There are a number of color palettes available in `@angular/material` that can be
 used with the `primary` and `tertiary` options:
 
-- `$m3-red-palette`
-- `$m3-green-palette`
-- `$m3-blue-palette`
-- `$m3-yellow-palette`
-- `$m3-cyan-palette`
-- `$m3-magenta-palette`
-- `$m3-orange-palette`
-- `$m3-chartreuse-palette`
-- `$m3-azure-palette`
-- `$m3-violet-palette`
-- `$m3-rose-palette`
+- `$red-palette`
+- `$green-palette`
+- `$blue-palette`
+- `$yellow-palette`
+- `$cyan-palette`
+- `$magenta-palette`
+- `$orange-palette`
+- `$chartreuse-palette`
+- `$azure-palette`
+- `$violet-palette`
+- `$rose-palette`
 
 Alternatively, a theme can be generated with a custom color with the following schematic:
 
@@ -161,9 +157,8 @@ can instead apply color variants by passing the `$color-variant` option to a com
 
 ```scss
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
-$theme: matx.define-theme();
+$theme: mat.define-theme();
 
 .tertiary-checkbox {
   @include mat.checkbox-color($theme, $color-variant: tertiary);
@@ -231,10 +226,9 @@ overrides on the highest-level selector where they apply.
 
 ```scss
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
-$light-theme: matx.define-theme();
-$dark-theme: matx.define-theme((
+$light-theme: mat.define-theme();
+$dark-theme: mat.define-theme((
   color: (
     theme-type: dark
   )
@@ -273,7 +267,6 @@ provided by Angular Material to access properties of the theme.
 
 ```scss
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
 @mixin my-comp-theme($theme) {
   .my-comp {
@@ -410,20 +403,19 @@ We recommend _not_ relying on the `color="primary"`, `color="accent"`, or `color
 that are offered by a number of Angular Material components for M2 themes. However, if you want to
 quickly update to M3 and are willing to accept the extra CSS generated for these variants, you can
 enable backwards compatibility styles that restore the behavior of this API. Call the
-`color-variants-back-compat` mixin from `@angular/material-experimental` with the M3 theme you want
+`color-variants-backwards-compatibility` mixin from `@angular/material` with the M3 theme you want
 to generate color variant styles for.
 
 <!-- TODO(mmalerba): Upgrade to embedded example -->
 
 ```scss
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
-$theme: matx.define-theme();
+$theme: mat.define-theme();
 
 html {
   @include mat.all-component-themes($theme);
-  @include matx.color-variants-back-compat($theme);
+  @include mat.color-variants-backwards-compatibility($theme);
 }
 ```
 
@@ -441,9 +433,8 @@ styles, pass an additional argument `$back-compat: true` to the mixin.
 
 ```scss
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 
-$theme: matx.define-theme();
+$theme: mat.define-theme();
 
 @include mat.typography-hierarchy($theme, $back-compat: true);
 ```
