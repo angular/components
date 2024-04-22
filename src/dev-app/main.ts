@@ -13,7 +13,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {
   importProvidersFrom,
   provideZoneChangeDetection,
-  ɵprovideZonelessChangeDetection,
+  provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -52,7 +52,7 @@ bootstrapApplication(DevApp, {
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
     {provide: Directionality, useClass: DevAppDirectionality},
     cachedAppState.zoneless
-      ? ɵprovideZonelessChangeDetection()
+      ? provideExperimentalZonelessChangeDetection()
       : provideZoneChangeDetection({eventCoalescing: true}),
   ],
 });
