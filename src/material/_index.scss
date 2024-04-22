@@ -39,7 +39,8 @@
 // Component themes
 @forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density,
   core-base, core-overrides;
-@forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme, ripple-base, ripple-overrides;
+@forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme, ripple-base,
+  ripple-overrides;
 @forward './core/option/option-theme' as option-* show option-color, option-typography,
   option-theme, option-density, option-base, option-overrides;
 @forward './core/option/optgroup-theme' as optgroup-* show optgroup-color, optgroup-typography,
@@ -52,19 +53,23 @@
 @forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
   strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './autocomplete/autocomplete-theme' as autocomplete-* show autocomplete-theme,
-  autocomplete-color, autocomplete-typography, autocomplete-density, autocomplete-base, autocomplete-overrides;
+  autocomplete-color, autocomplete-typography, autocomplete-density, autocomplete-base,
+  autocomplete-overrides;
 @forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography,
   badge-density, badge-base, badge-overrides;
 @forward './bottom-sheet/bottom-sheet-theme' as bottom-sheet-* show bottom-sheet-theme,
-  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density, bottom-sheet-base, bottom-sheet-overrides;
+  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density, bottom-sheet-base,
+  bottom-sheet-overrides;
 @forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
   button-density, button-base, button-overrides;
 @forward './button/fab-theme' as fab-* show fab-color, fab-typography,
   fab-density, fab-theme, fab-base, fab-overrides;
 @forward './button/icon-button-theme' as icon-button-* show icon-button-color,
-  icon-button-typography, icon-button-density, icon-button-theme, icon-button-base, icon-button-overrides;
+  icon-button-typography, icon-button-density, icon-button-theme, icon-button-base,
+  icon-button-overrides;
 @forward './button-toggle/button-toggle-theme' as button-toggle-* show button-toggle-theme,
-  button-toggle-color, button-toggle-typography, button-toggle-density, button-toggle-base, button-toggle-overrides;
+  button-toggle-color, button-toggle-typography, button-toggle-density, button-toggle-base,
+  button-toggle-overrides;
 @forward './card/card-theme' as card-* show card-theme, card-color, card-typography, card-density,
   card-base, card-overrides;
 @forward './checkbox/checkbox-theme' as checkbox-* show checkbox-theme, checkbox-color,
@@ -72,7 +77,8 @@
 @forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
   chips-density, chips-base, chips-overrides;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
-  datepicker-typography, datepicker-date-range-colors, datepicker-density, datepicker-base, datepicker-overrides;
+  datepicker-typography, datepicker-date-range-colors, datepicker-density, datepicker-base,
+  datepicker-overrides;
 @forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,
   dialog-density, dialog-base, dialog-overrides;
 @forward './dialog/dialog-legacy-padding' as dialog-* show dialog-legacy-padding;
@@ -81,7 +87,8 @@
 @forward './expansion/expansion-theme' as expansion-* show expansion-theme, expansion-color,
   expansion-typography, expansion-density, expansion-base, expansion-overrides;
 @forward './form-field/form-field-theme' as form-field-* show form-field-theme,
-  form-field-color, form-field-typography, form-field-density, form-field-base, form-field-overrides;
+  form-field-color, form-field-typography, form-field-density, form-field-base,
+  form-field-overrides;
 @forward './grid-list/grid-list-theme' as grid-list-* show grid-list-theme, grid-list-color,
   grid-list-typography, grid-list-density, grid-list-base, grid-list-overrides;
 @forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography, icon-density,
