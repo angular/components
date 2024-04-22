@@ -14,14 +14,12 @@ import {
 } from '@angular/cdk/schematics';
 
 import {materialUpgradeData} from './upgrade-data';
+import {M2ThemingMigration} from './migrations/m2-theming-v18';
 
-const materialMigrations: NullableDevkitMigration[] = [];
+const materialMigrations: NullableDevkitMigration[] = [M2ThemingMigration];
 
 /** Entry point for the migration schematics with target of Angular Material v18 */
 export function updateToV18(): Rule {
-  // We pass the v18 migration rule as a callback, instead of using `chain()`, because the
-  // legacy imports error only logs an error message, it doesn't actually interrupt the migration
-  // process and we don't want to execute migrations if there are leftover legacy imports.
   return createMigrationSchematicRule(
     TargetVersion.V18,
     materialMigrations,

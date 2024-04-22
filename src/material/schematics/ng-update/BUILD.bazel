@@ -79,7 +79,10 @@ ts_library(
 
 spec_bundle(
     name = "spec_bundle",
-    external = ["*/paths.js"],
+    external = [
+        "*/paths.js",
+        "@angular-devkit/core/node",
+    ],
     platform = "cjs-legacy",
     target = "es2020",
     deps = [":test_lib"],
