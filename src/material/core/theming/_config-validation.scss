@@ -89,7 +89,7 @@
   @if $err {
     @return (#{'$config should be a color configuration object. Got:'} $config);
   }
-  $allowed: (theme-type, primary, tertiary);
+  $allowed: (theme-type, primary, tertiary, use-system-variables);
   $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
   @if $err {
     @return (
@@ -128,7 +128,14 @@
   @if $err {
     @return (#{'$config should be a typography configuration object. Got:'} $config);
   }
-  $allowed: (brand-family, plain-family, bold-weight, medium-weight, regular-weight);
+  $allowed: (
+    brand-family,
+    plain-family,
+    bold-weight,
+    medium-weight,
+    regular-weight,
+    use-system-variables
+  );
   $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
   @if $err {
     @return (

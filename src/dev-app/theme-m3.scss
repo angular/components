@@ -12,7 +12,9 @@ mat.$theme-legacy-inspection-api-compatibility: false;
       theme-type: $type,
       primary: mat.$azure-palette,
       tertiary: mat.$blue-palette,
+      use-system-variables: true,
     ),
+    typography: (use-system-variables: true),
     density: (
       scale: $density
     ),
@@ -33,6 +35,8 @@ $dark-theme: create-theme($type: dark);
 // Include the default theme styles.
 html {
   @include mat.all-component-themes($light-theme);
+  @include mat.system-level-colors($light-theme);
+  @include mat.system-level-typography($light-theme);
   // TODO(mmalerba): Support M3 for experimental components.
   // @include matx.column-resize-theme($light-theme);
   // @include matx.popover-edit-theme($light-theme);
@@ -54,6 +58,7 @@ html {
 .demo-unicorn-dark-theme {
   // Include the dark theme color styles.
   @include mat.all-component-colors($dark-theme);
+  @include mat.system-level-colors($dark-theme);
   // TODO(mmalerba): Support M3 for experimental components.
   // @include matx.column-resize-color($dark-theme);
   // @include matx.popover-edit-color($dark-theme);

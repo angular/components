@@ -83,6 +83,7 @@ describe('theming definition api', () => {
         'theme-type',
         'palettes',
         'color-tokens',
+        'font-definition',
         'typography-tokens',
         'density-scale',
         'density-tokens',
@@ -279,7 +280,11 @@ describe('theming definition api', () => {
         }
       `);
       const vars = getRootVars(css);
-      expect(vars['keys'].split(', ')).toEqual(['theme-version', 'typography-tokens']);
+      expect(vars['keys'].split(', ')).toEqual([
+        'theme-version',
+        'font-definition',
+        'typography-tokens',
+      ]);
     });
   });
 
