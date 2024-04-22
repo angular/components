@@ -44,6 +44,13 @@
   @else {}
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-divider.$prefix, tokens: tokens-mat-divider.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-divider') {
     @if inspection.get-theme-version($theme) == 1 {

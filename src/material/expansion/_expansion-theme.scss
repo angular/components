@@ -58,6 +58,13 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-expansion.$prefix, tokens: tokens-mat-expansion.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-expansion') {
     @if inspection.get-theme-version($theme) == 1 {

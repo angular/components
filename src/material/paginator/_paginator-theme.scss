@@ -55,6 +55,13 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-paginator.$prefix, tokens: tokens-mat-paginator.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-paginator') {
     @if inspection.get-theme-version($theme) == 1 {

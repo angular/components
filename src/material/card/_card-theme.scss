@@ -88,6 +88,15 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-card.$prefix, tokens: tokens-mat-card.get-token-slots()),
+    (prefix: tokens-mdc-elevated-card.$prefix, tokens: tokens-mdc-elevated-card.get-token-slots()),
+    (prefix: tokens-mdc-outlined-card.$prefix, tokens: tokens-mdc-outlined-card.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
     @if inspection.get-theme-version($theme) == 1 {

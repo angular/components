@@ -33,6 +33,19 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {}
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
+  $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
+
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mat-full-pseudo-checkbox.$prefix, tokens: $full-pseudo-checkbox-tokens),
+    (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens),
+  );
+}
+
 /// Outputs color theme styles for the mat-pseudo-checkbox.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):

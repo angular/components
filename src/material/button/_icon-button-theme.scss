@@ -121,6 +121,14 @@
   }
 }
 
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values(
+    $tokens,
+    (prefix: tokens-mdc-icon-button.$prefix, tokens: tokens-mdc-icon-button.get-token-slots()),
+    (prefix: tokens-mat-icon-button.$prefix, tokens: tokens-mat-icon-button.get-token-slots()),
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
     @if inspection.get-theme-version($theme) == 1 {
