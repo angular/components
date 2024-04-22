@@ -40,11 +40,6 @@ declare const kagekiri: {
 describe('WebDriverHarnessEnvironment', () => {
   let wd: webdriver.WebDriver;
 
-  async function getUrl(path: string) {
-    await wd.get(`http://localhost:${port}${path}`);
-    await waitForAngularReady(wd);
-  }
-
   async function piercingQueryFn(selector: string, root: () => webdriver.WebElement) {
     return wd.findElements(
       webdriver.By.js((s: string, r: Element) => kagekiri.querySelectorAll(s, r), selector, root()),
@@ -60,15 +55,21 @@ describe('WebDriverHarnessEnvironment', () => {
       .usingServer(process.env['WEB_TEST_WEBDRIVER_SERVER']!)
       .withCapabilities(webTestMetadata.capabilities)
       .build();
-    await wd.manage().timeouts().implicitlyWait(0);
+
+    // Ideally we would refresh the page and wait for Angular to stabilize on each test.
+    // We don't do it, because it causes Webdriver to eventually time out. Instead we go to
+    // the page once and reset the component state before the test (see `beforeEach` below).
+    await wd.get(`http://localhost:${port}/component-harness`);
+    await waitForAngularReady(wd);
+  });
+
+  beforeEach(async () => {
+    await wd.findElement({id: 'reset-state'}).click();
+    await wd.sleep(500);
   });
 
   afterAll(async () => {
     await wd.quit();
-  });
-
-  beforeEach(async () => {
-    await getUrl('/component-harness');
   });
 
   describe('environment specific', () => {
