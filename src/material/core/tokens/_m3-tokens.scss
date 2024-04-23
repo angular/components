@@ -170,7 +170,7 @@
     }
     @else if($color != null) {
       $result: map.remove($result, $opacity-key);
-      $combined-color: #{color(from #{$color} srgb r g b / #{$opacity})};
+      $combined-color: rgb(from $color #{r g b} / $opacity);
       $result: map.set($result, $color-key, $combined-color);
     }
   }

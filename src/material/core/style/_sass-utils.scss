@@ -68,7 +68,7 @@ $use-system-typography-variables: false;
     @return color.change($color, $args...);
   }
   @else if ($color != null and map.get($args, alpha) != null and $use-system-color-variables) {
-    @return #{color(from #{$color} srgb r g b / #{map.get($args, alpha)})};
+    @return rgb(from $color #{r g b} / map.get($args, alpha));
   }
   @return $color;
 }
