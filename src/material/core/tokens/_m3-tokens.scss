@@ -170,7 +170,8 @@
     }
     @else if($color != null) {
       $result: map.remove($result, $opacity-key);
-      $result: map.set($result, $color-key, #{color(from #{$color} srgb r g b / #{$opacity})});
+      $combined-color: #{color(from #{$color} srgb r g b / #{$opacity})};
+      $result: map.set($result, $color-key, $combined-color);
     }
   }
 
@@ -1029,8 +1030,8 @@
   }
 }
 
-@function _get-sys-color($type, $use-sys-vars, $ref) {
-  @if $use-sys-vars {
+@function _get-sys-color($type, $ref) {
+  @if (sass-utils.$use-system-color-variables) {
     @return (
       'background': var(--sys-background),
       'error': var(--sys-error),
@@ -1089,8 +1090,8 @@
     mdc-tokens.md-sys-color-values-light($ref));
 }
 
-@function _get-sys-typeface($use-sys-vars, $ref) {
-  @if ($use-sys-vars) {
+@function _get-sys-typeface($ref) {
+  @if (sass-utils.$use-system-typography-variables) {
     @return (
       'body-large': var(--sys-body-large),
       'body-large-font': var(--sys-body-large-font),
@@ -1195,12 +1196,12 @@
 /// @param {Map} $tertiary The tertiary palette
 /// @param {Map} $error The error palette
 /// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $tertiary, $error, $use-sys-vars) {
+@function generate-color-tokens($type, $primary, $tertiary, $error) {
   $ref: (
     md-ref-palette: _generate-ref-palette-tokens($primary, $tertiary, $error)
   );
 
-  $sys-color: _get-sys-color($type, $use-sys-vars, $ref);
+  $sys-color: _get-sys-color($type, $ref);
 
   @return _generate-tokens(map.merge($ref, (
     md-sys-color: $sys-color,
@@ -1222,11 +1223,11 @@
 /// @param {String|Number} $medium The medium font-weight
 /// @param {String|Number} $regular The regular font-weight
 /// @return {Map} A map of namespaced typography tokens
-@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular, $use-sys-vars) {
+@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular) {
   $ref: (
     md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
   );
-  $sys-typeface: _get-sys-typeface($use-sys-vars, $ref);
+  $sys-typeface: _get-sys-typeface($ref);
   @return _generate-tokens((
     md-sys-typescale: $sys-typeface
   ));

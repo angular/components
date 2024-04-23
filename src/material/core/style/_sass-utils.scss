@@ -3,6 +3,12 @@
 @use 'sass:map';
 @use 'sass:meta';
 
+/// Whether our theming API is using --sys- variables for color tokens.
+$use-system-color-variables: false;
+
+/// Whether our theming API is using --sys- variables for typography tokens.
+$use-system-typography-variables: false;
+
 /// Include content under the current selector (&) or the document root if there is no current
 /// selector.
 /// @param {String} $root [html] The default root selector to use when there is no current selector.
@@ -61,7 +67,7 @@
   @if (meta.type-of($color) == 'color') {
     @return color.change($color, $args...);
   }
-  @else if ($color != null and map.get($args, alpha) != null) {
+  @else if ($color != null and map.get($args, alpha) != null and $use-system-color-variables) {
     @return #{color(from #{$color} srgb r g b / #{map.get($args, alpha)})};
   }
   @return $color;
