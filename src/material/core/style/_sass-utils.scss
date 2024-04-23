@@ -62,7 +62,7 @@
     @return color.change($color, $args...);
   }
   @else if ($color != null and map.get($args, alpha) != null) {
-    @return #{color(from #{$color} srgb r g b / #{map.get($args, alpha)})};
+    @return rgba($color, map.get($args, alpha));
   }
   @return $color;
 }

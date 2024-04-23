@@ -164,13 +164,9 @@
     $color: map.get($tokens, $color-key);
     $opacity: map.get($opacity-lookup, $opacity-key);
 
-    @if(meta.type-of($color) == 'color') {
+    @if($color != null) {
       $result: map.remove($result, $opacity-key);
       $result: map.set($result, $color-key, rgba($color, $opacity));
-    }
-    @else if($color != null) {
-      $result: map.remove($result, $opacity-key);
-      $result: map.set($result, $color-key, #{color(from #{$color} srgb r g b / #{$opacity})});
     }
   }
 
