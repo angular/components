@@ -22,14 +22,15 @@ import {DragDropRegistry} from './drag-drop-registry';
 import {
   combineTransforms,
   DragCSSStyleDeclaration,
-  extendStyles,
+  getTransform,
   toggleNativeDragInteractions,
   toggleVisibility,
 } from './dom/styling';
-import {getTransformTransitionDurationInMs} from './dom/transition-duration';
 import {getMutableClientRect, adjustDomRect} from './dom/dom-rect';
 import {ParentPositionTracker} from './dom/parent-position-tracker';
 import {deepCloneNode} from './dom/clone-node';
+import {DragPreviewTemplate, PreviewRef} from './preview-ref';
+import {getRootNode} from './dom/root-node';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -82,11 +83,6 @@ interface DragHelperTemplate<T = any> {
   context: T;
 }
 
-/** Template that can be used to create a drag preview element. */
-interface DragPreviewTemplate<T = any> extends DragHelperTemplate<T> {
-  matchSize?: boolean;
-}
-
 /** Point on the page or within an element. */
 export interface Point {
   x: number;
@@ -118,10 +114,7 @@ export type PreviewContainer = 'global' | 'parent' | ElementRef<HTMLElement> | H
  */
 export class DragRef<T = any> {
   /** Element displayed next to the user's pointer while the element is dragged. */
-  private _preview: HTMLElement;
-
-  /** Reference to the view of the preview element. */
-  private _previewRef: EmbeddedViewRef<any> | null;
+  private _preview: PreviewRef | null;
 
   /** Container into which to insert the preview. */
   private _previewContainer: PreviewContainer | undefined;
@@ -627,9 +620,8 @@ export class DragRef<T = any> {
 
   /** Destroys the preview element and its ViewRef. */
   private _destroyPreview() {
-    this._preview?.remove();
-    this._previewRef?.destroy();
-    this._preview = this._previewRef = null!;
+    this._preview?.destroy();
+    this._preview = null;
   }
 
   /** Destroys the placeholder element and its ViewRef. */
@@ -834,14 +826,24 @@ export class DragRef<T = any> {
 
       // Create the preview after the initial transform has
       // been cached, because it can be affected by the transform.
-      this._preview = this._createPreviewElement();
+      this._preview = new PreviewRef(
+        this._document,
+        this._rootElement,
+        this._direction,
+        this._initialDomRect!,
+        this._previewTemplate || null,
+        this.previewClass || null,
+        this._pickupPositionOnPage,
+        this._initialTransform,
+        this._config.zIndex || 1000,
+      );
+      this._preview.attach(this._getPreviewInsertionPoint(parent, shadowRoot));
 
       // We move the element out at the end of the body and we make it hidden, because keeping it in
       // place will throw off the consumer's `:last-child` selectors. We can't remove the element
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       toggleVisibility(element, false, dragImportantProperties);
       this._document.body.appendChild(parent.replaceChild(placeholder, element));
-      this._getPreviewInsertionPoint(parent, shadowRoot).appendChild(this._preview);
       this.started.next({source: this, event}); // Emit before notifying the container.
       dropContainer.start();
       this._initialContainer = dropContainer;
@@ -1057,75 +1059,6 @@ export class DragRef<T = any> {
   }
 
   /**
-   * Creates the element that will be rendered next to the user's pointer
-   * and will be used as a preview of the element that is being dragged.
-   */
-  private _createPreviewElement(): HTMLElement {
-    const previewConfig = this._previewTemplate;
-    const previewClass = this.previewClass;
-    const previewTemplate = previewConfig ? previewConfig.template : null;
-    let preview: HTMLElement;
-
-    if (previewTemplate && previewConfig) {
-      // Measure the element before we've inserted the preview
-      // since the insertion could throw off the measurement.
-      const rootRect = previewConfig.matchSize ? this._initialDomRect : null;
-      const viewRef = previewConfig.viewContainer.createEmbeddedView(
-        previewTemplate,
-        previewConfig.context,
-      );
-      viewRef.detectChanges();
-      preview = getRootNode(viewRef, this._document);
-      this._previewRef = viewRef;
-      if (previewConfig.matchSize) {
-        matchElementSize(preview, rootRect!);
-      } else {
-        preview.style.transform = getTransform(
-          this._pickupPositionOnPage.x,
-          this._pickupPositionOnPage.y,
-        );
-      }
-    } else {
-      preview = deepCloneNode(this._rootElement);
-      matchElementSize(preview, this._initialDomRect!);
-
-      if (this._initialTransform) {
-        preview.style.transform = this._initialTransform;
-      }
-    }
-
-    extendStyles(
-      preview.style,
-      {
-        // It's important that we disable the pointer events on the preview, because
-        // it can throw off the `document.elementFromPoint` calls in the `CdkDropList`.
-        'pointer-events': 'none',
-        // We have to reset the margin, because it can throw off positioning relative to the viewport.
-        'margin': '0',
-        'position': 'fixed',
-        'top': '0',
-        'left': '0',
-        'z-index': `${this._config.zIndex || 1000}`,
-      },
-      dragImportantProperties,
-    );
-
-    toggleNativeDragInteractions(preview, false);
-    preview.classList.add('cdk-drag-preview');
-    preview.setAttribute('dir', this._direction);
-
-    if (previewClass) {
-      if (Array.isArray(previewClass)) {
-        previewClass.forEach(className => preview.classList.add(className));
-      } else {
-        preview.classList.add(previewClass);
-      }
-    }
-
-    return preview;
-  }
-
-  /**
    * Animates the preview element from its current position to the location of the drop placeholder.
    * @returns Promise that resolves when the animation completes.
    */
@@ -1138,7 +1071,7 @@ export class DragRef<T = any> {
     const placeholderRect = this._placeholder.getBoundingClientRect();
 
     // Apply the class that adds a transition to the preview.
-    this._preview.classList.add('cdk-drag-animating');
+    this._preview!.addClass('cdk-drag-animating');
 
     // Move the preview to the placeholder position.
     this._applyPreviewTransform(placeholderRect.left, placeholderRect.top);
@@ -1147,7 +1080,7 @@ export class DragRef<T = any> {
     // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
     // apply its style, we take advantage of the available info to figure out whether we need to
     // bind the event in the first place.
-    const duration = getTransformTransitionDurationInMs(this._preview);
+    const duration = this._preview!.getTransitionDuration();
 
     if (duration === 0) {
       return Promise.resolve();
@@ -1170,7 +1103,7 @@ export class DragRef<T = any> {
         // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
         // fire if the transition hasn't completed when it was supposed to.
         const timeout = setTimeout(handler as Function, duration * 1.5);
-        this._preview.addEventListener('transitionend', handler);
+        this._preview!.addEventListener('transitionend', handler);
       });
     });
   }
@@ -1373,7 +1306,7 @@ export class DragRef<T = any> {
     // it could be completely different and the transform might not make sense anymore.
     const initialTransform = this._previewTemplate?.template ? undefined : this._initialTransform;
     const transform = getTransform(x, y);
-    this._preview.style.transform = combineTransforms(transform, initialTransform);
+    this._preview!.setTransform(combineTransforms(transform, initialTransform));
   }
 
   /**
@@ -1559,7 +1492,7 @@ export class DragRef<T = any> {
     // we cached it too early before the element dimensions were computed.
     if (!this._previewRect || (!this._previewRect.width && !this._previewRect.height)) {
       this._previewRect = this._preview
-        ? this._preview.getBoundingClientRect()
+        ? this._preview!.getBoundingClientRect()
         : this._initialDomRect!;
     }
 
@@ -1589,17 +1522,6 @@ export class DragRef<T = any> {
   }
 }
 
-/**
- * Gets a 3d `transform` that can be applied to an element.
- * @param x Desired position of the element along the X axis.
- * @param y Desired position of the element along the Y axis.
- */
-function getTransform(x: number, y: number): string {
-  // Round the transforms since some browsers will
-  // blur the elements for sub-pixel transforms.
-  return `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
-}
-
 /** Clamps a value between a minimum and a maximum. */
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -1611,33 +1533,6 @@ function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
   // as fast as possible. Since we only bind mouse events and touch events, we can assume
   // that if the event's name starts with `t`, it's a touch event.
   return event.type[0] === 't';
-}
-
-/**
- * Gets the root HTML element of an embedded view.
- * If the root is not an HTML element it gets wrapped in one.
- */
-function getRootNode(viewRef: EmbeddedViewRef<any>, _document: Document): HTMLElement {
-  const rootNodes: Node[] = viewRef.rootNodes;
-
-  if (rootNodes.length === 1 && rootNodes[0].nodeType === _document.ELEMENT_NODE) {
-    return rootNodes[0] as HTMLElement;
-  }
-
-  const wrapper = _document.createElement('div');
-  rootNodes.forEach(node => wrapper.appendChild(node));
-  return wrapper;
-}
-
-/**
- * Matches the target element's size to the source's size.
- * @param target Element that needs to be resized.
- * @param sourceRect Dimensions of the source element.
- */
-function matchElementSize(target: HTMLElement, sourceRect: DOMRect): void {
-  target.style.width = `${sourceRect.width}px`;
-  target.style.height = `${sourceRect.height}px`;
-  target.style.transform = getTransform(sourceRect.left, sourceRect.top);
 }
 
 /** Callback invoked for `selectstart` events inside the shadow DOM. */
