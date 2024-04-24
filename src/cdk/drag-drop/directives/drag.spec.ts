@@ -2482,7 +2482,8 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
 
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
       const previewRect = preview.getBoundingClientRect();
       const zeroPxRegex = /^0(px)?$/;
 
@@ -2504,12 +2505,14 @@ describe('CdkDrag', () => {
         .withContext('Expected element to be removed from layout')
         .toBe('-999em');
       expect(item.style.opacity).withContext('Expected element to be invisible').toBe('0');
-      expect(preview).withContext('Expected preview to be in the DOM').toBeTruthy();
+      expect(previewContainer)
+        .withContext('Expected preview container to be in the DOM')
+        .toBeTruthy();
       expect(preview.textContent!.trim())
         .withContext('Expected preview content to match element')
         .toContain('One');
-      expect(preview.getAttribute('dir'))
-        .withContext('Expected preview element to inherit the directionality.')
+      expect(previewContainer.getAttribute('dir'))
+        .withContext('Expected preview container element to inherit the directionality.')
         .toBe('ltr');
       expect(previewRect.width)
         .withContext('Expected preview width to match element')
@@ -2520,8 +2523,8 @@ describe('CdkDrag', () => {
       expect(preview.style.pointerEvents)
         .withContext('Expected pointer events to be disabled on the preview')
         .toBe('none');
-      expect(preview.style.zIndex)
-        .withContext('Expected preview to have a high default zIndex.')
+      expect(previewContainer.style.zIndex)
+        .withContext('Expected preview container to have a high default zIndex.')
         .toBe('1000');
       // Use a regex here since some browsers normalize 0 to 0px, but others don't.
       // Use a regex here since some browsers normalize 0 to 0px, but others don't.
@@ -2542,8 +2545,8 @@ describe('CdkDrag', () => {
       expect(item.style.top).withContext('Expected element to be within the layout').toBeFalsy();
       expect(item.style.left).withContext('Expected element to be within the layout').toBeFalsy();
       expect(item.style.opacity).withContext('Expected element to be visible').toBeFalsy();
-      expect(preview.parentNode)
-        .withContext('Expected preview to be removed from the DOM')
+      expect(previewContainer.parentNode)
+        .withContext('Expected preview container to be removed from the DOM')
         .toBeFalsy();
     }));
 
@@ -2561,7 +2564,7 @@ describe('CdkDrag', () => {
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       startDraggingViaMouse(fixture, item);
 
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const preview = document.querySelector('.cdk-drag-preview-container')! as HTMLElement;
       expect(preview.style.zIndex).toBe('3000');
     }));
 
@@ -2606,9 +2609,11 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item);
       flush();
 
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector(
+        '.cdk-drag-preview-container',
+      )! as HTMLElement;
 
-      expect(preview.parentNode).toBe(fakeDocument.fullscreenElement);
+      expect(previewContainer.parentNode).toBe(fakeDocument.fullscreenElement);
       fakeDocument.fullscreenElement.remove();
     }));
 
@@ -2907,8 +2912,8 @@ describe('CdkDrag', () => {
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       startDraggingViaMouse(fixture, item);
 
-      expect(document.querySelector('.cdk-drag-preview')!.getAttribute('dir'))
-        .withContext('Expected preview element to inherit the directionality.')
+      expect(document.querySelector('.cdk-drag-preview-container')!.getAttribute('dir'))
+        .withContext('Expected preview container to inherit the directionality.')
         .toBe('rtl');
     }));
 
@@ -2919,7 +2924,8 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
 
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
 
       // Add a duration since the tests won't include one.
       preview.style.transitionDuration = '500ms';
@@ -2932,13 +2938,13 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
       tick(250);
 
-      expect(preview.parentNode)
+      expect(previewContainer.parentNode)
         .withContext('Expected preview to be in the DOM mid-way through the transition')
         .toBeTruthy();
 
       tick(500);
 
-      expect(preview.parentNode)
+      expect(previewContainer.parentNode)
         .withContext('Expected preview to be removed from the DOM if the transition timed out')
         .toBeFalsy();
     }));
@@ -3042,6 +3048,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
       preview.style.transition = 'opacity 500ms ease';
 
       dispatchMouseEvent(document, 'mousemove', 50, 50);
@@ -3051,8 +3058,8 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
       tick(0);
 
-      expect(preview.parentNode)
-        .withContext('Expected preview to be removed from the DOM immediately')
+      expect(previewContainer.parentNode)
+        .withContext('Expected preview container to be removed from the DOM immediately')
         .toBeFalsy();
     }));
 
@@ -3064,6 +3071,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
       preview.style.transition = 'opacity 500ms ease, transform 1000ms ease';
 
       dispatchMouseEvent(document, 'mousemove', 50, 50);
@@ -3073,15 +3081,17 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
       tick(500);
 
-      expect(preview.parentNode)
-        .withContext('Expected preview to be in the DOM at the end of the opacity transition')
+      expect(previewContainer.parentNode)
+        .withContext(
+          'Expected preview container to be in the DOM at the end of the opacity transition',
+        )
         .toBeTruthy();
 
       tick(1000);
 
-      expect(preview.parentNode)
+      expect(previewContainer.parentNode)
         .withContext(
-          'Expected preview to be removed from the DOM at the end of the ' + 'transform transition',
+          'Expected preview container to be removed from the DOM at the end of the transform transition',
         )
         .toBeFalsy();
     }));
@@ -3123,8 +3133,8 @@ describe('CdkDrag', () => {
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       startDraggingViaMouse(fixture, item);
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
-      expect(preview.parentNode).toBe(document.body);
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
+      expect(previewContainer.parentNode).toBe(document.body);
     }));
 
     it('should insert the preview into the parent node if previewContainer is set to `parent`', fakeAsync(() => {
@@ -3135,9 +3145,9 @@ describe('CdkDrag', () => {
       const list = fixture.nativeElement.querySelector('.drop-list');
 
       startDraggingViaMouse(fixture, item);
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
       expect(list).toBeTruthy();
-      expect(preview.parentNode).toBe(list);
+      expect(previewContainer.parentNode).toBe(list);
     }));
 
     it('should insert the preview into a particular element, if specified', fakeAsync(() => {
@@ -3151,8 +3161,10 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, item);
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
-      expect(preview.parentNode).toBe(previewContainer.nativeElement);
+      const previewContainerElement = document.querySelector(
+        '.cdk-drag-preview-container',
+      ) as HTMLElement;
+      expect(previewContainerElement.parentNode).toBe(previewContainer.nativeElement);
     }));
 
     it('should remove the id from the placeholder', fakeAsync(() => {
@@ -3664,15 +3676,17 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
 
-      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector('.cdk-drag-preview-container') as HTMLElement;
 
-      expect(preview.parentNode).withContext('Expected preview to be in the DOM').toBeTruthy();
+      expect(previewContainer.parentNode)
+        .withContext('Expected preview container to be in the DOM')
+        .toBeTruthy();
       expect(item.parentNode).withContext('Expected drag item to be in the DOM').toBeTruthy();
 
       fixture.destroy();
 
-      expect(preview.parentNode)
-        .withContext('Expected preview to be removed from the DOM')
+      expect(previewContainer.parentNode)
+        .withContext('Expected preview container to be removed from the DOM')
         .toBeFalsy();
       expect(item.parentNode)
         .withContext('Expected drag item to be removed from the DOM')
@@ -6541,10 +6555,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item.element.nativeElement);
       fixture.detectChanges();
 
-      const initialSelectStart = dispatchFakeEvent(
-        shadowRoot,
-        'selectstart',
-      );
+      const initialSelectStart = dispatchFakeEvent(shadowRoot, 'selectstart');
       fixture.detectChanges();
       expect(initialSelectStart.defaultPrevented).toBe(true);
 
@@ -6552,10 +6563,7 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
       flush();
 
-      const afterDropSelectStart = dispatchFakeEvent(
-        shadowRoot,
-        'selectstart',
-      );
+      const afterDropSelectStart = dispatchFakeEvent(shadowRoot, 'selectstart');
       fixture.detectChanges();
       expect(afterDropSelectStart.defaultPrevented).toBe(false);
     }));
