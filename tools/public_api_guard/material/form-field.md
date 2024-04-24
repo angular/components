@@ -166,6 +166,7 @@ export type MatFormFieldAppearance = 'fill' | 'outline';
 export abstract class MatFormFieldControl<T> {
     readonly autofilled?: boolean;
     readonly controlType?: string;
+    readonly disableAutomaticLabeling?: boolean;
     readonly disabled: boolean;
     readonly empty: boolean;
     readonly errorState: boolean;

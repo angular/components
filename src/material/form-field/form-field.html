@@ -16,7 +16,7 @@
            [floating]="_shouldLabelFloat()"
            [monitorResize]="_hasOutline()"
            [id]="_labelId"
-           [attr.for]="_control.id">
+           [attr.for]="_control.disableAutomaticLabeling ? null : _control.id">
       <ng-content select="mat-label"></ng-content>
       <!--
         We set the required marker as a separate element, in order to make it easier to target if

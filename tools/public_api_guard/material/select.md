@@ -102,6 +102,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     // (undocumented)
     protected _defaultOptions?: MatSelectConfig | undefined;
     protected readonly _destroy: Subject<void>;
+    readonly disableAutomaticLabeling = true;
     disabled: boolean;
     disableOptionCentering: boolean;
     disableRipple: boolean;
