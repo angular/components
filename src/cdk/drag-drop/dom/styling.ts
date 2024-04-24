@@ -94,3 +94,25 @@ export function combineTransforms(transform: string, initialTransform?: string):
     ? transform + ' ' + initialTransform
     : transform;
 }
+
+/**
+ * Matches the target element's size to the source's size.
+ * @param target Element that needs to be resized.
+ * @param sourceRect Dimensions of the source element.
+ */
+export function matchElementSize(target: HTMLElement, sourceRect: DOMRect): void {
+  target.style.width = `${sourceRect.width}px`;
+  target.style.height = `${sourceRect.height}px`;
+  target.style.transform = getTransform(sourceRect.left, sourceRect.top);
+}
+
+/**
+ * Gets a 3d `transform` that can be applied to an element.
+ * @param x Desired position of the element along the X axis.
+ * @param y Desired position of the element along the Y axis.
+ */
+export function getTransform(x: number, y: number): string {
+  // Round the transforms since some browsers will
+  // blur the elements for sub-pixel transforms.
+  return `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+}
