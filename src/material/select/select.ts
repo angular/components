@@ -333,6 +333,12 @@ export class MatSelect
   readonly stateChanges = new Subject<void>();
 
   /**
+   * Disable the automatic labeling to avoid issues like #27241.
+   * @docs-private
+   */
+  readonly disableAutomaticLabeling = true;
+
+  /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */

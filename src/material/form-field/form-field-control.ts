@@ -68,6 +68,13 @@ export abstract class MatFormFieldControl<T> {
    */
   readonly userAriaDescribedBy?: string;
 
+  /**
+   * Whether to automatically assign the ID of the form field as the `for` attribute
+   * on the `<label>` inside the form field. Set this to true to prevent the form
+   * field from associating the label with non-native elements.
+   */
+  readonly disableAutomaticLabeling?: boolean;
+
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;
 

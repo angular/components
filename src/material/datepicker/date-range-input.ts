@@ -256,6 +256,12 @@ export class MatDateRangeInput<D>
   /** Emits when the input's state has changed. */
   readonly stateChanges = new Subject<void>();
 
+  /**
+   * Disable the automatic labeling to avoid issues like #27241.
+   * @docs-private
+   */
+  readonly disableAutomaticLabeling = true;
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef<HTMLElement>,
