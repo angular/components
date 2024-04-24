@@ -1,3 +1,21 @@
+<a name="17.3.6"></a>
+# 17.3.6 "onyx-whisper" (2024-04-24)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c2dc2da71e](https://github.com/angular/components/commit/c2dc2da71e56faf6291c2ff3213baa032f3731be) | fix | **a11y:** handle signal based items in list key manager ([#28854](https://github.com/angular/components/pull/28854)) |
+| [e33c436c73](https://github.com/angular/components/commit/e33c436c73941f27d687387ba1090985fc337e9c) | fix | **drag-drop:** use native popover to avoid stacking issues with preview |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d78c7706c6](https://github.com/angular/components/commit/d78c7706c60ac679b9f55cd9a0c27d959833f8ff) | fix | **progress-bar:** avoid CSP issues for apps not using buffer mode ([#28946](https://github.com/angular/components/pull/28946)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [73d1e2e3cf](https://github.com/angular/components/commit/73d1e2e3cf530fafadc7a490ea8542487d6a325b) | fix | remove label for attribute on non-native elements ([#28948](https://github.com/angular/components/pull/28948)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-next.5"></a>
 # 18.0.0-next.5 "mercury-ant" (2024-04-17)
 ### cdk
