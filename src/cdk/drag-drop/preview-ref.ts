@@ -39,6 +39,9 @@ export class PreviewRef {
   /** Reference to the preview element. */
   private _preview: HTMLElement;
 
+  /** Reference to the preview wrapper. */
+  private _wrapper: HTMLElement;
+
   constructor(
     private _document: Document,
     private _rootElement: HTMLElement,
@@ -55,14 +58,21 @@ export class PreviewRef {
   ) {}
 
   attach(parent: HTMLElement): void {
+    this._wrapper = this._createWrapper();
     this._preview = this._createPreview();
-    parent.appendChild(this._preview);
+    this._wrapper.appendChild(this._preview);
+    parent.appendChild(this._wrapper);
+
+    // The null check is necessary for browsers that don't support the popover API.
+    if (this._wrapper.showPopover) {
+      this._wrapper.showPopover();
+    }
   }
 
   destroy(): void {
-    this._preview?.remove();
+    this._wrapper?.remove();
     this._previewEmbeddedView?.destroy();
-    this._preview = this._previewEmbeddedView = null!;
+    this._preview = this._wrapper = this._previewEmbeddedView = null!;
   }
 
   setTransform(value: string): void {
@@ -87,6 +97,33 @@ export class PreviewRef {
 
   removeEventListener(name: string, handler: EventListenerOrEventListenerObject) {
     this._preview.removeEventListener(name, handler);
+  }
+
+  private _createWrapper(): HTMLElement {
+    const wrapper = this._document.createElement('div');
+    wrapper.setAttribute('popover', 'manual');
+    wrapper.setAttribute('dir', this._direction);
+    wrapper.classList.add('cdk-drag-preview-container');
+
+    extendStyles(wrapper.style, {
+      // This is redundant, but we need it for browsers that don't support the popover API.
+      'position': 'fixed',
+      'top': '0',
+      'left': '0',
+      'width': '100%',
+      'height': '100%',
+      'z-index': this._zIndex + '',
+
+      // Reset the user agent styles.
+      'background': 'none',
+      'border': 'none',
+      'pointer-events': 'none',
+      'margin': '0',
+      'padding': '0',
+    });
+    toggleNativeDragInteractions(wrapper, false);
+
+    return wrapper;
   }
 
   private _createPreview(): HTMLElement {
@@ -134,14 +171,12 @@ export class PreviewRef {
         'position': 'absolute',
         'top': '0',
         'left': '0',
-        'z-index': `${this._zIndex}`,
       },
       importantProperties,
     );
 
     toggleNativeDragInteractions(preview, false);
     preview.classList.add('cdk-drag-preview');
-    preview.setAttribute('dir', this._direction);
 
     if (previewClass) {
       if (Array.isArray(previewClass)) {
