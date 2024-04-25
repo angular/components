@@ -1,16 +1,15 @@
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 @use '../../app-theme';
 
-$theme: matx.define-theme((
+$theme: mat.define-theme((
   color: (
     theme-type: light,
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-blue-palette,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
   )
 ));
 
-@include matx.color-variants-back-compat($theme);
+@include mat.color-variants-backwards-compatibility($theme);
 @include app-theme.theme($theme);
 
 :root {
