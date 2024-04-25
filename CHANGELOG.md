@@ -1,3 +1,74 @@
+<a name="18.0.0-next.6"></a>
+# 18.0.0-next.6 "smoke-contour" (2024-04-25)
+## Breaking Changes
+### material
+- The following APIs have been renamed. If you update using `ng update`, your app will be fixed automatically.
+  * `define-light-theme` to `m2-define-light-theme`
+  * `define-dark-theme` to `m2-define-dark-theme`
+  * `define-palette` to `m2-define-palette`
+  * `get-contrast-color-from-palette` to `m2-get-contrast-color-from-palette`
+  * `get-color-from-palette` to `m2-get-color-from-palette`
+  * `get-color-config` to `m2-get-color-config`
+  * `get-typography-config` to `m2-get-typography-config`
+  * `get-density-config` to `m2-get-density-config`
+  * `$red-palette` to `$m2-red-palette`
+  * `$pink-palette` to `$m2-pink-palette`
+  * `$indigo-palette` to `$m2-indigo-palette`
+  * `$purple-palette` to `$m2-purple-palette`
+  * `$deep-purple-palette` to `$m2-deep-purple-palette`
+  * `$blue-palette` to `$m2-blue-palette`
+  * `$light-blue-palette` to `$m2-light-blue-palette`
+  * `$cyan-palette` to `$m2-cyan-palette`
+  * `$teal-palette` to `$m2-teal-palette`
+  * `$green-palette` to `$m2-green-palette`
+  * `$light-green-palette` to `$m2-light-green-palette`
+  * `$lime-palette` to `$m2-lime-palette`
+  * `$yellow-palette` to `$m2-yellow-palette`
+  * `$amber-palette` to `$m2-amber-palette`
+  * `$orange-palette` to `$m2-orange-palette`
+  * `$deep-orange-palette` to `$m2-deep-orange-palette`
+  * `$brown-palette` to `$m2-brown-palette`
+  * `$grey-palette` to `$m2-grey-palette`
+  * `$gray-palette` to `$m2-gray-palette`
+  * `$blue-grey-palette` to `$m2-blue-grey-palette`
+  * `$blue-gray-palette` to `$m2-blue-gray-palette`
+  * `$light-theme-background-palette` to `$m2-light-theme-background-palette`
+  * `$dark-theme-background-palette` to `$m2-dark-theme-background-palette`
+  * `$light-theme-foreground-palette` to `$m2-light-theme-foreground-palette`
+  * `$dark-theme-foreground-palette` to `$m2-dark-theme-foreground-palette`
+  * `define-typography-level` to `m2-define-typography-level`
+  * `define-rem-typography-config` to `m2-define-rem-typography-config`
+  * `define-typography-config` to `m2-define-typography-config`
+  * `define-legacy-typography-config` to `m2-define-legacy-typography-config`
+  * `typography-level` to `m2-typography-level`
+  * `font-size` to `m2-font-size`
+  * `line-height` to `m2-line-height`
+  * `font-weight` to `m2-font-weight`
+  * `letter-spacing` to `m2-letter-spacing`
+  * `font-family` to `m2-font-family`
+  * `font-shorthand` to `m2-font-shorthand`
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d679024dec](https://github.com/angular/components/commit/d679024dec9c3c5e697e0c72caadaced3a87f67b) | feat | **core:** move Material 3 support into stable ([#28913](https://github.com/angular/components/pull/28913)) |
+| [4ba4689dcd](https://github.com/angular/components/commit/4ba4689dcd54adfcb9be6469fc2c7ee1d9ceefe3) | feat | **core:** namespace m2-specific theming APIs ([#28892](https://github.com/angular/components/pull/28892)) |
+| [f8bd658df3](https://github.com/angular/components/commit/f8bd658df3eb86834a6df4fbd7819c7b8d3c90b7) | feat | **theming:** add ability to use sys variables ([#28898](https://github.com/angular/components/pull/28898)) |
+| [5501d9b408](https://github.com/angular/components/commit/5501d9b408b976cda848188aa5e2df00f64e4443) | fix | **core:** add migration for M2 theming APIs ([#28927](https://github.com/angular/components/pull/28927)) |
+| [cf3506adf1](https://github.com/angular/components/commit/cf3506adf1af1556d705dbb651e7e96a7141b81d) | fix | **progress-bar:** avoid CSP issues for apps not using buffer mode ([#28946](https://github.com/angular/components/pull/28946)) |
+| [0bb5610d03](https://github.com/angular/components/commit/0bb5610d03553ac8e8459aa9ad89a3eaf82d7dbd) | fix | **theming:** restrict css color usage behind a flag ([#28944](https://github.com/angular/components/pull/28944)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d9c8813ca1](https://github.com/angular/components/commit/d9c8813ca1478374cb2b8113467b50faf63752ac) | fix | **a11y:** handle signal based items in list key manager ([#28854](https://github.com/angular/components/pull/28854)) |
+| [7cd3f027db](https://github.com/angular/components/commit/7cd3f027db729e8dfc85cd109ebd5657506915da) | fix | **drag-drop:** use native popover to avoid stacking issues with preview |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4719da2c34](https://github.com/angular/components/commit/4719da2c34bee87095a2368334715e415f18a4c3) | feat | token overrides api ([#28910](https://github.com/angular/components/pull/28910)) |
+| [94a083408d](https://github.com/angular/components/commit/94a083408dbedb9ee18b0ce793ea8ef364d0e8bd) | fix | remove label for attribute on non-native elements ([#28948](https://github.com/angular/components/pull/28948)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.6"></a>
 # 17.3.6 "onyx-whisper" (2024-04-24)
 ### cdk
