@@ -1031,6 +1031,10 @@
 }
 
 @function _get-sys-color($type, $ref) {
+  $mdc-sys-color: if($type == dark,
+    mdc-tokens.md-sys-color-values-dark($ref),
+    mdc-tokens.md-sys-color-values-light($ref));
+
   @if (sass-utils.$use-system-color-variables) {
     @return (
       'background': var(--sys-background),
@@ -1067,7 +1071,7 @@
       'secondary-container': var(--sys-secondary-container),
       'secondary-fixed': var(--sys-secondary-fixed),
       'secondary-fixed-dim': var(--sys-secondary-fixed-dim),
-      'shadow': var(--sys-shadow),
+      'shadow': map.get($mdc-sys-color, shadow),
       'surface': var(--sys-surface),
       'surface-bright': var(--sys-surface-bright),
       'surface-container': var(--sys-surface-container),
@@ -1085,9 +1089,7 @@
     );
   }
 
-  @return if($type == dark,
-    mdc-tokens.md-sys-color-values-dark($ref),
-    mdc-tokens.md-sys-color-values-light($ref));
+  @return $mdc-sys-color;
 }
 
 @function _get-sys-typeface($ref) {
