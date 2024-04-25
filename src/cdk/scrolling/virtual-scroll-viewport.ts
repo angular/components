@@ -511,15 +511,20 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     }
 
     this.ngZone.run(() => {
+      // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+      // from the root, since the repeated items are content projected in. Calling `detectChanges`
+      // instead does not properly check the projected content.
       this._changeDetectorRef.markForCheck();
+
+      // Apply the content transform. The transform can't be set via an Angular binding because
+      // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+      // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+      // the `Number` function first to coerce it to a numeric value.
+      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
       afterNextRender(
         () => {
           this._isChangeDetectionPending = false;
-          // Apply the content transform. The transform can't be set via an Angular binding because
-          // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-          // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-          // the `Number` function first to coerce it to a numeric value.
-          this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
           const runAfterChangeDetection = this._runAfterChangeDetection;
           this._runAfterChangeDetection = [];
           for (const fn of runAfterChangeDetection) {
