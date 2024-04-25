@@ -16,6 +16,7 @@ import {
   Optional,
   SimpleChanges,
 } from '@angular/core';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 import {MatDialog} from './dialog';
 import {_closeDialogVia, MatDialogRef} from './dialog-ref';
@@ -159,6 +160,7 @@ export class MatDialogTitle extends MatDialogLayoutSection {
   selector: `[mat-dialog-content], mat-dialog-content, [matDialogContent]`,
   host: {'class': 'mat-mdc-dialog-content mdc-dialog__content'},
   standalone: true,
+  hostDirectives: [CdkScrollable],
 })
 export class MatDialogContent {}
 
