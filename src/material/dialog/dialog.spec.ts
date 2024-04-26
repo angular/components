@@ -86,7 +86,11 @@ describe('MDC-based MatDialog', () => {
         {provide: Location, useClass: SpyLocation},
         {
           provide: ScrollDispatcher,
-          useFactory: () => ({scrolled: () => scrolledSubject}),
+          useFactory: () => ({
+            scrolled: () => scrolledSubject,
+            register: () => {},
+            deregister: () => {},
+          }),
         },
       ],
     });
