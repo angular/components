@@ -1,0 +1,51 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, tab-header);
+
+/// Generates custom tokens for the mat-tab-header.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-tab-header
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: sass-utils.merge-all(
+    token-utils.generate-typography-tokens($systems, label-text, title-small),
+    (
+      divider-color: map.get($systems, md-sys-color, surface-variant),
+      divider-height: token-utils.hardcode(1px, $exclude-hardcoded),
+      disabled-ripple-color: null, // TODO(mmalerba): Figure out correct value.
+      pagination-icon-color: map.get($systems, md-sys-color, on-surface),
+      inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-ripple-color: map.get($systems, md-sys-color, on-surface),
+      inactive-ripple-color: map.get($systems, md-sys-color, on-surface),
+      inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+      inactive-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+      active-focus-indicator-color: map.get($systems, md-sys-color, primary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, primary),
+    ),
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, secondary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, tertiary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, error),
+      active-hover-indicator-color: map.get($systems, md-sys-color, error),
+    )
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}
+

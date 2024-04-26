@@ -1,0 +1,46 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+@use '@material/elevation' as mdc-elevation;
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, select);
+
+/// Generates custom tokens for the mat-select.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-select
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: sass-utils.merge-all(
+    token-utils.generate-typography-tokens($systems, trigger-text, body-large),
+    (
+      panel-background-color: map.get($systems, md-sys-color, surface-container),
+      enabled-trigger-text-color: map.get($systems, md-sys-color, on-surface),
+      disabled-trigger-text-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      placeholder-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      enabled-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-arrow-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      focused-arrow-color: map.get($systems, md-sys-color, primary),
+      invalid-arrow-color: map.get($systems, md-sys-color, error),
+      container-elevation-shadow:
+        token-utils.hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
+    )
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed
+    secondary: (
+      focused-arrow-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      focused-arrow-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      focused-arrow-color: map.get($systems, md-sys-color, error),
+    )
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

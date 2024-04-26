@@ -1,0 +1,123 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+@use '@material/elevation' as mdc-elevation;
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, datepicker);
+
+/// Generates custom tokens for the mat-datepicker.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-datepicker
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    calendar-date-in-range-state-background-color:
+      map.get($systems, md-sys-color, primary-container),
+    calendar-date-in-comparison-range-state-background-color:
+      map.get($systems, md-sys-color, tertiary-container),
+    calendar-date-in-overlap-range-state-background-color:
+      map.get($systems, md-sys-color, secondary-container),
+    calendar-date-in-overlap-range-selected-state-background-color:
+      map.get($systems, md-sys-color, secondary),
+    calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-primary),
+    calendar-date-selected-state-background-color: map.get($systems, md-sys-color, primary),
+    calendar-date-selected-disabled-state-background-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: 0.38
+    ),
+    calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, primary),
+    calendar-date-focus-state-background-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+    ),
+    calendar-date-hover-state-background-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+    ),
+    toggle-active-state-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    toggle-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    calendar-body-label-text-color: map.get($systems, md-sys-color, on-surface),
+    calendar-period-button-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    calendar-period-button-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    calendar-navigation-button-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    calendar-header-divider-color: token-utils.hardcode(transparent, $exclude-hardcoded),
+    calendar-header-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    calendar-date-today-outline-color: map.get($systems, md-sys-color, primary),
+    calendar-date-today-disabled-state-outline-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: 0.38
+    ),
+    calendar-date-text-color: map.get($systems, md-sys-color, on-surface),
+    calendar-date-outline-color: token-utils.hardcode(transparent, $exclude-hardcoded),
+    calendar-date-disabled-state-text-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: 0.38
+    ),
+    calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, primary),
+    range-input-separator-color: map.get($systems, md-sys-color, on-surface),
+    range-input-disabled-state-separator-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: 0.38
+    ),
+    range-input-disabled-state-text-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface),
+      $alpha: 0.38
+    ),
+    calendar-container-background-color: map.get($systems, md-sys-color, surface-container-high),
+    calendar-container-text-color: map.get($systems, md-sys-color, on-surface),
+    calendar-container-elevation-shadow: token-utils.hardcode(mdc-elevation.elevation-box-shadow(0),
+      $exclude-hardcoded),
+    calendar-container-touch-elevation-shadow:
+      token-utils.hardcode(mdc-elevation.elevation-box-shadow(0), $exclude-hardcoded),
+    calendar-container-shape: map.get($systems, md-sys-shape, corner-large),
+    calendar-container-touch-shape: map.get($systems, md-sys-shape, corner-extra-large),
+    calendar-text-font: map.get($systems, md-sys-typescale, body-large-font),
+    calendar-text-size: map.get($systems, md-sys-typescale, body-large-size),
+    calendar-body-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+    calendar-body-label-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
+    calendar-period-button-text-size: map.get($systems, md-sys-typescale, title-small-size),
+    calendar-period-button-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
+    calendar-header-text-size: map.get($systems, md-sys-typescale, title-small-size),
+    calendar-header-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, secondary-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-secondary),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, secondary),
+      calendar-date-in-overlap-range-state-background-color:
+          map.get($systems, md-sys-color, primary-container),
+      calendar-date-in-overlap-range-selected-state-background-color:
+          map.get($systems, md-sys-color, primary),
+    ),
+    tertiary: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, tertiary-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-tertiary),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, tertiary),
+      calendar-date-in-comparison-range-state-background-color:
+          map.get($systems, md-sys-color, primary-container),
+    ),
+    error: (
+      calendar-date-in-range-state-background-color:
+          map.get($systems, md-sys-color, error-container),
+      calendar-date-selected-state-text-color: map.get($systems, md-sys-color, on-error),
+      calendar-date-selected-state-background-color: map.get($systems, md-sys-color, error),
+      calendar-date-today-selected-state-outline-color: map.get($systems, md-sys-color, error),
+      calendar-date-today-outline-color: map.get($systems, md-sys-color, error),
+      calendar-date-preview-state-outline-color: map.get($systems, md-sys-color, error),
+    )
+  ));
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

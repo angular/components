@@ -3,7 +3,9 @@
 @use 'sass:meta';
 @use '@material/tokens/v0_161' as mdc-tokens;
 @use '../style/sass-utils';
+@use '../tokens/token-utils';
 @use '../m2' as m2-theming;
+@use './m3';
 @use '../tokens/m2' as m2-tokens;
 @use './density';
 @use './custom-tokens';
@@ -23,33 +25,6 @@
   @return $result;
 }
 
-/// Picks a submap containing only the given keys out the given map.
-/// @param {Map} $map The map to pick from.
-/// @param {List} $keys The map keys to pick.
-/// @return {Map} A submap containing only the given keys.
-@function _pick($map, $keys) {
-  $result: ();
-  @each $key in $keys {
-    @if map.has-key($map, $key) {
-      $result: map.set($result, $key, map.get($map, $key));
-    }
-  }
-  @return $result;
-}
-
-/// Filters keys with a null value out of the map.
-/// @param {Map} $map The map to filter.
-/// @return {Map} The given map with all of the null keys filtered out.
-@function _filter-nulls($map) {
-  $result: ();
-  @each $key, $val in $map {
-    @if $val != null {
-      $result: map.set($result, $key, $val);
-    }
-  }
-  @return $result;
-}
-
 /// Renames the keys in a map
 /// @param {Map} $map The map whose keys should be renamed
 /// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
@@ -62,39 +37,6 @@
     }
   }
   @return $result;
-}
-
-/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
-/// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
-///  This param may also be a tuple of maps, the first one representing the default M3 token values,
-//   and the second containing overrides for different color variants.
-//   Single map example:
-//     (token1: green, token2: 2px)
-//   Tuple example:
-//     (
-//       (token1: green, token2: 2px),
-//       (
-//         secondary: (token1: blue),
-//         error: (token1: red),
-//       )
-//     )
-/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
-/// @param {String|null} $variant The name of the variant the token values are for.
-/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function _namespace-tokens($prefix, $values, $slots, $variant: null) {
-  $result: ();
-  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
-    $variants: list.nth($values, 2);
-    $values: list.nth($values, 1);
-    @each $variant, $overrides in $variants {
-      $result: map.merge($result, _namespace-tokens($prefix, $overrides, $slots, $variant));
-    }
-  }
-  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
-  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
-  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
-  @return map.merge($result, ($prefix: $used-m3-tokens));
 }
 
 /// Generates tokens for the given palette with the given prefix.
@@ -530,7 +472,7 @@
       (mdc, typography): map.get($systems, md-sys-typescale),
     ),
     // Get the official MDC component tokens
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, checkbox),
       (
         _fix-checkbox-tokens(mdc-tokens.md-comp-checkbox-values($systems, $exclude-hardcoded)),
@@ -541,12 +483,12 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, chip),
       custom-tokens.mdc-chip($systems, $exclude-hardcoded),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, circular-progress),
       (
         mdc-tokens.md-comp-circular-progress-indicator-values($systems, $exclude-hardcoded),
@@ -554,17 +496,17 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, dialog),
       _fix-dialog-tokens($systems, mdc-tokens.md-comp-dialog-values($systems, $exclude-hardcoded)),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, elevated-card),
       mdc-tokens.md-comp-elevated-card-values($systems, $exclude-hardcoded),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, fab),
       (
         mdc-tokens.md-comp-fab-primary-values($systems, $exclude-hardcoded),
@@ -577,7 +519,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, fab-small),
       (
         mdc-tokens.md-comp-fab-primary-small-values($systems, $exclude-hardcoded),
@@ -590,7 +532,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, extended-fab),
       (
         mdc-tokens.md-comp-extended-fab-primary-values($systems, $exclude-hardcoded),
@@ -603,7 +545,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, filled-text-field),
       (
         _fix-filled-text-field-tokens(
@@ -616,17 +558,17 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, form-field),
       _get-form-field-tokens($systems),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, icon-button),
       _fix-icon-button-tokens(mdc-tokens.md-comp-icon-button-values($systems, $exclude-hardcoded)),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, text-button),
       (
         _fix-text-button-tokens(
@@ -639,7 +581,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       // Note: in M3 the "protected" button is called "elevated".
       (mdc, protected-button),
       (
@@ -653,7 +595,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, filled-button),
       (
         _fix-filled-button-tokens(
@@ -666,7 +608,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, outlined-button),
       (
         _fix-outlined-button-tokens(
@@ -679,7 +621,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, linear-progress),
       (
         mdc-tokens.md-comp-linear-progress-indicator-values($systems, $exclude-hardcoded),
@@ -687,19 +629,19 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, list),
       _fix-list-tokens(
         mdc-tokens.md-comp-list-values($systems, $exclude-hardcoded)
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, outlined-card),
       mdc-tokens.md-comp-outlined-card-values($systems, $exclude-hardcoded),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, outlined-text-field),
       (
         _fix-outlined-text-field-tokens(
@@ -712,12 +654,12 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, plain-tooltip),
       mdc-tokens.md-comp-plain-tooltip-values($systems, $exclude-hardcoded),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, radio),
       (
         mdc-tokens.md-comp-radio-button-values($systems, $exclude-hardcoded),
@@ -725,7 +667,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, slider),
       (
         mdc-tokens.md-comp-slider-values($systems, $exclude-hardcoded),
@@ -733,12 +675,12 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, snackbar),
       mdc-tokens.md-comp-snackbar-values($systems, $exclude-hardcoded),
       $token-slots,
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, switch),
       (
         mdc-tokens.md-comp-switch-values($systems, $exclude-hardcoded),
@@ -746,7 +688,7 @@
       ),
       $token-slots
     ),
-    _namespace-tokens(
+    token-utils.namespace-tokens(
       (mdc, tab),
       mdc-tokens.md-comp-secondary-navigation-tab-values($systems, $exclude-hardcoded),
       $token-slots
@@ -754,220 +696,11 @@
 
     // Choose values for our made up tokens based on MDC system tokens or sensible hardcoded
     // values.
-    _namespace-tokens(
-      (mat, app),
-      custom-tokens.app($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
+    m3.get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
+
+    token-utils.namespace-tokens(
       (mdc, tab-indicator),
       custom-tokens.tab-indicator($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, autocomplete),
-      custom-tokens.autocomplete($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, badge),
-      custom-tokens.badge($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, bottom-sheet),
-      custom-tokens.bottom-sheet($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, card),
-      custom-tokens.card($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, chip),
-      custom-tokens.chip($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, datepicker),
-      custom-tokens.datepicker($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, dialog),
-      custom-tokens.dialog($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, divider),
-      custom-tokens.divider($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, fab),
-      custom-tokens.fab($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, fab-small),
-      custom-tokens.fab-small($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, form-field),
-      custom-tokens.form-field($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, expansion),
-      custom-tokens.expansion($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, grid-list),
-      custom-tokens.grid-list($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, icon),
-      custom-tokens.icon($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, text-button),
-      custom-tokens.text-button($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, filled-button),
-      custom-tokens.filled-button($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, list),
-      custom-tokens.list($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      // Note: in M3 the "protected" button is called "elevated".
-      (mat, protected-button),
-      custom-tokens.elevated-button($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, outlined-button),
-      custom-tokens.outlined-button($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, icon-button),
-      custom-tokens.icon-button($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, menu),
-      custom-tokens.menu($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, optgroup),
-      custom-tokens.optgroup($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, option),
-      custom-tokens.option($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, paginator),
-      custom-tokens.paginator($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, full-pseudo-checkbox),
-      custom-tokens.full-pseudo-checkbox($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, minimal-pseudo-checkbox),
-      custom-tokens.minimal-pseudo-checkbox($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, checkbox),
-      custom-tokens.checkbox($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, radio),
-      custom-tokens.radio($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, ripple),
-      custom-tokens.ripple($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, select),
-      custom-tokens.select($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, sidenav),
-      custom-tokens.sidenav($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, slider),
-      custom-tokens.slider($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, snack-bar),
-      custom-tokens.snack-bar($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, sort),
-      custom-tokens.sort($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, standard-button-toggle),
-      custom-tokens.button-toggle($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, stepper),
-      custom-tokens.stepper($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, switch),
-      custom-tokens.switch($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, tab-header),
-      custom-tokens.tab-header($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, table),
-      custom-tokens.table($systems, $exclude-hardcoded),
-      $token-slots
-    ),
-    _namespace-tokens(
-      (mat, toolbar),
-      custom-tokens.toolbar($systems, $exclude-hardcoded),
-      $token-slots,
-    ),
-    _namespace-tokens(
-      (mat, tree),
-      custom-tokens.tree($systems, $exclude-hardcoded),
       $token-slots
     ),
   );

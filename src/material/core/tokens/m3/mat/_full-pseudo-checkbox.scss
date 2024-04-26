@@ -1,0 +1,42 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, full-pseudo-checkbox);
+
+/// Generates custom tokens for the full variant of mat-pseudo-checkbox.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the full variant of mat-pseudo-checkbox
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $disabled-color: sass-utils.safe-color-change(
+    map.get($systems, md-sys-color, on-surface), $alpha: 0.38);
+
+  $tokens: ((
+    selected-icon-color: map.get($systems, md-sys-color, primary),
+    selected-checkmark-color: map.get($systems, md-sys-color, on-primary),
+    unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    disabled-selected-checkmark-color: map.get($systems, md-sys-color, surface),
+    disabled-unselected-icon-color: $disabled-color,
+    disabled-selected-icon-color: $disabled-color,
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      selected-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-secondary),
+    ),
+    tertiary: (
+      selected-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-tertiary),
+    ),
+    error: (
+      selected-icon-color: map.get($systems, md-sys-color, error),
+      selected-checkmark-color: map.get($systems, md-sys-color, on-error),
+    )
+  ));
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

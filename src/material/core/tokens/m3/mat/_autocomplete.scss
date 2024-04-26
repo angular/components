@@ -1,0 +1,22 @@
+@use 'sass:map';
+@use '@material/elevation/elevation-theme' as mdc-elevation;
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, autocomplete);
+
+/// Generates custom tokens for the mat-autocomplete.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-autocomplete
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    background-color: map.get($systems, md-sys-color, surface-container),
+    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+    container-elevation-shadow:
+      token-utils.hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}
