@@ -3,6 +3,7 @@
 @use './m3-system';
 @use 'sass:list';
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:string';
 
 $_tokens: null;
@@ -138,10 +139,13 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 @function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
   $elevation: map.get($tokens, $elevation-token);
   $shadow-color: map.get($tokens, $shadow-color-token);
-  @return map.merge($tokens, (
-    $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
-    $shadow-color-token: null,
-  ));
+  @return map.merge(
+    $tokens,
+    (
+      $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
+      $shadow-color-token: null,
+    )
+  );
 }
 
 /// Checks whether a list starts wih a given prefix
@@ -195,7 +199,8 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   $overrides: map.get($tokens, list.append($prefix, $color-variant));
   @if $overrides == null {
     $variants: _supported-color-variants($tokens, $prefix);
-    $secondary-message: if($variants == (),
+    $secondary-message: if(
+      $variants == (),
       'Mixin does not support color variants',
       'Supported color variants are: #{$variants}'
     );
@@ -245,4 +250,34 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
       );
     }
   }
+}
+
+// Returns a theme config with the given tokens overridden.
+/// @param {Map} $theme The material theme for an application.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $component, $overrides: ()) {
+  $internals: _mat-theming-internals-do-not-access;
+
+  @each $system in (color, typography, density, base) {
+    $system-name: $system + '-tokens';
+    $namespaces: map.get($theme, $internals, $system-name);
+    @each $namespace, $tokens in $namespaces {
+      @if (list.nth($namespace, 2) == $component) {
+        $namespace-overrides: if(
+          list.length($namespace) == 3,
+          map.get($overrides, list.nth($namespace, 3)),
+          $overrides
+        );
+
+        @each $name, $value in $tokens {
+          $token: map.get($namespace-overrides, $name);
+          @if $token != null {
+            $theme: map.set($theme, $internals, $system-name, $namespace, $name, $token);
+          }
+        }
+      }
+    }
+  }
+
+  @return $theme;
 }
