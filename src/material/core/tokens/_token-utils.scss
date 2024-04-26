@@ -255,3 +255,33 @@ $_component-prefix: null;
     }
   }
 }
+
+/// Returns a theme config with the given tokens overridden.
+/// @param {Map} $theme The material theme for an application.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $component, $overrides: ()) {
+  $internals: _mat-theming-internals-do-not-access;
+
+  @each $system in (color, typography, density, base) {
+
+    $system-name: $system + '-tokens';
+    $namespaces: map.get($theme, $internals, $system-name);
+    @each $namespace, $tokens in $namespaces {
+
+      @if (list.nth($namespace, 2) == $component) {
+        $namespace-overrides: if(list.length($namespace) == 3,
+          map.get($overrides, list.nth($namespace, 3)),
+          $overrides);
+
+        @each $name, $value in $tokens {
+          $token: map.get($namespace-overrides, $name);
+          @if $token != null {
+            $theme: map.set($theme, $internals, $system-name, $namespace, $name, $token);
+          }
+        }
+      }
+    }
+  }
+
+  @return $theme;
+}
