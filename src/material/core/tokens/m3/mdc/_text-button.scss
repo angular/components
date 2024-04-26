@@ -1,0 +1,79 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, text-button);
+
+/// Generates the tokens for MDC text-button
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC text-button
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('text-button', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      hover-label-text-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-label-text-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-icon-color: map.get($systems, md-sys-color, secondary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, secondary)
+    ),
+    tertiary: (
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      hover-label-text-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-label-text-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-icon-color: map.get($systems, md-sys-color, tertiary),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, tertiary)
+    ),
+    error: (
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      hover-label-text-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-text-color: map.get($systems, md-sys-color, error),
+      pressed-label-text-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-icon-color: map.get($systems, md-sys-color, error),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, error)
+    )
+  );
+
+  @return token-utils.namespace-tokens($prefix, (
+    _fix-tokens($mdc-tokens),
+    token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+  ), $token-slots);
+}
+
+
+/// Fixes inconsistent values in the text button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of text button tokens currently being generated.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-utils.get-mdc-tokens('text-button', (), false);
+
+  @return token-utils.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+    (
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
+    ),
+  ));
+}

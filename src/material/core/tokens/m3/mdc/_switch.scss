@@ -1,0 +1,70 @@
+@use 'sass:map';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, switch);
+
+/// Generates the tokens for MDC switch
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC switch
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('switch', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-track-color: map.get($systems, md-sys-color, secondary),
+      selected-handle-color: map.get($systems, md-sys-color, on-secondary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-track-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, secondary),
+      selected-track-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-handle-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-track-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-focus-track-color: map.get($systems, md-sys-color, error),
+      selected-handle-color: map.get($systems, md-sys-color, on-error),
+      selected-hover-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-track-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-pressed-track-color: map.get($systems, md-sys-color, error),
+      selected-track-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return token-utils.namespace-tokens($prefix, ($mdc-tokens, $variant-tokens), $token-slots);
+}

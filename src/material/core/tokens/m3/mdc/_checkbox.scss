@@ -1,0 +1,110 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, checkbox);
+
+/// Generates the tokens for MDC checkbox
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC checkbox
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('checkbox', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-container-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-container-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-container-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, on-secondary),
+      selected-pressed-container-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-secondary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-pressed-container-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-container-color: map.get($systems, md-sys-color, error),
+      selected-focus-container-color: map.get($systems, md-sys-color, error),
+      selected-focus-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-container-color: map.get($systems, md-sys-color, error),
+      selected-hover-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, on-error),
+      selected-pressed-container-color: map.get($systems, md-sys-color, error),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, on-error),
+      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+    )
+  );
+
+  @return token-utils.namespace-tokens(
+    $prefix,
+    (
+      _fix-tokens($mdc-tokens),
+      token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+    ),
+    $token-slots
+  );
+}
+
+/// Renames the official checkbox tokens to match the names actually used in MDC's code (which are
+/// different). This is a temporary workaround until MDC updates to use the correct names for the
+/// tokens.
+/// @param {Map} $tokens The map of checkbox tokens with the official tokens names
+/// @param {Map} $all-tokens Map of all checkbox tokens, including hardcoded values.
+/// This is necessary in order to do opacity lookups.
+/// @return {Map} The given tokens, renamed to be compatible with MDC's token implementation.
+@function _fix-tokens($tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-utils.get-mdc-tokens('checkbox', (), false);
+
+  $rename-keys: (
+    selected-icon-color: selected-checkmark-color,
+    selected-disabled-icon-color: disabled-selected-checkmark-color,
+    selected-container-color: selected-icon-color,
+    selected-hover-container-color: selected-hover-icon-color,
+    selected-disabled-container-color: disabled-selected-icon-color,
+    selected-disabled-container-opacity: disabled-selected-icon-opacity,
+    selected-focus-container-color: selected-focus-icon-color,
+    selected-pressed-container-color: selected-pressed-icon-color,
+    unselected-disabled-outline-color: disabled-unselected-icon-color,
+    unselected-disabled-container-opacity: disabled-unselected-icon-opacity,
+    unselected-focus-outline-color: unselected-focus-icon-color,
+    unselected-hover-outline-color: unselected-hover-icon-color,
+    unselected-outline-color: unselected-icon-color,
+    unselected-pressed-outline-color: unselected-pressed-icon-color
+  );
+
+  $remapped-tokens: token-utils.rename-map-keys($tokens, $rename-keys);
+  $remapped-hardcoded-tokens: token-utils.rename-map-keys($hardcoded-tokens, $rename-keys);
+
+  @return token-utils.combine-color-tokens($remapped-tokens, $remapped-hardcoded-tokens, (
+    (
+      color: disabled-selected-icon-color,
+      opacity: disabled-selected-icon-opacity,
+    ),
+    (
+      color: disabled-unselected-icon-color,
+      opacity: disabled-unselected-icon-opacity,
+    ),
+  ));
+}

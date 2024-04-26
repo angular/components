@@ -1,0 +1,61 @@
+@use 'sass:map';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, slider);
+
+/// Generates the tokens for MDC slider
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC slider
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('slider', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-track-color: map.get($systems, md-sys-color, secondary),
+      focus-handle-color: map.get($systems, md-sys-color, secondary),
+      focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      handle-color: map.get($systems, md-sys-color, secondary),
+      hover-handle-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      label-container-color: map.get($systems, md-sys-color, secondary),
+      label-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      pressed-handle-color: map.get($systems, md-sys-color, secondary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-secondary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-secondary),
+    ),
+    tertiary: (
+      active-track-color: map.get($systems, md-sys-color, tertiary),
+      focus-handle-color: map.get($systems, md-sys-color, tertiary),
+      focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      handle-color: map.get($systems, md-sys-color, tertiary),
+      hover-handle-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      label-container-color: map.get($systems, md-sys-color, tertiary),
+      label-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      pressed-handle-color: map.get($systems, md-sys-color, tertiary),
+      pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-tertiary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-tertiary),
+    ),
+    error: (
+      active-track-color: map.get($systems, md-sys-color, error),
+      focus-handle-color: map.get($systems, md-sys-color, error),
+      focus-state-layer-color: map.get($systems, md-sys-color, error),
+      handle-color: map.get($systems, md-sys-color, error),
+      hover-handle-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: map.get($systems, md-sys-color, error),
+      label-container-color: map.get($systems, md-sys-color, error),
+      label-label-text-color: map.get($systems, md-sys-color, on-error),
+      pressed-handle-color: map.get($systems, md-sys-color, error),
+      pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-error),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-error),
+    ),
+  );
+
+  @return token-utils.namespace-tokens($prefix, ($mdc-tokens, $variant-tokens), $token-slots);
+}
