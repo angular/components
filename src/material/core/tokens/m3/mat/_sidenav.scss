@@ -1,0 +1,28 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, sidenav);
+
+/// Generates custom tokens for the mat-sidenav.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-sidenav
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    container-elevation-shadow: token-utils.hardcode(none, $exclude-hardcoded),
+    container-divider-color: token-utils.hardcode(transparent, $exclude-hardcoded),
+    container-width: token-utils.hardcode(360px, $exclude-hardcoded),
+    container-shape: map.get($systems, md-sys-shape, corner-large),
+    container-background-color: map.get($systems, md-sys-color, surface),
+    container-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    content-background-color: map.get($systems, md-sys-color, background),
+    content-text-color: map.get($systems, md-sys-color, on-background),
+    scrim-color: sass-utils.safe-color-change(
+        map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

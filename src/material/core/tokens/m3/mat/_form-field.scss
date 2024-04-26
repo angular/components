@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, form-field);
+
+/// Generates custom tokens for the mat-form-field.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-form-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: sass-utils.merge-all(
+    token-utils.generate-typography-tokens($systems, container-text, body-large),
+    token-utils.generate-typography-tokens($systems, subscript-text, body-small),
+    (
+      disabled-input-text-placeholder-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      state-layer-color: map.get($systems, md-sys-color, on-surface),
+      error-text-color: map.get($systems, md-sys-color, error),
+      select-option-text-color: map.get($systems, md-ref-palette, neutral10),
+      select-disabled-option-text-color: sass-utils.safe-color-change(
+          map.get($systems, md-ref-palette, neutral10), $alpha: 0.38),
+      enabled-select-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-select-arrow-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+      focus-state-layer-opacity: token-utils.hardcode(0, $exclude-hardcoded),
+      focus-select-arrow-color: map.get($systems, md-sys-color, primary),
+      outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
+
+      leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-leading-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+
+      trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      disabled-trailing-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      error-focus-trailing-icon-color: map.get($systems, md-sys-color, error),
+      error-hover-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
+      error-trailing-icon-color: map.get($systems, md-sys-color, error),
+    )
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      focus-select-arrow-color: map.get($systems, md-sys-color, error),
+    )
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}
