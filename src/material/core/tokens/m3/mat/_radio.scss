@@ -1,0 +1,34 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, radio);
+
+/// Generates custom tokens for the mat-radio.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-radio
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    ripple-color: map.get($systems, md-sys-color, on-surface),
+    checked-ripple-color: map.get($systems, md-sys-color, primary),
+    disabled-label-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed
+    secondary: (
+      checked-ripple-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      checked-ripple-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      checked-ripple-color: map.get($systems, md-sys-color, error),
+    ),
+  ));
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

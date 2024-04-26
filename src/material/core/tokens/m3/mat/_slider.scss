@@ -1,0 +1,56 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, slider);
+
+/// Generates custom tokens for the mat-slider.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-slider
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    ripple-color: map.get($systems, md-sys-color, primary),
+    hover-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, primary), $alpha: 0.05),
+    focus-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, primary), $alpha: 0.2),
+    value-indicator-opacity: token-utils.hardcode(1, $exclude-hardcoded),
+    value-indicator-padding: token-utils.hardcode(0, $exclude-hardcoded),
+    value-indicator-width: token-utils.hardcode(28px, $exclude-hardcoded),
+    value-indicator-height: token-utils.hardcode(28px, $exclude-hardcoded),
+    value-indicator-caret-display: token-utils.hardcode(none, $exclude-hardcoded),
+    value-indicator-border-radius: token-utils.hardcode(50% 50% 50% 0, $exclude-hardcoded),
+    value-indicator-text-transform: token-utils.hardcode(rotate(45deg), $exclude-hardcoded),
+    value-indicator-container-transform:
+      token-utils.hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      ripple-color: map.get($systems, md-sys-color, secondary),
+      hover-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, secondary), $alpha: 0.05),
+      focus-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, secondary), $alpha: 0.2),
+    ),
+    tertiary: (
+      ripple-color: map.get($systems, md-sys-color, tertiary),
+      hover-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, tertiary), $alpha: 0.05),
+      focus-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, tertiary), $alpha: 0.2),
+    ),
+    error: (
+      ripple-color: map.get($systems, md-sys-color, error),
+      hover-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, error), $alpha: 0.05),
+      focus-state-layer-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, error), $alpha: 0.2),
+    ),
+  ));
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}

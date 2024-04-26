@@ -1,0 +1,79 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, stepper);
+
+/// Generates custom tokens for the mat-stepper.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-stepper
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    (
+      container-color: map.get($systems, md-sys-color, surface),
+      line-color: map.get($systems, md-sys-color, outline-variant),
+      header-hover-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, inverse-surface),
+        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+      ),
+      header-focus-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, inverse-surface),
+        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+      ),
+      header-label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-optional-label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-selected-state-label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-icon-background-color: map.get($systems, md-sys-color, on-surface-variant),
+      header-icon-foreground-color: map.get($systems, md-sys-color, surface),
+      header-edit-state-icon-background-color: map.get($systems, md-sys-color, primary),
+      header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+      header-error-state-label-text-color: map.get($systems, md-sys-color, error),
+      header-error-state-icon-foreground-color: map.get($systems, md-sys-color, error),
+      header-error-state-icon-background-color:
+        token-utils.hardcode(transparent, $exclude-hardcoded),
+      container-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+      header-label-text-font: map.get($systems, md-sys-typescale, title-small-font),
+      header-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+      header-label-text-weight: map.get($systems, md-sys-typescale, title-small-weight),
+      header-error-state-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+      header-focus-state-layer-shape: map.get($systems, md-sys-shape, corner-medium),
+      header-hover-state-layer-shape: map.get($systems, md-sys-shape, corner-medium),
+      header-selected-state-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
+      header-selected-state-label-text-weight: map.get(
+          $systems, md-sys-typescale, title-small-weight),
+      header-selected-state-icon-background-color: map.get($systems, md-sys-color, primary),
+      header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+    ), (
+      // Color variants
+      primary: (
+        header-edit-state-icon-background-color: map.get($systems, md-sys-color, primary),
+        header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+        header-selected-state-icon-background-color: map.get($systems, md-sys-color, primary),
+        header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+      ),
+      secondary: (
+        header-edit-state-icon-background-color: map.get($systems, md-sys-color, secondary),
+        header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-secondary),
+        header-selected-state-icon-background-color: map.get($systems, md-sys-color, secondary),
+        header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-secondary),
+      ),
+      tertiary: (
+        header-edit-state-icon-background-color: map.get($systems, md-sys-color, tertiary),
+        header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-tertiary),
+        header-selected-state-icon-background-color: map.get($systems, md-sys-color, tertiary),
+        header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-tertiary),
+      ),
+      error: (
+        header-edit-state-icon-background-color: map.get($systems, md-sys-color, error),
+        header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-error),
+        header-selected-state-icon-background-color: map.get($systems, md-sys-color, error),
+        header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-error),
+      )
+    )
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}
