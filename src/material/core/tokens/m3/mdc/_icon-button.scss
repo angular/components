@@ -1,0 +1,39 @@
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, icon-button);
+
+/// Generates the tokens for MDC icon-button
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC icon-button
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('icon-button', $systems, $exclude-hardcoded);
+
+  @return token-utils.namespace-tokens($prefix, _fix-tokens($mdc-tokens), $token-slots);
+}
+
+/// Fixes inconsistent values in the icon button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of icon button tokens currently being generated.
+/// @param {Map} $all-tokens Map of all icon button tokens, including hardcoded values.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-utils.get-mdc-tokens('icon-button', (), false);
+
+  $rename-keys: (
+    unselected-icon-color: icon-color,
+  );
+
+  $remapped-tokens: token-utils.rename-map-keys($tokens, $rename-keys);
+  $remapped-hardcoded-tokens: token-utils.rename-map-keys($hardcoded-tokens, $rename-keys);
+
+  @return token-utils.combine-color-tokens($remapped-tokens, $remapped-hardcoded-tokens, (
+    (
+      color: disabled-icon-color,
+      opacity: disabled-icon-opacity,
+    ),
+  ));
+}

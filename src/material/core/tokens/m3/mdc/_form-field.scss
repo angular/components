@@ -1,0 +1,25 @@
+@use 'sass:map';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, form-field);
+
+/// Generates the tokens for MDC form-field
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC form-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    // TODO: MDC currently doesn't provide tokens for the form field so we need to
+    // define them ourselves. Clean this up once b/246297033 is resolved.
+    label-text-color: map.get($systems, md-sys-color, on-surface),
+    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+  );
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+}
