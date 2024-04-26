@@ -5,6 +5,7 @@
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
+@use '@material/tokens/v0_161' as mdc-tokens;
 @use '../style/sass-utils';
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
@@ -140,6 +141,17 @@ $_component-prefix: null;
   @include _configure-token-prefix($prefix...) {
     @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
   }
+}
+
+/// Gets all the MDC token values for a specific component. This function serves as single
+/// point at which we directly reference a specific version of the MDC tokens.
+/// @param {String} $component Name of the component for which to get the tokens
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {List} Map of token names to values
+@function get-mdc-tokens($component, $systems, $exclude-hardcoded) {
+  $fn: meta.get-function($name: 'md-comp-' + $component + '-values', $module: 'mdc-tokens');
+  @return meta.call($fn, $systems, $exclude-hardcoded);
 }
 
 // MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
@@ -285,6 +297,63 @@ $_component-prefix: null;
     $result: map.set($result, #{$base-name}-#{$prop},
       map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
   }
+  @return $result;
+}
+
+/// Maps the values in a map to new values using the given mapping function
+/// @param {Map} $map The maps whose values will be mapped to new values.
+/// @param {Function} $fn The value mapping function.
+/// @param {Map} A new map with its values updated using the mapping function.
+@function map-values($map, $fn) {
+  $result: ();
+  @each $key, $value in $map {
+    $result: map.set($result, $key, meta.call($fn, $value));
+  }
+  @return $result;
+}
+
+/// Renames the keys in a map
+/// @param {Map} $map The map whose keys should be renamed
+/// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
+/// @return {Map} The result of applying the given key renames to the given map.
+@function rename-map-keys($map, $rename-keys) {
+  $result: $map;
+  @each $old-key-name, $new-key-name in $rename-keys {
+    @if map.has-key($map, $old-key-name) {
+      $result: map.set($result, $new-key-name, map.get($map, $old-key-name));
+    }
+  }
+  @return $result;
+}
+
+/// At the time of writing, some color tokens (e.g. disabled state) are defined as a solid color
+/// token and a separate opacity token. This function applies the opacity to the color and drops the
+/// opacity key from the map. Can be removed once b/213331407 is resolved.
+/// @param {Map} $tokens The map of tokens currently being generated
+/// @param {Map} $all-tokens A map of all tokens, including hardcoded values
+/// @param {List} $pairs Pairs of color token names and their opacities. Should be in the shape of
+/// `((color: 'color-key', opacity: 'opacity-key'))`.
+/// @return {Map} The initial tokens with the combined color values.
+@function combine-color-tokens($tokens, $opacity-lookup, $pairs) {
+  $result: $tokens;
+
+  @each $pair in $pairs {
+    $color-key: map.get($pair, color);
+    $opacity-key: map.get($pair, opacity);
+    $color: map.get($tokens, $color-key);
+    $opacity: map.get($opacity-lookup, $opacity-key);
+
+    @if(meta.type-of($color) == 'color') {
+      $result: map.remove($result, $opacity-key);
+      $result: map.set($result, $color-key, rgba($color, $opacity));
+    }
+    @else if($color != null) {
+      $result: map.remove($result, $opacity-key);
+      $combined-color: #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
+      $result: map.set($result, $color-key, $combined-color);
+    }
+  }
+
   @return $result;
 }
 

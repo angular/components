@@ -42,34 +42,35 @@
 @use './mat/table' as tokens-mat-table;
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/tree' as tokens-mat-tree;
-// @use './mdc/checkbox' as tokens-mdc-checkbox;
-// @use './mdc/text-button' as tokens-mdc-text-button;
-// @use './mdc/protected-button' as tokens-mdc-protected-button;
-// @use './mdc/filled-button' as tokens-mdc-filled-button;
-// @use './mdc/outlined-button' as tokens-mdc-outlined-button;
-// @use './mdc/chip' as tokens-mdc-chip;
-// @use './mdc/circular-progress' as tokens-mdc-circular-progress;
-// @use './mdc/dialog' as tokens-mdc-dialog;
-// @use './mdc/elevated-card' as tokens-mdc-elevated-card;
-// @use './mdc/extended-fab' as tokens-mdc-extended-fab;
-// @use './mdc/fab' as tokens-mdc-fab;
-// @use './mdc/fab-small' as tokens-mdc-fab-small;
-// @use './mdc/form-field' as tokens-mdc-form-field;
-// @use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
-// @use './mdc/icon-button' as tokens-mdc-icon-button;
-// @use './mdc/linear-progress' as tokens-mdc-linear-progress;
-// @use './mdc/list' as tokens-mdc-list;
-// @use './mdc/outlined-card' as tokens-mdc-outlined-card;
-// @use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
-// @use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
-// @use './mdc/radio' as tokens-mdc-radio;
-// @use './mdc/slider' as tokens-mdc-slider;
-// @use './mdc/snack-bar' as tokens-mdc-snack-bar;
-// @use './mdc/switch' as tokens-mdc-switch;
-// @use './mdc/tab' as tokens-mdc-tab;
-// @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mdc/checkbox' as tokens-mdc-checkbox;
+@use './mdc/text-button' as tokens-mdc-text-button;
+@use './mdc/protected-button' as tokens-mdc-protected-button;
+@use './mdc/filled-button' as tokens-mdc-filled-button;
+@use './mdc/outlined-button' as tokens-mdc-outlined-button;
+@use './mdc/chip' as tokens-mdc-chip;
+@use './mdc/circular-progress' as tokens-mdc-circular-progress;
+@use './mdc/dialog' as tokens-mdc-dialog;
+@use './mdc/elevated-card' as tokens-mdc-elevated-card;
+@use './mdc/extended-fab' as tokens-mdc-extended-fab;
+@use './mdc/fab' as tokens-mdc-fab;
+@use './mdc/fab-small' as tokens-mdc-fab-small;
+@use './mdc/form-field' as tokens-mdc-form-field;
+@use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
+@use './mdc/icon-button' as tokens-mdc-icon-button;
+@use './mdc/linear-progress' as tokens-mdc-linear-progress;
+@use './mdc/list' as tokens-mdc-list;
+@use './mdc/outlined-card' as tokens-mdc-outlined-card;
+@use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
+@use './mdc/radio' as tokens-mdc-radio;
+@use './mdc/slider' as tokens-mdc-slider;
+@use './mdc/snack-bar' as tokens-mdc-snack-bar;
+@use './mdc/switch' as tokens-mdc-switch;
+@use './mdc/tab' as tokens-mdc-tab;
+@use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
 
 $_module-names: (
+  // Custom tokens
   tokens-mat-app,
   tokens-mat-autocomplete,
   tokens-mat-badge,
@@ -112,6 +113,35 @@ $_module-names: (
   tokens-mat-text-button,
   tokens-mat-toolbar,
   tokens-mat-tree,
+
+  // MDC tokens
+  tokens-mdc-checkbox,
+  tokens-mdc-chip,
+  tokens-mdc-text-button,
+  tokens-mdc-protected-button,
+  tokens-mdc-filled-button,
+  tokens-mdc-outlined-button,
+  tokens-mdc-chip,
+  tokens-mdc-circular-progress,
+  tokens-mdc-dialog,
+  tokens-mdc-elevated-card,
+  tokens-mdc-extended-fab,
+  tokens-mdc-fab,
+  tokens-mdc-fab-small,
+  tokens-mdc-form-field,
+  tokens-mdc-filled-text-field,
+  tokens-mdc-icon-button,
+  tokens-mdc-linear-progress,
+  tokens-mdc-list,
+  tokens-mdc-outlined-card,
+  tokens-mdc-outlined-text-field,
+  tokens-mdc-plain-tooltip,
+  tokens-mdc-radio,
+  tokens-mdc-slider,
+  tokens-mdc-snack-bar,
+  tokens-mdc-switch,
+  tokens-mdc-tab,
+  tokens-mdc-tab-indicator,
 );
 
 /// Gets the full set of M3 tokens for the given theme object.

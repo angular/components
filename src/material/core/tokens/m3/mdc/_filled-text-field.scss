@@ -1,0 +1,92 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:list';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, filled-text-field);
+
+/// Generates the tokens for MDC filled-text-field
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC filled-text-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('filled-text-field', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-active-indicator-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return token-utils.namespace-tokens($prefix, (
+    _fix-tokens($mdc-tokens),
+    token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+  ), $token-slots);
+}
+
+
+/// Fixes inconsistent values in the filled text field tokens so that they can produce valid
+/// styles.
+/// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-utils.get-mdc-tokens('filled-text-field', (), false);
+
+  $tokens: token-utils.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+    (
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
+    ),
+    (
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
+    ),
+    (
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
+    ),
+    (
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
+    ),
+    (
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
+    ),
+    (
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
+    ),
+    (
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
+    )
+  ));
+
+  $container-shape: map.get($tokens, container-shape);
+
+  // The M2 token slots define a single `container-shape` slot while the M3 tokens provide a list
+  // of shapes (e.g. top/bottom/left/right). Extract the first value so it matches the expected
+  // token slot in M2.
+  @if meta.type-of($container-shape) == 'list' {
+    $tokens: map.set($tokens, container-shape, list.nth($container-shape, 1));
+  }
+
+  @return $tokens;
+}

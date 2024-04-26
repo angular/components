@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use '../../token-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, list);
+
+/// Generates the tokens for MDC list
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC list
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-utils.get-mdc-tokens('list', $systems, $exclude-hardcoded);
+
+  @return token-utils.namespace-tokens($prefix, _fix-tokens($mdc-tokens), $token-slots);
+}
+
+/// Fixes values in the list tokens that are inconsistent with its usage.
+/// @param {Map} $initial-tokens Map of list tokens currently being generated.
+/// @return {Map} The given tokens, with the inconsistent values replaced with valid ones.
+@function _fix-tokens($tokens) {
+  // This does not match the spec, which defines this to be `md.sys.color.surface`.
+  // However, this interferes with the use case of placing a list on other components. For example,
+  // the bottom sheet's container color is `md.sys.color.surface-container-low`. Instead, allow the
+  // list to just display the colors for its background.
+  @if map.get($tokens, list-item-container-color) != null {
+    $tokens: map.set($tokens, list-item-container-color, transparent);
+  }
+
+  // Match spec, which has list-item-leading-icon-size of 24px.
+  // Current version of tokens (0_161) has 18px.
+  @if map.get($tokens, list-item-leading-icon-size) != null {
+    $tokens: map.set($tokens, list-item-leading-icon-size, 24px);
+  }
+
+  @return $tokens;
+}
