@@ -98,13 +98,13 @@ function getColorPalettesSCSS(colorPalettes: Map<string, Map<number, string>>): 
 /**
  * Gets the generated scss from the provided color palettes and theme types.
  * @param colorPalettes Map of colors and their hue tones and values.
- * @param themeTypes List of theme types for the theme (ex. ['light', 'dark']).
+ * @param themeTypes Theme types for the theme (ex. 'light', 'dark', or 'both').
  * @param colorComment Comment with original hex colors used to generate palettes.
  * @returns String of the generated theme scss.
  */
 export function generateSCSSTheme(
   colorPalettes: Map<string, Map<number, string>>,
-  themeTypes: string[],
+  themeTypes: string,
   colorComment: string,
 ): string {
   let scss = [
@@ -128,9 +128,10 @@ export function generateSCSSTheme(
     '',
   ];
 
+  let themes = themeTypes === 'both' ? ['light', 'dark'] : [themeTypes];
   // Note: Call define-theme function here since creating the color tokens
   // from the palettes is a private function
-  for (const themeType of themeTypes) {
+  for (const themeType of themes) {
     scss = scss.concat([
       '$' + themeType + '-theme: mat.define-theme((',
       '  color: (',
@@ -173,9 +174,9 @@ export default function (options: Schema): Rule {
       colorComment += ', neutral: ' + options.neutralColor;
     }
 
-    if (options.themeTypes.length === 0) {
+    if (!options.themeTypes) {
       context.logger.info('No theme types specified, creating both light and dark themes.');
-      options.themeTypes = ['light', 'dark'];
+      options.themeTypes = 'both';
     }
 
     const themeScss = generateSCSSTheme(colorPalettes, options.themeTypes, colorComment);

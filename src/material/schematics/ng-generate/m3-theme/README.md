@@ -25,9 +25,11 @@ mixins.
 
 @include mat.core();
 
-// Apply the light theme by default
-@include mat.core-theme(my-theme.$light-theme);
-@include mat.button-theme(my-theme.$light-theme);
+html {
+  // Apply the light theme by default
+  @include mat.core-theme(my-theme.$light-theme);
+  @include mat.button-theme(my-theme.$light-theme);
+}
 ```
 
 ## Options
@@ -48,5 +50,4 @@ tertiary color generated from Material based on the primary.
 neutral color generated from Material based on the primary.
 * `directory` - Relative path to a directory within the project that the
 generated theme file should be created in. Defaults to the project root.
-* `themeTypes` - List of theme types (light and dark) to generate themes for.
-Defaults to both light and dark.
+* `themeTypes` - Theme types ('light', 'dark', or 'both') to generate themes for. Defaults to both.
