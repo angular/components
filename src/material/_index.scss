@@ -8,7 +8,7 @@
   define-density;
 @forward './core/theming/palettes' show $red-palette, $green-palette, $blue-palette,
   $yellow-palette, $cyan-palette, $magenta-palette, $orange-palette,
-  $chartreuse-palette, $azure-palette, $violet-palette, $rose-palette;
+  $chartreuse-palette, $spring-green-palette, $azure-palette, $violet-palette, $rose-palette;
 @forward './core/theming/color-api-backwards-compatibility' show
   color-variants-backwards-compatibility;
 

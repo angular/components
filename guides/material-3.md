@@ -70,6 +70,7 @@ used with the `primary` and `tertiary` options:
 - `$magenta-palette`
 - `$orange-palette`
 - `$chartreuse-palette`
+- `$spring-green-palette`
 - `$azure-palette`
 - `$violet-palette`
 - `$rose-palette`
