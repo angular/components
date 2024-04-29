@@ -121,6 +121,7 @@ export class PreviewRef {
       'pointer-events': 'none',
       'margin': '0',
       'padding': '0',
+      'color': 'inherit',
     });
     toggleNativeDragInteractions(wrapper, false);
 
