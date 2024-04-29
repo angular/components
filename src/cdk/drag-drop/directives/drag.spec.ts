@@ -2508,6 +2508,15 @@ describe('CdkDrag', () => {
       expect(previewContainer)
         .withContext('Expected preview container to be in the DOM')
         .toBeTruthy();
+      expect(previewContainer.style.color)
+        .withContext('Expected preview container to reset user agent color')
+        .toBe('inherit');
+      expect(previewContainer.style.margin)
+        .withContext('Expected preview container to reset user agent margin')
+        .toMatch(zeroPxRegex);
+      expect(previewContainer.style.padding)
+        .withContext('Expected preview container to reset user agent padding')
+        .toMatch(zeroPxRegex);
       expect(preview.textContent!.trim())
         .withContext('Expected preview content to match element')
         .toContain('One');
