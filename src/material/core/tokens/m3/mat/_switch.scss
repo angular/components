@@ -35,7 +35,8 @@ $prefix: (mat, switch);
     hidden-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
     track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
     track-outline-color:  map.get($systems, md-sys-color, outline),
-    selected-track-outline-width: token-utils.hardcode(0, $exclude-hardcoded),
+    selected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
+    selected-track-outline-color: token-utils.hardcode(transparent, $exclude-hardcoded),
     disabled-unselected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
     disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
   );
