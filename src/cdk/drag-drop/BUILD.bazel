@@ -4,6 +4,7 @@ load(
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
+    "sass_binary",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -14,6 +15,9 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = [
+        ":resets_scss",
+    ],
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -42,6 +46,11 @@ ng_test_library(
         "@npm//@angular/common",
         "@npm//rxjs",
     ],
+)
+
+sass_binary(
+    name = "resets_scss",
+    src = "resets.scss",
 )
 
 ng_web_test_suite(
