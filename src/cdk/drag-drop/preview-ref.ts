@@ -64,8 +64,9 @@ export class PreviewRef {
     parent.appendChild(this._wrapper);
 
     // The null check is necessary for browsers that don't support the popover API.
-    if (this._wrapper.showPopover) {
-      this._wrapper.showPopover();
+    // Note that we use a string access for compatibility with Closure.
+    if ('showPopover' in this._wrapper) {
+      this._wrapper['showPopover']();
     }
   }
 
