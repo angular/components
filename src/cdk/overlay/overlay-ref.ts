@@ -7,8 +7,11 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {coerceArray, coerceCssPixelValue} from '@angular/cdk/coercion';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
+import {Location} from '@angular/common';
 import {
+  AfterRenderRef,
   ComponentRef,
   EmbeddedViewRef,
   EnvironmentInjector,
@@ -16,15 +19,12 @@ import {
   afterNextRender,
   afterRender,
   untracked,
-  AfterRenderRef,
 } from '@angular/core';
-import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription, SubscriptionLike, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
 
@@ -495,10 +495,11 @@ export class OverlayRef implements PortalOutlet {
     // Run this outside the Angular zone because there's nothing that Angular cares about.
     // If it were to run inside the Angular zone, every test that used Overlay would have to be
     // either async or fakeAsync.
-    this._backdropTimeout = this._ngZone.runOutsideAngular(() =>
-      setTimeout(() => {
-        this._disposeBackdrop(backdropToDetach);
-      }, 500),
+    this._backdropTimeout = this._ngZone.runOutsideAngular(
+      () =>
+        setTimeout(() => {
+          this._disposeBackdrop(backdropToDetach);
+        }, 500) as any,
     );
   }
 

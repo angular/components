@@ -7,24 +7,24 @@
  */
 
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {NgClass} from '@angular/common';
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  Injector,
   Input,
-  Output,
-  ViewEncapsulation,
   NgZone,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
-  AfterViewChecked,
-  inject,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
   afterNextRender,
-  Injector,
+  inject,
 } from '@angular/core';
-import {NgClass} from '@angular/common';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -314,18 +314,20 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   _focusActiveCell(movePreview = true) {
     afterNextRender(
       () => {
-        setTimeout(() => {
-          const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
-            '.mat-calendar-body-active',
-          );
+        this._ngZone.runOutsideAngular(() => {
+          setTimeout(() => {
+            const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
+              '.mat-calendar-body-active',
+            );
 
-          if (activeCell) {
-            if (!movePreview) {
-              this._skipNextFocus = true;
+            if (activeCell) {
+              if (!movePreview) {
+                this._skipNextFocus = true;
+              }
+
+              activeCell.focus();
             }
-
-            activeCell.focus();
-          }
+          });
         });
       },
       {injector: this._injector},
