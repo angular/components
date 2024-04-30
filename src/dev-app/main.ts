@@ -53,6 +53,6 @@ bootstrapApplication(DevApp, {
     {provide: Directionality, useClass: DevAppDirectionality},
     cachedAppState.zoneless
       ? provideExperimentalZonelessChangeDetection()
-      : provideZoneChangeDetection({eventCoalescing: true}),
+      : provideZoneChangeDetection({eventCoalescing: true, runCoalescing: true}),
   ],
 });
