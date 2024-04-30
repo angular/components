@@ -223,6 +223,7 @@
   .mdc-switch--selected .mdc-switch__track::after,
   .mdc-switch--selected .mdc-switch__track::before {
     @include token-utils.create-token-slot(border-width, selected-track-outline-width);
+    @include token-utils.create-token-slot(border-color, selected-track-outline-color);
   }
 
   .mdc-switch--disabled .mdc-switch__track::after,
