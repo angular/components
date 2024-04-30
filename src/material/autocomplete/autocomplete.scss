@@ -54,3 +54,10 @@ div.mat-mdc-autocomplete-panel {
 mat-autocomplete {
   display: none;
 }
+
+// Prevents autocomplete panel from being cut-off from being viewed in landscape orientation.
+@media all and (orientation: landscape) {
+  div.mat-mdc-autocomplete-panel {
+    max-height: 55vh;
+  }
+}
