@@ -1,0 +1,8 @@
+@layer cdk-resets {
+  .cdk-drag-preview {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+  }
+}
