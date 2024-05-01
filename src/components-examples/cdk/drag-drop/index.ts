@@ -15,3 +15,4 @@ export {CdkDragDropOverviewExample} from './cdk-drag-drop-overview/cdk-drag-drop
 export {CdkDragDropRootElementExample} from './cdk-drag-drop-root-element/cdk-drag-drop-root-element-example';
 export {CdkDragDropSortingExample} from './cdk-drag-drop-sorting/cdk-drag-drop-sorting-example';
 export {CdkDragDropSortPredicateExample} from './cdk-drag-drop-sort-predicate/cdk-drag-drop-sort-predicate-example';
+export {CdkDragDropTableExample} from './cdk-drag-drop-table/cdk-drag-drop-table-example';

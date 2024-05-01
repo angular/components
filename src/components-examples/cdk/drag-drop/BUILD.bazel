@@ -13,6 +13,8 @@ ng_module(
         "//src/cdk/drag-drop",
         "//src/cdk/overlay",
         "//src/cdk/portal",
+        "//src/material/icon",
+        "//src/material/table",
     ],
 )
 

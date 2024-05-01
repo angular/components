@@ -238,3 +238,11 @@ whenever an item is about to be moved into a new index. If the predicate returns
 item will be moved into the new index, otherwise it will keep its current position.
 
 <!-- example(cdk-drag-drop-sort-predicate) -->
+
+### Reordering table rows
+Angular Material provides seamless integration of drag-and-drop functionality into tables,
+by adding the `cdkDropList` directive to your mat-table and handling the `(cdkDropListDropped)`
+event, you can enable drag-and-drop interactions within your table. This allows users to reorder
+rows or perform other custom actions with ease.
+
+<!-- example(cdk-drag-drop-table) -->
