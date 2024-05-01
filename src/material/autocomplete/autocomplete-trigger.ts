@@ -884,7 +884,9 @@ export class MatAutocompleteTrigger
     const strategy = this._overlay
       .position()
       .flexibleConnectedTo(this._getConnectedElement())
-      .withFlexibleDimensions(false)
+      .withFlexibleDimensions(true)
+      .withGrowAfterOpen(true)
+      .withViewportMargin(8)
       .withPush(false);
 
     this._setStrategyPositions(strategy);
