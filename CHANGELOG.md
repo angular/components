@@ -1,3 +1,22 @@
+<a name="18.0.0-rc.0"></a>
+# 18.0.0-rc.0 "plastic-moose" (2024-05-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f13b9095ef](https://github.com/angular/components/commit/f13b9095ef4e22004bd8c5fba9daf14e43cf7921) | fix | **drag-drop:** remove preview wrapper |
+| [b86c8c84d1](https://github.com/angular/components/commit/b86c8c84d147eef27ef5b5ff3153c8f67e015fd7) | fix | **drag-drop:** reset user agent color on preview popover |
+| [66afde5b7e](https://github.com/angular/components/commit/66afde5b7e1290929a041412d6b67146dc662597) | fix | **drag-drop:** resolve incompatibility with property minification ([#28980](https://github.com/angular/components/pull/28980)) |
+| [c8b62a1549](https://github.com/angular/components/commit/c8b62a154992912046d52113b08408065f3772fd) | fix | **scrolling:** fix virtual scrolling jankiness with run coalescing ([#28968](https://github.com/angular/components/pull/28968)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0ccc52830e](https://github.com/angular/components/commit/0ccc52830e8d663537e391978f7ce43f4d952a5d) | fix | **core:** export all available M3 palettes ([#28975](https://github.com/angular/components/pull/28975)) |
+| [6dc8f7e90d](https://github.com/angular/components/commit/6dc8f7e90d05b7136daa8f99e0dc28ae5052848b) | fix | **dialog:** mark dialog content as scrollable ([#28963](https://github.com/angular/components/pull/28963)) |
+| [c86359dd43](https://github.com/angular/components/commit/c86359dd438e0c7d346372fdaa359a0b1465e7a9) | fix | **slide-toggle:** no outline when selected in high contrast mode ([#28979](https://github.com/angular/components/pull/28979)) |
+| [a4fc0a0970](https://github.com/angular/components/commit/a4fc0a097070729f490429462268ea9d68ae85e2) | fix | **theming:** remove shadow css variable ([#28953](https://github.com/angular/components/pull/28953)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-next.6"></a>
 # 18.0.0-next.6 "smoke-contour" (2024-04-25)
 ## Breaking Changes
