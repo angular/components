@@ -49,7 +49,7 @@ export function getSupportedInputTypes(): Set<string> {
   // We can't check if an input type is not supported until we're on the browser, so say that
   // everything is supported when not on the browser. We don't use `Platform` here since it's
   // just a helper function and can't inject it.
-  if (typeof document !== 'object' || !document) {
+  if (typeof document !== 'object' || !document || !(document instanceof Document)) {
     supportedInputTypes = new Set(candidateInputTypes);
     return supportedInputTypes;
   }
