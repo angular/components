@@ -12,7 +12,7 @@ $prefix: (mat, divider);
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
     width: token-utils.hardcode(1px, $exclude-hardcoded),
-    color: map.get($systems, md-sys-color, outline-variant),
+    color: map.get($systems, md-sys-color, outline),
   );
 
   @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);

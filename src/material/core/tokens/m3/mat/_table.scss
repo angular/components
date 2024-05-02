@@ -20,7 +20,7 @@ $prefix: (mat, table);
       background-color: map.get($systems, md-sys-color, surface),
       header-headline-color: map.get($systems, md-sys-color, on-surface),
       row-item-label-text-color: map.get($systems, md-sys-color, on-surface),
-      row-item-outline-color: map.get($systems, md-sys-color, outline-variant),
+      row-item-outline-color: map.get($systems, md-sys-color, outline),
     ),
   );
 

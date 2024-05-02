@@ -14,7 +14,7 @@ $prefix: (mat, stepper);
   $tokens: (
     (
       container-color: map.get($systems, md-sys-color, surface),
-      line-color: map.get($systems, md-sys-color, outline-variant),
+      line-color: map.get($systems, md-sys-color, outline),
       header-hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, inverse-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
