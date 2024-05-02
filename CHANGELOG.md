@@ -1,3 +1,14 @@
+<a name="17.3.7"></a>
+# 17.3.7 "plastic-deer" (2024-05-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3c8abfb990](https://github.com/angular/components/commit/3c8abfb9902e06af2d73b8b536ce65c9d04442df) | fix | **drag-drop:** remove preview wrapper |
+| [a03a47c938](https://github.com/angular/components/commit/a03a47c93845fc6f8d917d588739599b63ce1608) | fix | **drag-drop:** reset user agent color on preview popover |
+| [8e3dfd2e5b](https://github.com/angular/components/commit/8e3dfd2e5b5e5c12cacb598581598e998456bd11) | fix | **drag-drop:** resolve incompatibility with property minification ([#28980](https://github.com/angular/components/pull/28980)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-rc.0"></a>
 # 18.0.0-rc.0 "plastic-moose" (2024-05-02)
 ### cdk
