@@ -16,6 +16,7 @@ import {
 import {Direction} from '@angular/cdk/bidi';
 import {PositionStrategy, ScrollStrategy} from '@angular/cdk/overlay';
 import {BasePortalOutlet} from '@angular/cdk/portal';
+import {AnimationFactory} from '@angular/animations';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -168,4 +169,13 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
    * A function can be passed in to resolve the context lazily.
    */
   templateContext?: Record<string, any> | (() => Record<string, any>);
+
+  /** Animation applied to the overlay when dialog is opened. */
+  overlayOpenAnimation?: AnimationFactory;
+  /** Animation applied to the backdrop when dialog is opened. */
+  backdropOpenAnimation?: AnimationFactory;
+  /** Animation applied to the overlay when dialog is closed. */
+  overlayCloseAnimation?: AnimationFactory;
+  /** Animation applied to the backdrop when dialog is closed. */
+  backdropCloseAnimation?: AnimationFactory;
 }

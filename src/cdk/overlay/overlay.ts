@@ -85,7 +85,8 @@ export class Overlay {
       this._document,
       this._location,
       this._outsideClickDispatcher,
-      this._animationsModuleType === 'NoopAnimations',
+      this._animationsModuleType === 'NoopAnimations' ||
+        config?.prebuiltCssAnimationsDisabled === true,
       this._injector.get(EnvironmentInjector),
     );
   }

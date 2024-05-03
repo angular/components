@@ -13,6 +13,7 @@ import {DialogConfig} from './dialog-config';
 import {FocusOrigin} from '@angular/cdk/a11y';
 import {BasePortalOutlet} from '@angular/cdk/portal';
 import {ComponentRef} from '@angular/core';
+import {AnimationPlayer} from '@angular/animations';
 
 /** Additional options that can be passed in when closing a dialog. */
 export interface DialogCloseOptions {
@@ -89,6 +90,9 @@ export class DialogRef<R = unknown, C = unknown> {
         this.close();
       }
     });
+
+    config?.overlayOpenAnimation?.create(overlayRef.overlayElement)?.play();
+    config?.backdropOpenAnimation?.create(overlayRef.backdropElement)?.play();
   }
 
   /**
@@ -103,12 +107,15 @@ export class DialogRef<R = unknown, C = unknown> {
       // Drop the detach subscription first since it can be triggered by the
       // `dispose` call and override the result of this closing sequence.
       this._detachSubscription.unsubscribe();
-      this.overlayRef.dispose();
-      closedSubject.next(result);
-      closedSubject.complete();
-      (this as {componentInstance: C}).componentInstance = (
-        this as {containerInstance: BasePortalOutlet}
-      ).containerInstance = null!;
+
+      this._playCloseAnimations().then(() => {
+        this.overlayRef.dispose();
+        closedSubject.next(result);
+        closedSubject.complete();
+        (this as {componentInstance: C}).componentInstance = (
+          this as {containerInstance: BasePortalOutlet}
+        ).containerInstance = null!;
+      });
     }
   }
 
@@ -138,5 +145,46 @@ export class DialogRef<R = unknown, C = unknown> {
   removePanelClass(classes: string | string[]): this {
     this.overlayRef.removePanelClass(classes);
     return this;
+  }
+
+  private _playCloseAnimations(): Promise<void> {
+    let waitGroup = 0;
+
+    let overlayClosePlayer: AnimationPlayer | undefined;
+    if (this.config?.overlayCloseAnimation !== undefined) {
+      overlayClosePlayer = this.config.overlayCloseAnimation.create(this.overlayRef.overlayElement);
+      waitGroup++;
+    }
+
+    let backdropClosePlayer: AnimationPlayer | undefined;
+    if (this.config?.backdropCloseAnimation !== undefined) {
+      backdropClosePlayer = this.config.backdropCloseAnimation.create(
+        this.overlayRef.backdropElement,
+      );
+      waitGroup++;
+    }
+
+    // If no animation is defined we resolve immediately.
+    if (waitGroup == 0) {
+      return Promise.resolve();
+    }
+
+    overlayClosePlayer?.play();
+    backdropClosePlayer?.play();
+
+    // If none is started it means the NoopAnimationsModule was used and we resolve immediately.
+    if (overlayClosePlayer?.hasStarted() === false && backdropClosePlayer?.hasStarted() === false) {
+      return Promise.resolve();
+    }
+
+    return new Promise<void>(resolve => {
+      const onDoneCallback = () => {
+        if (--waitGroup == 0) {
+          resolve();
+        }
+      };
+      overlayClosePlayer?.onDone(onDoneCallback);
+      backdropClosePlayer?.onDone(onDoneCallback);
+    });
   }
 }

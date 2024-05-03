@@ -201,6 +201,7 @@ export class Dialog implements OnDestroy {
       width: config.width,
       height: config.height,
       disposeOnNavigation: config.closeOnNavigation,
+      prebuiltCssAnimationsDisabled: hasAnyOpenOrCloseAnimationsDefined(config),
     });
 
     if (config.backdropClass) {
@@ -411,4 +412,13 @@ function reverseForEach<T>(items: T[] | readonly T[], callback: (current: T) => 
   while (i--) {
     callback(items[i]);
   }
+}
+
+function hasAnyOpenOrCloseAnimationsDefined<D, R>(config: DialogConfig<D, R>): boolean {
+  return (
+    config.overlayOpenAnimation !== undefined ||
+    config.backdropOpenAnimation !== undefined ||
+    config.overlayCloseAnimation !== undefined ||
+    config.backdropCloseAnimation !== undefined
+  );
 }

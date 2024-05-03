@@ -58,6 +58,11 @@ export class OverlayConfig {
    */
   disposeOnNavigation?: boolean = false;
 
+  /**
+   * Whether prebuilt CSS overlay animations should be disabled.
+   */
+  prebuiltCssAnimationsDisabled?: boolean = false;
+
   constructor(config?: OverlayConfig) {
     if (config) {
       // Use `Iterable` instead of `Array` because TypeScript, as of 3.6.3,
