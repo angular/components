@@ -30,27 +30,10 @@
       "x-prompt": "What is the directory you want to place the generated theme file in? (Enter the relative path such as 'src/app/styles/' or leave blank to generate at your project root)"
     },
     "themeTypes": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": ["light", "dark"]
-      },
+      "type": "string",
+      "enum": ["light", "dark", "both"],
       "description": "The components to migrate.",
-      "x-prompt": {
-        "message": "Choose light, dark, or both to generate the corresponding themes",
-        "type": "list",
-        "multiselect": true,
-        "items": [
-          {
-            "value": "light",
-            "label": "light"
-          },
-          {
-            "value": "dark",
-            "label": "dark"
-          }
-        ]
-      }
+      "x-prompt": "Choose light, dark, or both to generate the corresponding themes"
     }
   }
 }

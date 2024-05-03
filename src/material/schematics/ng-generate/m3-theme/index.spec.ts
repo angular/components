@@ -224,7 +224,7 @@ describe('material-m3-theme-schematic', () => {
     try {
       await runM3ThemeSchematic(runner, {
         primaryColor: '#fffff',
-        themeTypes: ['light'],
+        themeTypes: 'light',
       });
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -236,7 +236,7 @@ describe('material-m3-theme-schematic', () => {
   it('should generate m3 theme file', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['light'],
+      themeTypes: 'light',
     });
     expect(tree.exists('m3-theme.scss')).toBe(true);
   });
@@ -244,7 +244,7 @@ describe('material-m3-theme-schematic', () => {
   it('should generate m3 theme file at specified path', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['light'],
+      themeTypes: 'light',
       directory: 'projects/',
     });
     expect(tree.exists('projects/m3-theme.scss')).toBe(true);
@@ -253,7 +253,7 @@ describe('material-m3-theme-schematic', () => {
   it('should generate m3 theme file with correct indentation and formatting', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['light', 'dark'],
+      themeTypes: 'both',
     });
     expect(tree.readText('m3-theme.scss')).toEqual(testM3ThemeScss);
   });
@@ -261,13 +261,13 @@ describe('material-m3-theme-schematic', () => {
   it('should generate light theme when provided a primary color', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['light'],
+      themeTypes: 'light',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      ['light'],
+      'light',
       'Color palettes are generated from primary: #984061',
     );
 
@@ -278,13 +278,13 @@ describe('material-m3-theme-schematic', () => {
   it('should generate dark theme when provided a primary color', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['dark'],
+      themeTypes: 'dark',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      ['dark'],
+      'dark',
       'Color palettes are generated from primary: #984061',
     );
 
@@ -295,13 +295,13 @@ describe('material-m3-theme-schematic', () => {
   it('should generate light and dark theme when provided a primary color', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
-      themeTypes: ['light', 'dark'],
+      themeTypes: 'both',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      ['light', 'dark'],
+      'both',
       'Color palettes are generated from primary: #984061',
     );
 
@@ -313,7 +313,7 @@ describe('material-m3-theme-schematic', () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
       secondaryColor: '#984061',
-      themeTypes: ['light', 'dark'],
+      themeTypes: 'both',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
@@ -325,7 +325,7 @@ describe('material-m3-theme-schematic', () => {
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      ['light', 'dark'],
+      'both',
       'Color palettes are generated from primary: #984061, secondary: #984061',
     );
 
@@ -338,7 +338,7 @@ describe('material-m3-theme-schematic', () => {
       primaryColor: '#984061',
       secondaryColor: '#984061',
       tertiaryColor: '#984061',
-      themeTypes: ['light', 'dark'],
+      themeTypes: 'both',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
@@ -351,7 +351,7 @@ describe('material-m3-theme-schematic', () => {
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      ['light', 'dark'],
+      'both',
       'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061',
     );
 
@@ -365,7 +365,7 @@ describe('material-m3-theme-schematic', () => {
       secondaryColor: '#984061',
       tertiaryColor: '#984061',
       neutralColor: '#984061',
-      themeTypes: ['light', 'dark'],
+      themeTypes: 'both',
     });
 
     const generatedSCSS = tree.readText('m3-theme.scss');
@@ -379,7 +379,7 @@ describe('material-m3-theme-schematic', () => {
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      ['light', 'dark'],
+      'both',
       'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061, neutral: #984061',
     );
 
