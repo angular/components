@@ -24,10 +24,10 @@ export interface Schema {
    */
   neutralColor?: string;
   /**
-   * Type for theme (ex. 'light' and/or 'dark')
+   * Type for theme (ex. 'light', 'dark', or 'both').
    */
-  themeTypes: string[];
-  /**
+  themeTypes?: string;
+  /*
    * Workspace-relative path to a directory where the file with the custom M3
    * theme will be generated.
    *
