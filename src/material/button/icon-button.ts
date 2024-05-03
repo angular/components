@@ -54,7 +54,7 @@ export class MatIconButton extends MatButtonBase {
  */
 @Component({
   selector: `a[mat-icon-button]`,
-  templateUrl: 'button.html',
+  templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   host: MAT_ANCHOR_HOST,
   exportAs: 'matButton, matAnchor',
