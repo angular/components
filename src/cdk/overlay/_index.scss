@@ -8,10 +8,6 @@ $overlay-backdrop-z-index: 1000 !default;
 // Background color for all of the backdrops
 $overlay-backdrop-color: rgba(0, 0, 0, 0.32) !default;
 
-// Default backdrop animation is based on the Material Design swift-ease-out.
-$backdrop-animation-duration: 400ms !default;
-$backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
-
 /// Emits structural styles required for cdk/overlay to function.
 @mixin overlay() {
   .cdk-overlay-container, .cdk-global-overlay-wrapper {
@@ -61,6 +57,8 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     display: flex;
     max-width: 100%;
     max-height: 100%;
+
+    &.cdk-overlay-pane-showing {}
   }
 
   .cdk-overlay-backdrop {
@@ -74,12 +72,8 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     z-index: $overlay-backdrop-z-index;
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
-    transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
-    opacity: 0;
 
     &.cdk-overlay-backdrop-showing {
-      opacity: 1;
-
       // Note that we can't import and use the `high-contrast` mixin from `_a11y.scss`, because
       // this file will be copied to the top-level `cdk` package when putting together the files
       // for npm. Any relative import paths we use here will become invalid once the file is copied.
@@ -96,23 +90,12 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
   }
 
   .cdk-overlay-transparent-backdrop {
-    // Define a transition on the visibility so that the `transitionend` event can fire immediately.
-    transition: visibility 1ms linear, opacity 1ms linear;
-    visibility: hidden;
-    opacity: 1;
-
     // Note: as of Firefox 57, having the backdrop be `background: none` will prevent it from
     // capturing the user's mouse scroll events. Since we also can't use something like
     // `rgba(0, 0, 0, 0)`, we work around the inconsistency by not setting the background at
     // all and using `opacity` to make the element transparent.
-    &.cdk-overlay-backdrop-showing {
-      opacity: 0;
-      visibility: visible;
-    }
-  }
-
-  .cdk-overlay-backdrop-noop-animation {
-    transition: none;
+    opacity: 0;
+    visibility: visible;
   }
 
   // Overlay parent element used with the connected position strategy. Used to constrain the

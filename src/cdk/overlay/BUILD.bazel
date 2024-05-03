@@ -26,6 +26,7 @@ ng_module(
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/scrolling",
+        "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//rxjs",

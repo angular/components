@@ -35,6 +35,7 @@ import {startWith} from 'rxjs/operators';
 
 import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
 import {CdkDialogContainer} from './dialog-container';
+import {AnimationBuilder} from '@angular/animations';
 
 /** Unique id for the created dialog. */
 let uniqueId = 0;
@@ -201,6 +202,10 @@ export class Dialog implements OnDestroy {
       width: config.width,
       height: config.height,
       disposeOnNavigation: config.closeOnNavigation,
+      paneOpenAnimations: config.overlayOpenAnimations,
+      backdropOpenAnimations: config.backdropOpenAnimations,
+      paneCloseAnimations: config.overlayCloseAnimations,
+      backdropCloseAnimations: config.backdropCloseAnimations,
     });
 
     if (config.backdropClass) {

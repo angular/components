@@ -27,6 +27,7 @@ import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
+import {AnimationBuilder} from '@angular/animations';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -59,7 +60,7 @@ export class Overlay {
     private _directionality: Directionality,
     private _location: Location,
     private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
-    @Inject(ANIMATION_MODULE_TYPE) @Optional() private _animationsModuleType?: string,
+    private _animationBuilder: AnimationBuilder,
   ) {}
 
   /**
@@ -85,8 +86,8 @@ export class Overlay {
       this._document,
       this._location,
       this._outsideClickDispatcher,
-      this._animationsModuleType === 'NoopAnimations',
       this._injector.get(EnvironmentInjector),
+      this._animationBuilder,
     );
   }
 

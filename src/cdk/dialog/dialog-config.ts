@@ -16,6 +16,7 @@ import {
 import {Direction} from '@angular/cdk/bidi';
 import {PositionStrategy, ScrollStrategy} from '@angular/cdk/overlay';
 import {BasePortalOutlet} from '@angular/cdk/portal';
+import {animate, AnimationMetadata, style} from '@angular/animations';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -168,4 +169,40 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
    * A function can be passed in to resolve the context lazily.
    */
   templateContext?: Record<string, any> | (() => Record<string, any>);
+
+  /**
+   * Animations applied to the overlay when dialog is opened.
+   * The default animation is based on the Material Design swift-ease-out.
+   */
+  overlayOpenAnimations?: AnimationMetadata | AnimationMetadata[] = [
+    style({opacity: 0}),
+    animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({opacity: 1})),
+  ];
+
+  /**
+   * Animations applied to the backdrop when dialog is opened.
+   * The default animation is based on the Material Design swift-ease-out.
+   */
+  backdropOpenAnimations?: AnimationMetadata | AnimationMetadata[] = [
+    style({opacity: 0}),
+    animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({opacity: 1})),
+  ];
+
+  /**
+   * Animations applied to the overlay when dialog is closed.
+   * The default animation is based on the Material Design swift-ease-in.
+   */
+  overlayCloseAnimations?: AnimationMetadata | AnimationMetadata[] = animate(
+    '300ms cubic-bezier(0.55, 0, 0.55, 0.2)',
+    style({opacity: 0}),
+  );
+
+  /**
+   * Animations applied to the backdrop when dialog is closed.
+   * The default animation is based on the Material Design swift-ease-in.
+   */
+  backdropCloseAnimations?: AnimationMetadata | AnimationMetadata[] = animate(
+    '300ms cubic-bezier(0.55, 0, 0.55, 0.2)',
+    style({opacity: 0}),
+  );
 }

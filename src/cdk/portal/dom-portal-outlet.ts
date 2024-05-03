@@ -176,9 +176,10 @@ export class DomPortalOutlet extends BasePortalOutlet {
   /**
    * Clears out a portal from the DOM.
    */
-  override dispose(): void {
+  override dispose(): Promise<void> {
     super.dispose();
     this.outletElement.remove();
+    return Promise.resolve();
   }
 
   /** Gets the root HTMLElement for an instantiated component. */

@@ -9,6 +9,7 @@
 import {PositionStrategy} from './position/position-strategy';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
+import {AnimationMetadata} from '@angular/animations';
 
 /** Initial configuration used when creating an overlay. */
 export class OverlayConfig {
@@ -57,6 +58,18 @@ export class OverlayConfig {
    * the `HashLocationStrategy`).
    */
   disposeOnNavigation?: boolean = false;
+
+  /** Animations applied to the pane when overlay is opened. */
+  paneOpenAnimations?: AnimationMetadata | AnimationMetadata[];
+
+  /** Animations applied to the backdrop when overlay is opened. */
+  backdropOpenAnimations?: AnimationMetadata | AnimationMetadata[];
+
+  /** Animations applied to the pane when overlay is closed. */
+  paneCloseAnimations?: AnimationMetadata | AnimationMetadata[];
+
+  /** Animations applied to the backdrop when overlay is closed. */
+  backdropCloseAnimations?: AnimationMetadata | AnimationMetadata[];
 
   constructor(config?: OverlayConfig) {
     if (config) {

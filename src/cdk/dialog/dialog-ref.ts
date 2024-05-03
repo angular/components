@@ -96,20 +96,23 @@ export class DialogRef<R = unknown, C = unknown> {
    * @param result Optional result to return to the dialog opener.
    * @param options Additional options to customize the closing behavior.
    */
-  close(result?: R, options?: DialogCloseOptions): void {
-    if (this.containerInstance) {
-      const closedSubject = this.closed as Subject<R | undefined>;
-      this.containerInstance._closeInteractionType = options?.focusOrigin || 'program';
-      // Drop the detach subscription first since it can be triggered by the
-      // `dispose` call and override the result of this closing sequence.
-      this._detachSubscription.unsubscribe();
-      this.overlayRef.dispose();
-      closedSubject.next(result);
-      closedSubject.complete();
-      (this as {componentInstance: C}).componentInstance = (
-        this as {containerInstance: BasePortalOutlet}
-      ).containerInstance = null!;
+  async close(result?: R, options?: DialogCloseOptions): Promise<void> {
+    if (!this.containerInstance) {
+      return Promise.resolve();
     }
+
+    const closedSubject = this.closed as Subject<R | undefined>;
+    this.containerInstance._closeInteractionType = options?.focusOrigin || 'program';
+    // Drop the detach subscription first since it can be triggered by the
+    // `dispose` call and override the result of this closing sequence.
+    this._detachSubscription.unsubscribe();
+
+    await this.overlayRef.dispose();
+    closedSubject.next(result);
+    closedSubject.complete();
+    (this as {componentInstance: C}).componentInstance = (
+      this as {containerInstance: BasePortalOutlet}
+    ).containerInstance = null!;
   }
 
   /** Updates the position of the dialog based on the current position strategy. */

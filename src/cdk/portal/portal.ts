@@ -183,7 +183,7 @@ export interface PortalOutlet {
   detach(): any;
 
   /** Performs cleanup before the outlet is destroyed. */
-  dispose(): void;
+  dispose(): Promise<void>;
 
   /** Whether there is currently a portal attached to this outlet. */
   hasAttached(): boolean;
@@ -269,13 +269,14 @@ export abstract class BasePortalOutlet implements PortalOutlet {
   }
 
   /** Permanently dispose of this portal host. */
-  dispose(): void {
+  dispose(): Promise<void> {
     if (this.hasAttached()) {
       this.detach();
     }
 
     this._invokeDisposeFn();
     this._isDisposed = true;
+    return Promise.resolve();
   }
 
   /** @docs-private */

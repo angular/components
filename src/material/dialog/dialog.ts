@@ -213,6 +213,12 @@ export class MatDialog implements OnDestroy {
           {provide: this._dialogRefConstructor, useValue: dialogRef},
         ];
       },
+      // material ui still uses its own animation system,
+      // so we disable cdk-dialog animations to prevent any interference
+      overlayOpenAnimations: undefined,
+      backdropOpenAnimations: undefined,
+      overlayCloseAnimations: undefined,
+      backdropCloseAnimations: undefined,
     });
 
     // This can't be assigned in the `providers` callback, because
