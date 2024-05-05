@@ -22,6 +22,26 @@
     @include mdc-chip-theme.theme-styles($mdc-chip-token-slots);
   }
 
+  // The highlighted attribute is used to make the chip appear as selected on-demand,
+  // aside from showing the selected indicator. We achieve this by re-mapping the base
+  // tokens to the highlighted ones. Note that we only need to do this for the tokens
+  // that we don't re-implement ourselves below.
+  // TODO(crisbeto): with some future refactors we may be able to clean this up.
+  .mat-mdc-chip-highlighted {
+    @include token-utils.use-tokens(tokens-mdc-chip.$prefix, $mdc-chip-token-slots) {
+      $highlighted-remapped-tokens: (
+        with-icon-icon-color: with-icon-selected-icon-color,
+        elevated-container-color: elevated-selected-container-color,
+        label-text-color: selected-label-text-color,
+        outline-width: flat-selected-outline-width,
+      );
+
+      @each $selected, $base in $highlighted-remapped-tokens {
+        #{token-utils.get-token-variable($selected)}: var(token-utils.get-token-variable($base));
+      }
+    }
+  }
+
   // Add additional slots for the MDC chip tokens, needed in Angular Material.
   $disabled-trailing-icon-opacity: 1;
 
@@ -29,7 +49,8 @@
     .mat-mdc-chip-focus-overlay {
       @include token-utils.create-token-slot(background, focus-state-layer-color);
 
-      .mat-mdc-chip-selected & {
+      .mat-mdc-chip-selected &,
+      .mat-mdc-chip-highlighted & {
         @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
       }
 
@@ -38,7 +59,8 @@
         @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
       }
 
-      .mat-mdc-chip-selected:hover & {
+      .mat-mdc-chip-selected:hover,
+      .mat-mdc-chip-highlighted:hover & {
         @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
         @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
       }
@@ -48,7 +70,8 @@
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
       }
 
-      .mat-mdc-chip-selected.cdk-focused & {
+      .mat-mdc-chip-selected.cdk-focused &,
+      .mat-mdc-chip-highlighted.cdk-focused & {
         @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
         @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
       }
@@ -79,7 +102,8 @@
         @include token-utils.create-token-slot(opacity, disabled-container-opacity);
       }
 
-      &.mdc-evolution-chip--selected {
+      &.mdc-evolution-chip--selected,
+      &.mat-mdc-chip-highlighted {
         .mdc-evolution-chip__icon--trailing {
           @include token-utils.create-token-slot(color, selected-trailing-icon-color);
         }
@@ -110,7 +134,8 @@
       }
     }
 
-    .mat-mdc-chip-selected .mat-mdc-chip-remove::after {
+    .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
+    .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
       @include token-utils.create-token-slot(
           background, selected-trailing-action-state-layer-color);
     }
