@@ -123,6 +123,12 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** ID for the DOM node containing the paginator's items per page label. */
   readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
 
+  /** MDC class names of paginator buttons. */
+  readonly _pageNext = 'mat-mdc-paginator-navigation-next';
+  readonly _pagePrevious = 'mat-mdc-paginator-navigation-previous';
+  readonly _pageFirst = 'mat-mdc-paginator-navigation-first';
+  readonly _pageLast = 'mat-mdc-paginator-navigation-last';
+
   private _intlChanges: Subscription;
   private _isInitialized = false;
   private _initializedStream = new ReplaySubject<void>(1);
@@ -311,29 +317,20 @@ export class MatPaginator implements OnInit, OnDestroy {
 
       setTimeout(() => {
         event.preventDefault();
-        if (
-          currentElement.disabled &&
-          currentElement.classList.contains('mat-mdc-paginator-navigation-next')
-        ) {
+        if (currentElement.disabled && currentElement.classList.contains(this._pageNext)) {
           const previousElement = currentElement.previousElementSibling as HTMLButtonElement;
           previousElement?.focus();
         } else if (
           currentElement.disabled &&
-          currentElement.classList.contains('mat-mdc-paginator-navigation-previous')
+          currentElement.classList.contains(this._pagePrevious)
         ) {
           const nextElement = currentElement.nextElementSibling as HTMLButtonElement;
           nextElement?.focus();
-        } else if (
-          currentElement.disabled &&
-          currentElement.classList.contains('mat-mdc-paginator-navigation-first')
-        ) {
+        } else if (currentElement.disabled && currentElement.classList.contains(this._pageFirst)) {
           const nextElement = currentElement.nextElementSibling
             ?.nextElementSibling as HTMLButtonElement;
           nextElement?.focus();
-        } else if (
-          currentElement.disabled &&
-          currentElement.classList.contains('mat-mdc-paginator-navigation-last')
-        ) {
+        } else if (currentElement.disabled && currentElement.classList.contains(this._pageLast)) {
           const previousElement = currentElement.previousElementSibling
             ?.previousElementSibling as HTMLButtonElement;
           previousElement?.focus();
