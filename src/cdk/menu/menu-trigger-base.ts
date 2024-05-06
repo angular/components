@@ -18,12 +18,24 @@ import {
 } from '@angular/core';
 import {Menu} from './menu-interface';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {ConnectedPosition, OverlayRef} from '@angular/cdk/overlay';
+import {ConnectedPosition, Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {merge, Subject} from 'rxjs';
 
 /** Injection token used for an implementation of MenuStack. */
 export const MENU_TRIGGER = new InjectionToken<CdkMenuTriggerBase>('cdk-menu-trigger');
+
+/** Injection token used to configure the behavior of the menu when the page is scrolled. */
+export const MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
+  'cdk-menu-scroll-strategy',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
+);
 
 /**
  * Abstract directive that implements shared logic common to all menu triggers.
@@ -45,6 +57,9 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
 
   /** The menu stack in which this menu resides. */
   protected readonly menuStack: MenuStack = inject(MENU_STACK);
+
+  /** Function used to configure the scroll strategy for the menu. */
+  protected readonly menuScrollStrategy = inject(MENU_SCROLL_STRATEGY);
 
   /**
    * A list of preferred menu positions to be used when constructing the
