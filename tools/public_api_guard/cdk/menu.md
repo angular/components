@@ -22,6 +22,7 @@ import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
@@ -225,6 +226,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     isOpen(): boolean;
     menuData: unknown;
     menuPosition: ConnectedPosition[];
+    protected readonly menuScrollStrategy: () => ScrollStrategy;
     protected readonly menuStack: MenuStack;
     menuTemplateRef: TemplateRef<unknown> | null;
     // (undocumented)
@@ -295,6 +297,9 @@ export interface Menu extends MenuStackItem {
 
 // @public
 export const MENU_AIM: InjectionToken<MenuAim>;
+
+// @public
+export const MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export const MENU_STACK: InjectionToken<MenuStack>;
