@@ -38,6 +38,15 @@ describe('CdkTableScrollContainer', () => {
     scrollerElement = fixture.nativeElement.querySelector('.cdk-table-scroll-container');
   }
 
+  async function waitForLayout(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve));
+
+    // In newer versions of Chrome (change was noticed between 114 and 124), the computed
+    // style of `::-webkit-scrollbar-track` doesn't update until the styles of the container
+    // have changed. Toggle between a couple of states so that tests get accurate measurements.
+    scrollerElement.style.color = scrollerElement.style.color ? '' : '#000';
+  }
+
   beforeEach(() => {
     setupTableTestApp(StickyNativeLayoutCdkTableApp);
 
@@ -51,7 +60,7 @@ describe('CdkTableScrollContainer', () => {
   it('sets scrollbar track margin for sticky headers', waitForAsync(async () => {
     component.stickyHeaders = ['header-1', 'header-3'];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -66,7 +75,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyHeaders = [];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -77,7 +86,7 @@ describe('CdkTableScrollContainer', () => {
   it('sets scrollbar track margin for sticky footers', waitForAsync(async () => {
     component.stickyFooters = ['footer-1', 'footer-3'];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -92,7 +101,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyFooters = [];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -103,7 +112,7 @@ describe('CdkTableScrollContainer', () => {
   it('sets scrollbar track margin for sticky start columns', waitForAsync(async () => {
     component.stickyStartColumns = ['column-1', 'column-3'];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -120,7 +129,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyStartColumns = [];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -131,7 +140,7 @@ describe('CdkTableScrollContainer', () => {
   it('sets scrollbar track margin for sticky end columns', waitForAsync(async () => {
     component.stickyEndColumns = ['column-4', 'column-6'];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -148,7 +157,7 @@ describe('CdkTableScrollContainer', () => {
 
     component.stickyEndColumns = [];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -162,7 +171,7 @@ describe('CdkTableScrollContainer', () => {
     component.stickyStartColumns = ['column-1'];
     component.stickyEndColumns = ['column-6'];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
@@ -184,7 +193,7 @@ describe('CdkTableScrollContainer', () => {
     component.stickyStartColumns = [];
     component.stickyEndColumns = [];
     fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
