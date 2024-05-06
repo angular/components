@@ -11,6 +11,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   Inject,
   InjectionToken,
   Input,
@@ -112,6 +113,10 @@ let nextUniqueId = 0;
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
 export class MatPaginator implements OnInit, OnDestroy {
+  /** Listener to know when to focus on previous button when next button is disabled */
+  @HostListener('keydown', ['$event']) focusPreviousIfDisabledFunc(event: KeyboardEvent) {
+    this.focusPreviousOrNextIfDisabled(event);
+  }
   /** If set, styles the "page size" form field with the designated style. */
   _formFieldAppearance?: MatFormFieldAppearance;
 
@@ -298,6 +303,43 @@ export class MatPaginator implements OnInit, OnDestroy {
     }
 
     return Math.ceil(this.length / this.pageSize);
+  }
+
+  focusPreviousOrNextIfDisabled(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      const currentElement = event.target as HTMLButtonElement;
+
+      setTimeout(() => {
+        event.preventDefault();
+        if (
+          currentElement.disabled &&
+          currentElement.classList.contains('mat-mdc-paginator-navigation-next')
+        ) {
+          const previousElement = currentElement.previousElementSibling as HTMLButtonElement;
+          previousElement?.focus();
+        } else if (
+          currentElement.disabled &&
+          currentElement.classList.contains('mat-mdc-paginator-navigation-previous')
+        ) {
+          const nextElement = currentElement.nextElementSibling as HTMLButtonElement;
+          nextElement?.focus();
+        } else if (
+          currentElement.disabled &&
+          currentElement.classList.contains('mat-mdc-paginator-navigation-first')
+        ) {
+          const nextElement = currentElement.nextElementSibling
+            ?.nextElementSibling as HTMLButtonElement;
+          nextElement?.focus();
+        } else if (
+          currentElement.disabled &&
+          currentElement.classList.contains('mat-mdc-paginator-navigation-last')
+        ) {
+          const previousElement = currentElement.previousElementSibling
+            ?.previousElementSibling as HTMLButtonElement;
+          previousElement?.focus();
+        }
+      }, 100);
+    }
   }
 
   /**
