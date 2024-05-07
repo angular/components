@@ -316,7 +316,8 @@ export class MatPaginator implements OnInit, OnDestroy {
     if (event.key === 'Enter') {
       const currentElement = event.target as HTMLButtonElement;
 
-      /** setTimeout is used to give DOM time to update currentElement (paginator buttons)
+      /**
+       * setTimeout is used to give DOM time to update currentElement (paginator buttons)
        * to see if it's disabled or not.
        */
       setTimeout(() => {
