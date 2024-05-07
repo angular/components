@@ -1096,7 +1096,10 @@ export class TooltipComponent implements OnDestroy {
     const hideClass = this._hideAnimation;
     tooltip.classList.remove(isVisible ? hideClass : showClass);
     tooltip.classList.add(isVisible ? showClass : hideClass);
-    this._isVisible = isVisible;
+    if (this._isVisible !== isVisible) {
+      this._isVisible = isVisible;
+      this._changeDetectorRef.markForCheck();
+    }
 
     // It's common for internal apps to disable animations using `* { animation: none !important }`
     // which can break the opening sequence. Try to detect such cases and work around them.
