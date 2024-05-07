@@ -106,6 +106,7 @@ let nextUniqueId = 0;
   host: {
     'class': 'mat-mdc-paginator',
     'role': 'group',
+    '(keydown)': '_focusPreviousOrNextIfDisabled($event)',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -113,10 +114,6 @@ let nextUniqueId = 0;
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
 export class MatPaginator implements OnInit, OnDestroy {
-  /** Listener to know when to focus on previous button when next button is disabled */
-  @HostListener('keydown', ['$event']) focusPreviousIfDisabledFunc(event: KeyboardEvent) {
-    this.focusPreviousOrNextIfDisabled(event);
-  }
   /** If set, styles the "page size" form field with the designated style. */
   _formFieldAppearance?: MatFormFieldAppearance;
 
@@ -311,10 +308,18 @@ export class MatPaginator implements OnInit, OnDestroy {
     return Math.ceil(this.length / this.pageSize);
   }
 
-  focusPreviousOrNextIfDisabled(event: KeyboardEvent) {
+  /**
+   * Handle keyboard Enter event for the Paginator. Keeps focus on appropriate paginator button
+   * whenever next, previous, first, or last button becomes disabled.
+   * @param event The keyboard event to be handled.
+   */
+  _focusPreviousOrNextIfDisabled(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       const currentElement = event.target as HTMLButtonElement;
 
+      /** setTimeout is used to give DOM time to update currentElement (paginator buttons)
+       * to see if it's disabled or not.
+       */
       setTimeout(() => {
         event.preventDefault();
         if (currentElement.disabled && currentElement.classList.contains(this._pageNext)) {
