@@ -57,6 +57,32 @@
   );
 }
 
+$_cached-token-slots: null;
+
+/// Determines the token slots for all components.
+@function _get-token-slots() {
+  // Cache the slots since they're constant and calculating
+  // them appears to be expensive (see #29009).
+  @if ($_cached-token-slots) {
+    @return $_cached-token-slots;
+  }
+
+  // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
+  //  material-experimental. This is a hack for now because there is no good way to get the token
+  //  slots in material-experimental without exposing them all from material.
+  $fake-theme: m2-theming.define-light-theme((
+    color: (
+      primary: m2-theming.define-palette(m2-theming.$red-palette),
+      accent: m2-theming.define-palette(m2-theming.$red-palette),
+      warn: m2-theming.define-palette(m2-theming.$red-palette),
+    ),
+    typography: m2-theming.define-typography-config(),
+    density: 0
+  ));
+  $_cached-token-slots: m2-tokens.m2-tokens-from-theme($fake-theme) !global;
+  @return $_cached-token-slots;
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -75,20 +101,7 @@
   // DO NOT REMOVE
   // This function is used internally.
   $systems: format-tokens.private-format-tokens($systems);
-
-  // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
-  //  material-experimental. This is a hack for now because there is no good way to get the token
-  //  slots in material-experimental without exposing them all from material.
-  $fake-theme: m2-theming.define-light-theme((
-    color: (
-      primary: m2-theming.define-palette(m2-theming.$red-palette),
-      accent: m2-theming.define-palette(m2-theming.$red-palette),
-      warn: m2-theming.define-palette(m2-theming.$red-palette),
-    ),
-    typography: m2-theming.define-typography-config(),
-    density: 0
-  ));
-  $token-slots: m2-tokens.m2-tokens-from-theme($fake-theme);
+  $token-slots: _get-token-slots();
 
   // TODO(mmalerba): Fill in remaining tokens.
   $result: sass-utils.deep-merge-all(
