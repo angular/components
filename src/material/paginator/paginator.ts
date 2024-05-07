@@ -11,7 +11,6 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  HostListener,
   Inject,
   InjectionToken,
   Input,
