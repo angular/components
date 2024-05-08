@@ -1,3 +1,18 @@
+<a name="17.3.8"></a>
+# 17.3.8 "rock-rope" (2024-05-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [23dc148e7f](https://github.com/angular/components/commit/23dc148e7f11fb764ad39cd16f7facf02e2800d8) | fix | **menu:** allow for scroll strategy to be configured ([#29005](https://github.com/angular/components/pull/29005)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f20105d87e](https://github.com/angular/components/commit/f20105d87eb40e969b29433585dd61df5bb83bd9) | fix | **button:** incorrect template for icon button anchor ([#28996](https://github.com/angular/components/pull/28996)) |
+| [72baa7cff2](https://github.com/angular/components/commit/72baa7cff2d3b24a100422207e8631c8bd1fd03b) | fix | **chips:** highlighted not working in M3 ([#29001](https://github.com/angular/components/pull/29001)) |
+| [cf0785cd67](https://github.com/angular/components/commit/cf0785cd672796bc369ac12bdf806ccbd0c30486) | fix | **tooltip:** Tooltip should mark for check when visibility changes ([#29000](https://github.com/angular/components/pull/29000)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.7"></a>
 # 17.3.7 "plastic-deer" (2024-05-02)
 ### cdk
