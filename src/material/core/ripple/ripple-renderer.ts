@@ -97,6 +97,13 @@ export class RippleRenderer implements EventListenerObject {
    */
   private _containerRect: DOMRect | null;
 
+  /**
+   * Cached dimensions of the trigger element. Set only if the trigger
+   * element is different than the container element when the trigger
+   * is being first pressed and cleared once no more ripples are visible.
+   */
+  private _triggerRect!: DOMRect | null;
+
   private static _eventManager = new RippleEventManager();
 
   constructor(
@@ -337,9 +344,10 @@ export class RippleRenderer implements EventListenerObject {
     const eventListeners = this._activeRipples.get(rippleRef) ?? null;
     this._activeRipples.delete(rippleRef);
 
-    // Clear out the cached bounding rect if we have no more ripples.
+    // Clear out the cached bounding rects if we have no more ripples.
     if (!this._activeRipples.size) {
       this._containerRect = null;
+      this._triggerRect = null;
     }
 
     // If the current ref is the most recent transient ripple, unset it
@@ -367,7 +375,8 @@ export class RippleRenderer implements EventListenerObject {
 
     if (!this._target.rippleDisabled && !isFakeMousedown && !isSyntheticEvent) {
       this._isPointerDown = true;
-      this.fadeInRipple(event.clientX, event.clientY, this._target.rippleConfig);
+      const pointerCoords = this._fixCoordinatesEmittedFromTrigger(event.clientX, event.clientY);
+      this.fadeInRipple(pointerCoords[0], pointerCoords[1], this._target.rippleConfig);
     }
   }
 
@@ -388,7 +397,11 @@ export class RippleRenderer implements EventListenerObject {
       // the browser appears to not assign them in tests which leads to flakes.
       if (touches) {
         for (let i = 0; i < touches.length; i++) {
-          this.fadeInRipple(touches[i].clientX, touches[i].clientY, this._target.rippleConfig);
+          const pointerCoords = this._fixCoordinatesEmittedFromTrigger(
+            touches[i].clientX,
+            touches[i].clientY,
+          );
+          this.fadeInRipple(pointerCoords[0], pointerCoords[1], this._target.rippleConfig);
         }
       }
     }
@@ -437,6 +450,19 @@ export class RippleRenderer implements EventListenerObject {
         this._pointerUpEventsRegistered = false;
       }
     }
+  }
+
+  /** Fix coordinates emitted from the trigger element when is not the container element. */
+  private _fixCoordinatesEmittedFromTrigger(x: number, y: number): [number, number] {
+    if (this._triggerElement && this._triggerElement !== this._containerElement) {
+      const containerRect = (this._containerRect =
+        this._containerRect || this._containerElement.getBoundingClientRect());
+      const triggerRect = (this._triggerRect =
+        this._triggerRect || this._triggerElement.getBoundingClientRect());
+      x = ((x - triggerRect.left) / triggerRect.width) * containerRect.width + containerRect.left;
+      y = ((y - triggerRect.top) / triggerRect.height) * containerRect.height + containerRect.top;
+    }
+    return [x, y];
   }
 }
 
