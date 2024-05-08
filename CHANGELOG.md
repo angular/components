@@ -1,3 +1,20 @@
+<a name="18.0.0-rc.1"></a>
+# 18.0.0-rc.1 "ruby-river" (2024-05-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f6864dcdb5](https://github.com/angular/components/commit/f6864dcdb56e5e228fb3e830f68ce3d17aa77077) | fix | **menu:** allow for scroll strategy to be configured ([#29005](https://github.com/angular/components/pull/29005)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [641a575af1](https://github.com/angular/components/commit/641a575af14e5fc9ed293c861c5c005fd533c300) | fix | **button:** incorrect template for icon button anchor ([#28996](https://github.com/angular/components/pull/28996)) |
+| [e024c12a5c](https://github.com/angular/components/commit/e024c12a5ca0a61ed9e5a6028a31a6a97f57b76a) | fix | **chips:** highlighted not working in M3 ([#29001](https://github.com/angular/components/pull/29001)) |
+| [bdb17c6b34](https://github.com/angular/components/commit/bdb17c6b34c7c236a2112407e57790005f544d3b) | fix | **schematics:** Change themeTypes to a single select instead of a multiselect prompt in M3 theme schematic ([#28997](https://github.com/angular/components/pull/28997)) |
+| [f80ab1f54f](https://github.com/angular/components/commit/f80ab1f54f83b9ca880df66412bdf25309f7e8ad) | fix | **tooltip:** Tooltip should mark for check when visibility changes ([#29000](https://github.com/angular/components/pull/29000)) |
+| [a332146ff5](https://github.com/angular/components/commit/a332146ff57e638fcc1e0f73aa59b5abad2bb883) | perf | **core:** speed up M3 compilation ([#29009](https://github.com/angular/components/pull/29009)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-rc.0"></a>
 # 18.0.0-rc.0 "plastic-moose" (2024-05-02)
 ### cdk
