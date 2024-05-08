@@ -333,7 +333,7 @@ describe('MDC-based MatButton', () => {
     });
 
     // Ensure each of these events triggers the initialization of the button ripple.
-    for (const event of ['click', 'touchstart', 'mouseenter', 'focus']) {
+    for (const event of ['mousedown', 'touchstart', 'mouseenter', 'focus']) {
       it(`should render the ripple once a button has received a "${event}" event`, () => {
         const fab = fixture.debugElement.query(By.css('button[mat-fab]'))!;
         let ripple = fab.nativeElement.querySelector('.mat-mdc-button-ripple');
