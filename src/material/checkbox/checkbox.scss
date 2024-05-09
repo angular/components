@@ -196,7 +196,9 @@
   // user of this. Therefore we add the pointer cursor on top of MDC's styles.
   label {
     cursor: pointer;
+  }
 
+  .mat-internal-form-field {
     @include token-utils.use-tokens(
       tokens-mat-checkbox.$prefix,
       tokens-mat-checkbox.get-token-slots()

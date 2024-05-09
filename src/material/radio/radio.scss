@@ -54,7 +54,7 @@
       }
     }
 
-    .mdc-radio + label {
+    .mat-internal-form-field {
       @include token-utils.use-tokens(
         tokens-mat-radio.$prefix,
         tokens-mat-radio.get-token-slots()
