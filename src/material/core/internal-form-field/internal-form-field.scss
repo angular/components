@@ -1,13 +1,10 @@
 @use '@material/form-field/form-field' as mdc-form-field;
-@use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../mdc-helpers/mdc-helpers';
-@use '../tokens/m2/mdc/form-field' as tokens-mdc-form-field;
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   @include mdc-form-field.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-  @include mdc-form-field-theme.theme-styles(tokens-mdc-form-field.get-token-slots());
 }
 
 .mat-internal-form-field {

@@ -10,7 +10,6 @@
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 
-
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
   @include mdc-radio.static-styles($query: mdc-helpers.$mdc-base-styles-query);
 
@@ -55,9 +54,26 @@
       }
     }
 
+    .mdc-radio + label {
+      @include token-utils.use-tokens(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-token-slots()
+      ) {
+        @include token-utils.create-token-slot(color, label-text-color);
+        @include token-utils.create-token-slot(font-family, label-text-font);
+        @include token-utils.create-token-slot(line-height, label-text-line-height);
+        @include token-utils.create-token-slot(font-size, label-text-size);
+        @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+        @include token-utils.create-token-slot(font-weight, label-text-weight);
+      }
+    }
+
     // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
     .mdc-radio--disabled + label {
-      @include token-utils.use-tokens(tokens-mat-radio.$prefix,tokens-mat-radio.get-token-slots()) {
+      @include token-utils.use-tokens(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-token-slots()
+      ) {
         @include token-utils.create-token-slot(color, disabled-label-color);
       }
     }
@@ -106,9 +122,10 @@
   .mat-mdc-radio-touch-target {
     @include mdc-touch-target.touch-target(
       $set-width: true,
-      $query: mdc-helpers.$mdc-base-styles-query);
+      $query: mdc-helpers.$mdc-base-styles-query
+    );
 
-    @include token-utils.use-tokens(tokens-mat-radio.$prefix,tokens-mat-radio.get-token-slots()) {
+    @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
       @include token-utils.create-token-slot(display, touch-target-display);
     }
 
