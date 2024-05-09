@@ -239,7 +239,6 @@ export class MatAutocompleteTrigger
     private _viewContainerRef: ViewContainerRef,
     private _zone: NgZone,
     private _changeDetectorRef: ChangeDetectorRef,
-    /** Subscription to viewport orientation changes. */
     private _breakpointObserver: BreakpointObserver,
     @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dir: Directionality | null,
