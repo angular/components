@@ -27,6 +27,10 @@ export interface Schema {
    * Type for theme (ex. 'light', 'dark', or 'both').
    */
   themeTypes?: string;
+  /**
+   * Whether to use system-level variables in the theme.
+   */
+  useSystemVariables?: boolean;
   /*
    * Workspace-relative path to a directory where the file with the custom M3
    * theme will be generated.

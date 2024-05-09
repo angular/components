@@ -19,6 +19,10 @@ specified directory or the project root with the generated themes. The exported
 themes (`$light-theme` and/or `$dark-theme`) can be provided to component theme
 mixins.
 
+If you're using the system variables option, you should remember to either provide values for the
+system variables (all prefixed with `--sys-`), or to include the `system-level-colors` and
+`system-level-typography` mixins which will generate the values based on your theme.
+
 ```scss
 @use '@angular/material' as mat;
 @use './path/to/my-theme';
@@ -29,6 +33,11 @@ html {
   // Apply the light theme by default
   @include mat.core-theme(my-theme.$light-theme);
   @include mat.button-theme(my-theme.$light-theme);
+
+  // When using system variables, remember to provide values for them
+  // or uncomment the lines below to generate them from the theme.
+  // @include mat.system-level-colors(my-theme.$light-theme);
+  // @include mat.system-level-typography(my-theme.$light-theme);
 }
 ```
 
@@ -51,3 +60,5 @@ neutral color generated from Material based on the primary.
 * `directory` - Relative path to a directory within the project that the
 generated theme file should be created in. Defaults to the project root.
 * `themeTypes` - Theme types ('light', 'dark', or 'both') to generate themes for. Defaults to both.
+* `useSystemVariables` - Whether to generate a theme that uses system-level variables for easier
+dynamic theming. Defaults to false.
