@@ -16,13 +16,17 @@ import {
   inject,
 } from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple} from '../ripple';
-import {Platform} from '@angular/cdk/platform';
+import {Platform, _getEventTarget} from '@angular/cdk/platform';
 
 /** The options for the MatRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
 
-/** The events that should trigger the initialization of the ripple. */
-const rippleInteractionEvents = ['focus', 'click', 'mouseenter', 'touchstart'];
+/**
+ * The events that should trigger the initialization of the ripple.
+ * Note that we use `mousedown`, rather than `click`, for mouse devices because
+ * we can't rely on `mouseenter` in the shadow DOM and `click` happens too late.
+ */
+const rippleInteractionEvents = ['focus', 'mousedown', 'mouseenter', 'touchstart'];
 
 /** The attribute attached to a component whose ripple has not yet been initialized. */
 const matRippleUninitialized = 'mat-ripple-loader-uninitialized';
@@ -130,20 +134,22 @@ export class MatRippleLoader implements OnDestroy {
     }
   }
 
-  /** Handles creating and attaching component internals when a component it is initially interacted with. */
+  /**
+   * Handles creating and attaching component internals
+   * when a component is initially interacted with.
+   */
   private _onInteraction = (event: Event) => {
-    if (!(event.target instanceof HTMLElement)) {
-      return;
-    }
-    const eventTarget = event.target as HTMLElement;
+    const eventTarget = _getEventTarget(event);
 
-    // TODO(wagnermaciel): Consider batching these events to improve runtime performance.
+    if (eventTarget instanceof HTMLElement) {
+      // TODO(wagnermaciel): Consider batching these events to improve runtime performance.
+      const element = eventTarget.closest(
+        `[${matRippleUninitialized}="${this._globalRippleOptions?.namespace ?? ''}"]`,
+      );
 
-    const element = eventTarget.closest(
-      `[${matRippleUninitialized}="${this._globalRippleOptions?.namespace ?? ''}"]`,
-    );
-    if (element) {
-      this._createRipple(element as HTMLElement);
+      if (element) {
+        this._createRipple(element as HTMLElement);
+      }
     }
   };
 
