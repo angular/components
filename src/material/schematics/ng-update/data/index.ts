@@ -10,6 +10,7 @@ export * from './attribute-selectors';
 export * from './class-names';
 export * from './constructor-checks';
 export * from './css-selectors';
+export * from './css-tokens';
 export * from './element-selectors';
 export * from './input-names';
 export * from './method-call-checks';
