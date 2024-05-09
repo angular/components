@@ -433,6 +433,8 @@ export class RippleRenderer implements EventListenerObject {
         pointerUpEvents.forEach(type =>
           trigger.removeEventListener(type, this, passiveCapturingEventOptions),
         );
+
+        this._pointerUpEventsRegistered = false;
       }
     }
   }
