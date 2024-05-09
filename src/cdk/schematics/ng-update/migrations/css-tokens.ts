@@ -67,10 +67,6 @@ export class CssTokensMigration extends Migration<UpgradeData> {
   }
 
   private _visitStringLiteralLike(node: ts.StringLiteralLike) {
-    if (node.parent && node.parent.kind !== ts.SyntaxKind.CallExpression) {
-      return;
-    }
-
     const textContent = node.getText();
     const filePath = this.fileSystem.resolve(node.getSourceFile().fileName);
 
