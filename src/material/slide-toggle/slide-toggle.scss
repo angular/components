@@ -15,7 +15,7 @@
   // Add the MDC switch static styles.
   @include mdc-switch.static-styles-without-ripple();
 
-  .mdc-switch + label {
+  .mat-mdc-slide-toggle .mat-internal-form-field {
     @include token-utils.use-tokens(
       tokens-mat-switch.$prefix,
       tokens-mat-switch.get-token-slots()
