@@ -248,6 +248,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     _startDateLabelId: string;
     startValue: number;
     todayValue: number;
+    _trackRow: (row: MatCalendarCell[]) => MatCalendarCell<any>[];
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarBody<any>, "[mat-calendar-body]", ["matCalendarBody"], { "label": { "alias": "label"; "required": false; }; "rows": { "alias": "rows"; "required": false; }; "todayValue": { "alias": "todayValue"; "required": false; }; "startValue": { "alias": "startValue"; "required": false; }; "endValue": { "alias": "endValue"; "required": false; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; }; "numCols": { "alias": "numCols"; "required": false; }; "activeCell": { "alias": "activeCell"; "required": false; }; "isRange": { "alias": "isRange"; "required": false; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; }; "comparisonStart": { "alias": "comparisonStart"; "required": false; }; "comparisonEnd": { "alias": "comparisonEnd"; "required": false; }; "previewStart": { "alias": "previewStart"; "required": false; }; "previewEnd": { "alias": "previewEnd"; "required": false; }; "startDateAccessibleName": { "alias": "startDateAccessibleName"; "required": false; }; "endDateAccessibleName": { "alias": "endDateAccessibleName"; "required": false; }; }, { "selectedValueChange": "selectedValueChange"; "previewChange": "previewChange"; "activeDateChange": "activeDateChange"; "dragStarted": "dragStarted"; "dragEnded": "dragEnded"; }, never, never, true, never>;
     // (undocumented)
@@ -267,6 +268,8 @@ export class MatCalendarCell<D = any> {
     displayValue: string;
     // (undocumented)
     enabled: boolean;
+    // (undocumented)
+    readonly id: number;
     // (undocumented)
     rawValue?: D | undefined;
     // (undocumented)
@@ -748,6 +751,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     _weekdays: {
         long: string;
         narrow: string;
+        id: number;
     }[];
     _weeks: MatCalendarCell[][];
     // (undocumented)

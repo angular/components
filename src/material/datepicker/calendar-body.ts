@@ -35,11 +35,15 @@ export type MatCalendarCellClassFunction<D> = (
   view: 'month' | 'year' | 'multi-year',
 ) => MatCalendarCellCssClasses;
 
+let uniqueIdCounter = 0;
+
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
 export class MatCalendarCell<D = any> {
+  readonly id = uniqueIdCounter++;
+
   constructor(
     public value: number,
     public displayValue: string,
@@ -191,6 +195,13 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   private _didDragSinceMouseDown = false;
 
   private _injector = inject(Injector);
+
+  /**
+   * Tracking function for rows based on their identity. Ideally we would use some sort of
+   * key on the row, but that would require a breaking change for the `rows` input. We don't
+   * use the built-in identity tracking, because it logs warnings.
+   */
+  _trackRow = (row: MatCalendarCell[]) => row;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
