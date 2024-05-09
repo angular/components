@@ -5,15 +5,29 @@
 @use '@material/ripple' as mdc-ripple;
 @use '../core/style/layout-common';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '../core/tokens/m2/mat/switch' as m2-mat-switch;
-@use '../core/tokens/m2/mdc/switch' as m2-mdc-switch;
+@use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
+@use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-switch-token-slots: m2-mdc-switch.get-token-slots();
+  $mdc-switch-token-slots: tokens-mdc-switch.get-token-slots();
 
   // Add the MDC switch static styles.
   @include mdc-switch.static-styles-without-ripple();
+
+  .mdc-switch + label {
+    @include token-utils.use-tokens(
+      tokens-mat-switch.$prefix,
+      tokens-mat-switch.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(font-family, label-text-font);
+      @include token-utils.create-token-slot(line-height, label-text-line-height);
+      @include token-utils.create-token-slot(font-size, label-text-size);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+      @include token-utils.create-token-slot(font-weight, label-text-weight);
+    }
+  }
 
   // TODO(wagnermaciel): Use our custom token system to emit this css rule.
   .mat-mdc-slide-toggle .mdc-switch--disabled + label {
@@ -51,7 +65,8 @@
   outline: 0;
 
   // The ripple needs extra specificity so the base ripple styling doesn't override its `position`.
-  .mat-mdc-slide-toggle-ripple, #{mdc-switch.$ripple-target}::after {
+  .mat-mdc-slide-toggle-ripple,
+  #{mdc-switch.$ripple-target}::after {
     @include layout-common.fill();
     border-radius: 50%;
     // Disable pointer events for the ripple container so that it doesn't eat the mouse events meant
@@ -134,7 +149,7 @@
 // The m2 slide-toggle uses transforms to hide & show the tracks while
 // the m3 slide-toggle uses opacity.
 
-@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
   .mdc-switch--selected .mdc-switch__track {
     &::before {
       @include token-utils.create-token-slot(opacity, hidden-track-opacity);
@@ -158,7 +173,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
   .mat-mdc-slide-toggle {
     .mdc-switch--unselected .mdc-switch__handle {
       @include token-utils.create-token-slot(width, unselected-handle-size);
@@ -182,7 +197,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
   .mat-mdc-slide-toggle {
     .mdc-switch--selected .mdc-switch__handle {
       @include token-utils.create-token-slot(margin, selected-handle-horizontal-margin);
@@ -198,7 +213,7 @@
       &:has(.mdc-switch__icons) {
         @include token-utils.create-token-slot(
           margin,
-          unselected-with-icon-handle-horizontal-margin,
+          unselected-with-icon-handle-horizontal-margin
         );
       }
     }
@@ -213,7 +228,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
   .mdc-switch__track::after,
   .mdc-switch__track::before {
     @include token-utils.create-token-slot(border-width, track-outline-width);
@@ -233,7 +248,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-mat-switch.$prefix, m2-mat-switch.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
   .mdc-switch--disabled.mdc-switch--selected .mdc-switch__handle::after {
     @include token-utils.create-token-slot(opacity, disabled-selected-handle-opacity);
   }

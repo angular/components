@@ -34,11 +34,17 @@ $prefix: (mat, switch);
     visible-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
     hidden-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
     track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
-    track-outline-color:  map.get($systems, md-sys-color, outline),
+    track-outline-color: map.get($systems, md-sys-color, outline),
     selected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
     selected-track-outline-color: token-utils.hardcode(transparent, $exclude-hardcoded),
     disabled-unselected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
     disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
+    label-text-color: map.get($systems, md-sys-color, on-surface),
+    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
   );
 
   @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
