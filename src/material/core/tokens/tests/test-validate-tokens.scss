@@ -25,7 +25,6 @@
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
-@use '@material/form-field/form-field-theme' as mdc-form-field-theme;
 @use '@material/theme/validate' as mdc-validate;
 
 @use '../m2/mdc/protected-button' as tokens-mdc-protected-button;
@@ -52,7 +51,6 @@
 @use '../m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use '../m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
-@use '../m2/mdc/form-field' as tokens-mdc-form-field;
 
 @mixin validate-slots($component, $slots, $reference) {
   @debug 'Validating #{$component}...';
@@ -186,9 +184,4 @@
   $component: 'm2.mdc.outlined-button',
   $slots: tokens-mdc-outlined-button.get-token-slots(),
   $reference: mdc-button-outlined-theme.$light-theme
-);
-@include validate-slots(
-  $component: 'm2.mdc.form-field',
-  $slots: tokens-mdc-form-field.get-token-slots(),
-  $reference: mdc-form-field-theme.$light-theme
 );

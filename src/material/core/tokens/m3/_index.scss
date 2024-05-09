@@ -54,7 +54,6 @@
 @use './mdc/extended-fab' as tokens-mdc-extended-fab;
 @use './mdc/fab' as tokens-mdc-fab;
 @use './mdc/fab-small' as tokens-mdc-fab-small;
-@use './mdc/form-field' as tokens-mdc-form-field;
 @use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
@@ -113,7 +112,6 @@ $_module-names: (
   tokens-mat-text-button,
   tokens-mat-toolbar,
   tokens-mat-tree,
-
   // MDC tokens
   tokens-mdc-checkbox,
   tokens-mdc-chip,
@@ -128,7 +126,6 @@ $_module-names: (
   tokens-mdc-extended-fab,
   tokens-mdc-fab,
   tokens-mdc-fab-small,
-  tokens-mdc-form-field,
   tokens-mdc-filled-text-field,
   tokens-mdc-icon-button,
   tokens-mdc-linear-progress,
@@ -141,7 +138,7 @@ $_module-names: (
   tokens-mdc-snack-bar,
   tokens-mdc-switch,
   tokens-mdc-tab,
-  tokens-mdc-tab-indicator,
+  tokens-mdc-tab-indicator
 );
 
 /// Gets the full set of M3 tokens for the given theme object.
@@ -153,7 +150,10 @@ $_module-names: (
   $tokens: ();
 
   @each $module-name in $_module-names {
-    $fn: meta.get-function($name: 'get-tokens', $module: $module-name);
+    $fn: meta.get-function(
+      $name: 'get-tokens',
+      $module: $module-name,
+    );
     $tokens: map.merge($tokens, meta.call($fn, $systems, $exclude-hardcoded, $token-slots));
   }
 
