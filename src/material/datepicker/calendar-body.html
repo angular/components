@@ -14,7 +14,7 @@
 }
 
 <!-- Create the first row separately so we can include a special spacer cell. -->
-@for (row of rows; track row; let rowIndex = $index) {
+@for (row of rows; track _trackRow(row); let rowIndex = $index) {
   <tr role="row">
     <!--
       This cell is purely decorative, but we can't put `aria-hidden` or `role="presentation"` on it,
@@ -36,7 +36,7 @@
       cell is interactable, as well as the selection state via `aria-pressed`. See #23476 for
       background.
     -->
-    @for (item of row; track item; let colIndex = $index) {
+    @for (item of row; track item.id; let colIndex = $index) {
       <td
         role="gridcell"
         class="mat-calendar-body-cell-container"
