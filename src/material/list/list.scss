@@ -162,14 +162,23 @@ a.mdc-list-item--activated {
   }
 }
 
-.mat-mdc-list-item.mdc-list-item--with-three-lines {
-  // List item lines or titles never wrap. MDC always enables wrapping for secondary text
-  // if the list item has acquired three lines. We unset these styles for line elements.
-  // https://github.com/material-components/material-components-web/blob/348665978ce73694ad4518626dd70cdf5b984113/packages/mdc-list/_evolution-mixins.scss#L205-L206.
-  // TODO: Consider removing once MDC supports the explicit tertiary line list variant.
+.mat-mdc-list-item.mdc-list-item--with-leading-avatar.mdc-list-item--with-two-lines
+.mdc-list-item__primary-text::before {
+  height: 25px;
+}
+
+.mat-mdc-list-item.mdc-list-item--with-three-lines,
+.mat-mdc-list-item.mdc-list-item--with-two-lines {
+  // List item lines must wrap according to GAR 1.18(b). Removing the nowrap and
+  // adjusts .mat-mdc-list-item-title.mdc-list-item__primary-text height
+  // to accommodate any wrapping text. Fixes: b/247881646.
+  .mat-mdc-list-item-title.mdc-list-item__primary-text,
   .mat-mdc-list-item-line.mdc-list-item__secondary-text {
-    white-space: nowrap;
+    white-space: normal;
     line-height: normal;
+  }
+  .mat-mdc-list-item-title.mdc-list-item__primary-text {
+    height: 45px;
   }
 
   // Unscoped content can wrap if the list item has acquired three lines. MDC implements
@@ -218,3 +227,4 @@ mat-action-list button {
     }
   }
 }
+
