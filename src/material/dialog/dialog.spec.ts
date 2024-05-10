@@ -40,6 +40,7 @@ import {
   flushMicrotasks,
   inject,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -1905,6 +1906,27 @@ describe('MDC-based MatDialog', () => {
 
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBe(null);
   }));
+
+  it('should recapture focus when the focused element is removed from the DOM', waitForAsync(async () => {
+    dialog.open(ContentWithConditionalButton, {
+      viewContainerRef: testViewContainerRef,
+      autoFocus: 'button',
+    });
+    viewContainerFixture.detectChanges();
+
+    const cancelButton = document.querySelector<HTMLElement>('.cancel')!;
+    const okButton = document.querySelector<HTMLElement>('.ok');
+    cancelButton.focus();
+    viewContainerFixture.detectChanges();
+
+    expect(document.activeElement).toEqual(cancelButton);
+
+    cancelButton.click();
+    viewContainerFixture.detectChanges();
+    await Promise.resolve().then();
+
+    expect(document.activeElement).toEqual(okButton);
+  }));
 });
 
 describe('MDC-based MatDialog with a parent MatDialog', () => {
@@ -2392,6 +2414,19 @@ class ModuleBoundDialogComponent {}
 })
 class ModuleBoundDialogChildComponent {
   constructor(public service: ModuleBoundDialogService) {}
+}
+
+@Component({
+  template: `
+    @if (!disableCancel()) {
+      <button class="cancel" (click)="disableCancel.set(true)">Cancel</button>
+    }
+    <button class="ok">Ok</button>
+  `,
+  standalone: true,
+})
+class ContentWithConditionalButton {
+  disableCancel = signal(false);
 }
 
 @NgModule({

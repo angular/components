@@ -7,9 +7,13 @@
  */
 
 import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {OverlayRef} from '@angular/cdk/overlay';
+import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
@@ -20,12 +24,8 @@ import {
   OnDestroy,
   Optional,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
-import {CdkDialogContainer} from '@angular/cdk/dialog';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
-import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -93,8 +93,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
-
-  private _isDestroyed = false;
 
   constructor(
     elementRef: ElementRef,

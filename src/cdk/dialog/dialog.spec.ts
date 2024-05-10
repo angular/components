@@ -22,6 +22,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
+  signal,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -30,6 +31,7 @@ import {
   flush,
   flushMicrotasks,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -1108,6 +1110,27 @@ describe('Dialog', () => {
       expect(container.hasAttribute('aria-labelledby')).toBe(false);
     }));
   });
+
+  it('should recapture focus when the focused element is removed from the DOM', waitForAsync(async () => {
+    dialog.open(ContentWithConditionalButton, {
+      viewContainerRef: testViewContainerRef,
+      autoFocus: 'button',
+    });
+    viewContainerFixture.detectChanges();
+
+    const cancelButton = document.querySelector<HTMLElement>('.cancel')!;
+    const okButton = document.querySelector<HTMLElement>('.ok');
+    cancelButton.focus();
+    viewContainerFixture.detectChanges();
+
+    expect(document.activeElement).toEqual(cancelButton);
+
+    cancelButton.click();
+    viewContainerFixture.detectChanges();
+    await Promise.resolve().then();
+
+    expect(document.activeElement).toEqual(okButton);
+  }));
 });
 
 describe('Dialog with a parent Dialog', () => {
@@ -1341,4 +1364,17 @@ class TemplateInjectorInnerDirective {
 class TemplateInjectorParentComponent {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   innerComponentValue = '';
+}
+
+@Component({
+  template: `
+    @if (!disableCancel()) {
+      <button class="cancel" (click)="disableCancel.set(true)">Cancel</button>
+    }
+    <button class="ok">Ok</button>
+  `,
+  standalone: true,
+})
+class ContentWithConditionalButton {
+  disableCancel = signal(false);
 }

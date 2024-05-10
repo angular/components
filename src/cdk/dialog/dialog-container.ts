@@ -107,6 +107,18 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   private _injector = inject(Injector);
 
+  protected _isDestroyed = false;
+
+  private _recaptureOnFocusout = () => {
+    // One reason focus could leave the dialog is if the currently focused element was removed from
+    // the DOM. In that case we will get a focusout event immediately prior to the element's
+    // removal. We delay the recapture by a microtask so that we don't try to move focus back into
+    // the dialog by focusing the same element whose removal triggered the event.
+    queueMicrotask(() => {
+      this._recaptureFocus();
+    });
+  };
+
   constructor(
     protected _elementRef: ElementRef,
     protected _focusTrapFactory: FocusTrapFactory,
@@ -141,6 +153,9 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   protected _contentAttached() {
+    this._ngZone.runOutsideAngular(() => {
+      this._elementRef.nativeElement.addEventListener('focusout', this._recaptureOnFocusout);
+    });
     this._initializeFocusTrap();
     this._handleBackdropClicks();
     this._captureInitialFocus();
@@ -155,6 +170,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   ngOnDestroy() {
+    this._isDestroyed = true;
+    this._elementRef.nativeElement.removeEventListener('focusout', this._recaptureOnFocusout);
     this._restoreFocus();
   }
 
@@ -295,7 +312,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
           // `onStable` in zonefull apps, but it should be noted that zoneless apps can still
           // suffer from this issue.
           this._ngZone.onStable.pipe(take(1)).subscribe(doFocus);
-        } else {
+        } else if (!this._isDestroyed) {
           afterNextRender(doFocus, {injector: this._injector});
         }
         break;
@@ -386,6 +403,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   private _handleBackdropClicks() {
     // Clicking on the backdrop will move focus out of dialog.
     // Recapture it if closing via the backdrop is disabled.
+    // TODO(mmalerba): This may not be necessary now that we recapture on focusout.
     this._overlayRef.backdropClick().subscribe(() => {
       if (this._config.disableClose) {
         this._recaptureFocus();
