@@ -1,17 +1,19 @@
+import {Directionality} from '@angular/cdk/bidi';
+import {A, ESCAPE} from '@angular/cdk/keycodes';
+import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  tick,
-  flush,
-} from '@angular/core/testing';
+  createKeyboardEvent,
+  dispatchEvent,
+  dispatchKeyboardEvent,
+} from '@angular/cdk/testing/private';
+import {Location} from '@angular/common';
+import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
   Directive,
-  inject,
   Inject,
   InjectionToken,
   Injector,
@@ -19,19 +21,17 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {Location} from '@angular/common';
-import {SpyLocation} from '@angular/common/testing';
-import {Directionality} from '@angular/cdk/bidi';
-import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
-  dispatchKeyboardEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-} from '@angular/cdk/testing/private';
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  tick,
+} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {DIALOG_DATA, Dialog, DialogModule, DialogRef} from './index';
 
@@ -282,17 +282,20 @@ describe('Dialog', () => {
     const spy = jasmine.createSpy('backdropClick spy');
     dialogRef.backdropClick.subscribe(spy);
     viewContainerFixture.detectChanges();
+    flush();
 
     const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
     backdrop.click();
     viewContainerFixture.detectChanges();
+    flush();
     expect(spy).toHaveBeenCalledTimes(1);
 
     // Additional clicks after the dialog has closed should not be emitted
     dialogRef.disableClose = false;
     backdrop.click();
     viewContainerFixture.detectChanges();
+    flush();
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
@@ -303,6 +306,7 @@ describe('Dialog', () => {
     dialogRef.keydownEvents.subscribe(spy);
 
     viewContainerFixture.detectChanges();
+    flush();
 
     let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
     let container = overlayContainerElement.querySelector('cdk-dialog-container') as HTMLElement;
@@ -757,9 +761,11 @@ describe('Dialog', () => {
       fakeAsync(() => {
         const templateInjectFixture = TestBed.createComponent(TemplateInjectorParentComponent);
         templateInjectFixture.detectChanges();
+        flush();
 
         dialog.open(templateInjectFixture.componentInstance.templateRef);
         templateInjectFixture.detectChanges();
+        flush();
 
         expect(templateInjectFixture.componentInstance.innerComponentValue).toBe(
           'hello from parent component',
@@ -840,7 +846,7 @@ describe('Dialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(document.activeElement!.tagName)
         .withContext('Expected first tabbable element (input) in the dialog to be focused.')
@@ -910,9 +916,8 @@ describe('Dialog', () => {
 
       let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
-      flushMicrotasks();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(document.activeElement!.id).not.toBe(
         'dialog-trigger',
@@ -920,7 +925,6 @@ describe('Dialog', () => {
       );
 
       dialogRef.close();
-      flushMicrotasks();
       viewContainerFixture.detectChanges();
       flush();
 
@@ -939,18 +943,18 @@ describe('Dialog', () => {
       viewContainerFixture.destroy();
       const fixture = TestBed.createComponent(ShadowDomComponent);
       fixture.detectChanges();
+      flush();
       const button = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
       button.focus();
 
       const dialogRef = dialog.open(PizzaMsg);
-      flushMicrotasks();
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       const spy = spyOn(button, 'focus').and.callThrough();
       dialogRef.close();
-      flushMicrotasks();
+      flush();
       fixture.detectChanges();
       tick(500);
 
@@ -994,7 +998,7 @@ describe('Dialog', () => {
       dialog.open(DialogWithoutFocusableElements);
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(document.activeElement!.tagName.toLowerCase())
         .withContext('Expected dialog container to be focused.')
@@ -1013,14 +1017,12 @@ describe('Dialog', () => {
         restoreFocus: false,
       });
 
-      flushMicrotasks();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(document.activeElement!.id).not.toBe('dialog-trigger');
 
       dialogRef.close();
-      flushMicrotasks();
       viewContainerFixture.detectChanges();
       flush();
 
