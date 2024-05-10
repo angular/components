@@ -4,9 +4,9 @@ import {OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
@@ -23,11 +23,11 @@ import {
 } from '@angular/core';
 import {
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
   flushMicrotasks,
   inject,
-  TestBed,
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -640,7 +640,7 @@ describe('MatBottomSheet', () => {
         });
 
         viewContainerFixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         expect(document.activeElement!.tagName)
           .withContext('Expected first tabbable element (input) in the dialog to be focused.')
