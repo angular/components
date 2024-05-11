@@ -15,7 +15,7 @@ import {filter, shareReplay, takeUntil} from 'rxjs/operators';
  * @param e The error
  */
 const loopLimitExceededErrorHandler = (e: unknown) => {
-  if (e instanceof Error && e.message === 'ResizeObserver loop limit exceeded') {
+  if (e instanceof ErrorEvent && e.message === 'ResizeObserver loop limit exceeded') {
     console.error(
       `${e.message}. This could indicate a performance issue with your app. See https://github.com/WICG/resize-observer/blob/master/explainer.md#error-handling`,
     );
