@@ -176,7 +176,7 @@ describe('Portals', () => {
       testAppComponent.selectedPortal = domPortal;
       fixture.detectChanges();
 
-      parent.innerHTML = '';
+      parent.innerText = '';
 
       expect(() => {
         testAppComponent.selectedPortal = undefined;
