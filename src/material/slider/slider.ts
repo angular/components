@@ -726,7 +726,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     const valuetext = this.displayWith(source.value);
 
     this._hasViewInitialized
-      ? (source._valuetext = valuetext)
+      ? source._valuetext.set(valuetext)
       : source._hostElement.setAttribute('aria-valuetext', valuetext);
 
     if (this.discrete) {
