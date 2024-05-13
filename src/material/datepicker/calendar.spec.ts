@@ -5,7 +5,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
 import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
@@ -15,6 +15,11 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],

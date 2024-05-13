@@ -7,7 +7,14 @@ import {
   discardPeriodicTasks,
   flush,
 } from '@angular/core/testing';
-import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
+import {
+  Component,
+  ɵZONELESS_ENABLED,
+  ElementRef,
+  ErrorHandler,
+  ViewChild,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
@@ -23,6 +30,11 @@ import {CdkScrollable} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 
 describe('MatDrawer', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -842,6 +854,11 @@ describe('MatDrawer', () => {
 });
 
 describe('MatDrawerContainer', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

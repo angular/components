@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -14,6 +14,7 @@ describe('Observe content directive', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [ObserversModule, ComponentWithTextContent, ComponentWithChildTextContent],
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       });
 
       TestBed.compileComponents();
@@ -208,6 +209,7 @@ describe('ContentObserver injectable', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [ObserversModule, UnobservedComponentWithTextContent],
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       });
 
       TestBed.compileComponents();

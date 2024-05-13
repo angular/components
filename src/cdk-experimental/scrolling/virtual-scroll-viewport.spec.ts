@@ -49,7 +49,9 @@ describe('CdkVirtualScrollViewport', () => {
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
       testComponent.minBufferPx = 100;
       testComponent.maxBufferPx = 99;
-      expect(() => finishInit(fixture)).toThrow();
+      const errorSpy = spyOn(console, 'error');
+      finishInit(fixture);
+      expect(errorSpy).toHaveBeenCalled();
     }));
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,

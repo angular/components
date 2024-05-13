@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -48,7 +48,7 @@ describe('MatNativeSelectHarness', () => {
       }),
     ).toEqual([false, false]);
 
-    fixture.componentInstance.favoriteDrinkDisabled = true;
+    fixture.componentInstance.favoriteDrinkDisabled.set(true);
     expect(await parallel(() => selects.map(select => select.isDisabled()))).toEqual([false, true]);
   });
 
@@ -65,7 +65,7 @@ describe('MatNativeSelectHarness', () => {
       }),
     ).toEqual([false, false]);
 
-    fixture.componentInstance.favoriteFoodRequired = true;
+    fixture.componentInstance.favoriteFoodRequired.set(true);
     expect(await parallel(() => selects.map(select => select.isRequired()))).toEqual([true, false]);
   });
 
@@ -139,7 +139,7 @@ describe('MatNativeSelectHarness', () => {
       false,
     ]);
 
-    fixture.componentInstance.pastaDisabled = true;
+    fixture.componentInstance.pastaDisabled.set(true);
 
     expect(await parallel(() => options.map(option => option.isDisabled()))).toEqual([
       false,
@@ -197,9 +197,9 @@ describe('MatNativeSelectHarness', () => {
         matNativeControl
         name="favorite-food"
         [(ngModel)]="favoriteFood"
-        [required]="favoriteFoodRequired">
+        [required]="favoriteFoodRequired()">
         <option value="pizza">Pizza</option>
-        <option value="pasta" [disabled]="pastaDisabled">Pasta</option>
+        <option value="pasta" [disabled]="pastaDisabled()">Pasta</option>
         <option value="ramen">Ramen</option>
       </select>
     </mat-form-field>
@@ -210,7 +210,7 @@ describe('MatNativeSelectHarness', () => {
         matNativeControl
         name="favorite-drink"
         [(ngModel)]="favoriteDrink"
-        [disabled]="favoriteDrinkDisabled"
+        [disabled]="favoriteDrinkDisabled()"
         multiple>
         <option value="water">Water</option>
         <option value="soda">Soda</option>
@@ -225,7 +225,7 @@ describe('MatNativeSelectHarness', () => {
 class SelectHarnessTest {
   favoriteFood: string;
   favoriteDrink: string[] = [];
-  favoriteFoodRequired = false;
-  favoriteDrinkDisabled = false;
-  pastaDisabled = false;
+  favoriteFoodRequired = signal(false);
+  favoriteDrinkDisabled = signal(false);
+  pastaDisabled = signal(false);
 }

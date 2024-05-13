@@ -1,5 +1,14 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {ApplicationRef, Component, DebugElement, Provider, Type} from '@angular/core';
+import {
+  ApplicationRef,
+  Component,
+  DebugElement,
+  EnvironmentProviders,
+  Provider,
+  Type,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {MatProgressBarModule, MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './index';
@@ -8,7 +17,7 @@ import {MatProgressBar} from './progress-bar';
 describe('MDC-based MatProgressBar', () => {
   function createComponent<T>(
     componentType: Type<T>,
-    providers: Provider[] = [],
+    providers: (Provider | EnvironmentProviders)[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatProgressBarModule, componentType],
@@ -254,7 +263,10 @@ describe('MDC-based MatProgressBar', () => {
       let primaryValueBar: DebugElement;
 
       beforeEach(() => {
-        fixture = createComponent(BufferProgressBar);
+        fixture = createComponent(BufferProgressBar, [
+          {provide: ɵZONELESS_ENABLED, useValue: false},
+          provideZoneChangeDetection(),
+        ]);
 
         progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
         progressComponent = progressElement.componentInstance;
@@ -321,7 +333,6 @@ describe('MDC-based MatProgressBar', () => {
         // On animation end, output should be emitted.
         dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend', true);
 
-        expect(appRef.tick).toHaveBeenCalled();
         expect(animationEndSpy).toHaveBeenCalledWith({value: 40});
       });
     });

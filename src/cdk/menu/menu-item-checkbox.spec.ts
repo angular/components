@@ -1,4 +1,4 @@
-import {Component, ElementRef} from '@angular/core';
+import {Component, ElementRef, ɵZONELESS_ENABLED} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
@@ -16,6 +16,7 @@ describe('MenuItemCheckbox', () => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule, SingleCheckboxButton],
       providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
         {provide: CDK_MENU, useClass: CdkMenu},
         {provide: MENU_STACK, useClass: MenuStack},
         // View engine can't figure out the ElementRef to inject so we need to provide a fake

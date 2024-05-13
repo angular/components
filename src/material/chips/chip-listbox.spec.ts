@@ -13,6 +13,8 @@ import {
   Type,
   ViewChild,
   ViewChildren,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -28,6 +30,11 @@ describe('MDC-based MatChipListbox', () => {
   let chips: QueryList<MatChipOption>;
   let directionality: {value: Direction; change: EventEmitter<Direction>};
   let primaryActions: NodeListOf<HTMLElement>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
 
   describe('StandardChipList', () => {
     describe('basic behaviors', () => {

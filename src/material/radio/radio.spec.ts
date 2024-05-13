@@ -1,6 +1,6 @@
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ɵZONELESS_ENABLED, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
@@ -15,6 +15,7 @@ import {
 describe('MDC-based MatRadio', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       imports: [
         MatRadioModule,
         FormsModule,

@@ -1,6 +1,6 @@
 import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ɵZONELESS_ENABLED, ViewChild, NgZone} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
@@ -26,6 +26,10 @@ describe('CdkScrollable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+        {provide: NgZone, useFactory: () => new NgZone({})},
+      ],
       imports: [ScrollingModule, ScrollableViewport],
     }).compileComponents();
   }));

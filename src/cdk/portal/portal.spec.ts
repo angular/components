@@ -15,6 +15,8 @@ import {
   ViewContainerRef,
   Directive,
   AfterViewInit,
+  ɵZONELESS_ENABLED,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
@@ -24,6 +26,7 @@ import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 describe('Portals', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
       imports: [
         PortalModule,
         CommonModule,

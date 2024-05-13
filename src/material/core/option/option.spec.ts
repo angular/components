@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   dispatchFakeEvent,
@@ -81,7 +81,7 @@ describe('MatOption component', () => {
   it('should be able to set a custom id', () => {
     const fixture = TestBed.createComponent(BasicOption);
 
-    fixture.componentInstance.id = 'custom-option';
+    fixture.componentInstance.id.set('custom-option');
     fixture.detectChanges();
 
     const optionInstance = fixture.debugElement.query(By.directive(MatOption))!.componentInstance;
@@ -184,7 +184,7 @@ describe('MatOption component', () => {
         .withContext('Expected no ripples to show up initially')
         .toBe(0);
 
-      fixture.componentInstance.disabled = true;
+      fixture.componentInstance.disabled.set(true);
       fixture.detectChanges();
 
       dispatchFakeEvent(optionNativeElement, 'mousedown');
@@ -242,13 +242,13 @@ describe('MatOption component', () => {
 });
 
 @Component({
-  template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`,
+  template: `<mat-option [id]="id()" [disabled]="disabled()"></mat-option>`,
   standalone: true,
   imports: [MatOptionModule],
 })
 class BasicOption {
-  disabled: boolean;
-  id: string;
+  disabled = signal(false);
+  id = signal('');
 }
 
 @Component({

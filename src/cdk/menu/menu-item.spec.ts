@@ -1,4 +1,4 @@
-import {Component, Type, ElementRef} from '@angular/core';
+import {Component, Type, ElementRef, ɵZONELESS_ENABLED} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
@@ -20,6 +20,7 @@ describe('MenuItem', () => {
         imports: [CdkMenuModule],
         declarations: [SingleMenuItem],
         providers: [
+          {provide: ɵZONELESS_ENABLED, useValue: false},
           {provide: CDK_MENU, useClass: CdkMenu},
           {provide: MENU_STACK, useClass: MenuStack},
           // View engine can't figure out the ElementRef to inject so we need to provide a fake
@@ -82,6 +83,7 @@ describe('MenuItem', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MatIcon],
         providers: [
+          {provide: ɵZONELESS_ENABLED, useValue: false},
           {provide: CDK_MENU, useClass: CdkMenu},
           {provide: MENU_STACK, useClass: MenuStack},
           // View engine can't figure out the ElementRef to inject so we need to provide a fake

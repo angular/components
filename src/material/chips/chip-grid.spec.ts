@@ -26,6 +26,7 @@ import {
   Type,
   ViewChild,
   ViewChildren,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -1002,7 +1003,10 @@ describe('MDC-based MatChipGrid', () => {
         MatInputModule,
         animationsModule,
       ],
-      providers: [{provide: Directionality, useValue: directionality}],
+      providers: [
+        {provide: Directionality, useValue: directionality},
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+      ],
       declarations: [component],
     }).compileComponents();
 

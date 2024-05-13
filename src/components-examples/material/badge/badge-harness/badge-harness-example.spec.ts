@@ -23,7 +23,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#simple'}));
 
     expect(await badge.getText()).toBe('S');
-    fixture.componentInstance.simpleContent = 'Changed';
+    fixture.componentInstance.simpleContent.set('Changed');
     expect(await badge.getText()).toBe('Changed');
   });
 
@@ -31,7 +31,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#overlapping'}));
 
     expect(await badge.isOverlapping()).toBe(true);
-    fixture.componentInstance.overlap = false;
+    fixture.componentInstance.overlap.set(false);
     expect(await badge.isOverlapping()).toBe(false);
   });
 
@@ -39,7 +39,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#disabled'}));
 
     expect(await badge.isDisabled()).toBe(true);
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     expect(await badge.isDisabled()).toBe(false);
   });
 });

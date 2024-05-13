@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ApplicationRef, Component, DebugElement} from '@angular/core';
+import {ApplicationRef, Component, DebugElement, ɵZONELESS_ENABLED} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton, MatFabDefaultOptions, MAT_FAB_DEFAULT_OPTIONS} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
@@ -9,6 +9,7 @@ describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule, TestApp],
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
     });
 
     TestBed.compileComponents();

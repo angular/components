@@ -1,12 +1,20 @@
 import {fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  provideZoneChangeDetection,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
 describe('MDC-based MatList', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
       imports: [
         MatListModule,
         ListWithOneAnchorItem,

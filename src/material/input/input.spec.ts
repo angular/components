@@ -5,6 +5,7 @@ import {
   Directive,
   ErrorHandler,
   Provider,
+  ɵZONELESS_ENABLED,
   Type,
   ViewChild,
 } from '@angular/core';
@@ -1527,6 +1528,7 @@ function configureTestingModule(
     ],
     declarations: [component, ...declarations],
     providers: [
+      {provide: ɵZONELESS_ENABLED, useValue: false},
       // Custom error handler that re-throws the error. Errors happening within
       // change detection phase will be reported through the handler and thrown
       // in Ivy. Since we do not want to pollute the "console.error", but rather

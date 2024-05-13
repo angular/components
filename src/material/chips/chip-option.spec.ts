@@ -1,6 +1,12 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ViewChild,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
@@ -26,6 +32,12 @@ describe('MDC-based Option Chips', () => {
   let dir = 'ltr';
 
   let hideSingleSelectionIndicator: boolean | undefined;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};

@@ -6,7 +6,14 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ElementRef,
+  ViewChild,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -26,6 +33,12 @@ describe('MDC-based Row Chips', () => {
   let chipInstance: MatChipRow;
 
   let dir = 'ltr';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

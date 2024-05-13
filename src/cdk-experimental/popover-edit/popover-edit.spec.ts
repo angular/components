@@ -3,7 +3,14 @@ import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/k
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
-import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  Directive,
+  ElementRef,
+  ɵZONELESS_ENABLED,
+  ViewChild,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
 import {BidiModule, Direction} from '@angular/cdk/bidi';
@@ -382,6 +389,7 @@ describe('CDK Popover Edit', () => {
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkTableModule, CdkPopoverEditModule, CommonModule, FormsModule, BidiModule],
+          providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
           declarations: [componentClass],
         }).compileComponents();
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);

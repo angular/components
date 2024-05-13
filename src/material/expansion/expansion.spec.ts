@@ -6,7 +6,7 @@ import {
   ComponentFixture,
   flush,
 } from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -25,6 +25,7 @@ import {
 describe('MatExpansionPanel', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       imports: [
         MatExpansionModule,
         NoopAnimationsModule,
@@ -406,6 +407,7 @@ describe('MatExpansionPanel', () => {
       .configureTestingModule({
         imports: [MatExpansionModule, NoopAnimationsModule],
         providers: [
+          {provide: ɵZONELESS_ENABLED, useValue: false},
           {
             provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
             useValue: {

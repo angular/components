@@ -5,6 +5,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {PortalModule, CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
@@ -14,6 +15,7 @@ import {By} from '@angular/platform-browser';
 describe('FocusTrap', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       imports: [
         A11yModule,
         PortalModule,

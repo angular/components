@@ -10,7 +10,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
 import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
@@ -32,7 +32,10 @@ describe('MatYearView', () => {
         YearViewWithDateFilter,
         YearViewWithDateClass,
       ],
-      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+      providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+      ],
     });
 
     TestBed.compileComponents();

@@ -2,6 +2,7 @@ import {_supportsShadowDom} from '@angular/cdk/platform';
 import {HarnessLoader, manualChangeDetection, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
@@ -12,6 +13,9 @@ describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
     fixture = TestBed.createComponent(TestMainComponent);
   });
 

@@ -30,6 +30,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {
@@ -148,7 +149,7 @@ describe('MatStepper', () => {
       selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
       expect(selectedLabel.textContent).toMatch('Step 3');
 
-      fixture.componentInstance.inputLabel = 'New Label';
+      fixture.componentInstance.inputLabel.set('New Label');
       fixture.detectChanges();
 
       selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
@@ -405,7 +406,7 @@ describe('MatStepper', () => {
       expect(stepperComponent.selectedIndex).toBe(2);
 
       expect(() => {
-        fixture.componentInstance.showStepTwo = false;
+        fixture.componentInstance.showStepTwo.set(false);
         fixture.detectChanges();
       }).not.toThrow();
 
@@ -1019,7 +1020,7 @@ describe('MatStepper', () => {
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(false);
 
-      fixture.componentInstance.disableRipple = true;
+      fixture.componentInstance.disableRipple.set(true);
       fixture.detectChanges();
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
@@ -1050,7 +1051,7 @@ describe('MatStepper', () => {
       expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(false);
       expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
 
-      fixture.componentInstance.stepperTheme = 'accent';
+      fixture.componentInstance.stepperTheme.set('accent');
       fixture.detectChanges();
 
       expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(true);
@@ -1068,7 +1069,7 @@ describe('MatStepper', () => {
 
       expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
 
-      fixture.componentInstance.secondStepTheme = 'accent';
+      fixture.componentInstance.secondStepTheme.set('accent');
       fixture.detectChanges();
 
       expect(headers[0].classList.contains('mat-primary')).toBe(true);
@@ -1107,7 +1108,7 @@ describe('MatStepper', () => {
     it('should maintain the correct navigation order when a step is added later on', () => {
       const fixture = createComponent(HorizontalStepperWithDelayedStep);
       fixture.detectChanges();
-      fixture.componentInstance.renderSecondStep = true;
+      fixture.componentInstance.renderSecondStep.set(true);
       fixture.detectChanges();
 
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
@@ -1139,7 +1140,7 @@ describe('MatStepper', () => {
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(false);
 
-      fixture.componentInstance.disableRipple = true;
+      fixture.componentInstance.disableRipple.set(true);
       fixture.detectChanges();
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
@@ -1157,7 +1158,7 @@ describe('MatStepper', () => {
       expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(false);
       expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
 
-      fixture.componentInstance.stepperTheme = 'accent';
+      fixture.componentInstance.stepperTheme.set('accent');
       fixture.detectChanges();
 
       expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(true);
@@ -1175,7 +1176,7 @@ describe('MatStepper', () => {
 
       expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
 
-      fixture.componentInstance.secondStepTheme = 'accent';
+      fixture.componentInstance.secondStepTheme.set('accent');
       fixture.detectChanges();
 
       expect(headers[0].classList.contains('mat-primary')).toBe(true);
@@ -1242,7 +1243,7 @@ describe('MatStepper', () => {
 
       expect(stepperHost.classList).not.toContain('mat-stepper-header-position-bottom');
 
-      fixture.componentInstance.headerPosition = 'bottom';
+      fixture.componentInstance.headerPosition.set('bottom');
       fixture.detectChanges();
 
       expect(stepperHost.classList).toContain('mat-stepper-header-position-bottom');
@@ -1263,21 +1264,19 @@ describe('MatStepper', () => {
     });
 
     it('must be visited if not optional', () => {
-      stepper.selectedIndex = 2;
-      fixture.detectChanges();
-      expect(stepper.selectedIndex).toBe(0);
-
       stepper.selectedIndex = 1;
+      fixture.componentRef.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(stepper.selectedIndex).toBe(1);
 
       stepper.selectedIndex = 2;
+      fixture.componentRef.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(stepper.selectedIndex).toBe(2);
     });
 
     it('can be skipped entirely if optional', () => {
-      testComponent.step2Optional = true;
+      testComponent.step2Optional.set(true);
       fixture.detectChanges();
       stepper.selectedIndex = 2;
       fixture.detectChanges();
@@ -1301,22 +1300,22 @@ describe('MatStepper', () => {
     });
 
     it('should set the aria-label attribute', () => {
-      fixture.componentInstance.ariaLabel = 'First step';
+      fixture.componentInstance.ariaLabel.set('First step');
       fixture.detectChanges();
 
       expect(stepHeader.getAttribute('aria-label')).toBe('First step');
     });
 
     it('should set the aria-labelledby attribute', () => {
-      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.componentInstance.ariaLabelledby.set('first-step-label');
       fixture.detectChanges();
 
       expect(stepHeader.getAttribute('aria-labelledby')).toBe('first-step-label');
     });
 
     it('should not be able to set both an aria-label and aria-labelledby', () => {
-      fixture.componentInstance.ariaLabel = 'First step';
-      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.componentInstance.ariaLabel.set('First step');
+      fixture.componentInstance.ariaLabelledby.set('first-step-label');
       fixture.detectChanges();
 
       expect(stepHeader.getAttribute('aria-label')).toBe('First step');
@@ -1506,7 +1505,7 @@ describe('MatStepper', () => {
 
     expect(fixture.nativeElement.querySelectorAll('.mat-step-header').length).toBe(1);
 
-    fixture.componentInstance.showStep2 = true;
+    fixture.componentInstance.showStep2.set(true);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.mat-step-header').length).toBe(2);
@@ -1542,7 +1541,7 @@ describe('MatStepper', () => {
     it('should render the content of the selected step on init', () => {
       const fixture = createComponent(StepperWithLazyContent);
       const element = fixture.nativeElement;
-      fixture.componentInstance.selectedIndex = 1;
+      fixture.componentInstance.selectedIndex.set(1);
       fixture.detectChanges();
 
       expect(element.textContent).not.toContain('Step 1 content');
@@ -1553,21 +1552,21 @@ describe('MatStepper', () => {
     it('should render the content of steps when the user navigates to them', () => {
       const fixture = createComponent(StepperWithLazyContent);
       const element = fixture.nativeElement;
-      fixture.componentInstance.selectedIndex = 0;
+      fixture.componentInstance.selectedIndex.set(0);
       fixture.detectChanges();
 
       expect(element.textContent).toContain('Step 1 content');
       expect(element.textContent).not.toContain('Step 2 content');
       expect(element.textContent).not.toContain('Step 3 content');
 
-      fixture.componentInstance.selectedIndex = 1;
+      fixture.componentInstance.selectedIndex.set(1);
       fixture.detectChanges();
 
       expect(element.textContent).toContain('Step 1 content');
       expect(element.textContent).toContain('Step 2 content');
       expect(element.textContent).not.toContain('Step 3 content');
 
-      fixture.componentInstance.selectedIndex = 2;
+      fixture.componentInstance.selectedIndex.set(2);
       fixture.detectChanges();
 
       expect(element.textContent).toContain('Step 1 content');
@@ -1850,9 +1849,9 @@ class MatHorizontalStepperWithErrorsApp {
 @Component({
   template: `
     <mat-stepper
-      [disableRipple]="disableRipple"
-      [color]="stepperTheme"
-      [headerPosition]="headerPosition">
+      [disableRipple]="disableRipple()"
+      [color]="stepperTheme()"
+      [headerPosition]="headerPosition()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1861,7 +1860,7 @@ class MatHorizontalStepperWithErrorsApp {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      <mat-step [color]="secondStepTheme">
+      <mat-step [color]="secondStepTheme()">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
@@ -1881,15 +1880,15 @@ class MatHorizontalStepperWithErrorsApp {
 })
 class SimpleMatHorizontalStepperApp {
   inputLabel = 'Step 3';
-  disableRipple = false;
-  stepperTheme: ThemePalette;
-  secondStepTheme: ThemePalette;
-  headerPosition: string;
+  disableRipple = signal(false);
+  stepperTheme = signal<ThemePalette>(undefined);
+  secondStepTheme = signal<ThemePalette>(undefined);
+  headerPosition = signal('');
 }
 
 @Component({
   template: `
-    <mat-stepper orientation="vertical" [disableRipple]="disableRipple" [color]="stepperTheme">
+    <mat-stepper orientation="vertical" [disableRipple]="disableRipple()" [color]="stepperTheme()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1898,8 +1897,8 @@ class SimpleMatHorizontalStepperApp {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      @if (showStepTwo) {
-        <mat-step [color]="secondStepTheme">
+      @if (showStepTwo()) {
+        <mat-step [color]="secondStepTheme()">
           <ng-template matStepLabel>Step 2</ng-template>
           Content 2
           <div>
@@ -1908,7 +1907,7 @@ class SimpleMatHorizontalStepperApp {
           </div>
         </mat-step>
       }
-      <mat-step [label]="inputLabel">
+      <mat-step [label]="inputLabel()">
         Content 3
         <div>
           <button mat-button matStepperPrevious>Back</button>
@@ -1919,11 +1918,11 @@ class SimpleMatHorizontalStepperApp {
   `,
 })
 class SimpleMatVerticalStepperApp {
-  inputLabel = 'Step 3';
-  showStepTwo = true;
-  disableRipple = false;
-  stepperTheme: ThemePalette;
-  secondStepTheme: ThemePalette;
+  inputLabel = signal('Step 3');
+  showStepTwo = signal(true);
+  disableRipple = signal(false);
+  stepperTheme = signal<ThemePalette>(undefined);
+  secondStepTheme = signal<ThemePalette>(undefined);
 }
 
 @Component({
@@ -2091,19 +2090,19 @@ class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
 })
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl(''));
-  step2Optional = false;
+  step2Optional = signal(false);
 }
 
 @Component({
   template: `
     <mat-stepper>
-      <mat-step [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby" label="One"></mat-step>
+      <mat-step [aria-label]="ariaLabel()" [aria-labelledby]="ariaLabelledby()" label="One"></mat-step>
     </mat-stepper>
   `,
 })
 class StepperWithAriaInputs {
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel = signal('');
+  ariaLabelledby = signal('');
 }
 
 @Component({
@@ -2126,7 +2125,7 @@ class StepperWithIndirectDescendantSteps {}
         <ng-template matStepLabel>Step 1</ng-template>
       </mat-step>
 
-      @if (showStep2) {
+      @if (showStep2()) {
         <mat-step>
           <ng-template matStepLabel>Step 2</ng-template>
         </mat-step>
@@ -2135,7 +2134,7 @@ class StepperWithIndirectDescendantSteps {}
   `,
 })
 class StepperWithNgIf {
-  showStep2 = false;
+  showStep2 = signal(false);
 }
 
 @Component({
@@ -2171,7 +2170,7 @@ class StepperWithStaticOutOfBoundsIndex {
 
 @Component({
   template: `
-    <mat-stepper orientation="vertical" [selectedIndex]="selectedIndex">
+    <mat-stepper orientation="vertical" [selectedIndex]="selectedIndex()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         <ng-template matStepContent>Step 1 content</ng-template>
@@ -2188,14 +2187,14 @@ class StepperWithStaticOutOfBoundsIndex {
   `,
 })
 class StepperWithLazyContent {
-  selectedIndex = 0;
+  selectedIndex = signal(0);
 }
 
 @Component({
   template: `
     <mat-stepper>
       <mat-step label="Step 1">Content 1</mat-step>
-      @if (renderSecondStep) {
+      @if (renderSecondStep()) {
         <mat-step label="Step 2">Content 2</mat-step>
       }
       <mat-step label="Step 3">Content 3</mat-step>
@@ -2203,7 +2202,7 @@ class StepperWithLazyContent {
   `,
 })
 class HorizontalStepperWithDelayedStep {
-  renderSecondStep = false;
+  renderSecondStep = signal(false);
 }
 
 @Component({

@@ -19,7 +19,7 @@ describe('ChipsHarnessExample', () => {
 
     expect(await chipList.isDisabled()).toBeFalse();
 
-    fixture.componentInstance.isDisabled = true;
+    fixture.componentInstance.isDisabled.set(true);
     fixture.detectChanges();
 
     expect(await chipList.isDisabled()).toBeTrue();

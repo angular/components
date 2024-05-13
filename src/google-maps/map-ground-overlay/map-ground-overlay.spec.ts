@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -19,6 +19,12 @@ describe('MapGroundOverlay', () => {
   const clickable = true;
   const opacity = 0.5;
   const groundOverlayOptions: google.maps.GroundOverlayOptions = {clickable, opacity};
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+    });
+  });
 
   beforeEach(() => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);

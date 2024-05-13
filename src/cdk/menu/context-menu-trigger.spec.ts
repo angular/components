@@ -1,4 +1,12 @@
-import {Component, ViewChild, ElementRef, Type, ViewChildren, QueryList} from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Type,
+  ViewChildren,
+  QueryList,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {CdkMenuModule} from './menu-module';
 import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
@@ -18,6 +26,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [SimpleContextMenu],
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       }).compileComponents();
     }));
 
@@ -151,6 +160,7 @@ describe('CdkContextMenuTrigger', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
         declarations: [NestedContextMenu],
       }).compileComponents();
     }));
@@ -400,6 +410,7 @@ describe('CdkContextMenuTrigger', () => {
     function createComponent<T>(componentClass: Type<T>) {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
         declarations: [componentClass],
       }).compileComponents();
 

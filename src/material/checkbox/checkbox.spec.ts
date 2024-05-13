@@ -1,5 +1,11 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DebugElement,
+  ɵZONELESS_ENABLED,
+  Type,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
@@ -18,6 +24,7 @@ describe('MDC-based MatCheckbox', () => {
   function createComponent<T>(componentType: Type<T>) {
     TestBed.configureTestingModule({
       imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);

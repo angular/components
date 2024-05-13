@@ -3,7 +3,14 @@ import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/k
 import {MatTableModule} from '@angular/material/table';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {CommonModule} from '@angular/common';
-import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  Directive,
+  ElementRef,
+  ViewChild,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
@@ -291,6 +298,12 @@ const testCases = [
 ] as const;
 
 describe('Material Popover Edit', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
+
   for (const [componentClass, label] of testCases) {
     describe(label, () => {
       let component: BaseTestComponent;

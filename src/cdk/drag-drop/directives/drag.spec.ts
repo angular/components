@@ -21,6 +21,8 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
 import {ViewportRuler, CdkScrollableModule} from '@angular/cdk/scrolling';
@@ -53,6 +55,8 @@ describe('CdkDrag', () => {
     TestBed.configureTestingModule({
       imports: [DragDropModule, CdkScrollableModule],
       providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         {
           provide: CDK_DRAG_CONFIG,
           useValue: {

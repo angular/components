@@ -33,6 +33,8 @@ import {
   ViewChild,
   ViewChildren,
   Provider,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   waitForAsync,
@@ -78,6 +80,11 @@ import {
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
 describe('MDC-based MatSelect', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   let overlayContainerElement: HTMLElement;
   let dir: {value: 'ltr' | 'rtl'; change: Observable<string>};
   let scrolledSubject = new Subject();

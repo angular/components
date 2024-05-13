@@ -6,7 +6,13 @@ import {
   dispatchMouseEvent,
   wrappedErrorMessage,
 } from '@angular/cdk/testing/private';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
@@ -29,6 +35,11 @@ import {
 } from './sort-errors';
 
 describe('MatSort', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   describe('without default options', () => {
     let fixture: ComponentFixture<SimpleMatSortApp>;
     let component: SimpleMatSortApp;

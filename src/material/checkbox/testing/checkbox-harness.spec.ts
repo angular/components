@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -53,7 +53,7 @@ describe('MatCheckboxHarness', () => {
     expect(enabledCheckboxes.length).toBe(1);
     expect(disabledCheckboxes.length).toBe(1);
 
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     enabledCheckboxes = await loader.getAllHarnesses(MatCheckboxHarness.with({disabled: false}));
     disabledCheckboxes = await loader.getAllHarnesses(MatCheckboxHarness.with({disabled: true}));
     expect(enabledCheckboxes.length).toBe(2);
@@ -135,7 +135,7 @@ describe('MatCheckboxHarness', () => {
   });
 
   it('should toggle checkbox', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(MatCheckboxHarness);
     await checkedCheckbox.toggle();
     await uncheckedCheckbox.toggle();
@@ -144,7 +144,7 @@ describe('MatCheckboxHarness', () => {
   });
 
   it('should check checkbox', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(MatCheckboxHarness);
     await checkedCheckbox.check();
     await uncheckedCheckbox.check();
@@ -153,7 +153,7 @@ describe('MatCheckboxHarness', () => {
   });
 
   it('should uncheck checkbox', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(MatCheckboxHarness);
     await checkedCheckbox.uncheck();
     await uncheckedCheckbox.uncheck();
@@ -179,7 +179,7 @@ describe('MatCheckboxHarness', () => {
         aria-label="First checkbox">
       First
     </mat-checkbox>
-    <mat-checkbox indeterminate="true" [disabled]="disabled" aria-labelledby="second-label">
+    <mat-checkbox indeterminate="true" [disabled]="disabled()" aria-labelledby="second-label">
       Second
     </mat-checkbox>
     <span id="second-label">Second checkbox</span>
@@ -189,5 +189,5 @@ describe('MatCheckboxHarness', () => {
 })
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);
-  disabled = true;
+  disabled = signal(true);
 }

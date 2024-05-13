@@ -1,4 +1,11 @@
-import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit} from '@angular/core';
+import {
+  Component,
+  QueryList,
+  ElementRef,
+  ViewChildren,
+  AfterViewInit,
+  ɵZONELESS_ENABLED,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
 import {Observable} from 'rxjs';
@@ -19,6 +26,7 @@ describe('FocusMouseManger', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
       imports: [MultiElementWithConditionalComponent, MockWrapper],
     }).compileComponents();
   }));

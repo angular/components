@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
 import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {MatSidenav, MatSidenavModule, MatSidenavContainer} from './index';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -6,6 +6,11 @@ import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 
 describe('MatSidenav', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

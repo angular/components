@@ -1,6 +1,6 @@
 import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -17,6 +17,11 @@ import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './inde
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 
 describe('MDC-based MatSlideToggle without forms', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [

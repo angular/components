@@ -12,6 +12,8 @@ import {
   DebugElement,
   QueryList,
   ViewChildren,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -44,6 +46,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [
           MatListModule,
           SelectionListWithListOptions,
@@ -672,6 +675,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, SelectionListWithSelectedOption],
       });
 
@@ -710,6 +714,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, SingleSelectionListWithSelectedOption],
       });
 
@@ -782,6 +787,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, SelectionListWithDisabledOption],
       });
 
@@ -829,6 +835,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [
           MatListModule,
           SelectionListWithListOptions,
@@ -926,6 +933,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [
           MatListModule,
           SelectionListWithListOptions,
@@ -956,6 +964,7 @@ describe('MDC-based MatSelectionList without forms', () => {
   describe('with list item elements', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, SelectionListWithAvatar, SelectionListWithIcon],
       }).compileComponents();
     }));
@@ -1084,6 +1093,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, SelectionListWithListOptions],
       }).compileComponents();
 
@@ -1208,6 +1218,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
         imports: [MatListModule, ListOptionWithTwoWayBinding],
       }).compileComponents();
 
@@ -1241,6 +1252,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 describe('MDC-based MatSelectionList with forms', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
       imports: [
         MatListModule,
         FormsModule,

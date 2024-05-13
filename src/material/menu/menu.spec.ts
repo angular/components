@@ -24,7 +24,9 @@ import {
   TemplateRef,
   Type,
   ViewChild,
+  ɵZONELESS_ENABLED,
   ViewChildren,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {MatRipple} from '@angular/material/core';
@@ -63,9 +65,13 @@ describe('MDC-based MatMenu', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
+      providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
+        ...providers,
+      ],
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
-      providers,
     }).compileComponents();
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
@@ -2710,6 +2716,8 @@ describe('MatMenu default overrides', () => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
       providers: [
+        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
           useValue: {overlapTrigger: true, xPosition: 'before', yPosition: 'above'},

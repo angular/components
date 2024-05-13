@@ -25,6 +25,8 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  provideZoneChangeDetection,
+  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   waitForAsync,
@@ -56,6 +58,12 @@ import {
 } from './index';
 
 describe('MDC-based MatAutocomplete', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+    });
+  });
+
   let overlayContainerElement: HTMLElement;
 
   // Creates a test component fixture.
