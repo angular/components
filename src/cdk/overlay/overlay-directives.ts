@@ -27,6 +27,7 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {Overlay} from './overlay';
@@ -311,7 +312,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     });
 
     this._overlayRef.outsidePointerEvents().subscribe((event: MouseEvent) => {
-      this.overlayOutsideClick.next(event);
+      const origin = this._getOriginElement();
+      const target = _getEventTarget(event) as Element | null;
+
+      if (!origin || (origin !== target && !origin.contains(target))) {
+        this.overlayOutsideClick.next(event);
+      }
     });
   }
 
@@ -367,7 +373,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }));
 
     return positionStrategy
-      .setOrigin(this._getFlexibleConnectedPositionStrategyOrigin())
+      .setOrigin(this._getOrigin())
       .withPositions(positions)
       .withFlexibleDimensions(this.flexibleDimensions)
       .withPush(this.push)
@@ -379,19 +385,33 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
   private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
-    const strategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this._getFlexibleConnectedPositionStrategyOrigin());
+    const strategy = this._overlay.position().flexibleConnectedTo(this._getOrigin());
     this._updatePositionStrategy(strategy);
     return strategy;
   }
 
-  private _getFlexibleConnectedPositionStrategyOrigin(): FlexibleConnectedPositionStrategyOrigin {
+  private _getOrigin(): FlexibleConnectedPositionStrategyOrigin {
     if (this.origin instanceof CdkOverlayOrigin) {
       return this.origin.elementRef;
     } else {
       return this.origin;
     }
+  }
+
+  private _getOriginElement(): Element | null {
+    if (this.origin instanceof CdkOverlayOrigin) {
+      return this.origin.elementRef.nativeElement;
+    }
+
+    if (this.origin instanceof ElementRef) {
+      return this.origin.nativeElement;
+    }
+
+    if (typeof Element !== 'undefined' && this.origin instanceof Element) {
+      return this.origin;
+    }
+
+    return null;
   }
 
   /** Attaches the overlay and subscribes to backdrop clicks if backdrop exists */
