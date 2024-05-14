@@ -239,7 +239,6 @@ export class MatAutocompleteTrigger
     private _viewContainerRef: ViewContainerRef,
     private _zone: NgZone,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _breakpointObserver: BreakpointObserver,
     @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dir: Directionality | null,
     @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField | null,
@@ -880,6 +879,9 @@ export class MatAutocompleteTrigger
       panelClass: this._defaults?.overlayPanelClass,
     });
   }
+
+  /** Implements BreakpointObserver to be used to detect handset landscape */
+  private _breakpointObserver = inject(BreakpointObserver);
 
   private _getOverlayPosition(): PositionStrategy {
     // Set default Overlay Position
