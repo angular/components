@@ -1174,6 +1174,7 @@ describe('CdkTree', () => {
       it('maintains tabindex when component is blurred', () => {
         // activate the second child by clicking on it
         nodes[1].click();
+        nodes[1].focus();
         fixture.detectChanges();
 
         expect(document.activeElement).toBe(nodes[1]);
