@@ -1,3 +1,17 @@
+<a name="17.3.9"></a>
+# 17.3.9 "orange-ornament" (2024-05-15)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ba8137dfa](https://github.com/angular/components/commit/ba8137dfa60a5f092db4d70bb318ac34d94e0b82) | fix | **observers:** logs "ResizeObserver loop limit exceeded" errors ([#29036](https://github.com/angular/components/pull/29036)) |
+| [6d9c2e7b3](https://github.com/angular/components/commit/6d9c2e7b398d1b9bd0ae872d9b5108638544bd80) | fix | **overlay:** skip trigger interactions in outside click event ([#29044](https://github.com/angular/components/pull/29044)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0b30688d3](https://github.com/angular/components/commit/0b30688d35409e6ede69f40f49a7f83e66a15e8f) | fix | **core:** ripple element not destroyed after trigger change ([#29010](https://github.com/angular/components/pull/29010)) ([#29012](https://github.com/angular/components/pull/29012)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.8"></a>
 # 17.3.8 "rock-rope" (2024-05-08)
 ### cdk
