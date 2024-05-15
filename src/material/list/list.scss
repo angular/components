@@ -168,13 +168,20 @@ a.mdc-list-item--activated {
 }
 
 // Increased list item height if it has multiple lines so bottom line doesn't get
-// cut off.
-.mat-mdc-list-item.mdc-list-item--with-three-lines {
-  min-height: 90px;
+// cut off. Also added padding-bottom so there's space btw the text and the divider.
+.mat-mdc-list-item.mdc-list-item--with-leading-avatar.mdc-list-item--with-two-lines,
+.mat-mdc-list-item.mdc-list-item--with-leading-checkbox.mdc-list-item--with-two-lines,
+.mat-mdc-list-item.mdc-list-item--with-leading-icon.mdc-list-item--with-two-lines,
+.mat-mdc-list-item.mdc-list-item--with-leading-avatar.mdc-list-item--with-three-lines,
+.mat-mdc-list-item.mdc-list-item--with-leading-checkbox.mdc-list-item--with-three-lines,
+.mat-mdc-list-item.mdc-list-item--with-leading-icon.mdc-list-item--with-three-lines {
+  height: auto;
+  padding-bottom: 8px;
 }
 
 .mat-mdc-list-item.mdc-list-item--with-three-lines,
 .mat-mdc-list-item.mdc-list-item--with-two-lines {
+  height: auto;
   // List item lines must wrap according to GAR 1.18(b). Removing the nowrap and
   // adjusts .mat-mdc-list-item-title.mdc-list-item__primary-text height
   // to accommodate any wrapping text. Fixes: b/247881646.
