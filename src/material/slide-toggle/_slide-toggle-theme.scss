@@ -19,7 +19,10 @@
       $mat-tokens: tokens-mat-switch.get-unthemable-tokens();
       $mdc-tokens: tokens-mdc-switch.get-unthemable-tokens();
       @include mdc-switch-theme.theme($mdc-tokens);
-      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+      }
     }
   }
 }
@@ -40,7 +43,6 @@
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme($mdc-tokens);
-      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
 
       // TODO(wagnermaciel): Use our token system to define this css variable.
       --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
@@ -50,6 +52,8 @@
         )};
 
       .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
           @include mdc-switch-theme.theme(
@@ -79,7 +83,10 @@
     // Add values for MDC slide toggle tokens
     @include sass-utils.current-selector-or-root() {
       @include mdc-switch-theme.theme($mdc-tokens);
-      @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+      }
     }
   }
 }
@@ -94,6 +101,10 @@
       $mat-tokens: tokens-mat-switch.get-density-tokens($theme);
       $mdc-tokens: tokens-mdc-switch.get-density-tokens($theme);
       @include mdc-switch-theme.theme(tokens-mdc-switch.get-density-tokens($theme));
+
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-tokens);
+      }
     }
   }
 }
