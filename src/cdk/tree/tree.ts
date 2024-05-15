@@ -23,6 +23,7 @@ import {
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -120,7 +121,13 @@ type RenderingData<T> =
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
-  implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+  implements
+    AfterContentChecked,
+    AfterContentInit,
+    AfterViewInit,
+    CollectionViewer,
+    OnDestroy,
+    OnInit
 {
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -257,6 +264,7 @@ export class CdkTree<T, K = T>
 
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
+  private _viewInit = false;
 
   constructor(
     private _differs: IterableDiffers,
@@ -289,12 +297,18 @@ export class CdkTree<T, K = T>
       this._dataSubscription = null;
     }
 
-    this._keyManager.destroy();
+    // In certain tests, the tree might be destroyed before this is initialized
+    // in `ngAfterContentInit`.
+    this._keyManager?.destroy();
   }
 
   ngOnInit() {
     this._checkTreeControlUsage();
     this._initializeDataDiffer();
+  }
+
+  ngAfterViewInit() {
+    this._viewInit = true;
   }
 
   private _updateDefaultNodeDefinition() {
@@ -458,7 +472,9 @@ export class CdkTree<T, K = T>
   }
 
   private _initializeDataDiffer() {
-    this._dataDiffer = this._differs.find([]).create(this.trackBy);
+    // Provide a default trackBy based on `_getExpansionKey` if one isn't provided.
+    const trackBy = this.trackBy ?? ((_index: number, item: T) => this._getExpansionKey(item));
+    this._dataDiffer = this._differs.find([]).create(trackBy);
   }
 
   private _checkTreeControlUsage() {
@@ -493,11 +509,19 @@ export class CdkTree<T, K = T>
     parentData?: T,
   ) {
     const changes = dataDiffer.diff(data);
-    if (!changes) {
+
+    // Some tree consumers expect change detection to propagate to nodes
+    // even when the array itself hasn't changed; we explicitly detect changes
+    // anyways in order for nodes to update their data.
+    //
+    // However, if change detection is called while the component's view is
+    // still initing, then the order of child views initing will be incorrect;
+    // to prevent this, we only exit early if the view hasn't initialized yet.
+    if (!changes && !this._viewInit) {
       return;
     }
 
-    changes.forEachOperation(
+    changes?.forEachOperation(
       (
         item: IterableChangeRecord<T>,
         adjustedPreviousIndex: number | null,
@@ -507,12 +531,6 @@ export class CdkTree<T, K = T>
           this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex!);
-          const set = this._getAriaSet(item.item);
-          const key = this._getExpansionKey(item.item);
-          set.splice(
-            set.findIndex(groupItem => this._getExpansionKey(groupItem) === key),
-            1,
-          );
         } else {
           const view = viewContainer.get(adjustedPreviousIndex!);
           viewContainer.move(view!, currentIndex);
@@ -693,12 +711,12 @@ export class CdkTree<T, K = T>
 
   /** Level accessor, used for compatibility between the old Tree and new Tree */
   _getLevelAccessor() {
-    return this.treeControl?.getLevel ?? this.levelAccessor;
+    return this.treeControl?.getLevel?.bind(this.treeControl) ?? this.levelAccessor;
   }
 
   /** Children accessor, used for compatibility between the old Tree and new Tree */
   _getChildrenAccessor() {
-    return this.treeControl?.getChildren ?? this.childrenAccessor;
+    return this.treeControl?.getChildren?.bind(this.treeControl) ?? this.childrenAccessor;
   }
 
   /**
@@ -1105,7 +1123,7 @@ export class CdkTree<T, K = T>
     '[attr.aria-setsize]': '_getSetSize()',
     '[tabindex]': '_tabindex',
     'role': 'treeitem',
-    '(click)': '_focusItem()',
+    '(click)': '_setActiveItem()',
     '(focus)': '_focusItem()',
   },
   standalone: true,
@@ -1183,6 +1201,13 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   readonly _dataChanges = new Subject<void>();
 
   private _inputIsExpandable: boolean = false;
+  /**
+   * Flag used to determine whether or not we should be focusing the actual element based on
+   * some user interaction (click or focus). On click, we don't forcibly focus the element
+   * since the click could trigger some other component that wants to grab its own focus
+   * (e.g. menu, dialog).
+   */
+  private _shouldFocus = true;
   private _parentNodeAriaLevel: number;
 
   /** The tree node's data. */
@@ -1294,7 +1319,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._tabindex = 0;
-    this._elementRef.nativeElement.focus();
+    if (this._shouldFocus) {
+      this._elementRef.nativeElement.focus();
+    }
 
     this._changeDetectorRef.markForCheck();
   }
@@ -1333,6 +1360,15 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
       return;
     }
     this._tree._keyManager.focusItem(this);
+  }
+
+  _setActiveItem() {
+    if (this.isDisabled) {
+      return;
+    }
+    this._shouldFocus = false;
+    this._tree._keyManager.focusItem(this);
+    this._shouldFocus = true;
   }
 
   _emitExpansionState(expanded: boolean) {

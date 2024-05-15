@@ -6,6 +6,7 @@
 
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
@@ -76,7 +77,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 }
 
 // @public
-export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, AfterViewInit, CollectionViewer, OnDestroy, OnInit {
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality);
     childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     collapse(dataNode: T): void;
@@ -105,6 +106,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -193,6 +196,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     // @deprecated
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');
+    // (undocumented)
+    _setActiveItem(): void;
     // (undocumented)
     protected _tabindex: number | null;
     // (undocumented)

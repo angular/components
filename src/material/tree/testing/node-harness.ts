@@ -35,6 +35,11 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
     return coerceBooleanProperty(await (await this.host()).getAttribute('aria-expanded'));
   }
 
+  /** Whether the tree node is expandable. */
+  async isExpandable(): Promise<boolean> {
+    return (await (await this.host()).getAttribute('aria-expanded')) !== null;
+  }
+
   /** Whether the tree node is disabled. */
   async isDisabled(): Promise<boolean> {
     return coerceBooleanProperty(await (await this.host()).getProperty('aria-disabled'));

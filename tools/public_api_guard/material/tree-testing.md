@@ -27,6 +27,7 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
     getText(): Promise<string>;
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
+    isExpandable(): Promise<boolean>;
     isExpanded(): Promise<boolean>;
     toggle(): Promise<void>;
     // (undocumented)
