@@ -19,6 +19,7 @@ import { QueryList } from '@angular/core';
 import { RippleGlobalOptions } from '@angular/material/core';
 import { Subject } from 'rxjs';
 import { ThemePalette } from '@angular/material/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
@@ -290,7 +291,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     get value(): number;
     set value(value: number);
     readonly valueChange: EventEmitter<number>;
-    _valuetext: string;
+    _valuetext: WritableSignal<string>;
     writeValue(value: any): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatSliderThumb, "input[matSliderThumb]", ["matSliderThumb"], { "value": { "alias": "value"; "required": false; }; }, { "valueChange": "valueChange"; "dragStart": "dragStart"; "dragEnd": "dragEnd"; }, never, never, true, never>;
