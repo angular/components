@@ -20,6 +20,7 @@ import {
   numberAttribute,
   OnDestroy,
   Output,
+  signal,
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Subject} from 'rxjs';
@@ -69,7 +70,7 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
   host: {
     'class': 'mdc-slider__input',
     'type': 'range',
-    '[attr.aria-valuetext]': '_valuetext',
+    '[attr.aria-valuetext]': '_valuetext()',
     '(change)': '_onChange()',
     '(input)': '_onInput()',
     // TODO(wagnermaciel): Consider using a global event listener instead.
@@ -211,7 +212,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   _hostElement: HTMLInputElement;
 
   /** The aria-valuetext string representation of the input's value. */
-  _valuetext: string;
+  _valuetext = signal('');
 
   /** The radius of a native html slider's knob. */
   _knobRadius: number = 8;

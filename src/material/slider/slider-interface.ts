@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken, ChangeDetectorRef} from '@angular/core';
+import {InjectionToken, ChangeDetectorRef, WritableSignal} from '@angular/core';
 import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
 
 /**
@@ -183,7 +183,7 @@ export interface _MatSliderThumb {
   _isFocused: boolean;
 
   /** The aria-valuetext string representation of the input's value. */
-  _valuetext: string;
+  _valuetext: WritableSignal<string>;
 
   /**
    * Indicates whether UI updates should be skipped.
