@@ -8,7 +8,6 @@
 
 import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -57,7 +56,6 @@ let nextUniqueId = 0;
     // the MDC chips were landed initially with it.
     'class': 'mat-mdc-chip-input mat-mdc-input-element mdc-text-field__input mat-input-element',
     '(keydown)': '_keydown($event)',
-    '(keyup)': '_keyup($event)',
     '(blur)': '_blur()',
     '(focus)': '_focus()',
     '(input)': '_onInput()',
@@ -70,10 +68,7 @@ let nextUniqueId = 0;
   },
   standalone: true,
 })
-export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
-  /** Used to prevent focus moving to chips while user is holding backspace */
-  private _focusLastChipOnBackspace: boolean;
-
+export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Whether the control is focused. */
   focused: boolean = false;
 
@@ -153,36 +148,17 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     this.chipEnd.complete();
   }
 
-  ngAfterContentInit(): void {
-    this._focusLastChipOnBackspace = this.empty;
-  }
-
   /** Utility method to make host definition/tests more clear. */
-  _keydown(event?: KeyboardEvent) {
-    if (event) {
-      // To prevent the user from accidentally deleting chips when pressing BACKSPACE continuously,
-      // We focus the last chip on backspace only after the user has released the backspace button,
-      // And the input is empty (see behaviour in _keyup)
-      if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
+  _keydown(event: KeyboardEvent) {
+    if (this.empty && event.keyCode === BACKSPACE) {
+      // Ignore events where the user is holding down backspace
+      // so that we don't accidentally remove too many chips.
+      if (!event.repeat) {
         this._chipGrid._focusLastChip();
-        event.preventDefault();
-        return;
-      } else {
-        this._focusLastChipOnBackspace = false;
       }
-    }
-
-    this._emitChipEnd(event);
-  }
-
-  /**
-   * Pass events to the keyboard manager. Available here for tests.
-   */
-  _keyup(event: KeyboardEvent) {
-    // Allow user to move focus to chips next time he presses backspace
-    if (!this._focusLastChipOnBackspace && event.keyCode === BACKSPACE && this.empty) {
-      this._focusLastChipOnBackspace = true;
       event.preventDefault();
+    } else {
+      this._emitChipEnd(event);
     }
   }
 
@@ -201,7 +177,6 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
 
   _focus() {
     this.focused = true;
-    this._focusLastChipOnBackspace = this.empty;
     this._chipGrid.stateChanges.next();
   }
 
@@ -231,7 +206,6 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
   /** Clears the input */
   clear(): void {
     this.inputElement.value = '';
-    this._focusLastChipOnBackspace = true;
   }
 
   setDescribedByIds(ids: string[]): void {

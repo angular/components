@@ -1,7 +1,6 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
-  A,
   BACKSPACE,
   DELETE,
   END,
@@ -13,6 +12,8 @@ import {
   TAB,
 } from '@angular/cdk/keycodes';
 import {
+  createKeyboardEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   patchElementFocus,
@@ -789,28 +790,15 @@ describe('MDC-based MatChipGrid', () => {
         expectLastCellFocused();
       });
 
-      it(
-        'should not focus the last chip when pressing BACKSPACE after changing input, ' +
-          'until BACKSPACE is released and pressed again',
-        () => {
-          // Change the input
-          dispatchKeyboardEvent(nativeInput, 'keydown', A);
-
-          // It shouldn't focus until backspace is released and pressed again
-          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
-          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
-          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
-          expectNoCellFocused();
-
-          // Still not focused
-          dispatchKeyboardEvent(nativeInput, 'keyup', BACKSPACE);
-          expectNoCellFocused();
-
-          // Only now should it focus the last element
-          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
-          expectLastCellFocused();
-        },
-      );
+      it('should not focus the last chip when the BACKSPACE key is being repeated', () => {
+        // Only now should it focus the last element
+        const event = createKeyboardEvent('keydown', BACKSPACE);
+        Object.defineProperty(event, 'repeat', {
+          get: () => true,
+        });
+        dispatchEvent(nativeInput, event);
+        expectNoCellFocused();
+      });
 
       it('should focus last chip after pressing BACKSPACE after creating a chip', () => {
         // Create a chip

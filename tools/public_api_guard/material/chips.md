@@ -249,7 +249,7 @@ export class MatChipGridChange {
 }
 
 // @public
-export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
+export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     constructor(_elementRef: ElementRef<HTMLInputElement>, defaultOptions: MatChipsDefaultOptions, formField?: MatFormField);
     addOnBlur: boolean;
     _blur(): void;
@@ -269,14 +269,11 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
     focused: boolean;
     id: string;
     readonly inputElement: HTMLInputElement;
-    _keydown(event?: KeyboardEvent): void;
-    _keyup(event: KeyboardEvent): void;
+    _keydown(event: KeyboardEvent): void;
     // (undocumented)
     static ngAcceptInputType_addOnBlur: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngOnChanges(): void;
     // (undocumented)
