@@ -1,3 +1,20 @@
+<a name="18.0.0-rc.2"></a>
+# 18.0.0-rc.2 "orange-owl" (2024-05-15)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [81bdca50f](https://github.com/angular/components/commit/81bdca50fb784fc078773fc2c2d4d4d25eb6cd56) | fix | **observers:** logs "ResizeObserver loop limit exceeded" errors ([#29036](https://github.com/angular/components/pull/29036)) |
+| [98a43c01b](https://github.com/angular/components/commit/98a43c01b0e92847d1cb8f3d9ea21d2df280b6e8) | fix | **overlay:** skip trigger interactions in outside click event ([#29044](https://github.com/angular/components/pull/29044)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7a8e88614](https://github.com/angular/components/commit/7a8e886140d3cf2dd5ccc8f36b7998131def1982) | fix | **core:** ripple element not destroyed after trigger change ([#29010](https://github.com/angular/components/pull/29010)) ([#29012](https://github.com/angular/components/pull/29012)) |
+| [a5ad288bf](https://github.com/angular/components/commit/a5ad288bffb063cc27bc562df62a824e57968d2f) | fix | **core:** ripple loader not working in shadow DOM ([#29015](https://github.com/angular/components/pull/29015)) |
+| [ec9e83db4](https://github.com/angular/components/commit/ec9e83db4c6f47a8095bdc83b5e9cce9f7e2cbc2) | fix | **datepicker:** resolve repeater warnings in calendar ([#29028](https://github.com/angular/components/pull/29028)) |
+| [3e9d3c394](https://github.com/angular/components/commit/3e9d3c39441084f34de8e8798382c68732213e2c) | fix | **schematics:** add option to generate system variables in M3 schematic |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.9"></a>
 # 17.3.9 "orange-ornament" (2024-05-15)
 ### cdk
