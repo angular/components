@@ -17,7 +17,6 @@ import {
   Directive,
   ViewContainerRef,
   ApplicationRef,
-  ɵZONELESS_ENABLED,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {
@@ -39,7 +38,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, FixedSizeVirtualScroll],
       }).compileComponents();
     }));
@@ -852,7 +851,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, FixedSizeVirtualScrollWithRtlDirection],
       }).compileComponents();
 
@@ -953,7 +952,7 @@ describe('CdkVirtualScrollViewport', () => {
   describe('with no VirtualScrollStrategy', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, VirtualScrollWithNoStrategy],
       }).compileComponents();
     });
@@ -972,7 +971,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+        providers: [provideZoneChangeDetection()],
         imports: [
           ScrollingModule,
           VirtualScrollWithItemInjectingViewContainer,
@@ -1011,7 +1010,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, CommonModule, DelayedInitializationVirtualScroll],
       }).compileComponents();
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
@@ -1041,7 +1040,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, CommonModule, VirtualScrollWithAppendOnly],
       }).compileComponents();
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);

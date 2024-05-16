@@ -6,7 +6,6 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
@@ -14,7 +13,7 @@ import {MatListItem, MatListModule} from './index';
 describe('MDC-based MatList', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
       imports: [
         MatListModule,
         ListWithOneAnchorItem,

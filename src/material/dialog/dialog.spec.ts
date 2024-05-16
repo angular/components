@@ -19,7 +19,6 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Directive,
-  ɵZONELESS_ENABLED,
   Inject,
   Injectable,
   Injector,
@@ -85,7 +84,7 @@ describe('MDC-based MatDialog', () => {
         ComponentWithContentElementTemplateRef,
       ],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         provideZoneChangeDetection(),
         {provide: Location, useClass: SpyLocation},
         {
@@ -1921,7 +1920,7 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, NoopAnimationsModule, ComponentThatProvidesMatDialog],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         {
           provide: OverlayContainer,
           useFactory: () => {
@@ -2041,7 +2040,7 @@ describe('MDC-based MatDialog with default options', () => {
       ],
       providers: [
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
-        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
       ],
     });
 

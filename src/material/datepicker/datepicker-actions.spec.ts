@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Type,
-  ViewChild,
-  provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
-} from '@angular/core';
+import {Component, ElementRef, Type, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, flush, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -19,7 +12,7 @@ import {MatDatepicker} from './datepicker';
 describe('MatDatepickerActions', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {

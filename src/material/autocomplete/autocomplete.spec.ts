@@ -26,7 +26,6 @@ import {
   ViewChildren,
   ViewEncapsulation,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   waitForAsync,
@@ -60,7 +59,7 @@ import {
 describe('MDC-based MatAutocomplete', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

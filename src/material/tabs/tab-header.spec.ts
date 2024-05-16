@@ -12,7 +12,7 @@ import {
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
-import {Component, ViewChild, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -34,7 +34,7 @@ describe('MDC-based MatTabHeader', () => {
   let resizeEvents: Subject<ResizeObserverEntry[]>;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

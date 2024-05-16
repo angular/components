@@ -1,4 +1,4 @@
-import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -23,7 +23,7 @@ describe('MapHeatmapLayer', () => {
     createMapConstructorSpy(mapSpy);
     createLatLngConstructorSpy(latLngSpy);
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ElementRef, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
@@ -19,7 +19,7 @@ describe('MenuItemRadio', () => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule, SimpleRadioButton],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         {provide: UniqueSelectionDispatcher, useValue: selectionDispatcher},
         {provide: CDK_MENU, useClass: CdkMenu},
         {provide: MENU_STACK, useClass: MenuStack},

@@ -1,4 +1,4 @@
-import {Component, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {
@@ -16,7 +16,7 @@ describe('CdkTextColumn', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
     }).compileComponents();
   }));

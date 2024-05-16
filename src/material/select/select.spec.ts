@@ -34,7 +34,6 @@ import {
   ViewChildren,
   Provider,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   waitForAsync,
@@ -82,7 +81,7 @@ const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 describe('MDC-based MatSelect', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   let overlayContainerElement: HTMLElement;

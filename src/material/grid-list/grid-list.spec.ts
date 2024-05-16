@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component, DebugElement, Type, ɵZONELESS_ENABLED, ViewChild} from '@angular/core';
+import {Component, DebugElement, Type, provideZoneChangeDetection, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatGridList, MatGridListModule} from './index';
 import {MatGridTile, MatGridTileText} from './grid-tile';
@@ -8,7 +8,7 @@ import {Directionality} from '@angular/cdk/bidi';
 describe('MatGridList', () => {
   function createComponent<T>(componentType: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [MatGridListModule],
       declarations: [componentType],
     }).compileComponents();

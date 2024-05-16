@@ -10,7 +10,6 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectionStrategy,
-  ɵZONELESS_ENABLED,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
@@ -45,7 +44,7 @@ describe('CdkTable', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, BidiModule],
       declarations: [componentType, ...declarations],
     }).compileComponents();

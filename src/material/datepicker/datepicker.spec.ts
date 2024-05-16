@@ -27,7 +27,6 @@ import {
   Directive,
   ViewEncapsulation,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {
@@ -62,7 +61,7 @@ describe('MatDatepicker', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

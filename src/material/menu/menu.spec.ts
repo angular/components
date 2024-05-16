@@ -24,7 +24,6 @@ import {
   TemplateRef,
   Type,
   ViewChild,
-  ɵZONELESS_ENABLED,
   ViewChildren,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -65,11 +64,7 @@ describe('MDC-based MatMenu', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
-        provideZoneChangeDetection(),
-        ...providers,
-      ],
+      providers: [provideZoneChangeDetection(), ...providers],
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
     }).compileComponents();
@@ -2716,7 +2711,6 @@ describe('MatMenu default overrides', () => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
         provideZoneChangeDetection(),
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,

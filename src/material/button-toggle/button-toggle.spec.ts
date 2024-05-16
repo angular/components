@@ -6,7 +6,6 @@ import {
   ViewChild,
   ViewChildren,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
@@ -23,7 +22,7 @@ import {
 describe('MatButtonToggle with forms', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   beforeEach(fakeAsync(() => {
@@ -327,7 +326,7 @@ describe('MatButtonToggle with forms', () => {
 describe('MatButtonToggle without forms', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   beforeEach(fakeAsync(() => {

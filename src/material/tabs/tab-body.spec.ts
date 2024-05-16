@@ -6,7 +6,6 @@ import {
   Component,
   TemplateRef,
   ViewChild,
-  ɵZONELESS_ENABLED,
   ViewContainerRef,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -23,7 +22,7 @@ describe('MDC-based MatTabBody', () => {
   let dirChange: Subject<Direction> = new Subject<Direction>();
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

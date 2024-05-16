@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ɵZONELESS_ENABLED,
   Type,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
@@ -24,7 +24,7 @@ describe('MDC-based MatCheckbox', () => {
   function createComponent<T>(componentType: Type<T>) {
     TestBed.configureTestingModule({
       imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);

@@ -9,7 +9,6 @@ import {
 } from '@angular/core/testing';
 import {
   Component,
-  ɵZONELESS_ENABLED,
   ElementRef,
   ErrorHandler,
   ViewChild,
@@ -32,7 +31,7 @@ import {CommonModule} from '@angular/common';
 describe('MatDrawer', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   beforeEach(waitForAsync(() => {
@@ -856,7 +855,7 @@ describe('MatDrawer', () => {
 describe('MatDrawerContainer', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   beforeEach(waitForAsync(() => {

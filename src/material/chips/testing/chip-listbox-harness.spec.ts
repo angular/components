@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipListboxHarness} from './chip-listbox-harness';
@@ -10,7 +10,7 @@ describe('MatChipListboxHarness', () => {
   let loader: HarnessLoader;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

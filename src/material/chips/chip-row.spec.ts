@@ -12,7 +12,6 @@ import {
   ElementRef,
   ViewChild,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -36,7 +35,7 @@ describe('MDC-based Row Chips', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

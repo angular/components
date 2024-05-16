@@ -19,7 +19,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
@@ -48,7 +48,7 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          {provide: ɵZONELESS_ENABLED, useValue: false},
+          provideZoneChangeDetection(),
           {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
@@ -799,7 +799,7 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          {provide: ɵZONELESS_ENABLED, useValue: false},
+          provideZoneChangeDetection(),
           {provide: Directionality, useFactory: () => ({value: 'ltr'})},
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
           {

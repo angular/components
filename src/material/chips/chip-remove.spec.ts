@@ -1,4 +1,4 @@
-import {Component, provideZoneChangeDetection, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
@@ -11,7 +11,7 @@ describe('MDC-based Chip Remove', () => {
   let chipNativeElement: HTMLElement;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

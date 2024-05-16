@@ -1,4 +1,4 @@
-import {Component, ElementRef, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ElementRef, provideZoneChangeDetection} from '@angular/core';
 import {fakeAsync, TestBed, inject} from '@angular/core/testing';
 import {DragDropModule} from './drag-drop-module';
 import {DragDrop} from './drag-drop';
@@ -10,7 +10,7 @@ describe('DragDrop', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [DragDropModule, TestComponent],
     });
 

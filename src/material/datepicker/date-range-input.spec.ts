@@ -6,7 +6,6 @@ import {
   Directive,
   Provider,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, TestBed, inject, fakeAsync, tick, flush} from '@angular/core/testing';
 import {
@@ -37,7 +36,7 @@ import {Subscription} from 'rxjs';
 describe('MatDateRangeInput', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

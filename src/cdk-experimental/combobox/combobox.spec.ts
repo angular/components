@@ -1,9 +1,9 @@
 import {
   Component,
-  ɵZONELESS_ENABLED,
   DebugElement,
   ElementRef,
   ViewChild,
+  provideZoneChangeDetection,
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
@@ -32,7 +32,7 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+        providers: [provideZoneChangeDetection()],
         imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));

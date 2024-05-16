@@ -1,5 +1,5 @@
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, signal, Type, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, signal, Type, provideZoneChangeDetection} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkListbox, CdkListboxModule, CdkOption, ListboxValueChangeEvent} from './index';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
@@ -21,7 +21,7 @@ function setupComponent<T, O = string>(component: Type<T>, imports: any[] = []) 
   TestBed.configureTestingModule({
     imports: [CdkListboxModule, ...imports],
     declarations: [component],
-    providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+    providers: [provideZoneChangeDetection()],
   }).compileComponents();
   const fixture = TestBed.createComponent(component);
   fixture.detectChanges();

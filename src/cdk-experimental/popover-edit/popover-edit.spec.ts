@@ -7,7 +7,6 @@ import {
   Component,
   Directive,
   ElementRef,
-  ɵZONELESS_ENABLED,
   ViewChild,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -389,7 +388,7 @@ describe('CDK Popover Edit', () => {
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkTableModule, CdkPopoverEditModule, CommonModule, FormsModule, BidiModule],
-          providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+          providers: [provideZoneChangeDetection()],
           declarations: [componentClass],
         }).compileComponents();
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);

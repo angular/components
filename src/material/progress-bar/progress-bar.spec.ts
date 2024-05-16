@@ -7,7 +7,6 @@ import {
   Provider,
   Type,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
@@ -263,10 +262,7 @@ describe('MDC-based MatProgressBar', () => {
       let primaryValueBar: DebugElement;
 
       beforeEach(() => {
-        fixture = createComponent(BufferProgressBar, [
-          {provide: ɵZONELESS_ENABLED, useValue: false},
-          provideZoneChangeDetection(),
-        ]);
+        fixture = createComponent(BufferProgressBar, [provideZoneChangeDetection()]);
 
         progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
         progressComponent = progressElement.componentInstance;

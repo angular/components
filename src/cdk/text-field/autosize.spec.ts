@@ -1,5 +1,5 @@
 import {dispatchFakeEvent} from '../testing/private';
-import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {
   waitForAsync,
   ComponentFixture,
@@ -21,7 +21,7 @@ describe('CdkTextareaAutosize', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [
         FormsModule,
         TextFieldModule,

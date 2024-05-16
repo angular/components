@@ -1,4 +1,10 @@
-import {Component, ViewChildren, QueryList, signal, ɵZONELESS_ENABLED} from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  QueryList,
+  signal,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -17,7 +23,7 @@ describe('MatOptionHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatOptionModule, OptionHarnessTest],
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OptionHarnessTest);

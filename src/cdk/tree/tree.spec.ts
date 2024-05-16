@@ -15,7 +15,6 @@ import {
   EventEmitter,
   ViewChildren,
   QueryList,
-  ɵZONELESS_ENABLED,
   provideZoneChangeDetection,
 } from '@angular/core';
 
@@ -44,7 +43,6 @@ describe('CdkTree', () => {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
         provideZoneChangeDetection(),
         {
           provide: Directionality,

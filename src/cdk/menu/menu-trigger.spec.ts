@@ -5,7 +5,7 @@ import {
   ElementRef,
   ViewChild,
   Type,
-  ɵZONELESS_ENABLED,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -27,7 +27,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [TriggerForEmptyMenu],
-        providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 

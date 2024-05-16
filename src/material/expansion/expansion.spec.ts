@@ -6,7 +6,7 @@ import {
   ComponentFixture,
   flush,
 } from '@angular/core/testing';
-import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -25,7 +25,7 @@ import {
 describe('MatExpansionPanel', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [
         MatExpansionModule,
         NoopAnimationsModule,
@@ -407,7 +407,7 @@ describe('MatExpansionPanel', () => {
       .configureTestingModule({
         imports: [MatExpansionModule, NoopAnimationsModule],
         providers: [
-          {provide: ɵZONELESS_ENABLED, useValue: false},
+          provideZoneChangeDetection(),
           {
             provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
             useValue: {

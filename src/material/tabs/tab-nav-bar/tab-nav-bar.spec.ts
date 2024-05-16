@@ -12,7 +12,6 @@ import {
   ViewChild,
   ViewChildren,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
@@ -26,7 +25,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar';
 describe('MDC-based MatTabNavBar', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   let dir: Direction = 'ltr';

@@ -17,7 +17,6 @@ import {
   ViewChild,
   ViewChildren,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -44,7 +43,7 @@ interface Point {
 describe('MDC-based MatSlider', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   let platform: Platform;

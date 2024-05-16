@@ -4,7 +4,7 @@ import {
   EnvironmentProviders,
   Provider,
   ViewChild,
-  ɵZONELESS_ENABLED,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   YouTubePlayer,
@@ -19,7 +19,7 @@ import {Subscription} from 'rxjs';
 const VIDEO_ID = 'a12345';
 const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
 const TEST_PROVIDERS: (Provider | EnvironmentProviders)[] = [
-  {provide: ɵZONELESS_ENABLED, useValue: false},
+  provideZoneChangeDetection(),
   {
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {

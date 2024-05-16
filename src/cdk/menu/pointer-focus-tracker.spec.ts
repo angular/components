@@ -4,7 +4,7 @@ import {
   ElementRef,
   ViewChildren,
   AfterViewInit,
-  ɵZONELESS_ENABLED,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
@@ -26,7 +26,7 @@ describe('FocusMouseManger', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [MultiElementWithConditionalComponent, MockWrapper],
     }).compileComponents();
   }));

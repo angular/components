@@ -1,4 +1,4 @@
-import {Component, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -13,7 +13,7 @@ describe('radio harness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatRadioModule, ReactiveFormsModule, MultipleRadioButtonsHarnessTest],
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultipleRadioButtonsHarnessTest);

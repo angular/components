@@ -1,4 +1,4 @@
-import {Component, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
@@ -30,7 +30,7 @@ describe('CdkCopyToClipboard', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [ClipboardModule, CopyToClipboardHost],
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     });
 
     TestBed.compileComponents();

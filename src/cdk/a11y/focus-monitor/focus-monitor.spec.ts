@@ -8,13 +8,7 @@ import {
   dispatchEvent,
 } from '../../testing/private';
 import {DOCUMENT} from '@angular/common';
-import {
-  Component,
-  NgZone,
-  ViewChild,
-  provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
-} from '@angular/core';
+import {Component, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Platform} from '@angular/cdk/platform';
@@ -832,11 +826,7 @@ describe('FocusMonitor observable stream', () => {
     fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
       imports: [A11yModule, PlainButton],
-      providers: [
-        {provide: Platform, useValue: fakePlatform},
-        {provide: ɵZONELESS_ENABLED, useValue: false},
-        provideZoneChangeDetection(),
-      ],
+      providers: [{provide: Platform, useValue: fakePlatform}, provideZoneChangeDetection()],
     }).compileComponents();
   });
 

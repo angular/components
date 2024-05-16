@@ -1,4 +1,4 @@
-import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -43,7 +43,7 @@ describe('MapMarkerClusterer', () => {
     markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy);
 
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     });
     fixture = TestBed.createComponent(TestApp);
   });

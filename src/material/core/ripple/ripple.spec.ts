@@ -7,13 +7,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  ViewChild,
-  ViewEncapsulation,
-  provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
-} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -43,7 +37,7 @@ describe('MatRipple', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

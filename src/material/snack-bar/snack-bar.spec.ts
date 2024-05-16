@@ -10,7 +10,6 @@ import {
   ViewContainerRef,
   provideZoneChangeDetection,
   signal,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -29,7 +28,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from './snack-bar';
 describe('MatSnackBar', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   let snackBar: MatSnackBar;

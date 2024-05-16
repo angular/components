@@ -5,7 +5,14 @@ import {
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import {Component, ErrorHandler, Provider, Type, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {
+  Component,
+  ErrorHandler,
+  Provider,
+  Type,
+  ViewChild,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {MAT_ICON_DEFAULT_OPTIONS, MAT_ICON_LOCATION, MatIconModule} from './index';
 import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
 import {FAKE_SVGS} from './fake-svgs';
@@ -45,7 +52,7 @@ function verifyPathChildElement(element: Element, attributeValue: string): void 
 function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
   TestBed.configureTestingModule({
     imports: [MatIconModule, component],
-    providers: [...providers, {provide: ɵZONELESS_ENABLED, useValue: false}],
+    providers: [...providers, provideZoneChangeDetection()],
   });
 
   TestBed.compileComponents();
@@ -80,7 +87,7 @@ describe('MatIcon', () => {
         BlankIcon,
       ],
       providers: [
-        {provide: ɵZONELESS_ENABLED, useValue: false},
+        provideZoneChangeDetection(),
         {
           provide: MAT_ICON_LOCATION,
           useValue: {getPathname: () => fakePath},
@@ -1307,7 +1314,7 @@ describe('MatIcon without HttpClientModule', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
       imports: [MatIconModule],
       declarations: [IconFromSvgName],
     });

@@ -21,7 +21,6 @@ import {
   NgZone,
   ViewChild,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -53,7 +52,7 @@ describe('MDC-based MatTooltip', () => {
   let focusMonitor: FocusMonitor;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
 
@@ -181,7 +180,7 @@ describe('MDC-based MatTooltip', () => {
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
           providers: [
-            {provide: ɵZONELESS_ENABLED, useValue: false},
+            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {showDelay: 1337, hideDelay: 7331},
@@ -219,7 +218,7 @@ describe('MDC-based MatTooltip', () => {
           imports: [MatTooltipModule, OverlayModule],
           declarations: [TooltipDemoWithoutPositionBinding],
           providers: [
-            {provide: ɵZONELESS_ENABLED, useValue: false},
+            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {position: 'right'},

@@ -1,4 +1,4 @@
-import {Component, ViewChild, ɵZONELESS_ENABLED} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -22,7 +22,7 @@ describe('MapGroundOverlay', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}],
+      providers: [provideZoneChangeDetection()],
     });
   });
 

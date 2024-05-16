@@ -8,7 +8,6 @@ import {
   ViewChild,
   ViewChildren,
   provideZoneChangeDetection,
-  ɵZONELESS_ENABLED,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -34,7 +33,7 @@ import {
 describe('MDC-based MatTabGroup', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   beforeEach(fakeAsync(() => {
@@ -1052,7 +1051,7 @@ describe('nested MatTabGroup with enabled animations', () => {
 describe('MatTabGroup with ink bar fit to content', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: ɵZONELESS_ENABLED, useValue: false}, provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
   });
   let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
