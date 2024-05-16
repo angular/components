@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -30,37 +30,37 @@ describe('MatPaginatorHarness', () => {
   it('should be able to go to the next page', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    expect(instance.pageIndex).toBe(0);
+    expect(instance.pageIndex()).toBe(0);
     await paginator.goToNextPage();
-    expect(instance.pageIndex).toBe(1);
+    expect(instance.pageIndex()).toBe(1);
   });
 
   it('should be able to go to the previous page', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    instance.pageIndex = 5;
+    instance.pageIndex.set(5);
     fixture.detectChanges();
 
     await paginator.goToPreviousPage();
-    expect(instance.pageIndex).toBe(4);
+    expect(instance.pageIndex()).toBe(4);
   });
 
   it('should be able to go to the first page', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    instance.pageIndex = 5;
+    instance.pageIndex.set(5);
     fixture.detectChanges();
 
     await paginator.goToFirstPage();
-    expect(instance.pageIndex).toBe(0);
+    expect(instance.pageIndex()).toBe(0);
   });
 
   it('should be able to go to the last page', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    expect(instance.pageIndex).toBe(0);
+    expect(instance.pageIndex()).toBe(0);
     await paginator.goToLastPage();
-    expect(instance.pageIndex).toBe(49);
+    expect(instance.pageIndex()).toBe(49);
   });
 
   it('should be able to set the page size', async () => {
@@ -84,7 +84,7 @@ describe('MatPaginatorHarness', () => {
   it('should throw an error if the first page button is not available', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    instance.showFirstLastButtons = false;
+    instance.showFirstLastButtons.set(false);
     fixture.detectChanges();
 
     await expectAsync(paginator.goToFirstPage()).toBeRejectedWithError(
@@ -106,7 +106,7 @@ describe('MatPaginatorHarness', () => {
   it('should throw an error if the last page button is not available', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    instance.showFirstLastButtons = false;
+    instance.showFirstLastButtons.set(false);
     fixture.detectChanges();
 
     await expectAsync(paginator.goToLastPage()).toBeRejectedWithError(
@@ -117,7 +117,7 @@ describe('MatPaginatorHarness', () => {
   it('should throw an error if the page size selector is not available', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
 
-    instance.pageSizeOptions = [];
+    instance.pageSizeOptions.set([]);
     fixture.detectChanges();
 
     await expectAsync(paginator.setPageSize(10)).toBeRejectedWithError(
@@ -132,9 +132,9 @@ describe('MatPaginatorHarness', () => {
       (page)="handlePageEvent($event)"
       [length]="length"
       [pageSize]="pageSize"
-      [showFirstLastButtons]="showFirstLastButtons"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageIndex">
+      [showFirstLastButtons]="showFirstLastButtons()"
+      [pageSizeOptions]="pageSizeOptions()"
+      [pageIndex]="pageIndex()">
     </mat-paginator>
   `,
   standalone: true,
@@ -143,13 +143,13 @@ describe('MatPaginatorHarness', () => {
 class PaginatorHarnessTest {
   length = 500;
   pageSize = 10;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
-  showFirstLastButtons = true;
+  pageIndex = signal(0);
+  pageSizeOptions = signal([5, 10, 25]);
+  showFirstLastButtons = signal(true);
 
   handlePageEvent(event: PageEvent) {
     this.length = event.length;
     this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+    this.pageIndex.set(event.pageIndex);
   }
 }

@@ -48,7 +48,7 @@ describe('SortHarnessExample', () => {
 
     expect(await thirdHeader.isDisabled()).toBe(false);
 
-    fixture.componentInstance.disableThirdHeader = true;
+    fixture.componentInstance.disableThirdHeader.set(true);
     fixture.detectChanges();
 
     expect(await thirdHeader.isDisabled()).toBe(true);

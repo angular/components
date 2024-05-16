@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -12,6 +12,12 @@ describe('MDC-based MatChip', () => {
   let chipInstance: MatChip;
 
   let dir = 'ltr';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

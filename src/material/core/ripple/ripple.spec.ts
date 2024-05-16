@@ -7,7 +7,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -34,6 +34,12 @@ describe('MatRipple', () => {
   function flushTransition() {
     dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
   }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({

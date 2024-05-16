@@ -1,5 +1,5 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Component, Type, ViewChild} from '@angular/core';
+import {Component, Type, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -23,6 +23,7 @@ describe('CdkTableScrollContainer', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
     }).compileComponents();
 

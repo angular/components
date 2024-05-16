@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -16,5 +16,5 @@ import {MatInputModule} from '@angular/material/input';
 })
 export class DatepickerHarnessExample {
   date: Date | null = null;
-  minDate: Date | null = null;
+  minDate = signal<null | Date>(null);
 }

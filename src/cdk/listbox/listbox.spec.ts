@@ -1,5 +1,5 @@
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, Type} from '@angular/core';
+import {Component, signal, Type, provideZoneChangeDetection} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkListbox, CdkListboxModule, CdkOption, ListboxValueChangeEvent} from './index';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
@@ -21,6 +21,7 @@ function setupComponent<T, O = string>(component: Type<T>, imports: any[] = []) 
   TestBed.configureTestingModule({
     imports: [CdkListboxModule, ...imports],
     declarations: [component],
+    providers: [provideZoneChangeDetection()],
   }).compileComponents();
   const fixture = TestBed.createComponent(component);
   fixture.detectChanges();
@@ -371,7 +372,7 @@ describe('CdkOption and CdkListbox', () => {
     it('should be able to toggle listbox disabled state', () => {
       const {fixture, testComponent, listbox, listboxEl, options, optionEls} =
         setupComponent(ListboxWithOptions);
-      testComponent.isListboxDisabled = true;
+      testComponent.isListboxDisabled.set(true);
       fixture.detectChanges();
 
       expect(listbox.disabled).toBeTrue();
@@ -406,7 +407,7 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should not change selection on click in a disabled listbox', () => {
       const {fixture, testComponent, listbox, optionEls} = setupComponent(ListboxWithOptions);
-      testComponent.isListboxDisabled = true;
+      testComponent.isListboxDisabled.set(true);
       fixture.detectChanges();
 
       optionEls[0].click();
@@ -421,7 +422,7 @@ describe('CdkOption and CdkListbox', () => {
       listbox.focus();
       fixture.detectChanges();
 
-      testComponent.isListboxDisabled = true;
+      testComponent.isListboxDisabled.set(true);
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE);
@@ -449,7 +450,7 @@ describe('CdkOption and CdkListbox', () => {
     it('should not handle type ahead on a disabled listbox', async (...args: unknown[]) => {
       const {fixture, testComponent, listboxEl, options} = setupComponent(ListboxWithOptions);
       await fakeAsync(() => {
-        testComponent.isListboxDisabled = true;
+        testComponent.isListboxDisabled.set(true);
         fixture.detectChanges();
 
         dispatchKeyboardEvent(listboxEl, 'keydown', B);
@@ -956,7 +957,7 @@ describe('CdkOption and CdkListbox', () => {
          [id]="listboxId"
          [tabindex]="listboxTabindex"
          [cdkListboxMultiple]="isMultiselectable"
-         [cdkListboxDisabled]="isListboxDisabled"
+         [cdkListboxDisabled]="isListboxDisabled()"
          [cdkListboxUseActiveDescendant]="isActiveDescendant"
          [cdkListboxOrientation]="orientation"
          [cdkListboxNavigationWrapDisabled]="!navigationWraps"
@@ -980,7 +981,7 @@ describe('CdkOption and CdkListbox', () => {
 })
 class ListboxWithOptions {
   changedOption: CdkOption | null;
-  isListboxDisabled = false;
+  isListboxDisabled = signal(false);
   isAppleDisabled = false;
   isOrangeDisabled = false;
   isMultiselectable = false;

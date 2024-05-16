@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 /**
@@ -11,5 +11,5 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
   imports: [MatProgressBarModule],
 })
 export class ProgressBarHarnessExample {
-  value: number;
+  value = signal<number | undefined>(undefined);
 }

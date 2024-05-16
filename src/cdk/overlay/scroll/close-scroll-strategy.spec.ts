@@ -1,5 +1,5 @@
 import {inject, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, ElementRef, NgZone} from '@angular/core';
+import {Component, ElementRef, NgZone, provideZoneChangeDetection} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
@@ -17,6 +17,7 @@ describe('CloseScrollStrategy', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, MozarellaMsg],
       providers: [
+        provideZoneChangeDetection(),
         {
           provide: ScrollDispatcher,
           useFactory: () => ({

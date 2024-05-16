@@ -20,7 +20,7 @@ describe('ProgressBarHarnessExample', () => {
   });
 
   it('should get the value', async () => {
-    fixture.componentInstance.value = 50;
+    fixture.componentInstance.value.set(50);
     const [determinate, indeterminate] = await loader.getAllHarnesses(MatProgressBarHarness);
     expect(await determinate.getValue()).toBe(50);
     expect(await indeterminate.getValue()).toBe(null);

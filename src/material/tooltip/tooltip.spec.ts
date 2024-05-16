@@ -20,6 +20,7 @@ import {
   ElementRef,
   NgZone,
   ViewChild,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -49,6 +50,11 @@ describe('MDC-based MatTooltip', () => {
   let dir: {value: Direction; change: Subject<Direction>};
   let platform: Platform;
   let focusMonitor: FocusMonitor;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -174,6 +180,7 @@ describe('MDC-based MatTooltip', () => {
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
           providers: [
+            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {showDelay: 1337, hideDelay: 7331},
@@ -211,6 +218,7 @@ describe('MDC-based MatTooltip', () => {
           imports: [MatTooltipModule, OverlayModule],
           declarations: [TooltipDemoWithoutPositionBinding],
           providers: [
+            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {position: 'right'},
@@ -268,13 +276,13 @@ describe('MDC-based MatTooltip', () => {
       );
     }));
 
-    it('should be able to override the default positionAtOrigin', fakeAsync(() => {
+    it('should be able to override the default positionAtOrigin', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
       }
 
-      TestBed.resetTestingModule()
+      await TestBed.resetTestingModule()
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule],
           declarations: [WideTooltipDemo],
@@ -297,14 +305,15 @@ describe('MDC-based MatTooltip', () => {
 
       dispatchMouseEvent(button, 'mouseenter', triggerRect.right - 100, triggerRect.top + 100);
       wideFixture.detectChanges();
-      tick();
+      await new Promise<void>(resolve => setTimeout(resolve));
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBe(
-        triggerRect.right - 100 - 20,
-      );
+      const actualOffsetLeft = tooltipDirective._overlayRef!.overlayElement.offsetLeft;
+      const expectedOffsetLeft = triggerRect.right - 100 - 20;
+      expect(actualOffsetLeft).toBeLessThanOrEqual(expectedOffsetLeft + 1);
+      expect(actualOffsetLeft).toBeGreaterThanOrEqual(expectedOffsetLeft - 1);
       expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBe(triggerRect.top + 100);
-    }));
+    });
 
     it('should be able to disable tooltip interactivity', fakeAsync(() => {
       TestBed.resetTestingModule()

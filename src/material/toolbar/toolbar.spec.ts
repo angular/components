@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {TestBed, waitForAsync, ComponentFixture, fakeAsync, flush} from '@angular/core/testing';
+import {Component, signal} from '@angular/core';
+import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {MatToolbarModule} from './index';
@@ -32,18 +32,18 @@ describe('MatToolbar', () => {
     });
 
     it('should apply class based on color attribute', () => {
-      testComponent.toolbarColor = 'primary';
+      testComponent.toolbarColor.set('primary');
       fixture.detectChanges();
 
       expect(toolbarElement.classList.contains('mat-primary')).toBe(true);
 
-      testComponent.toolbarColor = 'accent';
+      testComponent.toolbarColor.set('accent');
       fixture.detectChanges();
 
       expect(toolbarElement.classList.contains('mat-primary')).toBe(false);
       expect(toolbarElement.classList.contains('mat-accent')).toBe(true);
 
-      testComponent.toolbarColor = 'warn';
+      testComponent.toolbarColor.set('warn');
       fixture.detectChanges();
 
       expect(toolbarElement.classList.contains('mat-accent')).toBe(false);
@@ -70,29 +70,23 @@ describe('MatToolbar', () => {
     });
 
     it('should throw an error if different toolbar modes are mixed', () => {
-      expect(() => {
-        const fixture = TestBed.createComponent(ToolbarMixedRowModes);
-        fixture.detectChanges();
-      }).toThrowError(/attempting to combine different/i);
+      const errorSpy = spyOn(console, 'error');
+      const fixture = TestBed.createComponent(ToolbarMixedRowModes);
+      fixture.detectChanges();
+      expect(errorSpy.calls.first().args[1]).toMatch(/attempting to combine different/i);
     });
 
-    it('should throw an error if a toolbar-row is added later', fakeAsync(() => {
+    it('should throw an error if a toolbar-row is added later', async () => {
       const fixture = TestBed.createComponent(ToolbarMixedRowModes);
 
-      fixture.componentInstance.showToolbarRow = false;
-      fixture.detectChanges();
-      flush();
+      const errorSpy = spyOn(console, 'error');
+      fixture.componentInstance.showToolbarRow.set(false);
+      await fixture.whenStable();
 
-      expect(() => {
-        try {
-          fixture.componentInstance.showToolbarRow = true;
-          fixture.detectChanges();
-          flush();
-        } catch {
-          flush();
-        }
-      }).toThrowError(/attempting to combine different/i);
-    }));
+      fixture.componentInstance.showToolbarRow.set(true);
+      await fixture.whenStable();
+      expect(errorSpy.calls.first().args[1]).toMatch(/attempting to combine different/i);
+    });
 
     it('should pick up indirect descendant rows', () => {
       const fixture = TestBed.createComponent(ToolbarMultipleIndirectRows);
@@ -106,7 +100,7 @@ describe('MatToolbar', () => {
 
 @Component({
   template: `
-    <mat-toolbar [color]="toolbarColor">
+    <mat-toolbar [color]="toolbarColor()">
       <span>First Row</span>
     </mat-toolbar>
   `,
@@ -114,7 +108,7 @@ describe('MatToolbar', () => {
   imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarSingleRow {
-  toolbarColor: string;
+  toolbarColor = signal('');
 }
 
 @Component({
@@ -142,7 +136,7 @@ class ToolbarMultipleRows {}
   imports: [MatToolbarModule, CommonModule],
 })
 class ToolbarMixedRowModes {
-  showToolbarRow: boolean = true;
+  showToolbarRow = signal(true);
 }
 
 @Component({

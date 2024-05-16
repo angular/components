@@ -7,6 +7,7 @@ import {
   Provider,
   Type,
   ViewChild,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
@@ -1527,6 +1528,7 @@ function configureTestingModule(
     ],
     declarations: [component, ...declarations],
     providers: [
+      provideZoneChangeDetection(),
       // Custom error handler that re-throws the error. Errors happening within
       // change detection phase will be reported through the handler and thrown
       // in Ivy. Since we do not want to pollute the "console.error", but rather

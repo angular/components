@@ -40,7 +40,7 @@ describe('DatepickerHarnessExample', () => {
 
   it('should get the minimum date of the input', async () => {
     const input = await loader.getHarness(MatDatepickerInputHarness);
-    fixture.componentInstance.minDate = new Date(2020, 0, 1, 12, 0, 0);
+    fixture.componentInstance.minDate.set(new Date(2020, 0, 1, 12, 0, 0));
     expect(await input.getMin()).toEqual('2020-01-01');
   });
 

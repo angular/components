@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -25,7 +25,7 @@ describe('MatProgressSpinnerHarness', () => {
   });
 
   it('should get the value', async () => {
-    fixture.componentInstance.value = 50;
+    fixture.componentInstance.value.set(50);
     const [determinate, indeterminate, impliedIndeterminate] =
       await loader.getAllHarnesses(MatProgressSpinnerHarness);
     expect(await determinate.getValue()).toBe(50);
@@ -44,7 +44,7 @@ describe('MatProgressSpinnerHarness', () => {
 
 @Component({
   template: `
-    <mat-progress-spinner mode="determinate" [value]="value"></mat-progress-spinner>
+    <mat-progress-spinner mode="determinate" [value]="value()"></mat-progress-spinner>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     <mat-spinner></mat-spinner>
   `,
@@ -52,5 +52,5 @@ describe('MatProgressSpinnerHarness', () => {
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerHarnessTest {
-  value: number;
+  value = signal(0);
 }

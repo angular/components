@@ -10,6 +10,7 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectionStrategy,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
@@ -43,6 +44,7 @@ describe('CdkTable', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, BidiModule],
       declarations: [componentType, ...declarations],
     }).compileComponents();
