@@ -2,11 +2,14 @@
 
 You can use Angular Material's Sass-based theming system for your own custom components.
 
+**Note: The information on this page is specific to Material 2, for Material 3
+information on how to theme your components go to the [theming guide][theming-guide].**
+
 ## Reading style values from a theme
 
 As described in the [theming guide][theme-map], a theme is a Sass map that contains style values to
 customize components. Angular Material provides APIs for reading values from this data structure.
-
+[theming-guide]: https://material.angular.io/guide/theming#theme-your-own-components-using-a-material-3-theme
 [theme-map]: https://material.angular.io/guide/theming#themes
 
 ### Reading color values
@@ -89,7 +92,7 @@ $custom-background: if($type == dark, #030, #dfd);
 
 To read typography values from a theme, you can use the `get-theme-typography` Sass function. This
 function supports reading typography properties from the typography levels defined in the theme.
-There are two ways to call the function. 
+There are two ways to call the function.
 
 The first way to call it is by passing just the theme and the typography level to get a shorthand
 `font` property based on the settings for that level. (Note: `letter-spacing` cannot be expressed in
