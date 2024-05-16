@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -11,6 +11,12 @@ import {MatCalendarHarness} from './calendar-harness';
 describe('MatDatepickerToggleHarness', () => {
   let fixture: ComponentFixture<DatepickerToggleHarnessTest>;
   let loader: HarnessLoader;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

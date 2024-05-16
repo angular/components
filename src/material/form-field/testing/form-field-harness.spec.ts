@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {createFakeEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
@@ -126,7 +126,7 @@ describe('MatFormFieldHarness', () => {
     expect(await formFields[3].isLabelFloating()).toBe(true);
     expect(await formFields[4].isLabelFloating()).toBe(false);
 
-    fixture.componentInstance.shouldLabelFloat = 'always';
+    fixture.componentInstance.shouldLabelFloat.set('always');
     expect(await formFields[4].isLabelFloating()).toBe(true);
   });
 
@@ -138,7 +138,7 @@ describe('MatFormFieldHarness', () => {
     expect(await formFields[3].isDisabled()).toBe(false);
     expect(await formFields[4].isDisabled()).toBe(false);
 
-    fixture.componentInstance.isDisabled = true;
+    fixture.componentInstance.isDisabled.set(true);
     expect(await formFields[0].isDisabled()).toBe(true);
     expect(await formFields[1].isDisabled()).toBe(false);
     expect(await formFields[2].isDisabled()).toBe(true);
@@ -303,11 +303,11 @@ describe('MatFormFieldHarness', () => {
 
 @Component({
   template: `
-    <mat-form-field id="first-form-field" [floatLabel]="shouldLabelFloat">
+    <mat-form-field id="first-form-field" [floatLabel]="shouldLabelFloat()">
       <span matTextPrefix>prefix_text</span>
       <span matTextPrefix>prefix_text_2</span>
       <input matInput value="Sushi" name="favorite-food" placeholder="With placeholder"
-             [disabled]="isDisabled">
+             [disabled]="isDisabled()">
       <span matTextSuffix>suffix_text</span>
     </mat-form-field>
 
@@ -323,7 +323,7 @@ describe('MatFormFieldHarness', () => {
 
     <mat-form-field appearance="fill" color="accent">
       <mat-label>Label</mat-label>
-      <mat-select [disabled]="isDisabled">
+      <mat-select [disabled]="isDisabled()">
         <mat-option>First</mat-option>
       </mat-select>
     </mat-form-field>
@@ -337,7 +337,7 @@ describe('MatFormFieldHarness', () => {
       <mat-option>autocomplete_option</mat-option>
     </mat-autocomplete>
 
-    <mat-form-field id="last-form-field" [floatLabel]="shouldLabelFloat">
+    <mat-form-field id="last-form-field" [floatLabel]="shouldLabelFloat()">
       <mat-label>Label</mat-label>
       <input matInput>
     </mat-form-field>
@@ -382,9 +382,9 @@ describe('MatFormFieldHarness', () => {
 })
 class FormFieldHarnessTest {
   requiredControl = new FormControl('Initial value', [Validators.required]);
-  shouldLabelFloat: 'always' | 'auto' = 'auto';
+  shouldLabelFloat = signal<'always' | 'auto'>('auto');
   hasLabel = false;
-  isDisabled = false;
+  isDisabled = signal(false);
 
   setupAsyncValidator() {
     this.requiredControl.setValidators(() => null);

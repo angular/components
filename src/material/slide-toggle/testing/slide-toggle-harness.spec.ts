@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -128,7 +128,7 @@ describe('MatSlideToggleHarness', () => {
   });
 
   it('should toggle slide-toggle', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatSlideToggleHarness);
     await checkedToggle.toggle();
     await uncheckedToggle.toggle();
@@ -137,7 +137,7 @@ describe('MatSlideToggleHarness', () => {
   });
 
   it('should check slide-toggle', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatSlideToggleHarness);
     await checkedToggle.check();
     await uncheckedToggle.check();
@@ -146,7 +146,7 @@ describe('MatSlideToggleHarness', () => {
   });
 
   it('should uncheck slide-toggle', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatSlideToggleHarness);
     await checkedToggle.uncheck();
     await uncheckedToggle.uncheck();
@@ -171,7 +171,7 @@ describe('MatSlideToggleHarness', () => {
           aria-label="First slide-toggle">
         First
       </mat-slide-toggle>
-      <mat-slide-toggle [disabled]="disabled" aria-labelledby="second-label">
+      <mat-slide-toggle [disabled]="disabled()" aria-labelledby="second-label">
         Second
       </mat-slide-toggle>
       <span id="second-label">Second slide-toggle</span>
@@ -181,5 +181,5 @@ describe('MatSlideToggleHarness', () => {
 })
 class SlideToggleHarnessTest {
   ctrl = new FormControl(true);
-  disabled = true;
+  disabled = signal(true);
 }

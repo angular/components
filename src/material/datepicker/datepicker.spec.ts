@@ -19,7 +19,15 @@ import {
   dispatchMouseEvent,
   typeInElement,
 } from '@angular/cdk/testing/private';
-import {Component, Type, ViewChild, Provider, Directive, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Type,
+  ViewChild,
+  Provider,
+  Directive,
+  ViewEncapsulation,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
@@ -50,6 +58,12 @@ import {DatepickerDropdownPositionX, DatepickerDropdownPositionY} from './datepi
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   // Creates a test component fixture.
   function createComponent<T>(

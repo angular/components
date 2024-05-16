@@ -1,4 +1,12 @@
-import {Type, Component, ViewChild, ElementRef, Directive, Provider} from '@angular/core';
+import {
+  Type,
+  Component,
+  ViewChild,
+  ElementRef,
+  Directive,
+  Provider,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, TestBed, inject, fakeAsync, tick, flush} from '@angular/core/testing';
 import {
   FormsModule,
@@ -26,6 +34,12 @@ import {MatStartDate, MatEndDate} from './date-range-input-parts';
 import {Subscription} from 'rxjs';
 
 describe('MatDateRangeInput', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
+
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [

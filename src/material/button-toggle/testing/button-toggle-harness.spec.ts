@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -9,6 +9,11 @@ describe('MatButtonToggleHarness', () => {
   let fixture: ComponentFixture<ButtonToggleHarnessTest>;
   let loader: HarnessLoader;
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatButtonToggleModule, ButtonToggleHarnessTest],

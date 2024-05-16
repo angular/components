@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 import {By} from '@angular/platform-browser';
 import {
@@ -9,6 +9,11 @@ import {
 } from '@angular/cdk/testing/private';
 
 describe('MatCalendarBody', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],

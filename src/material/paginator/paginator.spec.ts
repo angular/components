@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
-import {Component, ViewChild, Type, Provider} from '@angular/core';
+import {Component, ViewChild, Type, Provider, provideZoneChangeDetection} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {ThemePalette} from '@angular/material/core';
@@ -17,7 +17,7 @@ describe('MDC-based MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
-      providers: [MatPaginatorIntl, ...providers],
+      providers: [provideZoneChangeDetection(), MatPaginatorIntl, ...providers],
       declarations: [type],
     }).compileComponents();
 

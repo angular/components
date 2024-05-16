@@ -1,4 +1,11 @@
-import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ElementRef,
+  ViewChild,
+  provideZoneChangeDetection,
+  signal,
+} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkComboboxModule} from './combobox-module';
@@ -25,6 +32,7 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [provideZoneChangeDetection()],
         imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));
@@ -83,7 +91,7 @@ describe('Combobox', () => {
 
     it('should toggle focus upon toggling the panel', () => {
       comboboxElement.focus();
-      testComponent.actions = 'toggle';
+      testComponent.actions.set('toggle');
       fixture.detectChanges();
 
       expect(document.activeElement).toEqual(comboboxElement);
@@ -209,7 +217,7 @@ describe('Combobox', () => {
     });
 
     it('should coerce actions separated by space', () => {
-      testComponent.actions = 'focus click';
+      testComponent.actions.set('focus click');
       fixture.detectChanges();
 
       const openActions = comboboxInstance.openActions;
@@ -219,7 +227,7 @@ describe('Combobox', () => {
     });
 
     it('should coerce actions separated by comma', () => {
-      testComponent.actions = 'focus,click,downKey';
+      testComponent.actions.set('focus,click,downKey');
       fixture.detectChanges();
 
       const openActions = comboboxInstance.openActions;
@@ -230,7 +238,7 @@ describe('Combobox', () => {
     });
 
     it('should coerce actions separated by commas and spaces', () => {
-      testComponent.actions = 'focus click,downKey';
+      testComponent.actions.set('focus click,downKey');
       fixture.detectChanges();
 
       const openActions = comboboxInstance.openActions;
@@ -241,10 +249,10 @@ describe('Combobox', () => {
     });
 
     it('should throw error when given invalid open action', () => {
-      expect(() => {
-        testComponent.actions = 'invalidAction';
-        fixture.detectChanges();
-      }).toThrow();
+      const errorSpy = spyOn(console, 'error');
+      testComponent.actions.set('invalidAction');
+      fixture.detectChanges();
+      expect(errorSpy).toHaveBeenCalled();
     });
   });
 
@@ -274,7 +282,7 @@ describe('Combobox', () => {
     });
 
     it('should open panel with focus open action', () => {
-      testComponent.actions = 'focus';
+      testComponent.actions.set('focus');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -286,7 +294,7 @@ describe('Combobox', () => {
     });
 
     it('should open panel with click open action', () => {
-      testComponent.actions = 'click';
+      testComponent.actions.set('click');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -298,7 +306,7 @@ describe('Combobox', () => {
     });
 
     it('should open panel with downKey open action', () => {
-      testComponent.actions = 'downKey';
+      testComponent.actions.set('downKey');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -310,7 +318,7 @@ describe('Combobox', () => {
     });
 
     it('should toggle panel with toggle open action', () => {
-      testComponent.actions = 'toggle';
+      testComponent.actions.set('toggle');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -327,7 +335,7 @@ describe('Combobox', () => {
     });
 
     it('should close panel on escape key', () => {
-      testComponent.actions = 'click';
+      testComponent.actions.set('click');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -344,7 +352,7 @@ describe('Combobox', () => {
     });
 
     it('should handle multiple open actions', () => {
-      testComponent.actions = 'click downKey';
+      testComponent.actions.set('click downKey');
       fixture.detectChanges();
 
       expect(comboboxInstance.isOpen()).toBeFalse();
@@ -371,7 +379,7 @@ describe('Combobox', () => {
   template: `
   <button cdkCombobox #toggleCombobox="cdkCombobox" class="example-combobox"
           [cdkComboboxTriggerFor]="panel"
-          [openActions]="actions">
+          [openActions]="actions()">
     No Value
   </button>
   <div id="other-content"></div>
@@ -388,5 +396,5 @@ describe('Combobox', () => {
 class ComboboxToggle {
   @ViewChild('input') inputElement: ElementRef<HTMLInputElement>;
 
-  actions: string = 'click';
+  actions = signal('click');
 }

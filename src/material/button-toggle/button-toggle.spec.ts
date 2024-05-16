@@ -1,5 +1,12 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
@@ -13,6 +20,11 @@ import {
 } from './index';
 
 describe('MatButtonToggle with forms', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -312,6 +324,11 @@ describe('MatButtonToggle with forms', () => {
 });
 
 describe('MatButtonToggle without forms', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [

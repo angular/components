@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -61,7 +61,7 @@ describe('MatGridListHarness', () => {
     const gridLists = await loader.getAllHarnesses(MatGridListHarness);
     expect(await gridLists[0].getColumns()).toBe(4);
     expect(await gridLists[1].getColumns()).toBe(2);
-    fixture.componentInstance.columns = 3;
+    fixture.componentInstance.columns.set(3);
     expect(await gridLists[0].getColumns()).toBe(3);
   });
 
@@ -91,7 +91,7 @@ describe('MatGridListHarness', () => {
 
     // Update the fourth tile to span over two rows. The previous position
     // should now be valid and the fourth tile should be returned.
-    fixture.componentInstance.tile4Rowspan = 2;
+    fixture.componentInstance.tile4Rowspan.set(2);
     const foundTile = await gridList.getTileAtPosition({row: 2, column: 0});
     expect(await foundTile.getHeaderText()).toBe('Four (second and third row)');
   });
@@ -120,7 +120,7 @@ describe('MatGridListHarness', () => {
     const tiles = await loader.getAllHarnesses(MatGridTileHarness);
     expect(await tiles[0].getRowspan()).toBe(1);
     expect(await tiles[3].getRowspan()).toBe(1);
-    fixture.componentInstance.tile4Rowspan = 10;
+    fixture.componentInstance.tile4Rowspan.set(10);
     expect(await tiles[3].getRowspan()).toBe(10);
   });
 
@@ -133,24 +133,24 @@ describe('MatGridListHarness', () => {
   it('should be able to get header text of tile', async () => {
     const tiles = await loader.getAllHarnesses(MatGridTileHarness);
     expect(await tiles[0].getHeaderText()).toBe('One');
-    fixture.componentInstance.firstTileText = 'updated';
+    fixture.componentInstance.firstTileText.set('updated');
     expect(await tiles[0].getHeaderText()).toBe('updated');
   });
 
   it('should be able to get footer text of tile', async () => {
     const tiles = await loader.getAllHarnesses(MatGridTileHarness);
     expect(await tiles[0].getFooterText()).toBe(null);
-    fixture.componentInstance.showFooter = true;
+    fixture.componentInstance.showFooter.set(true);
     expect(await tiles[0].getFooterText()).toBe('Footer');
   });
 });
 
 @Component({
   template: `
-    <mat-grid-list [cols]="columns">
+    <mat-grid-list [cols]="columns()">
       <mat-grid-tile>
-        <mat-grid-tile-header>{{firstTileText}}</mat-grid-tile-header>
-        @if (showFooter) {
+        <mat-grid-tile-header>{{firstTileText()}}</mat-grid-tile-header>
+        @if (showFooter()) {
           <mat-grid-tile-footer>Footer</mat-grid-tile-footer>
         }
       </mat-grid-tile>
@@ -161,9 +161,9 @@ describe('MatGridListHarness', () => {
       <mat-grid-tile colspan="2">
         <mat-grid-tile-header>Three</mat-grid-tile-header>
       </mat-grid-tile>
-      <mat-grid-tile [rowspan]="tile4Rowspan">
+      <mat-grid-tile [rowspan]="tile4Rowspan()">
         <mat-grid-tile-header>
-          Four (second {{tile4Rowspan === 2 ? 'and third ' : ''}}row)
+          Four (second {{tile4Rowspan() === 2 ? 'and third ' : ''}}row)
         </mat-grid-tile-header>
       </mat-grid-tile>
     </mat-grid-list>
@@ -186,8 +186,8 @@ describe('MatGridListHarness', () => {
   imports: [MatGridListModule],
 })
 class GridListHarnessTest {
-  firstTileText = 'One';
-  showFooter = false;
-  columns = 4;
-  tile4Rowspan = 1;
+  firstTileText = signal('One');
+  showFooter = signal(false);
+  columns = signal(4);
+  tile4Rowspan = signal(1);
 }

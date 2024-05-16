@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
 
@@ -12,7 +12,7 @@ import {MatChipsModule} from '@angular/material/chips';
   imports: [MatChipsModule, MatIconModule],
 })
 export class ChipsHarnessExample {
-  isDisabled = false;
+  isDisabled = signal(false);
   remove: () => void = jasmine.createSpy('remove spy');
   add: () => void = jasmine.createSpy('add spy');
 }

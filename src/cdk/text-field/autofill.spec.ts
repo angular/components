@@ -7,7 +7,7 @@
  */
 
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
+import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {EMPTY} from 'rxjs';
 import {AutofillEvent, AutofillMonitor} from './autofill';
@@ -22,6 +22,7 @@ describe('AutofillMonitor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
       imports: [TextFieldModule, Inputs],
     }).compileComponents();
   });

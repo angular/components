@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
@@ -9,6 +9,11 @@ describe('MDC-based Chip Remove', () => {
   let fixture: ComponentFixture<TestChip>;
   let testChip: TestChip;
   let chipNativeElement: HTMLElement;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

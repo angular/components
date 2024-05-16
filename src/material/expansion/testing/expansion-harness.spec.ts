@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -14,6 +14,7 @@ describe('MatExpansionHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatExpansionModule, NoopAnimationsModule, ExpansionHarnessTestComponent],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpansionHarnessTestComponent);

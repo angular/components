@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
+import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   ComponentFixture,
@@ -41,6 +41,7 @@ describe('Overlay directives', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
+        provideZoneChangeDetection(),
         {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
         {
           provide: ScrollDispatcher,

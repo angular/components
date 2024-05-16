@@ -1,7 +1,7 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {Overlay} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
@@ -21,6 +21,7 @@ describe('LiveAnnouncer', () => {
   describe('with default element', () => {
     beforeEach(() =>
       TestBed.configureTestingModule({
+        providers: [provideZoneChangeDetection()],
         imports: [A11yModule, TestApp, TestModal],
       }),
     );
@@ -127,6 +128,7 @@ describe('LiveAnnouncer', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
+        providers: [provideZoneChangeDetection()],
         imports: [A11yModule],
       });
 
@@ -225,7 +227,10 @@ describe('LiveAnnouncer', () => {
 
       return TestBed.configureTestingModule({
         imports: [A11yModule, TestApp],
-        providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
+        providers: [
+          provideZoneChangeDetection(),
+          {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement},
+        ],
       });
     });
 
@@ -249,6 +254,7 @@ describe('LiveAnnouncer', () => {
       return TestBed.configureTestingModule({
         imports: [A11yModule, TestApp],
         providers: [
+          provideZoneChangeDetection(),
           {
             provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
             useValue: {
@@ -297,6 +303,7 @@ describe('CdkAriaLive', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, DivWithCdkAriaLive],
       providers: [
+        provideZoneChangeDetection(),
         {
           provide: MutationObserverFactory,
           useValue: {

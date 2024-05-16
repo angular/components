@@ -1,5 +1,11 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, Provider, ViewChild} from '@angular/core';
+import {
+  Component,
+  EnvironmentProviders,
+  Provider,
+  ViewChild,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   YouTubePlayer,
   DEFAULT_PLAYER_WIDTH,
@@ -12,7 +18,8 @@ import {Subscription} from 'rxjs';
 
 const VIDEO_ID = 'a12345';
 const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
-const TEST_PROVIDERS: Provider[] = [
+const TEST_PROVIDERS: (Provider | EnvironmentProviders)[] = [
+  provideZoneChangeDetection(),
   {
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
@@ -11,6 +11,6 @@ import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/materia
   imports: [MatButtonToggleModule],
 })
 export class ButtonToggleHarnessExample {
-  disabled = false;
-  appearance: MatButtonToggleAppearance = 'standard';
+  disabled = signal(false);
+  appearance = signal<MatButtonToggleAppearance>('standard');
 }

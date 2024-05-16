@@ -26,13 +26,15 @@ describe('MDC-based MatTestDialogOpener', () => {
     );
   });
 
-  it('should pass data to the component', fakeAsync(() => {
+  it('should pass data to the component', () => {
     const config = {data: 'test'};
-    TestBed.createComponent(MatTestDialogOpener.withComponent(ExampleComponent, config));
-    flush();
+    const fixture = TestBed.createComponent(
+      MatTestDialogOpener.withComponent(ExampleComponent, config),
+    );
+    fixture.detectChanges();
     const dialogContainer = document.querySelector('mat-dialog-container');
     expect(dialogContainer!.innerHTML).toContain('Data: test');
-  }));
+  });
 
   it('should get closed result data', fakeAsync(() => {
     const config = {data: 'test'};

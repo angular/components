@@ -28,14 +28,14 @@ describe('ButtonToggleHarnessExample', () => {
   it('should get whether the group is disabled', async () => {
     const group = await loader.getHarness(MatButtonToggleGroupHarness);
     expect(await group.isDisabled()).toBe(false);
-    fixture.componentInstance.disabled = true;
+    fixture.componentInstance.disabled.set(true);
     expect(await group.isDisabled()).toBe(true);
   });
 
   it('should get the group appearance', async () => {
     const group = await loader.getHarness(MatButtonToggleGroupHarness);
     expect(await group.getAppearance()).toBe('standard');
-    fixture.componentInstance.appearance = 'legacy';
+    fixture.componentInstance.appearance.set('legacy');
     expect(await group.getAppearance()).toBe('legacy');
   });
 });

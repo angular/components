@@ -1,4 +1,10 @@
-import {Component, ViewChildren, QueryList} from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  QueryList,
+  signal,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -17,6 +23,7 @@ describe('MatOptionHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatOptionModule, OptionHarnessTest],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OptionHarnessTest);
@@ -117,5 +124,11 @@ describe('MatOptionHarness', () => {
 })
 class OptionHarnessTest implements MatOptionParentComponent {
   @ViewChildren(MatOption) options: QueryList<{setActiveStyles(): void}>;
-  multiple = false;
+  private readonly _multiple = signal(false);
+  get multiple() {
+    return this._multiple();
+  }
+  set multiple(v: boolean) {
+    this._multiple.set(v);
+  }
 }
