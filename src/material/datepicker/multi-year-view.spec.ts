@@ -10,7 +10,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
 import {JAN, MAR} from '../testing';
@@ -33,7 +33,10 @@ describe('MatMultiYearView', () => {
         MultiYearViewWithMinMaxDate,
         MultiYearViewWithDateClass,
       ],
-      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+      providers: [
+        provideZoneChangeDetection(),
+        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+      ],
     });
 
     TestBed.compileComponents();

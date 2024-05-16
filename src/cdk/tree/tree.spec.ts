@@ -15,6 +15,7 @@ import {
   EventEmitter,
   ViewChildren,
   QueryList,
+  provideZoneChangeDetection,
 } from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -42,6 +43,7 @@ describe('CdkTree', () => {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
+        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),

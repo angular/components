@@ -9,7 +9,15 @@
 import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
-import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  Provider,
+  QueryList,
+  Type,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -33,6 +41,11 @@ interface Point {
 }
 
 describe('MDC-based MatSlider', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   let platform: Platform;
 
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {

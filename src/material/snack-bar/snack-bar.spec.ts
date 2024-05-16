@@ -8,6 +8,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  provideZoneChangeDetection,
   signal,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
@@ -25,6 +26,11 @@ import {Platform} from '@angular/cdk/platform';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from './snack-bar';
 
 describe('MatSnackBar', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   let snackBar: MatSnackBar;
   let liveAnnouncer: LiveAnnouncer;
   let overlayContainerElement: HTMLElement;

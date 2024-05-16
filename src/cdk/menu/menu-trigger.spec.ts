@@ -1,4 +1,12 @@
-import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ViewChild,
+  Type,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -19,6 +27,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [TriggerForEmptyMenu],
+        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 

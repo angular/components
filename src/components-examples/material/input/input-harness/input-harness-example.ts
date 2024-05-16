@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -12,6 +12,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [MatFormFieldModule, MatInputModule],
 })
 export class InputHarnessExample {
-  inputType = 'number';
-  disabled = false;
+  inputType = signal('number');
+  disabled = signal(false);
 }

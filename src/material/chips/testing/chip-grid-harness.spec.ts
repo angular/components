@@ -1,7 +1,7 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component} from '@angular/core';
+import {Component, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipGridHarness} from './chip-grid-harness';
@@ -9,6 +9,12 @@ import {MatChipGridHarness} from './chip-grid-harness';
 describe('MatChipGridHarness', () => {
   let fixture: ComponentFixture<ChipGridHarnessTest>;
   let loader: HarnessLoader;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

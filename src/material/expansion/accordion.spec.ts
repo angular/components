@@ -1,5 +1,11 @@
 import {waitForAsync, TestBed, inject} from '@angular/core/testing';
-import {Component, ViewChild, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  QueryList,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -30,6 +36,7 @@ describe('MatAccordion', () => {
         SetOfItems,
         NestedAccordions,
       ],
+      providers: [provideZoneChangeDetection()],
     });
     TestBed.compileComponents();
 

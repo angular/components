@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -12,7 +12,7 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatButtonModule, MatBadgeModule],
 })
 export class BadgeHarnessExample {
-  simpleContent = 'S';
-  overlap = true;
-  disabled = true;
+  simpleContent = signal('S');
+  overlap = signal(true);
+  disabled = signal(true);
 }

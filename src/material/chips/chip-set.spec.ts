@@ -1,4 +1,4 @@
-import {Component, DebugElement, QueryList} from '@angular/core';
+import {Component, DebugElement, QueryList, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
@@ -19,6 +19,12 @@ describe('MDC-based MatChipSet', () => {
     let chipSetNativeElement: HTMLElement;
     let chipSetInstance: MatChipSet;
     let chips: QueryList<MatChip>;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [provideZoneChangeDetection()],
+      });
+    });
 
     describe('basic behaviors', () => {
       beforeEach(() => {

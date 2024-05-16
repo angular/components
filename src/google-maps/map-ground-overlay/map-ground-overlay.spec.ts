@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -19,6 +19,12 @@ describe('MapGroundOverlay', () => {
   const clickable = true;
   const opacity = 0.5;
   const groundOverlayOptions: google.maps.GroundOverlayOptions = {clickable, opacity};
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(() => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);

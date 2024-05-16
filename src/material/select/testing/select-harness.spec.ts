@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
@@ -51,7 +51,7 @@ describe('MatSelectHarness', () => {
     expect(enabledSelects.length).toBe(4);
     expect(disabledSelects.length).toBe(0);
 
-    fixture.componentInstance.isDisabled = true;
+    fixture.componentInstance.isDisabled.set(true);
     fixture.detectChanges();
 
     enabledSelects = await loader.getAllHarnesses(MatSelectHarness.with({disabled: false}));
@@ -88,7 +88,7 @@ describe('MatSelectHarness', () => {
     expect(await singleSelection.isDisabled()).toBe(false);
     expect(await multipleSelection.isDisabled()).toBe(false);
 
-    fixture.componentInstance.isDisabled = true;
+    fixture.componentInstance.isDisabled.set(true);
     fixture.detectChanges();
 
     expect(await singleSelection.isDisabled()).toBe(true);
@@ -108,7 +108,7 @@ describe('MatSelectHarness', () => {
     expect(await singleSelection.isRequired()).toBe(false);
     expect(await multipleSelection.isRequired()).toBe(false);
 
-    fixture.componentInstance.isRequired = true;
+    fixture.componentInstance.isRequired.set(true);
     fixture.detectChanges();
 
     expect(await singleSelection.isRequired()).toBe(true);
@@ -274,7 +274,7 @@ describe('MatSelectHarness', () => {
 @Component({
   template: `
     <mat-form-field>
-      <mat-select [disabled]="isDisabled" [required]="isRequired" id="single-selection">
+      <mat-select [disabled]="isDisabled()" [required]="isRequired()" id="single-selection">
         @for (state of states; track state) {
           <mat-option [value]="state.code">{{ state.name }}</mat-option>
         }
@@ -311,8 +311,8 @@ describe('MatSelectHarness', () => {
 })
 class SelectHarnessTest {
   formControl = new FormControl(undefined as string | undefined, [Validators.required]);
-  isDisabled = false;
-  isRequired = false;
+  isDisabled = signal(false);
+  isRequired = signal(false);
   states = [
     {code: 'AL', name: 'Alabama'},
     {code: 'CA', name: 'California'},

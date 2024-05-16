@@ -46,7 +46,7 @@ describe('InputHarnessExample', () => {
     expect(await inputs[1].isDisabled()).toBe(false);
     expect(await inputs[2].isDisabled()).toBe(false);
 
-    fixture.componentInstance.disabled = true;
+    fixture.componentInstance.disabled.set(true);
 
     expect(await inputs[1].isDisabled()).toBe(true);
   });
@@ -59,7 +59,7 @@ describe('InputHarnessExample', () => {
     expect(await inputs[1].getType()).toBe('number');
     expect(await inputs[2].getType()).toBe('textarea');
 
-    fixture.componentInstance.inputType = 'text';
+    fixture.componentInstance.inputType.set('text');
 
     expect(await inputs[1].getType()).toBe('text');
   });

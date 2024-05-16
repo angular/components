@@ -1,7 +1,14 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
-import {AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -13,6 +20,11 @@ import {Subject} from 'rxjs';
 describe('MDC-based MatTabBody', () => {
   let dir: Direction = 'ltr';
   let dirChange: Subject<Direction> = new Subject<Direction>();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     dir = 'ltr';

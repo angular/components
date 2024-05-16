@@ -2,7 +2,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, flush} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
@@ -24,6 +24,12 @@ describe('MDC-based MatChipInput', () => {
   let inputNativeElement: HTMLElement;
   let chipInputDirective: MatChipInput;
   let dir = 'ltr';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

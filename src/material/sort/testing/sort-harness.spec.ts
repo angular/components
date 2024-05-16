@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -71,7 +71,7 @@ describe('MatSortHarness', () => {
 
     expect(await thirdHeader.isDisabled()).toBe(false);
 
-    fixture.componentInstance.disableThirdHeader = true;
+    fixture.componentInstance.disableThirdHeader.set(true);
     fixture.detectChanges();
 
     expect(await thirdHeader.isDisabled()).toBe(true);
@@ -121,7 +121,7 @@ describe('MatSortHarness', () => {
       <tr>
         <th mat-sort-header="name">Dessert</th>
         <th mat-sort-header="calories">Calories</th>
-        <th mat-sort-header="fat" [disabled]="disableThirdHeader">Fat</th>
+        <th mat-sort-header="fat" [disabled]="disableThirdHeader()">Fat</th>
         <th mat-sort-header="carbs">Carbs</th>
         <th mat-sort-header="protein">Protein</th>
       </tr>
@@ -141,7 +141,7 @@ describe('MatSortHarness', () => {
   imports: [MatSortModule],
 })
 class SortHarnessTest {
-  disableThirdHeader = false;
+  disableThirdHeader = signal(false);
   desserts = [
     {name: 'Frozen yogurt', calories: 159, fat: 6, carbs: 24, protein: 4},
     {name: 'Ice cream sandwich', calories: 237, fat: 9, carbs: 37, protein: 4},

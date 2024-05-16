@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -44,7 +44,7 @@ describe('MatSidenavHarness', () => {
       expect(await drawers[1].isOpen()).toBe(false);
       expect(await drawers[2].isOpen()).toBe(true);
 
-      fixture.componentInstance.threeOpened = false;
+      fixture.componentInstance.threeOpened.set(false);
       fixture.detectChanges();
 
       expect(await drawers[0].isOpen()).toBe(false);
@@ -172,7 +172,7 @@ describe('MatSidenavHarness', () => {
     </mat-drawer-container>
 
     <mat-drawer-container>
-      <mat-drawer id="three" mode="push" [opened]="threeOpened">Three</mat-drawer>
+      <mat-drawer id="three" mode="push" [opened]="threeOpened()">Three</mat-drawer>
       <mat-drawer-content>Content</mat-drawer-content>
     </mat-drawer-container>
   `,
@@ -180,7 +180,7 @@ describe('MatSidenavHarness', () => {
   imports: [MatSidenavModule],
 })
 class DrawerHarnessTest {
-  threeOpened = true;
+  threeOpened = signal(true);
 }
 
 @Component({

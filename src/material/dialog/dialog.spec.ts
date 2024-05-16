@@ -31,6 +31,7 @@ import {
   createNgModuleRef,
   forwardRef,
   signal,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -83,6 +84,8 @@ describe('MDC-based MatDialog', () => {
         ComponentWithContentElementTemplateRef,
       ],
       providers: [
+        provideZoneChangeDetection(),
+        provideZoneChangeDetection(),
         {provide: Location, useClass: SpyLocation},
         {
           provide: ScrollDispatcher,
@@ -1917,6 +1920,7 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, NoopAnimationsModule, ComponentThatProvidesMatDialog],
       providers: [
+        provideZoneChangeDetection(),
         {
           provide: OverlayContainer,
           useFactory: () => {
@@ -2034,7 +2038,10 @@ describe('MDC-based MatDialog with default options', () => {
         ComponentWithChildViewContainer,
         DirectiveWithViewContainer,
       ],
-      providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
+      providers: [
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
+        provideZoneChangeDetection(),
+      ],
     });
 
     TestBed.compileComponents();

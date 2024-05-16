@@ -15,6 +15,7 @@ import {
   EventEmitter,
   NgZone,
   Type,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '../testing/private';
@@ -47,6 +48,8 @@ describe('Overlay', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, ...imports],
       providers: [
+        provideZoneChangeDetection(),
+        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => {

@@ -1,5 +1,5 @@
 import {waitForAsync, fakeAsync, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
 
@@ -102,7 +102,7 @@ describe('Directionality', () => {
       expect(injectedDirectionality.value).toBe('rtl');
       expect(fixture.componentInstance.changeCount).toBe(0);
 
-      fixture.componentInstance.direction = 'ltr';
+      fixture.componentInstance.direction.set('ltr');
 
       fixture.detectChanges();
 
@@ -129,7 +129,7 @@ describe('Directionality', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('rtl');
 
-      fixture.componentInstance.direction = 'not-valid';
+      fixture.componentInstance.direction.set('not-valid');
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('ltr');
     });
@@ -170,7 +170,7 @@ class InjectsDirectionality {
 
 @Component({
   template: `
-    <div [dir]="direction" (dirChange)="changeCount = changeCount + 1">
+    <div [dir]="direction()" (dirChange)="changeCount = changeCount + 1">
       <injects-directionality></injects-directionality>
     </div>
   `,
@@ -179,7 +179,7 @@ class InjectsDirectionality {
 })
 class ElementWithDir {
   @ViewChild(Dir) dir: Dir;
-  direction = 'rtl';
+  direction = signal('rtl');
   changeCount = 0;
 }
 

@@ -1,6 +1,14 @@
 import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -23,6 +31,11 @@ import {
 } from './index';
 
 describe('MDC-based MatTabGroup', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -1036,6 +1049,11 @@ describe('nested MatTabGroup with enabled animations', () => {
 });
 
 describe('MatTabGroup with ink bar fit to content', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
 
   beforeEach(fakeAsync(() => {
