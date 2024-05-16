@@ -43,7 +43,7 @@ serve as text color when using a hue as a background color. The example below de
 structure of a palette. [See the Material Design color system for more background.][spec-colors]
 
 ```scss
-$indigo-palette: (
+$m2-indigo-palette: (
  50: #e8eaf6,
  100: #c5cae9,
  200: #9fa8da,
@@ -86,7 +86,7 @@ require these hues, but you can use these hues when defining a theme as describe
 ```scss
 @use '@angular/material' as mat;
 
-$my-palette: mat.$indigo-palette;
+$my-palette: mat.$m2-indigo-palette;
 ```
 
 [2014-palettes]: https://material.io/archive/guidelines/style/color.html#color-color-palette
@@ -129,7 +129,7 @@ choices, as well as some base design system settings. See
 [Customizing density](#customizing-density) below for details on adjusting component density.
 
 Constructing the theme first requires defining your primary and accent palettes, with an optional
-warn palette. The `define-palette` Sass function accepts a color palette, described in the
+warn palette. The `m2-define-palette` Sass function accepts a color palette, described in the
 [Palettes](#palettes) section above, as well as four optional hue numbers. These four hues
 represent, in order: the "default" hue, a "lighter" hue, a "darker" hue, and a "text" hue.
 Components use these hues to choose the most appropriate color for different parts of
@@ -138,33 +138,33 @@ themselves.
 ```scss
 @use '@angular/material' as mat;
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
 // The "warn" palette is optional and defaults to red if not specified.
-$my-warn: mat.define-palette(mat.$red-palette);
+$my-warn: mat.m2-define-palette(mat.$m2-red-palette);
 ```
 
-You can construct a theme by calling either `define-light-theme` or `define-dark-theme` with
-the result from `define-palette`. The choice of a light versus a dark theme determines the
+You can construct a theme by calling either `m2-define-light-theme` or `m2-define-dark-theme` with
+the result from `m2-define-palette`. The choice of a light versus a dark theme determines the
 background and foreground colors used throughout the components.
 
 ```scss
 @use '@angular/material' as mat;
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
 // The "warn" palette is optional and defaults to red if not specified.
-$my-warn: mat.define-palette(mat.$red-palette);
+$my-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
    warn: $my-warn,
  ),
- typography: mat.define-typography-config(),
+ typography: mat.m2-define-typography-config(),
  density: 0,
 ));
 ```
@@ -181,7 +181,7 @@ dimension of customization.
 
 Additionally, each component has a "theme" mixin that emits all styles that depend on the theme
 config. This theme mixin only emits color, typography, or density styles if you provided a
-corresponding configuration to `define-light-theme` or `define-dark-theme`, and it always emits the
+corresponding configuration to `m2-define-light-theme` or `m2-define-dark-theme`, and it always emits the
 base styles.
 
 Apply the styles for each of the components used in your application by including each of their
@@ -192,15 +192,15 @@ theme Sass mixins.
 
 @include mat.core();
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
  ),
- typography: mat.define-typography-config(),
+ typography: mat.m2-define-typography-config(),
  density: 0,
 ));
 
@@ -208,7 +208,7 @@ $my-theme: mat.define-light-theme((
 @include mat.core-theme($my-theme);
 
 // Emit styles for MatButton based on `$my-theme`. Because the configuration
-// passed to `define-light-theme` omits typography, `button-theme` will not
+// passed to `m2-define-light-theme` omits typography, `button-theme` will not
 // emit any typography styles.
 @include mat.button-theme($my-theme);
 
@@ -227,15 +227,15 @@ uses every single component, this will produce unnecessary CSS.
 
 @include mat.core();
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
  ),
- typography: mat.define-typography-config(),
+ typography: mat.m2-define-typography-config(),
  density: 0,
 ));
 
@@ -340,21 +340,21 @@ CSS rule declaration. See the [documentation for Sass mixins][sass-mixins] for f
 @include mat.core();
 
 // Define a dark theme
-$dark-theme: mat.define-dark-theme((
+$dark-theme: mat.m2-define-dark-theme((
  color: (
-   primary: mat.define-palette(mat.$pink-palette),
-   accent: mat.define-palette(mat.$blue-grey-palette),
+   primary: mat.m2-define-palette(mat.$m2-pink-palette),
+   accent: mat.m2-define-palette(mat.$m2-blue-grey-palette),
  ),
   // Only include `typography` and `density` in the default dark theme.
-  typography: mat.define-typography-config(),
+  typography: mat.m2-define-typography-config(),
   density: 0,
 ));
 
 // Define a light theme
-$light-theme: mat.define-light-theme((
+$light-theme: mat.m2-define-light-theme((
  color: (
-   primary: mat.define-palette(mat.$indigo-palette),
-   accent: mat.define-palette(mat.$pink-palette),
+   primary: mat.m2-define-palette(mat.$m2-indigo-palette),
+   accent: mat.m2-define-palette(mat.$m2-pink-palette),
  ),
 ));
 
@@ -400,9 +400,9 @@ The example below shows how to customize the color of all buttons inside element
 @use '@angular/material' as mat;
 
 .my-special-section {
- $special-primary: mat.define-palette(mat.$orange-palette);
- $special-accent: mat.define-palette(mat.$brown-palette);
- $special-theme: mat.define-dark-theme((
+ $special-primary: mat.m2-define-palette(mat.$m2-orange-palette);
+ $special-accent: mat.m2-define-palette(mat.$m2-brown-palette);
+ $special-theme: mat.m2-define-dark-theme((
    color: (primary: $special-primary, accent: $special-accent),
  ));
 
@@ -439,7 +439,7 @@ density Sass mixins.
 
 ```scss
 // You can set a density setting in your theme to apply to all components.
-$dark-theme: mat.define-dark-theme((
+$dark-theme: mat.m2-define-dark-theme((
   color: ...,
   typography: ...,
   density: -2,
@@ -480,10 +480,10 @@ the custom theme API.
 @include mat.core();
 @include mat.strong-focus-indicators();
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
@@ -516,10 +516,10 @@ of the custom theme API.
   border-radius: 2px,
 ));
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);
+$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
