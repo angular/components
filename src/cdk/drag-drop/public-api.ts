@@ -14,7 +14,7 @@ export {CDK_DRAG_PARENT} from './drag-parent';
 export * from './drag-events';
 export * from './drag-utils';
 export * from './drag-drop-module';
-export * from './drag-drop-registry';
+export {DragDropRegistry} from './drag-drop-registry';
 
 export {CdkDropList} from './directives/drop-list';
 export * from './directives/config';
