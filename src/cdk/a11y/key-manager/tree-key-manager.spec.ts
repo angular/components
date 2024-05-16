@@ -191,16 +191,12 @@ describe('TreeKeyManager', () => {
         keyManager.focusItem(itemList.get(0)!);
 
         expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        expect(keyManager.getActiveItem()?.getLabel())
-          .withContext('active item label')
-          .toBe('one');
+        expect(keyManager.getActiveItem()?.getLabel()).withContext('active item label').toBe('one');
         itemList.reset([new FakeObservableTreeKeyManagerItem('parent0'), ...itemList.toArray()]);
         itemList.notifyOnChanges();
 
         expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
-        expect(keyManager.getActiveItem()?.getLabel())
-          .withContext('active item label')
-          .toBe('one');
+        expect(keyManager.getActiveItem()?.getLabel()).withContext('active item label').toBe('one');
       });
 
       describe('Key events', () => {

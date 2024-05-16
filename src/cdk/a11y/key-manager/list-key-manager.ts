@@ -68,7 +68,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (_items instanceof QueryList) {
-      this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) => this._itemsChanged(newItems.toArray())
+      this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) =>
+        this._itemsChanged(newItems.toArray()),
       );
     } else if (isSignal(_items)) {
       if (!injector && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -373,12 +374,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   destroy() {
     this._typeaheadSubscription.unsubscribe();
     this._itemChangesSubscription?.unsubscribe();
-<<<<<<< HEAD
     this._effectRef?.destroy();
-    this._letterKeyStream.complete();
-=======
     this._typeahead?.destroy();
->>>>>>> 4bc94e055 (refactor(cdk/a11y): factor out a typeahead class for key managers (#28142))
     this.tabOut.complete();
     this.change.complete();
   }
@@ -454,14 +451,14 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Callback for when the items have changed. */
   private _itemsChanged(newItems: T[] | readonly T[]) {
-        this._typeahead?.setItems(newItems);
-        if (this._activeItem) {
-          const newIndex = newItems.indexOf(this._activeItem);
+    this._typeahead?.setItems(newItems);
+    if (this._activeItem) {
+      const newIndex = newItems.indexOf(this._activeItem);
 
-          if (newIndex > -1 && newIndex !== this._activeItemIndex) {
-            this._activeItemIndex = newIndex;
-            this._typeahead?.setCurrentSelectedItemIndex(newIndex);
-          }
-        }
+      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+        this._activeItemIndex = newIndex;
+        this._typeahead?.setCurrentSelectedItemIndex(newIndex);
+      }
+    }
   }
 }
