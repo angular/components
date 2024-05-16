@@ -123,7 +123,7 @@ describe('MDC-based Row Chips', () => {
 
           spyOn(testComponent, 'chipRemove');
 
-          chipInstance._handleKeydown(DELETE_EVENT);
+          dispatchEvent(chipNativeElement, DELETE_EVENT);
           fixture.detectChanges();
 
           expect(testComponent.chipRemove).toHaveBeenCalled();
@@ -134,10 +134,24 @@ describe('MDC-based Row Chips', () => {
 
           spyOn(testComponent, 'chipRemove');
 
-          chipInstance._handleKeydown(BACKSPACE_EVENT);
+          dispatchEvent(chipNativeElement, BACKSPACE_EVENT);
           fixture.detectChanges();
 
           expect(testComponent.chipRemove).toHaveBeenCalled();
+        });
+
+        it('should not remove for repeated BACKSPACE event', () => {
+          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE);
+          Object.defineProperty(BACKSPACE_EVENT, 'repeat', {
+            get: () => true,
+          });
+
+          spyOn(testComponent, 'chipRemove');
+
+          dispatchEvent(chipNativeElement, BACKSPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(testComponent.chipRemove).not.toHaveBeenCalled();
         });
       });
 
@@ -152,7 +166,7 @@ describe('MDC-based Row Chips', () => {
 
           spyOn(testComponent, 'chipRemove');
 
-          chipInstance._handleKeydown(DELETE_EVENT);
+          dispatchEvent(chipNativeElement, DELETE_EVENT);
           fixture.detectChanges();
 
           expect(testComponent.chipRemove).not.toHaveBeenCalled();
@@ -164,7 +178,7 @@ describe('MDC-based Row Chips', () => {
           spyOn(testComponent, 'chipRemove');
 
           // Use the delete to remove the chip
-          chipInstance._handleKeydown(BACKSPACE_EVENT);
+          dispatchEvent(chipNativeElement, BACKSPACE_EVENT);
           fixture.detectChanges();
 
           expect(testComponent.chipRemove).not.toHaveBeenCalled();
