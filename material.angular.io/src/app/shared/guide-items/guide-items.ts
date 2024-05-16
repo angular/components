@@ -81,11 +81,11 @@ const GUIDES = [
     overview: 'Learn how to migrate your app to the new MDC-based components available in v15.'
   },
   {
-    id: 'material-3',
-    name: 'Using Material 3 Themes (Experimental)',
-    document: '/docs-content/guides/material-3.html',
-    overview: 'Learn how to use Material 3 themes in your app.'
-  }
+    id: 'material-2-theming',
+    name: 'Theming Angular Material with Material 2',
+    document: '/docs-content/guides/material-2.html',
+    overview: 'Customize your application with Angular Material\'s theming system.'
+  },
 ];
 
 @Injectable({providedIn: 'root'})
