@@ -12,6 +12,7 @@ import {
   ViewChild,
   TrackByFunction,
   Type,
+  provideZoneChangeDetection,
   EventEmitter,
   ViewChildren,
   QueryList,
@@ -42,6 +43,7 @@ describe('CdkTree', () => {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
+        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),

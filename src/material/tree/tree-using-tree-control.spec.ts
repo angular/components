@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree';
-import {Component, ViewChild, Type} from '@angular/core';
+import {provideZoneChangeDetection, Component, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -28,6 +28,7 @@ describe('MatTree', () => {
   function configureMatTreeTestingModule(declarations: Type<any>[]) {
     TestBed.configureTestingModule({
       imports: [MatTreeModule],
+      providers: [provideZoneChangeDetection()],
       declarations: declarations,
     }).compileComponents();
   }

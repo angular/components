@@ -1,4 +1,11 @@
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {of} from 'rxjs';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTreeModule} from './tree-module';
@@ -13,7 +20,7 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
     TestBed.configureTestingModule({
       imports: [MatTreeModule],
       declarations: [SimpleMatTreeApp],
-      providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
+      providers: [provideZoneChangeDetection(), NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleMatTreeApp);
