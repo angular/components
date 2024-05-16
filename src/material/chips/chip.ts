@@ -333,7 +333,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** Handles keyboard events on the chip. */
   _handleKeydown(event: KeyboardEvent) {
-    if (event.keyCode === BACKSPACE || event.keyCode === DELETE) {
+    // Ignore backspace events where the user is holding down the key
+    // so that we don't accidentally remove too many chips.
+    if ((event.keyCode === BACKSPACE && !event.repeat) || event.keyCode === DELETE) {
       event.preventDefault();
       this.remove();
     }
