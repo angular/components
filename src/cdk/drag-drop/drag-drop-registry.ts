@@ -6,7 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, Inject} from '@angular/core';
+import {
+  Injectable,
+  NgZone,
+  OnDestroy,
+  Inject,
+  inject,
+  ApplicationRef,
+  EnvironmentInjector,
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  createComponent,
+} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {merge, Observable, Observer, Subject} from 'rxjs';
@@ -16,6 +28,23 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
   capture: true,
 });
+
+/** Keeps track of the apps currently containing drag items. */
+const activeApps = new Set<ApplicationRef>();
+
+/**
+ * Component used to load the drag&drop reset styles.
+ * @docs-private
+ */
+@Component({
+  standalone: true,
+  styleUrl: 'resets.css',
+  encapsulation: ViewEncapsulation.None,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {'cdk-drag-resets-container': ''},
+})
+export class _ResetsLoader {}
 
 /**
  * Service that keeps track of all the drag item and drop container
@@ -28,6 +57,8 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements OnDestroy {
   private _document: Document;
+  private _appRef = inject(ApplicationRef);
+  private _environmentInjector = inject(EnvironmentInjector);
 
   /** Registered drop container instances. */
   private _dropInstances = new Set<C>();
@@ -136,6 +167,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
       return;
     }
 
+    this._loadResets();
     this._activeDragInstances.push(drag);
 
     if (this._activeDragInstances.length === 1) {
@@ -275,5 +307,24 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
     });
 
     this._globalListeners.clear();
+  }
+
+  // TODO(crisbeto): abstract this away into something reusable.
+  /** Loads the CSS resets needed for the module to work correctly. */
+  private _loadResets() {
+    if (!activeApps.has(this._appRef)) {
+      activeApps.add(this._appRef);
+
+      const componentRef = createComponent(_ResetsLoader, {
+        environmentInjector: this._environmentInjector,
+      });
+
+      this._appRef.onDestroy(() => {
+        activeApps.delete(this._appRef);
+        if (activeApps.size === 0) {
+          componentRef.destroy();
+        }
+      });
+    }
   }
 }
