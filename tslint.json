@@ -188,8 +188,7 @@
         // Tests may need to verify behavior with zones.
         "**/*.spec.ts",
         // TODO(mmalerba): following files to be cleaned up and removed from this list:
-        "**/cdk/a11y/focus-trap/focus-trap.ts",
-        "**/cdk/dialog/dialog-container.ts"
+        "**/cdk/a11y/focus-trap/focus-trap.ts"
       ]
     ]
   },

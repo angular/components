@@ -11,15 +11,17 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   Directive,
+  DoCheck,
   ElementRef,
   Inject,
   Injectable,
+  Injector,
   Input,
   NgZone,
-  OnDestroy,
-  DoCheck,
-  SimpleChanges,
   OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  afterNextRender,
   booleanAttribute,
   inject,
 } from '@angular/core';
@@ -62,6 +64,8 @@ export class FocusTrap {
     readonly _ngZone: NgZone,
     readonly _document: Document,
     deferAnchors = false,
+    /** @breaking-change 20.0.0 param to become required */
+    readonly _injector?: Injector,
   ) {
     if (!deferAnchors) {
       this.attachAnchors();
@@ -355,10 +359,27 @@ export class FocusTrap {
 
   /** Executes a function when the zone is stable. */
   private _executeOnStable(fn: () => any): void {
-    if (this._ngZone.isStable) {
-      fn();
-    } else {
+    // TODO(mmalerba): Make this behave consistently across zonefull / zoneless.
+    if (!this._ngZone.isStable) {
+      // Subscribing `onStable` has slightly different behavior than `afterNextRender`.
+      // `afterNextRender` does not wait for state changes queued up in a Promise
+      // to avoid change after checked errors. In most cases we would consider this an
+      // acceptable behavior change, the dialog at least made its best effort to focus the
+      // first element. However, this is particularly problematic when combined with the
+      // current behavior of the mat-radio-group, which adjusts the tabindex of its child
+      // radios based on the selected value of the group. When the selected value is bound
+      // via `[(ngModel)]` it hits this "state change in a promise" edge-case and can wind up
+      // putting the focus on a radio button that is not supposed to be eligible to receive
+      // focus. For now, we side-step this whole sequence of events by continuing to use
+      // `onStable` in zonefull apps, but it should be noted that zoneless apps can still
+      // suffer from this issue.
       this._ngZone.onStable.pipe(take(1)).subscribe(fn);
+    } else {
+      if (this._injector) {
+        afterNextRender(fn, {injector: this._injector});
+      } else {
+        fn();
+      }
     }
   }
 }
@@ -369,6 +390,7 @@ export class FocusTrap {
 @Injectable({providedIn: 'root'})
 export class FocusTrapFactory {
   private _document: Document;
+  private _injector = inject(Injector);
 
   constructor(
     private _checker: InteractivityChecker,
@@ -392,6 +414,7 @@ export class FocusTrapFactory {
       this._ngZone,
       this._document,
       deferCaptureElements,
+      this._injector,
     );
   }
 }
