@@ -14,4 +14,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 })
 export class FormFieldPrefixSuffixExample {
   hide = true;
+  clickEvent(event: MouseEvent) {
+    this.hide = !this.hide;
+    event.stopPropagation();
+  }
 }
