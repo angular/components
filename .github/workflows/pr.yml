@@ -1,10 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - '[0-9]+.[0-9]+.x'
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,11 +42,10 @@ jobs:
         run: yarn tslint
       - name: Check for circular dependencies
         run: yarn -s ts-circular-deps:check
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Lint check'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+      - name: Check commit message
+        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+      - name: Check code format
+        run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
 
   api_golden_checks:
     runs-on: ubuntu-latest
@@ -65,11 +62,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'API Golden Checks'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   e2e:
     runs-on: ubuntu-latest
@@ -86,11 +78,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run e2e tests
         run: yarn e2e --flaky_test_attempts=2
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'E2E test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   integration:
     runs-on: ubuntu-latest
@@ -110,11 +97,6 @@ jobs:
       - name: Running size integration tests
         run: yarn integration-tests:size-test
         continue-on-error: true
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Integration test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_aot_tests:
     runs-on: ubuntu-latest-4core
@@ -131,11 +113,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run linker AOT tests
         run: yarn test-linker-aot
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Link AOT test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_jit_tests:
     runs-on: ubuntu-latest-4core
@@ -152,11 +129,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run linker JIT tests
         run: yarn test-linker-jit
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Link JIT test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   test:
     runs-on: ubuntu-latest-16core
@@ -173,11 +145,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   build:
     runs-on: ubuntu-latest-4core
@@ -194,13 +161,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Build'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
-  publish_snapshots:
+  upload_package_artifacts:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -217,49 +179,13 @@ jobs:
         run: yarn build-and-check-release-output
       - name: Verify tooling setup
         run: yarn check-tooling-setup
-      - name: Build Docs Content
-        run: yarn build-docs-content
-      - name: Build Docs Content
-        run: yarn build-docs-content
-      - name: Publish Snapshots
-        run: ./scripts/circleci/publish-snapshots.sh
-        env:
-          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
-      - uses: ./.github/actions/slack
-        if: failure()
+      - name: Build and create package artifacts
+        run: ./scripts/create-package-archives.js --suffix "pr${{github.event.number}}-$(git rev-parse --short HEAD)"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # tag=v4.3.1
         with:
-          JOB_NAME: 'Snapshot publishing'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
-
-  deploy_doc_site:
-    runs-on: ubuntu-latest-4core
-    steps:
-      - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
-        with:
-          cache-node-modules: true
-      - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
-      - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
-      - name: Install node modules
-        run: yarn install --frozen-lockfile
-      - name: Build and Verify Release Output
-        run: yarn build-and-check-release-output
-      - name: Verify tooling setup
-        run: yarn check-tooling-setup
-      - name: Deploy the docs app
-        run: yarn ci-push-deploy-docs-app
-        env:
-          CIRCLE_BRANCH: ${{ github.ref_name }}
-          CIRCLE_SHA1: ${{ github.sha }}
-          DOCS_SITE_GCP_SERVICE_KEY: ${{ secrets.DOCS_SITE_GCP_SERVICE_KEY }}
-          DOCS_DEPLOY_GITHUB_TOKEN: ${{ secrets.DOCS_DEPLOY_GITHUB_TOKEN }}
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Docs site deployment'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+          name: Package Artifacts
+          path: dist/release-archives
 
   saucelabs:
     runs-on: ubuntu-latest
@@ -273,6 +199,8 @@ jobs:
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
         with:
           cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Setup Bazel
@@ -293,6 +221,8 @@ jobs:
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
         with:
           cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Setup Bazel
