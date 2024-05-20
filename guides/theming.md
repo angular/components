@@ -449,65 +449,6 @@ $dark-theme: mat.define-theme((
 
 [material-density]: https://m3.material.io/foundations/layout/understanding-layout/spacing
 
-## Reading theme values
-
-### Reading tonal palette colors
-
-To read a
-[tonal palette color](https://m3.material.io/styles/color/system/how-the-system-works#3ce9da92-a118-4692-8b2c-c5c52a413fa6)
-from the theme, use the `get-theme-color` function with three arguments:
-
-| Argument   | Description                                                                                                                                                                                                                                                        |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `$theme`   | The M3 theme to read from.                                                                                                                                                                                                                                         |
-| `$palette` | The name of the palette to read from. This can be any of the standard M3 palettes:<ul><li>`primary`</li><li>`secondary`</li><li>`tertiary`</li><li>`error`</li><li>`neutral`</li><li>`neutral-variant`</li></ul>                                                   |
-| `$hue`     | The hue number to read within the palette. This can be any of the standard hues:<ul><li>`0`</li><li>`10`</li><li>`20`</li><li>`30`</li><li>`40`</li><li>`50`</li><li>`60`</li><li>`70`</li><li>`80`</li><li>`90`</li><li>`95`</li><li>`99`</li><li>`100`</li></ul> |
-
-<!-- TODO(mmalerba): Illustrate palettes and hues with example. -->
-
-### Reading color roles
-
-To read a [color role](https://m3.material.io/styles/color/roles), use `get-theme-color` with two
-arguments:
-
-| Argument | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$theme` | The M3 theme to read from.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `$role`  | The name of the color role. This can be any of the M3 color roles:<ul><li>`primary`</li><li>`on-primary`</li><li>`primary-container`</li><li>`on-primary-container`</li><li>`primary-fixed`</li><li>`primary-fixed-dim`</li><li>`on-primary-fixed`</li><li>`on-primary-fixed-variant`</li><li>`secondary`</li><li>`on-secondary`</li><li>`secondary-container`</li><li>`on-secondary-container`</li><li>`secondary-fixed`</li><li>`secondary-fixed-dim`</li><li>`on-secondary-fixed`</li><li>`on-secondary-fixed-variant`</li><li>`tertiary`</li><li>`on-tertiary`</li><li>`tertiary-container`</li><li>`on-tertiary-container`</li><li>`tertiary-fixed`</li><li>`tertiary-fixed-dim`</li><li>`on-tertiary-fixed`</li><li>`on-tertiary-fixed-variant`</li><li>`error`</li><li>`on-error`</li><li>`error-container`</li><li>`on-error-container`</li><li>`surface-dim`</li><li>`surface`</li><li>`surface-bright`</li><li>`surface-container-lowest`</li><li>`surface-container-low`</li><li>`surface-container`</li><li>`surface-container-high`</li><li>`surface-container-highest`</li><li>`on-surface`</li><li>`on-surface-variant`</li><li>`outline`</li><li>`outline-variant`</li><li>`inverse-surface`</li><li>`inverse-on-surface`</li><li>`inverse-primary`</li><li>`scrim`</li><li>`shadow`</li></ul> |
-
-<!-- TODO(mmalerba): Illustrate color roles with example. -->
-
-### Reading the theme type
-
-To read the theme type (`light` or `dark`), call `get-theme-type` with a single argument:
-
-| Argument | Description                |
-| -------- | -------------------------- |
-| `$theme` | The M3 theme to read from. |
-
-
-### Reading typescale properties
-
-To read a [typescale](https://m3.material.io/styles/typography/type-scale-tokens) property from the
-theme, call `get-theme-typography` with three arguments:
-
-| Argument    | Description                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `$theme`    | The M3 theme to read from.                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `$level`    | The typescale level. This can be any of the M3 typescale levels:<ul><li>`display-large`</li><li>`display-medium`</li><li>`display-small`</li><li>`headline-large`</li><li>`headline-medium`</li><li>`headline-small`</li><li>`title-large`</li><li>`title-medium`</li><li>`title-small`</li><li>`body-large`</li><li>`body-medium`</li><li>`body-small`</li><li>`label-large`</li><li>`label-medium`</li><li>`label-small`</li></ul> |
-| `$property` | The CSS font property to get a value for. This can be one of the following CSS properties:<ul><li>`font` (The CSS font shorthand, includes all font properties except letter-spacing)</li><li>`font-family`</li><li>`font-size`</li><li>`font-weight`</li><li>`line-height`</li><li>`letter-spacing`</li></ul>                                                                                                                       |
-
-<!-- TODO(mmalerba): Illustrate typescales with example. -->
-
-### Reading the density scale
-
-To read the density scale (`0`, `-1`, `-2`, `-3`, `-4`, or `-5`) from the theme, call
-`get-theme-density` with a single argument:
-
-| Argument | Description                |
-| -------- | -------------------------- |
-| `$theme` | The M3 theme to read from. |
-
 ## Strong focus indicators
 
 By default, most components indicate browser focus by changing their background color as described
