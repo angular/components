@@ -138,9 +138,7 @@ Learn more about this schematic in its [documentation](https://github.com/angula
 #### Customizing your typography
 
 The following aspects of your app's typography can be customized via the `typography` property of
-the theme configuration object (see the
-[M3 typography spec](https://m3.material.io/styles/typography/type-scale-tokens) to learn more about
-these terms):
+the theme configuration object.
 
 | Typography Property | Description                                                          |
 | ------------------- | -------------------------------------------------------------------- |
@@ -149,6 +147,9 @@ these terms):
 | `bold-weight`       | [Optional] The font weight to use for bold text.                     |
 | `medium-weight`     | [Optional] The font weight to use for medium text.                   |
 | `regular-weight`    | [Optional] The font weight to use for regular text.                  |
+
+See the [typography guide](https://material.angular.io/guide/typography) for more
+information.
 
 #### Customizing your density
 
