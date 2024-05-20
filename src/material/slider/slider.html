@@ -10,7 +10,7 @@
   @if (showTickMarks) {
     <div class="mdc-slider__tick-marks" #tickMarkContainer>
       @if (_cachedWidth) {
-        @for (tickMark of _tickMarks; track tickMark; let i = $index) {
+        @for (tickMark of _tickMarks; track i; let i = $index) {
           <div
             [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
             [style.transform]="_calcTickMarkTransform(i)"></div>
