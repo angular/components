@@ -21,6 +21,10 @@ interface TypeaheadConfig<T> {
   skipPredicate?: (item: T) => boolean | undefined;
 }
 
+/**
+ * Selects items based on keyboard inputs. Implements the typeahead functionality of
+ * `role="listbox"` or `role="tree"` and other related roles.
+ */
 export class Typeahead<T extends TypeaheadItem> {
   private readonly _letterKeyStream = new Subject<string>();
   private _items: readonly T[] = [];

@@ -146,7 +146,7 @@ for a particular data node via the `when` predicate of the template.
 
 #### Connecting the tree to a data source
 
-Similar to `mat-table`, data is provided to the tree through a `DataSource`. When the tree receives
+Similar to `mat-table`, you can provide data to the tree through a `DataSource`. When the tree receives
 a `DataSource` it will call its `connect()` method which returns an observable that emits an array
 of data. Whenever the data source emits data to this stream, the tree will render an update.
 
