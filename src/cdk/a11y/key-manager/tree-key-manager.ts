@@ -24,9 +24,16 @@ import {Typeahead} from './typeahead';
  * keyboard events occur.
  */
 export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
+  /** The index of the currently active (focused) item. */
   private _activeItemIndex = -1;
+  /** The currently active (focused) item. */
   private _activeItem: T | null = null;
+  /** Whether or not we activate the item when it's focused. */
   private _shouldActivationFollowFocus = false;
+  /**
+   * The orientation that the tree is laid out in. In `rtl` mode, the behavior of Left and
+   * Right arrow are switched.
+   */
   private _horizontalOrientation: 'ltr' | 'rtl' = 'ltr';
 
   // Keep tree items focusable when disabled. Align with
@@ -40,6 +47,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   /** Function to determine equivalent items. */
   private _trackByFn: (item: T) => unknown = (item: T) => item;
 
+  /** Synchronous cache of the items to manage. */
   private _items: T[] = [];
 
   private _typeahead?: Typeahead<T>;

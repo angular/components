@@ -84,12 +84,12 @@ type RenderingData<T> =
   | {
       flattenedNodes: null;
       nodeType: null;
-      renderNodes: T[];
+      renderNodes: readonly T[];
     }
   | {
-      flattenedNodes: T[];
+      flattenedNodes: readonly T[];
       nodeType: 'nested' | 'flat';
-      renderNodes: [];
+      renderNodes: readonly T[];
     };
 
 /**
@@ -351,6 +351,14 @@ export class CdkTree<T, K = T>
     }
   }
 
+  private _getExpansionModel() {
+    if (!this.treeControl) {
+      this._expansionModel ??= new SelectionModel<K>(true);
+      return this._expansionModel;
+    }
+    return this.treeControl.expansionModel;
+  }
+
   /** Set up a subscription for the data provided by the data source. */
   private _subscribeToDataChanges() {
     if (this._dataSubscription) {
@@ -374,15 +382,17 @@ export class CdkTree<T, K = T>
       return;
     }
 
-    let expansionModel;
-    if (!this.treeControl) {
-      this._expansionModel = new SelectionModel<K>(true);
-      expansionModel = this._expansionModel;
-    } else {
-      expansionModel = this.treeControl.expansionModel;
-    }
+    this._dataSubscription = this._getRenderData(dataStream)
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(renderingData => {
+        this._renderDataChanges(renderingData);
+      });
+  }
 
-    this._dataSubscription = combineLatest([
+  /** Given an Observable containing a stream of the raw data, returns an Observable containing the RenderingData */
+  private _getRenderData(dataStream: Observable<readonly T[]>): Observable<RenderingData<T>> {
+    const expansionModel = this._getExpansionModel();
+    return combineLatest([
       dataStream,
       this._nodeType,
       // We don't use the expansion data directly, however we add it here to essentially
@@ -393,24 +403,19 @@ export class CdkTree<T, K = T>
           this._emitExpansionChanges(expansionChanges);
         }),
       ),
-    ])
-      .pipe(
-        switchMap(([data, nodeType]) => {
-          if (nodeType === null) {
-            return observableOf([{renderNodes: data}, nodeType] as const);
-          }
+    ]).pipe(
+      switchMap(([data, nodeType]) => {
+        if (nodeType === null) {
+          return observableOf({renderNodes: data, flattenedNodes: null, nodeType} as const);
+        }
 
-          // If we're here, then we know what our node type is, and therefore can
-          // perform our usual rendering pipeline, which necessitates converting the data
-          return this._convertData(data, nodeType).pipe(
-            map(convertedData => [convertedData, nodeType] as const),
-          );
-        }),
-        takeUntil(this._onDestroy),
-      )
-      .subscribe(([data, nodeType]) => {
-        this._renderDataChanges({nodeType, ...data} as RenderingData<T>);
-      });
+        // If we're here, then we know what our node type is, and therefore can
+        // perform our usual rendering pipeline, which necessitates converting the data
+        return this._computeRenderingData(data, nodeType).pipe(
+          map(convertedData => ({...convertedData, nodeType}) as const),
+        );
+      }),
+    );
   }
 
   private _renderDataChanges(data: RenderingData<T>) {
@@ -597,10 +602,9 @@ export class CdkTree<T, K = T>
 
   /** Whether the data node is expanded or collapsed. Returns true if it's expanded. */
   isExpanded(dataNode: T): boolean {
-    return (
-      this.treeControl?.isExpanded(dataNode) ??
-      this._expansionModel?.isSelected(this._getExpansionKey(dataNode)) ??
-      false
+    return !!(
+      this.treeControl?.isExpanded(dataNode) ||
+      this._expansionModel?.isSelected(this._getExpansionKey(dataNode))
     );
   }
 
@@ -744,26 +748,13 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          const startIndex = flattenedNodes.findIndex(node => this._getExpansionKey(node) === key);
-          const level = levelAccessor(dataNode) + 1;
-          const results: T[] = [];
+          return this._findChildrenByLevel(
+            levelAccessor,
+            flattenedNodes,
 
-          // Goes through flattened tree nodes in the `flattenedNodes` array, and get all direct
-          // descendants. The level of descendants of a tree node must be equal to the level of the
-          // given tree node + 1.
-          // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
-          // If we reach a node whose level is greater than the level of the tree node, we hit a
-          // sibling of an ancestor.
-          for (let i = startIndex + 1; i < flattenedNodes.length; i++) {
-            const currentLevel = levelAccessor(flattenedNodes[i]);
-            if (level > currentLevel) {
-              break;
-            }
-            if (level === currentLevel) {
-              results.push(flattenedNodes[i]);
-            }
-          }
-          return results;
+            dataNode,
+            1,
+          );
         }),
       );
     }
@@ -772,6 +763,42 @@ export class CdkTree<T, K = T>
       return coerceObservable(childrenAccessor(dataNode) ?? []);
     }
     throw getTreeControlMissingError();
+  }
+
+  /**
+   * Given the list of flattened nodes, the level accessor, and the level range within
+   * which to consider children, finds the children for a given node.
+   *
+   * For example, for direct children, `levelDelta` would be 1. For all descendants,
+   * `levelDelta` would be Infinity.
+   */
+  private _findChildrenByLevel(
+    levelAccessor: (node: T) => number,
+    flattenedNodes: readonly T[],
+    dataNode: T,
+    levelDelta: number,
+  ): T[] {
+    const key = this._getExpansionKey(dataNode);
+    const startIndex = flattenedNodes.findIndex(node => this._getExpansionKey(node) === key);
+    const dataNodeLevel = levelAccessor(dataNode);
+    const expectedLevel = dataNodeLevel + levelDelta;
+    const results: T[] = [];
+
+    // Goes through flattened tree nodes in the `flattenedNodes` array, and get all
+    // descendants within a certain level range.
+    //
+    // If we reach a node whose level is equal to or less than the level of the tree node,
+    // we hit a sibling or parent's sibling, and should stop.
+    for (let i = startIndex + 1; i < flattenedNodes.length; i++) {
+      const currentLevel = levelAccessor(flattenedNodes[i]);
+      if (currentLevel <= dataNodeLevel) {
+        break;
+      }
+      if (currentLevel <= expectedLevel) {
+        results.push(flattenedNodes[i]);
+      }
+    }
+    return results;
   }
 
   /**
@@ -853,27 +880,12 @@ export class CdkTree<T, K = T>
       return observableOf(this.treeControl.getDescendants(dataNode));
     }
     if (this.levelAccessor) {
-      const key = this._getExpansionKey(dataNode);
-      const startIndex = this._flattenedNodes.value.findIndex(
-        node => this._getExpansionKey(node) === key,
+      const results = this._findChildrenByLevel(
+        this.levelAccessor,
+        this._flattenedNodes.value,
+        dataNode,
+        Infinity,
       );
-      const results: T[] = [];
-
-      // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
-      // The level of descendants of a tree node must be greater than the level of the given
-      // tree node.
-      // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
-      // If we reach a node whose level is greater than the level of the tree node, we hit a
-      // sibling of an ancestor.
-      const currentLevel = this.levelAccessor(dataNode);
-      for (
-        let i = startIndex + 1;
-        i < this._flattenedNodes.value.length &&
-        currentLevel < this.levelAccessor(this._flattenedNodes.value[i]);
-        i++
-      ) {
-        results.push(this._flattenedNodes.value[i]);
-      }
       return observableOf(results);
     }
     if (this.childrenAccessor) {
@@ -1014,7 +1026,7 @@ export class CdkTree<T, K = T>
    *
    * This also computes parent, level, and group data.
    */
-  private _convertData(
+  private _computeRenderingData(
     nodes: readonly T[],
     nodeType: 'flat' | 'nested',
   ): Observable<{
