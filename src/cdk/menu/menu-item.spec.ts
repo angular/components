@@ -1,4 +1,4 @@
-import {Component, Type, ElementRef, provideZoneChangeDetection} from '@angular/core';
+import {Component, Type, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
@@ -20,7 +20,6 @@ describe('MenuItem', () => {
         imports: [CdkMenuModule],
         declarations: [SingleMenuItem],
         providers: [
-          provideZoneChangeDetection(),
           {provide: CDK_MENU, useClass: CdkMenu},
           {provide: MENU_STACK, useClass: MenuStack},
           // View engine can't figure out the ElementRef to inject so we need to provide a fake
@@ -49,11 +48,13 @@ describe('MenuItem', () => {
       expect(nativeButton.hasAttribute('aria-disabled')).toBeFalse();
 
       menuItem.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(nativeButton.getAttribute('aria-disabled')).toBe('true');
 
       menuItem.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(nativeButton.hasAttribute('aria-disabled')).toBeFalse();
@@ -83,7 +84,6 @@ describe('MenuItem', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MatIcon],
         providers: [
-          provideZoneChangeDetection(),
           {provide: CDK_MENU, useClass: CdkMenu},
           {provide: MENU_STACK, useClass: MenuStack},
           // View engine can't figure out the ElementRef to inject so we need to provide a fake
@@ -108,6 +108,7 @@ describe('MenuItem', () => {
       const fixture = createComponent(MenuItemWithIcon);
       expect(menuItem.getLabel()).toEqual('unicorn Click me!');
       fixture.componentInstance.typeahead = 'Click me!';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(menuItem.getLabel()).toEqual('Click me!');
     });
@@ -119,6 +120,7 @@ describe('MenuItem', () => {
         const fixture = createComponent(MenuItemWithIconClass);
         expect(menuItem.getLabel()).toEqual('unicorn Click me!');
         fixture.componentInstance.typeahead = 'Click me!';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(menuItem.getLabel()).toEqual('Click me!');
       },
@@ -136,6 +138,7 @@ describe('MenuItem', () => {
         const fixture = createComponent(MenuItemWithMultipleNestings);
         expect(menuItem.getLabel()).toEqual('unicorn Click menume!');
         fixture.componentInstance.typeahead = 'Click me!';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(menuItem.getLabel()).toEqual('Click me!');
       },

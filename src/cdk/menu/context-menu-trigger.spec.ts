@@ -1,12 +1,4 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Type,
-  ViewChildren,
-  QueryList,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, ViewChild, ElementRef, Type, ViewChildren, QueryList} from '@angular/core';
 import {CdkMenuModule} from './menu-module';
 import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
@@ -26,7 +18,6 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [SimpleContextMenu],
-        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 
@@ -160,7 +151,6 @@ describe('CdkContextMenuTrigger', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
-        providers: [provideZoneChangeDetection()],
         declarations: [NestedContextMenu],
       }).compileComponents();
     }));
@@ -223,6 +213,7 @@ describe('CdkContextMenuTrigger', () => {
         ' is disabled',
       () => {
         fixture.componentInstance.copyMenuDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         openCopyContextMenu();
 
@@ -410,7 +401,6 @@ describe('CdkContextMenuTrigger', () => {
     function createComponent<T>(componentClass: Type<T>) {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
-        providers: [provideZoneChangeDetection()],
         declarations: [componentClass],
       }).compileComponents();
 

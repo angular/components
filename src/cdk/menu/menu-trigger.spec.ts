@@ -1,12 +1,4 @@
-import {
-  Component,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  ViewChild,
-  Type,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -27,7 +19,6 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [TriggerForEmptyMenu],
-        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 
@@ -51,6 +42,7 @@ describe('MenuTrigger', () => {
       expect(menuItemElement.getAttribute('aria-disabled')).toBeNull();
 
       menuItem.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(menuItemElement.getAttribute('aria-disabled')).toBe('true');
@@ -60,6 +52,7 @@ describe('MenuTrigger', () => {
       expect(menuItemElement.getAttribute('aria-haspopup')).toEqual('menu');
 
       fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(menuItemElement.hasAttribute('aria-haspopup')).toBe(false);
@@ -69,6 +62,7 @@ describe('MenuTrigger', () => {
       expect(menuItem.hasMenu).toBeTrue();
 
       fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(menuItem.hasMenu).toBeFalse();
@@ -83,6 +77,7 @@ describe('MenuTrigger', () => {
       expect(menuItemElement.getAttribute('aria-expanded')).toBe('false');
 
       fixture.componentInstance.trigger.menuTemplateRef = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(menuItemElement.hasAttribute('aria-expanded')).toBeFalse();
