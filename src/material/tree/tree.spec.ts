@@ -444,7 +444,7 @@ describe('MatTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        // NB: only four elements are present here; children are not present
+        // Note: only four elements are present here; children are not present
         // in DOM unless the parent node is expanded.
         expect(
           getNodes(treeElement)

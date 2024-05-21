@@ -142,7 +142,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
     switch (key) {
       case 'Tab':
-        // NB: return here, in order to allow Tab to actually tab out of the tree
+        // Return early here, in order to allow Tab to actually tab out of the tree
         return;
 
       case 'ArrowDown':

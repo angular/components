@@ -391,7 +391,7 @@ export class CdkTree<T, K = T>
     this._dataSubscription = combineLatest([
       dataStream,
       this._nodeType,
-      // NB: the data is unused below, however we add it here to essentially
+      // We don't use the expansion data directly, however we add it here to essentially
       // trigger data rendering when expansion changes occur.
       expansionModel.changed.pipe(
         startWith(null),
@@ -966,8 +966,8 @@ export class CdkTree<T, K = T>
    * nodes into a single array.
    *
    * If any nodes are not expanded, then their children will not be added into the array.
-   * NB: this will still traverse all nested children in order to build up our
-   * internal data models, but will not include them in the returned array.
+   * This will still traverse all nested children in order to build up our internal data
+   * models, but will not include them in the returned array.
    */
   private _flattenNestedNodesWithExpansion(nodes: readonly T[], level = 0): Observable<T[]> {
     const childrenAccessor = this._getChildrenAccessor();
