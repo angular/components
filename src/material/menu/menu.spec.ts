@@ -25,7 +25,6 @@ import {
   Type,
   ViewChild,
   ViewChildren,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {MatRipple} from '@angular/material/core';
@@ -64,7 +63,7 @@ describe('MDC-based MatMenu', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection(), ...providers],
+      providers,
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
     }).compileComponents();
@@ -96,6 +95,7 @@ describe('MDC-based MatMenu', () => {
     expect(triggerElement.getAttribute('aria-haspopup')).toBe('menu');
 
     fixture.componentInstance.trigger.menu = null;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(triggerElement.hasAttribute('aria-haspopup')).toBe(false);
@@ -371,6 +371,7 @@ describe('MDC-based MatMenu', () => {
 
     // Add 50 items to make the menu scrollable
     fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
@@ -650,6 +651,7 @@ describe('MDC-based MatMenu', () => {
     instance.ariaLabel = 'Custom aria-label';
     instance.ariaLabelledby = 'custom-labelled-by';
     instance.ariaDescribedby = 'custom-described-by';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(menuPanel.getAttribute('aria-label')).toBe('Custom aria-label');
@@ -658,6 +660,7 @@ describe('MDC-based MatMenu', () => {
 
     // Change these to empty strings to make sure that we don't preserve empty attributes.
     instance.ariaLabel = instance.ariaLabelledby = instance.ariaDescribedby = '';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(menuPanel.hasAttribute('aria-label')).toBe(false);
@@ -904,11 +907,11 @@ describe('MDC-based MatMenu', () => {
   }));
 
   it('should throw if assigning a menu that contains the trigger', fakeAsync(() => {
-    expect(() => {
-      const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
-      fixture.detectChanges();
-      tick(500);
-    }).toThrowError(/menu cannot contain its own trigger/);
+    const errorSpy = spyOn(console, 'error');
+    const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    tick(500);
+    expect(errorSpy.calls.first().args[1]).toMatch(/menu cannot contain its own trigger/);
   }));
 
   it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
@@ -1222,6 +1225,7 @@ describe('MDC-based MatMenu', () => {
     expect(Math.floor(panelRect.bottom)).toBeLessThan(viewportHeight);
 
     fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     panelRect = panel.getBoundingClientRect();
     expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
@@ -1408,6 +1412,7 @@ describe('MDC-based MatMenu', () => {
       trigger.style.top = '200px';
 
       fixture.componentInstance.yPosition = 'above';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openMenu();
@@ -1425,6 +1430,7 @@ describe('MDC-based MatMenu', () => {
       tick(500);
 
       fixture.componentInstance.yPosition = 'below';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openMenu();
@@ -2499,6 +2505,7 @@ describe('MDC-based MatMenu', () => {
       fixture.detectChanges();
       tick(500);
       fixture.detectChanges();
+      flush();
 
       expect(lazyTrigger.classList)
         .withContext('Expected the trigger to be highlighted')
@@ -2711,7 +2718,6 @@ describe('MatMenu default overrides', () => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
           useValue: {overlapTrigger: true, xPosition: 'before', yPosition: 'above'},

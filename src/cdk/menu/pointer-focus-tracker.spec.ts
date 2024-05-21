@@ -1,11 +1,4 @@
-import {
-  Component,
-  QueryList,
-  ElementRef,
-  ViewChildren,
-  AfterViewInit,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
 import {Observable} from 'rxjs';
@@ -26,7 +19,6 @@ describe('FocusMouseManger', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [MultiElementWithConditionalComponent, MockWrapper],
     }).compileComponents();
   }));
@@ -68,6 +60,7 @@ describe('FocusMouseManger', () => {
 
     expect(mockElements.length).toBe(2);
     fixture.componentInstance.showThird = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     getComponentsForTesting();
 

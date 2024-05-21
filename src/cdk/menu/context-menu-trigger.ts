@@ -6,7 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {booleanAttribute, Directive, inject, Injectable, Input, OnDestroy} from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectorRef,
+  Directive,
+  inject,
+  Injectable,
+  Input,
+  OnDestroy,
+} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
@@ -83,6 +91,8 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   /** The app's context menu tracking registry */
   private readonly _contextMenuTracker = inject(ContextMenuTracker);
 
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** Whether the context menu is disabled. */
   @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
@@ -97,6 +107,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
    */
   open(coordinates: ContextMenuCoordinates) {
     this._open(null, coordinates);
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Close the currently opened context menu. */
