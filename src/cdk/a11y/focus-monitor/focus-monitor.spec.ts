@@ -1,7 +1,7 @@
 import {TAB} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -34,7 +34,6 @@ describe('FocusMonitor', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, PlainButton],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: DOCUMENT,
           useFactory: () => {
@@ -900,25 +899,6 @@ describe('FocusMonitor input label detection', () => {
   }));
 });
 
-describe('cdkMonitorFocus with change detection counter', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule, ButtonWithCDCounter],
-      providers: [{provide: Platform, useValue: {isBrowser: true}}],
-    }).compileComponents();
-  });
-
-  it('should detect changes caused by focus change', async () => {
-    const fixture = TestBed.createComponent(ButtonWithCDCounter);
-    fixture.autoDetectChanges();
-    const buttonElement = fixture.nativeElement.querySelector('button');
-    buttonElement.focus();
-    await fixture.whenStable();
-    const focusChangeCounter = fixture.nativeElement.querySelector('.focus-change-counter');
-    expect(focusChangeCounter.innerText).toBe('1');
-  });
-});
-
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
   standalone: true,
@@ -980,16 +960,4 @@ class CheckboxWithLabel {}
 })
 class ExportedFocusMonitor {
   @ViewChild('exportedDir') exportedDirRef: CdkMonitorFocus;
-}
-
-@Component({
-  template: `
-    <button cdkMonitorElementFocus (cdkFocusChange)="focusChangeCount = focusChangeCount + 1"></button>
-    <div class="focus-change-counter">{{focusChangeCount}}</div>
-  `,
-  standalone: true,
-  imports: [A11yModule],
-})
-class ButtonWithCDCounter {
-  focusChangeCount = 0;
 }

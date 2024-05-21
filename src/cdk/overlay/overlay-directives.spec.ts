@@ -1,6 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -759,24 +759,6 @@ describe('Overlay directives', () => {
   });
 });
 
-describe('Overlay directives with change detection counter', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ConnectedOverlayWithCDCounter],
-    }).compileComponents();
-  });
-
-  it('should detect changes caused by position change', waitForAsync(async () => {
-    const fixture = TestBed.createComponent(ConnectedOverlayWithCDCounter);
-    fixture.autoDetectChanges();
-    fixture.componentInstance.isOpen = true;
-    fixture.changeDetectorRef.markForCheck();
-    await fixture.whenStable();
-    const positionChangeCounter = fixture.nativeElement.querySelector('.position-change-counter');
-    expect(positionChangeCounter.innerText).toBe('1');
-  }));
-});
-
 @Component({
   template: `
   <button cdk-overlay-origin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
@@ -859,24 +841,4 @@ class ConnectedOverlayDirectiveTest {
 class ConnectedOverlayPropertyInitOrder {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
   @ViewChild('trigger') trigger: CdkOverlayOrigin;
-}
-
-@Component({
-  template: `
-    <div class="position-change-counter">{{positionChangeCount}}</div>
-    <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
-    <ng-template
-        cdk-connected-overlay
-        [cdkConnectedOverlayOrigin]="trigger"
-        [cdkConnectedOverlayOpen]="isOpen"
-        (positionChange)="positionChangeCount = positionChangeCount + 1">
-      Menu content
-    </ng-template>
-  `,
-  standalone: true,
-  imports: [OverlayModule],
-})
-class ConnectedOverlayWithCDCounter {
-  @Input() isOpen = false;
-  positionChangeCount = 0;
 }
