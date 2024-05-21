@@ -7,6 +7,7 @@
  */
 
 import {InjectionToken, QueryList} from '@angular/core';
+import {coerceObservable} from '@angular/cdk/coercion/private';
 import {Observable, Subject, Subscription, isObservable, of as observableOf} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {
@@ -16,13 +17,6 @@ import {
   TreeKeyManagerStrategy,
 } from './tree-key-manager-strategy';
 import {Typeahead} from './typeahead';
-
-function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
-  if (!isObservable(data)) {
-    return observableOf(data);
-  }
-  return data;
-}
 
 /**
  * This class manages keyboard events for trees. If you pass it a QueryList or other list of tree

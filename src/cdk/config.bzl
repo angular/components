@@ -5,6 +5,7 @@ CDK_ENTRYPOINTS = [
     "bidi",
     "clipboard",
     "coercion",
+    "coercion/private",
     "collections",
     "dialog",
     "drag-drop",

@@ -1,6 +1,5 @@
 load(
     "//tools:defaults.bzl",
-    "markdown_to_html",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -9,48 +8,35 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
-    name = "tree",
+    name = "private",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
         "//src:dev_mode_types",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/coercion/private",
-        "//src/cdk/collections",
-        "//src/cdk/keycodes",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "private_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":tree",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/testbed",
+        ":private",
         "@npm//rxjs",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-markdown_to_html(
-    name = "overview",
-    srcs = [":tree.md"],
+    deps = [
+        ":private_tests_lib",
+    ],
 )
 
 filegroup(

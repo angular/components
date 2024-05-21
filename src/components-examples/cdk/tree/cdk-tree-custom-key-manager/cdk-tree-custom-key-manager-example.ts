@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, QueryList} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
+import {coerceObservable} from '@angular/cdk/coercion/private';
 import {FlatTreeControl, CdkTreeModule} from '@angular/cdk/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -24,7 +25,7 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {of as observableOf, Subject, isObservable, Observable} from 'rxjs';
+import {Subject, isObservable, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 const TREE_DATA: ExampleFlatNode[] = [
@@ -91,13 +92,6 @@ interface ExampleFlatNode {
   name: string;
   level: number;
   isExpanded?: boolean;
-}
-
-function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
-  if (!isObservable(data)) {
-    return observableOf(data);
-  }
-  return data;
 }
 
 /**

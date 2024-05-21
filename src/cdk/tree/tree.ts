@@ -47,6 +47,7 @@ import {
   inject,
   booleanAttribute,
 } from '@angular/core';
+import {coerceObservable} from '@angular/cdk/coercion/private';
 import {
   BehaviorSubject,
   combineLatest,
@@ -78,13 +79,6 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-
-function coerceObservable<T>(data: T | Observable<T>): Observable<T> {
-  if (!isObservable(data)) {
-    return observableOf(data);
-  }
-  return data;
-}
 
 type RenderingData<T> =
   | {
