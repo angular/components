@@ -29,7 +29,6 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
-import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
 
 describe('CdkTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
@@ -777,7 +776,7 @@ describe('CdkTree', () => {
         (getNodes(treeElement)[1] as HTMLElement).click();
         fixture.detectChanges();
 
-        // NB: only four elements are present here; children are not present
+        // Note: only four elements are present here; children are not present
         // in DOM unless the parent node is expanded.
         expect(
           getNodes(treeElement)
@@ -808,7 +807,7 @@ describe('CdkTree', () => {
         let node = getNodes(treeElement)[1] as HTMLElement;
 
         node.focus();
-        node.dispatchEvent(createKeyboardEvent('keydown', RIGHT_ARROW));
+        node.dispatchEvent(createKeyboardEvent('keydown', undefined, 'ArrowRight'));
         fixture.detectChanges();
 
         expect(component.treeControl.expansionModel.selected.length)
@@ -824,7 +823,7 @@ describe('CdkTree', () => {
 
         node = getNodes(treeElement)[1] as HTMLElement;
         node.focus();
-        node.dispatchEvent(createKeyboardEvent('keydown', LEFT_ARROW));
+        node.dispatchEvent(createKeyboardEvent('keydown', undefined, 'ArrowLeft'));
         fixture.detectChanges();
 
         expectNestedTreeToMatch(
@@ -839,7 +838,7 @@ describe('CdkTree', () => {
 
         node = getNodes(treeElement)[1] as HTMLElement;
         node.focus();
-        node.dispatchEvent(createKeyboardEvent('keydown', RIGHT_ARROW));
+        node.dispatchEvent(createKeyboardEvent('keydown', undefined, 'ArrowRight'));
         fixture.detectChanges();
 
         expect(component.treeControl.expansionModel.selected.length)

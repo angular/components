@@ -1,15 +1,3 @@
-import {
-  DOWN_ARROW,
-  EIGHT,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  SPACE,
-  TAB,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '../../testing/private';
 import {QueryList} from '@angular/core';
 import {TreeKeyManager} from './tree-key-manager';
@@ -98,17 +86,17 @@ describe('TreeKeyManager', () => {
 
   beforeEach(() => {
     fakeKeyEvents = {
-      downArrow: createKeyboardEvent('keydown', DOWN_ARROW),
-      upArrow: createKeyboardEvent('keydown', UP_ARROW),
-      leftArrow: createKeyboardEvent('keydown', LEFT_ARROW),
-      rightArrow: createKeyboardEvent('keydown', RIGHT_ARROW),
-      tab: createKeyboardEvent('keydown', TAB),
-      home: createKeyboardEvent('keydown', HOME),
-      end: createKeyboardEvent('keydown', END),
-      enter: createKeyboardEvent('keydown', ENTER),
-      space: createKeyboardEvent('keydown', SPACE),
-      star: createKeyboardEvent('keydown', EIGHT, '*'),
-      unsupported: createKeyboardEvent('keydown', 192), // corresponds to the tilde character (~)
+      downArrow: createKeyboardEvent('keydown', undefined, 'ArrowDown'),
+      upArrow: createKeyboardEvent('keydown', undefined, 'ArrowUp'),
+      leftArrow: createKeyboardEvent('keydown', undefined, 'ArrowLeft'),
+      rightArrow: createKeyboardEvent('keydown', undefined, 'ArrowRight'),
+      tab: createKeyboardEvent('keydown', undefined, 'Tab'),
+      home: createKeyboardEvent('keydown', undefined, 'Home'),
+      end: createKeyboardEvent('keydown', undefined, 'End'),
+      enter: createKeyboardEvent('keydown', undefined, 'Enter'),
+      space: createKeyboardEvent('keydown', undefined, ' '),
+      star: createKeyboardEvent('keydown', undefined, '*'),
+      unsupported: createKeyboardEvent('keydown', undefined, '~'),
     };
   });
 

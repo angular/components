@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {A, NINE, Z, ZERO} from '@angular/cdk/keycodes';
 import {Subject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
@@ -75,14 +74,8 @@ export class Typeahead<T extends TypeaheadItem> {
   }
 
   handleKey(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
-
-    // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-    // otherwise fall back to resolving alphanumeric characters via the keyCode.
-    if (event.key && event.key.length === 1) {
+    if (event.key.length === 1) {
       this._letterKeyStream.next(event.key.toLocaleUpperCase());
-    } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-      this._letterKeyStream.next(String.fromCharCode(keyCode));
     }
   }
 

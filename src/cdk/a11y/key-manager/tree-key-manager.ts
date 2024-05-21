@@ -6,17 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  DOWN_ARROW,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  SPACE,
-  TAB,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
 import {InjectionToken, QueryList} from '@angular/core';
 import {Observable, Subject, Subscription, isObservable, of as observableOf} from 'rxjs';
 import {take} from 'rxjs/operators';
@@ -149,49 +138,47 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
    * @param event Keyboard event that represents the user interaction with the tree.
    */
   onKeydown(event: KeyboardEvent) {
-    const keyCode = event.keyCode;
+    const key = event.key;
 
-    switch (keyCode) {
-      case TAB:
+    switch (key) {
+      case 'Tab':
         // NB: return here, in order to allow Tab to actually tab out of the tree
         return;
 
-      case DOWN_ARROW:
+      case 'ArrowDown':
         this._focusNextItem();
         break;
 
-      case UP_ARROW:
+      case 'ArrowUp':
         this._focusPreviousItem();
         break;
 
-      case RIGHT_ARROW:
+      case 'ArrowRight':
         this._horizontalOrientation === 'rtl'
           ? this._collapseCurrentItem()
           : this._expandCurrentItem();
         break;
 
-      case LEFT_ARROW:
+      case 'ArrowLeft':
         this._horizontalOrientation === 'rtl'
           ? this._expandCurrentItem()
           : this._collapseCurrentItem();
         break;
 
-      case HOME:
+      case 'Home':
         this._focusFirstItem();
         break;
 
-      case END:
+      case 'End':
         this._focusLastItem();
         break;
 
-      case ENTER:
-      case SPACE:
+      case 'Enter':
+      case ' ':
         this._activateCurrentItem();
         break;
 
       default:
-        // The keyCode for `*` is the same as the keyCode for `8`, so we check the event key
-        // instead.
         if (event.key === '*') {
           this._expandAllItemsAtCurrentItemLevel();
           break;
