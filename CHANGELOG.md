@@ -1,3 +1,19 @@
+<a name="18.0.0-rc.3"></a>
+# 18.0.0-rc.3 "steel-sofa" (2024-05-21)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d80afa95e](https://github.com/angular/components/commit/d80afa95e7f48fb3ae33464af9b1661f8b279fce) | fix | **drag-drop:** defer loading reset styles ([#29056](https://github.com/angular/components/pull/29056)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [57acd08fb](https://github.com/angular/components/commit/57acd08fb52f10e6a4ace5d09d62f680a3c7f1d8) | fix | **chips:** simplify repeat chip removal prevention ([#29048](https://github.com/angular/components/pull/29048)) |
+| [ae82909a9](https://github.com/angular/components/commit/ae82909a95a4f51ee82b704db5e724f83b6806d0) | fix | **schematics:** Add css token renaming migration |
+| [c7396b877](https://github.com/angular/components/commit/c7396b877dd11051cde3410b65e98a6a90f25546) | fix | **slider:** aria-valuetext host binding should be onPush compatible ([#29042](https://github.com/angular/components/pull/29042)) |
+| [8299b0912](https://github.com/angular/components/commit/8299b091223d3938abe18e0c939b82434ae7a7a1) | fix | **slider:** resolve duplicate key warnings ([#29073](https://github.com/angular/components/pull/29073)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0-rc.2"></a>
 # 18.0.0-rc.2 "orange-owl" (2024-05-15)
 ### cdk
