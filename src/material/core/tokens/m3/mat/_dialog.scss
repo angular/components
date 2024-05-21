@@ -10,6 +10,7 @@ $prefix: (mat, dialog);
 /// @return {Map} A set of custom tokens for the dialog
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
+    container-elevation-shadow: token-utils.hardcode(none, $exclude-hardcoded),
     container-max-width: token-utils.hardcode(560px, $exclude-hardcoded),
     container-small-max-width: token-utils.hardcode(calc(100vw - 32px), $exclude-hardcoded),
     container-min-width: token-utils.hardcode(280px, $exclude-hardcoded),

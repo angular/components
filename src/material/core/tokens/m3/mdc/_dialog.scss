@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -19,21 +18,6 @@ $prefix: (mdc, dialog);
     headline-tracking: subhead-tracking,
     headline-weight: subhead-weight,
   ));
-
-  @if map.get($tokens, container-elevation) != null {
-    $tokens: map.merge($tokens, (
-      // The spec has the dialog at an elevation of 3 which is consistent with the current
-      // version of the tokens (0_161), however both the designs and MDC's implementation
-      // have the elevation set to 0. Set it manually to 0 here since the value in the
-      // exported tokens is likely outdated.
-      container-elevation: 0,
-
-      // This color needs to be supplied for MDC to produce the shadow. Technically we don't
-      // have to provide it since the elevation is set to 0 above, but we do it in case
-      // the value changes in the future.
-      container-shadow-color: #000,
-    ));
-  }
 
   @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

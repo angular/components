@@ -13,15 +13,13 @@ $prefix: (mdc, dialog);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    // Height of the container's elevation.
-    container-elevation: 24,
-    // Color of the elevation shadow.
-    container-shadow-color: #000,
     // Border radius of the container.
     container-shape: 4px,
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
+    container-elevation: null,
+    container-shadow-color: null,
     with-divider-divider-height: null,
     with-divider-divider-color: null,
     with-icon-icon-size: null,
