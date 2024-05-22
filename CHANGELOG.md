@@ -1,3 +1,18 @@
+<a name="17.3.10"></a>
+# 17.3.10 "soft-starfish" (2024-05-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a22b29bd2](https://github.com/angular/components/commit/a22b29bd26f2073cd66c7f3ce293a5400781d60e) | fix | **drag-drop:** defer loading reset styles ([#29056](https://github.com/angular/components/pull/29056)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4cc7c1585](https://github.com/angular/components/commit/4cc7c15859a4e6780117ec55f02e41410172aa4e) | fix | **chips:** simplify repeat chip removal prevention ([#29048](https://github.com/angular/components/pull/29048)) |
+| [2f0f57691](https://github.com/angular/components/commit/2f0f57691f72c96c8ef8f3e56f4b656f6a9e6605) | fix | **slider:** aria-valuetext host binding should be onPush compatible ([#29042](https://github.com/angular/components/pull/29042)) |
+| [080164e62](https://github.com/angular/components/commit/080164e626c8bab8f5db46a22358e7247880f34a) | fix | **slider:** resolve duplicate key warnings ([#29073](https://github.com/angular/components/pull/29073)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="17.3.9"></a>
 # 17.3.9 "orange-ornament" (2024-05-15)
 ### cdk
