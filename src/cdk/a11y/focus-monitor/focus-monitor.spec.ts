@@ -1,24 +1,24 @@
 import {TAB} from '@angular/cdk/keycodes';
+import {Platform} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 import {
+  createMouseEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus,
-  createMouseEvent,
-  dispatchEvent,
 } from '../../testing/private';
-import {DOCUMENT} from '@angular/common';
-import {Component, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {Platform} from '@angular/cdk/platform';
 import {A11yModule, CdkMonitorFocus} from '../index';
 import {TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 import {
+  FOCUS_MONITOR_DEFAULT_OPTIONS,
   FocusMonitor,
   FocusMonitorDetectionMode,
   FocusOrigin,
-  FOCUS_MONITOR_DEFAULT_OPTIONS,
 } from './focus-monitor';
 
 describe('FocusMonitor', () => {
@@ -826,7 +826,7 @@ describe('FocusMonitor observable stream', () => {
     fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
       imports: [A11yModule, PlainButton],
-      providers: [{provide: Platform, useValue: fakePlatform}, provideZoneChangeDetection()],
+      providers: [{provide: Platform, useValue: fakePlatform}],
     }).compileComponents();
   });
 
@@ -836,17 +836,6 @@ describe('FocusMonitor observable stream', () => {
     fixture.detectChanges();
     buttonElement = fixture.debugElement.nativeElement.querySelector('button');
     patchElementFocus(buttonElement);
-  }));
-
-  it('should emit inside the NgZone', fakeAsync(() => {
-    const spy = jasmine.createSpy('zone spy');
-    focusMonitor.monitor(buttonElement).subscribe(() => spy(NgZone.isInAngularZone()));
-    expect(spy).not.toHaveBeenCalled();
-
-    buttonElement.focus();
-    fixture.detectChanges();
-    tick();
-    expect(spy).toHaveBeenCalledWith(true);
   }));
 
   it('should not emit on the server', fakeAsync(() => {

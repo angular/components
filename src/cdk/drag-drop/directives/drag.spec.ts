@@ -1,11 +1,13 @@
 import {Directionality} from '@angular/cdk/bidi';
+import {_supportsShadowDom} from '@angular/cdk/platform';
+import {CdkScrollableModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createMouseEvent,
   createTouchEvent,
   dispatchEvent,
+  dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchTouchEvent,
-  dispatchFakeEvent,
 } from '@angular/cdk/testing/private';
 import {
   AfterViewInit,
@@ -14,31 +16,41 @@ import {
   ElementRef,
   ErrorHandler,
   Input,
-  NgZone,
   Provider,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
-  provideZoneChangeDetection,
 } from '@angular/core';
-import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
-import {ViewportRuler, CdkScrollableModule} from '@angular/cdk/scrolling';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {of as observableOf} from 'rxjs';
 
+import {extendStyles} from '../dom/styling';
 import {DragDropModule} from '../drag-drop-module';
 import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
-import {Point, DragRef, PreviewContainer} from '../drag-ref';
-import {extendStyles} from '../dom/styling';
+import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
-import {CdkDrag} from './drag';
 import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
+import {CdkDrag} from './drag';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
+import {
+  assertDownwardSorting,
+  assertUpwardSorting,
+  continueDraggingViaTouch,
+  dragElementViaMouse,
+  dragElementViaTouch,
+  getElementIndexByPosition,
+  getElementSibligsByPosition,
+  makeScrollable,
+  startDraggingViaMouse,
+  startDraggingViaTouch,
+  stopDraggingViaTouch,
+  tickAnimationFrames,
+} from './test-utils.spec';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
@@ -54,7 +66,6 @@ describe('CdkDrag', () => {
     TestBed.configureTestingModule({
       imports: [DragDropModule, CdkScrollableModule],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: CDK_DRAG_CONFIG,
           useValue: {
@@ -84,6 +95,7 @@ describe('CdkDrag', () => {
     describe('mouse dragging', () => {
       it('should drag an element freely to a particular position', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -94,6 +106,7 @@ describe('CdkDrag', () => {
 
       it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const cleanup = makeScrollable();
@@ -108,6 +121,7 @@ describe('CdkDrag', () => {
 
       it('should continue dragging the element from where it was left off', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -122,6 +136,7 @@ describe('CdkDrag', () => {
 
       it('should continue dragging from where it was left off when the page is scrolled', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -141,6 +156,7 @@ describe('CdkDrag', () => {
 
       it('should not drag an element with the right mouse button', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
         const event = createMouseEvent('mousedown', 50, 100, 2);
@@ -148,12 +164,15 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
 
         dispatchEvent(dragElement, event);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mousemove', 50, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBeFalsy();
@@ -161,6 +180,7 @@ describe('CdkDrag', () => {
 
       it('should not drag the element if it was not moved more than the minimum distance', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -171,22 +191,28 @@ describe('CdkDrag', () => {
 
       it('should be able to stop dragging after a double click', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
         expect(dragElement.style.transform).toBeFalsy();
 
         dispatchMouseEvent(dragElement, 'mousedown');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(dragElement, 'mousedown');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dragElementViaMouse(fixture, dragElement, 50, 50);
         dispatchMouseEvent(document, 'mousemove', 100, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBeFalsy();
@@ -194,6 +220,7 @@ describe('CdkDrag', () => {
 
       it('should preserve the previous `transform` value', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -204,6 +231,7 @@ describe('CdkDrag', () => {
 
       it('should not generate multiple own `translate3d` values', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -218,6 +246,7 @@ describe('CdkDrag', () => {
 
       it('should prevent the `mousedown` action for native draggable elements', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -227,9 +256,11 @@ describe('CdkDrag', () => {
         Object.defineProperty(mousedownEvent, 'target', {get: () => dragElement});
         spyOn(mousedownEvent, 'preventDefault').and.callThrough();
         dispatchEvent(dragElement, mousedownEvent);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mousemove', 50, 50);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(mousedownEvent.preventDefault).toHaveBeenCalled();
@@ -237,6 +268,7 @@ describe('CdkDrag', () => {
 
       it('should not start dragging an element with a fake mousedown event', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
         const event = createMouseEvent('mousedown', 0, 0);
@@ -249,14 +281,18 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
 
         dispatchEvent(dragElement, event);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mousemove', 20, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(document, 'mousemove', 50, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBeFalsy();
@@ -264,11 +300,13 @@ describe('CdkDrag', () => {
 
       it('should prevent the default dragstart action', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const event = dispatchFakeEvent(
           fixture.componentInstance.dragElement.nativeElement,
           'dragstart',
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(event.defaultPrevented).toBe(true);
@@ -276,12 +314,14 @@ describe('CdkDrag', () => {
 
       it('should not prevent the default dragstart action when dragging is disabled', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         fixture.componentInstance.dragInstance.disabled = true;
         const event = dispatchFakeEvent(
           fixture.componentInstance.dragElement.nativeElement,
           'dragstart',
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(event.defaultPrevented).toBe(false);
@@ -291,6 +331,7 @@ describe('CdkDrag', () => {
     describe('touch dragging', () => {
       it('should drag an element freely to a particular position', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -301,6 +342,7 @@ describe('CdkDrag', () => {
 
       it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -315,6 +357,7 @@ describe('CdkDrag', () => {
 
       it('should continue dragging the element from where it was left off', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -329,6 +372,7 @@ describe('CdkDrag', () => {
 
       it('should continue dragging from where it was left off when the page is scrolled', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -348,9 +392,11 @@ describe('CdkDrag', () => {
 
       it('should prevent the default `touchmove` action on the page while dragging', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchTouchEvent(fixture.componentInstance.dragElement.nativeElement, 'touchstart');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented)
@@ -361,11 +407,13 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchTouchEvent(document, 'touchend');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }));
 
       it('should not prevent `touchstart` action for native draggable elements', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -375,9 +423,11 @@ describe('CdkDrag', () => {
         Object.defineProperty(touchstartEvent, 'target', {get: () => dragElement});
         spyOn(touchstartEvent, 'preventDefault').and.callThrough();
         dispatchEvent(dragElement, touchstartEvent);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchTouchEvent(document, 'touchmove');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(touchstartEvent.preventDefault).not.toHaveBeenCalled();
@@ -385,6 +435,7 @@ describe('CdkDrag', () => {
 
       it('should not start dragging an element with a fake touchstart event', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
         const event = createTouchEvent('touchstart', 50, 50) as TouchEvent;
@@ -398,14 +449,18 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
 
         dispatchEvent(dragElement, event);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchTouchEvent(document, 'touchmove', 20, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchTouchEvent(document, 'touchmove', 50, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchTouchEvent(document, 'touchend');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBeFalsy();
@@ -415,6 +470,7 @@ describe('CdkDrag', () => {
     describe('mouse dragging when initial transform is none', () => {
       it('should drag an element freely to a particular position', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
         dragElement.style.transform = 'none';
@@ -426,6 +482,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch an event when the user has started dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement);
@@ -444,6 +501,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch an event when the user has stopped dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 5, 10);
@@ -464,6 +522,7 @@ describe('CdkDrag', () => {
 
     it('should include the drag distance in the ended event', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 25, 30);
@@ -489,6 +548,7 @@ describe('CdkDrag', () => {
 
     it('should emit when the user is moving the drag element', () => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const spy = jasmine.createSpy('move spy');
@@ -505,6 +565,7 @@ describe('CdkDrag', () => {
 
     it('should not emit events if it was not moved more than the minimum distance', () => {
       const fixture = createComponent(StandaloneDraggable, [], 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const moveSpy = jasmine.createSpy('move spy');
@@ -519,23 +580,9 @@ describe('CdkDrag', () => {
       subscription.unsubscribe();
     });
 
-    it('should emit to `moved` inside the NgZone', () => {
-      const fixture = createComponent(StandaloneDraggable);
-      fixture.detectChanges();
-
-      const spy = jasmine.createSpy('move spy');
-      const subscription = fixture.componentInstance.dragInstance.moved.subscribe(() =>
-        spy(NgZone.isInAngularZone()),
-      );
-
-      dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 10, 20);
-      expect(spy).toHaveBeenCalledWith(true);
-
-      subscription.unsubscribe();
-    });
-
     it('should complete the `moved` stream on destroy', () => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const spy = jasmine.createSpy('move spy');
@@ -548,6 +595,7 @@ describe('CdkDrag', () => {
 
     it('should be able to lock dragging along the x axis', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dragInstance.lockAxis = 'x';
 
@@ -564,6 +612,7 @@ describe('CdkDrag', () => {
 
     it('should be able to lock dragging along the x axis while using constrainPosition', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dragInstance.lockAxis = 'x';
       fixture.componentInstance.dragInstance.constrainPosition = (
@@ -590,6 +639,7 @@ describe('CdkDrag', () => {
 
     it('should be able to lock dragging along the y axis', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dragInstance.lockAxis = 'y';
 
@@ -606,6 +656,7 @@ describe('CdkDrag', () => {
 
     it('should be able to lock dragging along the y axis while using constrainPosition', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.dragInstance.lockAxis = 'y';
@@ -633,6 +684,7 @@ describe('CdkDrag', () => {
 
     it('should add a class while an element is being dragged', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const element = fixture.componentInstance.dragElement.nativeElement;
@@ -644,6 +696,7 @@ describe('CdkDrag', () => {
       expect(element.classList).toContain('cdk-drag-dragging');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(element.classList).not.toContain('cdk-drag-dragging');
@@ -651,6 +704,7 @@ describe('CdkDrag', () => {
 
     it('should add a class while an element is being dragged with OnPush change detection', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithOnPush);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const element = fixture.componentInstance.dragElement.nativeElement;
@@ -662,6 +716,7 @@ describe('CdkDrag', () => {
       expect(element.classList).toContain('cdk-drag-dragging');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(element.classList).not.toContain('cdk-drag-dragging');
@@ -669,6 +724,7 @@ describe('CdkDrag', () => {
 
     it('should not add a class if item was not dragged more than the threshold', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable, [], 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const element = fixture.componentInstance.dragElement.nativeElement;
@@ -683,6 +739,7 @@ describe('CdkDrag', () => {
     it('should be able to set an alternate drag root element', fakeAsync(() => {
       const fixture = createComponent(DraggableWithAlternateRoot);
       fixture.componentInstance.rootElementSelector = '.alternate-root';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragRoot = fixture.componentInstance.dragRoot.nativeElement;
@@ -699,6 +756,7 @@ describe('CdkDrag', () => {
 
     it('should be able to set the cdkDrag element as handle if it has a different root element', fakeAsync(() => {
       const fixture = createComponent(DraggableWithAlternateRootAndSelfHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragRoot = fixture.componentInstance.dragRoot.nativeElement;
@@ -722,6 +780,7 @@ describe('CdkDrag', () => {
 
     it('should be able to set an alternate drag root element for ng-container', fakeAsync(() => {
       const fixture = createComponent(DraggableNgContainerWithAlternateRoot);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragRoot = fixture.componentInstance.dragRoot.nativeElement;
@@ -735,6 +794,7 @@ describe('CdkDrag', () => {
 
     it('should preserve the initial transform if the root element changes', fakeAsync(() => {
       const fixture = createComponent(DraggableWithAlternateRoot);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const alternateRoot = fixture.componentInstance.dragRoot.nativeElement;
@@ -745,6 +805,7 @@ describe('CdkDrag', () => {
 
       alternateRoot.style.transform = 'scale(2)';
       fixture.componentInstance.rootElementSelector = '.alternate-root';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dragElementViaMouse(fixture, alternateRoot, 50, 100);
@@ -755,10 +816,12 @@ describe('CdkDrag', () => {
 
     it('should handle the root element selector changing after init', fakeAsync(() => {
       const fixture = createComponent(DraggableWithAlternateRoot);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
       fixture.componentInstance.rootElementSelector = '.alternate-root';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragRoot = fixture.componentInstance.dragRoot.nativeElement;
@@ -775,12 +838,14 @@ describe('CdkDrag', () => {
 
     it('should not be able to drag the element if dragging is disabled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
       expect(dragElement.classList).not.toContain('cdk-drag-disabled');
 
       fixture.componentInstance.dragInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.classList).toContain('cdk-drag-disabled');
@@ -791,6 +856,7 @@ describe('CdkDrag', () => {
 
     it('should enable native drag interactions if dragging is disabled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const styles = dragElement.style;
@@ -798,6 +864,7 @@ describe('CdkDrag', () => {
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
 
       fixture.componentInstance.dragInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
@@ -805,6 +872,7 @@ describe('CdkDrag', () => {
 
     it('should enable native drag interactions if not dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const styles = dragElement.style;
@@ -814,6 +882,7 @@ describe('CdkDrag', () => {
 
     it('should disable native drag interactions if dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const styles = dragElement.style;
@@ -822,6 +891,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, dragElement);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
@@ -829,17 +899,20 @@ describe('CdkDrag', () => {
 
     it('should re-enable drag interactions once dragging is over', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const styles = dragElement.style;
 
       startDraggingViaMouse(fixture, dragElement);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
 
       dispatchMouseEvent(document, 'mouseup', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
@@ -847,6 +920,7 @@ describe('CdkDrag', () => {
 
     it('should not stop propagation for the drag sequence start event by default', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -854,6 +928,7 @@ describe('CdkDrag', () => {
       spyOn(event, 'stopPropagation').and.callThrough();
 
       dispatchEvent(dragElement, event);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(event.stopPropagation).not.toHaveBeenCalled();
@@ -869,6 +944,7 @@ describe('CdkDrag', () => {
 
     it('should enable native drag interactions on the drag item when there is a handle', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       expect(dragElement.style.touchAction).not.toBe('none');
@@ -876,6 +952,7 @@ describe('CdkDrag', () => {
 
     it('should disable native drag interactions on the drag handle', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const styles = fixture.componentInstance.handleElement.nativeElement.style;
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
@@ -883,8 +960,10 @@ describe('CdkDrag', () => {
 
     it('should enable native drag interactions on the drag handle if dragging is disabled', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.draggingDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const styles = fixture.componentInstance.handleElement.nativeElement.style;
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
@@ -896,6 +975,7 @@ describe('CdkDrag', () => {
       () => {
         const fixture = createComponent(StandaloneDraggableWithHandle);
         fixture.componentInstance.draggingDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const styles = fixture.componentInstance.handleElement.nativeElement.style;
         expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
@@ -904,19 +984,23 @@ describe('CdkDrag', () => {
 
     it('should toggle native drag interactions based on whether the handle is disabled', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.handleInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const styles = fixture.componentInstance.handleElement.nativeElement.style;
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
 
       fixture.componentInstance.handleInstance.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
     });
 
     it('should be able to reset a freely-dragged item to its initial position', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -930,6 +1014,7 @@ describe('CdkDrag', () => {
 
     it('should preserve initial transform after resetting', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -944,6 +1029,7 @@ describe('CdkDrag', () => {
 
     it('should start dragging an item from its initial position after a reset', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -958,21 +1044,26 @@ describe('CdkDrag', () => {
 
     it('should not dispatch multiple events for a mouse event right after a touch event', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
       // Dispatch a touch sequence.
       dispatchTouchEvent(dragElement, 'touchstart');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       dispatchTouchEvent(dragElement, 'touchend');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
       // Immediately dispatch a mouse sequence to simulate a fake event.
       startDraggingViaMouse(fixture, dragElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       dispatchMouseEvent(dragElement, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -982,6 +1073,7 @@ describe('CdkDrag', () => {
 
     it('should round the transform value', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -993,6 +1085,7 @@ describe('CdkDrag', () => {
     it('should allow for dragging to be constrained to an element', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.boundary = '.wrapper';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1004,6 +1097,7 @@ describe('CdkDrag', () => {
     it('should allow for dragging to be constrained to an element while using constrainPosition', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.boundary = '.wrapper';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.dragInstance.constrainPosition = (
@@ -1027,6 +1121,7 @@ describe('CdkDrag', () => {
     it('should be able to pass in a DOM node as the boundary', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.boundary = fixture.nativeElement.querySelector('.wrapper');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1039,6 +1134,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1056,6 +1152,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1073,6 +1170,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1091,6 +1189,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1111,6 +1210,7 @@ describe('CdkDrag', () => {
         const fixture = createComponent(StandaloneDraggable);
         const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
         fixture.componentInstance.boundary = boundary;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1129,6 +1229,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1150,6 +1251,7 @@ describe('CdkDrag', () => {
       } as Point);
 
       fixture.componentInstance.constrainPosition = spy;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1188,6 +1290,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = 1000;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1199,6 +1302,7 @@ describe('CdkDrag', () => {
       currentTime += 750;
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       currentTime += 500;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.style.transform)
@@ -1213,6 +1317,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = 1000;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const styles = dragElement.style;
@@ -1225,6 +1330,7 @@ describe('CdkDrag', () => {
       currentTime += 750;
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       currentTime += 500;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
@@ -1237,6 +1343,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = 500;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1245,12 +1352,14 @@ describe('CdkDrag', () => {
         .toBeFalsy();
 
       dispatchMouseEvent(dragElement, 'mousedown');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       currentTime += 750;
 
       // The first `mousemove` here starts the sequence and the second one moves the element.
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.style.transform)
@@ -1264,6 +1373,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = 500;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1272,6 +1382,7 @@ describe('CdkDrag', () => {
         .toBeFalsy();
 
       dispatchTouchEvent(dragElement, 'touchstart');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       currentTime += 250;
 
@@ -1285,6 +1396,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = '500';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1293,12 +1405,14 @@ describe('CdkDrag', () => {
         .toBeFalsy();
 
       dispatchMouseEvent(dragElement, 'mousedown');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       currentTime += 750;
 
       // The first `mousemove` here starts the sequence and the second one moves the element.
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.style.transform)
@@ -1313,6 +1427,7 @@ describe('CdkDrag', () => {
 
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragStartDelay = {touch: 500, mouse: 0};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1333,6 +1448,7 @@ describe('CdkDrag', () => {
 
     it('should be able to get the current position', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1349,6 +1465,7 @@ describe('CdkDrag', () => {
 
     it('should be able to set the current position programmatically', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1363,6 +1480,7 @@ describe('CdkDrag', () => {
     it('should be able to set the current position', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1374,6 +1492,7 @@ describe('CdkDrag', () => {
 
     it('should be able to get the up-to-date position as the user is dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1383,11 +1502,13 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, dragElement);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
 
       dispatchMouseEvent(document, 'mousemove', 100, 200);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragInstance.getFreeDragPosition()).toEqual({x: 100, y: 200});
@@ -1396,6 +1517,7 @@ describe('CdkDrag', () => {
     it('should react to changes in the free drag position', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1403,6 +1525,7 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
 
       fixture.componentInstance.freeDragPosition = {x: 100, y: 200};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
@@ -1411,6 +1534,7 @@ describe('CdkDrag', () => {
     it('should be able to continue dragging after the current position was set', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1423,6 +1547,7 @@ describe('CdkDrag', () => {
 
     it('should include the dragged distance as the user is dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const spy = jasmine.createSpy('moved spy');
@@ -1431,12 +1556,14 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, dragElement);
 
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let event = spy.calls.mostRecent().args[0];
       expect(event.distance).toEqual({x: 50, y: 100});
 
       dispatchMouseEvent(document, 'mousemove', 75, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       event = spy.calls.mostRecent().args[0];
@@ -1463,6 +1590,7 @@ describe('CdkDrag', () => {
           useValue: config,
         },
       ]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const drag = fixture.componentInstance.dragInstance;
       expect(drag.disabled).toBe(true);
@@ -1477,6 +1605,7 @@ describe('CdkDrag', () => {
 
     it('should not throw if touches and changedTouches are empty', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1491,6 +1620,7 @@ describe('CdkDrag', () => {
 
       expect(() => {
         dispatchEvent(document, event);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
       }).not.toThrow();
@@ -1498,6 +1628,7 @@ describe('CdkDrag', () => {
 
     it('should update the free drag position if the page is scrolled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cleanup = makeScrollable();
@@ -1506,12 +1637,14 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       startDraggingViaMouse(fixture, dragElement, 0, 0);
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
 
       scrollTo(0, 500);
       dispatchFakeEvent(document, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(dragElement.style.transform).toBe('translate3d(50px, 600px, 0px)');
 
@@ -1523,6 +1656,7 @@ describe('CdkDrag', () => {
         'is scrolled',
       fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const cleanup = makeScrollable();
@@ -1531,14 +1665,17 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
         startDraggingViaMouse(fixture, dragElement, 0, 0);
         dispatchMouseEvent(document, 'mousemove', 50, 100);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
 
         scrollTo(0, 500);
         dispatchFakeEvent(document, 'scroll');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(document, 'mousemove', 50, 200);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragElement.style.transform).toBe('translate3d(50px, 700px, 0px)');
@@ -1551,6 +1688,7 @@ describe('CdkDrag', () => {
   describe('draggable with a handle', () => {
     it('should not be able to drag the entire element if it has a handle', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1561,6 +1699,7 @@ describe('CdkDrag', () => {
 
     it('should be able to drag an element using its handle', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1572,6 +1711,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to drag the element if the handle is disabled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1585,6 +1725,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to drag the element if the handle is disabled before init', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithPreDisabledHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1596,6 +1737,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to drag using the handle if the element is disabled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1610,8 +1752,10 @@ describe('CdkDrag', () => {
     it('should be able to use a handle that was added after init', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithDelayedHandle);
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.showHandle = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1624,6 +1768,7 @@ describe('CdkDrag', () => {
 
     it('should be able to use more than one handle to drag the element', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithMultipleHandles);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1639,6 +1784,7 @@ describe('CdkDrag', () => {
 
     it('should be able to drag with a handle that is not a direct descendant', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithIndirectHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1663,6 +1809,7 @@ describe('CdkDrag', () => {
       }
 
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1674,9 +1821,11 @@ describe('CdkDrag', () => {
       expect((dragElement.style as any).webkitTapHighlightColor).toBe('transparent');
 
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect((dragElement.style as any).webkitTapHighlightColor).toBeFalsy();
@@ -1689,6 +1838,7 @@ describe('CdkDrag', () => {
       }
 
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1700,9 +1850,11 @@ describe('CdkDrag', () => {
       expect((dragElement.style as any).webkitTapHighlightColor).toBe('transparent');
 
       dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup', 50, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect((dragElement.style as any).webkitTapHighlightColor).toBe('purple');
@@ -1726,6 +1878,7 @@ describe('CdkDrag', () => {
         undefined,
         [ShadowWrapper],
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handleChild = fixture.componentInstance.handleChild.nativeElement;
@@ -1737,12 +1890,14 @@ describe('CdkDrag', () => {
 
     it('should prevent default dragStart on handle, not on entire draggable', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const draggableEvent = dispatchFakeEvent(
         fixture.componentInstance.dragElement.nativeElement,
         'dragstart',
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const handleEvent = dispatchFakeEvent(
@@ -1750,6 +1905,7 @@ describe('CdkDrag', () => {
         'dragstart',
         true,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(draggableEvent.defaultPrevented).toBe(false);
@@ -1760,6 +1916,7 @@ describe('CdkDrag', () => {
   describe('in a drop container', () => {
     it('should be able to attach data to the drop container', () => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.dropInstance.data).toBe(fixture.componentInstance.items);
@@ -1767,12 +1924,14 @@ describe('CdkDrag', () => {
 
     it('should register an item with the drop container', () => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const list = fixture.componentInstance.dropInstance;
 
       spyOn(list, 'addItem').and.callThrough();
 
       fixture.componentInstance.items.push({value: 'Extra', margin: 0, height: ITEM_HEIGHT});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(list.addItem).toHaveBeenCalledTimes(1);
@@ -1780,12 +1939,14 @@ describe('CdkDrag', () => {
 
     it('should remove an item from the drop container', () => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const list = fixture.componentInstance.dropInstance;
 
       spyOn(list, 'removeItem').and.callThrough();
 
       fixture.componentInstance.items.pop();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(list.removeItem).toHaveBeenCalledTimes(1);
@@ -1794,11 +1955,13 @@ describe('CdkDrag', () => {
     it('should return the items sorted by their position in the DOM', () => {
       const fixture = createComponent(DraggableInDropZone);
       const items = fixture.componentInstance.items;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Insert a couple of items in the start and the middle so the list gets shifted around.
       items.unshift({value: 'Extra 0', margin: 0, height: ITEM_HEIGHT});
       items.splice(3, 0, {value: 'Extra 1', margin: 0, height: ITEM_HEIGHT});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(
@@ -1810,6 +1973,7 @@ describe('CdkDrag', () => {
 
     it('should sync the drop list inputs with the drop list ref', () => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstance = fixture.componentInstance.dropInstance;
@@ -1829,6 +1993,7 @@ describe('CdkDrag', () => {
 
     it('should be able to attach data to a drag item', () => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.dragItems.first.data).toBe(
@@ -1840,6 +2005,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(DraggableInDropZone);
 
       fixture.componentInstance.dropZoneId = 'custom-id';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const drop = fixture.componentInstance.dropInstance;
@@ -1850,6 +2016,7 @@ describe('CdkDrag', () => {
 
     it('should toggle a class when the user starts dragging an item', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const dropZone = fixture.componentInstance.dropInstance;
@@ -1861,8 +2028,10 @@ describe('CdkDrag', () => {
       expect(dropZone.element.nativeElement.classList).toContain('cdk-drop-list-dragging');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
@@ -1870,6 +2039,7 @@ describe('CdkDrag', () => {
 
     it('should toggle the drop dragging classes if there is nothing to trigger change detection', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithoutEvents);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const dropZone = fixture.componentInstance.dropInstance;
@@ -1883,8 +2053,10 @@ describe('CdkDrag', () => {
       expect(item.classList).toContain('cdk-drag-dragging');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
@@ -1893,6 +2065,7 @@ describe('CdkDrag', () => {
 
     it('should toggle a class when the user starts dragging an item with OnPush change detection', fakeAsync(() => {
       const fixture = createComponent(DraggableInOnPushDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const dropZone = fixture.componentInstance.dropInstance;
@@ -1904,8 +2077,10 @@ describe('CdkDrag', () => {
       expect(dropZone.element.nativeElement.classList).toContain('cdk-drop-list-dragging');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
@@ -1913,6 +2088,7 @@ describe('CdkDrag', () => {
 
     it('should not toggle dragging class if the element was not dragged more than the threshold', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone, [], 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const dropZone = fixture.componentInstance.dropInstance;
@@ -1926,6 +2102,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch the `dropped` event when an item has been dropped', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
 
@@ -1946,6 +2123,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -1976,6 +2154,7 @@ describe('CdkDrag', () => {
 
     it('should expose whether an item was dropped over a container', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -1988,6 +2167,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2000,12 +2180,14 @@ describe('CdkDrag', () => {
 
     it('should expose the drag distance when an item is dropped', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
 
       dragElementViaMouse(fixture, firstItem.element.nativeElement, 50, 60);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2019,6 +2201,7 @@ describe('CdkDrag', () => {
 
     it('should expose whether an item was dropped outside of a container', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -2032,6 +2215,7 @@ describe('CdkDrag', () => {
         containerRect.bottom + 10,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2044,6 +2228,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch the `sorted` event as an item is being sorted', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(item => item.element.nativeElement);
@@ -2057,6 +2242,7 @@ describe('CdkDrag', () => {
         const elementRect = items[i].getBoundingClientRect();
 
         dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.sortedSpy.calls.mostRecent().args[0]).toEqual({
@@ -2068,6 +2254,7 @@ describe('CdkDrag', () => {
       }
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
@@ -2078,6 +2265,7 @@ describe('CdkDrag', () => {
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZone);
         fixture.componentInstance.items = [fixture.componentInstance.items[0]];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const draggedItem = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2087,12 +2275,14 @@ describe('CdkDrag', () => {
 
         for (let i = 0; i < 5; i++) {
           dispatchMouseEvent(document, 'mousemove', left, top + 1);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(fixture.componentInstance.sortedSpy).not.toHaveBeenCalled();
         }
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }),
@@ -2100,6 +2290,7 @@ describe('CdkDrag', () => {
 
     it('should not move items in a vertical list if the pointer is too far away', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
 
@@ -2121,6 +2312,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2151,6 +2343,7 @@ describe('CdkDrag', () => {
 
     it('should not move the original element from its initial DOM position', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const root = fixture.nativeElement as HTMLElement;
       let dragElements = Array.from(root.querySelectorAll('.cdk-drag'));
@@ -2170,6 +2363,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dragElements = Array.from(root.querySelectorAll('.cdk-drag'));
@@ -2178,6 +2372,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch the `dropped` event in a horizontal drop zone', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
 
@@ -2198,6 +2393,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2235,6 +2431,7 @@ describe('CdkDrag', () => {
       ]);
 
       fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
 
@@ -2255,6 +2452,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2285,6 +2483,7 @@ describe('CdkDrag', () => {
 
     it('should not move items in a horizontal list if pointer is too far away', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
 
@@ -2306,6 +2505,7 @@ describe('CdkDrag', () => {
         thirdItemRect.bottom + 1000,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2336,6 +2536,7 @@ describe('CdkDrag', () => {
 
     it('should calculate the index if the list is scrolled while dragging', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -2343,18 +2544,23 @@ describe('CdkDrag', () => {
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
 
       startDraggingViaMouse(fixture, firstItem.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       list.scrollTop = ITEM_HEIGHT * 10;
       dispatchFakeEvent(list, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2389,6 +2595,7 @@ describe('CdkDrag', () => {
         [],
         ViewEncapsulation.ShadowDom,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -2396,18 +2603,23 @@ describe('CdkDrag', () => {
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
 
       startDraggingViaMouse(fixture, firstItem.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       list.scrollTop = ITEM_HEIGHT * 10;
       dispatchFakeEvent(list, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2440,24 +2652,30 @@ describe('CdkDrag', () => {
         });
       }
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
       const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
 
       startDraggingViaMouse(fixture, firstItem.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       scrollTo(0, ITEM_HEIGHT * 10);
       dispatchFakeEvent(document, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2483,6 +2701,7 @@ describe('CdkDrag', () => {
 
     it('should create a preview element while the item is dragged', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const itemRect = item.getBoundingClientRect();
@@ -2544,6 +2763,7 @@ describe('CdkDrag', () => {
         .toMatch(zeroPxRegex);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -2571,6 +2791,7 @@ describe('CdkDrag', () => {
           },
         },
       ]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       startDraggingViaMouse(fixture, item);
@@ -2582,6 +2803,7 @@ describe('CdkDrag', () => {
     it('should be able to constrain the preview position', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const listRect =
@@ -2594,6 +2816,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
       flush();
       dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const previewRect = preview.getBoundingClientRect();
@@ -2605,6 +2828,7 @@ describe('CdkDrag', () => {
     it('should update the boundary if the page is scrolled while dragging', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2617,6 +2841,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
       flush();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -2625,9 +2850,11 @@ describe('CdkDrag', () => {
 
       scrollTo(0, 0);
       dispatchFakeEvent(document, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listRect = list.getBoundingClientRect(); // We need to update these since we've scrolled.
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       previewRect = preview.getBoundingClientRect();
 
@@ -2638,6 +2865,7 @@ describe('CdkDrag', () => {
     it('should update the boundary if a parent is scrolled while dragging', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableParentContainer);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const container: HTMLElement = fixture.nativeElement.querySelector('.scroll-container');
@@ -2651,6 +2879,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
       flush();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -2662,9 +2891,11 @@ describe('CdkDrag', () => {
 
       container.scrollTop = 0;
       dispatchFakeEvent(container, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listRect = list.getBoundingClientRect(); // We need to update these since we've scrolled.
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       previewRect = preview.getBoundingClientRect();
 
@@ -2686,6 +2917,7 @@ describe('CdkDrag', () => {
         ViewEncapsulation.ShadowDom,
       );
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const container: HTMLElement =
@@ -2702,6 +2934,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
       flush();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = fixture.nativeElement.shadowRoot.querySelector(
@@ -2715,9 +2948,11 @@ describe('CdkDrag', () => {
 
       container.scrollTop = 0;
       dispatchFakeEvent(container, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listRect = list.getBoundingClientRect(); // We need to update these since we've scrolled.
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       previewRect = preview.getBoundingClientRect();
 
@@ -2727,6 +2962,7 @@ describe('CdkDrag', () => {
 
     it('should clear the id from the preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       item.id = 'custom-id';
@@ -2740,6 +2976,7 @@ describe('CdkDrag', () => {
 
     it('should clone the content of descendant canvas elements', fakeAsync(() => {
       const fixture = createComponent(DraggableWithCanvasInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const sourceCanvas = item.querySelector('canvas') as HTMLCanvasElement;
@@ -2767,6 +3004,7 @@ describe('CdkDrag', () => {
 
     it('should not throw when cloning an invalid canvas', fakeAsync(() => {
       const fixture = createComponent(DraggableWithInvalidCanvasInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2780,6 +3018,7 @@ describe('CdkDrag', () => {
 
     it('should clone the content of descendant input elements', fakeAsync(() => {
       const fixture = createComponent(DraggableWithInputsInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const sourceInput = item.querySelector('input')!;
@@ -2805,6 +3044,7 @@ describe('CdkDrag', () => {
 
     it('should preserve checked state for radio inputs in the content', fakeAsync(() => {
       const fixture = createComponent(DraggableWithRadioInputsInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[2].element.nativeElement;
       const sourceRadioInput = item.querySelector<HTMLInputElement>('input[type="radio"]')!;
@@ -2838,6 +3078,7 @@ describe('CdkDrag', () => {
 
     it('should clear the ids from descendants of the preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const extraChild = document.createElement('div');
@@ -2853,6 +3094,7 @@ describe('CdkDrag', () => {
 
     it('should not create a preview if the element was not dragged far enough', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone, [], 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2869,6 +3111,7 @@ describe('CdkDrag', () => {
         },
       ]);
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2881,6 +3124,7 @@ describe('CdkDrag', () => {
 
     it('should remove the preview if its `transitionend` event timed out', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2893,9 +3137,11 @@ describe('CdkDrag', () => {
 
       // Move somewhere so the draggable doesn't exit immediately.
       dispatchMouseEvent(document, 'mousemove', 50, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(250);
 
@@ -2913,6 +3159,7 @@ describe('CdkDrag', () => {
     it('should be able to set a single class on a preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewClass = 'custom-class';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2925,6 +3172,7 @@ describe('CdkDrag', () => {
     it('should be able to set multiple classes on a preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewClass = ['custom-class-1', 'custom-class-2'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2937,6 +3185,7 @@ describe('CdkDrag', () => {
 
     it('should emit the released event as soon as the item is released', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1];
       const endedSpy = jasmine.createSpy('ended spy');
@@ -2953,9 +3202,11 @@ describe('CdkDrag', () => {
 
       // Move somewhere so the draggable doesn't exit immediately.
       dispatchMouseEvent(document, 'mousemove', 50, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expected the released event to fire immediately upon release.
@@ -2971,6 +3222,7 @@ describe('CdkDrag', () => {
 
     it('should reset immediately when failed drag happens after a successful one', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const itemInstance = fixture.componentInstance.dragItems.toArray()[1];
@@ -2993,6 +3245,7 @@ describe('CdkDrag', () => {
 
       // Dispatch the mouseup immediately to simulate the user not moving the element.
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(0); // Important to tick with 0 since we don't want to flush any pending timeouts.
 
@@ -3003,6 +3256,7 @@ describe('CdkDrag', () => {
 
     it('should not wait for transition that are not on the `transform` property', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3012,9 +3266,11 @@ describe('CdkDrag', () => {
       preview.style.transition = 'opacity 500ms ease';
 
       dispatchMouseEvent(document, 'mousemove', 50, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(0);
 
@@ -3025,6 +3281,7 @@ describe('CdkDrag', () => {
 
     it('should pick out the `transform` duration if multiple properties are being transitioned', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3034,9 +3291,11 @@ describe('CdkDrag', () => {
       preview.style.transition = 'opacity 500ms ease, transform 1000ms ease';
 
       dispatchMouseEvent(document, 'mousemove', 50, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(500);
 
@@ -3055,6 +3314,7 @@ describe('CdkDrag', () => {
 
     it('should create a placeholder element while the item is dragged', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const initialParent = item.parentNode;
@@ -3075,6 +3335,7 @@ describe('CdkDrag', () => {
         .toBe('none');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -3086,6 +3347,7 @@ describe('CdkDrag', () => {
     it('should insert the preview into the `body` if previewContainer is set to `global`', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewContainer = 'global';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3097,6 +3359,7 @@ describe('CdkDrag', () => {
     it('should insert the preview into the parent node if previewContainer is set to `parent`', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewContainer = 'parent';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const list = fixture.nativeElement.querySelector('.drop-list');
@@ -3109,12 +3372,14 @@ describe('CdkDrag', () => {
 
     it('should insert the preview into a particular element, if specified', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const previewContainer = fixture.componentInstance.alternatePreviewContainer;
 
       expect(previewContainer).toBeTruthy();
       fixture.componentInstance.previewContainer = previewContainer;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, item);
@@ -3124,6 +3389,7 @@ describe('CdkDrag', () => {
 
     it('should remove the id from the placeholder', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3138,6 +3404,7 @@ describe('CdkDrag', () => {
 
     it('should clear the ids from descendants of the placeholder', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const extraChild = document.createElement('div');
@@ -3153,6 +3420,7 @@ describe('CdkDrag', () => {
 
     it('should not create placeholder if the element was not dragged far enough', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone, [], 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3163,6 +3431,7 @@ describe('CdkDrag', () => {
 
     it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       assertDownwardSorting(
         fixture,
@@ -3174,6 +3443,7 @@ describe('CdkDrag', () => {
 
     it('should move the placeholder as an item is being sorted down on a scrolled page', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
@@ -3189,6 +3459,7 @@ describe('CdkDrag', () => {
 
     it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       assertUpwardSorting(
         fixture,
@@ -3200,6 +3471,7 @@ describe('CdkDrag', () => {
 
     it('should move the placeholder as an item is being sorted up on a scrolled page', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
@@ -3215,6 +3487,7 @@ describe('CdkDrag', () => {
 
     it('should move the placeholder as an item is being sorted to the right', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.toArray();
@@ -3231,17 +3504,20 @@ describe('CdkDrag', () => {
 
         // Add a few pixels to the left offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', elementRect.left + 5, elementRect.top);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(getElementIndexByPosition(placeholder, 'left')).toBe(i);
       }
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should move the placeholder as an item is being sorted to the left', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.toArray();
@@ -3258,11 +3534,13 @@ describe('CdkDrag', () => {
 
         // Remove a few pixels from the right offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', elementRect.right - 5, elementRect.top);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(getElementIndexByPosition(placeholder, 'left')).toBe(i);
       }
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
@@ -3272,6 +3550,7 @@ describe('CdkDrag', () => {
         'sorting vertically',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZone);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
@@ -3285,6 +3564,7 @@ describe('CdkDrag', () => {
 
         // Add a few pixels to the top offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(
@@ -3292,6 +3572,7 @@ describe('CdkDrag', () => {
         ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }),
@@ -3299,12 +3580,14 @@ describe('CdkDrag', () => {
 
     it('should lay out the elements correctly, when swapping down with a taller element', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
       const {top, left} = items[0].getBoundingClientRect();
 
       fixture.componentInstance.items[0].height = ITEM_HEIGHT * 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, items[0], left, top);
@@ -3315,24 +3598,28 @@ describe('CdkDrag', () => {
 
       // Add a few pixels to the top offset so we get some overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT}px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT * 2}px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should lay out the elements correctly, when swapping up with a taller element', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
       const {top, left} = items[1].getBoundingClientRect();
 
       fixture.componentInstance.items[1].height = ITEM_HEIGHT * 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, items[1], left, top);
@@ -3343,24 +3630,28 @@ describe('CdkDrag', () => {
 
       // Add a few pixels to the top offset so we get some overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT}px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT * 2}px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should lay out elements correctly, when swapping an item with margin', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
       const {top, left} = items[0].getBoundingClientRect();
 
       fixture.componentInstance.items[0].margin = 12;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, items[0], left, top);
@@ -3371,12 +3662,14 @@ describe('CdkDrag', () => {
 
       // Add a few pixels to the top offset so we get some overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT + 12}px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT - 12}px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
@@ -3386,6 +3679,7 @@ describe('CdkDrag', () => {
         'sorting horizontally',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInHorizontalDropZone);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
@@ -3399,6 +3693,7 @@ describe('CdkDrag', () => {
 
         // Add a few pixels to the left offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(
@@ -3406,6 +3701,7 @@ describe('CdkDrag', () => {
         ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }),
@@ -3413,11 +3709,13 @@ describe('CdkDrag', () => {
 
     it('should lay out the elements correctly, when swapping to the right with a wider element', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
 
       fixture.componentInstance.items[0].width = ITEM_WIDTH * 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const {top, left} = items[0].getBoundingClientRect();
@@ -3428,24 +3726,28 @@ describe('CdkDrag', () => {
       const targetRect = target.getBoundingClientRect();
 
       dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(${ITEM_WIDTH}px, 0px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(${-ITEM_WIDTH * 2}px, 0px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should lay out the elements correctly, when swapping left with a wider element', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
       const {top, left} = items[1].getBoundingClientRect();
 
       fixture.componentInstance.items[1].width = ITEM_WIDTH * 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, items[1], left, top);
@@ -3455,24 +3757,28 @@ describe('CdkDrag', () => {
       const targetRect = target.getBoundingClientRect();
 
       dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(${-ITEM_WIDTH}px, 0px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(${ITEM_WIDTH * 2}px, 0px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should lay out elements correctly, when horizontally swapping an item with margin', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
       const {top, left} = items[0].getBoundingClientRect();
 
       fixture.componentInstance.items[0].margin = 12;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, items[0], left, top);
@@ -3482,18 +3788,21 @@ describe('CdkDrag', () => {
       const targetRect = target.getBoundingClientRect();
 
       dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.transform).toBe(`translate3d(${ITEM_WIDTH + 12}px, 0px, 0px)`);
       expect(target.style.transform).toBe(`translate3d(${-ITEM_WIDTH - 12}px, 0px, 0px)`);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should not swap position for tiny pointer movements', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
@@ -3517,6 +3826,7 @@ describe('CdkDrag', () => {
 
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
@@ -3524,18 +3834,21 @@ describe('CdkDrag', () => {
 
       // Move down a further 1px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions not to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
 
     it('should swap position for pointer movements in the opposite direction', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
@@ -3559,6 +3872,7 @@ describe('CdkDrag', () => {
 
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
@@ -3566,12 +3880,14 @@ describe('CdkDrag', () => {
 
       // Move up 10px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop - 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions to swap again.')
         .toEqual(['Zero', 'One', 'Two', 'Three']);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }));
@@ -3581,6 +3897,7 @@ describe('CdkDrag', () => {
         'overlap with the sibling item after the previous swap',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZone);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
@@ -3601,8 +3918,10 @@ describe('CdkDrag', () => {
         // Trigger a mouse move coming from the bottom so that the list thinks that we're
         // sorting upwards. This usually how a user would behave with a mouse pointer.
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom + 50);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(
@@ -3612,6 +3931,7 @@ describe('CdkDrag', () => {
         // Refresh the rect since the element position has changed.
         targetRect = target.getBoundingClientRect();
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(
@@ -3619,6 +3939,7 @@ describe('CdkDrag', () => {
         ).toEqual(['One', 'Two', 'Zero', 'Three']);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }),
@@ -3626,6 +3947,7 @@ describe('CdkDrag', () => {
 
     it('should clean up the preview element if the item is destroyed mid-drag', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3648,6 +3970,7 @@ describe('CdkDrag', () => {
 
     it('should be able to customize the preview element', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3662,11 +3985,13 @@ describe('CdkDrag', () => {
 
     it('should handle the custom preview being removed', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       fixture.componentInstance.renderCustomPreview = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       startDraggingViaMouse(fixture, item);
 
@@ -3680,6 +4005,7 @@ describe('CdkDrag', () => {
     it('should be able to constrain the position of a custom preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const listRect =
@@ -3692,6 +4018,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
       flush();
       dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const previewRect = preview.getBoundingClientRect();
@@ -3708,6 +4035,7 @@ describe('CdkDrag', () => {
       } as Point);
 
       fixture.componentInstance.constrainPosition = spy;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3718,6 +4046,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, 200, 200);
       flush();
       dispatchMouseEvent(document, 'mousemove', 200, 200);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const previewRect = preview.getBoundingClientRect();
@@ -3737,6 +4066,7 @@ describe('CdkDrag', () => {
         'preview has stopped',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dragContainer = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -3749,6 +4079,7 @@ describe('CdkDrag', () => {
         // The coordinates don't matter.
         dragElementViaMouse(fixture, item, 10, 10);
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dragContainer.contains(item))
@@ -3759,6 +4090,7 @@ describe('CdkDrag', () => {
 
     it('should position custom previews next to the pointer', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3771,6 +4103,7 @@ describe('CdkDrag', () => {
 
     it('should keep the preview next to the trigger if the page was scrolled', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const cleanup = makeScrollable();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -3781,10 +4114,12 @@ describe('CdkDrag', () => {
       expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
 
       scrollTo(0, 500);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Move the pointer a bit so the preview has to reposition.
       dispatchMouseEvent(document, 'mousemove', 55, 55);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(preview.style.transform).toBe('translate3d(55px, 555px, 0px)');
@@ -3794,6 +4129,7 @@ describe('CdkDrag', () => {
 
     it('should lock position inside a drop container along the x axis', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const item = fixture.componentInstance.dragItems.toArray()[1];
@@ -3804,6 +4140,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, element, 50, 50);
 
       dispatchMouseEvent(element, 'mousemove', 100, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -3813,6 +4150,7 @@ describe('CdkDrag', () => {
 
     it('should lock position inside a drop container along the y axis', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const item = fixture.componentInstance.dragItems.toArray()[1];
@@ -3823,6 +4161,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, element, 50, 50);
 
       dispatchMouseEvent(element, 'mousemove', 100, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -3832,6 +4171,7 @@ describe('CdkDrag', () => {
 
     it('should inherit the position locking from the drop container', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const element = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -3841,6 +4181,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, element, 50, 50);
 
       dispatchMouseEvent(element, 'mousemove', 100, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -3851,6 +4192,7 @@ describe('CdkDrag', () => {
     it('should be able to set a class on a custom preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.previewClass = 'custom-class';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3864,6 +4206,7 @@ describe('CdkDrag', () => {
     it('should be able to apply the size of the dragged element to a custom preview', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.matchPreviewSize = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const itemRect = item.getBoundingClientRect();
@@ -3883,6 +4226,7 @@ describe('CdkDrag', () => {
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
         fixture.componentInstance.matchPreviewSize = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3896,11 +4240,13 @@ describe('CdkDrag', () => {
 
     it('should not have the size of the inserted preview affect the size applied via matchSize', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalFlexDropZoneWithMatchSizePreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const itemRect = item.getBoundingClientRect();
 
       startDraggingViaMouse(fixture, item);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
@@ -3912,6 +4258,7 @@ describe('CdkDrag', () => {
 
     it('should not throw when custom preview only has text', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomTextOnlyPreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3927,6 +4274,7 @@ describe('CdkDrag', () => {
 
     it('should handle custom preview with multiple root nodes', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePreview);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3942,6 +4290,7 @@ describe('CdkDrag', () => {
 
     it('should be able to customize the placeholder', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -3956,12 +4305,14 @@ describe('CdkDrag', () => {
 
     it('should handle the custom placeholder being removed', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       fixture.componentInstance.renderPlaceholder = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       startDraggingViaMouse(fixture, item);
@@ -3976,6 +4327,7 @@ describe('CdkDrag', () => {
     it('should measure the custom placeholder after the first change detection', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
       fixture.componentInstance.extraPlaceholderClass = 'tall-placeholder';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const item = dragItems.toArray()[0].element.nativeElement;
@@ -3986,11 +4338,14 @@ describe('CdkDrag', () => {
       const thirdItemRect = thirdItem.getBoundingClientRect();
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3999,6 +4354,7 @@ describe('CdkDrag', () => {
 
     it('should not throw when custom placeholder only has text', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomTextOnlyPlaceholder);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -4014,6 +4370,7 @@ describe('CdkDrag', () => {
 
     it('should handle custom placeholder with multiple root nodes', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePlaceholder);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -4029,6 +4386,7 @@ describe('CdkDrag', () => {
 
     it('should clear the `transform` value from siblings when item is dropped`', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dragItems = fixture.componentInstance.dragItems;
@@ -4039,13 +4397,16 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, firstItem.element.nativeElement);
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(thirdItem.style.transform).toBeTruthy();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(thirdItem.style.transform).toBeFalsy();
@@ -4053,6 +4414,7 @@ describe('CdkDrag', () => {
 
     it('should not move the item if the list is disabled', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const dropElement = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4060,6 +4422,7 @@ describe('CdkDrag', () => {
       expect(dropElement.classList).not.toContain('cdk-drop-list-disabled');
 
       fixture.componentInstance.dropInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropElement.classList).toContain('cdk-drop-list-disabled');
@@ -4080,6 +4443,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -4094,16 +4458,20 @@ describe('CdkDrag', () => {
 
     it('should not throw if the `touches` array is empty', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       dispatchTouchEvent(item, 'touchstart');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchTouchEvent(document, 'touchmove');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchTouchEvent(document, 'touchmove', 50, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(() => {
@@ -4111,16 +4479,19 @@ describe('CdkDrag', () => {
         Object.defineProperty(endEvent, 'touches', {get: () => []});
 
         dispatchEvent(document, endEvent);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
     }));
 
     it('should not move the item if the group is disabled', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZonesViaGroupDirective);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.groupedDragItems[0];
 
       fixture.componentInstance.groupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
@@ -4140,6 +4511,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -4154,6 +4526,7 @@ describe('CdkDrag', () => {
 
     it('should not sort an item if sorting the list is disabled', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstance = fixture.componentInstance.dropInstance;
@@ -4178,6 +4551,7 @@ describe('CdkDrag', () => {
       const placeholder = document.querySelector('.cdk-drag-placeholder') as HTMLElement;
 
       dispatchMouseEvent(document, 'mousemove', targetX, targetY);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(getElementIndexByPosition(placeholder, 'top'))
@@ -4185,9 +4559,11 @@ describe('CdkDrag', () => {
         .toBe(0);
 
       dispatchMouseEvent(document, 'mouseup', targetX, targetY);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -4218,6 +4594,7 @@ describe('CdkDrag', () => {
 
     it('should not throw if an item is removed after dragging has started', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstElement = dragItems.first.element.nativeElement;
@@ -4228,11 +4605,13 @@ describe('CdkDrag', () => {
 
       // Remove the last item.
       fixture.componentInstance.items.pop();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(() => {
         // Move the dragged item over where the remove item would've been.
         dispatchMouseEvent(document, 'mousemove', lastItemRect.left + 1, lastItemRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }).not.toThrow();
@@ -4240,6 +4619,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to start a drag sequence while another one is still active', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const [item, otherItem] = fixture.componentInstance.dragItems.toArray();
 
@@ -4258,12 +4638,14 @@ describe('CdkDrag', () => {
 
     it('should should be able to disable auto-scrolling', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
       const listRect = list.getBoundingClientRect();
 
       fixture.componentInstance.dropInstance.autoScrollDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(list.scrollTop).toBe(0);
@@ -4275,6 +4657,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4283,6 +4666,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll down if the user holds their pointer at bottom edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4297,6 +4681,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4305,6 +4690,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll up if the user holds their pointer at top edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4313,6 +4699,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, listRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4321,6 +4708,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll right if the user holds their pointer at right edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4335,6 +4723,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width,
         listRect.top + listRect.height / 2,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4343,6 +4732,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll left if the user holds their pointer at left edge in ltr', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4351,6 +4741,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4365,6 +4756,7 @@ describe('CdkDrag', () => {
         },
       ]);
       fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4378,6 +4770,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width,
         listRect.top + listRect.height / 2,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4392,6 +4785,7 @@ describe('CdkDrag', () => {
         },
       ]);
       fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4401,6 +4795,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4410,6 +4805,7 @@ describe('CdkDrag', () => {
     it('should be able to start auto scrolling with a drag boundary', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.componentInstance.boundarySelector = '.drop-list';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4424,6 +4820,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width,
         listRect.top + listRect.height / 2,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4432,6 +4829,7 @@ describe('CdkDrag', () => {
 
     it('should stop scrolling if the user moves their pointer away', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4446,6 +4844,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4459,6 +4858,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height / 2,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4467,6 +4867,7 @@ describe('CdkDrag', () => {
 
     it('should stop scrolling if the user stops dragging', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4481,6 +4882,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4488,6 +4890,7 @@ describe('CdkDrag', () => {
       expect(previousScrollTop).toBeGreaterThan(0);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4496,6 +4899,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll viewport down if the pointer is close to bottom edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cleanup = makeScrollable();
@@ -4507,6 +4911,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width / 2, viewportSize.height);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4517,6 +4922,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll viewport up if the pointer is close to top edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cleanup = makeScrollable();
@@ -4530,6 +4936,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width / 2, 0);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4540,6 +4947,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll viewport right if the pointer is near right edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cleanup = makeScrollable('horizontal');
@@ -4551,6 +4959,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width, viewportSize.height / 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4561,6 +4970,7 @@ describe('CdkDrag', () => {
 
     it('should auto-scroll viewport left if the pointer is close to left edge', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cleanup = makeScrollable('horizontal');
@@ -4574,6 +4984,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', 0, viewportSize.height / 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4587,6 +4998,7 @@ describe('CdkDrag', () => {
         'both the list and the viewport',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4613,6 +5025,7 @@ describe('CdkDrag', () => {
 
         startDraggingViaMouse(fixture, item);
         dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tickAnimationFrames(20);
 
@@ -4628,6 +5041,7 @@ describe('CdkDrag', () => {
         'and the viewport, if the list cannot be scrolled in that direction',
       fakeAsync(() => {
         const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const list = fixture.componentInstance.dropInstance.element.nativeElement;
@@ -4654,6 +5068,7 @@ describe('CdkDrag', () => {
 
         startDraggingViaMouse(fixture, item);
         dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tickAnimationFrames(20);
 
@@ -4666,6 +5081,7 @@ describe('CdkDrag', () => {
 
     it('should be able to auto-scroll a parent container', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableParentContainer);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const container = fixture.nativeElement.querySelector('.scroll-container');
@@ -4680,6 +5096,7 @@ describe('CdkDrag', () => {
         containerRect.left + containerRect.width / 2,
         containerRect.top + containerRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(20);
 
@@ -4688,6 +5105,7 @@ describe('CdkDrag', () => {
 
     it('should be able to configure the auto-scroll speed', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dropInstance.autoScrollStep = 20;
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -4703,6 +5121,7 @@ describe('CdkDrag', () => {
         listRect.left + listRect.width / 2,
         listRect.top + listRect.height,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tickAnimationFrames(10);
 
@@ -4711,6 +5130,7 @@ describe('CdkDrag', () => {
 
     it('should pick up descendants inside of containers', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithContainer);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -4723,6 +5143,7 @@ describe('CdkDrag', () => {
         thirdItemRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -4746,6 +5167,7 @@ describe('CdkDrag', () => {
 
     it('should not pick up items from descendant drop lists', fakeAsync(() => {
       const fixture = createComponent(NestedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const {dragItems, innerList, outerList} = fixture.componentInstance;
       const innerClasses = innerList.nativeElement.classList;
@@ -4762,6 +5184,7 @@ describe('CdkDrag', () => {
       );
 
       startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(innerClasses)
@@ -4772,6 +5195,7 @@ describe('CdkDrag', () => {
 
     it('should be able to re-enable a disabled drop list', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const tryDrag = () => {
@@ -4784,6 +5208,7 @@ describe('CdkDrag', () => {
           thirdItemRect.top + 1,
         );
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       };
 
@@ -4795,6 +5220,7 @@ describe('CdkDrag', () => {
       ]);
 
       fixture.componentInstance.dropInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tryDrag();
 
@@ -4806,6 +5232,7 @@ describe('CdkDrag', () => {
       ]);
 
       fixture.componentInstance.dropInstance.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tryDrag();
 
@@ -4832,6 +5259,7 @@ describe('CdkDrag', () => {
           useValue: config,
         },
       ]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const list = fixture.componentInstance.dropList;
       expect(list.disabled).toBe(true);
@@ -4843,6 +5271,7 @@ describe('CdkDrag', () => {
 
     it('should disable scroll snapping while the user is dragging', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const styles: any = fixture.componentInstance.dropInstance.element.nativeElement.style;
@@ -4859,8 +5288,10 @@ describe('CdkDrag', () => {
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('none');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBeFalsy();
@@ -4868,6 +5299,7 @@ describe('CdkDrag', () => {
 
     it('should restore the previous inline scroll snap value', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const styles: any = fixture.componentInstance.dropInstance.element.nativeElement.style;
@@ -4885,8 +5317,10 @@ describe('CdkDrag', () => {
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('none');
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('block');
@@ -4894,6 +5328,7 @@ describe('CdkDrag', () => {
 
     it('should be able to start dragging again if the dragged item is destroyed', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let item = fixture.componentInstance.dragItems.first;
@@ -4906,6 +5341,7 @@ describe('CdkDrag', () => {
         {value: 'Five', height: ITEM_HEIGHT, margin: 0},
         {value: 'Six', height: ITEM_HEIGHT, margin: 0},
       ];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -4921,6 +5357,7 @@ describe('CdkDrag', () => {
         .toBeTruthy();
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -4929,6 +5366,7 @@ describe('CdkDrag', () => {
 
     it('should make the placeholder available in the start event', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       let placeholder: HTMLElement | undefined;
@@ -4943,6 +5381,7 @@ describe('CdkDrag', () => {
 
     it('should not move item into position not allowed by the sort predicate', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const spy = jasmine.createSpy('sort predicate spy').and.returnValue(false);
@@ -4960,6 +5399,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, firstItem.element.nativeElement);
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith(2, firstItem, fixture.componentInstance.dropInstance);
@@ -4971,6 +5411,7 @@ describe('CdkDrag', () => {
       ]);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -4993,6 +5434,7 @@ describe('CdkDrag', () => {
 
     it('should not call the sort predicate for the same index', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const spy = jasmine.createSpy('sort predicate spy').and.returnValue(true);
       fixture.componentInstance.dropInstance.sortPredicate = spy;
@@ -5002,6 +5444,7 @@ describe('CdkDrag', () => {
 
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', itemRect.left + 10, itemRect.top + 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
@@ -5016,6 +5459,7 @@ describe('CdkDrag', () => {
 
     it('should preserve the original `transform` of items in the list', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const items = fixture.componentInstance.dragItems.map(item => item.element.nativeElement);
       items.forEach(element => (element.style.transform = 'rotate(180deg)'));
@@ -5024,6 +5468,7 @@ describe('CdkDrag', () => {
         element.style.transform.indexOf('rotate(180deg)') > -1;
 
       startDraggingViaMouse(fixture, items[0]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
       const placeholder = fixture.nativeElement.querySelector('.cdk-drag-placeholder');
@@ -5039,6 +5484,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(items.every(hasInitialTransform))
         .withContext('Expected items to preserve transform while dragging.')
@@ -5051,8 +5497,10 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(items.every(hasInitialTransform))
         .withContext('Expected items to preserve transform when dragging stops.')
@@ -5068,6 +5516,7 @@ describe('CdkDrag', () => {
     it('should sort correctly if the <html> node has been offset', fakeAsync(() => {
       const documentElement = document.documentElement!;
       const fixture = createComponent(DraggableInDropZone);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       documentElement.style.position = 'absolute';
@@ -5088,6 +5537,7 @@ describe('CdkDrag', () => {
   describe('in a connected drop container', () => {
     it('should dispatch the `dropped` event when an item has been dropped into a new container', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5101,6 +5551,7 @@ describe('CdkDrag', () => {
         targetRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -5122,6 +5573,7 @@ describe('CdkDrag', () => {
 
     it('should be able to move the element over a new container and return it', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5140,6 +5592,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[1].contains(placeholder))
@@ -5147,6 +5600,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].contains(placeholder))
@@ -5154,6 +5608,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -5164,6 +5619,7 @@ describe('CdkDrag', () => {
         'one, even if it no longer matches the enterPredicate',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -5173,6 +5629,7 @@ describe('CdkDrag', () => {
         const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
         fixture.componentInstance.dropInstances.first.enterPredicate = () => false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         startDraggingViaMouse(fixture, item.element.nativeElement);
@@ -5185,6 +5642,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -5192,6 +5650,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[0].contains(placeholder))
@@ -5199,6 +5658,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -5207,6 +5667,7 @@ describe('CdkDrag', () => {
 
     it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems.slice();
@@ -5218,6 +5679,7 @@ describe('CdkDrag', () => {
       // after dragged item is removed from first container
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5239,8 +5701,10 @@ describe('CdkDrag', () => {
     it('should not be able to transfer an item into a container that is not in `connectedTo`', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dropInstances.forEach(d => (d.connectedTo = []));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems.slice();
@@ -5250,6 +5714,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5271,8 +5736,10 @@ describe('CdkDrag', () => {
     it('should not be able to transfer an item that does not match the `enterPredicate`', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dropInstances.forEach(d => (d.enterPredicate = () => false));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems.slice();
@@ -5282,6 +5749,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5302,6 +5770,7 @@ describe('CdkDrag', () => {
 
     it('should call the `enterPredicate` with the item and the container it is entering', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstances = fixture.componentInstance.dropInstances.toArray();
@@ -5311,6 +5780,7 @@ describe('CdkDrag', () => {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dropInstances[1].enterPredicate = spy;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dragElementViaMouse(
@@ -5320,6 +5790,7 @@ describe('CdkDrag', () => {
         targetRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith(dragItem, dropInstances[1]);
@@ -5327,6 +5798,7 @@ describe('CdkDrag', () => {
 
     it('should be able to start dragging after an item has been transferred', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5338,6 +5810,7 @@ describe('CdkDrag', () => {
       [1, -1].forEach(offset => {
         dragElementViaMouse(fixture, element, targetRect.left + offset, targetRect.top + offset);
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       });
 
@@ -5349,6 +5822,7 @@ describe('CdkDrag', () => {
 
       // Make sure there's only one item in the first list.
       fixture.componentInstance.todo = ['things'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5368,6 +5842,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[1].contains(placeholder))
@@ -5375,6 +5850,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].contains(placeholder))
@@ -5382,6 +5858,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -5392,6 +5869,7 @@ describe('CdkDrag', () => {
 
       // Make sure there's only one item in the first list.
       fixture.componentInstance.todo = ['things'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstances = fixture.componentInstance.dropInstances.toArray();
@@ -5409,6 +5887,7 @@ describe('CdkDrag', () => {
       expect(placeholder).toBeTruthy();
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(targetElement.previousSibling === placeholder)
@@ -5423,11 +5902,13 @@ describe('CdkDrag', () => {
 
       // Swap with target
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.bottom - 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Drop and verify item drop positon and coontainer
       dispatchMouseEvent(document, 'mouseup', targetRect.left + 1, targetRect.bottom - 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5451,6 +5932,7 @@ describe('CdkDrag', () => {
 
       // Make sure there's only one item in the first list.
       fixture.componentInstance.todo = ['things'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5473,6 +5955,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[1].firstElementChild === placeholder)
@@ -5487,6 +5970,7 @@ describe('CdkDrag', () => {
 
       // Make sure there's only one item in the first list.
       fixture.componentInstance.todo = ['things'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5512,6 +5996,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[1].lastChild === placeholder)
@@ -5526,6 +6011,7 @@ describe('CdkDrag', () => {
 
       // Make sure there's only one item in the first list.
       fixture.componentInstance.todo = ['things'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5539,12 +6025,14 @@ describe('CdkDrag', () => {
       expect(() => {
         dragElementViaMouse(fixture, item.element.nativeElement, targetRect.left, targetRect.top);
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
     }));
 
     it('should assign a default id on each drop zone', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(
@@ -5556,6 +6044,7 @@ describe('CdkDrag', () => {
 
     it('should be able to connect two drop zones by id', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstances = fixture.componentInstance.dropInstances.toArray();
@@ -5564,6 +6053,7 @@ describe('CdkDrag', () => {
       dropInstances[1].id = 'done';
       dropInstances[0].connectedTo = ['done'];
       dropInstances[1].connectedTo = ['todo'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5572,6 +6062,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5592,6 +6083,7 @@ describe('CdkDrag', () => {
 
     it('should be able to connect two drop zones using the drop list group', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZonesViaGroupDirective);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstances = fixture.componentInstance.dropInstances.toArray();
@@ -5601,6 +6093,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5621,12 +6114,14 @@ describe('CdkDrag', () => {
 
     it('should be able to pass a single id to `connectedTo`', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropInstances = fixture.componentInstance.dropInstances.toArray();
 
       dropInstances[1].id = 'done';
       dropInstances[0].connectedTo = ['done'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5635,6 +6130,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5658,6 +6154,7 @@ describe('CdkDrag', () => {
         'with one draggable item',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZonesWithSingleItems);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const items = fixture.componentInstance.dragItems.toArray();
@@ -5681,6 +6178,7 @@ describe('CdkDrag', () => {
           targetRect.top + 1,
         );
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -5713,6 +6211,7 @@ describe('CdkDrag', () => {
         'even if it is not connected to the current container',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -5727,6 +6226,7 @@ describe('CdkDrag', () => {
         dropInstances[1].connectedTo = [];
 
         startDraggingViaMouse(fixture, item.element.nativeElement);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
@@ -5737,6 +6237,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -5744,6 +6245,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[0].contains(placeholder))
@@ -5751,6 +6253,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -5760,6 +6263,7 @@ describe('CdkDrag', () => {
     it('should not add child drop lists to the same group as their parents', fakeAsync(() => {
       const fixture = createComponent(NestedDropListGroups);
       const component = fixture.componentInstance;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(Array.from(component.group._items)).toEqual([component.listOne, component.listTwo]);
@@ -5767,6 +6271,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to drop an element into a container that is under another element', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems.slice();
@@ -5789,6 +6294,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -5809,6 +6315,7 @@ describe('CdkDrag', () => {
 
     it('should set a class when a container can receive an item', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
@@ -5819,6 +6326,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].classList).not.toContain(
@@ -5833,6 +6341,7 @@ describe('CdkDrag', () => {
 
     it('should toggle the `receiving` class when the item enters a new list', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -5856,6 +6365,7 @@ describe('CdkDrag', () => {
         .toContain('cdk-drop-list-receiving');
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].classList)
@@ -5869,6 +6379,7 @@ describe('CdkDrag', () => {
 
     it('should not set the receiving class if the item does not match the enter predicate', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.dropInstances.toArray()[1].enterPredicate = () => false;
 
@@ -5880,6 +6391,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones.every(c => !c.classList.contains('cdk-drop-list-receiving')))
@@ -5892,6 +6404,7 @@ describe('CdkDrag', () => {
         'does not match',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         fixture.componentInstance.dropInstances.toArray()[0].enterPredicate = () => false;
 
@@ -5915,6 +6428,7 @@ describe('CdkDrag', () => {
           .toContain('cdk-drop-list-receiving');
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[0].classList)
@@ -5932,6 +6446,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(ConnectedDropListsInOnPush, undefined, undefined, [
         DraggableInOnPushDropZone,
       ]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const dropZones = Array.from<HTMLElement>(
@@ -5944,6 +6459,7 @@ describe('CdkDrag', () => {
         .toBe(true);
 
       startDraggingViaMouse(fixture, item);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].classList)
@@ -5960,12 +6476,14 @@ describe('CdkDrag', () => {
         'dropping it into the final one',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dropInstances = fixture.componentInstance.dropInstances.toArray();
         dropInstances[0].connectedTo = [dropInstances[1], dropInstances[2]];
         dropInstances[1].connectedTo = [];
         dropInstances[2].connectedTo = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -5989,6 +6507,7 @@ describe('CdkDrag', () => {
           intermediateRect.left + 1,
           intermediateRect.top + 1,
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -5996,6 +6515,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[2].contains(placeholder))
@@ -6003,8 +6523,10 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -6031,12 +6553,14 @@ describe('CdkDrag', () => {
         'not connected to by passing it over an intermediate one that is',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const dropInstances = fixture.componentInstance.dropInstances.toArray();
         dropInstances[0].connectedTo = [dropInstances[1]];
         dropInstances[1].connectedTo = [dropInstances[0], dropInstances[2]];
         dropInstances[2].connectedTo = [dropInstances[1]];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -6060,6 +6584,7 @@ describe('CdkDrag', () => {
           intermediateRect.left + 1,
           intermediateRect.top + 1,
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -6067,6 +6592,7 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -6074,8 +6600,10 @@ describe('CdkDrag', () => {
           .toBe(true);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -6099,6 +6627,7 @@ describe('CdkDrag', () => {
         'was disabled',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -6120,6 +6649,7 @@ describe('CdkDrag', () => {
           .toBe(1);
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -6138,6 +6668,7 @@ describe('CdkDrag', () => {
           firstInitialSiblingRect.left + 1,
           firstInitialSiblingRect.top + 1,
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[0].contains(placeholder))
@@ -6148,6 +6679,7 @@ describe('CdkDrag', () => {
           .toBe(1);
 
         dispatchMouseEvent(document, 'mouseup');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -6159,6 +6691,7 @@ describe('CdkDrag', () => {
         'sorting is enabled',
       fakeAsync(() => {
         const fixture = createComponent(ConnectedDropZones);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const groups = fixture.componentInstance.groupedDragItems;
@@ -6181,6 +6714,7 @@ describe('CdkDrag', () => {
           .toBe(1);
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[1].contains(placeholder))
@@ -6194,6 +6728,7 @@ describe('CdkDrag', () => {
 
         // Return the item to an index that is different from the initial one.
         dispatchMouseEvent(document, 'mousemove', nextTargetRect.left + 1, nextTargetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(dropZones[0].contains(placeholder))
@@ -6207,6 +6742,7 @@ describe('CdkDrag', () => {
 
     it('should return the last item to initial position when dragging back into a container with disabled sorting', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6229,6 +6765,7 @@ describe('CdkDrag', () => {
         .toBe(lastIndex);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[1].contains(placeholder))
@@ -6247,6 +6784,7 @@ describe('CdkDrag', () => {
         firstInitialSiblingRect.left,
         firstInitialSiblingRect.top,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(dropZones[0].contains(placeholder))
@@ -6257,6 +6795,7 @@ describe('CdkDrag', () => {
         .toBe(lastIndex);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -6269,6 +6808,7 @@ describe('CdkDrag', () => {
         const fixture = createComponent(ConnectedWrappedDropZones, [], 0, [
           WrappedDropContainerComponent,
         ]);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const [startZone, targetZone] = fixture.nativeElement.querySelectorAll('.cdk-drop-list');
@@ -6294,6 +6834,7 @@ describe('CdkDrag', () => {
           .toContain('cdk-drop-list-dragging');
 
         dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(startZone.classList)
@@ -6309,6 +6850,7 @@ describe('CdkDrag', () => {
 
     it('should dispatch an event when an item enters a new container', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6318,6 +6860,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item.element.nativeElement);
 
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const containerEnterEvent = fixture.componentInstance.enteredSpy.calls.mostRecent().args[0];
@@ -6334,6 +6877,7 @@ describe('CdkDrag', () => {
 
     it('should not throw if dragging was interrupted as a result of the entered event', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6342,6 +6886,7 @@ describe('CdkDrag', () => {
 
       fixture.componentInstance.enteredSpy.and.callFake(() => {
         fixture.componentInstance.todo = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       });
 
@@ -6353,20 +6898,24 @@ describe('CdkDrag', () => {
           targetRect.top + 1,
         );
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
     }));
 
     it('should be able to drop into a new container after scrolling into view', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Make the page scrollable and scroll the items out of view.
       const cleanup = makeScrollable();
       scrollTo(0, 4000);
       dispatchFakeEvent(document, 'scroll');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6380,8 +6929,10 @@ describe('CdkDrag', () => {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
       dispatchMouseEvent(document, 'mouseup', targetRect.left + 1, targetRect.top + 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -6416,6 +6967,7 @@ describe('CdkDrag', () => {
         [],
         ViewEncapsulation.ShadowDom,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6429,6 +6981,7 @@ describe('CdkDrag', () => {
         targetRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -6455,6 +7008,7 @@ describe('CdkDrag', () => {
       }
 
       const fixture = createComponent(ConnectedDropZonesInsideShadowRootWithNgIf);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6468,6 +7022,7 @@ describe('CdkDrag', () => {
         targetRect.top + 1,
       );
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -6500,29 +7055,35 @@ describe('CdkDrag', () => {
         [],
         ViewEncapsulation.ShadowDom,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const shadowRoot = fixture.nativeElement.shadowRoot;
       const item = fixture.componentInstance.groupedDragItems[0][1];
 
       startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const initialSelectStart = dispatchFakeEvent(shadowRoot, 'selectstart');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(initialSelectStart.defaultPrevented).toBe(true);
 
       dispatchMouseEvent(document, 'mouseup');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       const afterDropSelectStart = dispatchFakeEvent(shadowRoot, 'selectstart');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(afterDropSelectStart.defaultPrevented).toBe(false);
     }));
 
     it('should not throw if its next sibling is removed while dragging', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZonesWithSingleItems);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const items = fixture.componentInstance.dragItems.toArray();
@@ -6546,15 +7107,18 @@ describe('CdkDrag', () => {
 
       expect(() => {
         flush();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
     }));
 
     it('should warn when the connected container ID does not exist', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.dropInstances.first.connectedTo = 'does-not-exist';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -6563,6 +7127,7 @@ describe('CdkDrag', () => {
       spyOn(console, 'warn');
       dragElementViaMouse(fixture, element, 0, 0);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(console.warn).toHaveBeenCalledWith(
@@ -6572,6 +7137,7 @@ describe('CdkDrag', () => {
 
     it('should not be able to start a drag sequence while a connected container is active', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.groupedDragItems[0][0];
       const itemInOtherList = fixture.componentInstance.groupedDragItems[1][0];
@@ -6602,10 +7168,12 @@ describe('CdkDrag', () => {
         [],
         ViewEncapsulation.ShadowDom,
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const item = fixture.componentInstance.groupedDragItems[0][1];
 
       startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // `querySelector` doesn't descend into the shadow DOM so we can assert that the preview
@@ -6617,6 +7185,7 @@ describe('CdkDrag', () => {
   describe('with nested drags', () => {
     it('should not move draggable container when dragging child (multitouch)', fakeAsync(() => {
       const fixture = createComponent(NestedDragsComponent, [], 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // First finger drags container (less then threshold)
@@ -6669,6 +7238,7 @@ describe('CdkDrag', () => {
 
     it('should stop event propagation when dragging a nested item', fakeAsync(() => {
       const fixture = createComponent(NestedDragsComponent);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.item.nativeElement;
 
@@ -6676,6 +7246,7 @@ describe('CdkDrag', () => {
       spyOn(event, 'stopPropagation').and.callThrough();
 
       dispatchEvent(dragElement, event);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(event.stopPropagation).toHaveBeenCalled();
@@ -6683,6 +7254,7 @@ describe('CdkDrag', () => {
 
     it('should stop event propagation when dragging item nested via ng-template', fakeAsync(() => {
       const fixture = createComponent(NestedDragsThroughTemplate);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.item.nativeElement;
 
@@ -6690,6 +7262,7 @@ describe('CdkDrag', () => {
       spyOn(event, 'stopPropagation').and.callThrough();
 
       dispatchEvent(dragElement, event);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(event.stopPropagation).toHaveBeenCalled();
@@ -7941,190 +8514,4 @@ class DraggableWithRadioInputsInDropZone {
 class DraggableNgContainerWithAlternateRoot {
   @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
-}
-
-/**
- * Drags an element to a position on the page using the mouse.
- * @param fixture Fixture on which to run change detection.
- * @param element Element which is being dragged.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function dragElementViaMouse(
-  fixture: ComponentFixture<any>,
-  element: Element,
-  x: number,
-  y: number,
-) {
-  startDraggingViaMouse(fixture, element);
-
-  dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.detectChanges();
-
-  dispatchMouseEvent(document, 'mouseup', x, y);
-  fixture.detectChanges();
-}
-
-/**
- * Dispatches the events for starting a drag sequence.
- * @param fixture Fixture on which to run change detection.
- * @param element Element on which to dispatch the events.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function startDraggingViaMouse(
-  fixture: ComponentFixture<any>,
-  element: Element,
-  x?: number,
-  y?: number,
-) {
-  dispatchMouseEvent(element, 'mousedown', x, y);
-  fixture.detectChanges();
-
-  dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.detectChanges();
-}
-
-/**
- * Drags an element to a position on the page using a touch device.
- * @param fixture Fixture on which to run change detection.
- * @param element Element which is being dragged.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function dragElementViaTouch(
-  fixture: ComponentFixture<any>,
-  element: Element,
-  x: number,
-  y: number,
-) {
-  startDraggingViaTouch(fixture, element);
-  continueDraggingViaTouch(fixture, x, y);
-  stopDraggingViaTouch(fixture, x, y);
-}
-
-/**
- * @param fixture Fixture on which to run change detection.
- * @param element Element which is being dragged.
- */
-function startDraggingViaTouch(fixture: ComponentFixture<any>, element: Element) {
-  dispatchTouchEvent(element, 'touchstart');
-  fixture.detectChanges();
-
-  dispatchTouchEvent(document, 'touchmove');
-  fixture.detectChanges();
-}
-
-/**
- * @param fixture Fixture on which to run change detection.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function continueDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
-  dispatchTouchEvent(document, 'touchmove', x, y);
-  fixture.detectChanges();
-}
-
-/**
- * @param fixture Fixture on which to run change detection.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function stopDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
-  dispatchTouchEvent(document, 'touchend', x, y);
-  fixture.detectChanges();
-}
-
-/** Gets the index of an element among its siblings, based on their position on the page. */
-function getElementIndexByPosition(element: Element, direction: 'top' | 'left') {
-  return getElementSibligsByPosition(element, direction).indexOf(element);
-}
-
-/** Gets the siblings of an element, sorted by their position on the page. */
-function getElementSibligsByPosition(element: Element, direction: 'top' | 'left') {
-  return element.parentElement
-    ? Array.from(element.parentElement.children).sort((a, b) => {
-        return a.getBoundingClientRect()[direction] - b.getBoundingClientRect()[direction];
-      })
-    : [];
-}
-
-/**
- * Adds a large element to the page in order to make it scrollable.
- * @returns Function that should be used to clean up after the test is done.
- */
-function makeScrollable(
-  direction: 'vertical' | 'horizontal' = 'vertical',
-  element = document.body,
-) {
-  const veryTallElement = document.createElement('div');
-  veryTallElement.style.width = direction === 'vertical' ? '100%' : '4000px';
-  veryTallElement.style.height = direction === 'vertical' ? '2000px' : '5px';
-  element.appendChild(veryTallElement);
-
-  return () => {
-    scrollTo(0, 0);
-    veryTallElement.remove();
-  };
-}
-
-/**
- * Asserts that sorting an element down works correctly.
- * @param fixture Fixture against which to run the assertions.
- * @param items Array of items against which to test sorting.
- */
-function assertDownwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
-  const draggedItem = items[0];
-  const {top, left} = draggedItem.getBoundingClientRect();
-
-  startDraggingViaMouse(fixture, draggedItem, left, top);
-
-  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-  // Drag over each item one-by-one going downwards.
-  for (let i = 0; i < items.length; i++) {
-    const elementRect = items[i].getBoundingClientRect();
-
-    // Add a few pixels to the top offset so we get some overlap.
-    dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
-    fixture.detectChanges();
-    expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
-  }
-
-  dispatchMouseEvent(document, 'mouseup');
-  fixture.detectChanges();
-  flush();
-}
-
-/**
- * Asserts that sorting an element up works correctly.
- * @param fixture Fixture against which to run the assertions.
- * @param items Array of items against which to test sorting.
- */
-function assertUpwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
-  const draggedItem = items[items.length - 1];
-  const {top, left} = draggedItem.getBoundingClientRect();
-
-  startDraggingViaMouse(fixture, draggedItem, left, top);
-
-  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-  // Drag over each item one-by-one going upwards.
-  for (let i = items.length - 1; i > -1; i--) {
-    const elementRect = items[i].getBoundingClientRect();
-
-    // Remove a few pixels from the bottom offset so we get some overlap.
-    dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.bottom - 5);
-    fixture.detectChanges();
-    expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
-  }
-
-  dispatchMouseEvent(document, 'mouseup');
-  fixture.detectChanges();
-  flush();
-}
-
-/** Ticks the specified amount of `requestAnimationFrame`-s. */
-function tickAnimationFrames(amount: number) {
-  tick(16.6 * amount); // Angular turns rAF calls into 16.6ms timeouts in tests.
 }

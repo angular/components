@@ -1,8 +1,8 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {Overlay} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
@@ -21,7 +21,6 @@ describe('LiveAnnouncer', () => {
   describe('with default element', () => {
     beforeEach(() =>
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [A11yModule, TestApp, TestModal],
       }),
     );
@@ -128,7 +127,6 @@ describe('LiveAnnouncer', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [A11yModule],
       });
 
@@ -180,6 +178,7 @@ describe('LiveAnnouncer', () => {
       const overlayRef = overlay.create();
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(ariaLiveElement.id).toBeTruthy();
@@ -200,6 +199,7 @@ describe('LiveAnnouncer', () => {
       const overlayRef = overlay.create();
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       componentRef.instance.ariaOwns = 'foo bar';
@@ -227,10 +227,7 @@ describe('LiveAnnouncer', () => {
 
       return TestBed.configureTestingModule({
         imports: [A11yModule, TestApp],
-        providers: [
-          provideZoneChangeDetection(),
-          {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement},
-        ],
+        providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
 
@@ -254,7 +251,6 @@ describe('LiveAnnouncer', () => {
       return TestBed.configureTestingModule({
         imports: [A11yModule, TestApp],
         providers: [
-          provideZoneChangeDetection(),
           {
             provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
             useValue: {
@@ -303,7 +299,6 @@ describe('CdkAriaLive', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, DivWithCdkAriaLive],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: MutationObserverFactory,
           useValue: {
@@ -325,6 +320,7 @@ describe('CdkAriaLive', () => {
       announcer = la;
       announcerSpy = spyOn(la, 'announce').and.callThrough();
       fixture = TestBed.createComponent(DivWithCdkAriaLive);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }),
@@ -332,6 +328,7 @@ describe('CdkAriaLive', () => {
 
   it('should default politeness to polite', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -341,6 +338,7 @@ describe('CdkAriaLive', () => {
 
   it('should dynamically update the politeness', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -350,6 +348,7 @@ describe('CdkAriaLive', () => {
     announcerSpy.calls.reset();
     fixture.componentInstance.politeness = 'off';
     fixture.componentInstance.content = 'Newer content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -359,6 +358,7 @@ describe('CdkAriaLive', () => {
     announcerSpy.calls.reset();
     fixture.componentInstance.politeness = 'assertive';
     fixture.componentInstance.content = 'Newest content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -368,12 +368,14 @@ describe('CdkAriaLive', () => {
 
   it('should not announce the same text multiple times', fakeAsync(() => {
     fixture.componentInstance.content = 'Content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
 
     expect(announcer.announce).toHaveBeenCalledTimes(1);
 
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -384,6 +386,7 @@ describe('CdkAriaLive', () => {
   it('should be able to pass in a duration', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
     fixture.componentInstance.duration = 1337;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
