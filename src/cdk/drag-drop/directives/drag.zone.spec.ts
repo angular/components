@@ -1,5 +1,4 @@
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {
   Component,
   ElementRef,
@@ -15,6 +14,7 @@ import {DragDropModule} from '../drag-drop-module';
 import {Point} from '../drag-ref';
 import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
 import {CdkDrag} from './drag';
+import {dragElementViaMouse} from './test-utils.spec';
 
 describe('CdkDrag Zone.js integration', () => {
   function createComponent<T>(
@@ -71,52 +71,6 @@ describe('CdkDrag Zone.js integration', () => {
     });
   });
 });
-
-/**
- * Dispatches the events for starting a drag sequence.
- * @param fixture Fixture on which to run change detection.
- * @param element Element on which to dispatch the events.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function startDraggingViaMouse(
-  fixture: ComponentFixture<any>,
-  element: Element,
-  x?: number,
-  y?: number,
-) {
-  dispatchMouseEvent(element, 'mousedown', x, y);
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-
-  dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-}
-
-/**
- * Drags an element to a position on the page using the mouse.
- * @param fixture Fixture on which to run change detection.
- * @param element Element which is being dragged.
- * @param x Position along the x axis to which to drag the element.
- * @param y Position along the y axis to which to drag the element.
- */
-function dragElementViaMouse(
-  fixture: ComponentFixture<any>,
-  element: Element,
-  x: number,
-  y: number,
-) {
-  startDraggingViaMouse(fixture, element);
-
-  dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-
-  dispatchMouseEvent(document, 'mouseup', x, y);
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-}
 
 /**
  * Component that passes through whatever content is projected into it.

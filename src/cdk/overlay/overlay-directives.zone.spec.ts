@@ -46,7 +46,7 @@ describe('Overlay directives Zone.js integration', () => {
     <button cdk-overlay-origin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
     <button cdk-overlay-origin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
     <button id="nonDirectiveTrigger" #nonDirectiveTrigger>Toggle menu</button>
-  
+
     <ng-template cdk-connected-overlay
               [cdkConnectedOverlayOpen]="isOpen"
               [cdkConnectedOverlayWidth]="width"
