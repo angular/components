@@ -1,10 +1,5 @@
 import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {Subject} from 'rxjs';
-import {Directionality} from '../bidi';
-import {ScrollDispatcher} from '../scrolling';
-import {Overlay} from './overlay';
-import {OverlayContainer} from './overlay-container';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkConnectedOverlay, CdkOverlayOrigin} from './overlay-directives';
 import {OverlayModule} from './overlay-module';
 import {
@@ -15,25 +10,12 @@ import {
 import {ScrollStrategy} from './scroll';
 
 describe('Overlay directives Zone.js integration', () => {
-  let overlay: Overlay;
-  let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
-  let dir: {value: string};
-  let scrolledSubject = new Subject();
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
-      providers: [
-        provideZoneChangeDetection(),
-        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
-        {
-          provide: ScrollDispatcher,
-          useFactory: () => ({
-            scrolled: () => scrolledSubject,
-          }),
-        },
-      ],
+      providers: [provideZoneChangeDetection()],
     });
   });
 
@@ -42,11 +24,6 @@ describe('Overlay directives Zone.js integration', () => {
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
   });
-
-  beforeEach(inject([OverlayContainer, Overlay], (oc: OverlayContainer, o: Overlay) => {
-    overlay = o;
-    overlayContainerElement = oc.getContainerElement();
-  }));
 
   describe('outputs', () => {
     it('should emit the position change handler inside the zone', () => {
