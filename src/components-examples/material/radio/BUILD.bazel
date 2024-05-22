@@ -19,7 +19,6 @@ ng_module(
         "//src/material/radio/testing",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -43,7 +42,6 @@ ng_test_library(
         "//src/material/radio",
         "//src/material/radio/testing",
         "@npm//@angular/forms",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 

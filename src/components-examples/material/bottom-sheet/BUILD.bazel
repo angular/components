@@ -21,7 +21,6 @@ ng_module(
         "//src/material/button",
         "//src/material/list",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -45,7 +44,6 @@ ng_test_library(
         "//src/material/bottom-sheet",
         "//src/material/bottom-sheet/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 
