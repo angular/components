@@ -1,37 +1,35 @@
-import {
-  waitForAsync,
-  fakeAsync,
-  tick,
-  ComponentFixture,
-  TestBed,
-  flush,
-} from '@angular/core/testing';
-import {
-  Component,
-  ViewChild,
-  ViewContainerRef,
-  ErrorHandler,
-  Injectable,
-  EventEmitter,
-  NgZone,
-  Type,
-  provideZoneChangeDetection,
-} from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {dispatchFakeEvent} from '../testing/private';
-import {ComponentPortal, TemplatePortal, CdkPortal} from '@angular/cdk/portal';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
+  Component,
+  ErrorHandler,
+  EventEmitter,
+  Injectable,
+  Type,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {dispatchFakeEvent} from '../testing/private';
+import {
   Overlay,
+  OverlayConfig,
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  OverlayConfig,
   PositionStrategy,
   ScrollStrategy,
 } from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('Overlay', () => {
   let overlay: Overlay;
@@ -48,8 +46,6 @@ describe('Overlay', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, ...imports],
       providers: [
-        provideZoneChangeDetection(),
-        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => {
@@ -70,6 +66,7 @@ describe('Overlay', () => {
     overlayContainerElement = overlayContainer.getContainerElement();
 
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     templatePortal = fixture.componentInstance.templatePortal;
     componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
@@ -111,6 +108,7 @@ describe('Overlay', () => {
     let paneElement = overlayRef.overlayElement;
 
     overlayRef.attach(componentPortal);
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(paneElement.childNodes.length).not.toBe(0);
@@ -389,6 +387,7 @@ describe('Overlay', () => {
     const overlayRef = overlay.create();
 
     overlayRef.attach(componentPortal);
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
@@ -401,6 +400,7 @@ describe('Overlay', () => {
       .withContext('Expected host element not to have been removed immediately.')
       .toBeTruthy();
 
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
@@ -408,6 +408,7 @@ describe('Overlay', () => {
       .toBeFalsy();
 
     overlayRef.attach(componentPortal);
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
@@ -470,6 +471,7 @@ describe('Overlay', () => {
     const paneElement = overlayRef.overlayElement;
 
     overlayRef.attach(componentPortal);
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(paneElement.childNodes.length).not.toBe(0);
@@ -485,6 +487,7 @@ describe('Overlay', () => {
     const paneElement = overlayRef.overlayElement;
 
     overlayRef.attach(templatePortal);
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
 
     expect(paneElement.childNodes.length).not.toBe(0);
@@ -506,6 +509,7 @@ describe('Overlay', () => {
       config.positionStrategy = new FakePositionStrategy();
 
       overlay.create(config).attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -547,6 +551,7 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       overlayRef.detach();
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -567,6 +572,7 @@ describe('Overlay', () => {
 
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -577,6 +583,7 @@ describe('Overlay', () => {
       expect(secondStrategy.apply).not.toHaveBeenCalled();
 
       overlayRef.updatePositionStrategy(secondStrategy);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -599,6 +606,7 @@ describe('Overlay', () => {
 
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -607,6 +615,7 @@ describe('Overlay', () => {
       expect(strategy.dispose).not.toHaveBeenCalled();
 
       overlayRef.updatePositionStrategy(strategy);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -776,6 +785,7 @@ describe('Overlay', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
 
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop).toBeTruthy();
@@ -792,6 +802,7 @@ describe('Overlay', () => {
       let overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       let completeHandler = jasmine.createSpy('backdrop complete handler');
@@ -805,6 +816,7 @@ describe('Overlay', () => {
     it('should apply the default overlay backdrop class', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -816,6 +828,7 @@ describe('Overlay', () => {
 
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -827,6 +840,7 @@ describe('Overlay', () => {
 
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -838,6 +852,7 @@ describe('Overlay', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
 
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
@@ -852,6 +867,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
@@ -869,6 +885,7 @@ describe('Overlay', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
 
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop).toBeTruthy();
@@ -882,6 +899,7 @@ describe('Overlay', () => {
 
       overlayRef.detach();
       dispatchFakeEvent(backdrop, 'transitionend');
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       backdrop.click();
@@ -896,6 +914,7 @@ describe('Overlay', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
 
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
@@ -908,6 +927,7 @@ describe('Overlay', () => {
       const config = new OverlayConfig({panelClass: 'custom-panel-class'});
 
       overlay.create(config).attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
@@ -918,6 +938,7 @@ describe('Overlay', () => {
       const config = new OverlayConfig({panelClass: ['custom-class-one', 'custom-class-two']});
 
       overlay.create(config).attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
@@ -931,6 +952,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
@@ -939,22 +961,24 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       expect(pane.classList).not.toContain('custom-panel-class', 'Expected class to be removed');
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       expect(pane.classList)
         .withContext('Expected class to be re-added')
         .toContain('custom-panel-class');
     });
 
-    it('should wait for the overlay to be detached before removing the panelClass', () => {
+    it('should wait for the overlay to be detached before removing the panelClass', async () => {
       const config = new OverlayConfig({panelClass: 'custom-panel-class'});
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      viewContainerFixture.detectChanges();
+      await viewContainerFixture.whenStable();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.classList)
@@ -962,13 +986,10 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
-      // Stable emits after zone.run
-      TestBed.inject(NgZone).run(() => {
-        viewContainerFixture.detectChanges();
-        expect(pane.classList)
-          .withContext('Expected class not to be removed immediately')
-          .toContain('custom-panel-class');
-      });
+      expect(pane.classList)
+        .withContext('Expected class not to be removed immediately')
+        .toContain('custom-panel-class');
+      await viewContainerFixture.whenStable();
 
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')
@@ -1051,6 +1072,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create({scrollStrategy: firstStrategy});
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -1061,6 +1083,7 @@ describe('Overlay', () => {
       expect(secondStrategy.enable).not.toHaveBeenCalled();
 
       overlayRef.updateScrollStrategy(secondStrategy);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -1084,6 +1107,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create({scrollStrategy: strategy});
 
       overlayRef.attach(componentPortal);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 
@@ -1093,6 +1117,7 @@ describe('Overlay', () => {
       expect(strategy.detach).not.toHaveBeenCalled();
 
       overlayRef.updateScrollStrategy(strategy);
+      viewContainerFixture.changeDetectorRef.markForCheck();
       viewContainerFixture.detectChanges();
       tick();
 

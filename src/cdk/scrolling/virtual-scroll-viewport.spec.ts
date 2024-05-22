@@ -7,28 +7,26 @@ import {
   ScrollingModule,
 } from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
-import {dispatchFakeEvent} from '../testing/private';
 import {
+  ApplicationRef,
   Component,
-  NgZone,
+  Directive,
   TrackByFunction,
   ViewChild,
-  ViewEncapsulation,
-  Directive,
   ViewContainerRef,
-  ApplicationRef,
-  provideZoneChangeDetection,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
   inject,
-  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {animationFrameScheduler, Subject} from 'rxjs';
+import {Subject, animationFrameScheduler} from 'rxjs';
+import {dispatchFakeEvent} from '../testing/private';
 
 describe('CdkVirtualScrollViewport', () => {
   describe('with FixedSizeVirtualScrollStrategy', () => {
@@ -38,7 +36,6 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, FixedSizeVirtualScroll],
       }).compileComponents();
     }));
@@ -74,12 +71,14 @@ describe('CdkVirtualScrollViewport', () => {
 
     it('should update viewport size', fakeAsync(() => {
       testComponent.viewportSize = 300;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
       viewport.checkViewportSize();
       expect(viewport.getViewportSize()).toBe(300);
 
       testComponent.viewportSize = 500;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
       viewport.checkViewportSize();
@@ -91,6 +90,7 @@ describe('CdkVirtualScrollViewport', () => {
       spyOn(viewport, 'checkViewportSize').and.callThrough();
 
       dispatchFakeEvent(window, 'resize');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(20); // The resize listener is debounced so we need to flush it.
 
@@ -111,11 +111,13 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getRenderedRange()).toEqual({start: 0, end: 4});
 
       fixture.componentInstance.items = [0, 1];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.getRenderedRange()).toEqual({start: 0, end: 2});
 
       fixture.componentInstance.items = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.getRenderedRange()).toEqual({start: 0, end: 0});
@@ -124,6 +126,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should get the rendered content offset', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize + 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -135,6 +138,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should get the scroll offset', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize + 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -171,6 +175,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setTotalContentSize(10000);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
@@ -182,6 +187,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setTotalContentSize(10000);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
@@ -196,6 +202,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-vertical');
 
       testComponent.orientation = 'horizontal';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-horizontal');
@@ -214,6 +221,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should set rendered range', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedRange({start: 2, end: 3});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -227,21 +235,22 @@ describe('CdkVirtualScrollViewport', () => {
     it('should set content offset to top of content', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedContentOffset(10, 'to-start');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       expect(viewport.getOffsetToRenderedContentStart()).toBe(10);
     }));
 
-    it('should set content offset to bottom of content', fakeAsync(() => {
+    it('should set content offset to bottom of content', fakeAsync(async () => {
       finishInit(fixture);
       const contentSize = viewport.measureRenderedContentSize();
 
       expect(contentSize).toBeGreaterThan(0);
 
       viewport.setRenderedContentOffset(contentSize + 10, 'to-end');
-      fixture.detectChanges();
       flush();
+      await fixture.whenStable();
 
       expect(viewport.getOffsetToRenderedContentStart()).toBe(10);
     }));
@@ -251,6 +260,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport.scrollToOffset(testComponent.itemSize * 2);
 
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -263,6 +273,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport.scrollToIndex(2);
 
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -276,6 +287,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport.scrollToOffset(testComponent.itemSize * 2);
 
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -289,6 +301,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport.scrollToIndex(2);
 
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -299,12 +312,14 @@ describe('CdkVirtualScrollViewport', () => {
     it('should output scrolled index', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 2 - 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       expect(testComponent.scrolledToIndex).toBe(1);
 
       triggerScroll(viewport, testComponent.itemSize * 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -318,6 +333,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = 1; offset <= maxOffset; offset += 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -346,6 +362,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = maxOffset - 1; offset >= 0; offset -= 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -385,6 +402,7 @@ describe('CdkVirtualScrollViewport', () => {
       testComponent.maxBufferPx = testComponent.itemSize;
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -401,6 +419,7 @@ describe('CdkVirtualScrollViewport', () => {
       testComponent.maxBufferPx = testComponent.itemSize;
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 6);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -415,6 +434,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should handle dynamic item size', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -423,6 +443,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toEqual({start: 2, end: 6});
 
       testComponent.itemSize *= 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -434,6 +455,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should handle dynamic buffer size', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 2);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -443,6 +465,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       testComponent.minBufferPx = testComponent.itemSize;
       testComponent.maxBufferPx = testComponent.itemSize;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -454,6 +477,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should handle dynamic item array', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 6);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -462,6 +486,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(testComponent.itemSize * 6);
 
       testComponent.items = Array(5).fill(0);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -473,6 +498,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should handle dynamic item array with dynamic buffer', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 6);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -484,6 +510,7 @@ describe('CdkVirtualScrollViewport', () => {
       testComponent.minBufferPx = testComponent.itemSize;
       testComponent.maxBufferPx = testComponent.itemSize;
 
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -496,6 +523,7 @@ describe('CdkVirtualScrollViewport', () => {
       testComponent.items = Array(100).fill(0);
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize * 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -504,6 +532,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(testComponent.itemSize * 50);
 
       testComponent.items = Array(54).fill(0);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -520,6 +549,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = 1; offset <= maxOffset; offset += 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -549,6 +579,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = maxOffset - 1; offset >= 0; offset -= 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -590,6 +621,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toEqual({start: 0, end: 0});
 
       data.next([1, 2, 3]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -608,6 +640,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toEqual({start: 0, end: 0});
 
       data.next([1, 2, 3]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -639,12 +672,14 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       testComponent.items = [0];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       expect(testComponent.virtualForOf._viewContainerRef.detach).not.toHaveBeenCalled();
 
       testComponent.items = [1];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -658,12 +693,14 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       testComponent.items = [0];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       expect(testComponent.virtualForOf._viewContainerRef.detach).not.toHaveBeenCalled();
 
       testComponent.items = [1];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -681,6 +718,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       spy.calls.reset();
       triggerScroll(viewport, 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -694,6 +732,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = 10; offset <= maxOffset; offset += 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }
@@ -715,6 +754,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       spy.calls.reset();
       triggerScroll(viewport, 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -728,6 +768,7 @@ describe('CdkVirtualScrollViewport', () => {
         testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
       for (let offset = 10; offset <= maxOffset; offset += 10) {
         triggerScroll(viewport, offset);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
       }
@@ -747,6 +788,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toEqual({start: 0, end: 6});
 
       triggerScroll(viewport, 50);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -755,6 +797,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toEqual({start: 0, end: 6});
 
       triggerScroll(viewport, 51);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -764,9 +807,13 @@ describe('CdkVirtualScrollViewport', () => {
     }));
 
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
-      testComponent.minBufferPx = 100;
-      testComponent.maxBufferPx = 99;
-      expect(() => finishInit(fixture)).toThrow();
+      expect(() => {
+        testComponent.minBufferPx = 100;
+        testComponent.maxBufferPx = 99;
+        finishInit(fixture);
+      }).toThrowError(
+        'CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx',
+      );
     }));
 
     it('should register and degregister with ScrollDispatcher', fakeAsync(
@@ -780,17 +827,11 @@ describe('CdkVirtualScrollViewport', () => {
       }),
     ));
 
-    it('should emit on viewChange inside the Angular zone', fakeAsync(() => {
-      const zoneTest = jasmine.createSpy('zone test');
-      testComponent.virtualForOf.viewChange.subscribe(() => zoneTest(NgZone.isInAngularZone()));
-      finishInit(fixture);
-      expect(zoneTest).toHaveBeenCalledWith(true);
-    }));
-
     it('should not throw when disposing of a view that will not fit in the cache', fakeAsync(() => {
       finishInit(fixture);
       testComponent.items = new Array(200).fill(0);
       testComponent.templateCacheSize = 1; // Reduce the cache size to something we can easily hit.
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -798,6 +839,7 @@ describe('CdkVirtualScrollViewport', () => {
         for (let i = 0; i < 50; i++) {
           viewport.scrollToIndex(i);
           triggerScroll(viewport);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           flush();
         }
@@ -814,6 +856,7 @@ describe('CdkVirtualScrollViewport', () => {
       it('should not run change detection if there are no viewChange listeners', fakeAsync(() => {
         finishInit(fixture);
         testComponent.items = Array(10).fill(0);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -823,21 +866,6 @@ describe('CdkVirtualScrollViewport', () => {
         triggerScroll(viewport);
 
         expect(appRef.tick).not.toHaveBeenCalled();
-      }));
-
-      it('should run change detection if there are any viewChange listeners', fakeAsync(() => {
-        testComponent.virtualForOf.viewChange.subscribe();
-        finishInit(fixture);
-        testComponent.items = Array(10).fill(0);
-        fixture.detectChanges();
-        flush();
-
-        spyOn(appRef, 'tick');
-
-        viewport.scrollToIndex(5);
-        triggerScroll(viewport);
-
-        expect(appRef.tick).toHaveBeenCalledTimes(1);
       }));
     });
   });
@@ -851,7 +879,6 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, FixedSizeVirtualScrollWithRtlDirection],
       }).compileComponents();
 
@@ -882,6 +909,7 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       triggerScroll(viewport, testComponent.itemSize * testComponent.items.length);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -895,6 +923,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.scrollToOffset(100);
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -907,6 +936,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.scrollToIndex(2);
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -921,6 +951,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.scrollToIndex(2);
       triggerScroll(viewport);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -932,6 +963,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setTotalContentSize(10000);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
@@ -943,6 +975,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setTotalContentSize(10000);
       flush();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
@@ -952,7 +985,6 @@ describe('CdkVirtualScrollViewport', () => {
   describe('with no VirtualScrollStrategy', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, VirtualScrollWithNoStrategy],
       }).compileComponents();
     });
@@ -971,7 +1003,6 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [
           ScrollingModule,
           VirtualScrollWithItemInjectingViewContainer,
@@ -1010,7 +1041,6 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, CommonModule, DelayedInitializationVirtualScroll],
       }).compileComponents();
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
@@ -1023,8 +1053,10 @@ describe('CdkVirtualScrollViewport', () => {
       expect(testComponent.trackBy).not.toHaveBeenCalled();
 
       testComponent.renderVirtualFor = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       triggerScroll(viewport, testComponent.itemSize * 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1040,7 +1072,6 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [ScrollingModule, CommonModule, VirtualScrollWithAppendOnly],
       }).compileComponents();
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);
@@ -1054,9 +1085,11 @@ describe('CdkVirtualScrollViewport', () => {
     it('should not remove item that have already been rendered', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedRange({start: 100, end: 200});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
       viewport.setRenderedRange({start: 10, end: 50});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1066,6 +1099,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('rendered offset should always start at 0', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, testComponent.itemSize + 5);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1074,15 +1108,15 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(0);
     }));
 
-    it('should set content offset to bottom of content', fakeAsync(() => {
+    it('should set content offset to bottom of content', fakeAsync(async () => {
       finishInit(fixture);
       const contentSize = viewport.measureRenderedContentSize();
 
       expect(contentSize).toBeGreaterThan(0);
 
       viewport.setRenderedContentOffset(contentSize + 10, 'to-end');
-      fixture.detectChanges();
       flush();
+      await fixture.whenStable();
 
       expect(viewport.getOffsetToRenderedContentStart()).toBe(0);
     }));
@@ -1090,6 +1124,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should set content offset to top of content', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedContentOffset(10, 'to-start');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1099,12 +1134,14 @@ describe('CdkVirtualScrollViewport', () => {
     it('should not set a transform when scrolling', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, 0);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
       expect(contentWrapperEl.style.transform).toBe('translateY(0px)');
 
       triggerScroll(viewport, testComponent.itemSize * 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1140,6 +1177,7 @@ describe('CdkVirtualScrollViewport', () => {
     it('should measure scroll offset', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, 100);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1171,6 +1209,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport.scrollToOffset(100 + 8); // the +8 is due to a horizontal scrollbar
       dispatchFakeEvent(window, 'scroll', true);
       tick();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -1186,6 +1225,7 @@ describe('CdkVirtualScrollViewport', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(VirtualScrollableQuery);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.scrollable).toBeTruthy();
@@ -1195,16 +1235,19 @@ describe('CdkVirtualScrollViewport', () => {
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
   // On the first cycle we render and measure the viewport.
+  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
   flush();
 
   // On the second cycle we render the items.
+  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
   flush();
 
   // Flush the initial fake scroll event.
   animationFrameScheduler.flush();
   flush();
+  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
