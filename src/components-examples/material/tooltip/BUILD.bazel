@@ -24,7 +24,6 @@ ng_module(
         "//src/material/tooltip/testing",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -48,7 +47,6 @@ ng_test_library(
         "//src/material/tooltip",
         "//src/material/tooltip/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 

@@ -123,7 +123,6 @@ ng_test_library(
         "@npm//@angular/common",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//rxjs",
     ],
 )
