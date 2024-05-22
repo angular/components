@@ -1,5 +1,5 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
 import {ClipboardModule} from './clipboard-module';
@@ -30,7 +30,6 @@ describe('CdkCopyToClipboard', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [ClipboardModule, CopyToClipboardHost],
-      providers: [provideZoneChangeDetection()],
     });
 
     TestBed.compileComponents();
@@ -42,6 +41,7 @@ describe('CdkCopyToClipboard', () => {
     const host = fixture.componentInstance;
     host.content = COPY_CONTENT;
     clipboard = TestBed.inject(Clipboard);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
   });
 
@@ -74,9 +74,11 @@ describe('CdkCopyToClipboard', () => {
       destroy: () => {},
     } as PendingCopy);
     fixture.componentInstance.attempts = maxAttempts;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(3);
 
@@ -96,9 +98,11 @@ describe('CdkCopyToClipboard', () => {
       destroy: () => {},
     } as PendingCopy);
     fixture.componentInstance.attempts = maxAttempts;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(3);
 
@@ -114,12 +118,15 @@ describe('CdkCopyToClipboard', () => {
     } as PendingCopy;
 
     fixture.componentInstance.attempts = 10;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     spyOn(clipboard, 'beginCopy').and.returnValue(fakeCopy);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(1);
 
