@@ -139,6 +139,7 @@ export class MatAutocompleteTrigger
   private _scrollStrategy: () => ScrollStrategy;
   private _keydownSubscription: Subscription | null;
   private _outsideClickSubscription: Subscription | null;
+  private _handsetLandscapeBreakpointSubscription: Subscription | null;
 
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
   private _previousValue: string | number | null;
@@ -282,6 +283,7 @@ export class MatAutocompleteTrigger
       window.removeEventListener('blur', this._windowBlurHandler);
     }
 
+    this._handsetLandscapeBreakpointSubscription?.unsubscribe();
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
@@ -891,12 +893,19 @@ export class MatAutocompleteTrigger
       .withFlexibleDimensions(false)
       .withPush(false);
 
-    // Check breakpoint if being viewed in HandsetLandscape
-    const isHandsetLandscape = this._breakpointObserver
-      .observe(Breakpoints.HandsetLandscape)
-      .subscribe(result => {
-        return result.matches;
-      });
+    if (!this._handsetLandscapeBreakpointSubscription) {
+      // Subscribe to the breakpoint events stream to detect when screen is in
+      // handsetLandscape. Only subscribe if/when this panel is open.
+      // BreakpointObserver only returns screen size or isMatched/matches boolean.
+      this._handsetLandscapeBreakpointSubscription = this._breakpointObserver
+        .observe(Breakpoints.HandsetLandscape)
+        .subscribe(result => {
+          return result.matches;
+        });
+    }
+
+    // Check breakpoint if being viewed in HandsetLandscape via subscription (if not null)
+    const isHandsetLandscape = this._handsetLandscapeBreakpointSubscription;
     // Apply HandsetLandscape settings to prevent overlay cutoff in that breakpoint
     // Fixes b/284148377
     if (isHandsetLandscape) {
