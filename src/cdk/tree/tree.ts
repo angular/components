@@ -321,7 +321,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   exportAs: 'cdkTreeNode',
   host: {
     'class': 'cdk-tree-node',
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': 'isLeafNode',
   },
   standalone: true,
 })
@@ -368,7 +368,23 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   }
   protected _data: T;
 
-  get isExpanded(): boolean {
+  /* If leaf node, do not assign aria-expanded attribute */
+  get isLeafNode(): boolean | null {
+    // If flat tree node data returns false for expandable property, it's a leaf node
+    if (
+      this._tree.treeControl.isExpandable !== undefined &&
+      !this._tree.treeControl.isExpandable(this._data)
+    ) {
+      return null;
+
+      // If nested tree node data returns 0 descendants, it's a leaf node
+    } else if (
+      this._tree.treeControl.isExpandable === undefined &&
+      this._tree.treeControl.getDescendants(this._data).length === 0
+    ) {
+      return null;
+    }
+
     return this._tree.treeControl.isExpanded(this._data);
   }
 
