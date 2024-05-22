@@ -22,7 +22,6 @@ ng_module(
         "//src/material/slider",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -45,7 +44,6 @@ ng_test_library(
         "//src/cdk/testing/testbed",
         "//src/material/progress-bar",
         "//src/material/progress-bar/testing",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 

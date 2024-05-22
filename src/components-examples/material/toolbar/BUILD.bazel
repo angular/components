@@ -20,7 +20,6 @@ ng_module(
         "//src/material/toolbar",
         "//src/material/toolbar/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -44,7 +43,6 @@ ng_test_library(
         "//src/material/icon",
         "//src/material/toolbar",
         "//src/material/toolbar/testing",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 

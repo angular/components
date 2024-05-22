@@ -16,7 +16,6 @@ ng_module(
         "//src/cdk/dialog",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 
