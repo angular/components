@@ -82,6 +82,8 @@ $prefix: (mdc, checkbox);
     selected-hover-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected.
     selected-icon-color: $palette-selected,
+    // The color of the checkbox fill when the checkbox is selected and pressed.
+    selected-pressed-icon-color: $palette-selected,
     // The color of the checkbox border when the checkbox is unselected and focused.
     unselected-focus-icon-color: $active-border-color,
     // The color of the checkbox border when the checkbox is unselected and hovered.

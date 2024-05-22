@@ -174,7 +174,7 @@ export class DomPortal<T = HTMLElement> extends Portal<T> {
   }
 }
 
-/** A `PortalOutlet` is an space that can contain a single `Portal`. */
+/** A `PortalOutlet` is a space that can contain a single `Portal`. */
 export interface PortalOutlet {
   /** Attaches a portal to this outlet. */
   attach(portal: Portal<any>): any;
