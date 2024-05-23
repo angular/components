@@ -77,7 +77,8 @@
     <app-carousel aria-label="Guides">
       <a carousel-item class="carousel-item docs-homepage-guides-carousel-item"
          *ngFor="let guide of guideItems.getAllItems()"
-         routerLink="/guide/{{guide.id}}">
+         routerLink="/guide/{{guide.id}}"
+         matRipple>
         <mat-card class="docs-homepage-guides-card" appearance="outlined">
           <mat-card-title>{{guide.name}}</mat-card-title>
           <mat-card-content class="docs-component-category-list-card-summary">{{guide.overview}}</mat-card-content>

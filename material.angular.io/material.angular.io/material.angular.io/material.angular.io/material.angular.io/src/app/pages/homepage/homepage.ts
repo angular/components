@@ -2,6 +2,7 @@ import {Component, HostBinding, Inject, OnInit, Optional} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 import {MatButtonModule} from '@angular/material/button';
+import {MatRipple} from '@angular/material/core';
 import {Footer} from '../../shared/footer/footer';
 import {RouterLink} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -36,6 +37,7 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
     Support,
     Footer,
     AppLogo,
+    MatRipple,
   ],
 })
 export class Homepage implements OnInit {

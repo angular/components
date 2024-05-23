@@ -7,7 +7,7 @@
   <a *ngFor="let component of docItems.getItems(section)"
      class="docs-component-category-list-item"
     [routerLink]="'/' + section + '/' + component.id">
-    <div class="docs-component-category-list-card">
+    <div class="docs-component-category-list-card" matRipple>
       <img *ngIf="section === 'components'"
           class="docs-component-category-list-card-image-wrapper"
           [src]="'../../../assets/screenshots/' + component.id + '.scene.png'"
