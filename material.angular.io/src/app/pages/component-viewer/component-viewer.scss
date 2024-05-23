@@ -51,9 +51,10 @@ app-component-viewer {
     // sticky positioning
     @media (max-width: constants.$small-breakpoint-width) {
       order: -1;
-      position: inherit;
+      position: relative;
       width: auto;
       padding-left: 0;
+      max-height: none;
     }
   }
 }
@@ -65,7 +66,7 @@ app-component-viewer {
 
 .docs-component-api,
 .docs-component-overview {
-  width: 80%;
+  width: 75%;
 
   @media (max-width: constants.$small-breakpoint-width) {
     width: 100%;
