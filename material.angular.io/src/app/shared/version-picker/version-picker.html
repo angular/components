@@ -4,8 +4,7 @@
   <mat-icon>arrow_drop_down</mat-icon>
 </button>
 <mat-menu #versionPicker="matMenu" xPosition="before" class="docs-version-picker-menu">
-  <button mat-menu-item *ngFor="let version of docVersions | async"
-          (click)="onVersionChanged(version)">
-    {{version.title}}
-  </button>
+  @for (version of docVersions | async; track version) {
+    <button mat-menu-item (click)="onVersionChanged(version)">{{version.title}}</button>
+  }
 </mat-menu>

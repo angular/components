@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {HttpTestingController} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
 import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
@@ -240,7 +239,6 @@ describe('ExampleViewer', () => {
     MatAutocompleteModule,
     MatSlideToggleModule,
     FormsModule,
-    CommonModule,
     ReactiveFormsModule,
     NoopAnimationsModule,
     AutocompleteOverviewExample,

@@ -1,4 +1,3 @@
-import {NgFor} from '@angular/common';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 
@@ -8,7 +7,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
   styleUrls: ['./grid-list-scene.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatGridListModule, NgFor],
+  imports: [MatGridListModule],
 })
 export class GridListScene {
   tiles = [

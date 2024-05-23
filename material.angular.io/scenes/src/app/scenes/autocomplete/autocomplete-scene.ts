@@ -8,7 +8,6 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {NgFor} from '@angular/common';
 
 
 @Component({
@@ -22,7 +21,6 @@ import {NgFor} from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    NgFor,
   ],
 })
 export class AutocompleteScene implements AfterViewInit {

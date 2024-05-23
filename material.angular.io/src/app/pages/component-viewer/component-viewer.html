@@ -4,11 +4,12 @@
        id="component-viewer"
        focusOnNavigation
        [tabPanel]="panel">
-    <a mat-tab-link class="docs-component-viewer-section-tab"
-        *ngFor="let section of sections"
-        [routerLink]="section.toLowerCase()"
-        routerLinkActive #rla="routerLinkActive"
-        [active]="rla.isActive">{{section}}</a>
+    @for (section of sections; track section) {
+      <a mat-tab-link class="docs-component-viewer-section-tab"
+          [routerLink]="section.toLowerCase()"
+          routerLinkActive #rla="routerLinkActive"
+          [active]="rla.isActive">{{section}}</a>
+    }
   </nav>
 
   <mat-tab-nav-panel #panel class="docs-component-viewer-content">

@@ -11,8 +11,7 @@ import {Component,
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {CommonModule, NgIf, AsyncPipe, NgFor} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {AsyncPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
@@ -74,7 +73,6 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   standalone: true,
   imports: [
     MatSidenavModule,
-    NgIf,
     forwardRef(() => ComponentNav),
     ComponentPageHeader,
     RouterOutlet,
@@ -137,9 +135,7 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   ],
   standalone: true,
   imports: [
-    NgIf,
     MatListModule,
-    NgFor,
     RouterLinkActive,
     RouterLink,
     AsyncPipe,
@@ -183,16 +179,15 @@ const routes: Routes = [{
     MatSidenavModule,
     MatListModule,
     RouterModule,
-    CommonModule,
     ComponentCategoryListModule,
     ComponentViewerModule,
     DocViewerModule,
     FormsModule,
-    HttpClientModule,
     CdkAccordionModule,
     MatIconModule,
     RouterModule.forChild(routes),
-    ComponentSidenav, ComponentNav
+    ComponentSidenav,
+    ComponentNav
   ],
   exports: [ComponentSidenav],
 })

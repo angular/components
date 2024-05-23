@@ -11,7 +11,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
 import {GuideItems} from '../../shared/guide-items/guide-items';
-import {NgFor} from '@angular/common';
 
 import {Support} from '../../shared/support/support';
 import {Carousel, CarouselItem} from '../../shared/carousel/carousel';
@@ -31,7 +30,6 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
     MatDividerModule,
     MatIconModule,
     Carousel,
-    NgFor,
     CarouselItem,
     MatCardModule,
     Support,

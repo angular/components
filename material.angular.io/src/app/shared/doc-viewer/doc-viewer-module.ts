@@ -6,7 +6,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PortalModule} from '@angular/cdk/portal';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {HeaderLink} from './header-link';
 import {CodeSnippet} from '../example-viewer/code-snippet';
@@ -15,7 +14,6 @@ import {CodeSnippet} from '../example-viewer/code-snippet';
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,

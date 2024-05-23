@@ -1,5 +1,4 @@
 import {Component, ViewChild} from '@angular/core';
-import {NgFor} from '@angular/common';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {Carousel, CarouselItem} from './carousel';
@@ -54,8 +53,9 @@ describe('HorizontalCarousel', () => {
   selector: 'test-carousel',
   template: `
     <app-carousel>
-      <div carousel-item class="docs-carousel-item-container"
-           *ngFor="let i of [].constructor(numberOfItems) "></div>
+      @for (i of items; track i) {
+        <div carousel-item class="docs-carousel-item-container"></div>
+      }
     </app-carousel>`,
   styles: [`
     .docs-carousel-item-container {
@@ -64,9 +64,15 @@ describe('HorizontalCarousel', () => {
     }
   `],
   standalone: true,
-  imports: [Carousel, CarouselItem, NgFor, DocsAppTestingModule]
+  imports: [Carousel, CarouselItem, DocsAppTestingModule]
 })
 class CarouselTestComponent {
-  numberOfItems = 6;
   @ViewChild(Carousel) carousel!: Carousel;
+  items: number[] = [];
+
+  constructor() {
+    for (let i = 0; i < 6; i++) {
+      this.items.push(i);
+    }
+  }
 }

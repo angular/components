@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
+import {NgTemplateOutlet} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 
@@ -18,10 +18,8 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   styleUrls: ['./navbar.scss'],
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     RouterLink,
-    NgFor,
     RouterLinkActive,
     VersionPicker,
     ThemePicker,

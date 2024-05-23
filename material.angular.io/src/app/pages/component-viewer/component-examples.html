@@ -1,10 +1,12 @@
-<ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
+@if (componentViewer.componentDocItem | async; as docItem) {
   <span class="cdk-visually-hidden" tabindex="-1">
     Examples for {{docItem.id}}
   </span>
-  <example-viewer
-    *ngFor="let example of docItem.examples"
-    [example]="example"
-    [showCompactToggle]="false"
-    [view]="'demo'"></example-viewer>
-</ng-container>
+
+  @for (example of docItem.examples; track example) {
+    <example-viewer
+      [example]="example"
+      [showCompactToggle]="false"
+      view="demo"/>
+  }
+}
