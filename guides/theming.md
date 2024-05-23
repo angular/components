@@ -14,7 +14,7 @@ see [Angular Material Typography][mat-typography]. For guidance on building comp
 customizable with this system, see [Theming your own components][theme-your-own].
 
 [material-design-theming]: https://m3.material.io/
-[material-2]: https://material.angular.io/guide/material-2
+[material-2]: https://material.angular.io/guide/material-2-theming
 [mat-typography]: https://material.angular.io/guide/typography
 [theme-your-own]: https://material.angular.io/guide/theming-your-components
 
@@ -576,7 +576,7 @@ above can be applied to any checkbox _or_ any element that contains checkboxes, 
 of all checkboxes within that element.
 
 While you should prefer applying the mixins with color variants explicitly, if migrating from M2 to
-M3 you can alternatively use [the provided backwards compatibility mixins](https://material.angular.io/guide/material-2#how-to-migrate-an-app-from-material-2-to-material-3)
+M3 you can alternatively use [the provided backwards compatibility mixins](https://material.angular.io/guide/material-2-theming#how-to-migrate-an-app-from-material-2-to-material-3)
 that apply styles directly to the existing CSS classes (`mat-primary`, `mat-accent`, and
 `mat-warn`).
 
