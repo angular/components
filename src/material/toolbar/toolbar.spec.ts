@@ -1,7 +1,7 @@
-import {Component, signal} from '@angular/core';
-import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
+import {Component, signal} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 import {MatToolbarModule} from './index';
 
 describe('MatToolbar', () => {
@@ -70,22 +70,26 @@ describe('MatToolbar', () => {
     });
 
     it('should throw an error if different toolbar modes are mixed', () => {
-      const errorSpy = spyOn(console, 'error');
-      const fixture = TestBed.createComponent(ToolbarMixedRowModes);
-      fixture.detectChanges();
-      expect(errorSpy.calls.first().args[1]).toMatch(/attempting to combine different/i);
+      expect(() => {
+        const fixture = TestBed.createComponent(ToolbarMixedRowModes);
+        fixture.detectChanges();
+      }).toThrowError(/attempting to combine different/i);
     });
 
     it('should throw an error if a toolbar-row is added later', async () => {
       const fixture = TestBed.createComponent(ToolbarMixedRowModes);
 
-      const errorSpy = spyOn(console, 'error');
-      fixture.componentInstance.showToolbarRow.set(false);
-      await fixture.whenStable();
+      await expectAsync(
+        (async () => {
+          fixture.componentInstance.showToolbarRow.set(false);
+          fixture.detectChanges();
+          await fixture.whenStable();
 
-      fixture.componentInstance.showToolbarRow.set(true);
-      await fixture.whenStable();
-      expect(errorSpy.calls.first().args[1]).toMatch(/attempting to combine different/i);
+          fixture.componentInstance.showToolbarRow.set(true);
+          fixture.detectChanges();
+          await fixture.whenStable();
+        })(),
+      ).toBeRejectedWithError(/attempting to combine different/i);
     });
 
     it('should pick up indirect descendant rows', () => {

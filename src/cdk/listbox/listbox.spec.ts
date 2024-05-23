@@ -1058,11 +1058,9 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should throw on init if the preselected value is invalid', () => {
-      const errorSpy = spyOn(console, 'error');
-      setupComponent(ListboxWithInvalidPreselectedFormControl, [ReactiveFormsModule]);
-      expect(errorSpy.calls.first().args[1]).toMatch(
-        /Listbox has selected values that do not match any of its options./,
-      );
+      expect(() => {
+        setupComponent(ListboxWithInvalidPreselectedFormControl, [ReactiveFormsModule]);
+      }).toThrowError('Listbox has selected values that do not match any of its options.');
     });
   });
 });

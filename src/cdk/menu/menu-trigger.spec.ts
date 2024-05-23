@@ -1,13 +1,21 @@
-import {Component, ViewChildren, QueryList, ElementRef, ViewChild, Type} from '@angular/core';
+import {ENTER, SPACE, TAB} from '@angular/cdk/keycodes';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  Type,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
-import {TAB, SPACE, ENTER} from '@angular/cdk/keycodes';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItem} from './menu-item';
 import {CdkMenu} from './menu';
-import {CdkMenuTrigger} from './menu-trigger';
 import {Menu} from './menu-interface';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuModule} from './menu-module';
+import {CdkMenuTrigger} from './menu-trigger';
 
 describe('MenuTrigger', () => {
   describe('on CdkMenuItem', () => {
@@ -114,6 +122,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [MenuBarWithNestedSubMenus],
+        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 
