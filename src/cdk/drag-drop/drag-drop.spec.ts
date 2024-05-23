@@ -1,7 +1,7 @@
-import {Component, ElementRef, provideZoneChangeDetection} from '@angular/core';
-import {fakeAsync, TestBed, inject} from '@angular/core/testing';
-import {DragDropModule} from './drag-drop-module';
+import {Component, ElementRef} from '@angular/core';
+import {TestBed, fakeAsync, inject} from '@angular/core/testing';
 import {DragDrop} from './drag-drop';
+import {DragDropModule} from './drag-drop-module';
 import {DragRef} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
 
@@ -10,7 +10,6 @@ describe('DragDrop', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [DragDropModule, TestComponent],
     });
 
@@ -23,6 +22,7 @@ describe('DragDrop', () => {
 
   it('should be able to attach a DragRef to a DOM node', () => {
     const fixture = TestBed.createComponent(TestComponent);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const ref = service.createDrag(fixture.componentInstance.elementRef);
 
@@ -31,6 +31,7 @@ describe('DragDrop', () => {
 
   it('should be able to attach a DropListRef to a DOM node', () => {
     const fixture = TestBed.createComponent(TestComponent);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const ref = service.createDropList(fixture.componentInstance.elementRef);
 
