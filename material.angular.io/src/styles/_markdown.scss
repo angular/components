@@ -5,25 +5,34 @@
 
   h1 {
     display: inline-block;
-    font-size: 34px;
+    font-size: 32px;
     font-weight: 400;
+    margin: 32px 0 16px;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 28px;
+    margin: 32px 0 16px;
+    font-weight: 400;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 500;
+    margin: 32px 0 16px;
+    font-weight: 400;
   }
 
-  h2, h4 {
-    margin-top: 40px;
+  h4 {
+    font-size: 22px;
+    margin: 24px 0 12px;
+    font-weight: 400;
   }
 
   h5 {
     font-size: 18px;
+    margin: 20px 0 10px;
+    font-weight: 400;
   }
 
   p, ul, ol {
@@ -31,14 +40,27 @@
     line-height: 28px;
   }
 
+  p {
+    margin: 0 0 1em;
+
+    // In case the docs generator produces an empty paragraph.
+    &:empty {
+      display: none;
+    }
+  }
+
   a {
     text-decoration: none;
+  }
+
+  strong {
+    font-weight: 700;
   }
 
   pre {
     border-radius: 5px;
     display: block;
-    margin: 16px auto;
+    margin: 24px auto;
     overflow-x: auto;
     padding: 20px;
     white-space: pre-wrap;
@@ -55,10 +77,6 @@
 }
 
 .docs-header-link {
-  // padding to prevent the site header from headbutting the headers when navigating using fragment links
-  padding-top: 20px;
-  margin-top: -20px;
-
   header-link {
     // deduct -30px so the anchor icon will be positioned outside the content
     margin-left: -30px;
