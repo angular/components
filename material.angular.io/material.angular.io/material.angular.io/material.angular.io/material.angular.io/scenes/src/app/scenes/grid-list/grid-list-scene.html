@@ -1,8 +1,8 @@
 <mat-grid-list cols="4" rowHeight="70px">
-  <mat-grid-tile
-      *ngFor="let tile of tiles"
+  @for (tile of tiles; track tile) {
+    <mat-grid-tile
       [colspan]="tile.cols"
       [rowspan]="tile.rows"
-      [style.background]="tile.color">
-  </mat-grid-tile>
+      [style.background]="tile.color"/>
+  }
 </mat-grid-list>

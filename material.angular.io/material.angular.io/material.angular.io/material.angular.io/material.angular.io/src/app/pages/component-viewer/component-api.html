@@ -1,4 +1,4 @@
-<ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
+@if (componentViewer.componentDocItem | async; as docItem) {
   <span class="cdk-visually-hidden" tabindex="-1">
     API for {{docItem.id}}
   </span>
@@ -14,14 +14,15 @@
       (contentRendered)="updateTableOfContents(docItem.name, $event)">
     </doc-viewer>
 
-    <doc-viewer *ngFor="let additionalApiDoc of docItem.additionalApiDocs; let index = index"
-      documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
-      class="docs-component-view-text-content"
-      (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, index + 1)">
-    </doc-viewer>
+    @for (additionalApiDoc of docItem.additionalApiDocs; track additionalApiDoc) {
+      <doc-viewer
+        documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
+        class="docs-component-view-text-content"
+        (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, $index + 1)"/>
+    }
   </div>
 
-  <table-of-contents #toc
-      *ngIf="showToc | async"
-      container=".mat-drawer-content"></table-of-contents>
-</ng-container>
+  @if (showToc | async) {
+    <table-of-contents #toc container=".mat-drawer-content"/>
+  }
+}

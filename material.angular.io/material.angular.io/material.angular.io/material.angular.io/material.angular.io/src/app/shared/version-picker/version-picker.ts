@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {NgFor, AsyncPipe} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
@@ -20,7 +20,7 @@ interface VersionInfo {
   templateUrl: './version-picker.html',
   styleUrls: ['./version-picker.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule, NgFor, AsyncPipe],
+  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule, AsyncPipe],
   encapsulation: ViewEncapsulation.None,
 })
 export class VersionPicker {

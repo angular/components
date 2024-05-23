@@ -1,5 +1,5 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {CommonModule, NgFor, NgIf, AsyncPipe} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -42,7 +42,6 @@ import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
   imports: [
     MatTabsModule,
     NavigationFocus,
-    NgFor,
     RouterLinkActive,
     RouterLink,
     RouterOutlet,
@@ -153,7 +152,6 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    NgIf,
     DocViewer,
     TableOfContents,
     AsyncPipe,
@@ -186,9 +184,7 @@ export class ComponentOverview extends ComponentBaseView {
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    NgIf,
     DocViewer,
-    NgFor,
     TableOfContents,
     AsyncPipe,
   ],
@@ -214,8 +210,6 @@ export class ComponentApi extends ComponentBaseView {
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     ExampleViewer,
     AsyncPipe,
   ],
@@ -235,8 +229,10 @@ export class ComponentExamples extends ComponentBaseView {
     MatTabsModule,
     RouterModule,
     DocViewerModule,
-    CommonModule,
-    ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples,
+    ComponentViewer,
+    ComponentOverview,
+    ComponentApi,
+    ComponentExamples,
   ],
   exports: [ComponentViewer],
 })

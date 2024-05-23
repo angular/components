@@ -11,7 +11,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {NgFor} from '@angular/common';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -24,7 +23,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule, NgFor]
+  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule]
 })
 export class ThemePicker implements OnInit, OnDestroy {
   private _queryParamSubscription = Subscription.EMPTY;

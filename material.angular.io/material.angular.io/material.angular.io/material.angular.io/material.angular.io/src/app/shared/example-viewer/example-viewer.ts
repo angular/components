@@ -19,7 +19,7 @@ import {StackBlitzButton} from '../stack-blitz/stack-blitz-button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button';
-import {NgIf, NgFor, NgComponentOutlet} from '@angular/common';
+import {NgComponentOutlet} from '@angular/common';
 
 export type Views = 'snippet' | 'full' | 'demo';
 
@@ -35,13 +35,11 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
   styleUrls: ['./example-viewer.scss'],
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
     StackBlitzButton,
     MatTabsModule,
-    NgFor,
     CodeSnippet,
     NgComponentOutlet,
   ],

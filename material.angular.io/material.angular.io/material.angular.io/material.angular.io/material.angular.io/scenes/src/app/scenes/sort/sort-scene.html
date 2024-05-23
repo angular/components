@@ -4,8 +4,10 @@
     <th mat-sort-header="calories">Calories</th>
   </tr>
 
-  <tr *ngFor="let dessert of desserts">
-    <td>{{dessert.name}}</td>
-    <td>{{dessert.calories}}</td>
-  </tr>
+  @for (dessert of desserts; track dessert) {
+    <tr>
+      <td>{{dessert.name}}</td>
+      <td>{{dessert.calories}}</td>
+    </tr>
+  }
 </table>

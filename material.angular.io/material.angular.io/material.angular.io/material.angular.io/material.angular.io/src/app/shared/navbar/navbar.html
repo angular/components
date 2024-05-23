@@ -1,10 +1,12 @@
 <!-- TODO: figure out if the <nav> should go inside of a <header> element. -->
 <nav class="docs-navbar-header" aria-label="Top Toolbar">
-  <div class="skip-link-wrapper" [class.cdk-visually-hidden]="skipLinkHidden" *ngIf="skipLinkHref">
-    <a mat-raised-button [href]="skipLinkHref" (focus)="skipLinkHidden = false" (blur)="skipLinkHidden = true" color="accent">
-      Skip to main content
-    </a>
-  </div>
+  @if (skipLinkHidden) {
+    <div class="skip-link-wrapper" [class.cdk-visually-hidden]="skipLinkHidden">
+      <a mat-raised-button [href]="skipLinkHref" (focus)="skipLinkHidden = false" (blur)="skipLinkHidden = true" color="accent">
+        Skip to main content
+      </a>
+    </div>
+  }
   <a mat-button routerLink="/" aria-label="Angular Material">
     <app-logo matButtonIcon/>
     Material
@@ -13,10 +15,12 @@
       pre-release ⚠️
     }
   </a>
-  <a mat-button class="docs-navbar-hide-small"
-     *ngFor="let key of sectionKeys"
-     [routerLink]="key"
-     routerLinkActive="docs-navbar-header-item-selected">{{sections[key].name}}</a>
+
+  @for (key of sectionKeys; track key) {
+    <a mat-button class="docs-navbar-hide-small"
+       [routerLink]="key"
+       routerLinkActive="docs-navbar-header-item-selected">{{sections[key].name}}</a>
+  }
   <a mat-button class="docs-navbar-hide-small" routerLink="guides" routerLinkActive="docs-navbar-header-item-selected">Guides</a>
   <div class="flex-spacer"></div>
   <version-picker></version-picker>
@@ -32,9 +36,10 @@
   </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small" aria-label="Section Nav Bar">
-  <a mat-button class="docs-navbar-link"
-    *ngFor="let key of sectionKeys"
-    [routerLink]="key">{{sections[key].name}}</a>
+  @for (key of sectionKeys; track key) {
+    <a mat-button class="docs-navbar-link"
+      [routerLink]="key">{{sections[key].name}}</a>
+  }
   <a mat-button class="docs-navbar-link" routerLink="guides">Guides</a>
 </nav>
 

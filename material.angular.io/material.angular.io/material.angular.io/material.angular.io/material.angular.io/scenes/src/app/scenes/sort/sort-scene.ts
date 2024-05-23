@@ -1,4 +1,3 @@
-import {NgFor} from '@angular/common';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {MatSortModule} from '@angular/material/sort';
 
@@ -16,7 +15,7 @@ export interface Dessert {
   templateUrl: './sort-scene.html',
   styleUrls: ['./sort-scene.scss'],
   standalone: true,
-  imports: [MatSortModule, NgFor]
+  imports: [MatSortModule]
 })
 export class SortScene {
   desserts: Dessert[] = [
