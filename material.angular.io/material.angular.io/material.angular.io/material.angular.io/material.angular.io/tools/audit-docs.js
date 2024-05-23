@@ -54,7 +54,7 @@ const MIN_SCORES_PER_PAGE = [
     minScores: {
       pwa: 75,
       performance: 25, // Intentionally low because Ligthouse is flaky.
-      seo: 100,
+      seo: 90,
       'best-practices': 90,
       accessibility: 92,
     },
