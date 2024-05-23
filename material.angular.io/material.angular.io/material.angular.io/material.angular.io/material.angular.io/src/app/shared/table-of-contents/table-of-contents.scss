@@ -1,21 +1,24 @@
 :host {
   font-size: 13px;
   // Width is container width minus content width
-  width: 19%;
+  width: 24%;
   position: sticky;
   top: 0;
   padding-left: 25px;
   box-sizing: border-box;
   display: inline-flex;
   flex-direction: column;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
 }
 
 .docs-toc-container {
   width: 100%;
-  padding: 5px 0 10px 10px;
+  padding: 8px 0 8px 16px;
+  box-sizing: border-box;
 
   & + .docs-toc-container {
-    padding-top: 8px;
+    padding-top: 12px;
   }
 }
 
@@ -39,5 +42,6 @@ a {
 }
 
 .docs-level-h4 {
-  margin-left: 12px;
+  padding-left: 12px;
+  box-sizing: border-box;
 }

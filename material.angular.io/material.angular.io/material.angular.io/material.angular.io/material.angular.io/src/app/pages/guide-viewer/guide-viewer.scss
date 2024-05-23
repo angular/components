@@ -36,7 +36,7 @@
 
 .docs-guide-content {
   flex-grow: 1;
-  width: 80%;
+  width: 75%;
 
   @media (max-width: constants.$extra-small-breakpoint-width) {
     width: 100%;
@@ -51,8 +51,9 @@ table-of-contents {
   // sticky positioning
   @media (max-width: constants.$extra-small-breakpoint-width) {
     order: -1;
-    position: inherit;
+    position: relative;
     width: auto;
     padding-left: 0;
+    max-height: none;
   }
 }
