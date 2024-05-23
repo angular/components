@@ -47,7 +47,7 @@ $button-icon-size: 28px;
   .mat-mdc-select {
     // The smaller font size inherited from the paginator throws off the centering of the select
     // inside the form field. This `line-height` helps to center it relative to the other text.
-    line-height: 1.5;
+    line-height: 2;
   }
 }
 
