@@ -5,7 +5,7 @@ You can use Angular Material's Sass-based theming system for your own custom com
 **Note: The information on this page is specific to Material 3, for Material 2
 information on how to theme your components see the [Material 2 guide][material-2].**
 
-[material-2]: https://material.angular.io/guide/material-2#theming-your-components
+[material-2]: https://material.angular.io/guide/material-2-theming#theming-your-components
 
 ## Reading values from a theme
 

@@ -932,7 +932,7 @@ The following example demonstrates usage of the typography styles emitted by the
 #### Reading typography values from a config
 
 It is possible to read typography properties from a theme for use in your own components. For more
-information about this see our section on [Theming your own components](https://material.angular.io/guide/material-2#theming-your-components),
+information about this see our section on [Theming your own components](https://material.angular.io/guide/material-2-theming#theming-your-components),
 
 ### Step-by-step example
 
