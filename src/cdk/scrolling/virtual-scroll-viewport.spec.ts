@@ -25,7 +25,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Subject, animationFrameScheduler} from 'rxjs';
+import {Subject} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
 
 describe('CdkVirtualScrollViewport', () => {
@@ -1245,7 +1245,7 @@ function finishInit(fixture: ComponentFixture<any>) {
   flush();
 
   // Flush the initial fake scroll event.
-  animationFrameScheduler.flush();
+  tick(16); // flush animation frame
   flush();
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
@@ -1257,7 +1257,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
     viewport.scrollToOffset(offset);
   }
   dispatchFakeEvent(viewport.scrollable.getElementRef().nativeElement, 'scroll');
-  animationFrameScheduler.flush();
+  tick(16); // flush animation frame
 }
 
 @Component({
