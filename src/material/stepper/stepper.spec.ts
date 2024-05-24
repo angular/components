@@ -9,52 +9,53 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
-  StepperOrientation,
+  CdkStep,
   STEPPER_GLOBAL_OPTIONS,
   STEP_STATE,
-  CdkStep,
+  StepperOrientation,
 } from '@angular/cdk/stepper';
 import {
-  dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
   EventEmitter,
-  Type,
   Provider,
-  ViewChildren,
   QueryList,
+  Type,
   ViewChild,
+  ViewChildren,
   ViewEncapsulation,
+  provideZoneChangeDetection,
   signal,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, inject} from '@angular/core/testing';
 import {
   AbstractControl,
   AsyncValidatorFn,
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
-  FormBuilder,
 } from '@angular/forms';
 import {MatRipple, ThemePalette} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {_supportsShadowDom} from '@angular/cdk/platform';
-import {merge, Observable, Subject} from 'rxjs';
+import {Observable, Subject, merge} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {MatStepHeader, MatStepperModule} from './index';
 import {MatStep, MatStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
 import {MatStepperIntl} from './stepper-intl';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
 
 const VALID_REGEX = /valid/;
 let dir: {value: Direction; readonly change: EventEmitter<Direction>};
@@ -1794,7 +1795,11 @@ function createComponent<T>(
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
     imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule, ...imports],
-    providers: [{provide: Directionality, useFactory: () => dir}, ...providers],
+    providers: [
+      provideZoneChangeDetection(),
+      {provide: Directionality, useFactory: () => dir},
+      ...providers,
+    ],
     declarations: [component],
   });
 

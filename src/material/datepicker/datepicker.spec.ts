@@ -10,6 +10,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {Overlay} from '@angular/cdk/overlay';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -21,40 +22,39 @@ import {
 } from '@angular/cdk/testing/private';
 import {
   Component,
+  Directive,
+  Provider,
   Type,
   ViewChild,
-  Provider,
-  Directive,
   ViewEncapsulation,
   provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
 import {
   FormControl,
   FormsModule,
+  NG_VALIDATORS,
   NgModel,
   ReactiveFormsModule,
   Validator,
-  NG_VALIDATORS,
 } from '@angular/forms';
 import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
-import {DEC, JAN, JUL, JUN, SEP} from '../testing';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
-import {_supportsShadowDom} from '@angular/cdk/platform';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
-import {MatInputModule} from '@angular/material/input';
+import {DEC, JAN, JUL, JUN, SEP} from '../testing';
 import {MatDatepicker} from './datepicker';
+import {DatepickerDropdownPositionX, DatepickerDropdownPositionY} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {
   MAT_DATEPICKER_SCROLL_STRATEGY,
+  MatDateSelectionModel,
   MatDatepickerIntl,
   MatDatepickerModule,
-  MatDateSelectionModel,
 } from './index';
-import {DatepickerDropdownPositionX, DatepickerDropdownPositionY} from './datepicker-base';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
@@ -511,6 +511,9 @@ describe('MatDatepicker', () => {
 
       it('should reset the datepicker when it is closed externally', fakeAsync(() => {
         TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          providers: [provideZoneChangeDetection()],
+        });
 
         const scrolledSubject = new Subject();
 
@@ -1312,6 +1315,9 @@ describe('MatDatepicker', () => {
 
         fixture.destroy();
         TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          providers: [provideZoneChangeDetection()],
+        });
         fixture = createComponent(DatepickerWithToggleInShadowDom, [MatNativeDateModule]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;

@@ -28,13 +28,13 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
   inject,
-  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
@@ -45,15 +45,15 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {
-  getMatAutocompleteMissingPanelError,
+  MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
+  MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
   MatAutocomplete,
   MatAutocompleteDefaultOptions,
   MatAutocompleteModule,
   MatAutocompleteOrigin,
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
-  MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
-  MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+  getMatAutocompleteMissingPanelError,
 } from './index';
 
 describe('MDC-based MatAutocomplete', () => {
@@ -1025,6 +1025,9 @@ describe('MDC-based MatAutocomplete', () => {
     it('should disable the input when used with a value accessor and without `matInput`', () => {
       fixture.destroy();
       TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideZoneChangeDetection()],
+      });
 
       const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
       plainFixture.detectChanges();
