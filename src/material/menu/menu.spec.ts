@@ -25,8 +25,9 @@ import {
   Type,
   ViewChild,
   ViewChildren,
+  provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {MatRipple} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -63,7 +64,7 @@ describe('MDC-based MatMenu', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers,
+      providers: [provideZoneChangeDetection(), ...providers],
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
     }).compileComponents();
@@ -907,11 +908,11 @@ describe('MDC-based MatMenu', () => {
   }));
 
   it('should throw if assigning a menu that contains the trigger', fakeAsync(() => {
-    const errorSpy = spyOn(console, 'error');
-    const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
-    fixture.detectChanges();
-    tick(500);
-    expect(errorSpy.calls.first().args[1]).toMatch(/menu cannot contain its own trigger/);
+    expect(() => {
+      const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
+      fixture.detectChanges();
+      tick(500);
+    }).toThrowError(/menu cannot contain its own trigger/);
   }));
 
   it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {

@@ -1,6 +1,6 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
 describe('CdkVirtualScrollViewport', () => {
@@ -47,11 +47,13 @@ describe('CdkVirtualScrollViewport', () => {
     }));
 
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
-      testComponent.minBufferPx = 100;
-      testComponent.maxBufferPx = 99;
-      const errorSpy = spyOn(console, 'error');
-      finishInit(fixture);
-      expect(errorSpy).toHaveBeenCalled();
+      expect(() => {
+        testComponent.minBufferPx = 100;
+        testComponent.maxBufferPx = 99;
+        finishInit(fixture);
+      }).toThrowError(
+        'CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx',
+      );
     }));
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,

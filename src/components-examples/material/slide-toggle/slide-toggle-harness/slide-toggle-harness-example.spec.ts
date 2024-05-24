@@ -1,7 +1,8 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing';
 import {SlideToggleHarnessExample} from './slide-toggle-harness-example';
 
 describe('SlideToggleHarnessExample', () => {
@@ -9,6 +10,10 @@ describe('SlideToggleHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+
     fixture = TestBed.createComponent(SlideToggleHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

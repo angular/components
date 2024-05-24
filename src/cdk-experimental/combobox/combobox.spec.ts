@@ -1,3 +1,6 @@
+import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox/combobox-popup';
+import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
@@ -8,11 +11,8 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CdkComboboxModule} from './combobox-module';
 import {CdkCombobox} from './combobox';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
-import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox/combobox-popup';
+import {CdkComboboxModule} from './combobox-module';
 
 describe('Combobox', () => {
   describe('with a basic toggle trigger', () => {
@@ -249,10 +249,10 @@ describe('Combobox', () => {
     });
 
     it('should throw error when given invalid open action', () => {
-      const errorSpy = spyOn(console, 'error');
-      testComponent.actions.set('invalidAction');
-      fixture.detectChanges();
-      expect(errorSpy).toHaveBeenCalled();
+      expect(() => {
+        testComponent.actions.set('invalidAction');
+        fixture.detectChanges();
+      }).toThrowError('invalidAction is not a support open action for CdkCombobox');
     });
   });
 

@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
-import {fakeAsync, TestBed, flush} from '@angular/core/testing';
-import {MatTestDialogOpenerModule, MatTestDialogOpener} from '@angular/material/dialog/testing';
+import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '@angular/material/dialog';
+import {MatTestDialogOpener, MatTestDialogOpenerModule} from '@angular/material/dialog/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MDC-based MatTestDialogOpener', () => {
@@ -26,12 +26,13 @@ describe('MDC-based MatTestDialogOpener', () => {
     );
   });
 
-  it('should pass data to the component', () => {
+  it('should pass data to the component', async () => {
     const config = {data: 'test'};
     const fixture = TestBed.createComponent(
       MatTestDialogOpener.withComponent(ExampleComponent, config),
     );
     fixture.detectChanges();
+    await fixture.whenStable();
     const dialogContainer = document.querySelector('mat-dialog-container');
     expect(dialogContainer!.innerHTML).toContain('Data: test');
   });

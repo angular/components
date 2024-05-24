@@ -1,24 +1,31 @@
+import {TAB} from '@angular/cdk/keycodes';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
-  TestBed,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {TAB} from '@angular/cdk/keycodes';
+import {By} from '@angular/platform-browser';
 import {
   createMouseEvent,
   dispatchEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '../../cdk/testing/private';
-import {By} from '@angular/platform-browser';
 import {CdkMenu} from './menu';
-import {CdkMenuModule} from './menu-module';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {CdkMenuModule} from './menu-module';
 
 describe('Menu', () => {
   describe('as checkbox group', () => {
@@ -138,6 +145,7 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenus],
+          providers: [provideZoneChangeDetection()],
         }).compileComponents();
       }));
 
@@ -329,6 +337,7 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
+          providers: [provideZoneChangeDetection()],
         }).compileComponents();
       }));
 

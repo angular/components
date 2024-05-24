@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule, provideExperimentalZonelessChangeDetection} from '@angular/core';
+import {ErrorHandler, NgModule, provideExperimentalZonelessChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
@@ -14,7 +14,17 @@ import {
 } from '@angular/platform-browser-dynamic/testing';
 
 @NgModule({
-  providers: [provideExperimentalZonelessChangeDetection()],
+  providers: [
+    provideExperimentalZonelessChangeDetection(),
+    {
+      provide: ErrorHandler,
+      useValue: {
+        handleError: (e: any) => {
+          throw e;
+        },
+      },
+    },
+  ],
 })
 export class TestModule {}
 

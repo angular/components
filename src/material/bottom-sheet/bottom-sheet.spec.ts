@@ -20,6 +20,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -61,7 +62,7 @@ describe('MatBottomSheet', () => {
         BottomSheetWithInjectedData,
         ShadowDomComponent,
       ],
-      providers: [{provide: Location, useClass: SpyLocation}],
+      providers: [provideZoneChangeDetection(), {provide: Location, useClass: SpyLocation}],
     }).compileComponents();
   }));
 
@@ -639,6 +640,7 @@ describe('MatBottomSheet', () => {
           autoFocus: 'first-tabbable',
         });
 
+        viewContainerFixture.detectChanges();
         await viewContainerFixture.whenStable();
 
         expect(document.activeElement!.tagName)
