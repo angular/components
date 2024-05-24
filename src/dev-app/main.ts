@@ -9,7 +9,6 @@
 // Load `$localize` for examples using it.
 import '@angular/localize/init';
 
-import {HttpClientModule} from '@angular/common/http';
 import {
   importProvidersFrom,
   provideZoneChangeDetection,
@@ -36,23 +35,28 @@ const theme = document.createElement('link');
 theme.href = cachedAppState.m3Enabled ? 'theme-m3.css' : 'theme.css';
 theme.id = 'theme-styles';
 theme.rel = 'stylesheet';
+
+// Bootstrap the app after the theme has loaded so we can properly test the
+// theme loaded checks. This also avoids a flicker if it takes too long to load.
+theme.addEventListener('load', bootstrap, {once: true});
 document.head.appendChild(theme);
 
-bootstrapApplication(DevApp, {
-  providers: [
-    importProvidersFrom(
-      BrowserAnimationsModule.withConfig({
-        disableAnimations: !cachedAppState.animations,
-      }),
-      RouterModule.forRoot(DEV_APP_ROUTES),
-      HttpClientModule,
-    ),
-    provideNativeDateAdapter(),
-    {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
-    {provide: Directionality, useClass: DevAppDirectionality},
-    cachedAppState.zoneless
-      ? provideExperimentalZonelessChangeDetection()
-      : provideZoneChangeDetection({eventCoalescing: true, runCoalescing: true}),
-  ],
-});
+function bootstrap(): void {
+  bootstrapApplication(DevApp, {
+    providers: [
+      importProvidersFrom(
+        BrowserAnimationsModule.withConfig({
+          disableAnimations: !cachedAppState.animations,
+        }),
+        RouterModule.forRoot(DEV_APP_ROUTES),
+      ),
+      provideNativeDateAdapter(),
+      {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
+      {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
+      {provide: Directionality, useClass: DevAppDirectionality},
+      cachedAppState.zoneless
+        ? provideExperimentalZonelessChangeDetection()
+        : provideZoneChangeDetection({eventCoalescing: true, runCoalescing: true}),
+    ],
+  });
+}
