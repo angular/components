@@ -1,4 +1,4 @@
-import {parse} from 'postcss';
+import {parse, Rule} from 'postcss';
 import {compileString} from 'sass';
 import {runfiles} from '@bazel/runfiles';
 import * as path from 'path';
@@ -68,14 +68,18 @@ describe('M3 theme', () => {
     root.walkRules(rule => {
       selectors.push(rule.selector);
     });
-    expect(selectors).toEqual(['html']);
+    expect(selectors).toEqual(['html', '.mat-theme-loaded-marker']);
   });
 
   it('should only emit CSS variables', () => {
     const root = parse(transpile(`html { @include mat.all-component-themes($theme); }`));
     const nonVarProps: string[] = [];
     root.walkDecls(decl => {
-      if (!decl.prop.startsWith('--')) {
+      if (
+        !decl.prop.startsWith('--') &&
+        // Skip the theme loaded marker since it can't be a variable.
+        (decl.parent as Rule).selector !== '.mat-theme-loaded-marker'
+      ) {
         nonVarProps.push(decl.prop);
       }
     });
