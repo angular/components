@@ -472,7 +472,14 @@ describe('theming inspection api', () => {
         div {
           @include mat.all-component-themes($theme);
         }`);
-      expect(css).toBe('');
+      expect(css).toBe(
+        [
+          // The marker is always included.
+          `.mat-theme-loaded-marker {`,
+          `  display: none;`,
+          `}`,
+        ].join('\n'),
+      );
     });
   });
 });
