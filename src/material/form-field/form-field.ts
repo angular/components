@@ -706,7 +706,7 @@ export class MatFormField
       // If the element is inside the DOM the root node will be either the document,
       // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
       if (rootNode && rootNode !== element) {
-        // If the element is either a shadow root or the documen itslef
+        // If the element is either a shadow root or the document itslef
         if (rootNode instanceof ShadowRoot || rootNode === document) {
           return true;
         }
