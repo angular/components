@@ -703,12 +703,18 @@ export class MatFormField
     const element: HTMLElement = this._elementRef.nativeElement;
     if (element.getRootNode) {
       const rootNode = element.getRootNode();
-      // If the element is inside the DOM the root node will be either the document
-      // or the closest shadow root, otherwise it'll be the element itself.
-      return rootNode && rootNode !== element;
+      // If the element is inside the DOM the root node will be either the document,
+      // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
+      if (rootNode && rootNode !== element) {
+        // If the element is either a shadow root or the documen itslef
+        if (rootNode instanceof ShadowRoot || rootNode === document) {
+          return true;
+        }
+      }
     }
     // Otherwise fall back to checking if it's in the document. This doesn't account for
     // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
+    // If the element is not in the document it means that the element is not yet rendered.
     return document.documentElement!.contains(element);
   }
 }
