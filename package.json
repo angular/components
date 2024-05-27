@@ -52,7 +52,7 @@
     "ci-push-deploy-docs-app": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/deploy-ci-push.mts",
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "ci-notify-slack-failure": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/circleci/notify-slack-job-failure.mts",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "version": "18.1.0-next.0",
   "dependencies": {
