@@ -550,18 +550,27 @@ export abstract class MatPaginatedTabHeader
     if (this.disablePagination) {
       this._showPaginationControls = false;
     } else {
-      const isEnabled =
-        this._tabListInner.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
+      const scrollWidth = this._tabListInner.nativeElement.scrollWidth;
+      const containerWidth = this._elementRef.nativeElement.offsetWidth;
+
+      // Usually checking that the scroll width is greater than the container width should be
+      // enough, but on Safari at specific widths the browser ends up rounding up when there's
+      // no pagination and rounding down once the pagination is added. This can throw the component
+      // into an infinite loop where the pagination shows up and disappears constantly. We work
+      // around it by adding a threshold to the calculation. From manual testing the threshold
+      // can be lowered to 2px and still resolve the issue, but we set a higher one to be safe.
+      // This shouldn't cause any content to be clipped, because tabs have a 24px horizontal
+      // padding. See b/316395154 for more information.
+      const isEnabled = scrollWidth - containerWidth >= 5;
 
       if (!isEnabled) {
         this.scrollDistance = 0;
       }
 
       if (isEnabled !== this._showPaginationControls) {
+        this._showPaginationControls = isEnabled;
         this._changeDetectorRef.markForCheck();
       }
-
-      this._showPaginationControls = isEnabled;
     }
   }
 
