@@ -6,22 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
 import {
+  ApplicationRef,
+  ChangeDetectionStrategy,
+  Component,
+  EnvironmentInjector,
+  Inject,
   Injectable,
   NgZone,
   OnDestroy,
-  Inject,
-  inject,
-  ApplicationRef,
-  EnvironmentInjector,
-  Component,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
+  WritableSignal,
   createComponent,
+  inject,
+  signal,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {merge, Observable, Observer, Subject} from 'rxjs';
+import {Observable, Observer, Subject, merge} from 'rxjs';
 
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
@@ -67,7 +69,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   private _dragInstances = new Set<I>();
 
   /** Drag item instances that are currently being dragged. */
-  private _activeDragInstances: I[] = [];
+  private _activeDragInstances: WritableSignal<I[]> = signal([]);
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
   private _globalListeners = new Map<
@@ -163,14 +165,14 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    */
   startDragging(drag: I, event: TouchEvent | MouseEvent) {
     // Do not process the same drag twice to avoid memory leaks and redundant listeners
-    if (this._activeDragInstances.indexOf(drag) > -1) {
+    if (this._activeDragInstances().indexOf(drag) > -1) {
       return;
     }
 
     this._loadResets();
-    this._activeDragInstances.push(drag);
+    this._activeDragInstances.update(instances => [...instances, drag]);
 
-    if (this._activeDragInstances.length === 1) {
+    if (this._activeDragInstances().length === 1) {
       const isTouchEvent = event.type.startsWith('touch');
 
       // We explicitly bind __active__ listeners here, because newer browsers will default to
@@ -215,20 +217,23 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
 
   /** Stops dragging a drag item instance. */
   stopDragging(drag: I) {
-    const index = this._activeDragInstances.indexOf(drag);
-
-    if (index > -1) {
-      this._activeDragInstances.splice(index, 1);
-
-      if (this._activeDragInstances.length === 0) {
-        this._clearGlobalListeners();
+    this._activeDragInstances.update(instances => {
+      const index = instances.indexOf(drag);
+      if (index > -1) {
+        instances.splice(index, 1);
+        return [...instances];
       }
+      return instances;
+    });
+
+    if (this._activeDragInstances().length === 0) {
+      this._clearGlobalListeners();
     }
   }
 
   /** Gets whether a drag item instance is currently being dragged. */
   isDragging(drag: I) {
-    return this._activeDragInstances.indexOf(drag) > -1;
+    return this._activeDragInstances().indexOf(drag) > -1;
   }
 
   /**
@@ -250,7 +255,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
           return this._ngZone.runOutsideAngular(() => {
             const eventOptions = true;
             const callback = (event: Event) => {
-              if (this._activeDragInstances.length) {
+              if (this._activeDragInstances().length) {
                 observer.next(event);
               }
             };
@@ -281,18 +286,18 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * @param event Event whose default action should be prevented.
    */
   private _preventDefaultWhileDragging = (event: Event) => {
-    if (this._activeDragInstances.length > 0) {
+    if (this._activeDragInstances().length > 0) {
       event.preventDefault();
     }
   };
 
   /** Event listener for `touchmove` that is bound even if no dragging is happening. */
   private _persistentTouchmoveListener = (event: TouchEvent) => {
-    if (this._activeDragInstances.length > 0) {
+    if (this._activeDragInstances().length > 0) {
       // Note that we only want to prevent the default action after dragging has actually started.
       // Usually this is the same time at which the item is added to the `_activeDragInstances`,
       // but it could be pushed back if the user has set up a drag delay or threshold.
-      if (this._activeDragInstances.some(this._draggingPredicate)) {
+      if (this._activeDragInstances().some(this._draggingPredicate)) {
         event.preventDefault();
       }
 

@@ -6,6 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceArray} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
+import {
+  A,
+  DOWN_ARROW,
+  END,
+  ENTER,
+  hasModifierKey,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
   booleanAttribute,
@@ -21,26 +38,9 @@ import {
   Output,
   QueryList,
 } from '@angular/core';
-import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {
-  A,
-  DOWN_ARROW,
-  END,
-  ENTER,
-  hasModifierKey,
-  HOME,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  SPACE,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {coerceArray} from '@angular/cdk/coercion';
-import {SelectionModel} from '@angular/cdk/collections';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Directionality} from '@angular/cdk/bidi';
-import {Platform} from '@angular/cdk/platform';
 
 /** The next id to use for creating unique DOM IDs. */
 let nextId = 0;
@@ -585,6 +585,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this.changeDetectorRef.markForCheck();
   }
 
   /** Focus the listbox's host element. */

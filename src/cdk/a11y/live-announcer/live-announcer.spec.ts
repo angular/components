@@ -178,7 +178,6 @@ describe('LiveAnnouncer', () => {
       const overlayRef = overlay.create();
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(ariaLiveElement.id).toBeTruthy();
@@ -199,7 +198,6 @@ describe('LiveAnnouncer', () => {
       const overlayRef = overlay.create();
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       componentRef.instance.ariaOwns = 'foo bar';
@@ -320,7 +318,6 @@ describe('CdkAriaLive', () => {
       announcer = la;
       announcerSpy = spyOn(la, 'announce').and.callThrough();
       fixture = TestBed.createComponent(DivWithCdkAriaLive);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
     }),
@@ -375,7 +372,6 @@ describe('CdkAriaLive', () => {
 
     expect(announcer.announce).toHaveBeenCalledTimes(1);
 
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();

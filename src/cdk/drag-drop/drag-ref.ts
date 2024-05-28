@@ -6,31 +6,38 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EmbeddedViewRef, ElementRef, NgZone, ViewContainerRef, TemplateRef} from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
+import {coerceElement} from '@angular/cdk/coercion';
 import {
-  normalizePassiveListenerOptions,
   _getEventTarget,
   _getShadowRoot,
+  normalizePassiveListenerOptions,
 } from '@angular/cdk/platform';
-import {coerceElement} from '@angular/cdk/coercion';
-import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
-import {Subscription, Subject, Observable} from 'rxjs';
-import type {DropListRef} from './drop-list-ref';
-import {DragDropRegistry} from './drag-drop-registry';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  combineTransforms,
+  ElementRef,
+  EmbeddedViewRef,
+  NgZone,
+  TemplateRef,
+  ViewContainerRef,
+  signal,
+} from '@angular/core';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {deepCloneNode} from './dom/clone-node';
+import {adjustDomRect, getMutableClientRect} from './dom/dom-rect';
+import {ParentPositionTracker} from './dom/parent-position-tracker';
+import {getRootNode} from './dom/root-node';
+import {
   DragCSSStyleDeclaration,
+  combineTransforms,
   getTransform,
   toggleNativeDragInteractions,
   toggleVisibility,
 } from './dom/styling';
-import {getMutableClientRect, adjustDomRect} from './dom/dom-rect';
-import {ParentPositionTracker} from './dom/parent-position-tracker';
-import {deepCloneNode} from './dom/clone-node';
+import {DragDropRegistry} from './drag-drop-registry';
+import type {DropListRef} from './drop-list-ref';
 import {DragPreviewTemplate, PreviewRef} from './preview-ref';
-import {getRootNode} from './dom/root-node';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -155,7 +162,7 @@ export class DragRef<T = any> {
    * Whether the dragging sequence has been started. Doesn't
    * necessarily mean that the element has been moved.
    */
-  private _hasStartedDragging = false;
+  private _hasStartedDragging = signal(false);
 
   /** Whether the element has moved since the user started dragging it. */
   private _hasMoved: boolean;
@@ -521,7 +528,7 @@ export class DragRef<T = any> {
 
   /** Checks whether the element is currently being dragged. */
   isDragging(): boolean {
-    return this._hasStartedDragging && this._dragDropRegistry.isDragging(this);
+    return this._hasStartedDragging() && this._dragDropRegistry.isDragging(this);
   }
 
   /** Resets a standalone drag item to its initial position. */
@@ -651,7 +658,7 @@ export class DragRef<T = any> {
   private _pointerMove = (event: MouseEvent | TouchEvent) => {
     const pointerPosition = this._getPointerPositionOnPage(event);
 
-    if (!this._hasStartedDragging) {
+    if (!this._hasStartedDragging()) {
       const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
       const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
       const isOverThreshold = distanceX + distanceY >= this._config.dragStartThreshold;
@@ -678,7 +685,7 @@ export class DragRef<T = any> {
           if (event.cancelable) {
             event.preventDefault();
           }
-          this._hasStartedDragging = true;
+          this._hasStartedDragging.set(true);
           this._ngZone.run(() => this._startDragSequence(event));
         }
       }
@@ -753,7 +760,7 @@ export class DragRef<T = any> {
         this._rootElementTapHighlight;
     }
 
-    if (!this._hasStartedDragging) {
+    if (!this._hasStartedDragging()) {
       return;
     }
 
@@ -908,7 +915,8 @@ export class DragRef<T = any> {
       rootStyles.webkitTapHighlightColor = 'transparent';
     }
 
-    this._hasStartedDragging = this._hasMoved = false;
+    this._hasMoved = false;
+    this._hasStartedDragging.set(this._hasMoved);
 
     // Avoid multiple subscriptions and memory leaks when multi touch
     // (isDragging check above isn't enough because of possible temporal and/or dimensional delays)
