@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Directionality} from '@angular/cdk/bidi';
-import {Platform} from '@angular/cdk/platform';
+import {Platform, _getShadowRoot} from '@angular/cdk/platform';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -706,8 +706,7 @@ export class MatFormField
       // If the element is inside the DOM the root node will be either the document,
       // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
       if (rootNode && rootNode !== element) {
-        // If the element is either a shadow root or the document itslef
-        if (rootNode instanceof ShadowRoot || rootNode === document) {
+        if (rootNode === document || _getShadowRoot(element)) {
           return true;
         }
       }
