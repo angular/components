@@ -78,7 +78,7 @@ export const DEFAULT_PLAYER_HEIGHT = 390;
  * user tries to interact with the API before it has been loaded.
  */
 interface PendingPlayerState {
-  playbackState?: YT.PlayerState.PLAYING | YT.PlayerState.PAUSED | YT.PlayerState.CUED;
+  playbackState?: PlayerState.PLAYING | PlayerState.PAUSED | PlayerState.CUED;
   playbackRate?: number;
   volume?: number;
   muted?: boolean;
@@ -88,6 +88,19 @@ interface PendingPlayerState {
 /** Coercion function for time values. */
 function coerceTime(value: number | undefined): number | undefined {
   return value == null ? value : numberAttribute(value, 0);
+}
+
+/**
+ * Equivalent of `YT.PlayerState` which we can't use, because it's meant to
+ * be read off the `window` which we can't do before the API has been loaded.
+ */
+enum PlayerState {
+  UNSTARTED = -1,
+  ENDED = 0,
+  PLAYING = 1,
+  PAUSED = 2,
+  BUFFERING = 3,
+  CUED = 5,
 }
 
 /**
@@ -280,7 +293,8 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     if (this._player) {
       this._player.playVideo();
     } else {
-      this._getPendingState().playbackState = YT.PlayerState.PLAYING;
+      this._getPendingState().playbackState = PlayerState.PLAYING;
+      this._load(true);
     }
   }
 
@@ -289,7 +303,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     if (this._player) {
       this._player.pauseVideo();
     } else {
-      this._getPendingState().playbackState = YT.PlayerState.PAUSED;
+      this._getPendingState().playbackState = PlayerState.PAUSED;
     }
   }
 
@@ -299,7 +313,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       this._player.stopVideo();
     } else {
       // It seems like YouTube sets the player to CUED when it's stopped.
-      this._getPendingState().playbackState = YT.PlayerState.CUED;
+      this._getPendingState().playbackState = PlayerState.CUED;
     }
   }
 
@@ -411,7 +425,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       return this._pendingPlayerState.playbackState;
     }
 
-    return YT.PlayerState.UNSTARTED;
+    return PlayerState.UNSTARTED;
   }
 
   /** See https://developers.google.com/youtube/iframe_api_reference#getCurrentTime */
@@ -581,7 +595,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         // Only cue the player when it either hasn't started yet or it's cued,
         // otherwise cuing it can interrupt a player with autoplay enabled.
         const state = player.getPlayerState();
-        if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.CUED || state == null) {
+        if (state === PlayerState.UNSTARTED || state === PlayerState.CUED || state == null) {
           this._cuePlayer();
         }
 
@@ -598,13 +612,13 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     const {playbackState, playbackRate, volume, muted, seek} = pendingState;
 
     switch (playbackState) {
-      case YT.PlayerState.PLAYING:
+      case PlayerState.PLAYING:
         player.playVideo();
         break;
-      case YT.PlayerState.PAUSED:
+      case PlayerState.PAUSED:
         player.pauseVideo();
         break;
-      case YT.PlayerState.CUED:
+      case PlayerState.CUED:
         player.stopVideo();
         break;
     }
