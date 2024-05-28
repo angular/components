@@ -701,19 +701,23 @@ export class MatFormField
   /** Checks whether the form field is attached to the DOM. */
   private _isAttachedToDom(): boolean {
     const element: HTMLElement = this._elementRef.nativeElement;
+    const shadowRoot = _getShadowRoot(element);
     if (element.getRootNode) {
       const rootNode = element.getRootNode();
       // If the element is inside the DOM the root node will be either the document,
       // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
       if (rootNode && rootNode !== element) {
-        if (rootNode === document || _getShadowRoot(element)) {
+        if (rootNode === document || shadowRoot) {
           return true;
         }
       }
     }
     // Otherwise fall back to checking if it's in the document. This doesn't account for
     // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
-    // If the element is not in the document it means that the element is not yet rendered.
-    return document.documentElement!.contains(element);
+    // If the element is not in the document nor in the shaodw root it means that the element is not yet rendered.
+    return (
+      document.documentElement!.contains(element) ||
+      (shadowRoot != null && shadowRoot.contains(element))
+    );
   }
 }
