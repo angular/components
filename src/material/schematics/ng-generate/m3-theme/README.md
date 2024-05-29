@@ -23,6 +23,10 @@ If you're using the system variables option, you should remember to either provi
 system variables (all prefixed with `--sys-`), or to include the `system-level-colors` and
 `system-level-typography` mixins which will generate the values based on your theme.
 
+The default prefix for system variables is `--sys-`. This prefix can be customized. For
+example, to change the prefix to `--md-sys-`, use the following configuration at the color or typography level:
+`system-prefix: md-sys`.
+
 ```scss
 @use '@angular/material' as mat;
 @use './path/to/my-theme';
