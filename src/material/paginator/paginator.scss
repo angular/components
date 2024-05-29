@@ -9,6 +9,7 @@ $page-size-margin-right: 8px;
 $items-per-page-label-margin: 0 4px;
 $selector-margin: 0 4px;
 $selector-trigger-width: 84px;
+$touch-target-height: 48px;
 
 $range-label-margin: 0 32px 0 24px;
 $button-icon-size: 28px;
@@ -47,7 +48,7 @@ $button-icon-size: 28px;
   .mat-mdc-select {
     // The smaller font size inherited from the paginator throws off the centering of the select
     // inside the form field. This `line-height` helps to center it relative to the other text.
-    line-height: 2;
+    line-height: 1.5;
   }
 }
 
@@ -132,4 +133,15 @@ $button-icon-size: 28px;
   .mat-mdc-paginator-range-actions .mat-mdc-icon-button {
     outline: solid 1px;
   }
+}
+
+.mat-mdc-paginator-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $selector-trigger-width;
+  height: $touch-target-height;
+  background-color: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 }
