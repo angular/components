@@ -1,14 +1,7 @@
 import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-  NgZone,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
   const r1 = el1.nativeElement.getBoundingClientRect();
@@ -33,10 +26,6 @@ describe('CdkScrollable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideZoneChangeDetection(),
-        {provide: NgZone, useFactory: () => new NgZone({})},
-      ],
       imports: [ScrollingModule, ScrollableViewport],
     }).compileComponents();
   }));
@@ -140,6 +129,7 @@ describe('CdkScrollable', () => {
   describe('in RTL context', () => {
     beforeEach(() => {
       testComponent.dir = 'rtl';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       maxOffset =
         testComponent.scrollContainer.nativeElement.scrollHeight -

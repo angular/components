@@ -1,9 +1,9 @@
-import {inject, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, ElementRef, NgZone, provideZoneChangeDetection} from '@angular/core';
-import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
-import {Overlay, OverlayConfig, OverlayRef, OverlayModule, OverlayContainer} from '../index';
+import {Component, ElementRef} from '@angular/core';
+import {TestBed, fakeAsync, inject} from '@angular/core/testing';
+import {Subject} from 'rxjs';
+import {Overlay, OverlayConfig, OverlayContainer, OverlayModule, OverlayRef} from '../index';
 
 describe('CloseScrollStrategy', () => {
   let overlayRef: OverlayRef;
@@ -17,7 +17,6 @@ describe('CloseScrollStrategy', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, MozarellaMsg],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: ScrollDispatcher,
           useFactory: () => ({
@@ -73,17 +72,6 @@ describe('CloseScrollStrategy', () => {
     scrolledSubject.next();
 
     expect(overlayRef.detach).not.toHaveBeenCalled();
-  });
-
-  it('should detach inside the NgZone', () => {
-    const spy = jasmine.createSpy('detachment spy');
-    const subscription = overlayRef.detachments().subscribe(() => spy(NgZone.isInAngularZone()));
-
-    overlayRef.attach(componentPortal);
-    scrolledSubject.next();
-
-    expect(spy).toHaveBeenCalledWith(true);
-    subscription.unsubscribe();
   });
 
   it('should be able to reposition the overlay up to a certain threshold before closing', inject(
