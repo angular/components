@@ -6,27 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkMenuGroup} from './menu-group';
+import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   AfterContentInit,
   ContentChildren,
   Directive,
   ElementRef,
-  inject,
   Input,
   NgZone,
   OnDestroy,
   QueryList,
+  computed,
+  inject,
+  signal,
 } from '@angular/core';
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
-import {CdkMenuItem} from './menu-item';
-import {merge, Subject} from 'rxjs';
-import {Directionality} from '@angular/cdk/bidi';
+import {Subject, merge} from 'rxjs';
 import {mapTo, mergeAll, mergeMap, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
-import {Menu} from './menu-interface';
-import {PointerFocusTracker} from './pointer-focus-tracker';
 import {MENU_AIM} from './menu-aim';
+import {CdkMenuGroup} from './menu-group';
+import {Menu} from './menu-interface';
+import {CdkMenuItem} from './menu-item';
+import {MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
+import {PointerFocusTracker} from './pointer-focus-tracker';
 
 /** Counter used to create unique IDs for menus. */
 let nextId = 0;
@@ -97,7 +99,12 @@ export abstract class CdkMenuBase
   protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
 
   /** Whether this menu's menu stack has focus. */
-  private _menuStackHasFocus = false;
+  private _menuStackHasFocus = signal(false);
+
+  private _tabIndexSignal = computed(() => {
+    const tabindexIfInline = this._menuStackHasFocus() ? -1 : 0;
+    return this.isInline ? tabindexIfInline : null;
+  });
 
   ngAfterContentInit() {
     if (!this.isInline) {
@@ -137,8 +144,7 @@ export abstract class CdkMenuBase
 
   /** Gets the tabindex for this menu. */
   _getTabIndex() {
-    const tabindexIfInline = this._menuStackHasFocus ? -1 : 0;
-    return this.isInline ? tabindexIfInline : null;
+    return this._tabIndexSignal();
   }
 
   /**
@@ -211,7 +217,7 @@ export abstract class CdkMenuBase
   private _subscribeToMenuStackHasFocus() {
     if (this.isInline) {
       this.menuStack.hasFocus.pipe(takeUntil(this.destroyed)).subscribe(hasFocus => {
-        this._menuStackHasFocus = hasFocus;
+        this._menuStackHasFocus.set(hasFocus);
       });
     }
   }

@@ -1,16 +1,16 @@
-import {dispatchFakeEvent} from '../testing/private';
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
-  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {dispatchFakeEvent} from '../testing/private';
 import {CdkTextareaAutosize} from './autosize';
 import {TextFieldModule} from './text-field-module';
 
@@ -21,7 +21,6 @@ describe('CdkTextareaAutosize', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [
         FormsModule,
         TextFieldModule,
@@ -103,6 +102,7 @@ describe('CdkTextareaAutosize', () => {
     As of some one gently rapping, rapping at my chamber door.
     “’Tis some visitor,” I muttered, “tapping at my chamber door—
                 Only this and nothing more.”`;
+    fixture.changeDetectorRef.markForCheck();
 
     fixture.detectChanges();
 
@@ -127,6 +127,7 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.style.minHeight).toBeFalsy();
 
     fixture.componentInstance.minRows = 4;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.style.minHeight)
@@ -135,6 +136,7 @@ describe('CdkTextareaAutosize', () => {
 
     let previousMinHeight = parseInt(textarea.style.minHeight as string);
     fixture.componentInstance.minRows = 6;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(parseInt(textarea.style.minHeight as string))
@@ -146,6 +148,7 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.style.maxHeight).toBeFalsy();
 
     fixture.componentInstance.maxRows = 4;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.style.maxHeight)
@@ -154,6 +157,7 @@ describe('CdkTextareaAutosize', () => {
 
     let previousMaxHeight = parseInt(textarea.style.maxHeight as string);
     fixture.componentInstance.maxRows = 6;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(parseInt(textarea.style.maxHeight as string))
@@ -165,6 +169,7 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.style.minHeight).toBeFalsy();
 
     fixture.componentInstance.minRows = 6;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.style.minHeight)
@@ -173,6 +178,7 @@ describe('CdkTextareaAutosize', () => {
 
     let previousHeight = parseInt(textarea.style.height!);
     fixture.componentInstance.minRows = 3;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(parseInt(textarea.style.height!))
@@ -191,6 +197,7 @@ describe('CdkTextareaAutosize', () => {
       .toBe(1);
 
     fixture.componentInstance.minRows = 1;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.rows)
@@ -200,6 +207,7 @@ describe('CdkTextareaAutosize', () => {
     const previousMinHeight = parseInt(textarea.style.minHeight as string);
 
     fixture.componentInstance.minRows = 2;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.rows)
@@ -224,6 +232,7 @@ describe('CdkTextareaAutosize', () => {
       .toBe(textarea.scrollHeight);
 
     fixture.componentInstance.maxRows = 5;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.clientHeight)
@@ -246,6 +255,7 @@ describe('CdkTextareaAutosize', () => {
       Line
       Line
       Line`;
+    fixture.changeDetectorRef.markForCheck();
 
     fixture.detectChanges();
 
@@ -269,6 +279,7 @@ describe('CdkTextareaAutosize', () => {
       Line
       Line
       Line`;
+    fixture.changeDetectorRef.markForCheck();
 
     fixture.detectChanges();
 
@@ -291,6 +302,7 @@ describe('CdkTextareaAutosize', () => {
         “’Tis some visitor entreating entrance at my chamber door—
     Some late visitor entreating entrance at my chamber door;—
                 This it is and nothing more.” `;
+    fixtureWithForms.changeDetectorRef.markForCheck();
     fixtureWithForms.detectChanges();
     flush();
     fixtureWithForms.detectChanges();
@@ -308,6 +320,7 @@ describe('CdkTextareaAutosize', () => {
       if a woodchuck could chuck wood?
     `;
 
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
     fixture.detectChanges();
@@ -343,6 +356,7 @@ describe('CdkTextareaAutosize', () => {
     Line
     Line
     Line`;
+    fixtureWithoutAutosize.changeDetectorRef.markForCheck();
 
     // Manually call resizeToFitContent instead of faking an `input` event.
     fixtureWithoutAutosize.detectChanges();
@@ -377,6 +391,7 @@ describe('CdkTextareaAutosize', () => {
 
   it('should handle an undefined placeholder', () => {
     fixture.componentInstance.placeholder = undefined!;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
