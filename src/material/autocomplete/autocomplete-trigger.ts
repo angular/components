@@ -900,16 +900,15 @@ export class MatAutocompleteTrigger
       this._handsetLandscapeBreakpointSubscription = this._breakpointObserver
         .observe(Breakpoints.HandsetLandscape)
         .subscribe(result => {
-          return result.matches;
+          // Check breakpoint if being viewed in HandsetLandscape via subscription (if not null)
+          const isHandsetLandscape = result.matches;
+          // Apply HandsetLandscape settings to prevent overlay cutoff in that breakpoint
+          // Fixes b/284148377
+          if (isHandsetLandscape) {
+            strategy.withFlexibleDimensions(true).withGrowAfterOpen(true).withViewportMargin(8);
+          }
+          return;
         });
-    }
-
-    // Check breakpoint if being viewed in HandsetLandscape via subscription (if not null)
-    const isHandsetLandscape = this._handsetLandscapeBreakpointSubscription;
-    // Apply HandsetLandscape settings to prevent overlay cutoff in that breakpoint
-    // Fixes b/284148377
-    if (isHandsetLandscape) {
-      strategy.withFlexibleDimensions(true).withGrowAfterOpen(true).withViewportMargin(8);
     }
 
     this._setStrategyPositions(strategy);
