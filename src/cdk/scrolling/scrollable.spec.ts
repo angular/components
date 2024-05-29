@@ -1,6 +1,6 @@
 import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
@@ -26,14 +26,12 @@ describe('CdkScrollable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: NgZone, useFactory: () => new NgZone({})}],
       imports: [ScrollingModule, ScrollableViewport],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ScrollableViewport);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     testComponent = fixture.componentInstance;
     // Firefox preserves the `scrollTop` value from previous similar containers. This

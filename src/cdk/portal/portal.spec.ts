@@ -42,7 +42,6 @@ describe('Portals', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       inject([ComponentFactoryResolver], (cfr: ComponentFactoryResolver) => {
@@ -210,7 +209,6 @@ describe('Portals', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       templatePortal.attach(testAppComponent.portalOutlet, {$implicit: {status: 'rotten'}});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       // Expect that the content of the attached portal is present and context given via the
       // attach method is projected
@@ -233,7 +231,6 @@ describe('Portals', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       templatePortal.attach(testAppComponent.portalOutlet, {$implicit: {status: 'rotten'}});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       // Expect that the content of the attached portal is present and context given via the
       // attach method is projected and get precedence over constructor context
@@ -244,8 +241,8 @@ describe('Portals', () => {
       // Set the selectedHost to be a ComponentPortal.
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
-
       fixture.changeDetectorRef.markForCheck();
+
       fixture.detectChanges();
       expect(testAppComponent.selectedPortal.isAttached).toBe(true);
 
@@ -273,7 +270,6 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Set the selectedHost to be a TemplatePortal.
@@ -290,7 +286,6 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Set the selectedHost to be a TemplatePortal (with the `*` syntax).
@@ -307,7 +302,6 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Set the selectedHost to be a TemplatePortal.
@@ -334,7 +328,6 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Set the selectedHost to be a TemplatePortal.
@@ -359,7 +352,6 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Set the selectedHost to be a ComponentPortal.
@@ -381,8 +373,8 @@ describe('Portals', () => {
     it('should detach the portal when it is set to null', () => {
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
-
       fixture.changeDetectorRef.markForCheck();
+
       fixture.detectChanges();
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(true);
       expect(testAppComponent.portalOutlet.portal).toBe(testAppComponent.selectedPortal);
@@ -406,7 +398,6 @@ describe('Portals', () => {
 
     it('should set the `portal` when attaching a template portal programmatically', () => {
       let testAppComponent = fixture.componentInstance;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       testAppComponent.portalOutlet.attachTemplatePortal(testAppComponent.cakePortal);
@@ -432,13 +423,11 @@ describe('Portals', () => {
       fixture.destroy();
 
       const unboundFixture = TestBed.createComponent(UnboundPortalTestApp);
-      unboundFixture.changeDetectorRef.markForCheck();
       unboundFixture.detectChanges();
 
       // Note: calling `detectChanges` here will cause a false positive.
       // What we're testing is attaching before the first CD cycle.
       unboundFixture.componentInstance.portalOutlet.attach(new ComponentPortal(PizzaMsg));
-      unboundFixture.changeDetectorRef.markForCheck();
       unboundFixture.detectChanges();
 
       expect(unboundFixture.nativeElement.querySelector('.portal-container').textContent).toContain(
@@ -550,12 +539,10 @@ describe('Portals', () => {
     });
 
     it('should move the DOM nodes before running change detection', () => {
-      someFixture.changeDetectorRef.markForCheck();
       someFixture.detectChanges();
       let portal = new TemplatePortal(someFixture.componentInstance.template, someViewContainerRef);
 
       host.attachTemplatePortal(portal);
-      someFixture.changeDetectorRef.markForCheck();
       someFixture.detectChanges();
 
       expect(someFixture.componentInstance.saveParentNodeOnInit.parentOnViewInit).toBe(
@@ -574,7 +561,6 @@ describe('Portals', () => {
       let portal = new ComponentPortal(PizzaMsg, someViewContainerRef, chocolateInjector);
 
       let componentInstance: PizzaMsg = portal.attach(host).instance;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(componentInstance instanceof PizzaMsg).toBe(true);
@@ -588,7 +574,6 @@ describe('Portals', () => {
 
     it('should attach and detach a template portal', () => {
       let fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.cakePortal.attach(host);
@@ -598,7 +583,6 @@ describe('Portals', () => {
 
     it('should render a template portal with an inner template', () => {
       let fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.portalWithTemplate.attach(host);
@@ -612,17 +596,14 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Attach the TemplatePortal.
       testAppComponent.portalWithBinding.attach(host, {$implicit: {status: 'fresh'}});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Now that the portal is attached, change detection has to happen again in order
       // for the bindings to update.
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -645,7 +626,6 @@ describe('Portals', () => {
       someViewContainerRef = fixture.componentInstance.viewContainerRef;
 
       let appFixture = TestBed.createComponent(PortalTestApp);
-      appFixture.changeDetectorRef.markForCheck();
       appFixture.detectChanges();
 
       appFixture.componentInstance.piePortal.attach(host);
@@ -671,7 +651,6 @@ describe('Portals', () => {
         .toContain('Pizza');
 
       componentInstance.snack = new Chocolate();
-      someFixture.changeDetectorRef.markForCheck();
       someFixture.detectChanges();
       expect(someDomElement.textContent)
         .withContext('Expected the bound string "Chocolate" in the DomPortalOutlet')
@@ -712,7 +691,6 @@ describe('Portals', () => {
 
     it('should attach and detach a DOM portal', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const portal = new DomPortal(fixture.componentInstance.domPortalContent);
 
@@ -727,21 +705,18 @@ describe('Portals', () => {
 
     it('should throw when trying to load an element without a parent into a DOM portal', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const element = document.createElement('div');
       const portal = new DomPortal(element);
 
       expect(() => {
         portal.attach(host);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
 
     it('should not throw when restoring if the outlet element was cleared', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const portal = new DomPortal(fixture.componentInstance.domPortalContent);
 
@@ -753,7 +728,6 @@ describe('Portals', () => {
 
     it('should set hasAttached when the various portal types are attached', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const viewContainerRef = fixture.componentInstance.viewContainerRef;
 
