@@ -54,7 +54,6 @@ describe('Overlay directives', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
   });
 
@@ -161,7 +160,6 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim())
@@ -177,7 +175,6 @@ describe('Overlay directives', () => {
 
     const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
     dispatchEvent(document.body, event);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
@@ -192,7 +189,6 @@ describe('Overlay directives', () => {
 
     const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
     backdrop.click();
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
@@ -205,7 +201,6 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
@@ -216,7 +211,6 @@ describe('Overlay directives', () => {
     fixture.destroy();
 
     const propOrderFixture = TestBed.createComponent(ConnectedOverlayPropertyInitOrder);
-    propOrderFixture.changeDetectorRef.markForCheck();
     propOrderFixture.detectChanges();
 
     const overlayDirective = propOrderFixture.componentInstance.connectedOverlayDirective;
@@ -224,7 +218,6 @@ describe('Overlay directives', () => {
     expect(() => {
       overlayDirective.open = true;
       overlayDirective.origin = propOrderFixture.componentInstance.trigger;
-      propOrderFixture.changeDetectorRef.markForCheck();
       propOrderFixture.detectChanges();
     }).not.toThrow();
   }));
@@ -657,7 +650,6 @@ describe('Overlay directives', () => {
         '.cdk-overlay-backdrop',
       ) as HTMLElement;
       backdrop.click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.backdropClickHandler).toHaveBeenCalledWith(
@@ -718,7 +710,6 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       const event = dispatchKeyboardEvent(document.body, 'keydown', A);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.keydownHandler).toHaveBeenCalledWith(event);
@@ -734,7 +725,6 @@ describe('Overlay directives', () => {
       expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
 
       scrolledSubject.next();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.detachHandler).toHaveBeenCalled();

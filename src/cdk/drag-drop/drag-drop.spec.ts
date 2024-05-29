@@ -22,7 +22,6 @@ describe('DragDrop', () => {
 
   it('should be able to attach a DragRef to a DOM node', () => {
     const fixture = TestBed.createComponent(TestComponent);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const ref = service.createDrag(fixture.componentInstance.elementRef);
 
@@ -31,7 +30,6 @@ describe('DragDrop', () => {
 
   it('should be able to attach a DropListRef to a DOM node', () => {
     const fixture = TestBed.createComponent(TestComponent);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const ref = service.createDropList(fixture.componentInstance.elementRef);
 
