@@ -1,37 +1,35 @@
-import {
-  waitForAsync,
-  fakeAsync,
-  tick,
-  ComponentFixture,
-  TestBed,
-  flush,
-} from '@angular/core/testing';
-import {
-  Component,
-  ViewChild,
-  ViewContainerRef,
-  ErrorHandler,
-  Injectable,
-  EventEmitter,
-  NgZone,
-  Type,
-  provideZoneChangeDetection,
-} from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {dispatchFakeEvent} from '../testing/private';
-import {ComponentPortal, TemplatePortal, CdkPortal} from '@angular/cdk/portal';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
+  Component,
+  ErrorHandler,
+  EventEmitter,
+  Injectable,
+  Type,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {dispatchFakeEvent} from '../testing/private';
+import {
   Overlay,
+  OverlayConfig,
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  OverlayConfig,
   PositionStrategy,
   ScrollStrategy,
 } from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('Overlay', () => {
   let overlay: Overlay;
@@ -48,8 +46,6 @@ describe('Overlay', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, ...imports],
       providers: [
-        provideZoneChangeDetection(),
-        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => {
@@ -949,12 +945,12 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
     });
 
-    it('should wait for the overlay to be detached before removing the panelClass', () => {
+    it('should wait for the overlay to be detached before removing the panelClass', async () => {
       const config = new OverlayConfig({panelClass: 'custom-panel-class'});
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      viewContainerFixture.detectChanges();
+      await viewContainerFixture.whenStable();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.classList)
@@ -962,13 +958,10 @@ describe('Overlay', () => {
         .toContain('custom-panel-class');
 
       overlayRef.detach();
-      // Stable emits after zone.run
-      TestBed.inject(NgZone).run(() => {
-        viewContainerFixture.detectChanges();
-        expect(pane.classList)
-          .withContext('Expected class not to be removed immediately')
-          .toContain('custom-panel-class');
-      });
+      expect(pane.classList)
+        .withContext('Expected class not to be removed immediately')
+        .toContain('custom-panel-class');
+      await viewContainerFixture.whenStable();
 
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')

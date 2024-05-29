@@ -1,9 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {
+  AfterViewInit,
   ApplicationRef,
   Component,
   ComponentFactoryResolver,
   ComponentRef,
+  Directive,
   ElementRef,
   Injector,
   Optional,
@@ -13,11 +15,8 @@ import {
   ViewChild,
   ViewChildren,
   ViewContainerRef,
-  Directive,
-  AfterViewInit,
-  provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
 import {ComponentPortal, DomPortal, Portal, TemplatePortal} from './portal';
 import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
@@ -25,7 +24,6 @@ import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 describe('Portals', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [
         PortalModule,
         CommonModule,
@@ -58,6 +56,7 @@ describe('Portals', () => {
       let hostContainer = fixture.nativeElement.querySelector('.portal-container');
 
       testAppComponent.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -75,6 +74,7 @@ describe('Portals', () => {
       let templatePortal = new TemplatePortal(testAppComponent.templateRef, null!);
 
       testAppComponent.selectedPortal = templatePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present and no context is projected
@@ -103,6 +103,7 @@ describe('Portals', () => {
       );
 
       testAppComponent.selectedPortal = templatePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present and no context is projected
@@ -136,6 +137,7 @@ describe('Portals', () => {
         .toBe(false);
 
       testAppComponent.selectedPortal = domPortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(domPortal.element.parentNode).not.toBe(
@@ -148,6 +150,7 @@ describe('Portals', () => {
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(true);
 
       testAppComponent.selectedPortal = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(domPortal.element.parentNode)
@@ -166,6 +169,7 @@ describe('Portals', () => {
 
       expect(() => {
         testAppComponent.selectedPortal = domPortal;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
@@ -176,12 +180,14 @@ describe('Portals', () => {
       const domPortal = new DomPortal(testAppComponent.domPortalContent);
 
       testAppComponent.selectedPortal = domPortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       parent.innerHTML = '';
 
       expect(() => {
         testAppComponent.selectedPortal = undefined;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
     });
@@ -193,12 +199,14 @@ describe('Portals', () => {
       // TemplatePortal without context:
       let templatePortal = new TemplatePortal(testAppComponent.templateRef, null!);
       testAppComponent.selectedPortal = templatePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       // Expect that the content of the attached portal is present and NO context is projected
       expect(hostContainer.textContent).toContain('Banana - !');
 
       // using TemplatePortal.attach method to set context
       testAppComponent.selectedPortal = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       templatePortal.attach(testAppComponent.portalOutlet, {$implicit: {status: 'rotten'}});
       fixture.detectChanges();
@@ -211,6 +219,7 @@ describe('Portals', () => {
         $implicit: {status: 'fresh'},
       });
       testAppComponent.selectedPortal = templatePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       // Expect that the content of the attached portal is present and context given via the
       // constructor is projected
@@ -219,6 +228,7 @@ describe('Portals', () => {
       // using TemplatePortal constructor to set the context but also calling attach method with
       // context, the latter should take precedence:
       testAppComponent.selectedPortal = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       templatePortal.attach(testAppComponent.portalOutlet, {$implicit: {status: 'rotten'}});
       fixture.detectChanges();
@@ -231,6 +241,7 @@ describe('Portals', () => {
       // Set the selectedHost to be a ComponentPortal.
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
+      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
       expect(testAppComponent.selectedPortal.isAttached).toBe(true);
@@ -246,6 +257,7 @@ describe('Portals', () => {
       // Set the selectedHost to be a ComponentPortal.
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg, undefined, chocolateInjector);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -262,6 +274,7 @@ describe('Portals', () => {
 
       // Set the selectedHost to be a TemplatePortal.
       testAppComponent.selectedPortal = testAppComponent.cakePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -277,6 +290,7 @@ describe('Portals', () => {
 
       // Set the selectedHost to be a TemplatePortal (with the `*` syntax).
       testAppComponent.selectedPortal = testAppComponent.piePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -292,6 +306,7 @@ describe('Portals', () => {
 
       // Set the selectedHost to be a TemplatePortal.
       testAppComponent.selectedPortal = testAppComponent.portalWithBinding;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -302,6 +317,7 @@ describe('Portals', () => {
 
       // When updating the binding value.
       testAppComponent.fruit = 'Mango';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
@@ -316,6 +332,7 @@ describe('Portals', () => {
 
       // Set the selectedHost to be a TemplatePortal.
       testAppComponent.selectedPortal = testAppComponent.portalWithTemplate;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -324,6 +341,7 @@ describe('Portals', () => {
 
       // When updating the binding value.
       testAppComponent.fruits = ['Mangosteen'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
@@ -338,6 +356,7 @@ describe('Portals', () => {
 
       // Set the selectedHost to be a ComponentPortal.
       testAppComponent.selectedPortal = testAppComponent.piePortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect that the content of the attached portal is present.
@@ -345,6 +364,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Pie');
 
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(hostContainer.textContent).toContain('Pizza');
@@ -353,12 +373,14 @@ describe('Portals', () => {
     it('should detach the portal when it is set to null', () => {
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
+      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(true);
       expect(testAppComponent.portalOutlet.portal).toBe(testAppComponent.selectedPortal);
 
       testAppComponent.selectedPortal = null!;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(false);
@@ -387,6 +409,7 @@ describe('Portals', () => {
       let testAppComponent = fixture.componentInstance;
 
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(testAppComponent.portalOutlet.portal).toBeTruthy();
@@ -449,6 +472,7 @@ describe('Portals', () => {
       const portal = new ComponentPortal(PizzaMsg, fixture.componentInstance.alternateContainer);
 
       fixture.componentInstance.selectedPortal = portal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(hostContainer.textContent).toContain('Pizza');
@@ -462,6 +486,7 @@ describe('Portals', () => {
       ]);
 
       testAppComponent.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.nativeElement.textContent).toContain('Projectable node');
@@ -586,6 +611,7 @@ describe('Portals', () => {
 
       // When updating the binding value.
       testAppComponent.fruit = 'Mango';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
