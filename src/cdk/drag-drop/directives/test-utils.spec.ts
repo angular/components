@@ -17,11 +17,9 @@ export function dragElementViaMouse(
   startDraggingViaMouse(fixture, element);
 
   dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 
   dispatchMouseEvent(document, 'mouseup', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
@@ -39,11 +37,9 @@ export function startDraggingViaMouse(
   y?: number,
 ) {
   dispatchMouseEvent(element, 'mousedown', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 
   dispatchMouseEvent(document, 'mousemove', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
@@ -71,11 +67,9 @@ export function dragElementViaTouch(
  */
 export function startDraggingViaTouch(fixture: ComponentFixture<any>, element: Element) {
   dispatchTouchEvent(element, 'touchstart');
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 
   dispatchTouchEvent(document, 'touchmove');
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
@@ -86,7 +80,6 @@ export function startDraggingViaTouch(fixture: ComponentFixture<any>, element: E
  */
 export function continueDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
   dispatchTouchEvent(document, 'touchmove', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
@@ -97,7 +90,6 @@ export function continueDraggingViaTouch(fixture: ComponentFixture<any>, x: numb
  */
 export function stopDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
   dispatchTouchEvent(document, 'touchend', x, y);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
@@ -153,13 +145,11 @@ export function assertDownwardSorting(fixture: ComponentFixture<any>, items: Ele
 
     // Add a few pixels to the top offset so we get some overlap.
     dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
   }
 
   dispatchMouseEvent(document, 'mouseup');
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
   flush();
 }
@@ -183,13 +173,11 @@ export function assertUpwardSorting(fixture: ComponentFixture<any>, items: Eleme
 
     // Remove a few pixels from the bottom offset so we get some overlap.
     dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.bottom - 5);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
   }
 
   dispatchMouseEvent(document, 'mouseup');
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
   flush();
 }

@@ -78,7 +78,6 @@ describe('CdkCopyToClipboard', () => {
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(3);
 
@@ -102,7 +101,6 @@ describe('CdkCopyToClipboard', () => {
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(3);
 
@@ -122,11 +120,9 @@ describe('CdkCopyToClipboard', () => {
     fixture.detectChanges();
 
     spyOn(clipboard, 'beginCopy').and.returnValue(fakeCopy);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(1);
 

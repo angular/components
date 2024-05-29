@@ -23,7 +23,6 @@ function setupComponent<T, O = string>(component: Type<T>, imports: any[] = []) 
     declarations: [component],
   }).compileComponents();
   const fixture = TestBed.createComponent(component);
-  fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 
   const listboxDebugEl = fixture.debugElement.query(By.directive(CdkListbox));
@@ -71,7 +70,6 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionEls[0].getAttribute('tabindex')).toBe('-1');
 
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listboxEl.getAttribute('tabindex')).toBe('-1');
@@ -90,7 +88,6 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionEls[0].getAttribute('tabindex')).toBe('-1');
 
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listboxEl.getAttribute('tabindex')).toBe('-1');
@@ -106,7 +103,6 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionEls[0].getAttribute('tabindex')).toBe('-1');
 
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(optionEls[0].getAttribute('tabindex')).toBe('10');
@@ -119,7 +115,6 @@ describe('CdkOption and CdkListbox', () => {
       expect(options[0].getAttribute('tabindex')).toBe('-1');
 
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listboxEl.getAttribute('tabindex')).toBe('-1');
@@ -149,7 +144,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should update when selection is changed programmatically', () => {
       const {fixture, listbox, options, optionEls} = setupComponent(ListboxWithOptions);
       options[1].select();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -161,7 +155,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should update on option clicked', () => {
       const {fixture, listbox, options, optionEls} = setupComponent(ListboxWithOptions);
       optionEls[0].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple']);
@@ -173,7 +166,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should prevent the default click action', () => {
       const {fixture, optionEls} = setupComponent(ListboxWithOptions);
       const event = dispatchFakeEvent(optionEls[1], 'click');
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(event.defaultPrevented).toBe(true);
@@ -195,7 +187,6 @@ describe('CdkOption and CdkListbox', () => {
         undefined,
         {shift: true},
       );
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -210,7 +201,6 @@ describe('CdkOption and CdkListbox', () => {
         undefined,
         {shift: true},
       );
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange', 'banana', 'peach']);
@@ -225,7 +215,6 @@ describe('CdkOption and CdkListbox', () => {
         undefined,
         {shift: true},
       );
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -235,7 +224,6 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options, optionEls} = setupComponent(ListboxWithOptions);
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple']);
@@ -247,14 +235,12 @@ describe('CdkOption and CdkListbox', () => {
     it('should deselect previously selected option in single-select listbox', () => {
       const {fixture, listbox, options, optionEls} = setupComponent(ListboxWithOptions);
       dispatchMouseEvent(optionEls[0], 'click');
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple']);
       expect(options[0].isSelected()).toBeTrue();
 
       dispatchMouseEvent(optionEls[2], 'click');
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['banana']);
@@ -268,7 +254,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       listbox.setAllSelected(true);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple', 'orange', 'banana', 'peach']);
@@ -278,15 +263,14 @@ describe('CdkOption and CdkListbox', () => {
       const {testComponent, fixture, listbox, options, optionEls} =
         setupComponent(ListboxWithOptions);
       testComponent.isMultiselectable = true;
-      optionEls[0].click();
       fixture.changeDetectorRef.markForCheck();
+      optionEls[0].click();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple']);
       expect(options[0].isSelected()).toBeTrue();
 
       optionEls[2].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple', 'banana']);
@@ -299,7 +283,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listbox.setAllSelected(true);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple', 'orange', 'banana', 'peach']);
@@ -317,7 +300,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       optionEls[0].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple']);
@@ -337,7 +319,6 @@ describe('CdkOption and CdkListbox', () => {
 
       options[0].toggle();
       listbox.toggle(options[1]);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isSelected()).toBeTrue();
@@ -345,7 +326,6 @@ describe('CdkOption and CdkListbox', () => {
 
       options[0].toggle();
       listbox.toggle(options[1]);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isSelected()).toBeFalse();
@@ -360,7 +340,6 @@ describe('CdkOption and CdkListbox', () => {
 
       options[0].select();
       listbox.select(options[1]);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isSelected()).toBeTrue();
@@ -368,7 +347,6 @@ describe('CdkOption and CdkListbox', () => {
 
       options[0].deselect();
       listbox.deselect(options[1]);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isSelected()).toBeFalse();
@@ -409,7 +387,6 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, testComponent, listbox, listboxEl, options, optionEls} =
         setupComponent(ListboxWithOptions);
       testComponent.isListboxDisabled.set(true);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.disabled).toBeTrue();
@@ -438,7 +415,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       optionEls[0].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
@@ -448,11 +424,9 @@ describe('CdkOption and CdkListbox', () => {
     it('should not change selection on click in a disabled listbox', () => {
       const {fixture, testComponent, listbox, optionEls} = setupComponent(ListboxWithOptions);
       testComponent.isListboxDisabled.set(true);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       optionEls[0].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
@@ -462,15 +436,12 @@ describe('CdkOption and CdkListbox', () => {
     it('should not change selection on keyboard activation in a disabled listbox', () => {
       const {fixture, testComponent, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       testComponent.isListboxDisabled.set(true);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
@@ -480,7 +451,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should not change selection on click of a disabled option', () => {
       const {fixture, testComponent, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       testComponent.isAppleDisabled = true;
@@ -488,7 +458,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
@@ -499,11 +468,9 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, testComponent, listboxEl, options} = setupComponent(ListboxWithOptions);
       await fakeAsync(() => {
         testComponent.isListboxDisabled.set(true);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick(200);
 
@@ -517,14 +484,13 @@ describe('CdkOption and CdkListbox', () => {
       const {testComponent, fixture, listbox, listboxEl, options} =
         setupComponent(ListboxWithOptions);
       testComponent.isOrangeDisabled = true;
-      listbox.focus();
       fixture.changeDetectorRef.markForCheck();
+      listbox.focus();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[2].isActive()).toBeTrue();
@@ -535,14 +501,13 @@ describe('CdkOption and CdkListbox', () => {
         setupComponent(ListboxWithOptions);
       testComponent.navigationSkipsDisabled = false;
       testComponent.isOrangeDisabled = true;
-      listbox.focus();
       fixture.changeDetectorRef.markForCheck();
+      listbox.focus();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[1].isActive()).toBeTrue();
@@ -557,7 +522,6 @@ describe('CdkOption and CdkListbox', () => {
 
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', A, undefined, {control: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple', 'banana', 'peach']);
@@ -571,13 +535,11 @@ describe('CdkOption and CdkListbox', () => {
         [CommonModule],
       );
       listbox.value = [{name: 'Banana'}];
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[2].isSelected()).toBeTrue();
 
       listbox.value = [{name: 'Orange', extraStuff: true} as any];
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[1].isSelected()).toBeTrue();
@@ -589,13 +551,11 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithOptions);
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[1].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', UP_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
@@ -605,14 +565,12 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options, optionEls} = setupComponent(ListboxWithOptions);
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', END);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[options.length - 1].isActive()).toBeTrue();
       expect(optionEls[options.length - 1].classList).toContain('cdk-option-active');
 
       dispatchKeyboardEvent(listboxEl, 'keydown', HOME);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
@@ -623,11 +581,9 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithOptions);
       await fakeAsync(() => {
         listbox.focus();
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick(200);
 
@@ -639,11 +595,9 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithCustomTypeahead);
       await fakeAsync(() => {
         listbox.focus();
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick(200);
 
@@ -654,11 +608,9 @@ describe('CdkOption and CdkListbox', () => {
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW, undefined, {shift: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -676,13 +628,11 @@ describe('CdkOption and CdkListbox', () => {
 
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', RIGHT_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[1].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', LEFT_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
@@ -696,13 +646,11 @@ describe('CdkOption and CdkListbox', () => {
 
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', A, undefined, {control: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['apple', 'orange', 'banana', 'peach']);
 
       dispatchKeyboardEvent(listboxEl, 'keydown', A, undefined, {control: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
@@ -717,7 +665,6 @@ describe('CdkOption and CdkListbox', () => {
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE, undefined, {shift: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange']);
@@ -725,7 +672,6 @@ describe('CdkOption and CdkListbox', () => {
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
       dispatchKeyboardEvent(listboxEl, 'keydown', SPACE, undefined, {shift: true});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.value).toEqual(['orange', 'banana', 'peach']);
@@ -739,8 +685,8 @@ describe('CdkOption and CdkListbox', () => {
     it('should select and deselect range with CONTROL + SHIFT + HOME', () => {
       const {testComponent, fixture, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       testComponent.isMultiselectable = true;
-      listbox.focus();
       fixture.changeDetectorRef.markForCheck();
+      listbox.focus();
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
@@ -759,8 +705,8 @@ describe('CdkOption and CdkListbox', () => {
     it('should select and deselect range with CONTROL + SHIFT + END', () => {
       const {testComponent, fixture, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       testComponent.isMultiselectable = true;
-      listbox.focus();
       fixture.changeDetectorRef.markForCheck();
+      listbox.focus();
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
@@ -779,13 +725,11 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithOptions);
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', END);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[options.length - 1].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[0].isActive()).toBeTrue();
@@ -800,13 +744,11 @@ describe('CdkOption and CdkListbox', () => {
 
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', END);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[options.length - 1].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[options.length - 1].isActive()).toBeTrue();
@@ -819,13 +761,11 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[3].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', UP_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[2].isActive()).toBeTrue();
@@ -835,12 +775,10 @@ describe('CdkOption and CdkListbox', () => {
       const {testComponent, fixture, listbox, listboxEl, options} =
         setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(options[0].isActive()).toBeTrue();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(options[1].isActive()).toBeTrue();
 
@@ -855,14 +793,12 @@ describe('CdkOption and CdkListbox', () => {
     it('should shift focus on keyboard navigation', () => {
       const {fixture, listbox, listboxEl, optionEls} = setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(optionEls[0]);
       expect(listboxEl.hasAttribute('aria-activedescendant')).toBeFalse();
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(optionEls[1]);
@@ -872,7 +808,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should focus first option on listbox focus', () => {
       const {fixture, listbox, optionEls} = setupComponent(ListboxWithOptions);
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(optionEls[0]);
@@ -882,7 +817,6 @@ describe('CdkOption and CdkListbox', () => {
       const {fixture, listbox, listboxEl} = setupComponent(ListboxWithNoOptions);
 
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(listboxEl);
@@ -898,14 +832,12 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
       listbox.focus();
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listboxEl.getAttribute('aria-activedescendant')).toBe(optionEls[0].id);
       expect(document.activeElement).toBe(listboxEl);
 
       dispatchKeyboardEvent(listboxEl, 'keydown', DOWN_ARROW);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listboxEl.getAttribute('aria-activedescendant')).toBe(optionEls[1].id);
@@ -918,7 +850,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listbox.focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       for (let option of options) {
@@ -933,7 +864,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       optionEls[2].focus();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(listboxEl);
@@ -947,7 +877,6 @@ describe('CdkOption and CdkListbox', () => {
         ReactiveFormsModule,
       ]);
       testComponent.formControl.disable();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listbox.disabled).toBeTrue();
@@ -958,7 +887,6 @@ describe('CdkOption and CdkListbox', () => {
         ReactiveFormsModule,
       ]);
       testComponent.formControl.setValue(['banana']);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[2].isSelected()).toBeTrue();
@@ -970,13 +898,11 @@ describe('CdkOption and CdkListbox', () => {
       ]);
       const spy = jasmine.createSpy();
       const subscription = testComponent.formControl.valueChanges.subscribe(spy);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
 
       optionEls[1].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith(['orange']);
@@ -991,7 +917,6 @@ describe('CdkOption and CdkListbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       testComponent.formControl.setValue(['orange', 'banana']);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(options[1].isSelected()).toBeTrue();
@@ -1007,18 +932,15 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
       const spy = jasmine.createSpy();
       const subscription = testComponent.formControl.valueChanges.subscribe(spy);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
 
       optionEls[1].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledWith(['orange']);
 
       optionEls[2].click();
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledWith(['orange', 'banana']);
       subscription.unsubscribe();
@@ -1031,7 +953,6 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(() => {
         testComponent.formControl.setValue(['orange', 'banana']);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).toThrowError('Listbox cannot have more than one selected value in multi-selection mode.');
     });
@@ -1046,7 +967,6 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(() => {
         testComponent.formControl.setValue(['orange', 'dragonfruit', 'mango']);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).toThrowError('Listbox has selected values that do not match any of its options.');
     });

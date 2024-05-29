@@ -21,7 +21,6 @@ describe('Observe content directive', () => {
 
     it('should trigger the callback when the content of the element changes', done => {
       let fixture = TestBed.createComponent(ComponentWithTextContent);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // If the hint label is empty, expect no label.
@@ -39,7 +38,6 @@ describe('Observe content directive', () => {
 
     it('should trigger the callback when the content of the children changes', done => {
       let fixture = TestBed.createComponent(ComponentWithChildTextContent);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // If the hint label is empty, expect no label.
@@ -70,7 +68,6 @@ describe('Observe content directive', () => {
       });
 
       const fixture = TestBed.createComponent(ComponentWithTextContent);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(observeSpy).toHaveBeenCalledTimes(1);
@@ -114,7 +111,6 @@ describe('Observe content directive', () => {
       TestBed.compileComponents();
 
       fixture = TestBed.createComponent(ComponentWithDebouncedListener);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     }));
 
@@ -166,7 +162,6 @@ describe('ContentObserver injectable', () => {
     it('should trigger the callback when the content of the element changes', fakeAsync(() => {
       const spy = jasmine.createSpy('content observer');
       const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       contentObserver.observe(fixture.componentInstance.contentEl).subscribe(() => spy());
@@ -184,7 +179,6 @@ describe('ContentObserver injectable', () => {
         const spy = jasmine.createSpy('content observer');
         spyOn(mof, 'create').and.callThrough();
         const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const sub1 = contentObserver
