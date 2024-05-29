@@ -1,3 +1,19 @@
+<a name="18.0.1"></a>
+# 18.0.1 "plastic-baby" (2024-05-29)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d96b5e39e0](https://github.com/angular/components/commit/d96b5e39e08945b5b4ec92dbc89a7ef44dec1baa) | fix | **core:** M3 themes not inserting loaded marker |
+| [b7c0a6ef56](https://github.com/angular/components/commit/b7c0a6ef56ade6d99e9b097e0d616e9e3bb5a9f5) | fix | **form-field:** outline label position ([#29123](https://github.com/angular/components/pull/29123)) |
+| [24de3d4884](https://github.com/angular/components/commit/24de3d4884677c427e036258eb2e999a89da03e5) | fix | **menu:** prevent divider styles from bleeding out ([#29111](https://github.com/angular/components/pull/29111)) |
+| [2110f2c97e](https://github.com/angular/components/commit/2110f2c97ec8d9b84ee4f8bcd47ca7b95d398879) | fix | **tabs:** avoid pagination infinite loop in safari ([#29121](https://github.com/angular/components/pull/29121)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [466e249cd1](https://github.com/angular/components/commit/466e249cd1eb4b8ce9dd2f9f74c3f4c3cb33cf65) | fix | error when interacting with the player before the API has been loaded ([#29127](https://github.com/angular/components/pull/29127)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.0"></a>
 # 18.0.0 "satin-sasquatch" (2024-05-22)
 ## Breaking Changes
