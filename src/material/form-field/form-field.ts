@@ -7,8 +7,8 @@
  */
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
+import {Platform, _getShadowRoot} from '@angular/cdk/platform';
 import {
   ANIMATION_MODULE_TYPE,
   AfterContentChecked,
@@ -711,14 +711,15 @@ export class MatFormField
   /** Checks whether the form field is attached to the DOM. */
   private _isAttachedToDom(): boolean {
     const element: HTMLElement = this._elementRef.nativeElement;
-    if (element.getRootNode) {
-      const rootNode = element.getRootNode();
-      // If the element is inside the DOM the root node will be either the document
-      // or the closest shadow root, otherwise it'll be the element itself.
-      return rootNode && rootNode !== element;
-    }
-    // Otherwise fall back to checking if it's in the document. This doesn't account for
-    // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
-    return document.documentElement!.contains(element);
+    const rootNode = element.getRootNode();
+    // If the element is inside the DOM the root node will be either the document,
+    // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
+    return (
+      rootNode &&
+      rootNode !== element &&
+      // If the rootNode is the document we need to make sure that the element is visible
+      ((rootNode === document && element.offsetParent !== null) ||
+        rootNode === _getShadowRoot(element))
+    );
   }
 }
