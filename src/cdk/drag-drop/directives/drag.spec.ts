@@ -16,20 +16,17 @@ import {
   Component,
   ElementRef,
   Input,
-  Provider,
   QueryList,
-  Type,
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
   inject,
   signal,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {of as observableOf} from 'rxjs';
 
 import {extendStyles} from '../dom/styling';
-import {DragDropModule} from '../drag-drop-module';
 import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
@@ -39,6 +36,7 @@ import {CdkDrag} from './drag';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
 import {
+  createComponent,
   assertDownwardSorting,
   assertUpwardSorting,
   continueDraggingViaTouch,
@@ -56,41 +54,6 @@ const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
 
 describe('CdkDrag', () => {
-  function createComponent<T>(
-    componentType: Type<T>,
-    providers: Provider[] = [],
-    dragDistance = 0,
-    extraDeclarations: Type<any>[] = [],
-    encapsulation?: ViewEncapsulation,
-  ): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule, CdkScrollableModule],
-      providers: [
-        {
-          provide: CDK_DRAG_CONFIG,
-          useValue: {
-            // We default the `dragDistance` to zero, because the majority of the tests
-            // don't care about it and drags are a lot easier to simulate when we don't
-            // have to deal with thresholds.
-            dragStartThreshold: dragDistance,
-            pointerDirectionChangeThreshold: 5,
-          } as DragDropConfig,
-        },
-        ...providers,
-      ],
-      declarations: [componentType, ...extraDeclarations],
-    });
-
-    if (encapsulation != null) {
-      TestBed.overrideComponent(componentType, {
-        set: {encapsulation},
-      });
-    }
-
-    TestBed.compileComponents();
-    return TestBed.createComponent<T>(componentType);
-  }
-
   describe('in a drop container', () => {
     it('should be able to attach data to the drop container', () => {
       const fixture = createComponent(DraggableInDropZone);
@@ -250,7 +213,7 @@ describe('CdkDrag', () => {
     }));
 
     it('should not toggle dragging class if the element was not dragged more than the threshold', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone, [], 5);
+      const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       const dropZone = fixture.componentInstance.dropInstance;
@@ -565,12 +528,14 @@ describe('CdkDrag', () => {
     }));
 
     it('should dispatch the correct `dropped` event in RTL horizontal drop zone', fakeAsync(() => {
-      const fixture = createComponent(DraggableInHorizontalDropZone, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: observableOf()},
-        },
-      ]);
+      const fixture = createComponent(DraggableInHorizontalDropZone, {
+        providers: [
+          {
+            provide: Directionality,
+            useValue: {value: 'rtl', change: observableOf()},
+          },
+        ],
+      });
 
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
@@ -720,13 +685,9 @@ describe('CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(
-        DraggableInScrollableVerticalDropZone,
-        [],
-        undefined,
-        [],
-        ViewEncapsulation.ShadowDom,
-      );
+      const fixture = createComponent(DraggableInScrollableVerticalDropZone, {
+        encapsulation: ViewEncapsulation.ShadowDom,
+      });
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
@@ -901,15 +862,17 @@ describe('CdkDrag', () => {
     }));
 
     it('should be able to configure the preview z-index', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone, [
-        {
-          provide: CDK_DRAG_CONFIG,
-          useValue: {
-            dragStartThreshold: 0,
-            zIndex: 3000,
+      const fixture = createComponent(DraggableInDropZone, {
+        providers: [
+          {
+            provide: CDK_DRAG_CONFIG,
+            useValue: {
+              dragStartThreshold: 0,
+              zIndex: 3000,
+            },
           },
-        },
-      ]);
+        ],
+      });
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
       startDraggingViaMouse(fixture, item);
@@ -1017,13 +980,9 @@ describe('CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(
-        DraggableInScrollableParentContainer,
-        [],
-        undefined,
-        [],
-        ViewEncapsulation.ShadowDom,
-      );
+      const fixture = createComponent(DraggableInScrollableParentContainer, {
+        encapsulation: ViewEncapsulation.ShadowDom,
+      });
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
       fixture.detectChanges();
 
@@ -1191,7 +1150,7 @@ describe('CdkDrag', () => {
     }));
 
     it('should not create a preview if the element was not dragged far enough', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone, [], 5);
+      const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -1201,12 +1160,14 @@ describe('CdkDrag', () => {
     }));
 
     it('should pass the proper direction to the preview in rtl', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: observableOf()},
-        },
-      ]);
+      const fixture = createComponent(DraggableInDropZone, {
+        providers: [
+          {
+            provide: Directionality,
+            useValue: {value: 'rtl', change: observableOf()},
+          },
+        ],
+      });
 
       fixture.detectChanges();
 
@@ -1494,7 +1455,7 @@ describe('CdkDrag', () => {
     }));
 
     it('should not create placeholder if the element was not dragged far enough', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone, [], 5);
+      const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2713,12 +2674,14 @@ describe('CdkDrag', () => {
     }));
 
     it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
-      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: observableOf()},
-        },
-      ]);
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
+        providers: [
+          {
+            provide: Directionality,
+            useValue: {value: 'rtl', change: observableOf()},
+          },
+        ],
+      });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2740,12 +2703,14 @@ describe('CdkDrag', () => {
     }));
 
     it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
-      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: observableOf()},
-        },
-      ]);
+      const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
+        providers: [
+          {
+            provide: Directionality,
+            useValue: {value: 'rtl', change: observableOf()},
+          },
+        ],
+      });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -3181,12 +3146,14 @@ describe('CdkDrag', () => {
         lockAxis: 'y',
       };
 
-      const fixture = createComponent(PlainStandaloneDropList, [
-        {
-          provide: CDK_DRAG_CONFIG,
-          useValue: config,
-        },
-      ]);
+      const fixture = createComponent(PlainStandaloneDropList, {
+        providers: [
+          {
+            provide: CDK_DRAG_CONFIG,
+            useValue: config,
+          },
+        ],
+      });
       fixture.detectChanges();
       const list = fixture.componentInstance.dropList;
       expect(list.disabled).toBe(true);
@@ -4287,9 +4254,9 @@ describe('CdkDrag', () => {
     );
 
     it('should set the receiving class when the list is wrapped in an OnPush component', fakeAsync(() => {
-      const fixture = createComponent(ConnectedDropListsInOnPush, undefined, undefined, [
-        DraggableInOnPushDropZone,
-      ]);
+      const fixture = createComponent(ConnectedDropListsInOnPush, {
+        extraDeclarations: [DraggableInOnPushDropZone],
+      });
       fixture.detectChanges();
 
       const dropZones = Array.from<HTMLElement>(
@@ -4630,9 +4597,9 @@ describe('CdkDrag', () => {
       'should toggle a class when dragging an item inside a wrapper component component ' +
         'with OnPush change detection',
       fakeAsync(() => {
-        const fixture = createComponent(ConnectedWrappedDropZones, [], 0, [
-          WrappedDropContainerComponent,
-        ]);
+        const fixture = createComponent(ConnectedWrappedDropZones, {
+          extraDeclarations: [WrappedDropContainerComponent],
+        });
         fixture.detectChanges();
 
         const [startZone, targetZone] = fixture.nativeElement.querySelectorAll('.cdk-drop-list');
@@ -4773,13 +4740,9 @@ describe('CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(
-        ConnectedDropZones,
-        [],
-        undefined,
-        [],
-        ViewEncapsulation.ShadowDom,
-      );
+      const fixture = createComponent(ConnectedDropZones, {
+        encapsulation: ViewEncapsulation.ShadowDom,
+      });
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -4857,13 +4820,9 @@ describe('CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(
-        ConnectedDropZones,
-        [],
-        undefined,
-        [],
-        ViewEncapsulation.ShadowDom,
-      );
+      const fixture = createComponent(ConnectedDropZones, {
+        encapsulation: ViewEncapsulation.ShadowDom,
+      });
       fixture.detectChanges();
 
       const shadowRoot = fixture.nativeElement.shadowRoot;
@@ -4959,13 +4918,9 @@ describe('CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(
-        ConnectedDropZones,
-        [],
-        undefined,
-        [],
-        ViewEncapsulation.ShadowDom,
-      );
+      const fixture = createComponent(ConnectedDropZones, {
+        encapsulation: ViewEncapsulation.ShadowDom,
+      });
       fixture.detectChanges();
       const item = fixture.componentInstance.groupedDragItems[0][1];
 
@@ -4980,7 +4935,7 @@ describe('CdkDrag', () => {
 
   describe('with nested drags', () => {
     it('should not move draggable container when dragging child (multitouch)', fakeAsync(() => {
-      const fixture = createComponent(NestedDragsComponent, [], 10);
+      const fixture = createComponent(NestedDragsComponent, {dragDistance: 10});
       fixture.detectChanges();
 
       // First finger drags container (less then threshold)
