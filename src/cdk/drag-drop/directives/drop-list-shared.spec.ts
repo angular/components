@@ -1,6 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {CdkScrollableModule, ViewportRuler} from '@angular/cdk/scrolling';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createMouseEvent,
   createTouchEvent,
@@ -17,13 +17,14 @@ import {
   ElementRef,
   Input,
   QueryList,
+  Type,
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
   inject,
   signal,
 } from '@angular/core';
-import {TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {of as observableOf} from 'rxjs';
 
 import {extendStyles} from '../dom/styling';
@@ -31,18 +32,15 @@ import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
-import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig} from './config';
+import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
 import {CdkDrag} from './drag';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
 import {
-  createComponent,
-  assertDownwardSorting,
-  assertUpwardSorting,
+  createComponent as _createComponent,
+  DragDropTestConfig,
   continueDraggingViaTouch,
   dragElementViaMouse,
-  getElementIndexByPosition,
-  getElementSibligsByPosition,
   makeScrollable,
   startDraggingViaMouse,
   startDraggingViaTouch,
@@ -53,7 +51,32 @@ import {
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
 
-describe('CdkDrag', () => {
+export function defineCommonDropListTests(config: {
+  /** Orientation value that will be passed to tests checking vertical orientation. */
+  verticalListOrientation: DropListOrientation;
+
+  /** Orientation value that will be passed to tests checking horizontal orientation. */
+  horizontalListOrientation: DropListOrientation;
+
+  /** Asserts that sorting an element up works correctly. */
+  assertUpwardSorting: (fixture: ComponentFixture<unknown>, items: Element[]) => void;
+
+  /** Asserts that sorting an element down works correctly. */
+  assertDownwardSorting: (fixture: ComponentFixture<unknown>, items: Element[]) => void;
+
+  /** Gets the index of an element among its siblings, based on their visible position. */
+  getElementIndexByPosition: (element: Element, direction: 'top' | 'left') => number;
+
+  /** Gets the siblings of an element, sorted by their visible position. */
+  getElementSibligsByPosition: (element: Element, direction: 'top' | 'left') => Element[];
+}) {
+  function createComponent<T>(
+    type: Type<T>,
+    testConfig: DragDropTestConfig = {},
+  ): ComponentFixture<T> {
+    return _createComponent(type, {...testConfig, listOrientation: config.verticalListOrientation});
+  }
+
   describe('in a drop container', () => {
     it('should be able to attach data to the drop container', () => {
       const fixture = createComponent(DraggableInDropZone);
@@ -1467,7 +1490,7 @@ describe('CdkDrag', () => {
     it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertDownwardSorting(
+      config.assertDownwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
           return item.element.nativeElement;
@@ -1481,7 +1504,7 @@ describe('CdkDrag', () => {
       const cleanup = makeScrollable();
 
       scrollTo(0, 500);
-      assertDownwardSorting(
+      config.assertDownwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
           return item.element.nativeElement;
@@ -1493,7 +1516,7 @@ describe('CdkDrag', () => {
     it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertUpwardSorting(
+      config.assertUpwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
           return item.element.nativeElement;
@@ -1507,7 +1530,7 @@ describe('CdkDrag', () => {
       const cleanup = makeScrollable();
 
       scrollTo(0, 500);
-      assertUpwardSorting(
+      config.assertUpwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
           return item.element.nativeElement;
@@ -1535,7 +1558,7 @@ describe('CdkDrag', () => {
         // Add a few pixels to the left offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', elementRect.left + 5, elementRect.top);
         fixture.detectChanges();
-        expect(getElementIndexByPosition(placeholder, 'left')).toBe(i);
+        expect(config.getElementIndexByPosition(placeholder, 'left')).toBe(i);
       }
 
       dispatchMouseEvent(document, 'mouseup');
@@ -1562,7 +1585,7 @@ describe('CdkDrag', () => {
         // Remove a few pixels from the right offset so we get some overlap.
         dispatchMouseEvent(document, 'mousemove', elementRect.right - 5, elementRect.top);
         fixture.detectChanges();
-        expect(getElementIndexByPosition(placeholder, 'left')).toBe(i);
+        expect(config.getElementIndexByPosition(placeholder, 'left')).toBe(i);
       }
 
       dispatchMouseEvent(document, 'mouseup');
@@ -1591,7 +1614,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         expect(
-          getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
         ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
         dispatchMouseEvent(document, 'mouseup');
@@ -1708,7 +1731,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         expect(
-          getElementSibligsByPosition(placeholder, 'left').map(e => e.textContent!.trim()),
+          config.getElementSibligsByPosition(placeholder, 'left').map(e => e.textContent!.trim()),
         ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
         dispatchMouseEvent(document, 'mouseup');
@@ -1818,7 +1841,7 @@ describe('CdkDrag', () => {
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
       expect(
-        getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
       ).toEqual(['Zero', 'One', 'Two', 'Three']);
 
       const targetRect = target.getBoundingClientRect();
@@ -1827,14 +1850,14 @@ describe('CdkDrag', () => {
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
       fixture.detectChanges();
-      expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
       // Move down a further 1px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop + 1);
       fixture.detectChanges();
-      expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions not to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
@@ -1860,7 +1883,7 @@ describe('CdkDrag', () => {
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
       expect(
-        getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
       ).toEqual(['Zero', 'One', 'Two', 'Three']);
 
       const targetRect = target.getBoundingClientRect();
@@ -1869,14 +1892,14 @@ describe('CdkDrag', () => {
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
       fixture.detectChanges();
-      expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
       // Move up 10px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop - 10);
       fixture.detectChanges();
-      expect(getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions to swap again.')
         .toEqual(['Zero', 'One', 'Two', 'Three']);
 
@@ -1902,7 +1925,7 @@ describe('CdkDrag', () => {
         const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
         expect(
-          getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
         ).toEqual(['Zero', 'One', 'Two', 'Three']);
 
         let targetRect = target.getBoundingClientRect();
@@ -1915,7 +1938,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         expect(
-          getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
         ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
         // Refresh the rect since the element position has changed.
@@ -1924,7 +1947,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         expect(
-          getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
         ).toEqual(['One', 'Two', 'Zero', 'Three']);
 
         dispatchMouseEvent(document, 'mouseup');
@@ -2495,7 +2518,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', targetX, targetY);
       fixture.detectChanges();
 
-      expect(getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
         .withContext('Expected placeholder to stay in place.')
         .toBe(0);
 
@@ -3396,7 +3419,7 @@ describe('CdkDrag', () => {
       documentElement.style.position = 'absolute';
       documentElement.style.top = '-100px';
 
-      assertDownwardSorting(
+      config.assertDownwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
           return item.element.nativeElement;
@@ -3664,7 +3687,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
       });
 
-      assertDownwardSorting(fixture, Array.from(dropZone.querySelectorAll('.cdk-drag')));
+      config.assertDownwardSorting(fixture, Array.from(dropZone.querySelectorAll('.cdk-drag')));
     }));
 
     it('should be able to return the last item inside its initial container', fakeAsync(() => {
@@ -4446,7 +4469,7 @@ describe('CdkDrag', () => {
         expect(dropZones[0].contains(placeholder))
           .withContext('Expected placeholder to be inside the first container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be at item index.')
           .toBe(1);
 
@@ -4456,7 +4479,7 @@ describe('CdkDrag', () => {
         expect(dropZones[1].contains(placeholder))
           .withContext('Expected placeholder to be inside second container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be at the target index.')
           .toBe(3);
 
@@ -4474,7 +4497,7 @@ describe('CdkDrag', () => {
         expect(dropZones[0].contains(placeholder))
           .withContext('Expected placeholder to be back inside first container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be back at the initial index.')
           .toBe(1);
 
@@ -4507,7 +4530,7 @@ describe('CdkDrag', () => {
         expect(dropZones[0].contains(placeholder))
           .withContext('Expected placeholder to be inside the first container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be at item index.')
           .toBe(1);
 
@@ -4517,7 +4540,7 @@ describe('CdkDrag', () => {
         expect(dropZones[1].contains(placeholder))
           .withContext('Expected placeholder to be inside second container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be at the target index.')
           .toBe(3);
 
@@ -4530,7 +4553,7 @@ describe('CdkDrag', () => {
         expect(dropZones[0].contains(placeholder))
           .withContext('Expected placeholder to be back inside first container.')
           .toBe(true);
-        expect(getElementIndexByPosition(placeholder, 'top'))
+        expect(config.getElementIndexByPosition(placeholder, 'top'))
           .withContext('Expected placeholder to be at the index at which it entered.')
           .toBe(2);
       }),
@@ -4555,7 +4578,7 @@ describe('CdkDrag', () => {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be inside the first container.')
         .toBe(true);
-      expect(getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
         .withContext('Expected placeholder to be at item index.')
         .toBe(lastIndex);
 
@@ -4565,7 +4588,7 @@ describe('CdkDrag', () => {
       expect(dropZones[1].contains(placeholder))
         .withContext('Expected placeholder to be inside second container.')
         .toBe(true);
-      expect(getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
         .withContext('Expected placeholder to be at the target index.')
         .toBe(3);
 
@@ -4583,7 +4606,7 @@ describe('CdkDrag', () => {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be back inside first container.')
         .toBe(true);
-      expect(getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
         .withContext('Expected placeholder to be back at the initial index.')
         .toBe(lastIndex);
 
@@ -5014,7 +5037,131 @@ describe('CdkDrag', () => {
       expect(event.stopPropagation).toHaveBeenCalled();
     }));
   });
-});
+
+  // Horizontal fixtures need to be defined here, because the
+  // `horizontalListOrientation` value can change between tests.
+  // Use inline blocks here to avoid flexbox issues and not to have to flip floats in rtl.
+  const HORIZONTAL_FIXTURE_STYLES = `
+    .cdk-drop-list {
+      display: block;
+      width: 500px;
+      background: pink;
+      font-size: 0;
+    }
+
+    .cdk-drag {
+      height: ${ITEM_HEIGHT * 2}px;
+      background: red;
+      display: inline-block;
+    }
+  `;
+
+  const HORIZONTAL_FIXTURE_TEMPLATE = `
+    <div
+      class="drop-list scroll-container"
+      cdkDropList
+      cdkDropListOrientation="${config.horizontalListOrientation}"
+      [cdkDropListData]="items"
+      (cdkDropListDropped)="droppedSpy($event)">
+      @for (item of items; track item) {
+        <div
+          [style.width.px]="item.width"
+          [style.margin-right.px]="item.margin"
+          [cdkDragBoundary]="boundarySelector"
+          cdkDrag>{{item.value}}</div>
+      }
+    </div>
+  `;
+
+  @Component({
+    encapsulation: ViewEncapsulation.None,
+    styles: HORIZONTAL_FIXTURE_STYLES,
+    template: HORIZONTAL_FIXTURE_TEMPLATE,
+  })
+  class DraggableInHorizontalDropZone implements AfterViewInit {
+    @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+    @ViewChild(CdkDropList) dropInstance: CdkDropList;
+    items = [
+      {value: 'Zero', width: ITEM_WIDTH, margin: 0},
+      {value: 'One', width: ITEM_WIDTH, margin: 0},
+      {value: 'Two', width: ITEM_WIDTH, margin: 0},
+      {value: 'Three', width: ITEM_WIDTH, margin: 0},
+    ];
+    boundarySelector: string;
+    droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
+      moveItemInArray(this.items, event.previousIndex, event.currentIndex);
+    });
+
+    constructor(protected _elementRef: ElementRef) {}
+
+    ngAfterViewInit() {
+      // Firefox preserves the `scrollLeft` value from previous similar containers. This
+      // could throw off test assertions and result in flaky results.
+      // See: https://bugzilla.mozilla.org/show_bug.cgi?id=959812.
+      this._elementRef.nativeElement.querySelector('.scroll-container').scrollLeft = 0;
+    }
+  }
+
+  @Component({
+    template: HORIZONTAL_FIXTURE_TEMPLATE,
+
+    // Note that it needs a margin to ensure that it's not flush against the viewport
+    // edge which will cause the viewport to scroll, rather than the list.
+    styles: [
+      HORIZONTAL_FIXTURE_STYLES,
+      `
+        .drop-list {
+          max-width: 300px;
+          margin: 10vw 0 0 10vw;
+          overflow: auto;
+          white-space: nowrap;
+        }
+      `,
+    ],
+  })
+  class DraggableInScrollableHorizontalDropZone extends DraggableInHorizontalDropZone {
+    constructor(elementRef: ElementRef) {
+      super(elementRef);
+
+      for (let i = 0; i < 60; i++) {
+        this.items.push({value: `Extra item ${i}`, width: ITEM_WIDTH, margin: 0});
+      }
+    }
+  }
+
+  @Component({
+    styles: `
+      .list {
+        display: flex;
+        width: 100px;
+        flex-direction: row;
+      }
+
+      .item {
+        display: flex;
+        flex-grow: 1;
+        flex-basis: 0;
+        min-height: 50px;
+      }
+    `,
+    template: `
+      <div class="list" cdkDropList cdkDropListOrientation="${config.horizontalListOrientation}">
+        @for (item of items; track item) {
+          <div class="item" cdkDrag>
+            {{item}}
+            <ng-template cdkDragPreview [matchSize]="true">
+              <div class="item">{{item}}</div>
+            </ng-template>
+          </div>
+        }
+      </div>
+    `,
+  })
+  class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
+    @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+    items = ['Zero', 'One', 'Two'];
+  }
+}
 
 // TODO(crisbeto): figure out why switch `*ngFor` with `@for` here causes a test failure.
 const DROP_ZONE_FIXTURE_TEMPLATE = `
@@ -5181,95 +5328,6 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
   `,
 })
 class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
-
-// Use inline blocks here to avoid flexbox issues and not to have to flip floats in rtl.
-const HORIZONTAL_FIXTURE_STYLES = `
-  .cdk-drop-list {
-    display: block;
-    width: 500px;
-    background: pink;
-    font-size: 0;
-  }
-
-  .cdk-drag {
-    height: ${ITEM_HEIGHT * 2}px;
-    background: red;
-    display: inline-block;
-  }
-`;
-
-const HORIZONTAL_FIXTURE_TEMPLATE = `
-  <div
-    class="drop-list scroll-container"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    [cdkDropListData]="items"
-    (cdkDropListDropped)="droppedSpy($event)">
-    @for (item of items; track item) {
-      <div
-        [style.width.px]="item.width"
-        [style.margin-right.px]="item.margin"
-        [cdkDragBoundary]="boundarySelector"
-        cdkDrag>{{item.value}}</div>
-    }
-  </div>
-`;
-
-@Component({
-  encapsulation: ViewEncapsulation.None,
-  styles: HORIZONTAL_FIXTURE_STYLES,
-  template: HORIZONTAL_FIXTURE_TEMPLATE,
-})
-class DraggableInHorizontalDropZone implements AfterViewInit {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
-  items = [
-    {value: 'Zero', width: ITEM_WIDTH, margin: 0},
-    {value: 'One', width: ITEM_WIDTH, margin: 0},
-    {value: 'Two', width: ITEM_WIDTH, margin: 0},
-    {value: 'Three', width: ITEM_WIDTH, margin: 0},
-  ];
-  boundarySelector: string;
-  droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
-    moveItemInArray(this.items, event.previousIndex, event.currentIndex);
-  });
-
-  constructor(protected _elementRef: ElementRef) {}
-
-  ngAfterViewInit() {
-    // Firefox preserves the `scrollLeft` value from previous similar containers. This
-    // could throw off test assertions and result in flaky results.
-    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=959812.
-    this._elementRef.nativeElement.querySelector('.scroll-container').scrollLeft = 0;
-  }
-}
-
-@Component({
-  template: HORIZONTAL_FIXTURE_TEMPLATE,
-
-  // Note that it needs a margin to ensure that it's not flush against the viewport
-  // edge which will cause the viewport to scroll, rather than the list.
-  styles: [
-    HORIZONTAL_FIXTURE_STYLES,
-    `
-    .drop-list {
-      max-width: 300px;
-      margin: 10vw 0 0 10vw;
-      overflow: auto;
-      white-space: nowrap;
-    }
-  `,
-  ],
-})
-class DraggableInScrollableHorizontalDropZone extends DraggableInHorizontalDropZone {
-  constructor(elementRef: ElementRef) {
-    super(elementRef);
-
-    for (let i = 0; i < 60; i++) {
-      this.items.push({value: `Extra item ${i}`, width: ITEM_WIDTH, margin: 0});
-    }
-  }
-}
 
 // TODO(crisbeto): `*ngIf` here can be removed after updating to a version of Angular that includes
 // https://github.com/angular/angular/pull/52515
@@ -5904,40 +5962,6 @@ class NestedDropZones {
 class PlainStandaloneDropList {
   @ViewChild(CdkDropList) dropList: CdkDropList;
 }
-
-@Component({
-  styles: `
-    .list {
-      display: flex;
-      width: 100px;
-      flex-direction: row;
-    }
-
-    .item {
-      display: flex;
-      flex-grow: 1;
-      flex-basis: 0;
-      min-height: 50px;
-    }
-  `,
-  template: `
-    <div class="list" cdkDropList cdkDropListOrientation="horizontal">
-      @for (item of items; track item) {
-        <div class="item" cdkDrag>
-          {{item}}
-          <ng-template cdkDragPreview [matchSize]="true">
-            <div class="item">{{item}}</div>
-          </ng-template>
-        </div>
-      }
-    </div>
-  `,
-})
-class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  items = ['Zero', 'One', 'Two'];
-}
-
 @Component({
   styles: CONNECTED_DROP_ZONES_STYLES,
   template: `
