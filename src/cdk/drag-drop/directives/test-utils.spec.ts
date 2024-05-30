@@ -1,21 +1,12 @@
-import {
-  EnvironmentProviders,
-  Provider,
-  Type,
-  ViewEncapsulation,
-  reflectComponentType,
-} from '@angular/core';
+import {EnvironmentProviders, Provider, Type, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
 import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing/private';
-import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {DragDropModule} from '../drag-drop-module';
 import {CDK_DRAG_CONFIG, DragDropConfig, DropListOrientation} from './config';
 
 /** Options that can be used to configure a test. */
 export interface DragDropTestConfig {
   providers?: (Provider | EnvironmentProviders)[];
   dragDistance?: number;
-  extraDeclarations?: Type<unknown>[];
   encapsulation?: ViewEncapsulation;
   listOrientation?: DropListOrientation;
 }
@@ -29,8 +20,6 @@ export function createComponent<T>(
   componentType: Type<T>,
   config: DragDropTestConfig = {},
 ): ComponentFixture<T> {
-  // TODO(crisbeto): drop this logic once all the fixtures are converted to standalone.
-  const isStandalone = reflectComponentType(componentType)?.isStandalone;
   const dragConfig: DragDropConfig = {
     // We default the `dragDistance` to zero, because the majority of the tests
     // don't care about it and drags are a lot easier to simulate when we don't
@@ -39,14 +28,9 @@ export function createComponent<T>(
     pointerDirectionChangeThreshold: 5,
     listOrientation: config.listOrientation,
   };
-  const declarations = [...(config.extraDeclarations || [])];
-
-  if (!isStandalone) {
-    declarations.push(componentType);
-  }
 
   TestBed.configureTestingModule({
-    imports: [DragDropModule, CdkScrollableModule],
+    imports: [componentType],
     providers: [
       {
         provide: CDK_DRAG_CONFIG,
@@ -54,7 +38,6 @@ export function createComponent<T>(
       },
       ...(config.providers || []),
     ],
-    declarations,
   });
 
   if (config.encapsulation != null) {

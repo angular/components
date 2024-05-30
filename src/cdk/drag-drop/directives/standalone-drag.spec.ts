@@ -1592,9 +1592,7 @@ describe('Standalone CdkDrag', () => {
     }));
 
     it('should be able to drag with a handle that is not a direct descendant', fakeAsync(() => {
-      const fixture = createComponent(StandaloneDraggableWithIndirectHandle, {
-        extraDeclarations: [PassthroughComponent],
-      });
+      const fixture = createComponent(StandaloneDraggableWithIndirectHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handle = fixture.componentInstance.handleElement.nativeElement;
@@ -1676,9 +1674,7 @@ describe('Standalone CdkDrag', () => {
         return;
       }
 
-      const fixture = createComponent(StandaloneDraggableWithShadowInsideHandle, {
-        extraDeclarations: [ShadowWrapper],
-      });
+      const fixture = createComponent(StandaloneDraggableWithShadowInsideHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const handleChild = fixture.componentInstance.handleChild.nativeElement;
@@ -1729,6 +1725,8 @@ describe('Standalone CdkDrag', () => {
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class StandaloneDraggable {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1754,6 +1752,8 @@ class StandaloneDraggable {
   template: `
     <div cdkDrag #dragElement style="width: 100px; height: 100px; background: red;"></div>
   `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class StandaloneDraggableWithOnPush {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1767,6 +1767,8 @@ class StandaloneDraggableWithOnPush {
       <div #handleElement cdkDragHandle style="width: 10px; height: 10px; background: green;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1787,6 +1789,8 @@ class StandaloneDraggableWithHandle {
         style="width: 10px; height: 10px; background: green;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithPreDisabledHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1806,12 +1810,25 @@ class StandaloneDraggableWithPreDisabledHandle {
       }
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithDelayedHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
   @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
   showHandle = false;
 }
+
+/**
+ * Component that passes through whatever content is projected into it.
+ * Used to test having drag elements being projected into a component.
+ */
+@Component({
+  selector: 'passthrough-component',
+  template: '<ng-content></ng-content>',
+  standalone: true,
+})
+class PassthroughComponent {}
 
 @Component({
   template: `
@@ -1826,6 +1843,8 @@ class StandaloneDraggableWithDelayedHandle {
       </passthrough-component>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle, PassthroughComponent],
 })
 class StandaloneDraggableWithIndirectHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1836,6 +1855,7 @@ class StandaloneDraggableWithIndirectHandle {
   selector: 'shadow-wrapper',
   template: '<ng-content></ng-content>',
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: true,
 })
 class ShadowWrapper {}
 
@@ -1849,6 +1869,8 @@ class ShadowWrapper {}
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle, ShadowWrapper],
 })
 class StandaloneDraggableWithShadowInsideHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1873,6 +1895,8 @@ class StandaloneDraggableWithShadowInsideHandle {
       <div cdkDragHandle style="right: 0;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithMultipleHandles {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1889,6 +1913,8 @@ class StandaloneDraggableWithMultipleHandles {
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class DraggableWithAlternateRoot {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1901,6 +1927,8 @@ class DraggableWithAlternateRoot {
   template: `
     <ng-container cdkDrag></ng-container>
   `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class DraggableOnNgContainer {}
 
@@ -1910,6 +1938,8 @@ class DraggableOnNgContainer {}
       <ng-container cdkDragHandle></ng-container>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class DragHandleOnNgContainer {}
 
@@ -1924,6 +1954,8 @@ class DragHandleOnNgContainer {}
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle],
 })
 class DraggableWithAlternateRootAndSelfHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
@@ -1939,24 +1971,18 @@ class DraggableWithAlternateRootAndSelfHandle {
       </ng-container>
     </div>
   `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class DraggableNgContainerWithAlternateRoot {
   @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
 }
 
-/**
- * Component that passes through whatever content is projected into it.
- * Used to test having drag elements being projected into a component.
- */
-@Component({
-  selector: 'passthrough-component',
-  template: '<ng-content></ng-content>',
-})
-class PassthroughComponent {}
-
 @Component({
   template: `<div cdkDrag></div>`,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class PlainStandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
