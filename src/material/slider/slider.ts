@@ -870,8 +870,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _updateTickMarkUINonRange(step: number): void {
     const value = this._getValue();
-    let numActive = Math.max(Math.floor((value - this.min) / step), 0);
-    let numInactive = Math.max(Math.floor((this.max - value) / step), 0);
+    let numActive = Math.max(Math.round((value - this.min) / step), 0);
+    let numInactive = Math.max(Math.round((this.max - value) / step), 0);
     this._isRtl ? numActive++ : numInactive++;
 
     this._tickMarks = Array(numActive)
@@ -883,9 +883,9 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     const endValue = this._getValue();
     const startValue = this._getValue(_MatThumb.START);
 
-    const numInactiveBeforeStartThumb = Math.max(Math.floor((startValue - this.min) / step), 0);
-    const numActive = Math.max(Math.floor((endValue - startValue) / step) + 1, 0);
-    const numInactiveAfterEndThumb = Math.max(Math.floor((this.max - endValue) / step), 0);
+    const numInactiveBeforeStartThumb = Math.max(Math.round((startValue - this.min) / step), 0);
+    const numActive = Math.max(Math.round((endValue - startValue) / step) + 1, 0);
+    const numInactiveAfterEndThumb = Math.max(Math.round((this.max - endValue) / step), 0);
     this._tickMarks = Array(numInactiveBeforeStartThumb)
       .fill(_MatTickMark.INACTIVE)
       .concat(
