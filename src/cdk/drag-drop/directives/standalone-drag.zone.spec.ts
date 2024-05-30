@@ -37,20 +37,22 @@ describe('Standalone CdkDrag Zone.js integration', () => {
 
 @Component({
   template: `
-      <div class="wrapper" style="width: 200px; height: 200px; background: green;">
-        <div
-          cdkDrag
-          [cdkDragBoundary]="boundary"
-          [cdkDragStartDelay]="dragStartDelay"
-          [cdkDragConstrainPosition]="constrainPosition"
-          [cdkDragFreeDragPosition]="freeDragPosition"
-          (cdkDragStarted)="startedSpy($event)"
-          (cdkDragReleased)="releasedSpy($event)"
-          (cdkDragEnded)="endedSpy($event)"
-          #dragElement
-          style="width: 100px; height: 100px; background: red;"></div>
-      </div>
-    `,
+    <div class="wrapper" style="width: 200px; height: 200px; background: green;">
+      <div
+        cdkDrag
+        [cdkDragBoundary]="boundary"
+        [cdkDragStartDelay]="dragStartDelay"
+        [cdkDragConstrainPosition]="constrainPosition"
+        [cdkDragFreeDragPosition]="freeDragPosition"
+        (cdkDragStarted)="startedSpy($event)"
+        (cdkDragReleased)="releasedSpy($event)"
+        (cdkDragEnded)="endedSpy($event)"
+        #dragElement
+        style="width: 100px; height: 100px; background: red;"></div>
+    </div>
+  `,
+  standalone: true,
+  imports: [CdkDrag],
 })
 class StandaloneDraggable {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
