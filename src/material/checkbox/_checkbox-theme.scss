@@ -1,4 +1,3 @@
-@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -16,7 +15,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-unthemable-tokens()
+      );
       @include token-utils.create-token-values(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-unthemable-tokens()
@@ -35,7 +37,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-color-tokens($theme)
+      );
       @include token-utils.create-token-values(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-color-tokens($theme)
@@ -44,11 +49,15 @@
 
     .mat-mdc-checkbox {
       &.mat-primary {
-        @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, primary));
+        @include token-utils.create-token-values(
+          tokens-mdc-checkbox.$prefix,
+          tokens-mdc-checkbox.get-color-tokens($theme, primary));
       }
 
       &.mat-warn {
-        @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mdc-checkbox.$prefix,
+          tokens-mdc-checkbox.get-color-tokens($theme, warn));
       }
     }
   }
@@ -61,7 +70,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-typography-tokens($theme)
+      );
       @include token-utils.create-token-values(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-typography-tokens($theme)
@@ -79,7 +91,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-density-tokens($theme)
+      );
       @include token-utils.create-token-values(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-density-tokens($theme)
@@ -140,6 +155,6 @@
   // Don't pass $options here, since the mdc-checkbox doesn't support color options,
   // only the mdc-checkbox does.
   $mat-checkbox-tokens: token-utils.get-tokens-for($tokens, tokens-mat-checkbox.$prefix);
-  @include mdc-checkbox-theme.theme($mdc-checkbox-tokens);
+  @include token-utils.create-token-values(tokens-mdc-checkbox.$prefix, $mdc-checkbox-tokens);
   @include token-utils.create-token-values(tokens-mat-checkbox.$prefix, $mat-checkbox-tokens);
 }

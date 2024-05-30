@@ -35,6 +35,9 @@ $prefix: (mdc, checkbox);
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
+    selected-pressed-icon-color: null,
+    unselected-pressed-icon-color: null,
+
     // MDC currently doesn't output a slot for these tokens.
     disabled-selected-icon-opacity: null,
     disabled-unselected-icon-opacity: null,
@@ -79,16 +82,12 @@ $prefix: (mdc, checkbox);
     selected-hover-icon-color: $palette-selected,
     // The color of the checkbox fill when the checkbox is selected.
     selected-icon-color: $palette-selected,
-    // The color of the checkbox fill when the checkbox is selected an pressed.
-    selected-pressed-icon-color: $palette-selected,
     // The color of the checkbox border when the checkbox is unselected and focused.
     unselected-focus-icon-color: $active-border-color,
     // The color of the checkbox border when the checkbox is unselected and hovered.
     unselected-hover-icon-color: $active-border-color,
     // The color of the checkbox border when the checkbox is unselected.
     unselected-icon-color: $border-color,
-    // The color of the checkbox border when the checkbox is unselected and pressed.
-    unselected-pressed-icon-color: $border-color,
     // The color of the ripple when the checkbox is selected and focused.
     selected-focus-state-layer-color: $palette-default,
     // The color of the ripple when the checkbox is selected and hovered.

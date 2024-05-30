@@ -1,10 +1,8 @@
-@use '@material/checkbox/checkbox' as mdc-checkbox;
-@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/radio/radio' as mdc-radio;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 
+@use '../checkbox/checkbox-common';
 @use '../core/mdc-helpers/mdc-helpers';
-@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use './list-option-trailing-avatar-compat';
 @use './list-item-hcm-indicator';
@@ -17,24 +15,18 @@
   // The MDC-based list-option uses the MDC checkbox/radio for the selection indicators.
   // We need to ensure that the checkbox and radio styles are not included for the list-option.
   @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include mdc-checkbox.static-styles(
-      $query: mdc-helpers.$mdc-base-styles-without-animation-query);
     @include mdc-radio.static-styles(
       $query: mdc-helpers.$mdc-base-styles-without-animation-query);
 
     &:not(._mat-animation-noopable) {
-      @include mdc-checkbox.static-styles($query: animation);
       @include mdc-radio.static-styles($query: animation);
     }
   }
 
   // We can't use the MDC checkbox here directly, because this checkbox is purely
   // decorative and including the MDC one will bring in unnecessary JS.
-  .mdc-checkbox {
-    // MDC theme styles also include structural styles so we have to include the theme at least
-    // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-checkbox-theme.theme-styles(tokens-mdc-checkbox.get-token-slots());
-  }
+  @include checkbox-common.checkbox-structure(false);
+  @include checkbox-common.checkbox-noop-animations;
 
   // We can't use the MDC radio here directly, because this radio is purely
   // decorative and including the MDC one will bring in unnecessary JS.
