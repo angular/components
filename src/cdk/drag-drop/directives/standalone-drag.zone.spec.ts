@@ -1,48 +1,21 @@
-import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {
   Component,
   ElementRef,
   NgZone,
-  Provider,
   Type,
   ViewChild,
   provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {DragDropModule} from '../drag-drop-module';
 import {Point} from '../drag-ref';
-import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
 import {CdkDrag} from './drag';
-import {dragElementViaMouse} from './test-utils.spec';
+import {createComponent as _createComponent, dragElementViaMouse} from './test-utils.spec';
+import {ComponentFixture} from '@angular/core/testing';
 
 describe('Standalone CdkDrag Zone.js integration', () => {
-  function createComponent<T>(
-    componentType: Type<T>,
-    providers: Provider[] = [],
-    dragDistance = 0,
-    extraDeclarations: Type<any>[] = [],
-  ): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule, CdkScrollableModule],
-      providers: [
-        provideZoneChangeDetection(),
-        {
-          provide: CDK_DRAG_CONFIG,
-          useValue: {
-            // We default the `dragDistance` to zero, because the majority of the tests
-            // don't care about it and drags are a lot easier to simulate when we don't
-            // have to deal with thresholds.
-            dragStartThreshold: dragDistance,
-            pointerDirectionChangeThreshold: 5,
-          } as DragDropConfig,
-        },
-        ...providers,
-      ],
-      declarations: [componentType, ...extraDeclarations],
+  function createComponent<T>(type: Type<T>): ComponentFixture<T> {
+    return _createComponent(type, {
+      providers: [provideZoneChangeDetection()],
     });
-
-    TestBed.compileComponents();
-    return TestBed.createComponent<T>(componentType);
   }
 
   it('should emit to `moved` inside the NgZone', () => {
