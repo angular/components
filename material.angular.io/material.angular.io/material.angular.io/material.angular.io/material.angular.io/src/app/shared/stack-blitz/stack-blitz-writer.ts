@@ -44,7 +44,6 @@ export const TEMPLATE_FILES = [
   'src/main.ts',
   'src/styles.scss',
   'src/test.ts',
-  'src/theme.scss',
 ];
 
 const PROJECT_TAGS = ['angular', 'material', 'cdk', 'web', 'example'];
