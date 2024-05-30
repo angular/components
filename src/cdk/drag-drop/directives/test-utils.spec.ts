@@ -1,5 +1,51 @@
+import {EnvironmentProviders, Provider, Type, ViewEncapsulation} from '@angular/core';
+import {ComponentFixture, TestBed, flush, tick} from '@angular/core/testing';
 import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing/private';
-import {ComponentFixture, flush, tick} from '@angular/core/testing';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
+import {DragDropModule} from '../drag-drop-module';
+import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
+
+/**
+ * Creates a component fixture that can be used in a test.
+ * @param componentType Component for which to create the fixture.
+ * @param config Object that can be used to further configure the test.
+ */
+export function createComponent<T>(
+  componentType: Type<T>,
+  config: {
+    providers?: (Provider | EnvironmentProviders)[];
+    dragDistance?: number;
+    extraDeclarations?: Type<unknown>[];
+    encapsulation?: ViewEncapsulation;
+  } = {},
+): ComponentFixture<T> {
+  TestBed.configureTestingModule({
+    imports: [DragDropModule, CdkScrollableModule],
+    providers: [
+      {
+        provide: CDK_DRAG_CONFIG,
+        useValue: {
+          // We default the `dragDistance` to zero, because the majority of the tests
+          // don't care about it and drags are a lot easier to simulate when we don't
+          // have to deal with thresholds.
+          dragStartThreshold: config?.dragDistance ?? 0,
+          pointerDirectionChangeThreshold: 5,
+        } as DragDropConfig,
+      },
+      ...(config.providers || []),
+    ],
+    declarations: [componentType, ...(config.extraDeclarations || [])],
+  });
+
+  if (config.encapsulation != null) {
+    TestBed.overrideComponent(componentType, {
+      set: {encapsulation: config.encapsulation},
+    });
+  }
+
+  TestBed.compileComponents();
+  return TestBed.createComponent<T>(componentType);
+}
 
 /**
  * Drags an element to a position on the page using the mouse.
