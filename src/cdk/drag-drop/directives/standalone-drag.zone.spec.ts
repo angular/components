@@ -6,7 +6,6 @@ import {
   Provider,
   Type,
   ViewChild,
-  ViewEncapsulation,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -16,13 +15,12 @@ import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
 import {CdkDrag} from './drag';
 import {dragElementViaMouse} from './test-utils.spec';
 
-describe('CdkDrag Zone.js integration', () => {
+describe('Standalone CdkDrag Zone.js integration', () => {
   function createComponent<T>(
     componentType: Type<T>,
     providers: Provider[] = [],
     dragDistance = 0,
     extraDeclarations: Type<any>[] = [],
-    encapsulation?: ViewEncapsulation,
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [DragDropModule, CdkScrollableModule],
@@ -40,47 +38,29 @@ describe('CdkDrag Zone.js integration', () => {
         },
         ...providers,
       ],
-      declarations: [PassthroughComponent, componentType, ...extraDeclarations],
+      declarations: [componentType, ...extraDeclarations],
     });
-
-    if (encapsulation != null) {
-      TestBed.overrideComponent(componentType, {
-        set: {encapsulation},
-      });
-    }
 
     TestBed.compileComponents();
     return TestBed.createComponent<T>(componentType);
   }
 
-  describe('standalone draggable', () => {
-    it('should emit to `moved` inside the NgZone', () => {
-      const fixture = createComponent(StandaloneDraggable);
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
+  it('should emit to `moved` inside the NgZone', () => {
+    const fixture = createComponent(StandaloneDraggable);
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
 
-      const spy = jasmine.createSpy('move spy');
-      const subscription = fixture.componentInstance.dragInstance.moved.subscribe(() =>
-        spy(NgZone.isInAngularZone()),
-      );
+    const spy = jasmine.createSpy('move spy');
+    const subscription = fixture.componentInstance.dragInstance.moved.subscribe(() =>
+      spy(NgZone.isInAngularZone()),
+    );
 
-      dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 10, 20);
-      expect(spy).toHaveBeenCalledWith(true);
+    dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 10, 20);
+    expect(spy).toHaveBeenCalledWith(true);
 
-      subscription.unsubscribe();
-    });
+    subscription.unsubscribe();
   });
 });
-
-/**
- * Component that passes through whatever content is projected into it.
- * Used to test having drag elements being projected into a component.
- */
-@Component({
-  selector: 'passthrough-component',
-  template: '<ng-content></ng-content>',
-})
-class PassthroughComponent {}
 
 @Component({
   template: `
