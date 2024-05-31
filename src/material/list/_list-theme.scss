@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '@material/list/evolution-mixins';
-@use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 
@@ -63,13 +62,16 @@
     }
 
     .mat-mdc-list-option {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix, tokens-mdc-checkbox.get-color-tokens($theme, primary));
     }
     .mat-mdc-list-option.mat-accent {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, accent));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix, tokens-mdc-checkbox.get-color-tokens($theme, accent));
     }
     .mat-mdc-list-option.mat-warn {
-      @include mdc-checkbox-theme.theme(tokens-mdc-checkbox.get-color-tokens($theme, warn));
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix, tokens-mdc-checkbox.get-color-tokens($theme, warn));
     }
 
     // There is no token for activated color on nav list.
