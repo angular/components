@@ -1,13 +1,5 @@
 import {ENTER, SPACE, TAB} from '@angular/cdk/keycodes';
-import {
-  Component,
-  ElementRef,
-  QueryList,
-  Type,
-  ViewChild,
-  ViewChildren,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, ElementRef, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -122,7 +114,6 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [MenuBarWithNestedSubMenus],
-        providers: [provideZoneChangeDetection()],
       }).compileComponents();
     }));
 
@@ -161,6 +152,7 @@ describe('MenuTrigger', () => {
 
     it('should not open the menu when menu item disabled', () => {
       menuItems[0].disabled = true;
+      fixture.changeDetectorRef.markForCheck();
 
       menuItems[0].trigger();
       detectChanges();

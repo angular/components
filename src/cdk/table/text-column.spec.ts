@@ -1,9 +1,9 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {
-  getTableTextColumnMissingParentTableError,
   getTableTextColumnMissingNameError,
+  getTableTextColumnMissingParentTableError,
 } from './table-errors';
 import {CdkTableModule} from './table-module';
 import {expectTableToMatchContent} from './table.spec';
@@ -16,7 +16,6 @@ describe('CdkTextColumn', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
     }).compileComponents();
   }));
@@ -51,6 +50,7 @@ describe('CdkTextColumn', () => {
 
   it('should allow for alternate header text', () => {
     component.headerTextB = 'column-b';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expectTableToMatchContent(tableElement, [
@@ -62,6 +62,7 @@ describe('CdkTextColumn', () => {
 
   it('should allow for custom data accessor', () => {
     component.dataAccessorA = (data: TestData) => data.propertyA + '!';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expectTableToMatchContent(tableElement, [
@@ -73,6 +74,7 @@ describe('CdkTextColumn', () => {
 
   it('should allow for custom data accessor', () => {
     component.dataAccessorA = (data: TestData) => data.propertyA + '!';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expectTableToMatchContent(tableElement, [
@@ -87,6 +89,7 @@ describe('CdkTextColumn', () => {
       {propertyA: 'changed-a_1', propertyB: 'b_1', propertyC: 'c_1'},
       {propertyA: 'changed-a_2', propertyB: 'b_2', propertyC: 'c_2'},
     ];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expectTableToMatchContent(tableElement, [
