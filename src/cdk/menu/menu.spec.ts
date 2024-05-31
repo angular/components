@@ -1,12 +1,5 @@
 import {TAB} from '@angular/cdk/keycodes';
-import {
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -145,7 +138,6 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenus],
-          providers: [provideZoneChangeDetection()],
         }).compileComponents();
       }));
 
@@ -337,7 +329,6 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
-          providers: [provideZoneChangeDetection()],
         }).compileComponents();
       }));
 

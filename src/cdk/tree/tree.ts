@@ -26,17 +26,18 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
   numberAttribute,
 } from '@angular/core';
 import {
   BehaviorSubject,
-  isObservable,
   Observable,
-  of as observableOf,
   Subject,
   Subscription,
+  isObservable,
+  of as observableOf,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -255,6 +256,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
       },
     );
 
+    // TODO: change to `this._changeDetectorRef.markForCheck()`, or just switch this component to
+    // use signals.
     this._changeDetectorRef.detectChanges();
   }
 
@@ -381,6 +384,8 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
       : this._parentNodeAriaLevel;
   }
 
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   constructor(
     protected _elementRef: ElementRef<HTMLElement>,
     protected _tree: CdkTree<T, K>,
@@ -392,6 +397,14 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
     this._elementRef.nativeElement.setAttribute('aria-level', `${this.level + 1}`);
+    this._tree.treeControl.expansionModel.changed
+      .pipe(
+        map(() => this.isExpanded),
+        distinctUntilChanged(),
+      )
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   ngOnDestroy() {

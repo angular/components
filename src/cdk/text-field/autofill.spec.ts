@@ -7,8 +7,8 @@
  */
 
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {EMPTY} from 'rxjs';
 import {AutofillEvent, AutofillMonitor} from './autofill';
 import {TextFieldModule} from './text-field-module';
@@ -22,7 +22,6 @@ describe('AutofillMonitor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [TextFieldModule, Inputs],
     }).compileComponents();
   });
@@ -152,22 +151,6 @@ describe('AutofillMonitor', () => {
 
     autofillMonitor.stopMonitoring(element);
     expect(spy).toHaveBeenCalled();
-  });
-
-  it('should emit on stream inside the NgZone', () => {
-    const inputEl = testComponent.input1.nativeElement;
-    let animationStartCallback: Function = () => {};
-    inputEl.addEventListener.and.callFake(
-      (_: string, cb: Function) => (animationStartCallback = cb),
-    );
-    const autofillStream = autofillMonitor.monitor(inputEl);
-    const spy = jasmine.createSpy('autofill spy');
-
-    autofillStream.subscribe(() => spy(NgZone.isInAngularZone()));
-    expect(spy).not.toHaveBeenCalled();
-
-    animationStartCallback({animationName: 'cdk-text-field-autofill-start', target: inputEl});
-    expect(spy).toHaveBeenCalledWith(true);
   });
 
   it('should not emit on init if input is unfilled', () => {

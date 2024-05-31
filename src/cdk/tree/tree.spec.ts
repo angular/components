@@ -5,28 +5,29 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {
+  ChangeDetectorRef,
   Component,
   ErrorHandler,
-  ViewChild,
+  EventEmitter,
+  QueryList,
   TrackByFunction,
   Type,
-  EventEmitter,
+  ViewChild,
   ViewChildren,
-  QueryList,
-  provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Directionality, Direction} from '@angular/cdk/bidi';
-import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {BaseTreeControl} from './control/base-tree-control';
-import {TreeControl} from './control/tree-control';
 import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
+import {TreeControl} from './control/tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
@@ -43,7 +44,6 @@ describe('CdkTree', () => {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),
@@ -134,6 +134,7 @@ describe('CdkTree', () => {
         // add a child to the first node
         let data = dataSource.data;
         dataSource.addChild(data[0], true);
+        fixture.detectChanges();
 
         const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
         expect(ariaLevels).toEqual(['2', '3', '2', '2']);
@@ -191,6 +192,7 @@ describe('CdkTree', () => {
 
       it('should be able to use units different from px for the indentation', () => {
         component.indent = '15rem';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const data = dataSource.data;
@@ -207,6 +209,7 @@ describe('CdkTree', () => {
 
       it('should default to px if no unit is set for string value indentation', () => {
         component.indent = '17';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const data = dataSource.data;
@@ -241,6 +244,7 @@ describe('CdkTree', () => {
         const node = getNodes(treeElement)[0];
 
         component.indent = 10;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(node.style.paddingLeft).toBe('10px');
@@ -279,6 +283,7 @@ describe('CdkTree', () => {
           .toBe(0);
 
         component.toggleRecursively = false;
+        fixture.changeDetectorRef.markForCheck();
         let data = dataSource.data;
         dataSource.addChild(data[2]);
         fixture.detectChanges();
@@ -807,6 +812,7 @@ describe('CdkTree', () => {
         ).toBe(true);
 
         component.toggleRecursively = false;
+        fixture.changeDetectorRef.markForCheck();
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
@@ -821,6 +827,7 @@ describe('CdkTree', () => {
 
       it('should expand/collapse the node multiple times', () => {
         component.toggleRecursively = false;
+        fixture.changeDetectorRef.markForCheck();
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
@@ -1136,8 +1143,6 @@ describe('CdkTree', () => {
         try {
           TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges();
           flush();
-        } catch {
-          flush();
         } finally {
           flush();
         }
@@ -1147,12 +1152,8 @@ describe('CdkTree', () => {
     it('should throw an error when missing function in flat tree', fakeAsync(() => {
       configureCdkTreeTestingModule([FlatCdkErrorTreeApp]);
       expect(() => {
-        try {
-          TestBed.createComponent(FlatCdkErrorTreeApp).detectChanges();
-          flush();
-        } catch {
-          flush();
-        }
+        TestBed.createComponent(FlatCdkErrorTreeApp).detectChanges();
+        flush();
       }).toThrowError(getTreeControlFunctionsMissingError().message);
     }));
   });
@@ -1574,6 +1575,14 @@ class ArrayDataSourceCdkTreeApp {
   }
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
+
+  cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.dataSource._dataChange.subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
 }
 
 @Component({
