@@ -1,11 +1,7 @@
-@use '@material/data-table/data-table' as mdc-data-table;
-@use '@material/data-table/data-table-cell' as mdc-data-table-cell;
-@use '@material/data-table/data-table-header-cell' as mdc-data-table-header-cell;
-@use '@material/data-table' as mdc-data-table-theme;
-@use '@material/typography/typography' as mdc-typography;
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/table' as tokens-mat-table;
+@use '../core/style/vendor-prefixes';
 @use './table-flex-styles';
 
 .mat-mdc-table-sticky {
@@ -21,25 +17,13 @@
   border-bottom-style: solid;
 }
 
-@include mdc-data-table.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-@include mdc-data-table-cell.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-@include mdc-data-table-header-cell.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-@include mdc-data-table-theme.cell-padding(
-  $leading-padding: mdc-data-table-theme.$cell-leading-padding,
-  $trailing-padding: mdc-data-table-theme.$cell-trailing-padding,
-  $query: mdc-helpers.$mdc-base-styles-query
-);
 @include table-flex-styles.private-table-flex-styles();
 
 .mat-mdc-table {
-  // MDC Table applies `table-layout: fixed`, but this is a backwards incompatible
-  // change since the table did not previously apply it.
-  // TODO: Add a mixin to MDC to set the layout instead of including this override,
-  // see this issue: https://github.com/material-components/material-components-web/issues/6412
+  min-width: 100%;
+  border: 0;
+  border-spacing: 0;
   table-layout: auto;
-
-  // The MDC table does not allow text to wrap within the cell. This allows for text to
-  // wrap when the cell reaches its maximum width.
   white-space: normal;
 
   @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
@@ -47,12 +31,28 @@
   }
 }
 
+.mdc-data-table__cell {
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+}
+
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0 16px;
+}
+
 @include mdc-helpers.disable-mdc-fallback-declarations {
   @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
     // TODO(crisbeto): these tokens have default values in order to make the initial token
     // work easier to land in g3. Eventually we should remove them.
     .mat-mdc-header-row {
-      @include mdc-typography.smooth-font();
+      @include vendor-prefixes.smooth-font;
       @include token-utils.create-token-slot(height, header-container-height, 56px);
       @include token-utils.create-token-slot(color, header-headline-color, true);
       @include token-utils.create-token-slot(font-family, header-headline-font, true);
@@ -72,7 +72,7 @@
     // letter spacing which leads to a lot of internal screenshot diffs.
     .mat-mdc-row,
     .mdc-data-table__content {
-      @include mdc-typography.smooth-font();
+      @include vendor-prefixes.smooth-font;
       @include token-utils.create-token-slot(font-family, row-item-label-text-font, true);
       @include token-utils.create-token-slot(line-height, row-item-label-text-line-height);
       @include token-utils.create-token-slot(font-size, row-item-label-text-size, 14px);
@@ -80,7 +80,7 @@
     }
 
     .mat-mdc-footer-row {
-      @include mdc-typography.smooth-font();
+      @include vendor-prefixes.smooth-font;
       @include token-utils.create-token-slot(height, footer-container-height, 52px);
       @include token-utils.create-token-slot(color, row-item-label-text-color, true);
       @include token-utils.create-token-slot(font-family, footer-supporting-text-font, true);
@@ -95,6 +95,15 @@
       @include token-utils.create-token-slot(letter-spacing, header-headline-tracking);
       font-weight: inherit;
       line-height: inherit;
+      box-sizing: border-box;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      outline: none;
+      text-align: left;
+
+      [dir='rtl'] & {
+        text-align: right;
+      }
     }
 
     .mat-mdc-cell {
