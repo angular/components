@@ -1,4 +1,4 @@
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -6,9 +6,9 @@ import {MapMarker} from '../map-marker/map-marker';
 import {
   createMapConstructorSpy,
   createMapSpy,
-  createMarkerConstructorSpy,
   createMarkerClustererConstructorSpy,
   createMarkerClustererSpy,
+  createMarkerConstructorSpy,
   createMarkerSpy,
 } from '../testing/fake-google-map-utils';
 import {MapMarkerClusterer} from './map-marker-clusterer';
@@ -42,9 +42,6 @@ describe('MapMarkerClusterer', () => {
     markerClustererSpy = createMarkerClustererSpy();
     markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy);
 
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
     fixture = TestBed.createComponent(TestApp);
   });
 
@@ -106,6 +103,7 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.title = 'testTitle';
     fixture.componentInstance.zIndex = 6;
     fixture.componentInstance.zoomOnClick = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -141,6 +139,7 @@ describe('MapMarkerClusterer', () => {
       imageExtension: 'png',
     };
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(jasmine.objectContaining(options));
   }));
@@ -165,6 +164,7 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.ignoreHidden = expectedOptions.ignoreHidden;
     fixture.componentInstance.imageExtension = expectedOptions.imageExtension;
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(
@@ -192,6 +192,7 @@ describe('MapMarkerClusterer', () => {
     ]);
 
     fixture.componentInstance.state = 'state2';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -200,6 +201,7 @@ describe('MapMarkerClusterer', () => {
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.state = 'state0';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 

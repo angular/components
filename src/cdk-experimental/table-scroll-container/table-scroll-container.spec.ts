@@ -1,10 +1,10 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Component, Type, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Platform} from '@angular/cdk/platform';
+import {CdkTable, CdkTableModule} from '@angular/cdk/table';
+import {Component, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CdkTable, CdkTableModule} from '@angular/cdk/table';
-import {Platform} from '@angular/cdk/platform';
 
 import {CdkTableScrollContainerModule} from './index';
 
@@ -23,7 +23,6 @@ describe('CdkTableScrollContainer', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
     }).compileComponents();
 
@@ -60,6 +59,7 @@ describe('CdkTableScrollContainer', () => {
 
   it('sets scrollbar track margin for sticky headers', waitForAsync(async () => {
     component.stickyHeaders = ['header-1', 'header-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -75,6 +75,7 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyHeaders = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -86,6 +87,7 @@ describe('CdkTableScrollContainer', () => {
 
   it('sets scrollbar track margin for sticky footers', waitForAsync(async () => {
     component.stickyFooters = ['footer-1', 'footer-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -101,6 +103,7 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyFooters = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -112,6 +115,7 @@ describe('CdkTableScrollContainer', () => {
 
   it('sets scrollbar track margin for sticky start columns', waitForAsync(async () => {
     component.stickyStartColumns = ['column-1', 'column-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -129,6 +133,7 @@ describe('CdkTableScrollContainer', () => {
     );
 
     component.stickyStartColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -140,6 +145,7 @@ describe('CdkTableScrollContainer', () => {
 
   it('sets scrollbar track margin for sticky end columns', waitForAsync(async () => {
     component.stickyEndColumns = ['column-4', 'column-6'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -157,6 +163,7 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyEndColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -171,6 +178,7 @@ describe('CdkTableScrollContainer', () => {
     component.stickyFooters = ['footer-3'];
     component.stickyStartColumns = ['column-1'];
     component.stickyEndColumns = ['column-6'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 
@@ -193,6 +201,7 @@ describe('CdkTableScrollContainer', () => {
     component.stickyFooters = [];
     component.stickyStartColumns = [];
     component.stickyEndColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await waitForLayout();
 

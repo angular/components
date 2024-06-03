@@ -1,25 +1,18 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {
-  Component,
-  EnvironmentProviders,
-  Provider,
-  ViewChild,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {
-  YouTubePlayer,
-  DEFAULT_PLAYER_WIDTH,
-  DEFAULT_PLAYER_HEIGHT,
-  YOUTUBE_PLAYER_CONFIG,
-} from './youtube-player';
-import {createFakeYtNamespace} from './fake-youtube-player';
-import {PlaceholderImageQuality} from './youtube-player-placeholder';
+import {Component, EnvironmentProviders, Provider, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
+import {createFakeYtNamespace} from './fake-youtube-player';
+import {
+  DEFAULT_PLAYER_HEIGHT,
+  DEFAULT_PLAYER_WIDTH,
+  YOUTUBE_PLAYER_CONFIG,
+  YouTubePlayer,
+} from './youtube-player';
+import {PlaceholderImageQuality} from './youtube-player-placeholder';
 
 const VIDEO_ID = 'a12345';
 const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
 const TEST_PROVIDERS: (Provider | EnvironmentProviders)[] = [
-  provideZoneChangeDetection(),
   {
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {
@@ -93,6 +86,7 @@ describe('YoutubePlayer', () => {
       events.onReady({target: playerSpy});
 
       testComponent.visible = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.destroy).toHaveBeenCalled();
@@ -105,6 +99,7 @@ describe('YoutubePlayer', () => {
       const containerElement = getVideoHost(fixture);
 
       testComponent.videoId = 'otherId';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).not.toHaveBeenCalled();
@@ -116,11 +111,13 @@ describe('YoutubePlayer', () => {
       );
 
       testComponent.videoId = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.destroy).toHaveBeenCalled();
 
       testComponent.videoId = 'otherId2';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
@@ -134,6 +131,7 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       testComponent.width = 5;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setSize).not.toHaveBeenCalled();
@@ -145,6 +143,7 @@ describe('YoutubePlayer', () => {
       expect(testComponent.youtubePlayer.height).toBe(DEFAULT_PLAYER_HEIGHT);
 
       testComponent.height = 6;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setSize).toHaveBeenCalledWith(5, 6);
@@ -152,8 +151,10 @@ describe('YoutubePlayer', () => {
       expect(testComponent.youtubePlayer.height).toBe(6);
 
       testComponent.videoId = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       testComponent.videoId = VIDEO_ID;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
@@ -165,6 +166,7 @@ describe('YoutubePlayer', () => {
 
       events.onReady({target: playerSpy});
       testComponent.width = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setSize).toHaveBeenCalledWith(DEFAULT_PLAYER_WIDTH, 6);
@@ -172,6 +174,7 @@ describe('YoutubePlayer', () => {
       expect(testComponent.youtubePlayer.height).toBe(6);
 
       testComponent.height = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setSize).toHaveBeenCalledWith(DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
@@ -186,6 +189,7 @@ describe('YoutubePlayer', () => {
 
       const playerVars: YT.PlayerVars = {modestbranding: YT.ModestBranding.Modest};
       fixture.componentInstance.playerVars = playerVars;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       events.onReady({target: playerSpy});
@@ -204,6 +208,7 @@ describe('YoutubePlayer', () => {
 
       testComponent.startSeconds = 5;
       testComponent.endSeconds = 6;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).not.toHaveBeenCalled();
@@ -216,6 +221,7 @@ describe('YoutubePlayer', () => {
       );
 
       testComponent.endSeconds = 8;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -223,6 +229,7 @@ describe('YoutubePlayer', () => {
       );
 
       testComponent.startSeconds = 7;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -231,6 +238,7 @@ describe('YoutubePlayer', () => {
 
       testComponent.startSeconds = 10;
       testComponent.endSeconds = 11;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -243,6 +251,7 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       testComponent.suggestedQuality = 'small';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setPlaybackQuality).not.toHaveBeenCalled();
@@ -252,11 +261,13 @@ describe('YoutubePlayer', () => {
       expect(playerSpy.setPlaybackQuality).toHaveBeenCalledWith('small');
 
       testComponent.suggestedQuality = 'large';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.setPlaybackQuality).toHaveBeenCalledWith('large');
 
       testComponent.videoId = 'other';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -472,6 +483,7 @@ describe('YoutubePlayer', () => {
 
       playerCtorSpy.calls.reset();
       fixture.componentInstance.disableCookies = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
@@ -494,6 +506,7 @@ describe('YoutubePlayer', () => {
 
       testComponent.videoId = undefined;
       testComponent.playerVars = playerVars;
+      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
 
@@ -511,6 +524,7 @@ describe('YoutubePlayer', () => {
         ...playerVars,
         listType: undefined,
       };
+      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
 
@@ -603,6 +617,7 @@ describe('YoutubePlayer', () => {
       testComponent.videoId = 'foo123';
       testComponent.width = 100;
       testComponent.height = 50;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(placeholder.style.backgroundImage).toContain(
@@ -616,6 +631,7 @@ describe('YoutubePlayer', () => {
       expect(getPlaceholder(fixture)).toBeTruthy();
 
       testComponent.disablePlaceholder = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(getPlaceholder(fixture)).toBeFalsy();
@@ -627,6 +643,7 @@ describe('YoutubePlayer', () => {
       expect(button.getAttribute('aria-label')).toBe('Play video');
 
       testComponent.placeholderButtonLabel = 'Play Star Wars';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(button.getAttribute('aria-label')).toBe('Play Star Wars');
@@ -640,6 +657,7 @@ describe('YoutubePlayer', () => {
         list: 'some-playlist-id',
         listType: 'playlist',
       };
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(getPlaceholder(fixture)).toBeFalsy();
@@ -650,6 +668,7 @@ describe('YoutubePlayer', () => {
       expect(playerCtorSpy).not.toHaveBeenCalled();
 
       testComponent.playerVars = {autoplay: 1};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       events.onReady({target: playerSpy});
       fixture.detectChanges();
@@ -665,12 +684,14 @@ describe('YoutubePlayer', () => {
       );
 
       testComponent.placeholderImageQuality = 'low';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(placeholder.style.backgroundImage).toContain(
         `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`,
       );
 
       testComponent.placeholderImageQuality = 'high';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(placeholder.style.backgroundImage).toContain(
         `https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`,
