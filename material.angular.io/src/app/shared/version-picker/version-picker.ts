@@ -36,7 +36,7 @@ export class VersionPicker {
    * @param version data for use in navigating to the version's path
    */
   onVersionChanged(version: VersionInfo) {
-    if (!version.url.startsWith(window.location.href)) {
+    if (!version.url.startsWith(window.location.origin)) {
       window.location.assign(
         window.location.pathname ?
         (version.url + window.location.pathname + window.location.hash)
