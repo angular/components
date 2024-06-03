@@ -40,9 +40,9 @@ $${name}-theme: mat.define-theme((
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
 // For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
-// @include mat.typography-hierarchy($theme);
+// @include mat.typography-hierarchy($${name}-theme);
 
 // Comment out the line below if you want to use the deprecated \`color\` inputs.
-// @include mat.color-variants-backwards-compatibility($theme);
+// @include mat.color-variants-backwards-compatibility($${name}-theme);
 `;
 }
