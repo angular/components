@@ -11,6 +11,7 @@ import {ListRange} from '@angular/cdk/collections';
 import {Platform} from '@angular/cdk/platform';
 import {
   afterNextRender,
+  AfterRenderPhase,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -278,7 +279,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
           this._dataLength = newLength;
           this._scrollStrategy.onDataLengthChanged();
         }
-        this._doChangeDetection();
+        this._markChangeDetectionNeeded();
       });
     });
   }
@@ -511,16 +512,23 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     }
 
     this.ngZone.run(() => {
-      // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
-      // from the root, since the repeated items are content projected in. Calling `detectChanges`
-      // instead does not properly check the projected content.
-      this._changeDetectorRef.markForCheck();
-
-      // Apply the content transform. The transform can't be set via an Angular binding because
-      // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-      // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-      // the `Number` function first to coerce it to a numeric value.
-      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+      afterNextRender(
+        () => {
+          // Apply the content transform. The transform can't be set via an Angular binding because
+          // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+          // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+          // the `Number` function first to coerce it to a numeric value.
+          this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+          // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+          // from the root, since the repeated items are content projected in. Calling `detectChanges`
+          // instead does not properly check the projected content.
+          this._changeDetectorRef.markForCheck();
+        },
+        {
+          injector: this._injector,
+          phase: AfterRenderPhase.Write,
+        },
+      );
 
       afterNextRender(
         () => {
@@ -531,7 +539,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
             fn();
           }
         },
-        {injector: this._injector},
+        {
+          injector: this._injector,
+          phase: AfterRenderPhase.Read,
+        },
       );
     });
   }
