@@ -271,7 +271,7 @@ function extractNamespaceFromUseStatement(fullImport: string): string {
 function getNamespaces(moduleName: string, content: string): string[] {
   const namespaces = new Set<string>();
   const escapedName = moduleName.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-  const pattern = new RegExp(`@use +['"]${escapedName}['"].*;?\n`, 'g');
+  const pattern = new RegExp(`@use +['"]${escapedName}['"].*;?\\r?\\n`, 'g');
   let match: RegExpExecArray | null = null;
 
   while ((match = pattern.exec(content))) {

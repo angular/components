@@ -309,4 +309,46 @@ describe('M2 theming migration', () => {
       `@include matx.something-not-theming-related();`,
     ]);
   });
+
+  it('should migrate usages of the M2 theming APIs in a file with CRLF endings', async () => {
+    const result = await setup(
+      [
+        `@use '@angular/material' as mat;`,
+
+        `$my-primary: mat.define-palette(mat.$indigo-palette, 500);`,
+        `$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);`,
+        `$my-warn: mat.define-palette(mat.$red-palette);`,
+
+        `$my-theme: mat.define-light-theme((`,
+        `  color: (`,
+        `    primary: $my-primary,`,
+        `    accent: $my-accent,`,
+        `    warn: $my-warn,`,
+        `  ),`,
+        `  typography: mat.define-typography-config(),`,
+        `  density: 0,`,
+        `));`,
+        `@include mat.all-component-themes($my-theme);`,
+      ].join('\r\n'),
+    );
+
+    expect(result.split('\r\n')).toEqual([
+      `@use '@angular/material' as mat;`,
+
+      `$my-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500);`,
+      `$my-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);`,
+      `$my-warn: mat.m2-define-palette(mat.$m2-red-palette);`,
+
+      `$my-theme: mat.m2-define-light-theme((`,
+      `  color: (`,
+      `    primary: $my-primary,`,
+      `    accent: $my-accent,`,
+      `    warn: $my-warn,`,
+      `  ),`,
+      `  typography: mat.m2-define-typography-config(),`,
+      `  density: 0,`,
+      `));`,
+      `@include mat.all-component-themes($my-theme);`,
+    ]);
+  });
 });
