@@ -47,5 +47,11 @@
     @include cdk.high-contrast(active, off) {
       display: none;
     }
+
+    // Hide ripples inside cloned drag&drop elements since they won't go away.
+    .cdk-drag-preview &,
+    .cdk-drag-placeholder & {
+      display: none;
+    }
   }
 }
