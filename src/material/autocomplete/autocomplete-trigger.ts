@@ -809,7 +809,10 @@ export class MatAutocompleteTrigger
               .withGrowAfterOpen(true)
               .withViewportMargin(8);
           } else {
-            this._positionStrategy.withGrowAfterOpen(false);
+            this._positionStrategy
+              .withFlexibleDimensions(false)
+              .withGrowAfterOpen(false)
+              .withViewportMargin(0);
           }
         });
     } else {
