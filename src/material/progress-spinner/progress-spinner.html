@@ -13,7 +13,7 @@
   All children need to be hidden for screen readers in order to support ChromeVox.
   More context in the issue: https://github.com/angular/components/issues/22165.
 -->
-<div class="mdc-circular-progress__determinate-container" #determinateSpinner>
+<div class="mdc-circular-progress__determinate-container" aria-hidden="true" #determinateSpinner>
   <svg [attr.viewBox]="_viewBox()" class="mdc-circular-progress__determinate-circle-graphic"
        xmlns="http://www.w3.org/2000/svg" focusable="false">
     <circle [attr.r]="_circleRadius()"
