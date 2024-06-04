@@ -1,14 +1,7 @@
 import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox/combobox-popup';
 import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {
-  Component,
-  DebugElement,
-  ElementRef,
-  ViewChild,
-  provideZoneChangeDetection,
-  signal,
-} from '@angular/core';
+import {Component, DebugElement, ElementRef, ViewChild, signal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkCombobox} from './combobox';
@@ -32,7 +25,6 @@ describe('Combobox', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
         imports: [CdkComboboxModule, ComboboxToggle],
       }).compileComponents();
     }));
@@ -54,11 +46,13 @@ describe('Combobox', () => {
 
     it('should update the aria disabled attribute', () => {
       comboboxInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(comboboxElement.getAttribute('aria-disabled')).toBe('true');
 
       comboboxInstance.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(comboboxElement.getAttribute('aria-disabled')).toBe('false');
@@ -129,6 +123,7 @@ describe('Combobox', () => {
     it('should not open panel when disabled', () => {
       expect(comboboxInstance.isOpen()).toBeFalse();
       comboboxInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(comboboxElement, 'click');

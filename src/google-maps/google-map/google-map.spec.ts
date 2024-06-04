@@ -1,4 +1,4 @@
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -22,12 +22,6 @@ const testPosition: google.maps.LatLngLiteral = {
 describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   afterEach(() => {
     (window.google as any) = undefined;
@@ -71,6 +65,7 @@ describe('GoogleMap', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.height = '750px';
     fixture.componentInstance.width = '400px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
@@ -83,6 +78,7 @@ describe('GoogleMap', () => {
 
     fixture.componentInstance.height = '650px';
     fixture.componentInstance.width = '350px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(container.nativeElement.style.height).toBe('650px');
@@ -97,6 +93,7 @@ describe('GoogleMap', () => {
     const instance = fixture.componentInstance;
     instance.height = 750;
     instance.width = 400;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!.nativeElement;
@@ -105,6 +102,7 @@ describe('GoogleMap', () => {
 
     instance.height = '500';
     instance.width = '600';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(container.style.height).toBe('500px');
@@ -138,6 +136,7 @@ describe('GoogleMap', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.center = options.center;
     fixture.componentInstance.zoom = options.zoom;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
@@ -145,6 +144,7 @@ describe('GoogleMap', () => {
 
     fixture.componentInstance.center = {lat: 8, lng: 9};
     fixture.componentInstance.zoom = 12;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setCenter).toHaveBeenCalledWith({lat: 8, lng: 9});
@@ -164,12 +164,14 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, options);
 
     fixture.componentInstance.options = {...options, heading: 170};
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setOptions).toHaveBeenCalledWith({...options, heading: 170});
@@ -182,6 +184,7 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].center).toBeTruthy();
@@ -194,6 +197,7 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(DEFAULT_OPTIONS.zoom);
@@ -206,6 +210,7 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(0);
@@ -227,6 +232,7 @@ describe('GoogleMap', () => {
     fixture.componentInstance.center = correctedOptions.center;
     fixture.componentInstance.zoom = correctedOptions.zoom;
     fixture.componentInstance.options = inputOptions;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
@@ -344,6 +350,7 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.mapTypeId = 'terrain' as unknown as google.maps.MapTypeId;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy).toHaveBeenCalledWith(
@@ -352,6 +359,7 @@ describe('GoogleMap', () => {
     );
 
     fixture.componentInstance.mapTypeId = 'roadmap' as unknown as google.maps.MapTypeId;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setMapTypeId).toHaveBeenCalledWith('roadmap');
@@ -363,6 +371,7 @@ describe('GoogleMap', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.mapId = '123';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy).toHaveBeenCalledWith(
@@ -377,6 +386,7 @@ describe('GoogleMap', () => {
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
