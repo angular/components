@@ -1,25 +1,26 @@
+import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {DataSource} from '@angular/cdk/collections';
-import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   Directive,
   ElementRef,
   ViewChild,
-  provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {BehaviorSubject} from 'rxjs';
 
 import {
   CdkPopoverEditColspan,
   CdkPopoverEditModule,
-  HoverContentState,
   FormValueContainer,
+  HoverContentState,
   PopoverEditClickOutBehavior,
 } from './index';
 
@@ -80,6 +81,7 @@ abstract class BaseTestComponent {
   clickOutBehavior: PopoverEditClickOutBehavior = 'close';
   colspan: CdkPopoverEditColspan = {};
   direction: Direction = 'ltr';
+  cdr = inject(ChangeDetectorRef);
 
   constructor() {
     this.renderData();
@@ -222,6 +224,7 @@ class VanillaTableOutOfCell extends BaseTestComponent {
 
   renderData() {
     this.elements = createElementData();
+    this.cdr.markForCheck();
   }
 }
 
@@ -257,6 +260,7 @@ class VanillaTableInCell extends BaseTestComponent {
 
   renderData() {
     this.elements = createElementData();
+    this.cdr.markForCheck();
   }
 }
 
@@ -319,6 +323,7 @@ class CdkFlexTableInCell extends BaseTestComponent {
 
   renderData() {
     this.dataSource = new ElementDataSource();
+    this.cdr.markForCheck();
   }
 }
 
@@ -369,6 +374,7 @@ class CdkTableInCell extends BaseTestComponent {
 
   renderData() {
     this.dataSource = new ElementDataSource();
+    this.cdr.markForCheck();
   }
 }
 
@@ -388,13 +394,13 @@ describe('CDK Popover Edit', () => {
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkTableModule, CdkPopoverEditModule, CommonModule, FormsModule, BidiModule],
-          providers: [provideZoneChangeDetection()],
           declarations: [componentClass],
         }).compileComponents();
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
         tick(10);
+        fixture.detectChanges();
       }));
 
       describe('row hover content', () => {
@@ -533,6 +539,7 @@ describe('CDK Popover Edit', () => {
         it('opens edit from Enter on focued cell', fakeAsync(() => {
           // Uses Enter to open the lens.
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.lensIsOpen()).toBe(true);
           clearLeftoverTimers();
@@ -540,10 +547,12 @@ describe('CDK Popover Edit', () => {
 
         it('does not trigger edit when disabled', fakeAsync(() => {
           component.nameEditDisabled = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // Uses Enter to open the lens.
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.lensIsOpen()).toBe(false);
           clearLeftoverTimers();
@@ -560,6 +569,7 @@ describe('CDK Popover Edit', () => {
 
           it('unsets tabindex to 0 on disabled cells', () => {
             component.nameEditDisabled = true;
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             expect(component.getEditCell().hasAttribute('tabindex')).toBe(false);
@@ -640,6 +650,7 @@ describe('CDK Popover Edit', () => {
           it('keeps focus within the lens by default', fakeAsync(() => {
             // Open the name lens which has the default behavior.
             component.openLens();
+            fixture.detectChanges();
 
             const focusableElements = getFocusablePaneElements();
 
@@ -695,6 +706,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('shows a lens with the value from the table', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.getNameInput()!.value).toBe('Hydrogen');
           clearLeftoverTimers();
@@ -702,6 +714,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('positions the lens at the top left corner and spans the full width of the cell', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           const paneRect = component.getEditPane()!.getBoundingClientRect();
           const cellRect = component.getEditCell().getBoundingClientRect();
@@ -718,9 +731,11 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           );
 
           component.colspan = {before: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           component.openLens();
+          fixture.detectChanges();
 
           let paneRect = component.getEditPane()!.getBoundingClientRect();
           expectPixelsToEqual(paneRect.top, cellRects[0].top);
@@ -728,6 +743,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           expectPixelsToEqual(paneRect.right, cellRects[1].right);
 
           component.colspan = {after: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -736,6 +752,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           expectPixelsToEqual(paneRect.right, cellRects[2].right);
 
           component.colspan = {before: 1, after: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -747,6 +764,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('updates the form and submits, closing the lens', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -760,6 +778,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('does not close the lens on submit when form is invalid', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = '';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -776,6 +795,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           fakeAsync(() => {
             component.ignoreSubmitUnlessValid = false;
             component.openLens();
+            fixture.detectChanges();
 
             component.getNameInput()!.value = '';
             component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -789,6 +809,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('closes the lens on close', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.clickCloseButton();
 
@@ -798,6 +819,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('closes and reopens a lens with modified value persisted', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -809,6 +831,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           expect(component.lensIsOpen()).toBe(false);
 
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.getNameInput()!.value).toBe('Hydragon');
           clearLeftoverTimers();
@@ -816,6 +839,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('resets the lens to original value', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -828,6 +852,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('should not reset the values when clicking revert without making changes', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.getNameInput()!.value).toBe('Hydrogen');
           expect(component.getWeightInput()!.value).toBe('1.007');
@@ -841,6 +866,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('resets the lens to previously submitted value', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -849,6 +875,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           fixture.detectChanges();
 
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon X';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -861,6 +888,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('closes the lens on escape', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           const event = new KeyboardEvent('keydown', {bubbles: true, key: 'Escape'});
           spyOn(event, 'preventDefault').and.callThrough();
@@ -873,6 +901,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('does not close the lens on escape with a modifier key', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           const event = new KeyboardEvent('keydown', {bubbles: true, key: 'Escape'});
           Object.defineProperty(event, 'altKey', {get: () => true});
@@ -887,6 +916,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('does not close the lens on click within lens', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.dispatchEvent(new Event('click', {bubbles: true}));
 
@@ -896,6 +926,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('closes the lens on outside click', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getNameInput()!.value = 'Hydragon';
           component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -912,6 +943,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           fakeAsync(() => {
             component.clickOutBehavior = 'submit';
             component.openLens();
+            fixture.detectChanges();
 
             component.getNameInput()!.value = 'Hydragon';
             component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -929,6 +961,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
           fakeAsync(() => {
             component.clickOutBehavior = 'noop';
             component.openLens();
+            fixture.detectChanges();
 
             component.getNameInput()!.value = 'Hydragon';
             component.getNameInput()!.dispatchEvent(new Event('input'));
@@ -943,6 +976,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('sets focus on the first input in the lens', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           expect(document.activeElement).toBe(component.getNameInput());
           clearLeftoverTimers();
@@ -950,6 +984,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('returns focus to the edited cell after closing', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.clickCloseButton();
 
@@ -973,9 +1008,11 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
         it('should pass the directionality to the overlay', fakeAsync(() => {
           component.direction = 'rtl';
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.getEditBoundingBox()!.getAttribute('dir')).toBe('rtl');
           clearLeftoverTimers();

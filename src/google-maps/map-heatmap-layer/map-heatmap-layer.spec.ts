@@ -1,15 +1,15 @@
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 
 import {
-  createMapConstructorSpy,
-  createMapSpy,
   createHeatmapLayerConstructorSpy,
   createHeatmapLayerSpy,
-  createLatLngSpy,
   createLatLngConstructorSpy,
+  createLatLngSpy,
+  createMapConstructorSpy,
+  createMapSpy,
 } from '../testing/fake-google-map-utils';
 import {HeatmapData, MapHeatmapLayer} from './map-heatmap-layer';
 
@@ -22,9 +22,6 @@ describe('MapHeatmapLayer', () => {
     latLngSpy = createLatLngSpy();
     createMapConstructorSpy(mapSpy);
     createLatLngConstructorSpy(latLngSpy);
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
   });
 
   afterEach(() => {
@@ -70,6 +67,7 @@ describe('MapHeatmapLayer', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.data = options.data;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -92,6 +90,7 @@ describe('MapHeatmapLayer', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.data = data;
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -122,6 +121,7 @@ describe('MapHeatmapLayer', () => {
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.data = data;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -132,6 +132,7 @@ describe('MapHeatmapLayer', () => {
       new google.maps.LatLng(11, 12),
     ];
     fixture.componentInstance.data = data;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(heatmapSpy.setData).toHaveBeenCalledWith(data);
@@ -145,6 +146,7 @@ describe('MapHeatmapLayer', () => {
       {lat: 1, lng: 2},
       {lat: 3, lng: 4},
     ];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 

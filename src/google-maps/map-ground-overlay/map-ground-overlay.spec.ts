@@ -1,4 +1,4 @@
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -21,12 +21,6 @@ describe('MapGroundOverlay', () => {
   const groundOverlayOptions: google.maps.GroundOverlayOptions = {clickable, opacity};
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
-
-  beforeEach(() => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy);
   });
@@ -44,6 +38,7 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.bounds = bounds;
     fixture.componentInstance.clickable = clickable;
     fixture.componentInstance.opacity = opacity;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -62,6 +57,7 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.url = url;
     fixture.componentInstance.bounds = bounds;
     fixture.componentInstance.opacity = opacity;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -83,6 +79,7 @@ describe('MapGroundOverlay', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.url = url;
     fixture.componentInstance.bounds = bounds;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -98,6 +95,7 @@ describe('MapGroundOverlay', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.url = url;
     fixture.componentInstance.bounds = bounds;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -120,6 +118,7 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.bounds = bounds;
     fixture.componentInstance.clickable = clickable;
     fixture.componentInstance.opacity = opacity;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -128,6 +127,7 @@ describe('MapGroundOverlay', () => {
 
     groundOverlaySpy.setMap.calls.reset();
     fixture.componentInstance.url = 'foo.png';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(groundOverlaySpy.set).toHaveBeenCalledWith('url', 'foo.png');
@@ -146,6 +146,7 @@ describe('MapGroundOverlay', () => {
 
     const oldOverlay = fixture.componentInstance.groundOverlay.groundOverlay;
     fixture.componentInstance.bounds = {...bounds};
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 

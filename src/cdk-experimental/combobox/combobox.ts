@@ -5,8 +5,21 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {DOWN_ARROW, ENTER, ESCAPE, TAB} from '@angular/cdk/keycodes';
+import {
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+} from '@angular/cdk/overlay';
+import {_getEventTarget} from '@angular/cdk/platform';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   EventEmitter,
@@ -19,19 +32,8 @@ import {
   Output,
   TemplateRef,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {
-  ConnectedPosition,
-  FlexibleConnectedPositionStrategy,
-  Overlay,
-  OverlayConfig,
-  OverlayRef,
-} from '@angular/cdk/overlay';
-import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {_getEventTarget} from '@angular/cdk/platform';
-import {DOWN_ARROW, ENTER, ESCAPE, TAB} from '@angular/cdk/keycodes';
 
 export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
@@ -106,6 +108,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
 
   contentId: string = '';
   contentType: AriaHasPopupValue;
+
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -193,6 +197,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
+      this._changeDetectorRef.markForCheck();
       if (!this._isTextTrigger()) {
         // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
         this._doc.getElementById(this.contentId)?.focus();
@@ -205,6 +210,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
     if (this.isOpen() && !this.disabled) {
       this.closed.next();
       this._overlayRef.detach();
+      this._changeDetectorRef.markForCheck();
     }
   }
 
