@@ -9,14 +9,15 @@
 // Load `$localize` for examples using it.
 import '@angular/localize/init';
 
+import {provideHttpClient} from '@angular/common/http';
 import {
   importProvidersFrom,
-  provideZoneChangeDetection,
   provideExperimentalZonelessChangeDetection,
+  // tslint:disable-next-line:no-zone-dependencies -- Allow manual testing of dev-app with zones
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {provideHttpClient} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 
 import {Directionality} from '@angular/cdk/bidi';

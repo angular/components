@@ -1,13 +1,10 @@
-import {TestBed, inject, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, fakeAsync, inject, tick} from '@angular/core/testing';
+import {dispatchFakeEvent} from '../testing/private';
 import {ScrollingModule} from './public-api';
 import {ViewportRuler} from './viewport-ruler';
-import {dispatchFakeEvent} from '../testing/private';
-import {NgZone} from '@angular/core';
-import {Subscription} from 'rxjs';
 
 describe('ViewportRuler', () => {
   let viewportRuler: ViewportRuler;
-  let ngZone: NgZone;
 
   let startingWindowWidth = window.innerWidth;
   let startingWindowHeight = window.innerHeight;
@@ -24,9 +21,8 @@ describe('ViewportRuler', () => {
     }),
   );
 
-  beforeEach(inject([ViewportRuler, NgZone], (v: ViewportRuler, n: NgZone) => {
+  beforeEach(inject([ViewportRuler], (v: ViewportRuler) => {
     viewportRuler = v;
-    ngZone = n;
     scrollTo(0, 0);
   }));
 
@@ -133,27 +129,5 @@ describe('ViewportRuler', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       subscription.unsubscribe();
     }));
-
-    it('should run the resize event outside the NgZone', () => {
-      const spy = jasmine.createSpy('viewport changed spy');
-      const subscription = viewportRuler.change(0).subscribe(() => spy(NgZone.isInAngularZone()));
-
-      dispatchFakeEvent(window, 'resize');
-      expect(spy).toHaveBeenCalledWith(false);
-      subscription.unsubscribe();
-    });
-
-    it('should run events outside of the NgZone, even if the subcription is from inside', () => {
-      const spy = jasmine.createSpy('viewport changed spy');
-      let subscription: Subscription;
-
-      ngZone.run(() => {
-        subscription = viewportRuler.change(0).subscribe(() => spy(NgZone.isInAngularZone()));
-        dispatchFakeEvent(window, 'resize');
-      });
-
-      expect(spy).toHaveBeenCalledWith(false);
-      subscription!.unsubscribe();
-    });
   });
 });
