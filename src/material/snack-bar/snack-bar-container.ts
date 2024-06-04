@@ -54,7 +54,7 @@ let uniqueId = 0;
   standalone: true,
   imports: [CdkPortalOutlet],
   host: {
-    'class': 'mdc-snackbar mat-mdc-snack-bar-container mdc-snackbar--open',
+    'class': 'mdc-snackbar mat-mdc-snack-bar-container',
     '[@state]': '_animationState',
     '(@state.done)': 'onAnimationEnd($event)',
   },

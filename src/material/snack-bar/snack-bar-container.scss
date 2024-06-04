@@ -1,90 +1,96 @@
-@use '@material/snackbar/snackbar' as mdc-snackbar;
-@use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@angular/cdk';
 @use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 @use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
 @use '../core/tokens/token-utils';
-@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/style/elevation';
 
-@mixin _container-min-width {
-  $min-width: mdc-snackbar-theme.$min-width;
-  $mobile-breakpoint: mdc-snackbar-theme.$mobile-breakpoint;
+$_side-padding: 8px;
 
-  // The styles weren't included in `static-styles` so we need to add them ourselves.
-  @include mdc-snackbar-theme.min-width(
-    $min-width: $min-width,
-    $mobile-breakpoint: $mobile-breakpoint,
-    $query: mdc-helpers.$mdc-base-styles-query
-  );
+.mat-mdc-snack-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 8px;
 
-  // The MDC `min-width` mixin has a similar breakpoint that sets `min-width: 100%` on the surface
-  // element to make it span the entire viewport, however it ends up collapsing because the
-  // container is `width: auto`. This query ensures that the surface will span the whole viewport.
-  @media (max-width: $mobile-breakpoint), (max-width: $min-width) {
+  .mat-mdc-snack-bar-handset & {
     width: 100vw;
   }
 }
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  // Include the styles without the animations since we
-  // reuse the same animation as the non-MDC version.
-  @include mdc-snackbar.static-styles($query: mdc-helpers.$mdc-base-styles-without-animation-query);
+.mat-mdc-snackbar-surface {
+  @include elevation.elevation(6);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: $_side-padding;
 
-  .mat-mdc-snack-bar-container {
-    @include _container-min-width;
-    @include mdc-snackbar-theme.max-width(
-      mdc-snackbar-theme.$max-width,
-      $query: mdc-helpers.$mdc-base-styles-query
-    );
-    @include mdc-snackbar-theme.viewport-margin(
-      mdc-snackbar-theme.$viewport-margin-narrow,
-      $query: mdc-helpers.$mdc-base-styles-query
-    );
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $_side-padding;
+  }
 
-    // MDC has the `container-elevation` which sounds like it should work, but it ends up applying
-    // the shadow on the outer container instead of the `.mdc-snackbar__surface` which causes
-    // a white background behind the rounded corners, because the `border-radius` is on the
-    // surface element.
-    @include mdc-snackbar-theme.elevation(mdc-snackbar-theme.$elevation);
-    @include mdc-snackbar-theme.theme-styles(tokens-mdc-snack-bar.get-token-slots());
+  .mat-mdc-snack-bar-container & {
+    min-width: 344px;
+    max-width: 672px;
+  }
 
-    // MDC sets the position as fixed and sets the container on the bottom center of the page (or
-    // otherwise can be set to be "leading"). Our overlay handles a more advanced configuration
-    // of positions, so we'll defer logic there.
-    position: static;
+  // Ensures that the snack bar stretches to full width in handset mode.
+  .mat-mdc-snack-bar-handset & {
+    width: 100%;
+    min-width: 0;
+  }
 
-    // The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
-    // the specificity over the button styles that may bleed in from the rest of the app.
-    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      // MDC's `action-label-text-color` should be able to do this, but the button theme has a
-      // higher specificity so it ends up overriding it. Define our own variable that we can
-      // use to control the color instead.
-      @include token-utils.use-tokens(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-token-slots()
-      ) {
-        @include token-utils.create-token-slot(color, button-color);
-      }
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+  }
 
-      // Darken the ripples in the button so they're visible against the dark background.
-      @include token-utils.create-token-values(tokens-mat-text-button.$prefix, (
-        state-layer-color: currentColor,
-        ripple-color: currentColor,
-      ));
-
-      .mat-ripple-element {
-        opacity: 0.1;
-      }
-    }
-
-    // MDC uses this pseudo element to work around an issue with their live announcer, but it
-    // can cause additional space for long snack bar messages (see #26685). Since we don't use
-    // MDC's announcer, we can hide the element.
-    .mdc-snackbar__label::before {
-      display: none;
+  @include token-utils.use-tokens(
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
+  ) {
+    .mat-mdc-snack-bar-container & {
+      @include token-utils.create-token-slot(color, supporting-text-color);
+      @include token-utils.create-token-slot(border-radius, container-shape);
+      @include token-utils.create-token-slot(background-color, container-color);
     }
   }
+}
+
+.mdc-snackbar__label {
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 14px $_side-padding 14px 16px;
+
+  [dir='rtl'] & {
+    padding-left: $_side-padding;
+    padding-right: 16px;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
+  ) {
+    .mat-mdc-snack-bar-container & {
+      @include token-utils.create-token-slot(font-family, supporting-text-font);
+      @include token-utils.create-token-slot(font-size, supporting-text-size);
+      @include token-utils.create-token-slot(font-weight, supporting-text-weight);
+      @include token-utils.create-token-slot(line-height, supporting-text-line-height);
+    }
+  }
+}
+
+.mat-mdc-snack-bar-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 // These elements need to have full width using flex layout.
@@ -96,7 +102,26 @@
   flex: 1 1 auto;
 }
 
-// Ensures that the snack bar stretches to full width in handset mode.
-.mat-mdc-snack-bar-handset .mdc-snackbar__surface {
-  width: 100%;
+// The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
+// the specificity over the button styles that may bleed in from the rest of the app.
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+  // MDC's `action-label-text-color` should be able to do this, but the button theme has a
+  // higher specificity so it ends up overriding it. Define our own variable that we can
+  // use to control the color instead.
+  @include token-utils.use-tokens(
+    tokens-mat-snack-bar.$prefix,
+    tokens-mat-snack-bar.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(color, button-color);
+  }
+
+  // Darken the ripples in the button so they're visible against the dark background.
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, (
+    state-layer-color: currentColor,
+    ripple-color: currentColor,
+  ));
+
+  .mat-ripple-element {
+    opacity: 0.1;
+  }
 }
