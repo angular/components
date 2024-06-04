@@ -283,13 +283,17 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         break;
       case true:
       case 'first-tabbable':
-        this._focusTrap?.focusInitialElementWhenReady().then(focusedSuccessfully => {
-          // If we weren't able to find a focusable element in the dialog, then focus the dialog
-          // container instead.
-          if (!focusedSuccessfully) {
-            this._focusDialogContainer();
-          }
-        });
+        afterNextRender(
+          () => {
+            const focusedSuccessfully = this._focusTrap?.focusInitialElement();
+            // If we weren't able to find a focusable element in the dialog, then focus the dialog
+            // container instead.
+            if (!focusedSuccessfully) {
+              this._focusDialogContainer();
+            }
+          },
+          {injector: this._injector},
+        );
         break;
       case 'first-heading':
         afterNextRender(
