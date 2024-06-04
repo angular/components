@@ -6,11 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
+  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
   Attribute,
-  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -19,11 +21,10 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
-  forwardRef,
   Inject,
   InjectionToken,
+  Injector,
   Input,
-  numberAttribute,
   OnDestroy,
   OnInit,
   Optional,
@@ -31,12 +32,14 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
+  afterNextRender,
+  booleanAttribute,
+  forwardRef,
+  inject,
+  numberAttribute,
 } from '@angular/core';
-import {_MatInternalFormField, MatRipple, ThemePalette} from '@angular/material/core';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {MatRipple, ThemePalette, _MatInternalFormField} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 
 // Increasing integer for generating unique ids for radio components.
@@ -532,6 +535,8 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   /** Whether animations are disabled. */
   _noopAnimations: boolean;
 
+  private _injector = inject(Injector);
+
   constructor(
     @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
     protected _elementRef: ElementRef,
@@ -695,6 +700,31 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
       if (input) {
         input.setAttribute('tabindex', value + '');
         this._previousTabIndex = value;
+        // Wait for any pending tabindex changes to be applied
+        afterNextRender(
+          () => {
+            queueMicrotask(() => {
+              // The radio group uses a "selection follows focus" pattern for tab management, so if this
+              // radio button is currently focused and another radio button in the group becomes
+              // selected, we should move focus to the newly selected radio button to maintain
+              // consistency between the focused and selected states.
+              if (
+                group &&
+                group.selected &&
+                group.selected !== this &&
+                document.activeElement === input
+              ) {
+                group.selected?._inputElement.nativeElement.focus();
+                // If this radio button still has focus, the selected one must be disabled. In this
+                // case the radio group as a whole should lose focus.
+                if (document.activeElement === input) {
+                  this._inputElement.nativeElement.blur();
+                }
+              }
+            });
+          },
+          {injector: this._injector},
+        );
       }
     }
   }
