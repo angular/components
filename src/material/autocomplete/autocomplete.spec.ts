@@ -2172,7 +2172,7 @@ describe('MDC-based MatAutocomplete', () => {
         let inputReference = fixture.debugElement.query(By.css('.mdc-text-field'))!.nativeElement;
 
         // Push the element down so it has a little bit of space, but not enough to render.
-        inputReference.style.bottom = '75px';
+        inputReference.style.bottom = '100px';
         inputReference.style.position = 'fixed';
 
         dispatchFakeEvent(inputEl, 'focusin');
