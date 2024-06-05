@@ -1,3 +1,20 @@
+<a name="18.1.0-next.1"></a>
+# 18.1.0-next.1 "velvet-violoncello" (2024-06-05)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f4387fda12](https://github.com/angular/components/commit/f4387fda12e3e647e807111344c793efa1d14235) | fix | **testing:** TestbedHarnessEnvironment should work when Zone is not present ([#29176](https://github.com/angular/components/pull/29176)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c4a1407e75](https://github.com/angular/components/commit/c4a1407e75d9e408b0edbd5a106e1b520eb5ad2e) | fix | **core:** hide ripples inside drag&drop elements ([#29184](https://github.com/angular/components/pull/29184)) |
+| [b9fedfe9f9](https://github.com/angular/components/commit/b9fedfe9f900111d749262b2e25cc2fff8aac01f) | fix | **datepicker:** Move aria-live attribute so month can also be announced when using previous and next month buttons ([#29137](https://github.com/angular/components/pull/29137)) |
+| [71297ad7ef](https://github.com/angular/components/commit/71297ad7ef74baa058607356692b8e955791c484) | fix | **radio:** Ensure focus and selected states stay linked ([#29082](https://github.com/angular/components/pull/29082)) |
+| [c9e1d4aedd](https://github.com/angular/components/commit/c9e1d4aedd929b611b908633afac28a2bfb474d2) | fix | **schematics:** theming API migration not working with CRLF line endings ([#29171](https://github.com/angular/components/pull/29171)) |
+| [3314414e17](https://github.com/angular/components/commit/3314414e174a3fda90d18c8d00cf284a77f04e9c) | fix | **slider:** Tick marks changes position as the slider is changed (for a step that is decimal number) ([#29108](https://github.com/angular/components/pull/29108)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.2"></a>
 # 18.0.2 "velvet-viola" (2024-06-05)
 ### cdk
