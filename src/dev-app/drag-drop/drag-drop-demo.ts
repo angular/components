@@ -22,6 +22,8 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {MatRipple} from '@angular/material/core';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'drag-drop-demo',
@@ -38,9 +40,17 @@ import {MatSelectModule} from '@angular/material/select';
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatRipple,
+    MatButtonModule,
   ],
 })
 export class DragAndDropDemo {
+  links = [
+    ['Tab 1', 'Tab 2', 'Tab 3'],
+    ['Tab 4', 'Tab 5', 'Tab 6'],
+  ];
+  activeBlue = this.links[0][0];
+  activeRed = this.links[1][0];
   axisLock: 'x' | 'y';
   dragStartDelay = 0;
   todo = ['Go out for Lunch', 'Make a cool app', 'Watch TV', 'Eat a healthy dinner', 'Go to sleep'];

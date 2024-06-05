@@ -1,140 +1,26 @@
 <div cdkDropListGroup>
-  <div class="demo-list">
-    <h2>To do</h2>
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="todo">
-      @for (item of todo; track item) {
-        <div cdkDrag>
-          {{item}}
-          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-        </div>
-      }
+  <div class="tabs_blue">
+    <div cdkDropList cdkDropListOrientation="horizontal">
+      <button
+        mat-stroked-button
+        cdkDrag
+        *ngFor="let link of links[0]"
+        (click)="activeBlue = link"
+      >
+        {{link}}
+      </button>
     </div>
   </div>
-
-  <div class="demo-list">
-    <h2>Done</h2>
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="done">
-      @for (item of done; track item) {
-        <div cdkDrag>
-          {{item}}
-          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-        </div>
-      }
+  <div class="tabs_red column">
+    <div cdkDropList cdkDropListOrientation="horizontal">
+      <button
+        mat-stroked-button
+        cdkDrag
+        *ngFor="let link of links[1]"
+        (click)="activeRed = link"
+      >
+        {{link}}
+      </button>
     </div>
   </div>
-</div>
-
-<div cdkDropListGroup>
-  <div class="demo-list demo-list-horizontal">
-    <h2>Ages</h2>
-    <div
-      cdkDropList
-      cdkDropListOrientation="horizontal"
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="ages">
-      @for (item of ages; track item) {
-        <div cdkDrag>
-          {{item}}
-          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="demo-list demo-list-horizontal" style="text-align: right">
-    <h2>Preferred Ages</h2>
-    <div
-      cdkDropList
-      cdkDropListOrientation="horizontal"
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="preferredAges">
-      @for (item of preferredAges; track item) {
-        <div cdkDrag>
-          {{item}}
-          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-        </div>
-      }
-    </div>
-  </div>
-</div>
-
-<div class="demo-list">
-  <h2>Free dragging</h2>
-  <div
-    cdkDrag
-    class="demo-free-draggable"
-    [cdkDragLockAxis]="axisLock"
-    [cdkDragStartDelay]="dragStartDelay"
-  >
-    Drag me around
-  </div>
-</div>
-
-<div>
-  <h2>Drag with box boundary</h2>
-  <div class="demo-constrain-box" id="constrain-box-1">
-    <div
-      cdkDrag
-      class="demo-free-draggable"
-      [cdkDragLockAxis]="axisLock"
-      [cdkDragStartDelay]="dragStartDelay"
-      cdkDragBoundary="#constrain-box-1"
-    >
-      Drag me around
-    </div>
-  </div>
-</div>
-
-<div>
-  <h2>Drag with box boundary and custom constrain</h2>
-  <div class="demo-constrain-box" id="constrain-box-2">
-    <div
-      cdkDrag
-      class="demo-free-draggable"
-      [cdkDragLockAxis]="axisLock"
-      [cdkDragStartDelay]="dragStartDelay"
-      cdkDragBoundary="#constrain-box-2"
-      [cdkDragConstrainPosition]="constrainPosition"
-    >
-      Drag me around
-    </div>
-  </div>
-</div>
-
-<div>
-  <h2>Data</h2>
-  <pre>{{todo.join(', ')}}</pre>
-  <pre>{{done.join(', ')}}</pre>
-  <pre>{{ages.join(', ')}}</pre>
-  <pre>{{preferredAges.join(', ')}}</pre>
-</div>
-
-<div>
-  <h2>Axis locking</h2>
-  <mat-form-field>
-    <mat-label>Lock position along axis</mat-label>
-    <mat-select [(ngModel)]="axisLock">
-      <mat-option>None</mat-option>
-      <mat-option value="x">X axis</mat-option>
-      <mat-option value="y">Y axis</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-
-<div>
-  <h2>Drag start delay</h2>
-
-  <mat-form-field>
-    <input matInput placeholder="Drag start delay" value="0" [(ngModel)]="dragStartDelay" />
-  </mat-form-field>
 </div>
