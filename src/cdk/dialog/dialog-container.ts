@@ -31,11 +31,13 @@ import {
   ElementRef,
   EmbeddedViewRef,
   Inject,
+  Injector,
   NgZone,
   OnDestroy,
   Optional,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   inject,
 } from '@angular/core';
 import {DialogConfig} from './dialog-config';
@@ -102,6 +104,10 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
+  private _injector = inject(Injector);
+
+  private _isDestroyed = false;
+
   constructor(
     protected _elementRef: ElementRef,
     protected _focusTrapFactory: FocusTrapFactory,
@@ -150,6 +156,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   ngOnDestroy() {
+    this._isDestroyed = true;
     this._restoreFocus();
   }
 
@@ -246,13 +253,18 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * cannot be moved then focus will go to the dialog container.
    */
   protected _trapFocus() {
+    if (this._isDestroyed) {
+      return;
+    }
+
     const element = this._elementRef.nativeElement;
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty when setting focus when autoFocus isn't set to
     // dialog. If the element inside the dialog can't be focused, then the container is focused
     // so the user can't tab into other elements behind it.
-    switch (this._config.autoFocus) {
+    const autoFocus = this._config.autoFocus;
+    switch (autoFocus) {
       case false:
       case 'dialog':
         // Ensure that focus is on the dialog container. It's possible that a different
@@ -260,9 +272,14 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         // https://github.com/angular/components/issues/16215. Note that we only want to do this
         // if the focus isn't inside the dialog already, because it's possible that the consumer
         // turned off `autoFocus` in order to move focus themselves.
-        if (!this._containsFocus()) {
-          element.focus();
-        }
+        afterNextRender(
+          () => {
+            if (!this._containsFocus()) {
+              element.focus();
+            }
+          },
+          {injector: this._injector},
+        );
         break;
       case true:
       case 'first-tabbable':
@@ -275,10 +292,20 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         });
         break;
       case 'first-heading':
-        this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+        afterNextRender(
+          () => {
+            this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+          },
+          {injector: this._injector},
+        );
         break;
       default:
-        this._focusByCssSelector(this._config.autoFocus!);
+        afterNextRender(
+          () => {
+            this._focusByCssSelector(autoFocus!);
+          },
+          {injector: this._injector},
+        );
         break;
     }
   }

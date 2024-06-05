@@ -94,8 +94,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
 
-  private _isDestroyed = false;
-
   constructor(
     elementRef: ElementRef,
     focusTrapFactory: FocusTrapFactory,
@@ -264,10 +262,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
    * be called by sub-classes that use different animation implementations.
    */
   protected _openAnimationDone(totalTime: number) {
-    if (this._isDestroyed) {
-      return;
-    }
-
     if (this._config.delayFocusTrap) {
       this._trapFocus();
     }
@@ -281,8 +275,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     if (this._animationTimer !== null) {
       clearTimeout(this._animationTimer);
     }
-
-    this._isDestroyed = true;
   }
 
   override attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
