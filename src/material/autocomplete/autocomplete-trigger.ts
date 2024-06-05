@@ -7,16 +7,27 @@
  */
 
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
 import {
-  afterNextRender,
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+  PositionStrategy,
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
+import {_getEventTarget} from '@angular/cdk/platform';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {DOCUMENT} from '@angular/common';
+import {
   AfterViewInit,
-  booleanAttribute,
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  forwardRef,
   Host,
-  inject,
   Inject,
   InjectionToken,
   Injector,
@@ -27,38 +38,27 @@ import {
   Optional,
   SimpleChanges,
   ViewContainerRef,
+  afterNextRender,
+  booleanAttribute,
+  forwardRef,
+  inject,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
-import {_getEventTarget} from '@angular/cdk/platform';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {
-  FlexibleConnectedPositionStrategy,
-  Overlay,
-  OverlayConfig,
-  OverlayRef,
-  PositionStrategy,
-  ScrollStrategy,
-  ConnectedPosition,
-} from '@angular/cdk/overlay';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
+  MatOption,
   MatOptionSelectionChange,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
-  MatOption,
 } from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
-import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
-import {delay, filter, map, switchMap, take, tap, startWith} from 'rxjs/operators';
-import {MatAutocompleteOrigin} from './autocomplete-origin';
+import {Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf} from 'rxjs';
+import {delay, filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
-  MatAutocompleteDefaultOptions,
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
   MatAutocomplete,
+  MatAutocompleteDefaultOptions,
 } from './autocomplete';
+import {MatAutocompleteOrigin} from './autocomplete-origin';
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
@@ -456,6 +456,7 @@ export class MatAutocompleteTrigger
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this._element.nativeElement.disabled = isDisabled;
+    this._changeDetectorRef.markForCheck();
   }
 
   _handleKeydown(event: KeyboardEvent): void {

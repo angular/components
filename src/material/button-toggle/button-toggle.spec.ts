@@ -1,14 +1,7 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {
-  Component,
-  DebugElement,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  provideZoneChangeDetection,
-} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
@@ -20,11 +13,6 @@ import {
 } from './index';
 
 describe('MatButtonToggle with forms', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -296,16 +284,18 @@ describe('MatButtonToggle with forms', () => {
     fixture.detectChanges();
 
     instance.values.shift();
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(instance.toggles.map(t => t.checked)).toEqual([false, true]);
 
     instance.values.unshift('a');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(instance.toggles.map(t => t.checked)).toEqual([false, false, true]);
   });
 
-  it('should preserve the pre-selected option if it removed and re-added', () => {
+  it('should preserve the pre-selected option if it is removed and re-added', () => {
     const fixture = TestBed.createComponent(ButtonToggleGroupWithFormControlAndDynamicButtons);
     const instance = fixture.componentInstance;
     instance.control.setValue('a');
@@ -313,10 +303,12 @@ describe('MatButtonToggle with forms', () => {
     expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
 
     instance.values.shift();
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(instance.toggles.map(t => t.checked)).toEqual([false, false]);
 
     instance.values.unshift('a');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
@@ -324,11 +316,6 @@ describe('MatButtonToggle with forms', () => {
 });
 
 describe('MatButtonToggle without forms', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -410,6 +397,7 @@ describe('MatButtonToggle without forms', () => {
 
     it('should disable click interactions when the group is disabled', () => {
       testComponent.isGroupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       buttonToggleNativeElements[0].click();
@@ -417,6 +405,7 @@ describe('MatButtonToggle without forms', () => {
       expect(buttonToggleInstances[0].disabled).toBe(true);
 
       testComponent.isGroupDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(buttonToggleInstances[0].disabled).toBe(false);
@@ -431,6 +420,7 @@ describe('MatButtonToggle without forms', () => {
       expect(groupNativeElement.getAttribute('aria-disabled')).toBe('false');
 
       testComponent.isGroupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupNativeElement.getAttribute('aria-disabled')).toBe('true');
@@ -442,6 +432,7 @@ describe('MatButtonToggle without forms', () => {
       expect(buttons.every(input => input.disabled)).toBe(false);
 
       testComponent.isGroupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(buttons.every(input => input.disabled)).toBe(true);
@@ -496,6 +487,7 @@ describe('MatButtonToggle without forms', () => {
       expect(groupNativeElement.classList).not.toContain('mat-button-toggle-vertical');
 
       groupInstance.vertical = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupNativeElement.classList).toContain('mat-button-toggle-vertical');
@@ -541,6 +533,7 @@ describe('MatButtonToggle without forms', () => {
       expect(groupInstance.value).toBeFalsy();
 
       testComponent.groupValue = 'test1';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('test1');
@@ -549,6 +542,7 @@ describe('MatButtonToggle without forms', () => {
       expect(buttonToggleInstances[1].checked).toBe(false);
 
       testComponent.groupValue = 'test2';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('test2');
@@ -576,6 +570,7 @@ describe('MatButtonToggle without forms', () => {
       expect(groupInstance.selected).toBe(buttonToggleInstances[0]);
 
       testComponent.renderFirstToggle = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -645,6 +640,7 @@ describe('MatButtonToggle without forms', () => {
 
     it('should disable click interactions when the group is disabled', () => {
       testComponent.isGroupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       buttonToggleNativeElements[0].click();
@@ -695,6 +691,7 @@ describe('MatButtonToggle without forms', () => {
       expect(groupNativeElement.classList).not.toContain('mat-button-toggle-vertical');
 
       groupInstance.vertical = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupNativeElement.classList).toContain('mat-button-toggle-vertical');
@@ -1003,6 +1000,7 @@ describe('MatButtonToggle without forms', () => {
 
       fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
       fixture.componentInstance.value = 'Seven';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
@@ -1019,6 +1017,7 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(false);
 
     fixture.componentInstance.value = [0, false];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);

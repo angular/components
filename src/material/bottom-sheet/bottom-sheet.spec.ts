@@ -20,7 +20,6 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -62,7 +61,7 @@ describe('MatBottomSheet', () => {
         BottomSheetWithInjectedData,
         ShadowDomComponent,
       ],
-      providers: [provideZoneChangeDetection(), {provide: Location, useClass: SpyLocation}],
+      providers: [{provide: Location, useClass: SpyLocation}],
     }).compileComponents();
   }));
 
@@ -642,6 +641,7 @@ describe('MatBottomSheet', () => {
 
         viewContainerFixture.detectChanges();
         await viewContainerFixture.whenStable();
+        viewContainerFixture.detectChanges();
 
         expect(document.activeElement!.tagName)
           .withContext('Expected first tabbable element (input) in the dialog to be focused.')

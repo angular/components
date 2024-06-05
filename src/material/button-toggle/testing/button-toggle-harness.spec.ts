@@ -1,7 +1,7 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatButtonToggleHarness} from './button-toggle-harness';
 
@@ -9,11 +9,6 @@ describe('MatButtonToggleHarness', () => {
   let fixture: ComponentFixture<ButtonToggleHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatButtonToggleModule, ButtonToggleHarnessTest],
@@ -108,6 +103,7 @@ describe('MatButtonToggleHarness', () => {
 
   it('should toggle the button value', async () => {
     fixture.componentInstance.disabled = false;
+    fixture.changeDetectorRef.markForCheck();
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatButtonToggleHarness);
     await checkedToggle.toggle();
     await uncheckedToggle.toggle();
@@ -117,6 +113,7 @@ describe('MatButtonToggleHarness', () => {
 
   it('should check the button toggle', async () => {
     fixture.componentInstance.disabled = false;
+    fixture.changeDetectorRef.markForCheck();
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatButtonToggleHarness);
     await checkedToggle.check();
     await uncheckedToggle.check();
@@ -126,6 +123,7 @@ describe('MatButtonToggleHarness', () => {
 
   it('should uncheck the button toggle', async () => {
     fixture.componentInstance.disabled = false;
+    fixture.changeDetectorRef.markForCheck();
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatButtonToggleHarness);
     await checkedToggle.uncheck();
     await uncheckedToggle.uncheck();

@@ -1,7 +1,7 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatBadgeModule, MatBadgePosition, MatBadgeSize} from '@angular/material/badge';
 import {MatBadgeHarness} from './badge-harness';
 
@@ -12,7 +12,6 @@ describe('MatBadgeHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatBadgeModule, BadgeHarnessTest],
-      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BadgeHarnessTest);
@@ -30,6 +29,7 @@ describe('MatBadgeHarness', () => {
 
     expect(await badge.getText()).toBe('Simple badge');
     fixture.componentInstance.simpleContent = 'Changed simple badge';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getText()).toBe('Changed simple badge');
   });
 
@@ -51,6 +51,7 @@ describe('MatBadgeHarness', () => {
 
     expect(await badge.isOverlapping()).toBe(true);
     fixture.componentInstance.overlap = false;
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.isOverlapping()).toBe(false);
   });
 
@@ -59,6 +60,7 @@ describe('MatBadgeHarness', () => {
 
     expect(await badge.isDisabled()).toBe(true);
     fixture.componentInstance.disabled = false;
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.isDisabled()).toBe(false);
   });
 
@@ -67,6 +69,7 @@ describe('MatBadgeHarness', () => {
 
     expect(await badge.isHidden()).toBe(true);
     fixture.componentInstance.hidden = false;
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.isHidden()).toBe(false);
   });
 
@@ -77,15 +80,19 @@ describe('MatBadgeHarness', () => {
     expect(await badge.getPosition()).toBe('above after');
 
     instance.position = 'below';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getPosition()).toBe('below after');
 
     instance.position = 'below before';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getPosition()).toBe('below before');
 
     instance.position = 'above';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getPosition()).toBe('above after');
 
     instance.position = 'above before';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getPosition()).toBe('above before');
   });
 
@@ -96,9 +103,11 @@ describe('MatBadgeHarness', () => {
     expect(await badge.getSize()).toBe('medium');
 
     instance.size = 'small';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getSize()).toBe('small');
 
     instance.size = 'large';
+    fixture.changeDetectorRef.markForCheck();
     expect(await badge.getSize()).toBe('large');
   });
 });
