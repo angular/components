@@ -71,18 +71,6 @@ describe('ScrollDispatcher', () => {
       expect(serviceSpy).toHaveBeenCalled();
     }));
 
-    it('should not execute the global events in the Angular zone', () => {
-      scroll.scrolled(0).subscribe(() => {});
-      dispatchFakeEvent(document, 'scroll', false);
-
-      expect(fixture.ngZone!.isStable).toBe(true);
-    });
-
-    it('should not execute the scrollable events in the Angular zone', () => {
-      dispatchFakeEvent(fixture.componentInstance.scrollingElement.nativeElement, 'scroll');
-      expect(fixture.ngZone!.isStable).toBe(true);
-    });
-
     it('should be able to unsubscribe from the global scrollable', () => {
       const spy = jasmine.createSpy('global scroll callback');
       const subscription = scroll.scrolled(0).subscribe(spy);

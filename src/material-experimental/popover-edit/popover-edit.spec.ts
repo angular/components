@@ -1,23 +1,17 @@
 import {DataSource} from '@angular/cdk/collections';
-import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
-import {MatTableModule} from '@angular/material/table';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {CommonModule} from '@angular/common';
-import {
-  Component,
-  Directive,
-  ElementRef,
-  ViewChild,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
+import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 
 import {
   CdkPopoverEditColspan,
-  HoverContentState,
   FormValueContainer,
+  HoverContentState,
   PopoverEditClickOutBehavior,
 } from '@angular/cdk-experimental/popover-edit';
 import {MatPopoverEditModule} from './index';
@@ -297,12 +291,6 @@ const testCases = [
 ] as const;
 
 describe('Material Popover Edit', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
-
   for (const [componentClass, label] of testCases) {
     describe(label, () => {
       let component: BaseTestComponent;
@@ -317,6 +305,7 @@ describe('Material Popover Edit', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         tick(10);
+        fixture.detectChanges();
       }));
 
       describe('row hover content', () => {
@@ -432,6 +421,7 @@ describe('Material Popover Edit', () => {
 
         it('does not trigger edit when disabled', fakeAsync(() => {
           component.nameEditDisabled = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // Uses Enter to open the lens.
@@ -452,6 +442,7 @@ describe('Material Popover Edit', () => {
 
           it('unsets tabindex to 0 on disabled cells', () => {
             component.nameEditDisabled = true;
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             expect(component.getEditCell().hasAttribute('tabindex')).toBe(false);
@@ -594,6 +585,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
         it('positions the lens at the top left corner and spans the full width of the cell', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           const paneRect = component.getEditPane()!.getBoundingClientRect();
           const cellRect = component.getEditCell().getBoundingClientRect();
@@ -610,9 +602,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
           );
 
           component.colspan = {before: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           component.openLens();
+          fixture.detectChanges();
 
           let paneRect = component.getEditPane()!.getBoundingClientRect();
           expectPixelsToEqual(paneRect.top, cellRects[0].top);
@@ -620,6 +614,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           expectPixelsToEqual(paneRect.right, cellRects[1].right);
 
           component.colspan = {after: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -630,6 +625,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           // expectPixelsToEqual(paneRect.right, cellRects[2].right);
 
           component.colspan = {before: 1, after: 1};
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -706,6 +702,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           expect(component.lensIsOpen()).toBe(false);
 
           component.openLens();
+          fixture.detectChanges();
 
           expect(component.getInput()!.value).toBe('Hydragon');
           clearLeftoverTimers();
@@ -713,6 +710,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
         it('resets the lens to original value', fakeAsync(() => {
           component.openLens();
+          fixture.detectChanges();
 
           component.getInput()!.value = 'Hydragon';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -733,6 +731,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           fixture.detectChanges();
 
           component.openLens();
+          fixture.detectChanges();
 
           component.getInput()!.value = 'Hydragon X';
           component.getInput()!.dispatchEvent(new Event('input'));
