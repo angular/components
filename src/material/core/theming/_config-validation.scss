@@ -89,7 +89,7 @@
   @if $err {
     @return (#{'$config should be a color configuration object. Got:'} $config);
   }
-  $allowed: (theme-type, primary, tertiary, use-system-variables);
+  $allowed: (theme-type, primary, tertiary, use-system-variables, system-variables-prefix);
   $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
   @if $err {
     @return (
@@ -134,7 +134,8 @@
     bold-weight,
     medium-weight,
     regular-weight,
-    use-system-variables
+    use-system-variables,
+    system-variables-prefix
   );
   $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
   @if $err {
