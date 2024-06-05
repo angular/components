@@ -11,8 +11,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   NgModule,
+  NgZone,
   OnDestroy,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -41,6 +43,8 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
 
   private readonly _afterClosedSubscription: Subscription;
 
+  private readonly _ngZone = inject(NgZone);
+
   /** Static method that prepares this class to open the provided component. */
   static withComponent<T = unknown, R = unknown>(
     component: ComponentType<T>,
@@ -56,9 +60,11 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
       throw new Error(`MatTestDialogOpener does not have a component provided.`);
     }
 
-    this.dialogRef = this.dialog.open<T, R>(
-      MatTestDialogOpener.component as ComponentType<T>,
-      MatTestDialogOpener.config || {},
+    this.dialogRef = this._ngZone.run(() =>
+      this.dialog.open<T, R>(
+        MatTestDialogOpener.component as ComponentType<T>,
+        MatTestDialogOpener.config || {},
+      ),
     );
     this._afterClosedSubscription = this.dialogRef.afterClosed().subscribe(result => {
       this.closedResult = result;
