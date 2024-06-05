@@ -1,6 +1,6 @@
+import minimatch from 'minimatch';
 import * as Lint from 'tslint';
 import ts from 'typescript';
-import minimatch from 'minimatch';
 
 /**
  * NgZone properties that are ok to access.
@@ -48,5 +48,17 @@ class Walker extends Lint.RuleWalker {
     }
 
     return super.visitPropertyAccessExpression(node);
+  }
+
+  override visitNamedImports(node: ts.NamedImports): void {
+    if (!this._enabled) {
+      return;
+    }
+
+    node.elements.forEach(specifier => {
+      if (specifier.name.getText() === 'provideZoneChangeDetection') {
+        this.addFailureAtNode(specifier, `Using zone change detection is not allowed.`);
+      }
+    });
   }
 }

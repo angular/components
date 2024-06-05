@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {AutofillMonitor} from './autofill';
 import {TextFieldModule} from './text-field-module';
 
-describe('AutofillMonitor', () => {
+describe('AutofillMonitor Zone.js integration', () => {
   let autofillMonitor: AutofillMonitor;
   let fixture: ComponentFixture<Inputs>;
   let testComponent: Inputs;
