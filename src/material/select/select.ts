@@ -187,6 +187,7 @@ export class MatSelectChange {
     '[attr.aria-expanded]': 'panelOpen',
     '[attr.aria-label]': 'ariaLabel || null',
     '[attr.aria-required]': 'required.toString()',
+    '[attr.required]': 'required',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',

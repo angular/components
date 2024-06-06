@@ -63,6 +63,7 @@ let nextUniqueId = 0;
     '[id]': 'id',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.required]': 'required',
     '[attr.name]': 'name || null',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
     // Only mark the input as invalid for assistive technology if it has a value since the
