@@ -30,8 +30,8 @@ import {
   ViewEncapsulation,
   createNgModuleRef,
   forwardRef,
-  signal,
   provideZoneChangeDetection,
+  signal,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -1041,7 +1041,8 @@ describe('MDC-based MatDialog', () => {
         });
 
         viewContainerFixture.detectChanges();
-        flushMicrotasks();
+        flush();
+        viewContainerFixture.detectChanges();
 
         let backdrop = overlayContainerElement.querySelector(
           '.cdk-overlay-backdrop',
@@ -1209,7 +1210,8 @@ describe('MDC-based MatDialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       let container = overlayContainerElement.querySelector(
         '.mat-mdc-dialog-container',
@@ -1245,7 +1247,8 @@ describe('MDC-based MatDialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       let firstParagraph = overlayContainerElement.querySelector(
         'p[tabindex="-1"]',
