@@ -16,7 +16,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  NgZone,
   OnDestroy,
   OnInit,
   Provider,
@@ -25,7 +24,6 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -57,12 +55,6 @@ import {
 } from './index';
 
 describe('MDC-based MatAutocomplete', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
-
   let overlayContainerElement: HTMLElement;
 
   // Creates a test component fixture.
@@ -366,6 +358,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should not mess with label placement if set to never', fakeAsync(() => {
       fixture.componentInstance.floatLabel = 'never';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -388,6 +381,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should not mess with label placement if set to always', fakeAsync(() => {
       fixture.componentInstance.floatLabel = 'always';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -476,6 +470,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should not emit the `opened` event when no options are being shown', () => {
       fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -486,6 +481,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should emit the `opened` event if the options come in after the panel is shown', fakeAsync(() => {
       fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -496,6 +492,7 @@ describe('MDC-based MatAutocomplete', () => {
       fixture.componentInstance.filteredStates = fixture.componentInstance.states = [
         {name: 'California', code: 'CA'},
       ];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -529,6 +526,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should not emit the `closed` event when no options were shown', () => {
       fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -546,6 +544,7 @@ describe('MDC-based MatAutocomplete', () => {
         .toBe(false);
 
       fixture.componentInstance.autocompleteDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchFakeEvent(input, 'focusin');
@@ -558,6 +557,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should continue to update the model if the autocomplete is disabled', () => {
       fixture.componentInstance.autocompleteDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       typeInElement(input, 'hello');
@@ -570,6 +570,7 @@ describe('MDC-based MatAutocomplete', () => {
       expect(input.getAttribute('aria-haspopup')).toBe('listbox');
 
       fixture.componentInstance.autocompleteDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(input.hasAttribute('aria-haspopup')).toBe(false);
@@ -742,6 +743,7 @@ describe('MDC-based MatAutocomplete', () => {
   it('should not clear the selected option if it no longer matches the input text while typing with requireSelection', waitForAsync(async () => {
     const fixture = createComponent(SimpleAutocomplete);
     fixture.componentInstance.requireSelection = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await new Promise(r => setTimeout(r));
 
@@ -873,6 +875,7 @@ describe('MDC-based MatAutocomplete', () => {
 
       fixture.componentInstance.panel.displayWith = null;
       fixture.componentInstance.options.toArray()[1].value = 'test value';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const options = overlayContainerElement.querySelectorAll(
@@ -1025,9 +1028,6 @@ describe('MDC-based MatAutocomplete', () => {
     it('should disable the input when used with a value accessor and without `matInput`', () => {
       fixture.destroy();
       TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
-      });
 
       const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
       plainFixture.detectChanges();
@@ -1052,6 +1052,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should transfer the theme to the autocomplete panel', () => {
       fixture.componentInstance.theme = 'warn';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -1358,6 +1359,7 @@ describe('MDC-based MatAutocomplete', () => {
           state.height = 64;
         }
       });
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const trigger = fixture.componentInstance.trigger;
@@ -1520,6 +1522,7 @@ describe('MDC-based MatAutocomplete', () => {
     it('should close the panel when tabbing away from a trigger without results', fakeAsync(() => {
       fixture.componentInstance.states = [];
       fixture.componentInstance.filteredStates = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       input.focus();
       flush();
@@ -1828,6 +1831,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should add a custom aria-labelledby to the panel', () => {
       fixture.componentInstance.ariaLabelledby = 'myLabelId';
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -1841,8 +1845,10 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should trim aria-labelledby if the input does not have a label', () => {
       fixture.componentInstance.hasLabel = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.ariaLabelledby = 'myLabelId';
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -1854,6 +1860,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should clear aria-labelledby from the panel if an aria-label is set', () => {
       fixture.componentInstance.ariaLabel = 'My label';
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -1866,6 +1873,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should clear aria-labelledby if the form field does not have a label', () => {
       fixture.componentInstance.hasLabel = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -1878,6 +1886,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should support setting a custom aria-label', () => {
       fixture.componentInstance.ariaLabel = 'Custom Label';
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -2000,6 +2009,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should remove autocomplete-specific aria attributes when autocomplete is disabled', () => {
       fixture.componentInstance.autocompleteDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(input.getAttribute('role')).toBeFalsy();
@@ -2166,6 +2176,7 @@ describe('MDC-based MatAutocomplete', () => {
         let fixture = createComponent(SimpleAutocomplete);
         fixture.componentInstance.states = fixture.componentInstance.states.slice(0, 1);
         fixture.componentInstance.filteredStates = fixture.componentInstance.states.slice();
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -2190,6 +2201,7 @@ describe('MDC-based MatAutocomplete', () => {
 
         for (let i = 0; i < 20; i++) {
           fixture.componentInstance.filteredStates.push({code: 'FK', name: 'Fake State'});
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         }
 
@@ -2216,6 +2228,7 @@ describe('MDC-based MatAutocomplete', () => {
     it('should be able to force below position even if there is not enough space', waitForAsync(async () => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.componentInstance.position = 'below';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       let inputReference = fixture.debugElement.query(By.css('.mdc-text-field'))!.nativeElement;
 
@@ -2242,6 +2255,7 @@ describe('MDC-based MatAutocomplete', () => {
     it('should be able to force above position even if there is not enough space', waitForAsync(async () => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.componentInstance.position = 'above';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       let inputReference = fixture.debugElement.query(By.css('.mdc-text-field'))!.nativeElement;
 
@@ -2294,6 +2308,7 @@ describe('MDC-based MatAutocomplete', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.position = 'below';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       await openPanel();
 
@@ -2384,6 +2399,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     it('should be able to preselect the first option', waitForAsync(async () => {
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2438,6 +2454,7 @@ describe('MDC-based MatAutocomplete', () => {
         .toBe(false);
 
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2458,6 +2475,7 @@ describe('MDC-based MatAutocomplete', () => {
     it('should be able to preselect the first option when the floating label is disabled', waitForAsync(async () => {
       fixture.componentInstance.floatLabel = 'never';
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
@@ -2530,12 +2548,14 @@ describe('MDC-based MatAutocomplete', () => {
       };
 
       fixture.componentInstance.states = [{code: 'OR', name: 'Oregon'}];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       await openAndSelectFirstOption();
       expect(spy).toHaveBeenCalledTimes(1);
 
       fixture.componentInstance.states = [{code: 'WV', name: 'West Virginia'}];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       await openAndSelectFirstOption();
@@ -2627,6 +2647,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2659,6 +2680,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2692,6 +2714,7 @@ describe('MDC-based MatAutocomplete', () => {
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
       trigger.autocomplete.autoSelectActiveOption = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2720,6 +2743,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2758,6 +2782,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2786,6 +2811,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       stateCtrl.setValue(states[1]);
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -2794,6 +2820,7 @@ describe('MDC-based MatAutocomplete', () => {
       expect(stateCtrl.value).toEqual({code: 'CA', name: 'California'});
 
       fixture.componentInstance.states = fixture.componentInstance.filteredStates = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       trigger.openPanel();
@@ -2817,6 +2844,7 @@ describe('MDC-based MatAutocomplete', () => {
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
 
@@ -2934,6 +2962,7 @@ describe('MDC-based MatAutocomplete', () => {
     // tslint:disable-next-line:ban
     xit('should not prevent escape key propagation when there are no options', waitForAsync(async () => {
       fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
 
@@ -3023,6 +3052,7 @@ describe('MDC-based MatAutocomplete', () => {
       const fixture = createComponent(AutocompleteWithNumbers);
 
       fixture.componentInstance.selectedNumber = 0;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -3118,6 +3148,7 @@ describe('MDC-based MatAutocomplete', () => {
       expect(classList).toContain('class-two');
 
       fixture.componentInstance.panelClass = 'class-three class-four';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(classList).not.toContain('class-one');
@@ -3190,6 +3221,7 @@ describe('MDC-based MatAutocomplete', () => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
       fixture.componentInstance.trigger.autocomplete.autoSelectActiveOption = true;
+      fixture.changeDetectorRef.markForCheck();
     });
 
     it(
@@ -3416,6 +3448,7 @@ describe('MDC-based MatAutocomplete', () => {
   it('should have correct width when opened', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.openPanel();
@@ -3429,6 +3462,7 @@ describe('MDC-based MatAutocomplete', () => {
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.width = 500;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.openPanel();
@@ -3442,6 +3476,7 @@ describe('MDC-based MatAutocomplete', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.openPanel();
@@ -3453,6 +3488,7 @@ describe('MDC-based MatAutocomplete', () => {
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
     widthFixture.componentInstance.width = 500;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     input.focus();
@@ -3496,6 +3532,7 @@ describe('MDC-based MatAutocomplete', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.openPanel();
@@ -3506,6 +3543,7 @@ describe('MDC-based MatAutocomplete', () => {
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
     widthFixture.componentInstance.width = 400;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     dispatchFakeEvent(window, 'resize');
@@ -3518,6 +3556,7 @@ describe('MDC-based MatAutocomplete', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.openPanel();
@@ -3532,9 +3571,11 @@ describe('MDC-based MatAutocomplete', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.autocomplete.panelWidth = 'auto';
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.componentInstance.trigger.openPanel();
     widthFixture.detectChanges();
 
@@ -3547,9 +3588,11 @@ describe('MDC-based MatAutocomplete', () => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.detectChanges();
 
     widthFixture.componentInstance.trigger.autocomplete.panelWidth = 400;
+    widthFixture.changeDetectorRef.markForCheck();
     widthFixture.componentInstance.trigger.openPanel();
     widthFixture.detectChanges();
 
@@ -3640,6 +3683,7 @@ describe('MDC-based MatAutocomplete', () => {
     fixture.detectChanges();
 
     fixture.componentInstance.states.push('Puerto Rico');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick();
     fixture.detectChanges();
@@ -3714,6 +3758,7 @@ describe('MDC-based MatAutocomplete', () => {
 
     fixture.detectChanges();
     fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     fixture.componentInstance.trigger.openPanel();
     fixture.detectChanges();
@@ -3741,6 +3786,7 @@ describe('MDC-based MatAutocomplete', () => {
     fixture.detectChanges();
 
     fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openPanel();
@@ -3791,6 +3837,7 @@ describe('MDC-based MatAutocomplete', () => {
     const fixture = createComponent(AutocompleteWithDifferentOrigin);
     fixture.detectChanges();
     fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     fixture.componentInstance.trigger.openPanel();
     fixture.detectChanges();
@@ -3805,32 +3852,11 @@ describe('MDC-based MatAutocomplete', () => {
     expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
   }));
 
-  it('should emit from `autocomplete.closed` after click outside inside the NgZone', waitForAsync(async () => {
-    const inZoneSpy = jasmine.createSpy('in zone spy');
-
-    const fixture = createComponent(SimpleAutocomplete);
-    fixture.detectChanges();
-
-    fixture.componentInstance.trigger.openPanel();
-    fixture.detectChanges();
-    await new Promise(r => setTimeout(r));
-
-    const subscription = fixture.componentInstance.trigger.autocomplete.closed.subscribe(() =>
-      inZoneSpy(NgZone.isInAngularZone()),
-    );
-    await new Promise(r => setTimeout(r));
-
-    dispatchFakeEvent(document, 'click');
-
-    expect(inZoneSpy).toHaveBeenCalledWith(true);
-
-    subscription.unsubscribe();
-  }));
-
   describe('a11y', () => {
     it('should display checkmark for selection by default', () => {
       const fixture = createComponent(AutocompleteWithNgModel);
       fixture.componentInstance.selectedState = 'New York';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();

@@ -1,20 +1,14 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DebugElement,
-  Type,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
-import {ThemePalette} from '@angular/material/core';
+import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, flushMicrotasks} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
-  MatCheckboxDefaultOptions,
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MatCheckbox,
   MatCheckboxChange,
+  MatCheckboxDefaultOptions,
   MatCheckboxModule,
 } from './index';
 
@@ -24,7 +18,6 @@ describe('MDC-based MatCheckbox', () => {
   function createComponent<T>(componentType: Type<T>) {
     TestBed.configureTestingModule({
       imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
-      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -57,6 +50,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.checked).toBe(false);
 
       testComponent.isChecked = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(true);
@@ -66,6 +60,7 @@ describe('MDC-based MatCheckbox', () => {
         .toBe(false);
 
       testComponent.isChecked = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
@@ -85,6 +80,7 @@ describe('MDC-based MatCheckbox', () => {
       const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
 
       testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       dispatchFakeEvent(checkboxElement, 'mousedown');
       dispatchFakeEvent(checkboxElement, 'mouseup');
@@ -93,6 +89,7 @@ describe('MDC-based MatCheckbox', () => {
 
       flush();
       testComponent.isDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       dispatchFakeEvent(checkboxElement, 'mousedown');
       dispatchFakeEvent(checkboxElement, 'mouseup');
@@ -107,6 +104,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(false);
 
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -114,6 +112,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(true);
 
       testComponent.isIndeterminate = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -123,6 +122,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should set indeterminate to false when input clicked', fakeAsync(() => {
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.indeterminate).toBe(true);
@@ -145,6 +145,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(testComponent.isIndeterminate).toBe(false);
 
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.indeterminate).toBe(true);
@@ -170,6 +171,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should not set indeterminate to false when checked is set programmatically', fakeAsync(() => {
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -178,6 +180,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(testComponent.isIndeterminate).toBe(true);
 
       testComponent.isChecked = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(true);
@@ -186,6 +189,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(testComponent.isIndeterminate).toBe(true);
 
       testComponent.isChecked = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
@@ -222,6 +226,7 @@ describe('MDC-based MatCheckbox', () => {
     it('should change from indeterminate to checked on click', fakeAsync(() => {
       testComponent.isChecked = false;
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
@@ -248,12 +253,14 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.disabled).toBe(false);
 
       testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.disabled).toBe(true);
       expect(inputElement.disabled).toBe(true);
 
       testComponent.isDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.disabled).toBe(false);
@@ -263,6 +270,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should not toggle `checked` state upon interation while disabled', fakeAsync(() => {
       testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       checkboxNativeElement.click();
@@ -271,6 +279,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should overwrite indeterminate state when clicked', fakeAsync(() => {
       testComponent.isIndeterminate = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       inputElement.click();
@@ -290,6 +299,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should generate a unique id for the checkbox input if no id is set', fakeAsync(() => {
       testComponent.checkboxId = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\d+/);
@@ -307,6 +317,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should add a css class to position the label before the checkbox', fakeAsync(() => {
       testComponent.labelPos = 'before';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxNativeElement.querySelector('.mdc-form-field')!.classList).toContain(
@@ -364,6 +375,7 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.checked).toBe(false);
 
       testComponent.isChecked = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -385,11 +397,13 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should forward the required attribute', fakeAsync(() => {
       testComponent.isRequired = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputElement.required).toBe(true);
 
       testComponent.isRequired = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputElement.required).toBe(false);
@@ -420,6 +434,7 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should forward the value to input element', fakeAsync(() => {
       testComponent.checkboxValue = 'basic_checkbox';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputElement.value).toBe('basic_checkbox');
@@ -447,6 +462,7 @@ describe('MDC-based MatCheckbox', () => {
       it('should not show ripples when disabled', fakeAsync(() => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.isDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchFakeEvent(checkboxElement, 'mousedown');
@@ -457,6 +473,7 @@ describe('MDC-based MatCheckbox', () => {
 
         flush();
         testComponent.isDisabled = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchFakeEvent(checkboxElement, 'mousedown');
@@ -471,6 +488,7 @@ describe('MDC-based MatCheckbox', () => {
       it('should remove ripple if matRippleDisabled input is set', fakeAsync(() => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.disableRipple = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchFakeEvent(checkboxElement, 'mousedown');
@@ -481,6 +499,7 @@ describe('MDC-based MatCheckbox', () => {
 
         flush();
         testComponent.disableRipple = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         dispatchFakeEvent(checkboxElement, 'mousedown');
@@ -496,10 +515,12 @@ describe('MDC-based MatCheckbox', () => {
     describe('color behaviour', () => {
       it('should apply class based on color attribute', fakeAsync(() => {
         testComponent.checkboxColor = 'primary';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList.contains('mat-primary')).toBe(true);
 
         testComponent.checkboxColor = 'accent';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList.contains('mat-accent')).toBe(true);
       }));
@@ -508,12 +529,14 @@ describe('MDC-based MatCheckbox', () => {
         checkboxNativeElement.classList.add('custom-class');
 
         testComponent.checkboxColor = 'primary';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList.contains('mat-primary')).toBe(true);
         expect(checkboxNativeElement.classList.contains('custom-class')).toBe(true);
 
         testComponent.checkboxColor = 'accent';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList.contains('mat-primary')).toBe(false);
@@ -523,6 +546,7 @@ describe('MDC-based MatCheckbox', () => {
 
       it('should default to accent if no color is passed in', fakeAsync(() => {
         testComponent.checkboxColor = undefined;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList).toContain('mat-accent');
       }));
@@ -550,6 +574,7 @@ describe('MDC-based MatCheckbox', () => {
 
       it('should not set `indeterminate` to false on click if check is set', fakeAsync(() => {
         testComponent.isIndeterminate = true;
+        fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
         flush();
@@ -580,6 +605,7 @@ describe('MDC-based MatCheckbox', () => {
 
       it('should not change `indeterminate` on click if noop is set', fakeAsync(() => {
         testComponent.isIndeterminate = true;
+        fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
         flush();
@@ -591,6 +617,7 @@ describe('MDC-based MatCheckbox', () => {
       it(`should not change 'checked' or 'indeterminate' on click if noop is set`, fakeAsync(() => {
         testComponent.isChecked = true;
         testComponent.isIndeterminate = true;
+        fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
         flush();
@@ -599,6 +626,7 @@ describe('MDC-based MatCheckbox', () => {
         expect(inputElement.indeterminate).toBe(true);
 
         testComponent.isChecked = false;
+        fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
         flush();
@@ -770,12 +798,15 @@ describe('MDC-based MatCheckbox', () => {
 
     it('should preserve given tabIndex when the checkbox is disabled then enabled', fakeAsync(() => {
       testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       testComponent.customTabIndex = 13;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       testComponent.isDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputElement.tabIndex).toBe(13);
@@ -903,6 +934,7 @@ describe('MDC-based MatCheckbox', () => {
         inputElement.focus();
 
         fixture.componentInstance.isDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         flushMicrotasks();
@@ -1045,6 +1077,7 @@ describe('MatCheckboxDefaultOptions', () => {
       configure({color: 'primary'});
       const fixture: ComponentFixture<SingleCheckbox> = TestBed.createComponent(SingleCheckbox);
       fixture.componentInstance.checkboxColor = 'warn';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       expect(checkboxDebugElement.nativeElement.classList).not.toContain('mat-primary');
@@ -1056,6 +1089,7 @@ describe('MatCheckboxDefaultOptions', () => {
       configure({clickAction: 'noop'});
       const fixture: ComponentFixture<SingleCheckbox> = TestBed.createComponent(SingleCheckbox);
       fixture.componentInstance.checkboxColor = undefined;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       expect(checkboxDebugElement.nativeElement.classList).toContain('mat-accent');
