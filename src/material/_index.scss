@@ -127,7 +127,7 @@
 @forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
   slider-density, slider-base, slider-overrides;
 @forward './snack-bar/snack-bar-theme' as snack-bar-* show snack-bar-theme, snack-bar-color,
-  snack-bar-typography, snack-bar-density, snack-bar-base, bar-overrides;
+  snack-bar-typography, snack-bar-density, snack-bar-base, snack-bar-overrides;
 @forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography, sort-density,
   sort-base, sort-overrides;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
