@@ -13,11 +13,8 @@ import {DragDropRegistry} from '../drag-drop-registry';
 import {moveItemInArray} from '../drag-utils';
 import {combineTransforms} from '../dom/styling';
 import {adjustDomRect, getMutableClientRect, isInsideClientRect} from '../dom/dom-rect';
-import {
-  DropListSortStrategy,
-  DropListSortStrategyItem,
-  SortPredicate,
-} from './drop-list-sort-strategy';
+import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
+import type {DragRef} from '../drag-ref';
 
 /**
  * Entry in the position cache for draggable items.
@@ -39,21 +36,19 @@ interface CachedItemPosition<T> {
  * Items are reordered using CSS transforms which allows for sorting to be animated.
  * @docs-private
  */
-export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
-  implements DropListSortStrategy<T>
-{
+export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Function used to determine if an item can be sorted into a specific index. */
-  private _sortPredicate: SortPredicate<T>;
+  private _sortPredicate: SortPredicate<DragRef>;
 
   /** Cache of the dimensions of all the items inside the container. */
-  private _itemPositions: CachedItemPosition<T>[] = [];
+  private _itemPositions: CachedItemPosition<DragRef>[] = [];
 
   /**
    * Draggable items that are currently active inside the container. Includes the items
    * that were there at the start of the sequence, as well as any items that have been dragged
    * in, but haven't been dropped yet.
    */
-  private _activeDraggables: T[];
+  private _activeDraggables: DragRef[];
 
   /** Direction in which the list is oriented. */
   orientation: 'vertical' | 'horizontal' = 'vertical';
@@ -63,7 +58,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
 
   constructor(
     private _element: HTMLElement | ElementRef<HTMLElement>,
-    private _dragDropRegistry: DragDropRegistry<T, unknown>,
+    private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
   ) {}
 
   /**
@@ -72,7 +67,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * overlap with the swapped item after the swapping occurred.
    */
   private _previousSwap = {
-    drag: null as T | null,
+    drag: null as DragRef | null,
     delta: 0,
     overlaps: false,
   };
@@ -81,7 +76,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * To be called when the drag sequence starts.
    * @param items Items that are currently in the list.
    */
-  start(items: readonly T[]) {
+  start(items: readonly DragRef[]) {
     this.withItems(items);
   }
 
@@ -92,7 +87,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * @param pointerY Position of the item along the Y axis.
    * @param pointerDelta Direction in which the pointer is moving along each axis.
    */
-  sort(item: T, pointerX: number, pointerY: number, pointerDelta: {x: number; y: number}) {
+  sort(item: DragRef, pointerX: number, pointerY: number, pointerDelta: {x: number; y: number}) {
     const siblings = this._itemPositions;
     const newIndex = this._getItemIndexFromPointerPosition(item, pointerX, pointerY, pointerDelta);
 
@@ -172,7 +167,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * @param index Index at which the item entered. If omitted, the container will try to figure it
    *   out automatically.
    */
-  enter(item: T, pointerX: number, pointerY: number, index?: number): void {
+  enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void {
     const newIndex =
       index == null || index < 0
         ? // We use the coordinates of where the item entered the drop
@@ -183,7 +178,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
     const activeDraggables = this._activeDraggables;
     const currentIndex = activeDraggables.indexOf(item);
     const placeholder = item.getPlaceholderElement();
-    let newPositionReference: T | undefined = activeDraggables[newIndex];
+    let newPositionReference: DragRef | undefined = activeDraggables[newIndex];
 
     // If the item at the new position is the same as the item that is being dragged,
     // it means that we're trying to restore the item to its initial position. In this
@@ -229,13 +224,13 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
   }
 
   /** Sets the items that are currently part of the list. */
-  withItems(items: readonly T[]): void {
+  withItems(items: readonly DragRef[]): void {
     this._activeDraggables = items.slice();
     this._cacheItemPositions();
   }
 
   /** Assigns a sort predicate to the strategy. */
-  withSortPredicate(predicate: SortPredicate<T>): void {
+  withSortPredicate(predicate: SortPredicate<DragRef>): void {
     this._sortPredicate = predicate;
   }
 
@@ -262,12 +257,12 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * Gets a snapshot of items currently in the list.
    * Can include items that we dragged in from another list.
    */
-  getActiveItemsSnapshot(): readonly T[] {
+  getActiveItemsSnapshot(): readonly DragRef[] {
     return this._activeDraggables;
   }
 
   /** Gets the index of a specific item. */
-  getItemIndex(item: T): number {
+  getItemIndex(item: DragRef): number {
     // Items are sorted always by top/left in the cache, however they flow differently in RTL.
     // The rest of the logic still stands no matter what orientation we're in, however
     // we need to invert the array when determining the index.
@@ -351,7 +346,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    */
   private _getSiblingOffsetPx(
     currentIndex: number,
-    siblings: CachedItemPosition<T>[],
+    siblings: CachedItemPosition<DragRef>[],
     delta: 1 | -1,
   ) {
     const isHorizontal = this.orientation === 'horizontal';
@@ -410,7 +405,7 @@ export class SingleAxisSortStrategy<T extends DropListSortStrategyItem>
    * @param delta Direction in which the user is moving their pointer.
    */
   private _getItemIndexFromPointerPosition(
-    item: T,
+    item: DragRef,
     pointerX: number,
     pointerY: number,
     delta?: {x: number; y: number},
