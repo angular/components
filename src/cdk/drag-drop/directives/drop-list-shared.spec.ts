@@ -405,31 +405,27 @@ export function defineCommonDropListTests(config: {
       flush();
     }));
 
-    it(
-      'should not dispatch the `sorted` event when an item is dragged inside ' +
-        'a single-item list',
-      fakeAsync(() => {
-        const fixture = createComponent(DraggableInDropZone);
-        fixture.componentInstance.items = [fixture.componentInstance.items[0]];
+    it('should not dispatch the `sorted` event when an item is dragged inside a single-item list', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.componentInstance.items = [fixture.componentInstance.items[0]];
+      fixture.detectChanges();
+
+      const draggedItem = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const {top, left} = draggedItem.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, draggedItem, left, top);
+
+      for (let i = 0; i < 5; i++) {
+        dispatchMouseEvent(document, 'mousemove', left, top + 1);
         fixture.detectChanges();
 
-        const draggedItem = fixture.componentInstance.dragItems.first.element.nativeElement;
-        const {top, left} = draggedItem.getBoundingClientRect();
+        expect(fixture.componentInstance.sortedSpy).not.toHaveBeenCalled();
+      }
 
-        startDraggingViaMouse(fixture, draggedItem, left, top);
-
-        for (let i = 0; i < 5; i++) {
-          dispatchMouseEvent(document, 'mousemove', left, top + 1);
-          fixture.detectChanges();
-
-          expect(fixture.componentInstance.sortedSpy).not.toHaveBeenCalled();
-        }
-
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
-        flush();
-      }),
-    );
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+    }));
 
     it('should not move items in a vertical list if the pointer is too far away', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
@@ -1512,7 +1508,7 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
-      scrollTo(0, 500);
+      scrollTo(0, 5000);
       config.assertDownwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
@@ -1538,7 +1534,7 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
-      scrollTo(0, 500);
+      scrollTo(0, 5000);
       config.assertUpwardSorting(
         fixture,
         fixture.componentInstance.dragItems.map(item => {
@@ -1602,35 +1598,31 @@ export function defineCommonDropListTests(config: {
       flush();
     }));
 
-    it(
-      'should lay out the elements correctly, if an element skips multiple positions when ' +
-        'sorting vertically',
-      fakeAsync(() => {
-        const fixture = createComponent(DraggableInDropZone);
-        fixture.detectChanges();
+    it('should lay out the elements correctly, if an element skips multiple positions when sorting vertically', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
 
-        const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
-        const draggedItem = items[0];
-        const {top, left} = draggedItem.getBoundingClientRect();
+      const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
+      const draggedItem = items[0];
+      const {top, left} = draggedItem.getBoundingClientRect();
 
-        startDraggingViaMouse(fixture, draggedItem, left, top);
+      startDraggingViaMouse(fixture, draggedItem, left, top);
 
-        const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-        const targetRect = items[items.length - 1].getBoundingClientRect();
+      const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+      const targetRect = items[items.length - 1].getBoundingClientRect();
 
-        // Add a few pixels to the top offset so we get some overlap.
-        dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
-        fixture.detectChanges();
+      // Add a few pixels to the top offset so we get some overlap.
+      dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
+      fixture.detectChanges();
 
-        expect(
-          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-        ).toEqual(['One', 'Two', 'Three', 'Zero']);
+      expect(
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+      ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
-        flush();
-      }),
-    );
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+    }));
 
     it('should lay out the elements correctly, if an element skips multiple positions when sorting horizontally', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
@@ -1742,53 +1734,49 @@ export function defineCommonDropListTests(config: {
       flush();
     }));
 
-    it(
-      'it should allow item swaps in the same drag direction, if the pointer did not ' +
-        'overlap with the sibling item after the previous swap',
-      fakeAsync(() => {
-        const fixture = createComponent(DraggableInDropZone);
-        fixture.detectChanges();
+    it('it should allow item swaps in the same drag direction, if the pointer did not overlap with the sibling item after the previous swap', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
 
-        const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
-        const draggedItem = items[0];
-        const target = items[items.length - 1];
-        const itemRect = draggedItem.getBoundingClientRect();
+      const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
+      const draggedItem = items[0];
+      const target = items[items.length - 1];
+      const itemRect = draggedItem.getBoundingClientRect();
 
-        startDraggingViaMouse(fixture, draggedItem, itemRect.left, itemRect.top);
+      startDraggingViaMouse(fixture, draggedItem, itemRect.left, itemRect.top);
 
-        const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+      const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
-        expect(
-          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-        ).toEqual(['Zero', 'One', 'Two', 'Three']);
+      expect(
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+      ).toEqual(['Zero', 'One', 'Two', 'Three']);
 
-        let targetRect = target.getBoundingClientRect();
+      let targetRect = target.getBoundingClientRect();
 
-        // Trigger a mouse move coming from the bottom so that the list thinks that we're
-        // sorting upwards. This usually how a user would behave with a mouse pointer.
-        dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom + 50);
-        fixture.detectChanges();
-        dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
-        fixture.detectChanges();
+      // Trigger a mouse move coming from the bottom so that the list thinks that we're
+      // sorting upwards. This usually how a user would behave with a mouse pointer.
+      dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom + 50);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
+      fixture.detectChanges();
 
-        expect(
-          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-        ).toEqual(['One', 'Two', 'Three', 'Zero']);
+      expect(
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+      ).toEqual(['One', 'Two', 'Three', 'Zero']);
 
-        // Refresh the rect since the element position has changed.
-        targetRect = target.getBoundingClientRect();
-        dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
-        fixture.detectChanges();
+      // Refresh the rect since the element position has changed.
+      targetRect = target.getBoundingClientRect();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
+      fixture.detectChanges();
 
-        expect(
-          config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-        ).toEqual(['One', 'Two', 'Zero', 'Three']);
+      expect(
+        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
+      ).toEqual(['One', 'Two', 'Zero', 'Three']);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
-        flush();
-      }),
-    );
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+    }));
 
     it('should clean up the preview element if the item is destroyed mid-drag', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
@@ -1943,14 +1931,14 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
 
-      scrollTo(0, 500);
+      scrollTo(0, 5000);
       fixture.detectChanges();
 
       // Move the pointer a bit so the preview has to reposition.
       dispatchMouseEvent(document, 'mousemove', 55, 55);
       fixture.detectChanges();
 
-      expect(preview.style.transform).toBe('translate3d(55px, 555px, 0px)');
+      expect(preview.style.transform).toBe('translate3d(55px, 1571px, 0px)');
 
       cleanup();
     }));
@@ -2602,7 +2590,7 @@ export function defineCommonDropListTests(config: {
         document,
         'mousemove',
         listRect.left + listRect.width / 2,
-        listRect.top + listRect.height / 2,
+        listRect.bottom + listRect.height / 2,
       );
       fixture.detectChanges();
       tickAnimationFrames(20);
@@ -2727,87 +2715,79 @@ export function defineCommonDropListTests(config: {
       cleanup();
     }));
 
-    it(
-      'should auto-scroll the list, not the viewport, when the pointer is over the edge of ' +
-        'both the list and the viewport',
-      fakeAsync(() => {
-        const fixture = createComponent(DraggableInScrollableVerticalDropZone);
-        fixture.detectChanges();
+    it('should auto-scroll the list, not the viewport, when the pointer is over the edge of both the list and the viewport', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.detectChanges();
 
-        const list = fixture.componentInstance.dropInstance.element.nativeElement;
-        const viewportRuler = TestBed.inject(ViewportRuler);
-        const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const viewportRuler = TestBed.inject(ViewportRuler);
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
 
-        // Position the list so that its top aligns with the viewport top. That way the pointer
-        // will both over its top edge and the viewport's. We use top instead of bottom, because
-        // bottom behaves weirdly when we run tests on mobile devices.
-        list.style.position = 'fixed';
-        list.style.left = '50%';
-        list.style.top = '0';
-        list.style.margin = '0';
+      // Position the list so that its top aligns with the viewport top. That way the pointer
+      // will both over its top edge and the viewport's. We use top instead of bottom, because
+      // bottom behaves weirdly when we run tests on mobile devices.
+      list.style.position = 'fixed';
+      list.style.left = '50%';
+      list.style.top = '0';
+      list.style.margin = '0';
 
-        const listRect = list.getBoundingClientRect();
-        const cleanup = makeScrollable();
+      const listRect = list.getBoundingClientRect();
+      const cleanup = makeScrollable();
 
-        scrollTo(0, viewportRuler.getViewportSize().height * 5);
-        list.scrollTop = 50;
+      scrollTo(0, viewportRuler.getViewportSize().height * 5);
+      list.scrollTop = 50;
 
-        const initialScrollDistance = viewportRuler.getViewportScrollPosition().top;
-        expect(initialScrollDistance).toBeGreaterThan(0);
-        expect(list.scrollTop).toBe(50);
+      const initialScrollDistance = viewportRuler.getViewportScrollPosition().top;
+      expect(initialScrollDistance).toBeGreaterThan(0);
+      expect(list.scrollTop).toBe(50);
 
-        startDraggingViaMouse(fixture, item);
-        dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
-        fixture.detectChanges();
-        tickAnimationFrames(20);
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
 
-        expect(viewportRuler.getViewportScrollPosition().top).toBe(initialScrollDistance);
-        expect(list.scrollTop).toBeLessThan(50);
+      expect(viewportRuler.getViewportScrollPosition().top).toBe(initialScrollDistance);
+      expect(list.scrollTop).toBeLessThan(50);
 
-        cleanup();
-      }),
-    );
+      cleanup();
+    }));
 
-    it(
-      'should auto-scroll the viewport, when the pointer is over the edge of both the list ' +
-        'and the viewport, if the list cannot be scrolled in that direction',
-      fakeAsync(() => {
-        const fixture = createComponent(DraggableInScrollableVerticalDropZone);
-        fixture.detectChanges();
+    it('should auto-scroll the viewport, when the pointer is over the edge of both the list and the viewport, if the list cannot be scrolled in that direction', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableVerticalDropZone);
+      fixture.detectChanges();
 
-        const list = fixture.componentInstance.dropInstance.element.nativeElement;
-        const viewportRuler = TestBed.inject(ViewportRuler);
-        const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const viewportRuler = TestBed.inject(ViewportRuler);
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
 
-        // Position the list so that its top aligns with the viewport top. That way the pointer
-        // will both over its top edge and the viewport's. We use top instead of bottom, because
-        // bottom behaves weirdly when we run tests on mobile devices.
-        list.style.position = 'fixed';
-        list.style.left = '50%';
-        list.style.top = '0';
-        list.style.margin = '0';
+      // Position the list so that its top aligns with the viewport top. That way the pointer
+      // will both over its top edge and the viewport's. We use top instead of bottom, because
+      // bottom behaves weirdly when we run tests on mobile devices.
+      list.style.position = 'fixed';
+      list.style.left = '50%';
+      list.style.top = '0';
+      list.style.margin = '0';
 
-        const listRect = list.getBoundingClientRect();
-        const cleanup = makeScrollable();
+      const listRect = list.getBoundingClientRect();
+      const cleanup = makeScrollable();
 
-        scrollTo(0, viewportRuler.getViewportSize().height * 5);
-        list.scrollTop = 0;
+      scrollTo(0, viewportRuler.getViewportSize().height * 5);
+      list.scrollTop = 0;
 
-        const initialScrollDistance = viewportRuler.getViewportScrollPosition().top;
-        expect(initialScrollDistance).toBeGreaterThan(0);
-        expect(list.scrollTop).toBe(0);
+      const initialScrollDistance = viewportRuler.getViewportScrollPosition().top;
+      expect(initialScrollDistance).toBeGreaterThan(0);
+      expect(list.scrollTop).toBe(0);
 
-        startDraggingViaMouse(fixture, item);
-        dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
-        fixture.detectChanges();
-        tickAnimationFrames(20);
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
 
-        expect(viewportRuler.getViewportScrollPosition().top).toBeLessThan(initialScrollDistance);
-        expect(list.scrollTop).toBe(0);
+      expect(viewportRuler.getViewportScrollPosition().top).toBeLessThan(initialScrollDistance);
+      expect(list.scrollTop).toBe(0);
 
-        cleanup();
-      }),
-    );
+      cleanup();
+    }));
 
     it('should be able to auto-scroll a parent container', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableParentContainer);
@@ -3168,7 +3148,7 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       documentElement.style.position = 'absolute';
-      documentElement.style.top = '-100px';
+      documentElement.style.top = '100px';
 
       config.assertDownwardSorting(
         fixture,
@@ -3256,51 +3236,47 @@ export function defineCommonDropListTests(config: {
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
-    it(
-      'should be able to move the element over a new container and return it to the initial ' +
-        'one, even if it no longer matches the enterPredicate',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should be able to move the element over a new container and return it to the initial one, even if it no longer matches the enterPredicate', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
-        const item = groups[0][1];
-        const initialRect = item.element.nativeElement.getBoundingClientRect();
-        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const initialRect = item.element.nativeElement.getBoundingClientRect();
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
-        fixture.componentInstance.dropInstances.first.enterPredicate = () => false;
-        fixture.detectChanges();
+      fixture.componentInstance.dropInstances.first.enterPredicate = () => false;
+      fixture.detectChanges();
 
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[1].contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
+      expect(dropZones[1].contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be back inside first container.')
-          .toBe(true);
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be back inside first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
 
-        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-      }),
-    );
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
 
     it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
@@ -3579,45 +3555,6 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
     }));
 
-    it('should enter as last child if entering from top in reversed container', fakeAsync(() => {
-      const fixture = createComponent(ConnectedDropZones);
-
-      // Make sure there's only one item in the first list.
-      fixture.componentInstance.todo = ['things'];
-      fixture.detectChanges();
-
-      const groups = fixture.componentInstance.groupedDragItems;
-      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
-      const item = groups[0][0];
-
-      // Add some initial padding as the target drop zone
-      const targetDropZoneStyle = dropZones[1].style;
-      targetDropZoneStyle.paddingTop = '10px';
-      targetDropZoneStyle.display = 'flex';
-      targetDropZoneStyle.flexDirection = 'column-reverse';
-
-      const targetRect = dropZones[1].getBoundingClientRect();
-
-      startDraggingViaMouse(fixture, item.element.nativeElement);
-
-      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
-
-      expect(placeholder).toBeTruthy();
-
-      expect(dropZones[0].contains(placeholder))
-        .withContext('Expected placeholder to be inside the first container.')
-        .toBe(true);
-
-      dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top);
-      fixture.detectChanges();
-
-      expect(dropZones[1].lastChild === placeholder)
-        .withContext('Expected placeholder to be last child inside second container.')
-        .toBe(true);
-
-      dispatchMouseEvent(document, 'mouseup');
-    }));
-
     it('should not throw when entering from the top with an intermediate sibling present', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZonesWithIntermediateSibling);
 
@@ -3749,112 +3686,104 @@ export function defineCommonDropListTests(config: {
       });
     }));
 
-    it(
-      'should return DOM element to its initial container after it is dropped, in a container ' +
-        'with one draggable item',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZonesWithSingleItems);
-        fixture.detectChanges();
+    it('should return DOM element to its initial container after it is dropped, in a container with one draggable item', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZonesWithSingleItems);
+      fixture.detectChanges();
 
-        const items = fixture.componentInstance.dragItems.toArray();
-        const item = items[0];
-        const targetRect = items[1].element.nativeElement.getBoundingClientRect();
-        const dropContainers = fixture.componentInstance.dropInstances.map(
-          drop => drop.element.nativeElement,
-        );
+      const items = fixture.componentInstance.dragItems.toArray();
+      const item = items[0];
+      const targetRect = items[1].element.nativeElement.getBoundingClientRect();
+      const dropContainers = fixture.componentInstance.dropInstances.map(
+        drop => drop.element.nativeElement,
+      );
 
-        expect(dropContainers[0].contains(item.element.nativeElement))
-          .withContext('Expected DOM element to be in first container')
-          .toBe(true);
-        expect(item.dropContainer)
-          .withContext('Expected CdkDrag to be in first container in memory')
-          .toBe(fixture.componentInstance.dropInstances.first);
+      expect(dropContainers[0].contains(item.element.nativeElement))
+        .withContext('Expected DOM element to be in first container')
+        .toBe(true);
+      expect(item.dropContainer)
+        .withContext('Expected CdkDrag to be in first container in memory')
+        .toBe(fixture.componentInstance.dropInstances.first);
 
-        dragElementViaMouse(
-          fixture,
-          item.element.nativeElement,
-          targetRect.left + 1,
-          targetRect.top + 1,
-        );
-        flush();
-        fixture.detectChanges();
+      dragElementViaMouse(
+        fixture,
+        item.element.nativeElement,
+        targetRect.left + 1,
+        targetRect.top + 1,
+      );
+      flush();
+      fixture.detectChanges();
 
-        expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
 
-        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
-        expect(event).toEqual({
-          previousIndex: 0,
-          currentIndex: 0,
-          item,
-          container: fixture.componentInstance.dropInstances.toArray()[1],
-          previousContainer: fixture.componentInstance.dropInstances.first,
-          isPointerOverContainer: true,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
-          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
-          event: jasmine.anything(),
-        });
+      expect(event).toEqual({
+        previousIndex: 0,
+        currentIndex: 0,
+        item,
+        container: fixture.componentInstance.dropInstances.toArray()[1],
+        previousContainer: fixture.componentInstance.dropInstances.first,
+        isPointerOverContainer: true,
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        event: jasmine.anything(),
+      });
 
-        expect(dropContainers[0].contains(item.element.nativeElement))
-          .withContext('Expected DOM element to be returned to first container')
-          .toBe(true);
-        expect(item.dropContainer)
-          .withContext('Expected CdkDrag to be returned to first container in memory')
-          .toBe(fixture.componentInstance.dropInstances.first);
-      }),
-    );
+      expect(dropContainers[0].contains(item.element.nativeElement))
+        .withContext('Expected DOM element to be returned to first container')
+        .toBe(true);
+      expect(item.dropContainer)
+        .withContext('Expected CdkDrag to be returned to first container in memory')
+        .toBe(fixture.componentInstance.dropInstances.first);
+    }));
 
-    it(
-      'should be able to return an element to its initial container in the same sequence, ' +
-        'even if it is not connected to the current container',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should be able to return an element to its initial container in the same sequence, even if it is not connected to the current container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const [todoDropInstance, doneDropInstance] =
-          fixture.componentInstance.dropInstances.toArray();
-        const todoZone = todoDropInstance.element.nativeElement;
-        const doneZone = doneDropInstance.element.nativeElement;
-        const item = groups[0][1];
-        const initialRect = item.element.nativeElement.getBoundingClientRect();
-        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const [todoDropInstance, doneDropInstance] =
+        fixture.componentInstance.dropInstances.toArray();
+      const todoZone = todoDropInstance.element.nativeElement;
+      const doneZone = doneDropInstance.element.nativeElement;
+      const item = groups[0][1];
+      const initialRect = item.element.nativeElement.getBoundingClientRect();
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
-        // Change the `connectedTo` so the containers are only connected one-way.
-        fixture.componentInstance.todoConnectedTo.set([doneDropInstance]);
-        fixture.componentInstance.doneConnectedTo.set([]);
-        fixture.detectChanges();
+      // Change the `connectedTo` so the containers are only connected one-way.
+      fixture.componentInstance.todoConnectedTo.set([doneDropInstance]);
+      fixture.componentInstance.doneConnectedTo.set([]);
+      fixture.detectChanges();
 
-        startDraggingViaMouse(fixture, item.element.nativeElement);
-        fixture.detectChanges();
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.detectChanges();
 
-        const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
+      const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(todoZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
+      expect(placeholder).toBeTruthy();
+      expect(todoZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(doneZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
+      expect(doneZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.detectChanges();
 
-        expect(todoZone.contains(placeholder))
-          .withContext('Expected placeholder to be back inside first container.')
-          .toBe(true);
+      expect(todoZone.contains(placeholder))
+        .withContext('Expected placeholder to be back inside first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
 
-        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-      }),
-    );
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
 
     it('should not add child drop lists to the same group as their parents', fakeAsync(() => {
       const fixture = createComponent(NestedDropListGroups);
@@ -3986,46 +3915,42 @@ export function defineCommonDropListTests(config: {
         .toBe(true);
     }));
 
-    it(
-      'should set the receiving class on the source container, even if the enter predicate ' +
-        'does not match',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
-        fixture.componentInstance.dropInstances.toArray()[0].enterPredicate = () => false;
+    it('should set the receiving class on the source container, even if the enter predicate does not match', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+      fixture.componentInstance.dropInstances.toArray()[0].enterPredicate = () => false;
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
-        const item = groups[0][1];
-        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
-        expect(dropZones.every(c => !c.classList.contains('cdk-drop-list-receiving')))
-          .withContext('Expected neither of the containers to have the class.')
-          .toBe(true);
+      expect(dropZones.every(c => !c.classList.contains('cdk-drop-list-receiving')))
+        .withContext('Expected neither of the containers to have the class.')
+        .toBe(true);
 
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        expect(dropZones[0].classList)
-          .not.withContext('Expected source container not to have the receiving class.')
-          .toContain('cdk-drop-list-receiving');
+      expect(dropZones[0].classList)
+        .not.withContext('Expected source container not to have the receiving class.')
+        .toContain('cdk-drop-list-receiving');
 
-        expect(dropZones[1].classList)
-          .withContext('Expected target container to have the receiving class.')
-          .toContain('cdk-drop-list-receiving');
+      expect(dropZones[1].classList)
+        .withContext('Expected target container to have the receiving class.')
+        .toContain('cdk-drop-list-receiving');
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[0].classList)
-          .withContext('Expected old container to have the receiving class after exiting.')
-          .toContain('cdk-drop-list-receiving');
+      expect(dropZones[0].classList)
+        .withContext('Expected old container to have the receiving class after exiting.')
+        .toContain('cdk-drop-list-receiving');
 
-        expect(dropZones[1].classList).not.toContain(
-          'cdk-drop-list-receiving',
-          'Expected new container not to have the receiving class after exiting.',
-        );
-      }),
-    );
+      expect(dropZones[1].classList).not.toContain(
+        'cdk-drop-list-receiving',
+        'Expected new container not to have the receiving class after exiting.',
+      );
+    }));
 
     it('should set the receiving class when the list is wrapped in an OnPush component', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropListsInOnPush);
@@ -4052,261 +3977,245 @@ export function defineCommonDropListTests(config: {
         .toContain('cdk-drop-list-receiving');
     }));
 
-    it(
-      'should be able to move the item over an intermediate container before ' +
-        'dropping it into the final one',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should be able to move the item over an intermediate container before dropping it into the final one', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const [todoDropInstance, doneDropInstance, extraDropInstance] =
-          fixture.componentInstance.dropInstances.toArray();
-        fixture.componentInstance.todoConnectedTo.set([doneDropInstance, extraDropInstance]);
-        fixture.componentInstance.doneConnectedTo.set([]);
-        fixture.componentInstance.extraConnectedTo.set([]);
-        fixture.detectChanges();
+      const [todoDropInstance, doneDropInstance, extraDropInstance] =
+        fixture.componentInstance.dropInstances.toArray();
+      fixture.componentInstance.todoConnectedTo.set([doneDropInstance, extraDropInstance]);
+      fixture.componentInstance.doneConnectedTo.set([]);
+      fixture.componentInstance.extraConnectedTo.set([]);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const todoZone = todoDropInstance.element.nativeElement;
-        const doneZone = doneDropInstance.element.nativeElement;
-        const extraZone = extraDropInstance.element.nativeElement;
-        const item = groups[0][1];
-        const intermediateRect = doneZone.getBoundingClientRect();
-        const finalRect = extraZone.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const todoZone = todoDropInstance.element.nativeElement;
+      const doneZone = doneDropInstance.element.nativeElement;
+      const extraZone = extraDropInstance.element.nativeElement;
+      const item = groups[0][1];
+      const intermediateRect = doneZone.getBoundingClientRect();
+      const finalRect = extraZone.getBoundingClientRect();
 
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
+      const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(todoZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
+      expect(placeholder).toBeTruthy();
+      expect(todoZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(
-          document,
-          'mousemove',
-          intermediateRect.left + 1,
-          intermediateRect.top + 1,
-        );
-        fixture.detectChanges();
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        intermediateRect.left + 1,
+        intermediateRect.top + 1,
+      );
+      fixture.detectChanges();
 
-        expect(doneZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
+      expect(doneZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
+      fixture.detectChanges();
 
-        expect(extraZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside third container.')
-          .toBe(true);
+      expect(extraZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside third container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
 
-        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
-        expect(event).toBeTruthy();
-        expect(event).toEqual(
-          jasmine.objectContaining({
-            previousIndex: 1,
-            currentIndex: 0,
-            item: groups[0][1],
-            container: extraDropInstance,
-            previousContainer: todoDropInstance,
-            isPointerOverContainer: false,
-            distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
-            dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
-            event: jasmine.anything(),
-          }),
-        );
-      }),
-    );
+      expect(event).toBeTruthy();
+      expect(event).toEqual(
+        jasmine.objectContaining({
+          previousIndex: 1,
+          currentIndex: 0,
+          item: groups[0][1],
+          container: extraDropInstance,
+          previousContainer: todoDropInstance,
+          isPointerOverContainer: false,
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          event: jasmine.anything(),
+        }),
+      );
+    }));
 
-    it(
-      'should not be able to move an item into a drop container that the initial container is ' +
-        'not connected to by passing it over an intermediate one that is',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should not be able to move an item into a drop container that the initial container is not connected to by passing it over an intermediate one that is', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const [todoDropInstance, doneDropInstance, extraDropInstance] =
-          fixture.componentInstance.dropInstances.toArray();
-        fixture.componentInstance.todoConnectedTo.set([doneDropInstance]);
-        fixture.componentInstance.doneConnectedTo.set([todoDropInstance, extraDropInstance]);
-        fixture.componentInstance.extraConnectedTo.set([doneDropInstance]);
-        fixture.detectChanges();
+      const [todoDropInstance, doneDropInstance, extraDropInstance] =
+        fixture.componentInstance.dropInstances.toArray();
+      fixture.componentInstance.todoConnectedTo.set([doneDropInstance]);
+      fixture.componentInstance.doneConnectedTo.set([todoDropInstance, extraDropInstance]);
+      fixture.componentInstance.extraConnectedTo.set([doneDropInstance]);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const todoZone = todoDropInstance.element.nativeElement;
-        const doneZone = doneDropInstance.element.nativeElement;
-        const extraZone = extraDropInstance.element.nativeElement;
-        const item = groups[0][1];
-        const intermediateRect = doneZone.getBoundingClientRect();
-        const finalRect = extraZone.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const todoZone = todoDropInstance.element.nativeElement;
+      const doneZone = doneDropInstance.element.nativeElement;
+      const extraZone = extraDropInstance.element.nativeElement;
+      const item = groups[0][1];
+      const intermediateRect = doneZone.getBoundingClientRect();
+      const finalRect = extraZone.getBoundingClientRect();
 
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
+      const placeholder = todoZone.querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(todoZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
+      expect(placeholder).toBeTruthy();
+      expect(todoZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
 
-        dispatchMouseEvent(
-          document,
-          'mousemove',
-          intermediateRect.left + 1,
-          intermediateRect.top + 1,
-        );
-        fixture.detectChanges();
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        intermediateRect.left + 1,
+        intermediateRect.top + 1,
+      );
+      fixture.detectChanges();
 
-        expect(doneZone.contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
+      expect(doneZone.contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', finalRect.left + 1, finalRect.top + 1);
+      fixture.detectChanges();
 
-        expect(doneZone.contains(placeholder))
-          .withContext('Expected placeholder to remain in the second container.')
-          .toBe(true);
+      expect(doneZone.contains(placeholder))
+        .withContext('Expected placeholder to remain in the second container.')
+        .toBe(true);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
 
-        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
-        expect(event).toBeTruthy();
-        expect(event).toEqual(
-          jasmine.objectContaining({
-            previousIndex: 1,
-            currentIndex: 1,
-            item: groups[0][1],
-            container: doneDropInstance,
-            previousContainer: todoDropInstance,
-            isPointerOverContainer: false,
-          }),
-        );
-      }),
-    );
+      expect(event).toBeTruthy();
+      expect(event).toEqual(
+        jasmine.objectContaining({
+          previousIndex: 1,
+          currentIndex: 1,
+          item: groups[0][1],
+          container: doneDropInstance,
+          previousContainer: todoDropInstance,
+          isPointerOverContainer: false,
+        }),
+      );
+    }));
 
-    it(
-      'should return the item to its initial position, if sorting in the source container ' +
-        'was disabled',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should return the item to its initial position, if sorting in the source container was disabled', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
-        const item = groups[0][1];
-        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
-        fixture.componentInstance.dropInstances.first.sortingDisabled = true;
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      fixture.componentInstance.dropInstances.first.sortingDisabled = true;
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be at item index.')
-          .toBe(1);
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at item index.')
+        .toBe(1);
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[1].contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be at the target index.')
-          .toBe(3);
+      expect(dropZones[1].contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at the target index.')
+        .toBe(3);
 
-        const firstInitialSiblingRect = groups[0][0].element.nativeElement.getBoundingClientRect();
+      const firstInitialSiblingRect = groups[0][0].element.nativeElement.getBoundingClientRect();
 
-        // Return the item to an index that is different from the initial one.
-        dispatchMouseEvent(
-          document,
-          'mousemove',
-          firstInitialSiblingRect.left + 1,
-          firstInitialSiblingRect.top + 1,
-        );
-        fixture.detectChanges();
+      // Return the item to an index that is different from the initial one.
+      dispatchMouseEvent(
+        document,
+        'mousemove',
+        firstInitialSiblingRect.left + 1,
+        firstInitialSiblingRect.top + 1,
+      );
+      fixture.detectChanges();
 
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be back inside first container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be back at the initial index.')
-          .toBe(1);
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be back inside first container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be back at the initial index.')
+        .toBe(1);
 
-        dispatchMouseEvent(document, 'mouseup');
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
 
-        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-      }),
-    );
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
 
-    it(
-      'should enter an item into the correct index when returning to the initial container, if ' +
-        'sorting is enabled',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedDropZones);
-        fixture.detectChanges();
+    it('should enter an item into the correct index when returning to the initial container, if sorting is enabled', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
 
-        const groups = fixture.componentInstance.groupedDragItems;
-        const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
-        const item = groups[0][1];
-        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
-        // Explicitly enable just in case.
-        fixture.componentInstance.dropInstances.first.sortingDisabled = false;
-        startDraggingViaMouse(fixture, item.element.nativeElement);
+      // Explicitly enable just in case.
+      fixture.componentInstance.dropInstances.first.sortingDisabled = false;
+      startDraggingViaMouse(fixture, item.element.nativeElement);
 
-        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
 
-        expect(placeholder).toBeTruthy();
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be inside the first container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be at item index.')
-          .toBe(1);
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be inside the first container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at item index.')
+        .toBe(1);
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[1].contains(placeholder))
-          .withContext('Expected placeholder to be inside second container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be at the target index.')
-          .toBe(3);
+      expect(dropZones[1].contains(placeholder))
+        .withContext('Expected placeholder to be inside second container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at the target index.')
+        .toBe(3);
 
-        const nextTargetRect = groups[0][3].element.nativeElement.getBoundingClientRect();
+      const nextTargetRect = groups[0][3].element.nativeElement.getBoundingClientRect();
 
-        // Return the item to an index that is different from the initial one.
-        dispatchMouseEvent(document, 'mousemove', nextTargetRect.left + 1, nextTargetRect.top + 1);
-        fixture.detectChanges();
+      // Return the item to an index that is different from the initial one.
+      dispatchMouseEvent(document, 'mousemove', nextTargetRect.left + 1, nextTargetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(dropZones[0].contains(placeholder))
-          .withContext('Expected placeholder to be back inside first container.')
-          .toBe(true);
-        expect(config.getElementIndexByPosition(placeholder, 'top'))
-          .withContext('Expected placeholder to be at the index at which it entered.')
-          .toBe(2);
-      }),
-    );
+      expect(dropZones[0].contains(placeholder))
+        .withContext('Expected placeholder to be back inside first container.')
+        .toBe(true);
+      expect(config.getElementIndexByPosition(placeholder, 'top'))
+        .withContext('Expected placeholder to be at the index at which it entered.')
+        .toBe(2);
+    }));
 
     it('should return the last item to initial position when dragging back into a container with disabled sorting', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
@@ -4365,48 +4274,42 @@ export function defineCommonDropListTests(config: {
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
-    it(
-      'should toggle a class when dragging an item inside a wrapper component component ' +
-        'with OnPush change detection',
-      fakeAsync(() => {
-        const fixture = createComponent(ConnectedWrappedDropZones);
-        fixture.detectChanges();
+    it('should toggle a class when dragging an item inside a wrapper component component with OnPush change detection', fakeAsync(() => {
+      const fixture = createComponent(ConnectedWrappedDropZones);
+      fixture.detectChanges();
 
-        const [startZone, targetZone] = fixture.nativeElement.querySelectorAll('.cdk-drop-list');
-        const item = startZone.querySelector('.cdk-drag');
-        const targetRect = targetZone.getBoundingClientRect();
+      const [startZone, targetZone] = fixture.nativeElement.querySelectorAll('.cdk-drop-list');
+      const item = startZone.querySelector('.cdk-drag');
+      const targetRect = targetZone.getBoundingClientRect();
 
-        expect(startZone.classList).not.toContain(
-          'cdk-drop-list-dragging',
-          'Expected start not to have dragging class on init.',
-        );
-        expect(targetZone.classList).not.toContain(
-          'cdk-drop-list-dragging',
-          'Expected target not to have dragging class on init.',
-        );
+      expect(startZone.classList).not.toContain(
+        'cdk-drop-list-dragging',
+        'Expected start not to have dragging class on init.',
+      );
+      expect(targetZone.classList).not.toContain(
+        'cdk-drop-list-dragging',
+        'Expected target not to have dragging class on init.',
+      );
 
-        startDraggingViaMouse(fixture, item);
+      startDraggingViaMouse(fixture, item);
 
-        expect(startZone.classList)
-          .withContext('Expected start to have dragging class after dragging has started.')
-          .toContain('cdk-drop-list-dragging');
-        expect(targetZone.classList)
-          .not.withContext('Expected target not to have dragging class after dragging has started.')
-          .toContain('cdk-drop-list-dragging');
+      expect(startZone.classList)
+        .withContext('Expected start to have dragging class after dragging has started.')
+        .toContain('cdk-drop-list-dragging');
+      expect(targetZone.classList)
+        .not.withContext('Expected target not to have dragging class after dragging has started.')
+        .toContain('cdk-drop-list-dragging');
 
-        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
-        fixture.detectChanges();
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
 
-        expect(startZone.classList)
-          .not.withContext(
-            'Expected start not to have dragging class once item has been moved over.',
-          )
-          .toContain('cdk-drop-list-dragging');
-        expect(targetZone.classList)
-          .withContext('Expected target to have dragging class once item has been moved over.')
-          .toContain('cdk-drop-list-dragging');
-      }),
-    );
+      expect(startZone.classList)
+        .not.withContext('Expected start not to have dragging class once item has been moved over.')
+        .toContain('cdk-drop-list-dragging');
+      expect(targetZone.classList)
+        .withContext('Expected target to have dragging class once item has been moved over.')
+        .toContain('cdk-drop-list-dragging');
+    }));
 
     it('should dispatch an event when an item enters a new container', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
@@ -4464,7 +4367,7 @@ export function defineCommonDropListTests(config: {
 
       // Make the page scrollable and scroll the items out of view.
       const cleanup = makeScrollable();
-      scrollTo(0, 4000);
+      scrollTo(0, 0);
       dispatchFakeEvent(document, 'scroll');
       fixture.detectChanges();
       flush();
@@ -4475,7 +4378,7 @@ export function defineCommonDropListTests(config: {
 
       // Start dragging and then scroll the elements back into view.
       startDraggingViaMouse(fixture, item.element.nativeElement);
-      scrollTo(0, 0);
+      scrollTo(0, 5000);
       dispatchFakeEvent(document, 'scroll');
 
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
@@ -5348,7 +5251,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
   standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
-class ConnectedDropZones implements AfterViewInit {
+export class ConnectedDropZones implements AfterViewInit {
   @ViewChildren(CdkDrag) rawDragItems: QueryList<CdkDrag>;
   @ViewChildren(CdkDropList) dropInstances: QueryList<CdkDropList>;
   changeDetectorRef = inject(ChangeDetectorRef);
