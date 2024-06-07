@@ -609,7 +609,8 @@ describe('MatBottomSheet', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.tagName)
         .withContext('Expected bottom sheet container to be focused.')
@@ -658,7 +659,8 @@ describe('MatBottomSheet', () => {
         });
 
         viewContainerFixture.detectChanges();
-        flushMicrotasks();
+        flush();
+        viewContainerFixture.detectChanges();
 
         let container = overlayContainerElement.querySelector(
           '.mat-bottom-sheet-container',
@@ -679,7 +681,8 @@ describe('MatBottomSheet', () => {
         });
 
         viewContainerFixture.detectChanges();
-        flushMicrotasks();
+        flush();
+        viewContainerFixture.detectChanges();
 
         let firstHeader = overlayContainerElement.querySelector(
           'h1[tabindex="-1"]',
@@ -701,7 +704,8 @@ describe('MatBottomSheet', () => {
         });
 
         viewContainerFixture.detectChanges();
-        flushMicrotasks();
+        flush();
+        viewContainerFixture.detectChanges();
 
         let firstParagraph = overlayContainerElement.querySelector(
           'p[tabindex="-1"]',
@@ -721,9 +725,10 @@ describe('MatBottomSheet', () => {
 
       const bottomSheetRef = bottomSheet.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
-      flushMicrotasks();
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'bottom-sheet-trigger',
@@ -736,7 +741,7 @@ describe('MatBottomSheet', () => {
         'Expcted the focus not to have changed before the animation finishes.',
       );
 
-      flushMicrotasks();
+      flush();
       viewContainerFixture.detectChanges();
       tick(500);
 
@@ -758,9 +763,10 @@ describe('MatBottomSheet', () => {
         restoreFocus: false,
       });
 
-      flushMicrotasks();
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'bottom-sheet-trigger',
@@ -773,7 +779,7 @@ describe('MatBottomSheet', () => {
         'Expcted the focus not to have changed before the animation finishes.',
       );
 
-      flushMicrotasks();
+      flush();
       viewContainerFixture.detectChanges();
       tick(500);
 
@@ -798,9 +804,10 @@ describe('MatBottomSheet', () => {
 
       const bottomSheetRef = bottomSheet.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
-      flushMicrotasks();
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'bottom-sheet-trigger',
