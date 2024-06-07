@@ -54,6 +54,9 @@ import {CdkDragPlaceholder} from './drag-placeholder';
 export const ITEM_HEIGHT = 25;
 export const ITEM_WIDTH = 75;
 
+/** Function that can be used to get the sorted siblings of an element. */
+type SortedSiblingsFunction = (element: Element, direction: 'top' | 'left') => Element[];
+
 export function defineCommonDropListTests(config: {
   /** Orientation value that will be passed to tests checking vertical orientation. */
   verticalListOrientation: Exclude<DropListOrientation, 'horizontal'>;
@@ -61,17 +64,8 @@ export function defineCommonDropListTests(config: {
   /** Orientation value that will be passed to tests checking horizontal orientation. */
   horizontalListOrientation: Exclude<DropListOrientation, 'vertical'>;
 
-  /** Asserts that sorting an element up works correctly. */
-  assertUpwardSorting: (fixture: ComponentFixture<unknown>, items: Element[]) => void;
-
-  /** Asserts that sorting an element down works correctly. */
-  assertDownwardSorting: (fixture: ComponentFixture<unknown>, items: Element[]) => void;
-
-  /** Gets the index of an element among its siblings, based on their visible position. */
-  getElementIndexByPosition: (element: Element, direction: 'top' | 'left') => number;
-
   /** Gets the siblings of an element, sorted by their visible position. */
-  getElementSibligsByPosition: (element: Element, direction: 'top' | 'left') => Element[];
+  getSortedSiblings: SortedSiblingsFunction;
 }) {
   const {
     DraggableInHorizontalDropZone,
@@ -1495,11 +1489,11 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      config.assertDownwardSorting(
+      assertDownwardSorting(
+        'vertical',
         fixture,
-        fixture.componentInstance.dragItems.map(item => {
-          return item.element.nativeElement;
-        }),
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
     }));
 
@@ -1509,11 +1503,11 @@ export function defineCommonDropListTests(config: {
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      config.assertDownwardSorting(
+      assertDownwardSorting(
+        'vertical',
         fixture,
-        fixture.componentInstance.dragItems.map(item => {
-          return item.element.nativeElement;
-        }),
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
       cleanup();
     }));
@@ -1521,11 +1515,11 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      config.assertUpwardSorting(
+      assertUpwardSorting(
+        'vertical',
         fixture,
-        fixture.componentInstance.dragItems.map(item => {
-          return item.element.nativeElement;
-        }),
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
     }));
 
@@ -1535,11 +1529,11 @@ export function defineCommonDropListTests(config: {
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      config.assertUpwardSorting(
+      assertUpwardSorting(
+        'vertical',
         fixture,
-        fixture.componentInstance.dragItems.map(item => {
-          return item.element.nativeElement;
-        }),
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
       cleanup();
     }));
@@ -1547,55 +1541,23 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted to the right', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-
-      const items = fixture.componentInstance.dragItems.toArray();
-      const draggedItem = items[0].element.nativeElement;
-      const {top, left} = draggedItem.getBoundingClientRect();
-
-      startDraggingViaMouse(fixture, draggedItem, left, top);
-
-      const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-      // Drag over each item one-by-one going to the right.
-      for (let i = 0; i < items.length; i++) {
-        const elementRect = items[i].element.nativeElement.getBoundingClientRect();
-
-        // Add a few pixels to the left offset so we get some overlap.
-        dispatchMouseEvent(document, 'mousemove', elementRect.left + 5, elementRect.top);
-        fixture.detectChanges();
-        expect(config.getElementIndexByPosition(placeholder, 'left')).toBe(i);
-      }
-
-      dispatchMouseEvent(document, 'mouseup');
-      fixture.detectChanges();
-      flush();
+      assertDownwardSorting(
+        'horizontal',
+        fixture,
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
+      );
     }));
 
     it('should move the placeholder as an item is being sorted to the left', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-
-      const items = fixture.componentInstance.dragItems.toArray();
-      const draggedItem = items[items.length - 1].element.nativeElement;
-      const {top, left} = draggedItem.getBoundingClientRect();
-
-      startDraggingViaMouse(fixture, draggedItem, left, top);
-
-      const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-      // Drag over each item one-by-one going to the left.
-      for (let i = items.length - 1; i > -1; i--) {
-        const elementRect = items[i].element.nativeElement.getBoundingClientRect();
-
-        // Remove a few pixels from the right offset so we get some overlap.
-        dispatchMouseEvent(document, 'mousemove', elementRect.right - 5, elementRect.top);
-        fixture.detectChanges();
-        expect(config.getElementIndexByPosition(placeholder, 'left')).toBe(i);
-      }
-
-      dispatchMouseEvent(document, 'mouseup');
-      fixture.detectChanges();
-      flush();
+      assertUpwardSorting(
+        'horizontal',
+        fixture,
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
+      );
     }));
 
     it('should lay out the elements correctly, if an element skips multiple positions when sorting vertically', fakeAsync(() => {
@@ -1615,9 +1577,12 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
       fixture.detectChanges();
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['One', 'Two', 'Three', 'Zero']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'One',
+        'Two',
+        'Three',
+        'Zero',
+      ]);
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -1641,9 +1606,9 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
       fixture.detectChanges();
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'left').map(e => e.textContent!.trim()),
-      ).toEqual(['One', 'Two', 'Three', 'Zero']);
+      expect(config.getSortedSiblings(placeholder, 'left').map(e => e.textContent!.trim())).toEqual(
+        ['One', 'Two', 'Three', 'Zero'],
+      );
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -1666,9 +1631,12 @@ export function defineCommonDropListTests(config: {
 
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['Zero', 'One', 'Two', 'Three']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'Zero',
+        'One',
+        'Two',
+        'Three',
+      ]);
 
       const targetRect = target.getBoundingClientRect();
       const pointerTop = targetRect.top + 20;
@@ -1676,14 +1644,14 @@ export function defineCommonDropListTests(config: {
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
       fixture.detectChanges();
-      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
       // Move down a further 1px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop + 1);
       fixture.detectChanges();
-      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions not to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
@@ -1708,9 +1676,12 @@ export function defineCommonDropListTests(config: {
 
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['Zero', 'One', 'Two', 'Three']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'Zero',
+        'One',
+        'Two',
+        'Three',
+      ]);
 
       const targetRect = target.getBoundingClientRect();
       const pointerTop = targetRect.top + 20;
@@ -1718,14 +1689,14 @@ export function defineCommonDropListTests(config: {
       // Move over the target so there's a 20px overlap.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop);
       fixture.detectChanges();
-      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected position to swap.')
         .toEqual(['One', 'Zero', 'Two', 'Three']);
 
       // Move up 10px.
       dispatchMouseEvent(document, 'mousemove', targetRect.left, pointerTop - 10);
       fixture.detectChanges();
-      expect(config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()))
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim()))
         .withContext('Expected positions to swap again.')
         .toEqual(['Zero', 'One', 'Two', 'Three']);
 
@@ -1747,9 +1718,12 @@ export function defineCommonDropListTests(config: {
 
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['Zero', 'One', 'Two', 'Three']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'Zero',
+        'One',
+        'Two',
+        'Three',
+      ]);
 
       let targetRect = target.getBoundingClientRect();
 
@@ -1760,18 +1734,24 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
       fixture.detectChanges();
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['One', 'Two', 'Three', 'Zero']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'One',
+        'Two',
+        'Three',
+        'Zero',
+      ]);
 
       // Refresh the rect since the element position has changed.
       targetRect = target.getBoundingClientRect();
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 1);
       fixture.detectChanges();
 
-      expect(
-        config.getElementSibligsByPosition(placeholder, 'top').map(e => e.textContent!.trim()),
-      ).toEqual(['One', 'Two', 'Zero', 'Three']);
+      expect(config.getSortedSiblings(placeholder, 'top').map(e => e.textContent!.trim())).toEqual([
+        'One',
+        'Two',
+        'Zero',
+        'Three',
+      ]);
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -2308,7 +2288,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', targetX, targetY);
       fixture.detectChanges();
 
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to stay in place.')
         .toBe(0);
 
@@ -3150,11 +3130,11 @@ export function defineCommonDropListTests(config: {
       documentElement.style.position = 'absolute';
       documentElement.style.top = '100px';
 
-      config.assertDownwardSorting(
+      assertDownwardSorting(
+        'vertical',
         fixture,
-        fixture.componentInstance.dragItems.map(item => {
-          return item.element.nativeElement;
-        }),
+        config.getSortedSiblings,
+        fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
 
       documentElement.style.position = '';
@@ -3414,7 +3394,12 @@ export function defineCommonDropListTests(config: {
         fixture.detectChanges();
       });
 
-      config.assertDownwardSorting(fixture, Array.from(dropZone.querySelectorAll('.cdk-drag')));
+      assertDownwardSorting(
+        'vertical',
+        fixture,
+        config.getSortedSiblings,
+        Array.from(dropZone.querySelectorAll('.cdk-drag')),
+      );
     }));
 
     it('should be able to return the last item inside its initial container', fakeAsync(() => {
@@ -4132,7 +4117,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be inside the first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at item index.')
         .toBe(1);
 
@@ -4142,7 +4127,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].contains(placeholder))
         .withContext('Expected placeholder to be inside second container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at the target index.')
         .toBe(3);
 
@@ -4160,7 +4145,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be back inside first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be back at the initial index.')
         .toBe(1);
 
@@ -4189,7 +4174,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be inside the first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at item index.')
         .toBe(1);
 
@@ -4199,7 +4184,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].contains(placeholder))
         .withContext('Expected placeholder to be inside second container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at the target index.')
         .toBe(3);
 
@@ -4212,7 +4197,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be back inside first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at the index at which it entered.')
         .toBe(2);
     }));
@@ -4236,7 +4221,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be inside the first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at item index.')
         .toBe(lastIndex);
 
@@ -4246,7 +4231,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].contains(placeholder))
         .withContext('Expected placeholder to be inside second container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at the target index.')
         .toBe(3);
 
@@ -4264,7 +4249,7 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[0].contains(placeholder))
         .withContext('Expected placeholder to be back inside first container.')
         .toBe(true);
-      expect(config.getElementIndexByPosition(placeholder, 'top'))
+      expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be back at the initial index.')
         .toBe(lastIndex);
 
@@ -4687,6 +4672,85 @@ export function defineCommonDropListTests(config: {
       expect(event.stopPropagation).toHaveBeenCalled();
     }));
   });
+}
+
+function assertDownwardSorting(
+  listOrientation: 'vertical' | 'horizontal',
+  fixture: ComponentFixture<any>,
+  getSortedSiblings: SortedSiblingsFunction,
+  items: Element[],
+) {
+  const draggedItem = items[0];
+  const {top, left} = draggedItem.getBoundingClientRect();
+
+  startDraggingViaMouse(fixture, draggedItem, left, top);
+
+  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+
+  // Drag over each item one-by-one going downwards.
+  for (let i = 0; i < items.length; i++) {
+    const elementRect = items[i].getBoundingClientRect();
+
+    // Add a few pixels to the top offset so we get some overlap.
+    if (listOrientation === 'vertical') {
+      dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
+    } else {
+      dispatchMouseEvent(document, 'mousemove', elementRect.left + 5, elementRect.top);
+    }
+
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    const sortedSiblings = getSortedSiblings(
+      placeholder,
+      listOrientation === 'vertical' ? 'top' : 'left',
+    );
+    expect(sortedSiblings.indexOf(placeholder)).toBe(i);
+  }
+
+  dispatchMouseEvent(document, 'mouseup');
+  fixture.changeDetectorRef.markForCheck();
+  fixture.detectChanges();
+  flush();
+}
+
+function assertUpwardSorting(
+  listOrientation: 'vertical' | 'horizontal',
+  fixture: ComponentFixture<any>,
+  getSortedSiblings: SortedSiblingsFunction,
+  items: Element[],
+) {
+  const draggedItem = items[items.length - 1];
+  const {top, left} = draggedItem.getBoundingClientRect();
+
+  startDraggingViaMouse(fixture, draggedItem, left, top);
+
+  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+
+  // Drag over each item one-by-one going upwards.
+  for (let i = items.length - 1; i > -1; i--) {
+    const elementRect = items[i].getBoundingClientRect();
+
+    // Remove a few pixels from the bottom offset so we get some overlap.
+    if (listOrientation === 'vertical') {
+      dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.bottom - 5);
+    } else {
+      dispatchMouseEvent(document, 'mousemove', elementRect.right - 5, elementRect.top);
+    }
+
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(
+      getSortedSiblings(placeholder, listOrientation === 'vertical' ? 'top' : 'left').indexOf(
+        placeholder,
+      ),
+    ).toBe(i);
+  }
+
+  dispatchMouseEvent(document, 'mouseup');
+  fixture.changeDetectorRef.markForCheck();
+  fixture.detectChanges();
+  flush();
 }
 
 /**
