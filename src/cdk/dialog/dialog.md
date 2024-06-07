@@ -11,6 +11,14 @@ the prebuilt styles in your global stylesheet:
 @import '@angular/cdk/overlay-prebuilt.css';
 ```
 
+Alternatively, you can include the styles using the `cdk.overlay` mixin in your Sass file. You can import the mixin as follows:
+
+```scss
+@use '@angular/cdk' as cdk;
+
+@include cdk.overlay();
+```
+
 <!-- example(cdk-dialog-overview) -->
 
 You can open a dialog by calling the `open` method either with a component or with a `TemplateRef`
