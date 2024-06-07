@@ -146,7 +146,7 @@ export class DropListRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Strategy being used to sort items within the list. */
-  private _sortStrategy: DropListSortStrategy<DragRef>;
+  private _sortStrategy: DropListSortStrategy;
 
   /** Cached `DOMRect` of the drop list. */
   private _domRect: DOMRect | undefined;
@@ -186,6 +186,9 @@ export class DropListRef<T = any> {
 
   /** Initial value for the element's `scroll-snap-type` style. */
   private _initialScrollSnap: string;
+
+  /** Direction of the list's layout. */
+  private _direction: Direction = 'ltr';
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
@@ -332,7 +335,10 @@ export class DropListRef<T = any> {
 
   /** Sets the layout direction of the drop list. */
   withDirection(direction: Direction): this {
-    this._sortStrategy.direction = direction;
+    this._direction = direction;
+    if (this._sortStrategy instanceof SingleAxisSortStrategy) {
+      this._sortStrategy.direction = direction;
+    }
     return this;
   }
 
@@ -353,7 +359,7 @@ export class DropListRef<T = any> {
   withOrientation(orientation: 'vertical' | 'horizontal'): this {
     // TODO(crisbeto): eventually we should be constructing the new sort strategy here based on
     // the new orientation. For now we can assume that it'll always be `SingleAxisSortStrategy`.
-    (this._sortStrategy as SingleAxisSortStrategy<DragRef>).orientation = orientation;
+    (this._sortStrategy as SingleAxisSortStrategy).orientation = orientation;
     return this;
   }
 
@@ -455,7 +461,7 @@ export class DropListRef<T = any> {
         [verticalScrollDirection, horizontalScrollDirection] = getElementScrollDirections(
           element as HTMLElement,
           position.clientRect,
-          this._sortStrategy.direction,
+          this._direction,
           pointerX,
           pointerY,
         );
