@@ -1,6 +1,24 @@
 The `Dialog` service can be used to open unstyled modal dialogs and to build your own dialog
 services.
 
+### Initial setup
+The CDK dialogs depend on a small set of structural styles to work correctly. If you're using
+Angular Material, these styles have been included together with the theme, otherwise if you're
+using the CDK on its own, you'll have to include the styles yourself. You can do so by importing
+the prebuilt styles in your global stylesheet:
+
+```scss
+@import '@angular/cdk/overlay-prebuilt.css';
+```
+
+Alternatively, you can include the styles using the `cdk.overlay` mixin in your Sass file. You can import the mixin as follows:
+
+```scss
+@use '@angular/cdk' as cdk;
+
+@include cdk.overlay();
+```
+
 <!-- example(cdk-dialog-overview) -->
 
 You can open a dialog by calling the `open` method either with a component or with a `TemplateRef`
