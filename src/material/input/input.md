@@ -65,7 +65,7 @@ applies to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is availa
 globally cause input errors to show when the input is dirty and invalid.
 
 ```ts
-// Module applications
+// NgModule applications
 @NgModule({
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
@@ -78,10 +78,6 @@ export const appConfig: ApplicationConfig = {
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ]
 };
-```
-
-```ts
-
 ```
 
 ### Auto-resizing `<textarea>` elements
