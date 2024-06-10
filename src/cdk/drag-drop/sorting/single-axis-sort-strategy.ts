@@ -7,8 +7,6 @@
  */
 
 import {Direction} from '@angular/cdk/bidi';
-import {ElementRef} from '@angular/core';
-import {coerceElement} from '@angular/cdk/coercion';
 import {DragDropRegistry} from '../drag-drop-registry';
 import {moveItemInArray} from '../drag-utils';
 import {combineTransforms} from '../dom/styling';
@@ -57,7 +55,7 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
   direction: Direction;
 
   constructor(
-    private _element: HTMLElement | ElementRef<HTMLElement>,
+    private _element: HTMLElement,
     private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
   ) {}
 
@@ -210,7 +208,7 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
       element.parentElement!.insertBefore(placeholder, element);
       activeDraggables.splice(newIndex, 0, item);
     } else {
-      coerceElement(this._element).appendChild(placeholder);
+      this._element.appendChild(placeholder);
       activeDraggables.push(item);
     }
 
