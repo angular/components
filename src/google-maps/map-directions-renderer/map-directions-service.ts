@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" />
+/// <reference types="google.maps" preserve="true" />
 
 import {Injectable, NgZone} from '@angular/core';
 import {Observable} from 'rxjs';

@@ -138,7 +138,7 @@ export interface CdkCellOutletRowContext<T> {
 
 // @public
 export class CdkColumnDef implements CanStick {
-    constructor(_table?: any);
+    constructor(_table?: any | undefined);
     cell: CdkCellDef;
     _columnCssClassName: string[];
     cssClassFriendlyName: string;
@@ -162,7 +162,7 @@ export class CdkColumnDef implements CanStick {
     // (undocumented)
     _stickyEnd: boolean;
     // (undocumented)
-    _table?: any;
+    _table?: any | undefined;
     protected _updateColumnCssClassName(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkColumnDef, "[cdkColumnDef]", never, { "name": { "alias": "cdkColumnDef"; "required": false; }; "sticky": { "alias": "sticky"; "required": false; }; "stickyEnd": { "alias": "stickyEnd"; "required": false; }; }, {}, ["cell", "headerCell", "footerCell"], never, true, never>;
@@ -200,7 +200,7 @@ export class CdkFooterRow {
 
 // @public
 export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
-    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any);
+    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any | undefined);
     hasStickyChanged(): boolean;
     // (undocumented)
     static ngAcceptInputType_sticky: unknown;
@@ -210,7 +210,7 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
     get sticky(): boolean;
     set sticky(value: boolean);
     // (undocumented)
-    _table?: any;
+    _table?: any | undefined;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkFooterRowDef, "[cdkFooterRowDef]", never, { "columns": { "alias": "cdkFooterRowDef"; "required": false; }; "sticky": { "alias": "cdkFooterRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -247,7 +247,7 @@ export class CdkHeaderRow {
 
 // @public
 export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
-    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any);
+    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any | undefined);
     hasStickyChanged(): boolean;
     // (undocumented)
     static ngAcceptInputType_sticky: unknown;
@@ -257,7 +257,7 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
     get sticky(): boolean;
     set sticky(value: boolean);
     // (undocumented)
-    _table?: any;
+    _table?: any | undefined;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkHeaderRowDef, "[cdkHeaderRowDef]", never, { "columns": { "alias": "cdkHeaderRowDef"; "required": false; }; "sticky": { "alias": "cdkHeaderRowDefSticky"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -295,9 +295,9 @@ export class CdkRow {
 
 // @public
 export class CdkRowDef<T> extends BaseRowDef {
-    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any);
+    constructor(template: TemplateRef<any>, _differs: IterableDiffers, _table?: any | undefined);
     // (undocumented)
-    _table?: any;
+    _table?: any | undefined;
     when: (index: number, rowData: T) => boolean;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkRowDef<any>, "[cdkRowDef]", never, { "columns": { "alias": "cdkRowDefColumns"; "required": false; }; "when": { "alias": "cdkRowDefWhen"; "required": false; }; }, {}, never, never, true, never>;

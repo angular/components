@@ -44,7 +44,7 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConf
 
 // @public
 export class MatBottomSheet implements OnDestroy {
-    constructor(_overlay: Overlay, injector: Injector, _parentBottomSheet: MatBottomSheet, _defaultOptions?: MatBottomSheetConfig<any> | undefined);
+    constructor(_overlay: Overlay, injector: Injector, _parentBottomSheet: MatBottomSheet, _defaultOptions?: MatBottomSheetConfig | undefined);
     dismiss<R = any>(result?: R): void;
     // (undocumented)
     ngOnDestroy(): void;
