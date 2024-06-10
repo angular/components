@@ -9,6 +9,7 @@
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
