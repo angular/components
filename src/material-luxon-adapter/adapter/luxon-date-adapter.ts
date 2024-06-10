@@ -135,7 +135,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   }
 
   getNumDaysInMonth(date: LuxonDateTime): number {
-    return date.daysInMonth;
+    return date.daysInMonth!;
   }
 
   clone(date: LuxonDateTime): LuxonDateTime {
@@ -231,7 +231,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   }
 
   toIso8601(date: LuxonDateTime): string {
-    return date.toISO();
+    return date.toISO()!;
   }
 
   /**

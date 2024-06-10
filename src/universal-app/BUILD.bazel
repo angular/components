@@ -49,6 +49,7 @@ ts_library(
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
         "@npm//reflect-metadata",
+        "@npm//zone.js",
     ],
 )
 

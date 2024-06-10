@@ -51,7 +51,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     constructor(
     element: ElementRef<HTMLElement>,
     dropContainer: CdkDropList,
-    _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragDropConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _selfHandle?: CdkDragHandle | undefined, _parentDrag?: CdkDrag<any> | undefined);
+    _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragDropConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _selfHandle?: CdkDragHandle | undefined, _parentDrag?: CdkDrag | undefined);
     // (undocumented)
     _addHandle(handle: CdkDragHandle): void;
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
@@ -152,7 +152,7 @@ export interface CdkDragExit<T = any, I = T> {
 
 // @public
 export class CdkDragHandle implements OnDestroy {
-    constructor(element: ElementRef<HTMLElement>, _parentDrag?: CdkDrag<any> | undefined);
+    constructor(element: ElementRef<HTMLElement>, _parentDrag?: CdkDrag | undefined);
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -240,7 +240,7 @@ export interface CdkDragStart<T = any> {
 // @public
 export class CdkDropList<T = any> implements OnDestroy {
     constructor(
-    element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _scrollDispatcher: ScrollDispatcher, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined, config?: DragDropConfig);
+    element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _scrollDispatcher: ScrollDispatcher, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList> | undefined, config?: DragDropConfig);
     addItem(item: CdkDrag): void;
     autoScrollDisabled: boolean;
     autoScrollStep: NumberInput;
