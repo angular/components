@@ -157,9 +157,21 @@ directive:
 
 ### List orientation
 The `cdkDropList` directive assumes that lists are vertical by default. This can be
-changed by setting the `orientation` property to `"horizontal".
+changed by setting the `cdkDropListOrientation` property to `horizontal`.
 
 <!-- example(cdk-drag-drop-horizontal-sorting) -->
+
+### List wrapping
+By default the `cdkDropList` sorts the items by moving them around using a CSS `transform`. This
+allows for the sorting to be animated which provides a better user experience, but comes with the
+drawback that it works only one direction: vertically or horizontally.
+
+If you have a sortable list that needs to wrap, you can set `cdkDropListOrientation="mixed"` which
+will use a different strategy of sorting the elements that works by moving them in the DOM. It has
+the advantage of allowing the items to wrap to the next line, but it **cannot** animate the
+sorting action.
+
+<!-- example(cdk-drag-drop-mixed-sorting) -->
 
 ### Restricting movement within an element
 

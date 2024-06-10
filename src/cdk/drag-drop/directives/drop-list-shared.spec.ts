@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {Platform, _supportsShadowDom} from '@angular/cdk/platform';
 import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createMouseEvent,
@@ -803,6 +803,26 @@ export function defineCommonDropListTests(config: {
       scrollTo(0, 0);
     }));
 
+    it('should remove the anchor node once dragging stops', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+
+      startDraggingViaMouse(fixture, item);
+
+      const anchor = Array.from(list.childNodes).find(
+        node => node.textContent === 'cdk-drag-anchor',
+      );
+      expect(anchor).toBeTruthy();
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+
+      expect(anchor!.parentNode).toBeFalsy();
+    }));
+
     it('should create a preview element while the item is dragged', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
@@ -1489,7 +1509,7 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertDownwardSorting(
+      assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -1503,7 +1523,7 @@ export function defineCommonDropListTests(config: {
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      assertDownwardSorting(
+      assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -1515,7 +1535,7 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertUpwardSorting(
+      assertEndToStartSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -1529,7 +1549,7 @@ export function defineCommonDropListTests(config: {
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      assertUpwardSorting(
+      assertEndToStartSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -1541,7 +1561,7 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted to the right', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-      assertDownwardSorting(
+      assertStartToEndSorting(
         'horizontal',
         fixture,
         config.getSortedSiblings,
@@ -1552,7 +1572,7 @@ export function defineCommonDropListTests(config: {
     it('should move the placeholder as an item is being sorted to the left', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-      assertUpwardSorting(
+      assertEndToStartSorting(
         'horizontal',
         fixture,
         config.getSortedSiblings,
@@ -1901,15 +1921,28 @@ export function defineCommonDropListTests(config: {
     }));
 
     it('should keep the preview next to the trigger if the page was scrolled', fakeAsync(() => {
+      const extractTransform = (element: HTMLElement) => {
+        const match = element.style.transform.match(/translate3d\(\d+px, (\d+)px, \d+px\)/);
+        return match ? parseInt(match[1]) : 0;
+      };
+
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
+      const platform = TestBed.inject(Platform);
+
+      // The programmatic scrolling inside the Karma iframe doesn't seem to work on iOS in the CI.
+      // Skip the test since the logic is the same for all other browsers which are covered.
+      if (platform.IOS) {
+        return;
+      }
+
       const cleanup = makeScrollable();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       startDraggingViaMouse(fixture, item, 50, 50);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
-      expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
+      expect(extractTransform(preview)).toBe(50);
 
       scrollTo(0, 5000);
       fixture.detectChanges();
@@ -1918,7 +1951,9 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', 55, 55);
       fixture.detectChanges();
 
-      expect(preview.style.transform).toBe('translate3d(55px, 1571px, 0px)');
+      // Note that here we just check that the value is greater, because on the
+      // CI the values end up being inconsistent between browsers.
+      expect(extractTransform(preview)).toBeGreaterThan(1000);
 
       cleanup();
     }));
@@ -2603,6 +2638,8 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
       tickAnimationFrames(20);
+      flush();
+      fixture.detectChanges();
 
       expect(list.scrollTop).toBe(previousScrollTop);
     }));
@@ -3130,7 +3167,7 @@ export function defineCommonDropListTests(config: {
       documentElement.style.position = 'absolute';
       documentElement.style.top = '100px';
 
-      assertDownwardSorting(
+      assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -3394,7 +3431,7 @@ export function defineCommonDropListTests(config: {
         fixture.detectChanges();
       });
 
-      assertDownwardSorting(
+      assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -4674,7 +4711,7 @@ export function defineCommonDropListTests(config: {
   });
 }
 
-function assertDownwardSorting(
+export function assertStartToEndSorting(
   listOrientation: 'vertical' | 'horizontal',
   fixture: ComponentFixture<any>,
   getSortedSiblings: SortedSiblingsFunction,
@@ -4714,7 +4751,7 @@ function assertDownwardSorting(
   flush();
 }
 
-function assertUpwardSorting(
+export function assertEndToStartSorting(
   listOrientation: 'vertical' | 'horizontal',
   fixture: ComponentFixture<any>,
   getSortedSiblings: SortedSiblingsFunction,

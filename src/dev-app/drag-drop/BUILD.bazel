@@ -11,6 +11,7 @@ ng_module(
     ],
     deps = [
         "//src/cdk/drag-drop",
+        "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/icon",
         "//src/material/input",

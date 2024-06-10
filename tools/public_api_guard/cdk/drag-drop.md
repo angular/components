@@ -471,7 +471,7 @@ export type DragStartDelay = number | {
 };
 
 // @public
-export type DropListOrientation = 'horizontal' | 'vertical';
+export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';
 
 // @public
 export class DropListRef<T = any> {
@@ -544,7 +544,7 @@ export class DropListRef<T = any> {
     _stopScrolling(): void;
     withDirection(direction: Direction): this;
     withItems(items: DragRef[]): this;
-    withOrientation(orientation: 'vertical' | 'horizontal'): this;
+    withOrientation(orientation: DropListOrientation): this;
     withScrollableParents(elements: HTMLElement[]): this;
 }
 

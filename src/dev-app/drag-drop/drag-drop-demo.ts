@@ -22,6 +22,7 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'drag-drop-demo',
@@ -38,6 +39,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatCheckbox,
   ],
 })
 export class DragAndDropDemo {
@@ -45,6 +47,9 @@ export class DragAndDropDemo {
   dragStartDelay = 0;
   todo = ['Go out for Lunch', 'Make a cool app', 'Watch TV', 'Eat a healthy dinner', 'Go to sleep'];
   done = ['Get up', 'Have breakfast', 'Brush teeth', 'Check reddit'];
+  mixedTodo = this.todo.slice();
+  mixedDone = this.done.slice();
+  mixedWrap = true;
 
   ages = ['Stone age', 'Bronze age', 'Iron age', 'Middle ages'];
   preferredAges = ['Modern period', 'Renaissance'];
