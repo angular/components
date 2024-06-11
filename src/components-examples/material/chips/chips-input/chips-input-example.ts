@@ -1,9 +1,9 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, inject} from '@angular/core';
-import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
 
 export interface Fruit {
   name: string;
@@ -18,20 +18,20 @@ export interface Fruit {
   styleUrl: 'chips-input-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatChipsModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsInputExample {
-  addOnBlur = true;
+  readonly addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  fruits: Fruit[] = [{name: 'Lemon'}, {name: 'Lime'}, {name: 'Apple'}];
-
-  announcer = inject(LiveAnnouncer);
+  readonly fruits = signal<Fruit[]>([{name: 'Lemon'}, {name: 'Lime'}, {name: 'Apple'}]);
+  readonly announcer = inject(LiveAnnouncer);
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
     // Add our fruit
     if (value) {
-      this.fruits.push({name: value});
+      this.fruits.update(fruits => [...fruits, {name: value}]);
     }
 
     // Clear the input value
@@ -39,13 +39,16 @@ export class ChipsInputExample {
   }
 
   remove(fruit: Fruit): void {
-    const index = this.fruits.indexOf(fruit);
+    this.fruits.update(fruits => {
+      const index = fruits.indexOf(fruit);
+      if (index < 0) {
+        return fruits;
+      }
 
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-
-      this.announcer.announce(`Removed ${fruit}`);
-    }
+      fruits.splice(index, 1);
+      this.announcer.announce(`Removed ${fruit.name}`);
+      return [...fruits];
+    });
   }
 
   edit(fruit: Fruit, event: MatChipEditedEvent) {
@@ -58,9 +61,13 @@ export class ChipsInputExample {
     }
 
     // Edit existing fruit
-    const index = this.fruits.indexOf(fruit);
-    if (index >= 0) {
-      this.fruits[index].name = value;
-    }
+    this.fruits.update(fruits => {
+      const index = fruits.indexOf(fruit);
+      if (index >= 0) {
+        fruits[index].name = value;
+        return [...fruits];
+      }
+      return fruits;
+    });
   }
 }
