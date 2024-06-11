@@ -75,12 +75,6 @@ const GUIDES = [
     overview: 'Learn about our new color mixins for Sass that avoid duplicating theming styles.'
   },
   {
-    id: 'mdc-migration',
-    name: 'Migrating to MDC-based Components',
-    document: '/docs-content/guides/v15-mdc-migration.html',
-    overview: 'Learn how to migrate your app to the new MDC-based components available in v15.'
-  },
-  {
     id: 'material-2-theming',
     name: 'Theming Angular Material with Material 2',
     document: '/docs-content/guides/material-2.html',
