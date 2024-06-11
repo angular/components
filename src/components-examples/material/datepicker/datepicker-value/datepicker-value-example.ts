@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {provideNativeDateAdapter} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 /** @title Datepicker selected value */
 @Component({
@@ -19,8 +19,9 @@ import {provideNativeDateAdapter} from '@angular/material/core';
     FormsModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerValueExample {
-  date = new FormControl(new Date());
-  serializedDate = new FormControl(new Date().toISOString());
+  readonly date = new FormControl(new Date());
+  readonly serializedDate = new FormControl(new Date().toISOString());
 }
