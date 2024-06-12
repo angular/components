@@ -1,3 +1,22 @@
+<a name="18.1.0-next.2"></a>
+# 18.1.0-next.2 "ivory-infinity" (2024-06-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0bc6583892](https://github.com/angular/components/commit/0bc65838926e88723bfc677fc3e4de81826cfe5b) | feat | **drag-drop:** add mixed orientation support |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6f698fa4e2](https://github.com/angular/components/commit/6f698fa4e24ef4637b2c83f43cb608df967a78b5) | feat | **core:** add option to configure prefix of system variables ([#29139](https://github.com/angular/components/pull/29139)) |
+| [e7312037f7](https://github.com/angular/components/commit/e7312037f75dad5482b06868542ec2a715c116fc) | fix | **dialog:** Make autofocus work with animations disabled ([#29195](https://github.com/angular/components/pull/29195)) |
+| [3b32d0e7c9](https://github.com/angular/components/commit/3b32d0e7c95b358d30f8b7e6b0570ab8ba815a06) | fix | **dialog:** Make focus behavior consistent across zoneful/zoneless apps ([#29192](https://github.com/angular/components/pull/29192)) |
+| [566057b8f5](https://github.com/angular/components/commit/566057b8f58fab1b5328cbd4336b7b19ea412fd3) | fix | **divider:** non-text color contrast issues ([#28995](https://github.com/angular/components/pull/28995)) |
+| [e3abc65d7d](https://github.com/angular/components/commit/e3abc65d7d191f2adf1c294bdb84f532d4eac05c) | fix | **radio:** mark radio-group for check on touch ([#29203](https://github.com/angular/components/pull/29203)) |
+| [3da43230e6](https://github.com/angular/components/commit/3da43230e62c8983af5c21c4c1fc66ea2e5e7d52) | fix | **schematics:** estimate missing hues in M3 schematic ([#29231](https://github.com/angular/components/pull/29231)) |
+| [d717de5150](https://github.com/angular/components/commit/d717de51501e04a0410217c07fc31929ff2e983a) | fix | **snack-bar:** fix overrides mixin name typo ([#29180](https://github.com/angular/components/pull/29180)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.3"></a>
 # 18.0.3 "gossamer-glacier" (2024-06-12)
 ### material
