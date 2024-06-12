@@ -1,12 +1,10 @@
 @use './theming/theming';
 @use './theming/inspection';
 @use './theming/validation';
-@use './style/private';
 @use './ripple/ripple-theme';
 @use './option/option-theme';
 @use './option/optgroup-theme';
 @use './selection/pseudo-checkbox/pseudo-checkbox-theme';
-@use './style/elevation';
 @use './style/sass-utils';
 @use './typography/typography';
 @use './tokens/token-utils';
@@ -41,6 +39,10 @@ $_has-inserted-loaded-marker: false;
     @include option-theme.base($theme);
     @include optgroup-theme.base($theme);
     @include pseudo-checkbox-theme.base($theme);
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mat-app.$prefix,
+        tokens-mat-app.get-unthemable-tokens());
+    }
   }
 
   // The marker is a concrete style no matter which Material version we're targeting.
@@ -59,18 +61,6 @@ $_has-inserted-loaded-marker: false;
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(tokens-mat-app.$prefix,
         tokens-mat-app.get-color-tokens($theme));
-    }
-
-    // Provides external CSS classes for each elevation value. Each CSS class is formatted as
-    // `mat-elevation-z$zValue` where `$zValue` corresponds to the z-space to which the element is
-    // elevated.
-    @for $zValue from 0 through 24 {
-      $selector: elevation.$prefix + $zValue;
-      // We need the `mat-mdc-elevation-specific`, because some MDC mixins
-      // come with elevation baked in and we don't have a way of removing it.
-      .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
-        @include private.private-theme-elevation($zValue, $theme);
-      }
     }
   }
 }
