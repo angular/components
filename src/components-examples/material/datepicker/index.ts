@@ -5,7 +5,6 @@ export {DateRangePickerSelectionStrategyExample} from './date-range-picker-selec
 export {DatepickerActionsExample} from './datepicker-actions/datepicker-actions-example';
 
 export {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
-export {DatepickerColorExample} from './datepicker-color/datepicker-color-example';
 export {
   DatepickerCustomHeaderExample,
   ExampleHeader,

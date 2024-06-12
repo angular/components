@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,5 +10,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   standalone: true,
   imports: [MatFormFieldModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerOverviewExample {}

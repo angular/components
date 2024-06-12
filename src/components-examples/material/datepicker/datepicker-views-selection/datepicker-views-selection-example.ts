@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatDatepicker, MatDatepickerModule} from '@angular/material/datepicker';
@@ -49,9 +49,10 @@ export const MY_FORMATS = {
     FormsModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerViewsSelectionExample {
-  date = new FormControl(moment());
+  readonly date = new FormControl(moment());
 
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value ?? moment();
