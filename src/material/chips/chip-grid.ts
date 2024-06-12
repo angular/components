@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -20,6 +21,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
@@ -33,15 +35,14 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
+import {_ErrorStateTracker, ErrorStateMatcher} from '@angular/material/core';
 import {MatFormFieldControl} from '@angular/material/form-field';
-import {MatChipTextControl} from './chip-text-control';
-import {Observable, Subject, merge} from 'rxjs';
+import {merge, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
-import {Directionality} from '@angular/cdk/bidi';
+import {MatChipTextControl} from './chip-text-control';
 
 /** Change event object that is emitted when the chip grid value has changed. */
 export class MatChipGridChange {
@@ -90,7 +91,8 @@ export class MatChipGrid
     ControlValueAccessor,
     DoCheck,
     MatFormFieldControl<any>,
-    OnDestroy
+    OnDestroy,
+    OnInit
 {
   /**
    * Implemented as part of MatFormFieldControl.
@@ -276,6 +278,14 @@ export class MatChipGrid
       parentForm,
       this.stateChanges,
     );
+  }
+
+  ngOnInit() {
+    if (this.ngControl) {
+      this.ngControl.control?.events.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   ngAfterContentInit() {

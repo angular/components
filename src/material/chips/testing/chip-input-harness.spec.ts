@@ -1,7 +1,7 @@
-import {HarnessLoader, TestKey} from '@angular/cdk/testing';
 import {COMMA} from '@angular/cdk/keycodes';
+import {HarnessLoader, TestKey} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipInputHarness} from './chip-input-harness';
@@ -9,12 +9,6 @@ import {MatChipInputHarness} from './chip-input-harness';
 describe('MatChipInputHarness', () => {
   let fixture: ComponentFixture<ChipInputHarnessTest>;
   let loader: HarnessLoader;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -49,6 +43,7 @@ describe('MatChipInputHarness', () => {
     expect(await harness.isRequired()).toBe(false);
 
     fixture.componentInstance.required = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await harness.isRequired()).toBe(true);
   });
 

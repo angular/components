@@ -6,47 +6,47 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {DOCUMENT} from '@angular/common';
 import {
-  AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   AfterContentInit,
-  Component,
+  AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Component,
   ContentChild,
+  ContentChildren,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Inject,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
-  ViewEncapsulation,
-  ViewChild,
-  Attribute,
-  ContentChildren,
   QueryList,
-  OnInit,
-  DoCheck,
-  inject,
-  booleanAttribute,
-  numberAttribute,
-  ANIMATION_MODULE_TYPE,
+  ViewChild,
+  ViewEncapsulation,
   afterNextRender,
-  Injector,
+  booleanAttribute,
+  inject,
+  numberAttribute,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {
-  MatRipple,
   MAT_RIPPLE_GLOBAL_OPTIONS,
-  RippleGlobalOptions,
+  MatRipple,
   MatRippleLoader,
+  RippleGlobalOptions,
 } from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {merge, Subject, Subscription} from 'rxjs';
-import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
+import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
-import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
 let uid = 0;
@@ -240,7 +240,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    */
   _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
-  private _injector = inject(Injector);
+  protected _injector = inject(Injector);
 
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,

@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipListboxHarness} from './chip-listbox-harness';
@@ -8,11 +8,6 @@ import {MatChipListboxHarness} from './chip-listbox-harness';
 describe('MatChipListboxHarness', () => {
   let fixture: ComponentFixture<ChipListboxHarnessTest>;
   let loader: HarnessLoader;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -39,6 +34,7 @@ describe('MatChipListboxHarness', () => {
     expect(await harness.isMultiple()).toBe(false);
 
     fixture.componentInstance.isMultiple = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await harness.isMultiple()).toBe(true);
   });
 
@@ -49,6 +45,7 @@ describe('MatChipListboxHarness', () => {
     expect(disabledChips.length).toBe(0);
 
     fixture.componentInstance.disabled = true;
+    fixture.changeDetectorRef.markForCheck();
     enabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: false}));
     disabledChips = await loader.getAllHarnesses(MatChipListboxHarness.with({disabled: true}));
   });
@@ -58,6 +55,7 @@ describe('MatChipListboxHarness', () => {
     expect(await harness.isDisabled()).toBe(false);
 
     fixture.componentInstance.disabled = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await harness.isDisabled()).toBe(true);
   });
 
@@ -66,6 +64,7 @@ describe('MatChipListboxHarness', () => {
     expect(await harness.isRequired()).toBe(false);
 
     fixture.componentInstance.required = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await harness.isRequired()).toBe(true);
   });
 
@@ -77,6 +76,7 @@ describe('MatChipListboxHarness', () => {
 
   it('should get selection in single-selection mode', async () => {
     fixture.componentInstance.options[0].selected = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const harness = await loader.getHarness(MatChipListboxHarness);
@@ -89,6 +89,7 @@ describe('MatChipListboxHarness', () => {
     fixture.componentInstance.isMultiple = true;
     fixture.componentInstance.options[0].selected = true;
     fixture.componentInstance.options[1].selected = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const harness = await loader.getHarness(MatChipListboxHarness);
@@ -100,6 +101,7 @@ describe('MatChipListboxHarness', () => {
 
   it('should be able to select specific options', async () => {
     fixture.componentInstance.isMultiple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const harness = await loader.getHarness(MatChipListboxHarness);
