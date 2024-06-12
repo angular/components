@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
@@ -9,9 +11,6 @@ import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 import {default as _rollupMoment} from 'moment';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
 
 const moment = _rollupMoment || _moment;
 
@@ -47,7 +46,8 @@ export const MY_FORMATS = {
     FormsModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerFormatsExample {
-  date = new FormControl(moment());
+  readonly date = new FormControl(moment());
 }

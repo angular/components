@@ -1,35 +1,29 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  OnDestroy,
-} from '@angular/core';
-import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
+import {ChangeDetectionStrategy, Component, Inject, OnDestroy, signal} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
   provideNativeDateAdapter,
 } from '@angular/material/core';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
+import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {Subject} from 'rxjs';
+import {startWith, takeUntil} from 'rxjs/operators';
 
 /** @title Datepicker with custom calendar header */
 @Component({
   selector: 'datepicker-custom-header-example',
   templateUrl: 'datepicker-custom-header-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerCustomHeaderExample {
-  exampleHeader = ExampleHeader;
+  readonly exampleHeader = ExampleHeader;
 }
 
 /** Custom header component for datepicker. */
@@ -57,7 +51,7 @@ export class DatepickerCustomHeaderExample {
       <button mat-icon-button (click)="previousClicked('month')">
         <mat-icon>keyboard_arrow_left</mat-icon>
       </button>
-      <span class="example-header-label">{{periodLabel}}</span>
+      <span class="example-header-label">{{periodLabel()}}</span>
       <button mat-icon-button (click)="nextClicked('month')">
         <mat-icon>keyboard_arrow_right</mat-icon>
       </button>
@@ -66,31 +60,32 @@ export class DatepickerCustomHeaderExample {
       </button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleHeader<D> implements OnDestroy {
   private _destroyed = new Subject<void>();
+
+  readonly periodLabel = signal('');
 
   constructor(
     private _calendar: MatCalendar<D>,
     private _dateAdapter: DateAdapter<D>,
     @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-    cdr: ChangeDetectorRef,
   ) {
-    _calendar.stateChanges.pipe(takeUntil(this._destroyed)).subscribe(() => cdr.markForCheck());
+    _calendar.stateChanges.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
+      this.periodLabel.set(
+        this._dateAdapter
+          .format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel)
+          .toLocaleUpperCase(),
+      );
+    });
   }
 
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  get periodLabel() {
-    return this._dateAdapter
-      .format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel)
-      .toLocaleUpperCase();
   }
 
   previousClicked(mode: 'month' | 'year') {
