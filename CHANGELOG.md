@@ -1,3 +1,16 @@
+<a name="18.0.3"></a>
+# 18.0.3 "gossamer-glacier" (2024-06-12)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f6b993fdb7](https://github.com/angular/components/commit/f6b993fdb7fbdcfbe0297d320a5961097002308d) | fix | **dialog:** Make autofocus work with animations disabled ([#29195](https://github.com/angular/components/pull/29195)) |
+| [6dd1689b51](https://github.com/angular/components/commit/6dd1689b519abf287098d30f7698fc37197e3db0) | fix | **dialog:** Make focus behavior consistent across zoneful/zoneless apps ([#29192](https://github.com/angular/components/pull/29192)) |
+| [81d4527f91](https://github.com/angular/components/commit/81d4527f9130605f69dea31a092a60261bde25db) | fix | **radio:** mark radio-group for check on touch ([#29203](https://github.com/angular/components/pull/29203)) |
+| [0f4d1862d3](https://github.com/angular/components/commit/0f4d1862d30366978176a4a87b7799915d3caedd) | fix | **schematics:** estimate missing hues in M3 schematic ([#29231](https://github.com/angular/components/pull/29231)) |
+| [faf348438d](https://github.com/angular/components/commit/faf348438d57db80e8ac5187ffe3900fe398fe77) | fix | **snack-bar:** fix overrides mixin name typo ([#29180](https://github.com/angular/components/pull/29180)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.2"></a>
 # 18.0.2 "velvet-viola" (2024-06-05)
 ### cdk
