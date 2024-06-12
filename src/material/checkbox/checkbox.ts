@@ -6,27 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption} from '@angular/cdk/a11y';
 import {
+  ANIMATION_MODULE_TYPE,
   AfterViewInit,
   Attribute,
-  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  forwardRef,
   Inject,
   Input,
   NgZone,
-  numberAttribute,
   OnChanges,
   Optional,
   Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
+  booleanAttribute,
+  forwardRef,
+  numberAttribute,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -36,8 +37,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {_MatInternalFormField, MatRipple} from '@angular/material/core';
-import {FocusableOption} from '@angular/cdk/a11y';
+import {MatRipple, _MatInternalFormField} from '@angular/material/core';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
@@ -202,7 +202,11 @@ export class MatCheckbox
 
   // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
   // the lack of type checking previously and assigning random strings.
-  /** Palette color of the checkbox. */
+  /**
+   * Palette color of the checkbox. This API is supported in M2 themes only, it has no effect in M3
+   * themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   @Input() color: string | undefined;
 
   /**
