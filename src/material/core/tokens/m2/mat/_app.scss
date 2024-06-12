@@ -1,3 +1,5 @@
+@use '@material/elevation/elevation-theme' as mdc-elevation;
+@use 'sass:map';
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
@@ -13,10 +15,19 @@ $prefix: (mat, app);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  @return (
+  $tokens: (
     background-color: inspection.get-theme-color($theme, background, background),
     text-color: inspection.get-theme-color($theme, foreground, text),
   );
+
+  @for $zValue from 0 through 24 {
+    $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
+    $shadow: mdc-elevation.elevation-box-shadow($zValue,
+      if($elevation-color == null, elevation.$color, $elevation-color));
+    $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
+  }
+
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
