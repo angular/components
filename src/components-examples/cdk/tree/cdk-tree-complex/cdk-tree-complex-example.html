@@ -1,6 +1,6 @@
-<mat-spinner *ngIf="areRootsLoading | async; else treeTemplate"></mat-spinner>
-
-<ng-template #treeTemplate>
+@if (areRootsLoading | async) {
+  <mat-spinner></mat-spinner>
+} @else {
   <cdk-tree
       #tree
       [dataSource]="roots"
@@ -14,22 +14,27 @@
         [isExpandable]="node.isExpandable()"
         (expandedChange)="onExpand(node, $event)">
       <!-- Spinner when node is loading children; this replaces the expand button. -->
-      <mat-spinner *ngIf="node.areChildrenLoading()" mode="indeterminate"></mat-spinner>
+      @if (node.areChildrenLoading()) {
+        <mat-spinner mode="indeterminate"></mat-spinner>
+      }
 
-      <button
-          *ngIf="!node.areChildrenLoading() && node.isExpandable()"
-          mat-icon-button
-          cdkTreeNodeToggle
-          [attr.aria-label]="'Toggle ' + node.raw.name">
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-        </mat-icon>
-      </button>
+      @if (!node.areChildrenLoading() && node.isExpandable()) {
+        <button
+            mat-icon-button
+            cdkTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + node.raw.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+      }
 
       <!-- Spacer for leaf nodes -->
-      <div *ngIf="node.isLeaf()" class="toggle-spacer"></div>
+      @if (node.isLeaf()) {
+        <div class="toggle-spacer"></div>
+      }
 
       <span>{{node.raw.name}}</span>
     </cdk-tree-node>
   </cdk-tree>
-</ng-template>
+}

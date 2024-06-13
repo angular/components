@@ -202,6 +202,10 @@ class ComplexDataStore {
 
     this._state.next({
       ...currentState,
+      allData: new Map([
+        ...currentState.allData,
+        ...(parentData ? ([[parentId, {...parentData, childrenLoading: 'LOADING'}]] as const) : []),
+      ]),
       dataLoading: new Map([
         ...currentState.dataLoading,
         ...(parentData?.childrenIds?.map(childId => [childId, 'LOADING'] as const) ?? []),
