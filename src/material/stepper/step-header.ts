@@ -71,7 +71,13 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
   /** Whether the ripple should be disabled. */
   @Input() disableRipple: boolean;
 
-  /** Theme palette color of the step header. */
+  /**
+   * Theme color of the step header. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette;
 
   constructor(

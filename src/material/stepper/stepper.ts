@@ -79,7 +79,13 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   // We need an initializer here to avoid a TS error.
   @ContentChild(MatStepLabel) override stepLabel: MatStepLabel = undefined!;
 
-  /** Theme color for the particular step. */
+  /**
+   * Theme color for the particular step. This API is supported in M2 themes
+   * only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette;
 
   /** Content that will be rendered lazily. */
@@ -180,7 +186,13 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** Whether ripples should be disabled for the step headers. */
   @Input() disableRipple: boolean;
 
-  /** Theme color for all of the steps in stepper. */
+  /**
+   * Theme color for all of the steps in stepper. This API is supported in M2
+   * themes only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette;
 
   /**
