@@ -173,7 +173,7 @@ export class CdkTree<T, K = T>
    *
    * @deprecated Use one of `levelAccessor` or `childrenAccessor` instead. To be removed in a
    * future version.
-   * @breaking-change 19.0.0
+   * @breaking-change 21.0.0
    */
   @Input() treeControl?: TreeControl<T, K>;
 
@@ -1143,7 +1143,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
    *
    * @deprecated This will be ignored; the tree will automatically determine the appropriate role
    * for tree node. This input will be removed in a future version.
-   * @breaking-change 19.0.0
+   * @breaking-change 21.0.0
    */
   @Input() get role(): 'treeitem' | 'group' {
     return 'treeitem';
