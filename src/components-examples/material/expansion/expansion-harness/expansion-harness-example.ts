@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 
 /**
@@ -9,5 +9,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
   templateUrl: 'expansion-harness-example.html',
   standalone: true,
   imports: [MatExpansionModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpansionHarnessExample {}

@@ -1,27 +1,20 @@
 <mat-accordion>
-<!-- #docregion basic-panel -->
-<!-- #docregion hide-toggle -->
+  <!-- #docregion basic-panel -->
+  <!-- #docregion hide-toggle -->
   <mat-expansion-panel hideToggle>
-<!-- #enddocregion hide-toggle -->
+    <!-- #enddocregion hide-toggle -->
     <mat-expansion-panel-header>
-      <mat-panel-title>
-        This is the expansion title
-      </mat-panel-title>
-      <mat-panel-description>
-        This is a summary of the content
-      </mat-panel-description>
+      <mat-panel-title> This is the expansion title </mat-panel-title>
+      <mat-panel-description> This is a summary of the content </mat-panel-description>
     </mat-expansion-panel-header>
     <p>This is the primary content of the panel.</p>
   </mat-expansion-panel>
-<!-- #enddocregion basic-panel -->
-  <mat-expansion-panel (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
+  <!-- #enddocregion basic-panel -->
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
     <mat-expansion-panel-header>
-      <mat-panel-title>
-        Self aware panel
-      </mat-panel-title>
+      <mat-panel-title> Self aware panel </mat-panel-title>
       <mat-panel-description>
-        Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        Currently I am {{panelOpenState() ? 'open' : 'closed'}}
       </mat-panel-description>
     </mat-expansion-panel-header>
     <p>I'm visible because I am open</p>
