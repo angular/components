@@ -9,6 +9,7 @@
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
@@ -161,6 +162,10 @@ export class MatAutocompleteTrigger
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
 
+  /** Implements BreakpointObserver to be used to detect handset landscape */
+  private _breakpointObserver = inject(BreakpointObserver);
+  private _handsetLandscapeSubscription = Subscription.EMPTY;
+
   /**
    * Whether the autocomplete can open the next time it is focused. Used to prevent a focused,
    * closed autocomplete from being reopened if the user switches to another browser tab and then
@@ -282,6 +287,7 @@ export class MatAutocompleteTrigger
       window.removeEventListener('blur', this._windowBlurHandler);
     }
 
+    this._handsetLandscapeSubscription.unsubscribe();
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
@@ -790,6 +796,26 @@ export class MatAutocompleteTrigger
           overlayRef.updateSize({width: this._getPanelWidth()});
         }
       });
+      // Subscribe to the breakpoint events stream to detect when screen is in
+      // handsetLandscape.
+      this._handsetLandscapeSubscription = this._breakpointObserver
+        .observe(Breakpoints.HandsetLandscape)
+        .subscribe(result => {
+          const isHandsetLandscape = result.matches;
+          // Check if result.matches Breakpoints.HandsetLandscape. Apply HandsetLandscape
+          // settings to prevent overlay cutoff in that breakpoint. Fixes b/284148377
+          if (isHandsetLandscape) {
+            this._positionStrategy
+              .withFlexibleDimensions(true)
+              .withGrowAfterOpen(true)
+              .withViewportMargin(8);
+          } else {
+            this._positionStrategy
+              .withFlexibleDimensions(false)
+              .withGrowAfterOpen(false)
+              .withViewportMargin(0);
+          }
+        });
     } else {
       // Update the trigger, panel width and direction, in case anything has changed.
       this._positionStrategy.setOrigin(this._getConnectedElement());
@@ -881,6 +907,7 @@ export class MatAutocompleteTrigger
   }
 
   private _getOverlayPosition(): PositionStrategy {
+    // Set default Overlay Position
     const strategy = this._overlay
       .position()
       .flexibleConnectedTo(this._getConnectedElement())
