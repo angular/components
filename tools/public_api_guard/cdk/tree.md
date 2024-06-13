@@ -89,8 +89,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     expandAll(): void;
     expandDescendants(dataNode: T): void;
     expansionKey?: (dataNode: T) => K;
-    _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
+    _getChildrenAccessor(): ((dataNode: T) => Observable<T[]> | T[] | undefined | null) | undefined;
     _getDirectChildren(dataNode: T): Observable<T[]>;
+    // (undocumented)
+    _getExpansionModel(): SelectionModel<K>;
     _getLevel(node: T): number | undefined;
     _getLevelAccessor(): ((dataNode: T) => number) | undefined;
     _getNodeChildren(node: CdkTreeNode<T, K>): Observable<CdkTreeNode<T, K>[]>;
@@ -150,8 +152,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>);
     activate(): void;
     readonly activation: EventEmitter<T>;
-    // (undocumented)
-    _changeDetectorRef: ChangeDetectorRef;
     collapse(): void;
     get data(): T;
     set data(value: T);
