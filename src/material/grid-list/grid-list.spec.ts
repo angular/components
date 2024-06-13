@@ -1,14 +1,13 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component, DebugElement, Type, provideZoneChangeDetection, ViewChild} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {MatGridList, MatGridListModule} from './index';
-import {MatGridTile, MatGridTileText} from './grid-tile';
 import {Directionality} from '@angular/cdk/bidi';
+import {Component, DebugElement, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {MatGridTile, MatGridTileText} from './grid-tile';
+import {MatGridList, MatGridListModule} from './index';
 
 describe('MatGridList', () => {
   function createComponent<T>(componentType: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [MatGridListModule],
       declarations: [componentType],
     }).compileComponents();
@@ -43,6 +42,7 @@ describe('MatGridList', () => {
       // Set the row height twice so the tile styler is initialized.
       gridList.componentInstance.rowHeight = 12.3;
       gridList.componentInstance.rowHeight = 32.1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     }).not.toThrow();
   });
@@ -63,6 +63,7 @@ describe('MatGridList', () => {
 
     expect(() => {
       fixture.componentInstance.cols = -2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     }).not.toThrow();
 
@@ -86,6 +87,7 @@ describe('MatGridList', () => {
     const fixture = createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
@@ -96,6 +98,7 @@ describe('MatGridList', () => {
     expect(getDimension(tile, 'height')).toBe(100);
 
     fixture.componentInstance.rowHeight = '2:1';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(inlineStyles.paddingTop).toBeTruthy();
@@ -107,6 +110,7 @@ describe('MatGridList', () => {
     const fixture = createComponent(GridListWithFitRowHeightMode);
 
     fixture.componentInstance.totalHeight = '300px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
 
@@ -114,6 +118,7 @@ describe('MatGridList', () => {
     expect(getDimension(tile, 'height')).toBe(149.5);
 
     fixture.componentInstance.totalHeight = '200px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     // 99.5 * 2 = 199px + 1px gutter = 200px
@@ -124,12 +129,14 @@ describe('MatGridList', () => {
     const fixture = createComponent(GridListWithFixedRowHeightMode);
 
     fixture.componentInstance.rowHeight = '100px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
     expect(getDimension(tile, 'height')).toBe(100);
 
     fixture.componentInstance.rowHeight = '200px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(getDimension(tile, 'height')).toBe(200);
@@ -163,6 +170,7 @@ describe('MatGridList', () => {
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     gridList.componentInstance.gutterSize = 0;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -224,6 +232,7 @@ describe('MatGridList', () => {
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     gridList.componentInstance.gutterSize = '10%';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -256,12 +265,14 @@ describe('MatGridList', () => {
     const fixture = createComponent(GridListWithColspanBinding);
 
     fixture.componentInstance.colspan = 2;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
     expect(getDimension(tile, 'width')).toBe(199.5);
 
     fixture.componentInstance.colspan = 3;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(getDimension(tile, 'width')).toBe(299.75);
   });
@@ -270,12 +281,14 @@ describe('MatGridList', () => {
     const fixture = createComponent(GridListWithRowspanBinding);
 
     fixture.componentInstance.rowspan = 2;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
     expect(getDimension(tile, 'height')).toBe(201);
 
     fixture.componentInstance.rowspan = 3;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(getDimension(tile, 'height')).toBe(302);
   });
@@ -289,6 +302,7 @@ describe('MatGridList', () => {
       {cols: 1, rows: 1},
       {cols: 2, rows: 1},
     ];
+    fixture.changeDetectorRef.markForCheck();
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -400,6 +414,7 @@ describe('MatGridList', () => {
     const fixture = createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const firstTile = fixture.debugElement.query(By.directive(MatGridTile))!.nativeElement;
@@ -412,6 +427,7 @@ describe('MatGridList', () => {
     const fixture = createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const list = fixture.debugElement.query(By.directive(MatGridList))!;
@@ -428,6 +444,7 @@ describe('MatGridList', () => {
     expect(listInlineStyles.height).toBeFalsy();
 
     fixture.componentInstance.rowHeight = '400px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(tileInlineStyles.paddingTop)
@@ -488,6 +505,7 @@ describe('MatGridList', () => {
     expect(() => {
       // Note the semicolon at the end which will be an invalid value on some browsers (see #13252).
       gridList.componentInstance.rowHeight = '350px;';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     }).toThrowError(/^Invalid value/);
   });

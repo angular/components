@@ -1,4 +1,4 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {
   ApplicationRef,
   Component,
@@ -6,11 +6,10 @@ import {
   EnvironmentProviders,
   Provider,
   Type,
-  provideZoneChangeDetection,
 } from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {MatProgressBarModule, MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './index';
+import {MAT_PROGRESS_BAR_DEFAULT_OPTIONS, MatProgressBarModule} from './index';
 import {MatProgressBar} from './progress-bar';
 
 describe('MDC-based MatProgressBar', () => {
@@ -262,7 +261,7 @@ describe('MDC-based MatProgressBar', () => {
       let primaryValueBar: DebugElement;
 
       beforeEach(() => {
-        fixture = createComponent(BufferProgressBar, [provideZoneChangeDetection()]);
+        fixture = createComponent(BufferProgressBar);
 
         progressElement = fixture.debugElement.query(By.css('mat-progress-bar'))!;
         progressComponent = progressElement.componentInstance;
