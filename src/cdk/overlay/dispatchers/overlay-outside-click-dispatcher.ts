@@ -21,7 +21,7 @@ import type {OverlayRef} from '../overlay-ref';
 export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   private _cursorOriginalValue: string;
   private _cursorStyleIsSet = false;
-  private _pointerDownEventTarget: EventTarget | null;
+  private _pointerDownEventTarget: HTMLElement | null;
 
   constructor(
     @Inject(DOCUMENT) document: any,
@@ -89,12 +89,12 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
 
   /** Store pointerdown event target to track origin of click. */
   private _pointerDownListener = (event: PointerEvent) => {
-    this._pointerDownEventTarget = _getEventTarget(event);
+    this._pointerDownEventTarget = _getEventTarget<HTMLElement>(event);
   };
 
   /** Click event listener that will be attached to the body propagate phase. */
   private _clickListener = (event: MouseEvent) => {
-    const target = _getEventTarget(event);
+    const target = _getEventTarget<HTMLElement>(event);
     // In case of a click event, we want to check the origin of the click
     // (e.g. in case where a user starts a click inside the overlay and
     // releases the click outside of it).
@@ -128,8 +128,8 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
       // If it's an outside click (both origin and target of the click) dispatch the mouse event,
       // and proceed with the next overlay
       if (
-        overlayRef.overlayElement.contains(target as Node) ||
-        overlayRef.overlayElement.contains(origin as Node)
+        containsPierceShadowDom(overlayRef.overlayElement, target) ||
+        containsPierceShadowDom(overlayRef.overlayElement, origin)
       ) {
         break;
       }
@@ -143,4 +143,21 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
       }
     }
   };
+}
+
+/** Version of `Element.contains` that transcends shadow DOM boundaries. */
+function containsPierceShadowDom(parent: HTMLElement, child: HTMLElement | null): boolean {
+  const supportsShadowRoot = typeof ShadowRoot !== 'undefined' && ShadowRoot;
+  let current: Node | null = child;
+
+  while (current) {
+    if (current === parent) {
+      return true;
+    }
+
+    current =
+      supportsShadowRoot && current instanceof ShadowRoot ? current.host : current.parentNode;
+  }
+
+  return false;
 }
