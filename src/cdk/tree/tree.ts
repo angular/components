@@ -31,6 +31,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  EmbeddedViewRef,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -537,6 +538,16 @@ export class CdkTree<T, K = T>
         }
       },
     );
+
+    // If the data itself changes, but keeps the same trackBy, we need to update the templates'
+    // context to reflect the new object.
+    changes?.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const newData = record.item;
+      if (record.currentIndex != undefined) {
+        const view = viewContainer.get(record.currentIndex);
+        (view as EmbeddedViewRef<any>).context.$implicit = newData;
+      }
+    });
 
     // TODO: change to `this._changeDetectorRef.markForCheck()`, or just switch this component to
     // use signals.

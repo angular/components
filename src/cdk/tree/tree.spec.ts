@@ -529,6 +529,15 @@ describe('CdkTree', () => {
         component.dataSource.addData();
       }
 
+      function mutateProperties() {
+        const copiedData = component.dataSource.data.slice();
+        copiedData[0] = new TestData('topping_something_new');
+        copiedData[1] = new TestData('topping_something_new_1');
+        component.dataSource.data = copiedData;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }
+
       it('should add/remove/move nodes with reference-based trackBy', () => {
         createTrackByTestComponent('reference');
         mutateData();
@@ -577,6 +586,16 @@ describe('CdkTree', () => {
         expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
         expect(changedNodes[1].getAttribute('initialIndex')).toBe('1');
         expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
+      });
+
+      it('should update templated data if object changes', () => {
+        createTrackByTestComponent('index');
+        mutateProperties();
+
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(3);
+        expect(changedNodes[0].textContent).toContain('topping_something_new');
+        expect(changedNodes[1].textContent).toContain('topping_something_new_1');
       });
     });
 

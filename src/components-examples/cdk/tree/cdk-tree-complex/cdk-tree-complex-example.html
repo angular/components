@@ -15,7 +15,7 @@
         (expandedChange)="onExpand(node, $event)">
       <!-- Spinner when node is loading children; this replaces the expand button. -->
       @if (node.areChildrenLoading()) {
-        <mat-spinner mode="indeterminate"></mat-spinner>
+        <mat-spinner diameter="48" mode="indeterminate"></mat-spinner>
       }
 
       @if (!node.areChildrenLoading() && node.isExpandable()) {
