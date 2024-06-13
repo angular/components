@@ -28,7 +28,7 @@ determine which features to include:
 
 1. Choose a prebuilt theme name, or "custom" for a custom theme:
 
-   You can choose from [prebuilt material design themes](https://material.angular.io/guide/theming#using-a-pre-built-theme) or set up an extensible [custom theme](https://material.angular.io/guide/theming#defining-a-theme).
+   You can choose from [prebuilt material design themes](https://material.angular.io/guide/theming#pre-built-themes) or set up an extensible [custom theme](https://material.angular.io/guide/theming#defining-a-theme).
 
 2. Set up global Angular Material typography styles:
 
