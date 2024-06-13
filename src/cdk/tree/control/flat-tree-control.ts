@@ -18,7 +18,7 @@ export interface FlatTreeControlOptions<T, K> {
  *
  * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
  * version.
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with flat tree data node functions getLevel and isExpandable. */

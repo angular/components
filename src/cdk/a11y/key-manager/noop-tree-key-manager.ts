@@ -32,7 +32,7 @@ import {
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {
   readonly _isNoopTreeKeyManager = true;
@@ -79,7 +79,7 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export function NOOP_TREE_KEY_MANAGER_FACTORY<
   T extends TreeKeyManagerItem,
@@ -100,7 +100,7 @@ export function NOOP_TREE_KEY_MANAGER_FACTORY<
  * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
  * TreeKeyManagerStrategy instead. To be removed in a future version.
  *
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER = {
   provide: TREE_KEY_MANAGER,

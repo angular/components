@@ -21,7 +21,7 @@ export interface NestedTreeControlOptions<T, K> {
  *
  * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
  * version.
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with nested tree function getChildren. */

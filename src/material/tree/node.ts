@@ -62,7 +62,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
    * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
    *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
    *   an unexpected state. Tabindex to be removed in a future version.
-   * @breaking-change 19.0.0 Remove this attribute.
+   * @breaking-change 21.0.0 Remove this attribute.
    */
   @Input({
     transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
@@ -83,7 +83,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
    * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
    *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
    *   an unexpected state. Tabindex to be removed in a future version.
-   * @breaking-change 19.0.0 Remove this attribute.
+   * @breaking-change 21.0.0 Remove this attribute.
    */
   defaultTabIndex = 0;
 
@@ -98,7 +98,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
    * Whether the component is disabled.
    *
    * @deprecated This is an alias for `isDisabled`.
-   * @breaking-change 19.0.0 Remove this input
+   * @breaking-change 21.0.0 Remove this input
    */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
@@ -117,7 +117,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
      * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
      *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
      *   an unexpected state. Tabindex to be removed in a future version.
-     * @breaking-change 19.0.0 Remove this attribute.
+     * @breaking-change 21.0.0 Remove this attribute.
      */
     @Attribute('tabindex') tabIndex: string,
   ) {
@@ -178,7 +178,7 @@ export class MatNestedTreeNode<T, K = T>
    * Whether the node is disabled.
    *
    * @deprecated This is an alias for `isDisabled`.
-   * @breaking-change 19.0.0 Remove this input
+   * @breaking-change 21.0.0 Remove this input
    */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {

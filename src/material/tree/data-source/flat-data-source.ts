@@ -47,7 +47,7 @@ import {map, take} from 'rxjs/operators';
  *
  * @deprecated Use MatTree#childrenAccessor and MatTreeNode#isExpandable
  * instead. To be removed in a future version.
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlattener<T, F, K = F> {
   constructor(
@@ -129,7 +129,7 @@ export class MatTreeFlattener<T, F, K = F> {
  *
  * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
  * version.
- * @breaking-change 19.0.0
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   private readonly _flattenedData = new BehaviorSubject<F[]>([]);
