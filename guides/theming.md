@@ -91,8 +91,28 @@ more about these terms):
 
 ##### Pre-built themes
 
-There are a number of color palettes available in `@angular/material` that can be
-used with the `primary` and `tertiary` options:
+Angular Material includes several pre-built theme CSS files, each with different palettes selected.
+You can use one of these pre-built themes if you don't want to define a custom theme with Sass.
+
+| Theme                  | Light or dark? | Specification                    |
+|------------------------|----------------|----------------------------------|
+| `azure-blue.css`       | Light          | Material Design 3                |
+| `rose-red.css`         | Light          | Material Design 3                |
+| `cyan-orange.css`      | Dark           | Material Design 3                |
+| `magenta-violet.css`   | Dark           | Material Design 3                |
+| `deeppurple-amber.css` | Light          | Material Design 2                |
+| `indigo-pink.css`      | Light          | Material Design 2                |
+| `pink-bluegrey.css`    | Dark           | Material Design 2                |
+| `purple-green.css`     | Dark           | Material Design 2                |
+
+These files include the CSS for every component in the library. To include only the CSS for a subset
+of components, you must use the Sass API detailed in [Defining a theme](#defining-a-theme) above.
+You can [reference the source code for these pre-built themes](https://github.com/angular/components/blob/main/src/material/core/theming/prebuilt) to see examples of complete theme definitions.
+
+##### Pre-defined palettes
+
+The pre-built themes are based on a set of pre-defined palettes that can be used with the `primary`
+and `tertiary` options:
 
 - `$red-palette`
 - `$green-palette`
