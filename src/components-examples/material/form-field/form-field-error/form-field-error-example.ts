@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {merge} from 'rxjs';
 
 /** @title Form field with error messages */
@@ -12,11 +12,12 @@ import {merge} from 'rxjs';
   styleUrl: 'form-field-error-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldErrorExample {
-  email = new FormControl('', [Validators.required, Validators.email]);
+  readonly email = new FormControl('', [Validators.required, Validators.email]);
 
-  errorMessage = '';
+  errorMessage = signal('');
 
   constructor() {
     merge(this.email.statusChanges, this.email.valueChanges)
@@ -26,11 +27,11 @@ export class FormFieldErrorExample {
 
   updateErrorMessage() {
     if (this.email.hasError('required')) {
-      this.errorMessage = 'You must enter a value';
+      this.errorMessage.set('You must enter a value');
     } else if (this.email.hasError('email')) {
-      this.errorMessage = 'Not a valid email';
+      this.errorMessage.set('Not a valid email');
     } else {
-      this.errorMessage = '';
+      this.errorMessage.set('');
     }
   }
 }

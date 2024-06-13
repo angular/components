@@ -6,8 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
+import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 import {
+  ANIMATION_MODULE_TYPE,
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
@@ -20,7 +23,6 @@ import {
   Inject,
   InjectionToken,
   Injector,
-  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -28,12 +30,12 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
   afterRender,
+  inject,
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
-import {merge, Subject} from 'rxjs';
+import {Subject, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
@@ -47,14 +49,12 @@ import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
 import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl as _MatFormFieldControl} from './form-field-control';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
-import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -72,7 +72,11 @@ export type SubscriptSizing = 'fixed' | 'dynamic';
 export interface MatFormFieldDefaultOptions {
   /** Default form field appearance style. */
   appearance?: MatFormFieldAppearance;
-  /** Default color of the form field. */
+  /**
+   * Default color of the form field. This API is supported in M2 themes only, it has no effect in
+   * M3 themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   color?: ThemePalette;
   /** Whether the required marker should be hidden by default. */
   hideRequiredMarker?: boolean;
@@ -208,7 +212,11 @@ export class MatFormField
   }
   private _hideRequiredMarker = false;
 
-  /** The color palette for the form field. */
+  /**
+   * The color palette for the form field. This API is supported in M2 themes only, it has no
+   * effect in M3 themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   @Input() color: ThemePalette = 'primary';
 
   /** Whether the label should always float or float as the user types. */

@@ -7,14 +7,16 @@ In this document, "form field" refers to the wrapper component `<mat-form-field>
 (e.g. the input, textarea, select, etc.)
 
 The following Angular Material components are designed to work inside a `<mat-form-field>`:
-* [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.io/components/input/overview)
-* [`<select matNativeControl>`](https://material.angular.io/components/select/overview)
-* [`<mat-select>`](https://material.angular.io/components/select/overview)
-* [`<mat-chip-list>`](https://material.angular.io/components/chips/overview)
+
+- [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.io/components/input/overview)
+- [`<select matNativeControl>`](https://material.angular.io/components/select/overview)
+- [`<mat-select>`](https://material.angular.io/components/select/overview)
+- [`<mat-chip-list>`](https://material.angular.io/components/chips/overview)
 
 <!-- example(form-field-overview) -->
 
 ### Form field appearance variants
+
 `mat-form-field` supports two different appearance variants which can be set via the `appearance`
 input: `fill` and `outline`. The `fill` appearance displays the form field with a filled background
 box and an underline, while the `outline` appearance shows the form field with a border all the way
@@ -115,11 +117,11 @@ information on this see the guide on
 
 ### Theming
 
-`<mat-form-field>` has a `color` property which can be set to `primary`, `accent`, or `warn`. This
-will set the color of the form field underline and floating label based on the theme colors
-of your app.
-
-<!-- example(form-field-theming) -->
+The color of the form-field can be changed by specifying a `$color-variant` when applying the
+`mat.form-field-theme` or `mat.form-field-color` mixins (see the
+[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default, the
+form-field uses the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`, or
+`'error'`.
 
 ### Accessibility
 
