@@ -1,12 +1,12 @@
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, viewChild} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {
   MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
 } from '@angular/material/dialog';
-import {MatMenuTrigger, MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 /**
  * @title Dialog launched from a menu
  */
@@ -15,11 +15,12 @@ import {MatButtonModule} from '@angular/material/button';
   templateUrl: 'dialog-from-menu-example.html',
   standalone: true,
   imports: [MatButtonModule, MatMenuModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogFromMenuExample {
-  @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
+  readonly menuTrigger = viewChild.required(MatMenuTrigger);
 
-  constructor(public dialog: MatDialog) {}
+  readonly dialog = inject(MatDialog);
 
   openDialog() {
     // #docregion focus-restoration
@@ -27,7 +28,7 @@ export class DialogFromMenuExample {
 
     // Manually restore focus to the menu trigger since the element that
     // opens the dialog won't be in the DOM any more when the dialog closes.
-    dialogRef.afterClosed().subscribe(() => this.menuTrigger.focus());
+    dialogRef.afterClosed().subscribe(() => this.menuTrigger().focus());
     // #enddocregion focus-restoration
   }
 }
@@ -37,5 +38,6 @@ export class DialogFromMenuExample {
   templateUrl: 'dialog-from-menu-example-dialog.html',
   standalone: true,
   imports: [MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogFromMenuExampleDialog {}
