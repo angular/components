@@ -203,9 +203,11 @@ export class MatCheckbox
   // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
   // the lack of type checking previously and assigning random strings.
   /**
-   * Palette color of the checkbox. This API is supported in M2 themes only, it has no effect in M3
-   * themes. For information on applying color variants in M3, see
-   * https://material.angular.io/guide/theming#using-component-color-variants
+   * Theme color of the checkbox. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
    */
   @Input() color: string | undefined;
 
