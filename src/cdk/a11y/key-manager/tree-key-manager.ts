@@ -36,11 +36,13 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
    */
   private _horizontalOrientation: 'ltr' | 'rtl' = 'ltr';
 
-  // Keep tree items focusable when disabled. Align with
-  // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols.
   /**
    * Predicate function that can be used to check whether an item should be skipped
    * by the key manager.
+   *
+   * The default value for this doesn't skip any elements in order to keep tree items focusable
+   * when disabled. This aligns with ARIA guidelines:
+   * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols.
    */
   private _skipPredicateFn = (_item: T) => false;
 
