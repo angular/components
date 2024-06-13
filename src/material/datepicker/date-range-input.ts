@@ -6,39 +6,40 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
-  Optional,
-  OnDestroy,
-  ContentChild,
   AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Self,
+  Component,
+  ContentChild,
   ElementRef,
   Inject,
+  Input,
   OnChanges,
+  OnDestroy,
+  Optional,
+  Self,
   SimpleChanges,
+  ViewEncapsulation,
   booleanAttribute,
+  signal,
 } from '@angular/core';
-import {MatFormFieldControl, MAT_FORM_FIELD} from '@angular/material/form-field';
-import {ThemePalette, DateAdapter} from '@angular/material/core';
-import {NgControl, ControlContainer, Validators} from '@angular/forms';
-import {Subject, merge, Subscription} from 'rxjs';
-import {FocusOrigin, CdkMonitorFocus} from '@angular/cdk/a11y';
+import {ControlContainer, NgControl, Validators} from '@angular/forms';
+import {DateAdapter, ThemePalette} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormFieldControl} from '@angular/material/form-field';
+import {Subject, Subscription, merge} from 'rxjs';
 import {
-  MatStartDate,
-  MatEndDate,
-  MatDateRangeInputParent,
   MAT_DATE_RANGE_INPUT_PARENT,
+  MatDateRangeInputParent,
+  MatEndDate,
+  MatStartDate,
 } from './date-range-input-parts';
-import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
-import {createMissingDateImplError} from './datepicker-errors';
-import {DateFilterFn, dateInputsHaveChanged, _MatFormFieldPartial} from './datepicker-input-base';
 import {MatDateRangePickerInput} from './date-range-picker';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
+import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+import {createMissingDateImplError} from './datepicker-errors';
+import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datepicker-input-base';
 
 let nextUniqueId = 0;
 
@@ -79,6 +80,7 @@ export class MatDateRangeInput<D>
     OnDestroy
 {
   private _closedSubscription = Subscription.EMPTY;
+  private _openedSubscription = Subscription.EMPTY;
 
   /** Current value of the range input. */
   get value() {
@@ -120,14 +122,23 @@ export class MatDateRangeInput<D>
       this._model = rangePicker.registerInput(this);
       this._rangePicker = rangePicker;
       this._closedSubscription.unsubscribe();
+      this._openedSubscription.unsubscribe();
+      this._ariaOwns.set(this.rangePicker.opened ? rangePicker.id : null);
       this._closedSubscription = rangePicker.closedStream.subscribe(() => {
         this._startInput?._onTouched();
         this._endInput?._onTouched();
+        this._ariaOwns.set(null);
+      });
+      this._openedSubscription = rangePicker.openedStream.subscribe(() => {
+        this._ariaOwns.set(rangePicker.id);
       });
       this._registerModel(this._model!);
     }
   }
   private _rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
+
+  /** The id of the panel owned by this input. */
+  _ariaOwns = signal<string | null>(null);
 
   /** Whether the input is required. */
   @Input({transform: booleanAttribute})
@@ -339,6 +350,7 @@ export class MatDateRangeInput<D>
 
   ngOnDestroy() {
     this._closedSubscription.unsubscribe();
+    this._openedSubscription.unsubscribe();
     this.stateChanges.complete();
   }
 
