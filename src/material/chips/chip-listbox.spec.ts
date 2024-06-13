@@ -13,7 +13,6 @@ import {
   Type,
   ViewChild,
   ViewChildren,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -29,11 +28,6 @@ describe('MDC-based MatChipListbox', () => {
   let chips: QueryList<MatChipOption>;
   let directionality: {value: Direction; change: EventEmitter<Direction>};
   let primaryActions: NodeListOf<HTMLElement>;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   describe('StandardChipList', () => {
     describe('basic behaviors', () => {
@@ -47,6 +41,7 @@ describe('MDC-based MatChipListbox', () => {
 
       it('should not have the aria-selected attribute when it is not selectable', fakeAsync(() => {
         testComponent.selectable = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
 
@@ -64,11 +59,13 @@ describe('MDC-based MatChipListbox', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipListboxInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         chipListboxInstance.disabled = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
@@ -78,11 +75,13 @@ describe('MDC-based MatChipListbox', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipListboxInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         fixture.componentInstance.chips.push(5, 6);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
@@ -92,6 +91,7 @@ describe('MDC-based MatChipListbox', () => {
 
       it('should not set a role on the grid when the list is empty', () => {
         testComponent.chips = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
@@ -99,6 +99,7 @@ describe('MDC-based MatChipListbox', () => {
 
       it('should be able to set a custom role', () => {
         testComponent.role = 'grid';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipListboxNativeElement.getAttribute('role')).toBe('grid');
@@ -106,6 +107,7 @@ describe('MDC-based MatChipListbox', () => {
 
       it('should not set aria-required when it does not have a role', () => {
         testComponent.chips = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
@@ -138,6 +140,7 @@ describe('MDC-based MatChipListbox', () => {
 
       it('should not have role when empty', () => {
         fixture.componentInstance.foods = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipListboxNativeElement.getAttribute('role'))
@@ -171,6 +174,7 @@ describe('MDC-based MatChipListbox', () => {
           .toBe(false);
 
         chipListboxInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         chipListboxInstance.focus();
@@ -185,6 +189,7 @@ describe('MDC-based MatChipListbox', () => {
         expect(chipListboxNativeElement.getAttribute('tabindex')).toBe('0');
 
         chipListboxInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipListboxNativeElement.getAttribute('tabindex')).toBe('-1');
@@ -200,6 +205,7 @@ describe('MDC-based MatChipListbox', () => {
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // It focuses the 4th item
@@ -213,6 +219,7 @@ describe('MDC-based MatChipListbox', () => {
 
           // Destroy the last item
           testComponent.chips.pop();
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -229,6 +236,7 @@ describe('MDC-based MatChipListbox', () => {
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           tick();
 
@@ -238,6 +246,7 @@ describe('MDC-based MatChipListbox', () => {
 
         it('should focus the listbox if the last focused item is removed', fakeAsync(() => {
           testComponent.chips = [0];
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           spyOn(chipListboxInstance, 'focus');
@@ -245,6 +254,7 @@ describe('MDC-based MatChipListbox', () => {
           chips.last.focus();
 
           testComponent.chips.pop();
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(chipListboxInstance.focus).toHaveBeenCalled();
@@ -370,6 +380,7 @@ describe('MDC-based MatChipListbox', () => {
 
         it('should use user defined tabIndex', fakeAsync(() => {
           chipListboxInstance.tabIndex = 4;
+          fixture.changeDetectorRef.markForCheck();
 
           fixture.detectChanges();
 
@@ -429,6 +440,7 @@ describe('MDC-based MatChipListbox', () => {
           .toBe(chips.first);
 
         fixture.componentInstance.foods = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
 
@@ -440,6 +452,7 @@ describe('MDC-based MatChipListbox', () => {
       it('should select an option that was added after initialization', () => {
         fixture = createComponent(BasicChipListbox);
         fixture.componentInstance.foods.push({viewValue: 'Potatoes', value: 'potatoes-8'});
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         primaryActions = chipListboxNativeElement.querySelectorAll<HTMLElement>(
@@ -509,6 +522,7 @@ describe('MDC-based MatChipListbox', () => {
           {value: 'tacos-2', viewValue: 'Tacos'},
         ];
         fixture.componentInstance.selectable = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         primaryActions = chipListboxNativeElement.querySelectorAll<HTMLElement>(
@@ -547,6 +561,7 @@ describe('MDC-based MatChipListbox', () => {
           {value: 'tacos-2', viewValue: 'Tacos'},
         ];
         fixture.componentInstance.selectable = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         primaryActions = chipListboxNativeElement.querySelectorAll<HTMLElement>(
@@ -585,6 +600,7 @@ describe('MDC-based MatChipListbox', () => {
 
         it('should take an initial view value with reactive forms', fakeAsync(() => {
           fixture.componentInstance.control = new FormControl('pizza-1');
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           tick();
           const array = chips.toArray();

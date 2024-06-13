@@ -1,20 +1,14 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatChipsModule} from '../index';
 import {MatChipGridHarness} from './chip-grid-harness';
 
 describe('MatChipGridHarness', () => {
   let fixture: ComponentFixture<ChipGridHarnessTest>;
   let loader: HarnessLoader;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -69,6 +63,7 @@ describe('MatChipGridHarness', () => {
     expect(await harness.isRequired()).toBe(false);
 
     fixture.componentInstance.required = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await harness.isRequired()).toBe(true);
   });
 
@@ -88,6 +83,7 @@ describe('MatChipGridHarness', () => {
     const grid = await loader.getHarness(MatChipGridHarness);
     const chips = await grid.getRows();
     fixture.componentInstance.firstChipEditable = true;
+    fixture.changeDetectorRef.markForCheck();
 
     expect(await parallel(() => chips.map(chip => chip.isEditable()))).toEqual([
       true,
@@ -101,6 +97,7 @@ describe('MatChipGridHarness', () => {
     const chip = (await grid.getRows())[0];
     let error: string | null = null;
     fixture.componentInstance.firstChipEditable = false;
+    fixture.changeDetectorRef.markForCheck();
 
     try {
       await chip.startEditing();
@@ -115,6 +112,7 @@ describe('MatChipGridHarness', () => {
     const grid = await loader.getHarness(MatChipGridHarness);
     const chip = (await grid.getRows())[0];
     fixture.componentInstance.firstChipEditable = true;
+    fixture.changeDetectorRef.markForCheck();
 
     await chip.startEditing();
     await (await chip.getEditInput()).setValue('new value');
