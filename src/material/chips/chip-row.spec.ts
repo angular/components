@@ -6,19 +6,13 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  DebugElement,
-  ElementRef,
-  ViewChild,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
+import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {
-  MatChipEditedEvent,
   MatChipEditInput,
+  MatChipEditedEvent,
   MatChipEvent,
   MatChipGrid,
   MatChipRow,
@@ -32,12 +26,6 @@ describe('MDC-based Row Chips', () => {
   let chipInstance: MatChipRow;
 
   let dir = 'ltr';
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -83,6 +71,7 @@ describe('MDC-based Row Chips', () => {
 
         // Force a destroy callback
         testComponent.shouldShow = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(testComponent.chipDestroy).toHaveBeenCalledTimes(1);
@@ -92,6 +81,7 @@ describe('MDC-based Row Chips', () => {
         expect(chipNativeElement.classList).toContain('mat-primary');
 
         testComponent.color = 'warn';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).not.toContain('mat-primary');
@@ -117,6 +107,7 @@ describe('MDC-based Row Chips', () => {
 
       it('should be able to set a custom role', () => {
         chipInstance.role = 'button';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.getAttribute('role')).toBe('button');
@@ -127,6 +118,7 @@ describe('MDC-based Row Chips', () => {
       describe('when removable is true', () => {
         beforeEach(() => {
           testComponent.removable = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         });
 
@@ -170,6 +162,7 @@ describe('MDC-based Row Chips', () => {
       describe('when removable is false', () => {
         beforeEach(() => {
           testComponent.removable = false;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         });
 
@@ -205,6 +198,7 @@ describe('MDC-based Row Chips', () => {
         expect(primaryActionElement.getAttribute('aria-disabled')).toBe('false');
 
         testComponent.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(primaryActionElement.getAttribute('aria-disabled')).toBe('true');
@@ -236,6 +230,7 @@ describe('MDC-based Row Chips', () => {
     describe('editable behavior', () => {
       beforeEach(() => {
         testComponent.editable = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       });
 
@@ -260,6 +255,7 @@ describe('MDC-based Row Chips', () => {
 
       beforeEach(fakeAsync(() => {
         testComponent.editable = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchFakeEvent(chipNativeElement, 'dblclick');
         fixture.detectChanges();
@@ -283,10 +279,12 @@ describe('MDC-based Row Chips', () => {
 
       it('should set the role of the primary action to gridcell', () => {
         testComponent.editable = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(primaryAction.getAttribute('role')).toBe('gridcell');
 
         testComponent.editable = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         // Test regression of bug where element is mislabeled as a button role. Element that does not perform its
         // action on click event is not a button by ARIA spec (#27106).
@@ -329,6 +327,7 @@ describe('MDC-based Row Chips', () => {
       it('should use the default edit input if none is projected', () => {
         keyDownOnPrimaryAction(ENTER, 'Enter');
         testComponent.useCustomEditInput = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchFakeEvent(chipNativeElement, 'dblclick');
         fixture.detectChanges();
@@ -369,6 +368,7 @@ describe('MDC-based Row Chips', () => {
       it('should apply `ariaLabel` and `ariaDesciption` to the primary gridcell', () => {
         fixture.componentInstance.ariaLabel = 'chip name';
         fixture.componentInstance.ariaDescription = 'chip description';
+        fixture.changeDetectorRef.markForCheck();
 
         fixture.detectChanges();
 

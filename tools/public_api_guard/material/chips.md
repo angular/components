@@ -19,6 +19,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatRipple } from '@angular/material/core';
@@ -84,6 +85,8 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     _hasTrailingIcon(): boolean;
     highlighted: boolean;
     id: string;
+    // (undocumented)
+    protected _injector: Injector;
     _isBasicChip: boolean;
     _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
@@ -169,7 +172,7 @@ export interface MatChipEvent {
 }
 
 // @public
-export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
+export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy, OnInit {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
     protected _allowFocusEscape(): void;
     _blur(): void;
@@ -208,6 +211,8 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     _onChange: (value: any) => void;
     onContainerClick(event: MouseEvent): void;
     _onTouched: () => void;

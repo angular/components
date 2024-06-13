@@ -1,6 +1,6 @@
-import {Component, DebugElement, QueryList, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
+import {Component, DebugElement, QueryList} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
@@ -19,12 +19,6 @@ describe('MDC-based MatChipSet', () => {
     let chipSetNativeElement: HTMLElement;
     let chipSetInstance: MatChipSet;
     let chips: QueryList<MatChip>;
-
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [provideZoneChangeDetection()],
-      });
-    });
 
     describe('basic behaviors', () => {
       beforeEach(() => {
@@ -45,11 +39,13 @@ describe('MDC-based MatChipSet', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipSetInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         chipSetInstance.disabled = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
@@ -59,11 +55,13 @@ describe('MDC-based MatChipSet', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipSetInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         fixture.componentInstance.chips.push(5, 6);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
@@ -77,6 +75,7 @@ describe('MDC-based MatChipSet', () => {
 
       it('should allow a custom role to be specified', () => {
         chipSetInstance.role = 'list';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(chipSetNativeElement.getAttribute('role')).toBe('list');
       });

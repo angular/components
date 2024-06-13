@@ -244,7 +244,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    */
   _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
-  private _injector = inject(Injector);
+  protected _injector = inject(Injector);
 
   constructor(
     public _changeDetectorRef: ChangeDetectorRef,
