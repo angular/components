@@ -59,7 +59,8 @@ import {
   isObservable,
   of as observableOf,
 } from 'rxjs';
-import {distinctUntilChanged, 
+import {
+  distinctUntilChanged,
   concatMap,
   map,
   reduce,
@@ -351,7 +352,7 @@ export class CdkTree<T, K = T>
     }
   }
 
-  private _getExpansionModel() {
+  _getExpansionModel() {
     if (!this.treeControl) {
       this._expansionModel ??= new SelectionModel<K>(true);
       return this._expansionModel;
@@ -1137,8 +1138,6 @@ export class CdkTree<T, K = T>
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   protected _tabindex: number | null = -1;
 
-  _changeDetectorRef = inject(ChangeDetectorRef);
-
   /**
    * The role of the tree node.
    *
@@ -1300,8 +1299,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
-    this._tree._getExpansionModel().changed
-      .pipe(
+    this._tree
+      ._getExpansionModel()
+      .changed.pipe(
         map(() => this.isExpanded),
         distinctUntilChanged(),
       )

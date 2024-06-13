@@ -12,7 +12,6 @@ import {
   ViewChild,
   TrackByFunction,
   Type,
-  provideZoneChangeDetection,
   EventEmitter,
   ViewChildren,
   QueryList,
@@ -30,7 +29,7 @@ import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 
-describe('CdkTree', () => {
+describe('CdkTree with TreeControl', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = {};
   let dataSource: FakeDataSource;
@@ -42,7 +41,6 @@ describe('CdkTree', () => {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: Directionality,
           useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),
@@ -150,6 +148,7 @@ describe('CdkTree', () => {
 
       it('should be able to use units different from px for the indentation', () => {
         component.indent = '15rem';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const data = dataSource.data;
@@ -166,6 +165,7 @@ describe('CdkTree', () => {
 
       it('should default to px if no unit is set for string value indentation', () => {
         component.indent = '17';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const data = dataSource.data;
@@ -182,6 +182,7 @@ describe('CdkTree', () => {
 
       it('should be able to set zero as the indent level', () => {
         component.paddingNodes.forEach(node => (node.level = 0));
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const data = dataSource.data;
@@ -200,6 +201,7 @@ describe('CdkTree', () => {
         const node = getNodes(treeElement)[0];
 
         component.indent = 10;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(node.style.paddingLeft).toBe('10px');
@@ -391,6 +393,7 @@ describe('CdkTree', () => {
         );
 
         dataSource.addChild(data[1]);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
@@ -771,6 +774,7 @@ describe('CdkTree', () => {
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         (getNodes(treeElement)[1] as HTMLElement).click();
@@ -793,6 +797,7 @@ describe('CdkTree', () => {
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
 
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expectNestedTreeToMatch(
@@ -1192,6 +1197,7 @@ describe('CdkTree', () => {
 
       it('ignores clicks on disabled items', () => {
         dataSource.data[1].isDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         nodes[1].click();

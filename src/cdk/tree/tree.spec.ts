@@ -1240,6 +1240,7 @@ describe('CdkTree', () => {
 
       it('ignores clicks on disabled items', () => {
         dataSource.data[1].isDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
 
