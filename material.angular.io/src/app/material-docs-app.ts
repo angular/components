@@ -10,7 +10,11 @@ import {CookiePopup} from './shared/cookie-popup/cookie-popup';
 
 @Component({
   selector: 'material-docs-app',
-  templateUrl: './material-docs-app.html',
+  template: `
+    <app-cookie-popup/>
+    <app-navbar/>
+    <router-outlet/>
+  `,
   styleUrls: ['./material-docs-app.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
