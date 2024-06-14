@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
@@ -10,6 +10,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
   templateUrl: 'button-toggle-forms-example.html',
   standalone: true,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleFormsExample {
   fontStyleControl = new FormControl('');
