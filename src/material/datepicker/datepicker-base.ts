@@ -524,6 +524,8 @@ export abstract class MatDatepickerBase<
 
   private _injector = inject(Injector);
 
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
   constructor(
     private _overlay: Overlay,
     /**
@@ -542,6 +544,10 @@ export abstract class MatDatepickerBase<
     }
 
     this._scrollStrategy = scrollStrategy;
+
+    this._model.selectionChanged.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

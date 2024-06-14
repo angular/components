@@ -1,20 +1,15 @@
-import {Component, ElementRef, Type, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, flush, fakeAsync, tick} from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {Component, ElementRef, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {CommonModule} from '@angular/common';
-import {MatDatepickerModule} from './datepicker-module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDatepicker} from './datepicker';
+import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatDatepickerActions', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
       declarations: [component],
@@ -50,6 +45,7 @@ describe('MatDatepickerActions', () => {
   it('should render the actions inside calendar panel in touch UI mode', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.componentInstance.touchUi = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     fixture.componentInstance.datepicker.open();
     fixture.detectChanges();
@@ -241,6 +237,7 @@ describe('MatDatepickerActions', () => {
     expect(onDateChange).not.toHaveBeenCalled();
 
     fixture.componentInstance.renderActions = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     datepicker.open();
     fixture.detectChanges();
@@ -266,6 +263,7 @@ describe('MatDatepickerActions', () => {
   it('should be able to toggle the actions while the datepicker is open', fakeAsync(() => {
     const fixture = createComponent(DatepickerWithActions);
     fixture.componentInstance.renderActions = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.componentInstance.datepicker.open();
@@ -277,10 +275,12 @@ describe('MatDatepickerActions', () => {
     expect(content.querySelector('.mat-datepicker-actions')).toBeFalsy();
 
     fixture.componentInstance.renderActions = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(content.querySelector('.mat-datepicker-actions')).toBeTruthy();
 
     fixture.componentInstance.renderActions = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(content.querySelector('.mat-datepicker-actions')).toBeFalsy();
   }));
