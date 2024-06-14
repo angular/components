@@ -32,7 +32,13 @@ import {MatIconRegistry} from './icon-registry';
 
 /** Default options for `mat-icon`.  */
 export interface MatIconDefaultOptions {
-  /** Default color of the icon. */
+  /**
+   * Theme color of the icon. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   color?: ThemePalette;
   /** Font set that the icon is a part of. */
   fontSet?: string;
@@ -150,7 +156,13 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   private _defaultColor: ThemePalette;
 
-  /** Theme palette color of the icon. */
+  /**
+   * Theme color of the icon. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   get color() {
     return this._color || this._defaultColor;
