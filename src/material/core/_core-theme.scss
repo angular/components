@@ -11,6 +11,7 @@
 @use './tokens/m2/mat/app' as tokens-mat-app;
 @use './tokens/m2/mat/ripple' as tokens-mat-ripple;
 @use './tokens/m2/mat/option' as tokens-mat-option;
+@use './tokens/m2/mat/optgroup' as tokens-mat-optgroup;
 @use './tokens/m2/mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
 @use './tokens/m2/mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
 
@@ -139,6 +140,8 @@ $_has-inserted-loaded-marker: false;
   $mat-app-tokens: token-utils.get-tokens-for($tokens, tokens-mat-app.$prefix, $options...);
   $mat-ripple-tokens: token-utils.get-tokens-for($tokens, tokens-mat-ripple.$prefix, $options...);
   $mat-option-tokens: token-utils.get-tokens-for($tokens, tokens-mat-option.$prefix, $options...);
+  $mat-optgroup-tokens:
+    token-utils.get-tokens-for($tokens, tokens-mat-optgroup.$prefix, $options...);
   $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for($tokens,
     tokens-mat-full-pseudo-checkbox.$prefix, $options...);
   $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for($tokens,
@@ -147,6 +150,7 @@ $_has-inserted-loaded-marker: false;
   @include token-utils.create-token-values(tokens-mat-app.$prefix, $mat-app-tokens);
   @include token-utils.create-token-values(tokens-mat-ripple.$prefix, $mat-ripple-tokens);
   @include token-utils.create-token-values(tokens-mat-option.$prefix, $mat-option-tokens);
+  @include token-utils.create-token-values(tokens-mat-optgroup.$prefix, $mat-optgroup-tokens);
   @include token-utils.create-token-values(tokens-mat-full-pseudo-checkbox.$prefix,
     $mat-full-pseudo-checkbox-tokens);
   @include token-utils.create-token-values(tokens-mat-minimal-pseudo-checkbox.$prefix,
