@@ -6,27 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
   Input,
+  numberAttribute,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
 } from '@angular/core';
-import {MatOption, ThemePalette} from '@angular/material/core';
-import {MatSelect} from '@angular/material/select';
 import {MatIconButton} from '@angular/material/button';
-import {MatTooltip} from '@angular/material/tooltip';
+import {MatOption, ThemePalette} from '@angular/material/core';
 import {MatFormField, MatFormFieldAppearance} from '@angular/material/form-field';
+import {MatSelect} from '@angular/material/select';
+import {MatTooltip} from '@angular/material/tooltip';
 import {Observable, ReplaySubject, Subscription} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
 
@@ -90,8 +92,6 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
   'MAT_PAGINATOR_DEFAULT_OPTIONS',
 );
 
-let nextUniqueId = 0;
-
 /**
  * Component to provide navigation between paged information. Displays the size of the current
  * page, user-selectable options to change that size, what items are being shown, and
@@ -112,11 +112,14 @@ let nextUniqueId = 0;
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
 export class MatPaginator implements OnInit, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** If set, styles the "page size" form field with the designated style. */
   _formFieldAppearance?: MatFormFieldAppearance;
 
   /** ID for the DOM node containing the paginator's items per page label. */
-  readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
+  readonly _pageSizeLabelId = this._idGenerator.getId('mat-paginator-page-size-label-');
 
   private _intlChanges: Subscription;
   private _isInitialized = false;

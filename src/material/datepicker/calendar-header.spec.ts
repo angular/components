@@ -201,7 +201,7 @@ describe('MatCalendarHeader', () => {
       expect(periodButton.hasAttribute('aria-label')).toBe(true);
       expect(periodButton.getAttribute('aria-label')).toMatch(/^[a-z0-9\s]+$/i);
       expect(periodButton.hasAttribute('aria-describedby')).toBe(true);
-      expect(periodButton.getAttribute('aria-describedby')).toMatch(/mat-calendar-header-[0-9]+/i);
+      expect(periodButton.getAttribute('aria-describedby')).toMatch(/mat-calendar-header-\w+/i);
     });
   });
 

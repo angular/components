@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkMonitorFocus, IdGenerator} from '@angular/cdk/a11y';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
   AfterContentInit,
@@ -15,6 +16,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  inject,
   Inject,
   Input,
   OnChanges,
@@ -26,9 +28,11 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
-import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
+import {MatCalendarCellClassFunction, MatCalendarUserEvent} from './calendar-body';
+import {DateRange, MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
@@ -39,11 +43,6 @@ import {
   yearsPerPage,
 } from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
-import {MatIconButton, MatButton} from '@angular/material/button';
-import {CdkMonitorFocus} from '@angular/cdk/a11y';
-
-let calendarHeaderId = 1;
 
 /**
  * Possible views for the calendar.
@@ -62,6 +61,9 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   imports: [MatButton, MatIconButton],
 })
 export class MatCalendarHeader<D> {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   constructor(
     private _intl: MatDatepickerIntl,
     @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
@@ -221,7 +223,7 @@ export class MatCalendarHeader<D> {
     return [minYearLabel, maxYearLabel];
   }
 
-  private _id = `mat-calendar-header-${calendarHeaderId++}`;
+  private _id = this._idGenerator.getId('mat-calendar-header-');
 
   _periodButtonLabelId = `${this._id}-period-label`;
 }

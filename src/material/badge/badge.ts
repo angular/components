@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
+import {AriaDescriber, IdGenerator, InteractivityChecker} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {
+  ANIMATION_MODULE_TYPE,
   ApplicationRef,
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -26,7 +27,6 @@ import {
   Optional,
   Renderer2,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 
@@ -83,6 +83,9 @@ export class _MatBadgeStyleLoader {}
   standalone: true,
 })
 export class MatBadge implements OnInit, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /**
    * Theme color of the badge. This API is supported in M2 themes only, it
    * has no effect in M3 themes.
@@ -259,7 +262,7 @@ export class MatBadge implements OnInit, OnDestroy {
     const badgeElement = this._renderer.createElement('span');
     const activeClass = 'mat-badge-active';
 
-    badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
+    badgeElement.setAttribute('id', this._idGenerator.getId('mat-badge-content-'));
 
     // The badge is aria-hidden because we don't want it to appear in the page's navigation
     // flow. Instead, we use the badge to describe the decorated element with aria-describedby.

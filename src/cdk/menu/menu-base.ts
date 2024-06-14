@@ -6,22 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusKeyManager, FocusOrigin, IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   AfterContentInit,
+  computed,
   ContentChildren,
   Directive,
   ElementRef,
+  inject,
   Input,
   NgZone,
   OnDestroy,
   QueryList,
-  computed,
-  inject,
   signal,
 } from '@angular/core';
-import {Subject, merge} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {mapTo, mergeAll, mergeMap, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {MENU_AIM} from './menu-aim';
 import {CdkMenuGroup} from './menu-group';
@@ -29,9 +29,6 @@ import {Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
 import {MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
-
-/** Counter used to create unique IDs for menus. */
-let nextId = 0;
 
 /**
  * Abstract directive that implements shared logic common to all menus.
@@ -55,6 +52,9 @@ export abstract class CdkMenuBase
   extends CdkMenuGroup
   implements Menu, AfterContentInit, OnDestroy
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** The menu's native DOM host element. */
   readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
 
@@ -71,7 +71,7 @@ export abstract class CdkMenuBase
   protected readonly dir = inject(Directionality, {optional: true});
 
   /** The id of the menu's host element. */
-  @Input() id = `cdk-menu-${nextId++}`;
+  @Input() id = this._idGenerator.getId('cdk-menu-');
 
   /** All child MenuItem elements nested in this Menu. */
   @ContentChildren(CdkMenuItem, {descendants: true})

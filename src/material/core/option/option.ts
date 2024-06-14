@@ -6,36 +6,31 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusableOption, FocusOrigin, IdGenerator} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ElementRef,
-  ChangeDetectorRef,
-  Optional,
-  Inject,
   AfterViewChecked,
-  OnDestroy,
-  Input,
-  Output,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
   EventEmitter,
+  Inject,
+  inject,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
   QueryList,
   ViewChild,
-  booleanAttribute,
+  ViewEncapsulation,
 } from '@angular/core';
 import {Subject} from 'rxjs';
-import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
-import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 import {MatRipple} from '../ripple/ripple';
 import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
-
-/**
- * Option IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let _uniqueIdCounter = 0;
+import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
+import {MAT_OPTION_PARENT_COMPONENT, MatOptionParentComponent} from './option-parent';
 
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange<T = any> {
@@ -83,6 +78,9 @@ export class MatOptionSelectionChange<T = any> {
   imports: [MatPseudoCheckbox, MatRipple],
 })
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _selected = false;
   private _active = false;
   private _disabled = false;
@@ -102,7 +100,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   @Input() value: T;
 
   /** The unique ID of the option. */
-  @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
+  @Input() id: string = this._idGenerator.getId('mat-option-');
 
   /** Whether the option is disabled. */
   @Input({transform: booleanAttribute})

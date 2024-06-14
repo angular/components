@@ -6,25 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {IdGenerator} from '@angular/cdk/a11y';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {NgClass} from '@angular/common';
 import {
+  afterNextRender,
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  inject,
+  Injector,
   Input,
-  Output,
-  ViewEncapsulation,
   NgZone,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
-  AfterViewChecked,
-  inject,
-  afterNextRender,
-  Injector,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import {NgClass} from '@angular/common';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -61,8 +62,6 @@ export interface MatCalendarUserEvent<D> {
   event: Event;
 }
 
-let calendarBodyId = 1;
-
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
@@ -96,6 +95,9 @@ const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
   imports: [NgClass],
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _platform = inject(Platform);
 
   /**
@@ -595,7 +597,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     return null;
   }
 
-  private _id = `mat-calendar-body-${calendarBodyId++}`;
+  private _id = this._idGenerator.getId('mat-calendar-body-');
 
   _startDateLabelId = `${this._id}-start-date`;
 

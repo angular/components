@@ -46,10 +46,10 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionIds.size).toBe(options.length);
       for (let i = 0; i < options.length; i++) {
         expect(options[i].id).toBe(optionEls[i].id);
-        expect(options[i].id).toMatch(/cdk-option-\d+/);
+        expect(options[i].id).toMatch(/cdk-option-\w+/);
       }
       expect(listbox.id).toEqual(listboxEl.id);
-      expect(listbox.id).toMatch(/cdk-listbox-\d+/);
+      expect(listbox.id).toMatch(/cdk-listbox-\w+/);
     });
 
     it('should not overwrite user given ids', () => {

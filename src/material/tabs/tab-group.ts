@@ -6,9 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {
   AfterContentChecked,
   AfterContentInit,
+  ANIMATION_MODULE_TYPE,
+  APP_ID,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -16,29 +22,24 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   Input,
+  numberAttribute,
   OnDestroy,
   Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  booleanAttribute,
-  inject,
-  numberAttribute,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {MAT_TAB_GROUP, MatTab} from './tab';
-import {MatTabHeader} from './tab-header';
-import {ThemePalette, MatRipple} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
-import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
-import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabBody} from './tab-body';
-import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
+import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Platform} from '@angular/cdk/platform';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -94,6 +95,9 @@ const ENABLE_BACKGROUND_INPUT = true;
   ],
 })
 export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _appId = inject(APP_ID);
+
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
@@ -479,7 +483,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
 
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string {
-    return `mat-tab-label-${this._groupId}-${i}`;
+    return `mat-tab-label-${this._appId}${this._groupId}-${i}`;
   }
 
   /** Returns a unique id for each tab content element */

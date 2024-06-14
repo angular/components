@@ -6,13 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusOrigin, IdGenerator} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentInit,
+  afterNextRender,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -21,11 +23,14 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
+  inject,
   InjectionToken,
   Injector,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   OnInit,
   Optional,
@@ -33,18 +38,12 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  afterNextRender,
-  booleanAttribute,
-  forwardRef,
-  inject,
-  numberAttribute,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, ThemePalette, _MatInternalFormField} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple, ThemePalette} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 
 // Increasing integer for generating unique ids for radio components.
-let nextUniqueId = 0;
 
 /** Change event object emitted by radio button and radio group. */
 export class MatRadioChange {
@@ -120,11 +119,14 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
   standalone: true,
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Selected value for the radio group. */
   private _value: any = null;
 
   /** The HTML name attribute applied to radio buttons in this group. */
-  private _name: string = `mat-radio-group-${nextUniqueId++}`;
+  private _name: string = this._idGenerator.getId('mat-radio-group-');
 
   /** The currently selected radio button. Should match value. */
   private _selected: MatRadioButton | null = null;
@@ -408,7 +410,10 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
   private _ngZone = inject(NgZone);
-  private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
+
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+  private _uniqueId: string = this._idGenerator.getId('mat-radio-');
 
   /** The unique ID for the radio button. */
   @Input() id: string = this._uniqueId;

@@ -6,29 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {CdkMonitorFocus, FocusOrigin, IdGenerator} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
   ElementRef,
   Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   Optional,
   Self,
+  signal,
   SimpleChanges,
   ViewEncapsulation,
-  booleanAttribute,
-  signal,
 } from '@angular/core';
 import {ControlContainer, NgControl, Validators} from '@angular/forms';
 import {DateAdapter, ThemePalette} from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormFieldControl} from '@angular/material/form-field';
-import {Subject, Subscription, merge} from 'rxjs';
+import {merge, Subject, Subscription} from 'rxjs';
 import {
   MAT_DATE_RANGE_INPUT_PARENT,
   MatDateRangeInputParent,
@@ -39,9 +40,7 @@ import {MatDateRangePickerInput} from './date-range-picker';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {createMissingDateImplError} from './datepicker-errors';
-import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datepicker-input-base';
-
-let nextUniqueId = 0;
+import {_MatFormFieldPartial, DateFilterFn, dateInputsHaveChanged} from './datepicker-input-base';
 
 @Component({
   selector: 'mat-date-range-input',
@@ -79,6 +78,9 @@ export class MatDateRangeInput<D>
     OnChanges,
     OnDestroy
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _closedSubscription = Subscription.EMPTY;
   private _openedSubscription = Subscription.EMPTY;
 
@@ -88,7 +90,7 @@ export class MatDateRangeInput<D>
   }
 
   /** Unique ID for the group. */
-  id = `mat-date-range-input-${nextUniqueId++}`;
+  id = this._idGenerator.getId('mat-date-range-input-');
 
   /** Whether the control is focused. */
   focused = false;

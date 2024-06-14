@@ -7,6 +7,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
+import { IdGenerator } from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -52,6 +53,8 @@ export class CdkAccordionItem implements OnDestroy {
     // (undocumented)
     protected _expansionDispatcher: UniqueSelectionDispatcher;
     readonly id: string;
+    // (undocumented)
+    protected _idGenerator: IdGenerator;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)

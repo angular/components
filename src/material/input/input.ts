@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
@@ -14,6 +15,7 @@ import {
   Directive,
   DoCheck,
   ElementRef,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -23,8 +25,8 @@ import {
   Self,
 } from '@angular/core';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
-import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
+import {_ErrorStateTracker, ErrorStateMatcher} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
@@ -41,8 +43,6 @@ const MAT_INPUT_INVALID_TYPES = [
   'reset',
   'submit',
 ];
-
-let nextUniqueId = 0;
 
 @Directive({
   selector: `input[matInput], textarea[matInput], select[matNativeControl],
@@ -82,7 +82,10 @@ let nextUniqueId = 0;
 export class MatInput
   implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck
 {
-  protected _uid = `mat-input-${nextUniqueId++}`;
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
+  protected _uid = this._idGenerator.getId('mat-input-');
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
   private _previousPlaceholder: string | null;

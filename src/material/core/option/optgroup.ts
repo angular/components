@@ -6,17 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
 import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  Input,
-  Inject,
-  Optional,
-  InjectionToken,
   booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  inject,
+  InjectionToken,
+  Input,
+  Optional,
+  ViewEncapsulation,
 } from '@angular/core';
-import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+import {MAT_OPTION_PARENT_COMPONENT, MatOptionParentComponent} from './option-parent';
 
 // Notes on the accessibility pattern used for `mat-optgroup`.
 // The option group has two different "modes": regular and inert. The regular mode uses the
@@ -39,7 +41,6 @@ import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-pa
 //     doesn't read out the text at all. Furthermore, on
 
 // Counter for unique group ids.
-let _uniqueOptgroupIdCounter = 0;
 
 /**
  * Injection token that can be used to reference instances of `MatOptgroup`. It serves as
@@ -68,6 +69,9 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   standalone: true,
 })
 export class MatOptgroup {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Label for the option group. */
   @Input() label: string;
 
@@ -75,7 +79,7 @@ export class MatOptgroup {
   @Input({transform: booleanAttribute}) disabled: boolean = false;
 
   /** Unique id for the underlying label. */
-  _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
+  _labelId: string = this._idGenerator.getId('mat-optgroup-label-');
 
   /** Whether the group is in inert a11y mode. */
   _inert: boolean;

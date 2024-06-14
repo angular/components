@@ -13,6 +13,8 @@ import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
+  ANIMATION_MODULE_TYPE,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -32,21 +34,16 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  booleanAttribute,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
-import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
+import {MAT_ACCORDION, MatAccordionBase, MatAccordionTogglePosition} from './accordion-base';
 import {matExpansionAnimations} from './expansion-animations';
 import {MAT_EXPANSION_PANEL} from './expansion-panel-base';
 import {MatExpansionPanelContent} from './expansion-panel-content';
 
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
-
-/** Counter for generating unique element ids. */
-let uniqueId = 0;
 
 /**
  * Object that can be used to override the default options
@@ -146,7 +143,7 @@ export class MatExpansionPanel
   _portal: TemplatePortal;
 
   /** ID for the associated header element. Used for a11y labelling. */
-  _headerId = `mat-expansion-panel-header-${uniqueId++}`;
+  _headerId = this._idGenerator.getId('mat-expansion-panel-header-');
 
   constructor(
     @Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,

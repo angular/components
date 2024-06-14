@@ -175,7 +175,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       // Once the id binding is set to null, the id property should auto-generate a unique id.
-      expect(buttonElement.id).toMatch(/mat-mdc-slide-toggle-\d+-button/);
+      expect(buttonElement.id).toMatch(/mat-mdc-slide-toggle-\w+-button/);
     }));
 
     it('should forward the tabIndex to the underlying element', fakeAsync(() => {
@@ -237,7 +237,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
       // We fall back to pointing to the label if a value isn't provided.
       expect(buttonElement.getAttribute('aria-labelledby')).toMatch(
-        /mat-mdc-slide-toggle-\d+-label/,
+        /mat-mdc-slide-toggle-\w+-label/,
       );
     }));
 

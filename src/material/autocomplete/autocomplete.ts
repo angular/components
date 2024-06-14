@@ -6,8 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
+import {ActiveDescendantKeyManager, IdGenerator} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -15,6 +19,7 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
   Input,
   OnDestroy,
@@ -23,9 +28,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  booleanAttribute,
 } from '@angular/core';
-import {AnimationEvent} from '@angular/animations';
 import {
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
@@ -33,16 +36,8 @@ import {
   MatOption,
   ThemePalette,
 } from '@angular/material/core';
-import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
-import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
-
-/**
- * Autocomplete IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let _uniqueAutocompleteIdCounter = 0;
+import {panelAnimation} from './animations';
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
@@ -119,6 +114,9 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   standalone: true,
 })
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Emits when the panel animation is done. Null if the panel doesn't animate. */
@@ -244,7 +242,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   }
 
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
-  id: string = `mat-autocomplete-${_uniqueAutocompleteIdCounter++}`;
+  id: string = this._idGenerator.getId('mat-autocomplete-');
 
   /**
    * Tells any descendant `mat-optgroup` to use the inert a11y pattern.

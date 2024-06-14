@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CSP_NONCE, Directive, ElementRef, Inject, OnDestroy, OnInit, Optional} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {_getShadowRoot} from '@angular/cdk/platform';
 import {
@@ -16,8 +15,17 @@ import {
   StickySize,
   StickyUpdate,
 } from '@angular/cdk/table';
-
-let nextId = 0;
+import {DOCUMENT} from '@angular/common';
+import {
+  CSP_NONCE,
+  Directive,
+  ElementRef,
+  inject,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
 
 /**
  * Applies styles to the host element that make its scrollbars match up with
@@ -39,6 +47,9 @@ let nextId = 0;
   standalone: true,
 })
 export class CdkTableScrollContainer implements StickyPositioningListener, OnDestroy, OnInit {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private readonly _uniqueClassName: string;
   private _styleRoot!: Node;
   private _styleElement?: HTMLStyleElement;
@@ -55,7 +66,7 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
     @Optional() private readonly _directionality?: Directionality,
     @Optional() @Inject(CSP_NONCE) private readonly _nonce?: string | null,
   ) {
-    this._uniqueClassName = `cdk-table-scroll-container-${++nextId}`;
+    this._uniqueClassName = this._idGenerator.getId('cdk-table-scroll-container-');
     _elementRef.nativeElement.classList.add(this._uniqueClassName);
   }
 

@@ -6,12 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
+import {Dialog, DialogConfig} from '@angular/cdk/dialog';
 import {ComponentType, Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {Location} from '@angular/common';
 import {
   ANIMATION_MODULE_TYPE,
   ComponentRef,
   Inject,
+  inject,
   Injectable,
   InjectionToken,
   Injector,
@@ -20,14 +23,12 @@ import {
   SkipSelf,
   TemplateRef,
   Type,
-  inject,
 } from '@angular/core';
+import {defer, Observable, Subject} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
-import {defer, Observable, Subject} from 'rxjs';
-import {Dialog, DialogConfig} from '@angular/cdk/dialog';
-import {startWith} from 'rxjs/operators';
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatMdcDialogData');
@@ -71,14 +72,14 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 
-// Counter for unique dialog ids.
-let uniqueId = 0;
-
 /**
  * Service to open Material Design modal dialogs.
  */
 @Injectable({providedIn: 'root'})
 export class MatDialog implements OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
@@ -178,7 +179,7 @@ export class MatDialog implements OnDestroy {
   ): MatDialogRef<T, R> {
     let dialogRef: MatDialogRef<T, R>;
     config = {...(this._defaultOptions || new MatDialogConfig()), ...config};
-    config.id = config.id || `mat-mdc-dialog-${uniqueId++}`;
+    config.id = config.id || this._idGenerator.getId('mat-mdc-dialog-');
     config.scrollStrategy = config.scrollStrategy || this._scrollStrategy();
 
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {

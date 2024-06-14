@@ -6,41 +6,43 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  TemplateRef,
-  Injectable,
-  Injector,
-  OnDestroy,
-  Type,
-  StaticProvider,
-  Inject,
-  Optional,
-  SkipSelf,
-  ComponentRef,
-} from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
-import {of as observableOf, Observable, Subject, defer} from 'rxjs';
-import {DialogRef} from './dialog-ref';
-import {DialogConfig} from './dialog-config';
+import {IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ComponentType,
   Overlay,
-  OverlayRef,
   OverlayConfig,
-  ScrollStrategy,
   OverlayContainer,
+  OverlayRef,
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
+import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
+import {
+  ComponentRef,
+  Inject,
+  inject,
+  Injectable,
+  Injector,
+  OnDestroy,
+  Optional,
+  SkipSelf,
+  StaticProvider,
+  TemplateRef,
+  Type,
+} from '@angular/core';
+import {defer, Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith} from 'rxjs/operators';
-
-import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
+import {DialogConfig} from './dialog-config';
 import {CdkDialogContainer} from './dialog-container';
 
-/** Unique id for the created dialog. */
-let uniqueId = 0;
+import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
+import {DialogRef} from './dialog-ref';
 
 @Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<DialogRef>();
@@ -114,7 +116,7 @@ export class Dialog implements OnDestroy {
       DialogRef<R, C>
     >;
     config = {...defaults, ...config};
-    config.id = config.id || `cdk-dialog-${uniqueId++}`;
+    config.id = config.id || this._idGenerator.getId('cdk-dialog-');
 
     if (
       config.id &&
