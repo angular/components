@@ -6,23 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
+  booleanAttribute,
   Directive,
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   Optional,
   Output,
-  booleanAttribute,
 } from '@angular/core';
-import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
-import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
 
 /** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
@@ -41,7 +43,6 @@ export interface MatChipInputEvent {
 }
 
 // Increasing integer for generating unique ids.
-let nextUniqueId = 0;
 
 /**
  * Directive that adds chip-specific behaviors to an input element inside `<mat-form-field>`.
@@ -69,6 +70,9 @@ let nextUniqueId = 0;
   standalone: true,
 })
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Whether the control is focused. */
   focused: boolean = false;
 
@@ -107,7 +111,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   @Input() placeholder: string = '';
 
   /** Unique id for the input. */
-  @Input() id: string = `mat-mdc-chip-list-input-${nextUniqueId++}`;
+  @Input() id: string = this._idGenerator.getId('mat-mdc-chip-list-input-');
 
   /** Whether the input is disabled. */
   @Input({transform: booleanAttribute})

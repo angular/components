@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Input, OnInit} from '@angular/core';
+import {IdGenerator} from '@angular/cdk/a11y';
+import {Directive, ElementRef, inject, Inject, Input, OnInit} from '@angular/core';
 import {AriaHasPopupValue, CDK_COMBOBOX, CdkCombobox} from './combobox';
-
-let nextId = 0;
 
 @Directive({
   selector: '[cdkComboboxPopup]',
@@ -24,6 +23,9 @@ let nextId = 0;
   standalone: true,
 })
 export class CdkComboboxPopup<T = unknown> implements OnInit {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   @Input()
   get role(): AriaHasPopupValue {
     return this._role;
@@ -42,7 +44,7 @@ export class CdkComboboxPopup<T = unknown> implements OnInit {
   }
   private _firstFocusElement: HTMLElement;
 
-  @Input() id = `cdk-combobox-popup-${nextId++}`;
+  @Input() id = this._idGenerator.getId('cdk-combobox-popup-');
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,

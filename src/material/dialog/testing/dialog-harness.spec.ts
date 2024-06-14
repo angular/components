@@ -72,7 +72,7 @@ describe('MatDialogHarness', () => {
     fixture.componentInstance.open();
     fixture.componentInstance.open({ariaLabelledBy: 'dialog-label'});
     const dialogs = await loader.getAllHarnesses(MatDialogHarness);
-    expect(await dialogs[0].getAriaLabelledby()).toMatch(/-dialog-title-\d+/);
+    expect(await dialogs[0].getAriaLabelledby()).toMatch(/-dialog-title-\w+/);
     expect(await dialogs[1].getAriaLabelledby()).toBe('dialog-label');
   });
 
