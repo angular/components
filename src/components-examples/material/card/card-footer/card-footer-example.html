@@ -1,18 +1,15 @@
-<mat-card class="example-card">
+<mat-card class="example-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    <mat-card-title>Shiba Inu</mat-card-title>
+    <mat-card-title>Chihuahua</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <p>This card has divider and indeterminate progress as footer</p>
-    <p>{{ longText }}</p>
-    <mat-divider></mat-divider>
+    <p>{{longText}}</p>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
-  </mat-card-actions>
-  <mat-card-footer>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  <mat-card-footer class="example-card-footer">
+    <mat-chip-set aria-label="Chihuahua traits">
+      <mat-chip>charming</mat-chip>
+      <mat-chip>graceful</mat-chip>
+      <mat-chip>sassy</mat-chip>
+    </mat-chip-set>
   </mat-card-footer>
 </mat-card>

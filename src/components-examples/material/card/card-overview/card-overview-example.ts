@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 
 /**
@@ -9,5 +9,6 @@ import {MatCardModule} from '@angular/material/card';
   templateUrl: 'card-overview-example.html',
   standalone: true,
   imports: [MatCardModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardOverviewExample {}
