@@ -51,13 +51,15 @@
       &.mat-primary {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, primary));
+          tokens-mdc-checkbox.get-color-tokens($theme, primary)
+        );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, warn));
+          tokens-mdc-checkbox.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -123,7 +125,7 @@
 /// @param {Map} $theme The material theme for an application.
 /// @param {Map} $overrides The token values to override in the theme.
 @function extend-theme($theme, $overrides: ()) {
-  @return token-utils.extend-theme($theme, checkbox, $overrides);
+  @return token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), $overrides);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
