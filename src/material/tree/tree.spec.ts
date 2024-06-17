@@ -78,14 +78,20 @@ describe('MatTree', () => {
         const data = underlyingDataSource.data;
         underlyingDataSource.addChild(data[2]);
         fixture.detectChanges();
-        let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpandedStates).toEqual([null, null, 'false']);
+        expect(
+          getNodes(treeElement).every(node => {
+            return node.getAttribute('aria-expanded') === 'false';
+          }),
+        ).toBe(true);
 
         component.treeControl.expandAll();
         fixture.detectChanges();
 
-        ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpandedStates).toEqual([null, null, 'true', null]);
+        expect(
+          getNodes(treeElement).every(node => {
+            return node.getAttribute('aria-expanded') === 'true';
+          }),
+        ).toBe(true);
       });
 
       it('with the right data', () => {
@@ -464,8 +470,11 @@ describe('MatTree', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpandedStates).toEqual([null, null, null]);
+        expect(
+          getNodes(treeElement).every(node => {
+            return node.getAttribute('aria-expanded') === 'false';
+          }),
+        ).toBe(true);
 
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
@@ -477,7 +486,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
 
         const ariaExpanded = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpanded).toEqual([null, 'true', 'false', null]);
+        expect(ariaExpanded).toEqual(['false', 'true', 'false', 'false']);
       });
 
       it('should expand/collapse the node', () => {
