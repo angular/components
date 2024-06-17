@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '@material/list/evolution-mixins';
-@use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
 
 @use '../core/style/sass-utils';
@@ -44,20 +43,23 @@
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values(
+        tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, primary));
     }
 
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, accent));
+        @include token-utils.create-token-values(
+          tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, accent));
       }
     }
 
     .mat-warn {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, warn));
       }
     }
 
@@ -111,7 +113,8 @@
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-radio.$prefix, tokens-mdc-radio.get-density-tokens($theme));
     }
 
     // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
