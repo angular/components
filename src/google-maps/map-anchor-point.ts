@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" />
+/// <reference types="google.maps" preserve="true" />
 
 export interface MapAnchorPoint {
   getAnchor(): google.maps.MVCObject | google.maps.marker.AdvancedMarkerElement;

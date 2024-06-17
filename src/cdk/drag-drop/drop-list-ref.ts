@@ -20,6 +20,8 @@ import {ParentPositionTracker} from './dom/parent-position-tracker';
 import {DragCSSStyleDeclaration} from './dom/styling';
 import {DropListSortStrategy} from './sorting/drop-list-sort-strategy';
 import {SingleAxisSortStrategy} from './sorting/single-axis-sort-strategy';
+import {MixedSortStrategy} from './sorting/mixed-sort-strategy';
+import {DropListOrientation} from './directives/config';
 
 /**
  * Proximity, as a ratio to width/height, at which a
@@ -146,7 +148,7 @@ export class DropListRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Strategy being used to sort items within the list. */
-  private _sortStrategy: DropListSortStrategy<DragRef>;
+  private _sortStrategy: DropListSortStrategy;
 
   /** Cached `DOMRect` of the drop list. */
   private _domRect: DOMRect | undefined;
@@ -187,6 +189,9 @@ export class DropListRef<T = any> {
   /** Initial value for the element's `scroll-snap-type` style. */
   private _initialScrollSnap: string;
 
+  /** Direction of the list's layout. */
+  private _direction: Direction = 'ltr';
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
@@ -196,11 +201,9 @@ export class DropListRef<T = any> {
   ) {
     this.element = coerceElement(element);
     this._document = _document;
-    this.withScrollableParents([this.element]);
+    this.withScrollableParents([this.element]).withOrientation('vertical');
     _dragDropRegistry.registerDropContainer(this);
     this._parentPositions = new ParentPositionTracker(_document);
-    this._sortStrategy = new SingleAxisSortStrategy(this.element, _dragDropRegistry);
-    this._sortStrategy.withSortPredicate((index, item) => this.sortPredicate(index, item, this));
   }
 
   /** Removes the drop list functionality from the DOM element. */
@@ -332,7 +335,10 @@ export class DropListRef<T = any> {
 
   /** Sets the layout direction of the drop list. */
   withDirection(direction: Direction): this {
-    this._sortStrategy.direction = direction;
+    this._direction = direction;
+    if (this._sortStrategy instanceof SingleAxisSortStrategy) {
+      this._sortStrategy.direction = direction;
+    }
     return this;
   }
 
@@ -350,10 +356,23 @@ export class DropListRef<T = any> {
    * Sets the orientation of the container.
    * @param orientation New orientation for the container.
    */
-  withOrientation(orientation: 'vertical' | 'horizontal'): this {
-    // TODO(crisbeto): eventually we should be constructing the new sort strategy here based on
-    // the new orientation. For now we can assume that it'll always be `SingleAxisSortStrategy`.
-    (this._sortStrategy as SingleAxisSortStrategy<DragRef>).orientation = orientation;
+  withOrientation(orientation: DropListOrientation): this {
+    if (orientation === 'mixed') {
+      this._sortStrategy = new MixedSortStrategy(
+        coerceElement(this.element),
+        this._document,
+        this._dragDropRegistry,
+      );
+    } else {
+      const strategy = new SingleAxisSortStrategy(
+        coerceElement(this.element),
+        this._dragDropRegistry,
+      );
+      strategy.direction = this._direction;
+      strategy.orientation = orientation;
+      this._sortStrategy = strategy;
+    }
+    this._sortStrategy.withSortPredicate((index, item) => this.sortPredicate(index, item, this));
     return this;
   }
 
@@ -455,7 +474,7 @@ export class DropListRef<T = any> {
         [verticalScrollDirection, horizontalScrollDirection] = getElementScrollDirections(
           element as HTMLElement,
           position.clientRect,
-          this._sortStrategy.direction,
+          this._direction,
           pointerX,
           pointerY,
         );

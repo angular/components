@@ -27,11 +27,12 @@
 
     <section class="example-section">
       <mat-checkbox
-          class="example-margin"
-          [(ngModel)]="checked"
-          [(indeterminate)]="indeterminate"
-          [labelPosition]="labelPosition"
-          [disabled]="disabled">
+        class="example-margin"
+        [(ngModel)]="checked"
+        [(indeterminate)]="indeterminate"
+        [labelPosition]="labelPosition()"
+        [disabled]="disabled()"
+      >
         I'm a checkbox
       </mat-checkbox>
     </section>

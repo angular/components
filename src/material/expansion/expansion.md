@@ -12,16 +12,16 @@ as the control for expanding and collapsing. This header may optionally contain 
 header to align with Material Design specifications.
 
 <!-- example({"example": "expansion-overview",
-              "file": "expansion-overview-example.html", 
+              "file": "expansion-overview-example.html",
               "region": "basic-panel"}) -->
-              
+
 By default, the expansion-panel header includes a toggle icon at the end of the
 header to indicate the expansion state. This icon can be hidden via the
 `hideToggle` property.
 
 <!-- example({"example": "expansion-overview",
               "file": "expansion-overview-example.html", 
-              "region": "hide-toggle"}) -->         
+              "region": "hide-toggle"}) -->
 
 #### Action bar
 
@@ -29,15 +29,16 @@ Actions may optionally be included at the bottom of the panel, visible only when
 is in its expanded state.
 
 <!-- example({"example": "expansion-steps",
-              "file": "expansion-steps-example.html", 
+              "file": "expansion-steps-example.html",
               "region": "action-bar"}) -->
+
 #### Disabling a panel
 
 Expansion panels can be disabled using the `disabled` attribute. A disabled expansion panel can't
 be toggled by the user, but can still be manipulated programmatically.
 
 <!-- example({"example": "expansion-expand-collapse-all",
-              "file": "expansion-expand-collapse-all-example.html", 
+              "file": "expansion-expand-collapse-all-example.html",
               "region": "disabled"}) -->
 
 ### Accordion
@@ -47,13 +48,15 @@ expansions state to be set independently of each other. When `multi="false"` (de
 panel can be expanded at a given time:
 
 <!-- example({"example": "expansion-expand-collapse-all",
-              "file": "expansion-expand-collapse-all-example.html", 
+              "file": "expansion-expand-collapse-all-example.html",
               "region": "multi"}) -->
 
 ### Lazy rendering
+
 By default, the expansion panel content will be initialized even when the panel is closed.
 To instead defer initialization until the panel is open, the content should be provided as
 an `ng-template`:
+
 ```html
 <mat-expansion-panel>
   <mat-expansion-panel-header>

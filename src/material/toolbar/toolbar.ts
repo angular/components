@@ -46,7 +46,13 @@ export class MatToolbarRow {}
 })
 export class MatToolbar implements AfterViewInit {
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
-  /** Palette color of the toolbar. */
+  /**
+   * Theme color of the toolbar. This API is supported in M2 themes only, it has
+   * no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color?: string | null;
 
   private _document: Document;

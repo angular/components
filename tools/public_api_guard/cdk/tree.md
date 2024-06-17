@@ -162,9 +162,9 @@ export class CdkTreeNodeDef<T> {
 
 // @public
 export class CdkTreeNodeOutlet {
-    constructor(viewContainer: ViewContainerRef, _node?: any);
+    constructor(viewContainer: ViewContainerRef, _node?: any | undefined);
     // (undocumented)
-    _node?: any;
+    _node?: any | undefined;
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)

@@ -60,7 +60,7 @@ export class LayoutModule {
 
 // @public
 export class MediaMatcher {
-    constructor(_platform: Platform, _nonce?: string | null | undefined);
+    constructor(_platform: Platform, _nonce?: (string | null) | undefined);
     matchMedia(query: string): MediaQueryList;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, [null, { optional: true; }]>;

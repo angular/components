@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {FormGroup, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {JsonPipe} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {provideNativeDateAdapter} from '@angular/material/core';
 
 /** @title Date range picker forms integration */
 @Component({
@@ -12,9 +12,10 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerFormsExample {
-  range = new FormGroup({
+  readonly range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });

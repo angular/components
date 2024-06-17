@@ -30,6 +30,8 @@ node_integration_test(
         "rm -f %s/package.json" % APP_NAME,
         # Delete the Karma config since we need to use a headless browser.
         "rm -f %s/karma.conf.js" % APP_NAME,
+        # Delete the tsconfig since we have a pre-defined one.
+        "rm -f %s/tsconfig.json" % APP_NAME,
         # We can't name the checked-in config `angular.json`, because the CLI doesn't allow
         # `ng new` to run in a directory that has an `angular.json` already.
         "mv _angular.json angular.json",

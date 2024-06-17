@@ -155,7 +155,13 @@ export class MatSlideToggle
 
   // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
   // the lack of type checking previously and assigning random strings.
-  /** Palette color of slide toggle. */
+  /**
+   * Theme color of the slide toggle. This API is supported in M2 themes only,
+   * it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: string | undefined;
 
   /** Whether the slide toggle is disabled. */

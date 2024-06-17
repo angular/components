@@ -152,7 +152,13 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
   _radios: QueryList<MatRadioButton>;
 
-  /** Theme color for all of the radio buttons in the group. */
+  /**
+   * Theme color of the radio buttons in the group. This API is supported in M2
+   * themes only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette;
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */

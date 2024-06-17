@@ -3,6 +3,7 @@ import {
   DOWN_ARROW,
   END,
   ENTER,
+  ESCAPE,
   HOME,
   LEFT_ARROW,
   PAGE_DOWN,
@@ -10,27 +11,26 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-  ESCAPE,
 } from '@angular/cdk/keycodes';
 import {
+  createKeyboardEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-  createKeyboardEvent,
-  dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
-import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
-import {MatCalendarUserEvent, MatCalendarBody} from './calendar-body';
-import {MatMonthView} from './month-view';
-import {DateRange} from './date-selection-model';
+import {DEC, FEB, JAN, MAR, NOV} from '../testing';
+import {MatCalendarBody, MatCalendarUserEvent} from './calendar-body';
 import {
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
   DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
 } from './date-range-selection-strategy';
+import {DateRange} from './date-selection-model';
+import {MatMonthView} from './month-view';
 
 describe('MatMonthView', () => {
   describe('standard providers', () => {
@@ -48,7 +48,6 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          provideZoneChangeDetection(),
           {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
@@ -88,6 +87,7 @@ describe('MatMonthView', () => {
 
       it('does not show selected date if in different month', () => {
         testComponent.selected = new Date(2017, MAR, 10);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -114,6 +114,7 @@ describe('MatMonthView', () => {
 
         beforeEach(() => {
           testComponent.selected = initialRange;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         });
 
@@ -267,6 +268,7 @@ describe('MatMonthView', () => {
             expect(calendarBodyEl).not.toBeNull();
             dir.value = 'ltr';
             fixture.componentInstance.date = new Date(2017, JAN, 5);
+            fixture.changeDetectorRef.markForCheck();
             dispatchFakeEvent(calendarBodyEl, 'focus');
             fixture.detectChanges();
           });
@@ -277,6 +279,7 @@ describe('MatMonthView', () => {
             expect(calendarInstance.date).toEqual(new Date(2017, JAN, 4));
 
             calendarInstance.date = new Date(2017, JAN, 1);
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
@@ -320,6 +323,7 @@ describe('MatMonthView', () => {
             expect(calendarInstance.date).toEqual(new Date(2017, JAN, 4));
 
             calendarInstance.date = new Date(2017, JAN, 1);
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
@@ -335,6 +339,7 @@ describe('MatMonthView', () => {
             expect(calendarInstance.date).toEqual(new Date(2016, DEC, 29));
 
             calendarInstance.date = new Date(2017, JAN, 7);
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', UP_ARROW);
@@ -369,6 +374,7 @@ describe('MatMonthView', () => {
 
           it('should go to end of the month on end press', () => {
             calendarInstance.date = new Date(2017, JAN, 10);
+            fixture.changeDetectorRef.markForCheck();
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', END);
             fixture.detectChanges();
@@ -436,6 +442,7 @@ describe('MatMonthView', () => {
           it('should cancel the current range selection when pressing escape', () => {
             const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
             testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
             dispatchMouseEvent(cellEls[15], 'mouseenter');
             fixture.detectChanges();
@@ -478,6 +485,7 @@ describe('MatMonthView', () => {
             () => {
               const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
               testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
+              fixture.changeDetectorRef.markForCheck();
               fixture.detectChanges();
               dispatchMouseEvent(cellEls[15], 'mouseenter');
               fixture.detectChanges();
@@ -523,6 +531,7 @@ describe('MatMonthView', () => {
 
             const selectedRange = new DateRange(new Date(2017, JAN, 10), new Date(2017, JAN, 17));
             testComponent.selected = selectedRange;
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             dispatchMouseEvent(cellEls[11], 'mousedown');
@@ -570,6 +579,7 @@ describe('MatMonthView', () => {
             const cellEls =
               monthViewNativeElement.querySelectorAll<HTMLElement>('.mat-calendar-body-cell');
             testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
             dispatchMouseEvent(cellEls[15], 'mouseenter');
             fixture.detectChanges();
@@ -614,6 +624,7 @@ describe('MatMonthView', () => {
               new Date(2017, JAN, 10),
               new Date(2017, JAN, 15),
             );
+            fixture.changeDetectorRef.markForCheck();
             fixture.detectChanges();
 
             expect(getRangeElements().length)
@@ -633,6 +644,7 @@ describe('MatMonthView', () => {
               'date while selecting a single date',
             () => {
               testComponent.selected = new Date(2017, JAN, 10);
+              fixture.changeDetectorRef.markForCheck();
               fixture.detectChanges();
 
               expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
@@ -653,6 +665,7 @@ describe('MatMonthView', () => {
             () => {
               const selectedDate = new Date(2017, JAN, 10);
               testComponent.selected = new DateRange(selectedDate, null);
+              fixture.changeDetectorRef.markForCheck();
               fixture.detectChanges();
 
               expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
@@ -675,6 +688,7 @@ describe('MatMonthView', () => {
             () => {
               const date = new Date(2017, JAN, 10);
               testComponent.selected = date;
+              fixture.changeDetectorRef.markForCheck();
               fixture.detectChanges();
 
               expect(fixture.componentInstance.userSelectionSpy).not.toHaveBeenCalled();
@@ -737,6 +751,7 @@ describe('MatMonthView', () => {
           activeDate.getMonth(),
           activeDate.getDate(),
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(spy).not.toHaveBeenCalled();
@@ -751,6 +766,7 @@ describe('MatMonthView', () => {
           activeDate.getMonth(),
           activeDate.getDate(),
         );
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(spy).not.toHaveBeenCalled();
@@ -799,7 +815,6 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          provideZoneChangeDetection(),
           {provide: Directionality, useFactory: () => ({value: 'ltr'})},
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
           {

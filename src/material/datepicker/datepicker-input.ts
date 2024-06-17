@@ -6,15 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, forwardRef, Inject, Input, OnDestroy, Optional} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  forwardRef,
+  Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  signal,
+} from '@angular/core';
 import {NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidatorFn, Validators} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
-import {MatDatepickerInputBase, DateFilterFn, _MatFormFieldPartial} from './datepicker-input-base';
-import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {DateSelectionModelChange} from './date-selection-model';
+import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+import {_MatFormFieldPartial, DateFilterFn, MatDatepickerInputBase} from './datepicker-input-base';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -41,7 +50,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   host: {
     'class': 'mat-datepicker-input',
     '[attr.aria-haspopup]': '_datepicker ? "dialog" : null',
-    '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
+    '[attr.aria-owns]': '_ariaOwns()',
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     // Used by the test harness to tie this input to its calendar. We can't depend on
@@ -61,17 +70,28 @@ export class MatDatepickerInput<D>
   implements MatDatepickerControl<D | null>, OnDestroy
 {
   private _closedSubscription = Subscription.EMPTY;
+  private _openedSubscription = Subscription.EMPTY;
 
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D | null, D>) {
     if (datepicker) {
       this._datepicker = datepicker;
-      this._closedSubscription = datepicker.closedStream.subscribe(() => this._onTouched());
+      this._ariaOwns.set(datepicker.opened ? datepicker.id : null);
+      this._closedSubscription = datepicker.closedStream.subscribe(() => {
+        this._onTouched();
+        this._ariaOwns.set(null);
+      });
+      this._openedSubscription = datepicker.openedStream.subscribe(() => {
+        this._ariaOwns.set(datepicker.id);
+      });
       this._registerModel(datepicker.registerInput(this));
     }
   }
   _datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D | null, D>;
+
+  /** The id of the panel owned by this input. */
+  protected _ariaOwns = signal<string | null>(null);
 
   /** The minimum valid date. */
   @Input()
@@ -161,6 +181,7 @@ export class MatDatepickerInput<D>
   override ngOnDestroy() {
     super.ngOnDestroy();
     this._closedSubscription.unsubscribe();
+    this._openedSubscription.unsubscribe();
   }
 
   /** Opens the associated datepicker. */

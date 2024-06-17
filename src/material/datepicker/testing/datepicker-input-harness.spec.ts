@@ -1,23 +1,17 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
+import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDatepickerInputHarness} from './datepicker-input-harness';
 import {MatCalendarHarness} from './calendar-harness';
+import {MatDatepickerInputHarness} from './datepicker-input-harness';
 
 describe('MatDatepickerInputHarness', () => {
   let fixture: ComponentFixture<DatepickerInputHarnessTest>;
   let loader: HarnessLoader;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -42,6 +36,7 @@ describe('MatDatepickerInputHarness', () => {
 
   it('should filter inputs based on their value', async () => {
     fixture.componentInstance.date = new Date(2020, 0, 1, 12, 0, 0);
+    fixture.changeDetectorRef.markForCheck();
     const inputs = await loader.getAllHarnesses(MatDatepickerInputHarness.with({value: /2020/}));
     expect(inputs.length).toBe(1);
   });
@@ -66,6 +61,7 @@ describe('MatDatepickerInputHarness', () => {
     expect(await input.isDisabled()).toBe(false);
 
     fixture.componentInstance.disabled = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await input.isDisabled()).toBe(true);
   });
 
@@ -74,12 +70,14 @@ describe('MatDatepickerInputHarness', () => {
     expect(await input.isRequired()).toBe(false);
 
     fixture.componentInstance.required = true;
+    fixture.changeDetectorRef.markForCheck();
     expect(await input.isRequired()).toBe(true);
   });
 
   it('should get the input value', async () => {
     const input = await loader.getHarness(MatDatepickerInputHarness.with({selector: '#basic'}));
     fixture.componentInstance.date = new Date(2020, 0, 1, 12, 0, 0);
+    fixture.changeDetectorRef.markForCheck();
 
     expect(await input.getValue()).toBe('1/1/2020');
   });
@@ -108,11 +106,13 @@ describe('MatDatepickerInputHarness', () => {
 
     for (let value of validValues) {
       fixture.componentInstance.date = value;
+      fixture.changeDetectorRef.markForCheck();
       expect(await input.getValue()).toBe('FORMATTED_VALUE');
     }
 
     for (let value of invalidValues) {
       fixture.componentInstance.date = value;
+      fixture.changeDetectorRef.markForCheck();
       expect(await input.getValue()).toBe('');
     }
   });
@@ -142,12 +142,14 @@ describe('MatDatepickerInputHarness', () => {
   it('should get the minimum date of the input', async () => {
     const inputs = await loader.getAllHarnesses(MatDatepickerInputHarness);
     fixture.componentInstance.minDate = new Date(2020, 0, 1, 12, 0, 0);
+    fixture.changeDetectorRef.markForCheck();
     expect(await parallel(() => inputs.map(input => input.getMin()))).toEqual(['2020-01-01', null]);
   });
 
   it('should get the maximum date of the input', async () => {
     const inputs = await loader.getAllHarnesses(MatDatepickerInputHarness);
     fixture.componentInstance.maxDate = new Date(2020, 0, 1, 12, 0, 0);
+    fixture.changeDetectorRef.markForCheck();
     expect(await parallel(() => inputs.map(input => input.getMax()))).toEqual(['2020-01-01', null]);
   });
 
@@ -164,6 +166,7 @@ describe('MatDatepickerInputHarness', () => {
 
   it('should be able to open and close a calendar in touch mode', async () => {
     fixture.componentInstance.touchUi = true;
+    fixture.changeDetectorRef.markForCheck();
     const input = await loader.getHarness(MatDatepickerInputHarness.with({selector: '#basic'}));
     expect(await input.isCalendarOpen()).toBe(false);
 

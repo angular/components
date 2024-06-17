@@ -135,7 +135,13 @@ export class MatTabNav
   @Input({transform: booleanAttribute})
   disableRipple: boolean = false;
 
-  /** Theme color of the nav bar. */
+  /**
+   * Theme color of the nav bar. This API is supported in M2 themes only, it has
+   * no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette = 'primary';
 
   /**

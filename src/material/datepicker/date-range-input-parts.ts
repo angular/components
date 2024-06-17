@@ -6,41 +6,42 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  ElementRef,
-  Optional,
-  inject,
-  InjectionToken,
-  Inject,
-  OnInit,
-  Injector,
-  DoCheck,
-  Input,
-} from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  NgForm,
-  FormGroupDirective,
-  NgControl,
-  ValidatorFn,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
-import {
-  MAT_DATE_FORMATS,
-  DateAdapter,
-  MatDateFormats,
-  ErrorStateMatcher,
-  _ErrorStateTracker,
-} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
-import {DateRange, DateSelectionModelChange} from './date-selection-model';
+import {
+  Directive,
+  DoCheck,
+  ElementRef,
+  Inject,
+  InjectionToken,
+  Injector,
+  Input,
+  OnInit,
+  Optional,
+  Signal,
+  inject,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormGroupDirective,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
+  DateAdapter,
+  ErrorStateMatcher,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  _ErrorStateTracker,
+} from '@angular/material/core';
 import {_computeAriaAccessibleName} from './aria-accessible-name';
+import {DateRange, DateSelectionModelChange} from './date-selection-model';
+import {DateFilterFn, MatDatepickerInputBase} from './datepicker-input-base';
 
 /** Parent component that should be wrapped around `MatStartDate` and `MatEndDate`. */
 export interface MatDateRangeInputParent<D> {
@@ -52,6 +53,8 @@ export interface MatDateRangeInputParent<D> {
     opened: boolean;
     id: string;
   };
+  // @breaking-change 20.0.0 property to become required.
+  _ariaOwns?: Signal<string | null>;
   _startInput: MatDateRangeInputPartBase<D>;
   _endInput: MatDateRangeInputPartBase<D>;
   _groupDisabled: boolean;
@@ -235,7 +238,9 @@ abstract class MatDateRangeInputPartBase<D>
     '(change)': '_onChange()',
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
-    '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
+    '[attr.aria-owns]': `_rangeInput._ariaOwns
+        ? _rangeInput._ariaOwns()
+        : (_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null`,
     '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
     '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
     '(blur)': '_onBlur()',
@@ -348,7 +353,9 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
     '(change)': '_onChange()',
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
-    '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
+    '[attr.aria-owns]': `_rangeInput._ariaOwns
+        ? _rangeInput._ariaOwns()
+        : (_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null`,
     '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
     '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
     '(blur)': '_onBlur()',

@@ -20,6 +20,7 @@ import {
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
+  ChangeDetectorRef,
   Component,
   DebugElement,
   EventEmitter,
@@ -27,8 +28,9 @@ import {
   Type,
   ViewChild,
   ViewChildren,
-  provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -70,11 +72,13 @@ describe('MDC-based MatChipGrid', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipGridInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         chipGridInstance.disabled = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
@@ -84,11 +88,13 @@ describe('MDC-based MatChipGrid', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipGridInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
 
         fixture.componentInstance.chips.push(5, 6);
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
@@ -98,6 +104,7 @@ describe('MDC-based MatChipGrid', () => {
 
       it('should not set a role on the grid when the list is empty', () => {
         testComponent.chips = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipGridNativeElement.hasAttribute('role')).toBe(false);
@@ -105,6 +112,7 @@ describe('MDC-based MatChipGrid', () => {
 
       it('should be able to set a custom role', () => {
         testComponent.role = 'listbox';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipGridNativeElement.getAttribute('role')).toBe('listbox');
@@ -140,6 +148,7 @@ describe('MDC-based MatChipGrid', () => {
           .toBe(false);
 
         chipGridInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         chipGridInstance.focus();
@@ -154,6 +163,7 @@ describe('MDC-based MatChipGrid', () => {
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('0');
 
         chipGridInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('-1');
@@ -168,6 +178,7 @@ describe('MDC-based MatChipGrid', () => {
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // It focuses the 4th item
@@ -180,6 +191,7 @@ describe('MDC-based MatChipGrid', () => {
 
           // Destroy the last item
           testComponent.chips.pop();
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -196,6 +208,7 @@ describe('MDC-based MatChipGrid', () => {
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           flush();
 
@@ -205,12 +218,14 @@ describe('MDC-based MatChipGrid', () => {
 
         it('should focus the grid if the last focused item is removed', () => {
           testComponent.chips = [0];
+          fixture.changeDetectorRef.markForCheck();
 
           spyOn(chipGridInstance, 'focus');
           patchElementFocus(chips.last.primaryAction!._elementRef.nativeElement);
           chips.last.focus();
 
           testComponent.chips.pop();
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(chipGridInstance.focus).toHaveBeenCalled();
@@ -350,6 +365,7 @@ describe('MDC-based MatChipGrid', () => {
 
         it(`should use user defined tabIndex`, fakeAsync(() => {
           chipGridInstance.tabIndex = 4;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(chipGridInstance.tabIndex)
@@ -422,6 +438,7 @@ describe('MDC-based MatChipGrid', () => {
 
         it('should ignore all non-tab navigation keyboard events from an editing chip', fakeAsync(() => {
           testComponent.editable = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           chips.first.focus();
@@ -572,6 +589,7 @@ describe('MDC-based MatChipGrid', () => {
 
     it('should take an initial view value with reactive forms', () => {
       fixture.componentInstance.control = new FormControl('[pizza-1]');
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.chipGrid.value).toEqual('[pizza-1]');
@@ -756,6 +774,7 @@ describe('MDC-based MatChipGrid', () => {
 
     it('should set aria-invalid if the form field is invalid', fakeAsync(() => {
       fixture.componentInstance.control = new FormControl('', [Validators.required]);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
@@ -991,10 +1010,7 @@ describe('MDC-based MatChipGrid', () => {
         MatInputModule,
         animationsModule,
       ],
-      providers: [
-        {provide: Directionality, useValue: directionality},
-        provideZoneChangeDetection(),
-      ],
+      providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
     }).compileComponents();
 
@@ -1149,6 +1165,14 @@ class ChipGridWithFormErrorMessages {
 
   @ViewChild('form') form: NgForm;
   formControl = new FormControl('', Validators.required);
+
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.formControl.events.pipe(takeUntilDestroyed()).subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
+  }
 }
 
 @Component({

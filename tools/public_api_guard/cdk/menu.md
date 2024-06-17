@@ -348,7 +348,7 @@ export interface MenuStackItem {
 }
 
 // @public
-export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: 'vertical' | 'horizontal') => {
+export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: "vertical" | "horizontal") => {
     provide: InjectionToken<MenuStack>;
     deps: Optional[][];
     useFactory: (parentMenuStack?: MenuStack) => MenuStack;

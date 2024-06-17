@@ -8,8 +8,6 @@ Chips are always used inside a container. To create chips, start with a `<mat-ch
 
 By default, `<mat-chip>` renders a chip with Material Design styles applied. For a chip with no styles applied, use `<mat-basic-chip>`.
 
-*Hint: `<mat-basic-chip>` receives the `mat-mdc-basic-chip` CSS class in addition to the `mat-mdc-chip` class.*
-
 #### Disabled appearance
 
 Although `<mat-chip>` is not interactive, you can set the `disabled` Input to give it disabled appearance.
@@ -44,7 +42,7 @@ Chips are always used inside a container. To create chips connected to an input 
 
 #### Disabled `<mat-chip-row>`
 
-Use the `disabled` Input to disable a `<mat-chip-row>`. This  gives the `<mat-chip-row>` a disabled appearance and prevents the user from interacting with it.
+Use the `disabled` Input to disable a `<mat-chip-row>`. This gives the `<mat-chip-row>` a disabled appearance and prevents the user from interacting with it.
 
 ```html
 <mat-chip-row disabled>Orange</mat-chip-row>
@@ -58,11 +56,12 @@ Users can press delete to remove a chip. Pressing delete triggers the `removed` 
 
 #### Autocomplete
 
-An example of chip input with autocomplete.
+A `<mat-chip-grid>` can be combined with `<mat-autocomplete>` to enable free-form chip input with suggestions.
 
 <!-- example(chips-autocomplete) -->
 
 ### Icons
+
 You can add icons to chips to identify entities (like individuals) and provide additional functionality.
 
 #### Adding up to two icons with content projection
@@ -99,6 +98,7 @@ By default, chips are displayed horizontally. To stack chips vertically, apply t
 <!-- example(chips-stacked) -->
 
 ### Specifying global configuration defaults
+
 Use the `MAT_CHIPS_DEFAULT_OPTIONS` token to specify default options for the chips module.
 
 ```html
@@ -116,7 +116,11 @@ Use the `MAT_CHIPS_DEFAULT_OPTIONS` token to specify default options for the chi
 
 ### Theming
 
-By default, chips use the primary color. Specify the `color` property to change the color to `accent` or `warn`.
+The color of a `<mat-datepicker>` can be changed by specifying a `$color-variant` when applying the
+`mat.datepicker-theme` or `mat.datepicker-color` mixins (see the
+[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default, the
+datepicker uses the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`,
+or `'error'`.
 
 ### Interaction Patterns
 

@@ -275,6 +275,49 @@ describe('material-m3-theme-schematic', () => {
     expect(generatedCSS).toContain(`--sys-primary: ${primaryColor}`);
     expect(generatedCSS).toContain('var(--sys-primary)');
   });
+
+  it('should estimate missing neutral hues', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#232e62',
+      secondaryColor: '#cc862a',
+      tertiaryColor: '#44263e',
+      neutralColor: '#929093',
+      themeTypes: 'light',
+    });
+
+    expect(tree.readContent('m3-theme.scss')).toContain(
+      [
+        `  neutral: (`,
+        `    0: #000000,`,
+        `    4: #000527,`,
+        `    6: #00073a,`,
+        `    10: #000c61,`,
+        `    12: #051166,`,
+        `    17: #121e71,`,
+        `    20: #1a2678,`,
+        `    22: #1f2b7d,`,
+        `    24: #243082,`,
+        `    25: #273384,`,
+        `    30: #333f90,`,
+        `    35: #404b9c,`,
+        `    40: #4c57a9,`,
+        `    50: #6570c4,`,
+        `    60: #7f8ae0,`,
+        `    70: #9aa5fd,`,
+        `    80: #bcc2ff,`,
+        `    87: #d5d7ff,`,
+        `    90: #dfe0ff,`,
+        `    92: #e6e6ff,`,
+        `    94: #edecff,`,
+        `    95: #f0efff,`,
+        `    96: #f4f2ff,`,
+        `    98: #fbf8ff,`,
+        `    99: #fffbff,`,
+        `    100: #ffffff,`,
+        `  ),`,
+      ].join('\n'),
+    );
+  });
 });
 
 function getTestTheme() {

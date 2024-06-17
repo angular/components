@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '@material/elevation' as mdc-elevation;
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -10,10 +11,18 @@ $prefix: (mat, app);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the app
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $shadow-color: map.get($systems, md-sys-color, shadow);
   $tokens: (
     background-color: map.get($systems, md-sys-color, background),
     text-color: map.get($systems, md-sys-color, on-background),
   );
+
+  @if ($shadow-color) {
+    @for $zValue from 0 through 24 {
+      $shadow: mdc-elevation.elevation-box-shadow($zValue, $shadow-color);
+      $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
+    }
+  }
 
   @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

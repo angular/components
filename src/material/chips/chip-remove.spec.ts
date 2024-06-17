@@ -1,19 +1,14 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
 import {MatChip, MatChipsModule} from './index';
 
 describe('MDC-based Chip Remove', () => {
   let fixture: ComponentFixture<TestChip>;
   let testChip: TestChip;
   let chipNativeElement: HTMLElement;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -50,6 +45,7 @@ describe('MDC-based Chip Remove', () => {
 
     it('should emit (removed) event when exit animation is complete', fakeAsync(() => {
       testChip.removable = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       chipNativeElement.querySelector('button')!.click();
@@ -70,6 +66,7 @@ describe('MDC-based Chip Remove', () => {
       const buttonElement = chipNativeElement.querySelector('button')!;
 
       testChip.removable = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = dispatchKeyboardEvent(buttonElement, 'keydown', SPACE);
@@ -83,6 +80,7 @@ describe('MDC-based Chip Remove', () => {
       const buttonElement = chipNativeElement.querySelector('button')!;
 
       testChip.removable = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const event = dispatchKeyboardEvent(buttonElement, 'keydown', ENTER);

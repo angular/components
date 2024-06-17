@@ -105,7 +105,7 @@ export interface MatSortDefaultOptions {
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
     constructor(
     _intl: MatSortHeaderIntl, _changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>,
-    _ariaDescriber?: AriaDescriber | null | undefined, defaultOptions?: MatSortDefaultOptions);
+    _ariaDescriber?: (AriaDescriber | null) | undefined, defaultOptions?: MatSortDefaultOptions);
     _arrowDirection: SortDirection;
     arrowPosition: SortHeaderArrowPosition;
     // (undocumented)

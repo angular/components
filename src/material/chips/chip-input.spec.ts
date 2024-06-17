@@ -2,8 +2,8 @@ import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, flush} from '@angular/core/testing';
+import {Component, DebugElement, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -24,12 +24,6 @@ describe('MDC-based MatChipInput', () => {
   let inputNativeElement: HTMLElement;
   let chipInputDirective: MatChipInput;
   let dir = 'ltr';
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -77,6 +71,7 @@ describe('MDC-based MatChipInput', () => {
       expect(inputNativeElement.hasAttribute('placeholder')).toBe(false);
 
       testChipInput.placeholder = 'bound placeholder';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
@@ -87,6 +82,7 @@ describe('MDC-based MatChipInput', () => {
       expect(chipInputDirective.disabled).toBe(false);
 
       fixture.componentInstance.chipGridInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('disabled')).toBe('true');
@@ -97,6 +93,7 @@ describe('MDC-based MatChipInput', () => {
       expect(inputNativeElement.hasAttribute('aria-required')).toBe(false);
 
       fixture.componentInstance.required = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('aria-required')).toBe('true');
@@ -106,6 +103,7 @@ describe('MDC-based MatChipInput', () => {
       expect(inputNativeElement.hasAttribute('required')).toBe(false);
 
       fixture.componentInstance.required = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('required')).toBe('true');
@@ -144,6 +142,7 @@ describe('MDC-based MatChipInput', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       chipInputDirective._blur();
@@ -154,6 +153,7 @@ describe('MDC-based MatChipInput', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       chipInputDirective._blur();

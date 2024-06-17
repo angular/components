@@ -38,7 +38,7 @@ describe('CheckboxHarnessExample', () => {
   });
 
   it('should toggle checkbox', async () => {
-    fixture.componentInstance.disabled = false;
+    fixture.componentRef.setInput('disabled', false);
     fixture.changeDetectorRef.markForCheck();
     const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(MatCheckboxHarness);
     await checkedCheckbox.toggle();

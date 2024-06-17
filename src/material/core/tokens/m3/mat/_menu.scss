@@ -35,6 +35,9 @@ $prefix: (mat, menu);
       item-with-icon-leading-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
       item-with-icon-trailing-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
       container-color: map.get($systems, md-sys-color, surface-container),
+      // Note that this uses a value, rather than a computed box-shadow, because we use
+      // the value at runtime to determine which shadow to set based on the menu's depth.
+      base-elevation-level: token-utils.hardcode(2, $exclude-hardcoded),
     )
   );
 

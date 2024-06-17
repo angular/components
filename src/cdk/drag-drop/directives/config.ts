@@ -19,7 +19,7 @@ export type DragAxis = 'x' | 'y';
 export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
 
 /** Possible orientations for a drop list. */
-export type DropListOrientation = 'horizontal' | 'vertical';
+export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';
 
 /**
  * Injection token that can be used to configure the

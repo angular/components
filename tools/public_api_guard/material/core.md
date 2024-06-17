@@ -489,7 +489,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     invalid(): Date;
     // (undocumented)
-    isDateInstance(obj: any): boolean;
+    isDateInstance(obj: any): obj is Date;
     // (undocumented)
     isValid(date: Date): boolean;
     // (undocumented)

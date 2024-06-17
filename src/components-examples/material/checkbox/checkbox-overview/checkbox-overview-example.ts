@@ -1,12 +1,10 @@
-import {Component} from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ChangeDetectionStrategy, Component, computed, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 export interface Task {
   name: string;
   completed: boolean;
-  color: ThemePalette;
   subtasks?: Task[];
 }
 
@@ -19,37 +17,37 @@ export interface Task {
   styleUrl: 'checkbox-overview-example.css',
   standalone: true,
   imports: [MatCheckboxModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxOverviewExample {
-  task: Task = {
-    name: 'Indeterminate',
+  readonly task = signal<Task>({
+    name: 'Parent task',
     completed: false,
-    color: 'primary',
     subtasks: [
-      {name: 'Primary', completed: false, color: 'primary'},
-      {name: 'Accent', completed: false, color: 'accent'},
-      {name: 'Warn', completed: false, color: 'warn'},
+      {name: 'Child task 1', completed: false},
+      {name: 'Child task 2', completed: false},
+      {name: 'Child task 3', completed: false},
     ],
-  };
+  });
 
-  allComplete: boolean = false;
-
-  updateAllComplete() {
-    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
-  }
-
-  someComplete(): boolean {
-    if (this.task.subtasks == null) {
+  readonly partiallyComplete = computed(() => {
+    const task = this.task();
+    if (!task.subtasks) {
       return false;
     }
-    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
-  }
+    return task.subtasks.some(t => t.completed) && !task.subtasks.every(t => t.completed);
+  });
 
-  setAll(completed: boolean) {
-    this.allComplete = completed;
-    if (this.task.subtasks == null) {
-      return;
-    }
-    this.task.subtasks.forEach(t => (t.completed = completed));
+  update(completed: boolean, index?: number) {
+    this.task.update(task => {
+      if (index === undefined) {
+        task.completed = completed;
+        task.subtasks?.forEach(t => (t.completed = completed));
+      } else {
+        task.subtasks![index].completed = completed;
+        task.completed = task.subtasks?.every(t => t.completed) ?? true;
+      }
+      return {...task};
+    });
   }
 }

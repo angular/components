@@ -2,8 +2,9 @@
   class="example-chip"
   cdkDropList
   cdkDropListOrientation="horizontal"
-  (cdkDropListDropped)="drop($event)">
-  @for (vegetable of vegetables; track vegetable) {
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (vegetable of vegetables(); track vegetable.name) {
     <mat-chip class="example-box" cdkDrag>{{vegetable.name}}</mat-chip>
   }
 </mat-chip-set>

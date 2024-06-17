@@ -83,7 +83,10 @@ export class _MatBadgeStyleLoader {}
   standalone: true,
 })
 export class MatBadge implements OnInit, OnDestroy {
-  /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
+  /**
+   * The color of the badge. Can be `primary`, `accent`, or `warn`.
+   * Not recommended in M3, for more information see https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants.
+   */
   @Input('matBadgeColor')
   get color(): ThemePalette {
     return this._color;

@@ -2,13 +2,15 @@
   <li>
     <mat-form-field>
       <mat-label>What's your name?</mat-label>
-      <input matInput [(ngModel)]="name">
+      <input matInput [(ngModel)]="name" />
     </mat-form-field>
   </li>
   <li>
     <button mat-raised-button (click)="openDialog()">Pick one</button>
   </li>
-  @if (animal) {
-    <li>You chose: <em>{{animal}}</em></li>
+  @if (animal()) {
+    <li>
+      You chose: <em>{{animal()}}</em>
+    </li>
   }
 </ol>

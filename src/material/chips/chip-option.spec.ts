@@ -1,20 +1,20 @@
 import {Directionality} from '@angular/cdk/bidi';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {Component, DebugElement, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {
+  MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipEvent,
   MatChipListbox,
   MatChipOption,
-  MatChipsDefaultOptions,
   MatChipSelectionChange,
+  MatChipsDefaultOptions,
   MatChipsModule,
-  MAT_CHIPS_DEFAULT_OPTIONS,
 } from './index';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 describe('MDC-based Option Chips', () => {
   let fixture: ComponentFixture<any>;
@@ -26,12 +26,6 @@ describe('MDC-based Option Chips', () => {
   let dir = 'ltr';
 
   let hideSingleSelectionIndicator: boolean | undefined;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
@@ -96,6 +90,7 @@ describe('MDC-based Option Chips', () => {
 
         // Force a destroy callback
         testComponent.shouldShow = false;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(testComponent.chipDestroy).toHaveBeenCalledTimes(1);
@@ -105,6 +100,7 @@ describe('MDC-based Option Chips', () => {
         expect(chipNativeElement.classList).toContain('mat-primary');
 
         testComponent.color = 'warn';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).not.toContain('mat-primary');
@@ -116,6 +112,7 @@ describe('MDC-based Option Chips', () => {
         expect(chipNativeElement.classList).not.toContain('mat-mdc-chip-selected');
 
         testComponent.selected = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).toContain('mat-mdc-chip-selected');
@@ -203,6 +200,7 @@ describe('MDC-based Option Chips', () => {
 
       it('should be able to set a custom role', () => {
         chipInstance.role = 'button';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.getAttribute('role')).toBe('button');
@@ -213,6 +211,7 @@ describe('MDC-based Option Chips', () => {
       describe('when selectable is true', () => {
         beforeEach(() => {
           testComponent.selectable = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         });
 
@@ -252,6 +251,7 @@ describe('MDC-based Option Chips', () => {
           expect(primaryAction.getAttribute('aria-selected')).toBe('false');
 
           testComponent.selected = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(primaryAction.getAttribute('aria-selected')).toBe('true');
@@ -259,11 +259,13 @@ describe('MDC-based Option Chips', () => {
 
         it('should have the correct aria-selected in multi-selection mode', fakeAsync(() => {
           testComponent.chipList.multiple = true;
+          fixture.changeDetectorRef.markForCheck();
           flush();
           fixture.detectChanges();
           expect(primaryAction.getAttribute('aria-selected')).toBe('false');
 
           testComponent.selected = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(primaryAction.getAttribute('aria-selected')).toBe('true');
@@ -272,6 +274,7 @@ describe('MDC-based Option Chips', () => {
         it('should disable focus on the checkmark', fakeAsync(() => {
           // The checkmark is only shown in multi selection mode.
           testComponent.chipList.multiple = true;
+          fixture.changeDetectorRef.markForCheck();
           flush();
           fixture.detectChanges();
 
@@ -283,6 +286,7 @@ describe('MDC-based Option Chips', () => {
       describe('when selectable is false', () => {
         beforeEach(() => {
           testComponent.selectable = false;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
         });
 
@@ -306,6 +310,7 @@ describe('MDC-based Option Chips', () => {
         expect(primaryAction.getAttribute('aria-disabled')).toBe('false');
 
         testComponent.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(primaryAction.getAttribute('aria-disabled')).toBe('true');
@@ -330,6 +335,7 @@ describe('MDC-based Option Chips', () => {
       it('should apply `ariaLabel` and `ariaDesciption` to the element with option role', () => {
         testComponent.ariaLabel = 'option name';
         testComponent.ariaDescription = 'option description';
+        fixture.changeDetectorRef.markForCheck();
 
         fixture.detectChanges();
 
@@ -387,6 +393,7 @@ describe('MDC-based Option Chips', () => {
       it('displays checkmark graphic when avatar is provided', () => {
         testComponent.selected = true;
         testComponent.avatarLabel = 'A';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();

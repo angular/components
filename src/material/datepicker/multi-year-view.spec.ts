@@ -10,11 +10,11 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
-import {JAN, MAR} from '../testing';
 import {By} from '@angular/platform-browser';
+import {JAN, MAR} from '../testing';
 import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 
@@ -33,10 +33,7 @@ describe('MatMultiYearView', () => {
         MultiYearViewWithMinMaxDate,
         MultiYearViewWithDateClass,
       ],
-      providers: [
-        provideZoneChangeDetection(),
-        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
-      ],
+      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
     });
 
     TestBed.compileComponents();
@@ -68,6 +65,7 @@ describe('MatMultiYearView', () => {
 
     it('does not show selected year if in different range', () => {
       testComponent.selected = new Date(2040, JAN, 10);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let selectedEl = multiYearViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -117,6 +115,7 @@ describe('MatMultiYearView', () => {
           expect(calendarBodyEl).not.toBeNull();
           dir.value = 'ltr';
           fixture.componentInstance.date = new Date(2017, JAN, 3);
+          fixture.changeDetectorRef.markForCheck();
           dispatchFakeEvent(calendarBodyEl, 'focus');
           fixture.detectChanges();
         });
@@ -219,6 +218,7 @@ describe('MatMultiYearView', () => {
 
         it('should go to the year that is focused', () => {
           fixture.componentInstance.date = new Date(2017, MAR, 5);
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           expect(calendarInstance.date).toEqual(new Date(2017, MAR, 5));
 
@@ -267,6 +267,7 @@ describe('MatMultiYearView', () => {
         activeDate.getMonth(),
         activeDate.getDate(),
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
@@ -281,6 +282,7 @@ describe('MatMultiYearView', () => {
         activeDate.getMonth(),
         activeDate.getDate(),
       );
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
@@ -303,6 +305,7 @@ describe('MatMultiYearView', () => {
     it('should begin first page with minDate', () => {
       testComponent.minDate = new Date(2014, JAN, 1);
       testComponent.maxDate = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
@@ -326,6 +329,7 @@ describe('MatMultiYearView', () => {
     it('should end last page with maxDate', () => {
       testComponent.minDate = null;
       testComponent.maxDate = new Date(2020, JAN, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
@@ -349,6 +353,7 @@ describe('MatMultiYearView', () => {
     it('should end last page with maxDate', () => {
       testComponent.minDate = new Date(2006, JAN, 1);
       testComponent.maxDate = new Date(2020, JAN, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
@@ -358,6 +363,7 @@ describe('MatMultiYearView', () => {
     it('should disable dates before minDate', () => {
       testComponent.minDate = new Date(2006, JAN, 1);
       testComponent.maxDate = new Date(2020, JAN, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');

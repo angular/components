@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 /**
@@ -9,7 +9,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: 'checkbox-harness-example.html',
   standalone: true,
   imports: [MatCheckboxModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxHarnessExample {
-  disabled = true;
+  readonly disabled = input(true);
 }

@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
+import {CdkTrapFocus} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceStringArray} from '@angular/cdk/coercion';
 import {
@@ -20,63 +22,61 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
+  FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
-  FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
+import {DOCUMENT} from '@angular/common';
 import {
+  afterNextRender,
   AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
+  Directive,
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  ChangeDetectorRef,
-  Directive,
-  OnChanges,
-  SimpleChanges,
-  OnInit,
-  inject,
-  booleanAttribute,
-  afterNextRender,
-  Injector,
 } from '@angular/core';
+import {MatButton} from '@angular/material/button';
 import {DateAdapter, ThemePalette} from '@angular/material/core';
-import {AnimationEvent} from '@angular/animations';
-import {merge, Subject, Observable, Subscription} from 'rxjs';
+import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {MatCalendar, MatCalendarView} from './calendar';
-import {matDatepickerAnimations} from './datepicker-animations';
-import {createMissingDateImplError} from './datepicker-errors';
-import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
-import {DateFilterFn} from './datepicker-input-base';
-import {
-  ExtractDateTypeFromSelection,
-  MatDateSelectionModel,
-  DateRange,
-} from './date-selection-model';
+import {MatCalendarCellClassFunction, MatCalendarUserEvent} from './calendar-body';
 import {
   MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatDateRangeSelectionStrategy,
 } from './date-range-selection-strategy';
+import {
+  DateRange,
+  ExtractDateTypeFromSelection,
+  MatDateSelectionModel,
+} from './date-selection-model';
+import {matDatepickerAnimations} from './datepicker-animations';
+import {createMissingDateImplError} from './datepicker-errors';
+import {DateFilterFn} from './datepicker-input-base';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {DOCUMENT} from '@angular/common';
-import {MatButton} from '@angular/material/button';
-import {CdkTrapFocus} from '@angular/cdk/a11y';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -145,7 +145,13 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
 
-  /** Palette color of the internal calendar. */
+  /**
+   * Theme color of the internal calendar. This API is supported in M2 themes
+   * only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input() color: ThemePalette;
 
   /** Reference to the datepicker that created the overlay. */
@@ -317,7 +323,11 @@ export interface MatDatepickerPanel<
 > {
   /** Stream that emits whenever the date picker is closed. */
   closedStream: EventEmitter<void>;
-  /** Color palette to use on the datepicker's calendar. */
+  /**
+   * Color palette to use on the datepicker's calendar. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   color: ThemePalette;
   /** The input element the datepicker is associated with. */
   datepickerInput: C;
@@ -368,7 +378,11 @@ export abstract class MatDatepickerBase<
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
 
-  /** Color palette to use on the datepicker's calendar. */
+  /**
+   * Color palette to use on the datepicker's calendar. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   @Input()
   get color(): ThemePalette {
     return (
@@ -510,6 +524,8 @@ export abstract class MatDatepickerBase<
 
   private _injector = inject(Injector);
 
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
   constructor(
     private _overlay: Overlay,
     /**
@@ -528,6 +544,10 @@ export abstract class MatDatepickerBase<
     }
 
     this._scrollStrategy = scrollStrategy;
+
+    this._model.selectionChanged.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

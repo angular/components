@@ -12,6 +12,7 @@
             [color]="color"
             class="mat-mdc-paginator-page-size-select">
             <mat-select
+              #selectRef
               [value]="pageSize"
               [disabled]="disabled"
               [aria-labelledby]="_pageSizeLabelId"
@@ -25,6 +26,7 @@
                 </mat-option>
               }
             </mat-select>
+          <div class="mat-mdc-paginator-touch-target" (click)="selectRef.open()"></div>
           </mat-form-field>
         }
 

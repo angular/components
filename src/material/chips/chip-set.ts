@@ -23,7 +23,7 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
-import {merge, Observable, Subject} from 'rxjs';
+import {Observable, Subject, merge} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction} from './chip-action';
@@ -194,10 +194,14 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     if (this.tabIndex !== -1) {
       const previousTabIndex = this.tabIndex;
       this.tabIndex = -1;
+      this._changeDetectorRef.markForCheck();
 
       // Note that this needs to be a `setTimeout`, because a `Promise.resolve`
       // doesn't allow enough time for the focus to escape.
-      setTimeout(() => (this.tabIndex = previousTabIndex));
+      setTimeout(() => {
+        this.tabIndex = previousTabIndex;
+        this._changeDetectorRef.markForCheck();
+      });
     }
   }
 

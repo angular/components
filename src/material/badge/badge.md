@@ -1,4 +1,4 @@
-Badges are small status descriptors for UI elements. A badge consists of a small circle, 
+Badges are small status descriptors for UI elements. A badge consists of a small circle,
 typically containing a number or other short set of characters, that appears in proximity to
 another object.
 
@@ -13,7 +13,7 @@ By default, the badge will be placed `above after`. The direction can be changed
 the attribute `matBadgePosition` follow by `above|below` and `before|after`.
 
 <!-- example({"example":"badge-overview",
-              "file":"badge-overview-example.html", 
+              "file":"badge-overview-example.html",
               "region":"mat-badge-position"}) -->
 
 The overlap of the badge in relation to its inner contents can also be defined
@@ -21,31 +21,26 @@ using the `matBadgeOverlap` tag. Typically, you want the badge to overlap an ico
 a text phrase. By default it will overlap.
 
 <!-- example({"example":"badge-overview",
-              "file":"badge-overview-example.html", 
+              "file":"badge-overview-example.html",
               "region":"mat-badge-overlap"}) -->
 
 ### Badge sizing
 The badge has 3 sizes: `small`, `medium` and `large`. By default, the badge is set to `medium`.
+
+Badges that are `small` do not show the label text. This can be useful in contexts such as showing there are unread notifications but not needing to show the exact amount.
+
 You can change the size by adding `matBadgeSize` to the host element.
 
 <!-- example({"example":"badge-overview",
-              "file":"badge-overview-example.html", 
+              "file":"badge-overview-example.html",
               "region":"mat-badge-size"}) -->
 
 ### Badge visibility
 The badge visibility can be toggled programmatically by defining `matBadgeHidden`.
 
 <!-- example({"example":"badge-overview",
-              "file":"badge-overview-example.html", 
+              "file":"badge-overview-example.html",
               "region":"mat-badge-hide"}) -->
-
-### Theming
-Badges can be colored in terms of the current theme using the `matBadgeColor` property to set the
-background color to `primary`, `accent`, or `warn`.
-
-<!-- example({"example":"badge-overview",
-              "file":"badge-overview-example.html", 
-              "region":"mat-badge-color"}) -->
 
 ### Accessibility
 You must provide a meaningful description via `matBadgeDescription`. When attached to an interactive

@@ -1,10 +1,10 @@
-import {Component, inject} from '@angular/core';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatButtonModule} from '@angular/material/button';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
 
 /**
  * @title Chips with form control
@@ -22,20 +22,25 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
     ReactiveFormsModule,
     MatIconModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsFormControlExample {
-  keywords = ['angular', 'how-to', 'tutorial', 'accessibility'];
-  formControl = new FormControl(['angular']);
+  readonly keywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
+  readonly formControl = new FormControl(['angular']);
 
   announcer = inject(LiveAnnouncer);
 
   removeKeyword(keyword: string) {
-    const index = this.keywords.indexOf(keyword);
-    if (index >= 0) {
-      this.keywords.splice(index, 1);
+    this.keywords.update(keywords => {
+      const index = keywords.indexOf(keyword);
+      if (index < 0) {
+        return keywords;
+      }
 
+      keywords.splice(index, 1);
       this.announcer.announce(`removed ${keyword}`);
-    }
+      return [...keywords];
+    });
   }
 
   add(event: MatChipInputEvent): void {
@@ -43,7 +48,7 @@ export class ChipsFormControlExample {
 
     // Add our keyword
     if (value) {
-      this.keywords.push(value);
+      this.keywords.update(keywords => [...keywords, value]);
     }
 
     // Clear the input value

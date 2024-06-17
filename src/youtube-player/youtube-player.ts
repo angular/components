@@ -7,7 +7,7 @@
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="youtube" />
+/// <reference types="youtube" preserve="true" />
 
 import {
   ChangeDetectionStrategy,

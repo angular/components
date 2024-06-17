@@ -69,6 +69,7 @@ $prefix: (mat, paginator);
     container-size: map.get($size-scale, $density-scale),
     form-field-container-height: $form-field-height,
     form-field-container-vertical-padding: $form-field-vertical-padding,
+    touch-target-display: if($density-scale < -2, none, block),
   );
 }
 

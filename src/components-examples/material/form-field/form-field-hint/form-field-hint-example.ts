@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 /** @title Form field with hints */
 @Component({
@@ -10,5 +10,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   styleUrl: 'form-field-hint-example.css',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormFieldHintExample {}
+export class FormFieldHintExample {
+  protected readonly value = signal('');
+
+  protected onInput(event: Event) {
+    this.value.set((event.target as HTMLInputElement).value);
+  }
+}

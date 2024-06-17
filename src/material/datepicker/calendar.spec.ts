@@ -5,21 +5,16 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
-import {Component, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed, inject, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
-import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {By} from '@angular/platform-browser';
+import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],
@@ -353,6 +348,7 @@ describe('MatCalendar', () => {
 
     it('should clamp startAt value below min date', () => {
       testComponent.startAt = new Date(2000, JAN, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 1));
@@ -360,6 +356,7 @@ describe('MatCalendar', () => {
 
     it('should clamp startAt value above max date', () => {
       testComponent.startAt = new Date(2020, JAN, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 1));
@@ -367,6 +364,7 @@ describe('MatCalendar', () => {
 
     it('should not go back past min date', () => {
       testComponent.startAt = new Date(2016, FEB, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let prevButton = calendarElement.querySelector(
@@ -390,6 +388,7 @@ describe('MatCalendar', () => {
 
     it('should not go forward past max date', () => {
       testComponent.startAt = new Date(2017, DEC, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let nextButton = calendarElement.querySelector(
@@ -416,6 +415,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
       testComponent.minDate = new Date(2017, NOV, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.monthView._init).toHaveBeenCalled();
@@ -426,6 +426,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
       testComponent.minDate = new Date(2016, JAN, 1, 0, 0, 0, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.monthView._init).not.toHaveBeenCalled();
@@ -436,6 +437,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
       testComponent.maxDate = new Date(2017, DEC, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.monthView._init).toHaveBeenCalled();
@@ -455,6 +457,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.yearView, '_init').and.callThrough();
 
       testComponent.minDate = new Date(2017, NOV, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.yearView._init).toHaveBeenCalled();
@@ -474,6 +477,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.yearView, '_init').and.callThrough();
 
       testComponent.maxDate = new Date(2017, DEC, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.yearView._init).toHaveBeenCalled();
@@ -493,6 +497,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.yearView, '_init').and.callThrough();
 
       testComponent.maxDate = new Date(2018, JAN, 1, 0, 0, 1, 0);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.yearView._init).not.toHaveBeenCalled();
@@ -509,6 +514,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.multiYearView, '_init').and.callThrough();
 
       testComponent.minDate = new Date(2017, NOV, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.multiYearView._init).toHaveBeenCalled();
@@ -525,6 +531,7 @@ describe('MatCalendar', () => {
       spyOn(calendarInstance.multiYearView, '_init').and.callThrough();
 
       testComponent.maxDate = new Date(2017, DEC, 1);
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(calendarInstance.multiYearView._init).toHaveBeenCalled();

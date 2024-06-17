@@ -1,7 +1,7 @@
 <mat-form-field>
   <mat-label>Different locale</mat-label>
-  <input matInput [matDatepicker]="dp">
-  <mat-hint>{{getDateFormatString()}}</mat-hint>
+  <input matInput [matDatepicker]="dp" />
+  <mat-hint>{{dateFormatString()}}</mat-hint>
   <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
   <mat-datepicker #dp></mat-datepicker>
 </mat-form-field>

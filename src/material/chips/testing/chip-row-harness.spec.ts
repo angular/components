@@ -1,6 +1,6 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, signal, provideZoneChangeDetection} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipRowHarness} from './chip-row-harness';
@@ -12,7 +12,6 @@ describe('MatChipRowHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatChipsModule, ChipRowHarnessTest],
-      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChipRowHarnessTest);

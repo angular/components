@@ -1,8 +1,9 @@
-import {ComponentFixture, fakeAsync, flush} from '@angular/core/testing';
+import {fakeAsync, flush} from '@angular/core/testing';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {createComponent, startDraggingViaMouse} from './test-utils.spec';
 import {
+  ConnectedDropZones,
   DraggableInDropZone,
   DraggableInScrollableVerticalDropZone,
   ITEM_HEIGHT,
@@ -17,10 +18,13 @@ describe('Single-axis drop list', () => {
   defineCommonDropListTests({
     verticalListOrientation: 'vertical',
     horizontalListOrientation: 'horizontal',
-    getElementIndexByPosition,
-    getElementSibligsByPosition,
-    assertUpwardSorting,
-    assertDownwardSorting,
+    getSortedSiblings: (element, direction) => {
+      return element.parentElement
+        ? Array.from(element.parentElement.children).sort((a, b) => {
+            return a.getBoundingClientRect()[direction] - b.getBoundingClientRect()[direction];
+          })
+        : [];
+    },
   });
 
   it('should lay out the elements correctly, when swapping down with a taller element', fakeAsync(() => {
@@ -268,66 +272,43 @@ describe('Single-axis drop list', () => {
       .withContext('Expected placeholder to preserve transform when dragging stops.')
       .toBe(true);
   }));
+
+  it('should enter as last child if entering from top in reversed container', fakeAsync(() => {
+    const fixture = createComponent(ConnectedDropZones);
+
+    // Make sure there's only one item in the first list.
+    fixture.componentInstance.todo = ['things'];
+    fixture.detectChanges();
+
+    const groups = fixture.componentInstance.groupedDragItems;
+    const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+    const item = groups[0][0];
+
+    // Add some initial padding as the target drop zone
+    const targetDropZoneStyle = dropZones[1].style;
+    targetDropZoneStyle.paddingTop = '10px';
+    targetDropZoneStyle.display = 'flex';
+    targetDropZoneStyle.flexDirection = 'column-reverse';
+
+    const targetRect = dropZones[1].getBoundingClientRect();
+
+    startDraggingViaMouse(fixture, item.element.nativeElement);
+
+    const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+    expect(placeholder).toBeTruthy();
+
+    expect(dropZones[0].contains(placeholder))
+      .withContext('Expected placeholder to be inside the first container.')
+      .toBe(true);
+
+    dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top);
+    fixture.detectChanges();
+
+    expect(dropZones[1].lastChild === placeholder)
+      .withContext('Expected placeholder to be last child inside second container.')
+      .toBe(true);
+
+    dispatchMouseEvent(document, 'mouseup');
+  }));
 });
-
-function getElementIndexByPosition(element: Element, direction: 'top' | 'left') {
-  return getElementSibligsByPosition(element, direction).indexOf(element);
-}
-
-function getElementSibligsByPosition(element: Element, direction: 'top' | 'left') {
-  return element.parentElement
-    ? Array.from(element.parentElement.children).sort((a, b) => {
-        return a.getBoundingClientRect()[direction] - b.getBoundingClientRect()[direction];
-      })
-    : [];
-}
-
-function assertDownwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
-  const draggedItem = items[0];
-  const {top, left} = draggedItem.getBoundingClientRect();
-
-  startDraggingViaMouse(fixture, draggedItem, left, top);
-
-  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-  // Drag over each item one-by-one going downwards.
-  for (let i = 0; i < items.length; i++) {
-    const elementRect = items[i].getBoundingClientRect();
-
-    // Add a few pixels to the top offset so we get some overlap.
-    dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
-  }
-
-  dispatchMouseEvent(document, 'mouseup');
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-  flush();
-}
-
-function assertUpwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
-  const draggedItem = items[items.length - 1];
-  const {top, left} = draggedItem.getBoundingClientRect();
-
-  startDraggingViaMouse(fixture, draggedItem, left, top);
-
-  const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
-
-  // Drag over each item one-by-one going upwards.
-  for (let i = items.length - 1; i > -1; i--) {
-    const elementRect = items[i].getBoundingClientRect();
-
-    // Remove a few pixels from the bottom offset so we get some overlap.
-    dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.bottom - 5);
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    expect(getElementIndexByPosition(placeholder, 'top')).toBe(i);
-  }
-
-  dispatchMouseEvent(document, 'mouseup');
-  fixture.changeDetectorRef.markForCheck();
-  fixture.detectChanges();
-  flush();
-}

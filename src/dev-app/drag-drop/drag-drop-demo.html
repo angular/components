@@ -68,6 +68,52 @@
   </div>
 </div>
 
+<h2>Mixed orientation</h2>
+
+<p>
+  <mat-checkbox [(ngModel)]="mixedWrap">Wrap list</mat-checkbox>
+</p>
+
+<div cdkDropListGroup>
+  <div
+    class="demo-list"
+    [class.demo-list-wrapping]="mixedWrap"
+    [class.demo-list-horizontal]="mixedWrap">
+    <div
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="mixedTodo">
+      @for (item of mixedTodo; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div
+    class="demo-list"
+    [class.demo-list-wrapping]="mixedWrap"
+    [class.demo-list-horizontal]="mixedWrap">
+    <div
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="mixedDone">
+      @for (item of mixedDone; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
 <div class="demo-list">
   <h2>Free dragging</h2>
   <div

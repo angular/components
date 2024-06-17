@@ -1,5 +1,5 @@
-<mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
-  @for (chip of availableColors; track chip) {
-    <mat-chip-option selected [color]="chip.color">{{chip.name}}</mat-chip-option>
+<mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Cutest dog breeds">
+  @for (dog of bestBoys; track dog) {
+    <mat-chip-option selected>{{dog}}</mat-chip-option>
   }
 </mat-chip-listbox>
