@@ -70,6 +70,17 @@
   );
 }
 
+/// Returns the theme config with the given tooltip tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+      $theme,
+      sass-utils.list-of(tokens-mdc-plain-tooltip.$prefix),
+      $overrides
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tooltip') {
     @if inspection.get-theme-version($theme) == 1 {

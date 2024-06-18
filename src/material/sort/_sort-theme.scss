@@ -10,18 +10,19 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
   }
-  @else {}
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-sort.$prefix,
-        tokens-mat-sort.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-color-tokens($theme)
+      );
     }
   }
 }
@@ -29,11 +30,12 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-sort.$prefix,
-        tokens-mat-sort.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -41,11 +43,12 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-sort.$prefix,
-        tokens-mat-sort.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-density-tokens($theme)
+      );
     }
   }
 }
@@ -53,16 +56,25 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-sort.$prefix, tokens: tokens-mat-sort.get-token-slots()),
+    (
+      prefix: tokens-mat-sort.$prefix,
+      tokens: tokens-mat-sort.get-token-slots(),
+    )
   );
+}
+
+/// Returns the theme config with the given sort tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme($theme, sass-utils.list-of(tokens-mat-sort.$prefix), $overrides);
 }
 
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sort') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -79,9 +91,12 @@
 
 @mixin _theme-from-tokens($tokens) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-        tokens-mat-sort.$prefix, map.get($tokens, tokens-mat-sort.$prefix));
+      tokens-mat-sort.$prefix,
+      map.get($tokens, tokens-mat-sort.$prefix)
+    );
   }
 }
