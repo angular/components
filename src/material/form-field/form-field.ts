@@ -7,8 +7,8 @@
  */
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
+import {Platform, _getShadowRoot} from '@angular/cdk/platform';
 import {
   ANIMATION_MODULE_TYPE,
   AfterContentChecked,
@@ -314,6 +314,13 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdate = false;
+
+  /**
+   * Cached shadow root that the element is placed in. `null` means that the element isn't in
+   * the shadow DOM and `undefined` means that it hasn't been resolved yet. Should be read via
+   * `_getShadowRoot`, not directly.
+   */
+  private _cachedShadowRoot: ShadowRoot | null | undefined;
 
   private _injector = inject(Injector);
 
@@ -711,14 +718,29 @@ export class MatFormField
   /** Checks whether the form field is attached to the DOM. */
   private _isAttachedToDom(): boolean {
     const element: HTMLElement = this._elementRef.nativeElement;
-    if (element.getRootNode) {
-      const rootNode = element.getRootNode();
-      // If the element is inside the DOM the root node will be either the document
-      // or the closest shadow root, otherwise it'll be the element itself.
-      return rootNode && rootNode !== element;
+    const rootNode = element.getRootNode();
+    // If the element is inside the DOM the root node will be either the document,
+    // the closest shadow root or an element that is not yet rendered, otherwise it'll be the element itself.
+    return (
+      rootNode &&
+      rootNode !== element &&
+      // If the rootNode is the document we need to make sure that the element is visible
+      ((rootNode === document && element.offsetParent !== null) ||
+        rootNode === this._getShadowRoot())
+    );
+  }
+
+  /**
+   * Lazily resolves and returns the shadow root of the element. We do this in a function, rather
+   * than saving it in property directly on init, because we want to resolve it as late as possible
+   * in order to ensure that the element has been moved into the shadow DOM. Doing it inside the
+   * constructor might be too early if the element is inside of something like `ngFor` or `ngIf`.
+   */
+  private _getShadowRoot(): ShadowRoot | null {
+    if (this._cachedShadowRoot === undefined) {
+      this._cachedShadowRoot = _getShadowRoot(this._elementRef.nativeElement);
     }
-    // Otherwise fall back to checking if it's in the document. This doesn't account for
-    // shadow DOM, however browser that support shadow DOM should support `getRootNode` as well.
-    return document.documentElement!.contains(element);
+
+    return this._cachedShadowRoot;
   }
 }
