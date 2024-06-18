@@ -315,6 +315,13 @@ export class MatFormField
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdate = false;
 
+  /**
+   * Cached shadow root that the element is placed in. `null` means that the element isn't in
+   * the shadow DOM and `undefined` means that it hasn't been resolved yet. Should be read via
+   * `_getShadowRoot`, not directly.
+   */
+  private _cachedShadowRoot: ShadowRoot | null | undefined;
+
   private _injector = inject(Injector);
 
   constructor(
@@ -719,7 +726,21 @@ export class MatFormField
       rootNode !== element &&
       // If the rootNode is the document we need to make sure that the element is visible
       ((rootNode === document && element.offsetParent !== null) ||
-        rootNode === _getShadowRoot(element))
+        rootNode === this._getShadowRoot())
     );
+  }
+
+  /**
+   * Lazily resolves and returns the shadow root of the element. We do this in a function, rather
+   * than saving it in property directly on init, because we want to resolve it as late as possible
+   * in order to ensure that the element has been moved into the shadow DOM. Doing it inside the
+   * constructor might be too early if the element is inside of something like `ngFor` or `ngIf`.
+   */
+  private _getShadowRoot(): ShadowRoot | null {
+    if (this._cachedShadowRoot === undefined) {
+      this._cachedShadowRoot = _getShadowRoot(this._elementRef.nativeElement);
+    }
+
+    return this._cachedShadowRoot;
   }
 }
