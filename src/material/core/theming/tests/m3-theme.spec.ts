@@ -169,95 +169,147 @@ describe('M3 theme', () => {
       expect(css).toContain('--mdc-checkbox-selected-checkmark-color: magenta');
       expect(css).toContain('--mdc-checkbox-selected-checkmark-color: cyan');
     });
-  });
 
-  it('should error if used on M2 theme', () => {
-    expect(() =>
-      transpile(`
-        @use '../../tokens/token-utils';
+    it('should error if used on M2 theme', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
 
-        $theme: mat.m2-define-light-theme(mat.$m2-red-palette, mat.$m2-red-palette);
+          $theme: mat.m2-define-light-theme(mat.$m2-red-palette, mat.$m2-red-palette);
 
-        $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
-          selected-checkmark-color: magenta
-        ));
-
-        html {
-          @include mat.checkbox-theme($theme);
-        }
-      `),
-    ).toThrowError(/The `extend-theme` functions are only supported for M3 themes/);
-  });
-
-  it('should error on invalid namespace', () => {
-    expect(() =>
-      transpile(`
-        @use '../../tokens/token-utils';
-
-        $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbocks)), (
-          selected-checkmark-color: magenta
-        ));
-
-        html {
-          @include mat.checkbox-theme($theme);
-        }
-      `),
-    ).toThrowError(
-      /Error extending theme: Theme does not have tokes for namespace `\(mat, checkbocks\)`/,
-    );
-  });
-
-  it('should error on ambiguous shorthand token name', () => {
-    expect(() =>
-      transpile(`
-        @use '../../tokens/token-utils';
-
-        $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mdc, radio)), (
-          selected-checkmark-color: magenta
-        ));
-
-        html {
-          @include mat.checkbox-theme($theme);
-        }
-      `),
-    ).toThrowError(
-      /Error extending theme: Ambiguous token name `.*` exists in multiple namespaces: `\(mdc, checkbox\)` and `\(mdc, radio\)`/,
-    );
-  });
-
-  it('should error on unknown variant', () => {
-    expect(() =>
-      transpile(`
-        @use '../../tokens/token-utils';
-
-        $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
-          accent: (
+          $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
             selected-checkmark-color: magenta
-          )
-        ));
+          ));
 
-        html {
-          @include mat.checkbox-theme($theme);
-        }
-      `),
-    ).toThrowError(
-      /Error extending theme: Unrecognized color variant `accent`. Allowed variants are: primary, secondary, tertiary, error, surface/,
-    );
-  });
+          html {
+            @include mat.checkbox-theme($theme);
+          }
+        `),
+      ).toThrowError(/The `extend-theme` functions are only supported for M3 themes/);
+    });
 
-  it('should error on unknown token', () => {
-    expect(() =>
-      transpile(`
-        @use '../../tokens/token-utils';
+    it('should error on invalid namespace', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
 
-        $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
-          fake-token: red
-        ));
+          $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbocks)), (
+            selected-checkmark-color: magenta
+          ));
 
-        html {
-          @include mat.checkbox-theme($theme);
-        }
-      `),
-    ).toThrowError(/Error extending theme: Unrecognized token `fake-token`. Allowed tokens are: /);
+          html {
+            @include mat.checkbox-theme($theme);
+          }
+        `),
+      ).toThrowError(
+        /Error extending theme: Theme does not have tokens for namespace `\(mat, checkbocks\)`/,
+      );
+    });
+
+    it('should error on ambiguous shorthand token name', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+
+          $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mdc, radio)), (
+            selected-checkmark-color: magenta
+          ));
+
+          html {
+            @include mat.checkbox-theme($theme);
+          }
+        `),
+      ).toThrowError(
+        /Error extending theme: Ambiguous token name `.*` exists in multiple namespaces: `\(mdc, checkbox\)` and `\(mdc, radio\)`/,
+      );
+    });
+
+    it('should error on unknown variant', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+
+          $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
+            accent: (
+              selected-checkmark-color: magenta
+            )
+          ));
+
+          html {
+            @include mat.checkbox-theme($theme);
+          }
+        `),
+      ).toThrowError(
+        /Error extending theme: Unrecognized color variant `accent`. Allowed variants are: primary, secondary, tertiary, error, surface/,
+      );
+    });
+
+    it('should error on unknown token', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+
+          $theme: token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), (
+            fake-token: red
+          ));
+
+          html {
+            @include mat.checkbox-theme($theme);
+          }
+        `),
+      ).toThrowError(
+        /Error extending theme: Unrecognized token `fake-token`. Allowed tokens are: /,
+      );
+    });
+
+    it('should not error when calling component extend-theme functions', () => {
+      // Ensures that no components have issues with ambiguous token names.
+      expect(() =>
+        transpile(`
+          $theme: mat.core-extend-theme($theme, ());
+          $theme: mat.ripple-extend-theme($theme, ());
+          $theme: mat.option-extend-theme($theme, ());
+          $theme: mat.optgroup-extend-theme($theme, ());
+          $theme: mat.pseudo-checkbox-extend-theme($theme, ());
+          $theme: mat.autocomplete-extend-theme($theme, ());
+          $theme: mat.badge-extend-theme($theme, ());
+          $theme: mat.bottom-sheet-extend-theme($theme, ());
+          $theme: mat.button-extend-theme($theme, ());
+          $theme: mat.fab-extend-theme($theme, ());
+          $theme: mat.icon-button-extend-theme($theme, ());
+          $theme: mat.button-toggle-extend-theme($theme, ());
+          $theme: mat.card-extend-theme($theme, ());
+          $theme: mat.checkbox-extend-theme($theme, ());
+          $theme: mat.chips-extend-theme($theme, ());
+          $theme: mat.datepicker-extend-theme($theme, ());
+          $theme: mat.dialog-extend-theme($theme, ());
+          $theme: mat.divider-extend-theme($theme, ());
+          $theme: mat.expansion-extend-theme($theme, ());
+          $theme: mat.form-field-extend-theme($theme, ());
+          $theme: mat.grid-list-extend-theme($theme, ());
+          $theme: mat.icon-extend-theme($theme, ());
+          $theme: mat.list-extend-theme($theme, ());
+          $theme: mat.menu-extend-theme($theme, ());
+          $theme: mat.paginator-extend-theme($theme, ());
+          $theme: mat.progress-bar-extend-theme($theme, ());
+          $theme: mat.progress-spinner-extend-theme($theme, ());
+          $theme: mat.radio-extend-theme($theme, ());
+          $theme: mat.select-extend-theme($theme, ());
+          $theme: mat.sidenav-extend-theme($theme, ());
+          $theme: mat.slide-toggle-extend-theme($theme, ());
+          $theme: mat.slider-extend-theme($theme, ());
+          $theme: mat.snack-bar-extend-theme($theme, ());
+          $theme: mat.sort-extend-theme($theme, ());
+          $theme: mat.stepper-extend-theme($theme, ());
+          $theme: mat.table-extend-theme($theme, ());
+          $theme: mat.tabs-extend-theme($theme, ());
+          $theme: mat.toolbar-extend-theme($theme, ());
+          $theme: mat.tooltip-extend-theme($theme, ());
+          $theme: mat.tree-extend-theme($theme, ());
+
+          @include mat.all-component-themes($theme);
+        `),
+      ).not.toThrow();
+    });
   });
 });

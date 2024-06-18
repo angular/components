@@ -268,20 +268,24 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   // Determine which system and namespace each shorthand token belongs to.
   $seen-tokens: ();
   @each $namespace in $extend-namespaces {
+    $namespace-found: false;
     @each $system in $systems {
       $tokens: map.get($theme, $internals, $system, $namespace);
-      @if $tokens == null {
-        @error #{'Error extending theme: Theme does not have tokes for namespace `('}#{$namespace}#{
-          ')`'};
-      }
-      @each $name, $value in $tokens {
-        @if map.has-key($seen-tokens, $name) {
-          @error #{'Error extending theme: Ambiguous token name `'}#{$name}#{
+      @if ($tokens != null) {
+        $namespace-found: true;
+        @each $name, $value in $tokens {
+          @if map.has-key($seen-tokens, $name) {
+            @error #{'Error extending theme: Ambiguous token name `'}#{$name}#{
             '` exists in multiple namespaces: `('}#{list.nth(map.get($seen-tokens, $name), 1)}#{
               ')` and `('}#{$namespace}#{')`'};
+          }
+          $seen-tokens: map.set($seen-tokens, $name, ($namespace, $system));
         }
-        $seen-tokens: map.set($seen-tokens, $name, ($namespace, $system));
       }
+    }
+    @if not $namespace-found {
+      @error #{'Error extending theme: Theme does not have tokens for namespace `('}#{
+        $namespace}#{')`'};
     }
   }
 
