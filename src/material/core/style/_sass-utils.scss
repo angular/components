@@ -19,8 +19,7 @@ $use-system-typography-variables: false;
 @mixin current-selector-or-root($root: html) {
   @if & {
     @content;
-  }
-  @else {
+  } @else {
     #{$root} {
       @content;
     }
@@ -58,7 +57,7 @@ $use-system-typography-variables: false;
 /// @return {List} The original $value if it was a list, otherwise a single-item list containing
 ///     $value.
 @function coerce-to-list($value) {
-  @return if(meta.type-of($value) != 'list', ($value,), $value);
+  @return if(meta.type-of($value) != 'list', ($value), $value);
 }
 
 /// A version of the Sass `color.change` function that is safe ot use with CSS variables.
@@ -66,8 +65,7 @@ $use-system-typography-variables: false;
   $args: meta.keywords($args);
   @if (meta.type-of($color) == 'color') {
     @return color.change($color, $args...);
-  }
-  @else if ($color != null and map.get($args, alpha) != null and $use-system-color-variables) {
+  } @else if ($color != null and map.get($args, alpha) != null and $use-system-color-variables) {
     $opacity: map.get($args, alpha);
     @return #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
   }
@@ -90,4 +88,14 @@ $use-system-typography-variables: false;
     }
   }
   @return $kwargs;
+}
+
+/// Creates a list of the given values. This helper can be used when creating lists to avoid the
+/// following common pitfall:
+/// $x: ((x, y))  // => incorrect, sass interprets as a list of strings  (equivalent to `(x, y)`)
+/// $x: ((x, y),) // => correct, sass interprets as a list of list of strings
+/// @param {ArgList} $items The items of the list.
+/// @return {List} A list containing the given items.
+@function list-of($items...) {
+  @return $items;
 }

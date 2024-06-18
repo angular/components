@@ -147,6 +147,22 @@
   );
 }
 
+/// Returns the theme config with the given tabs tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+      $theme,
+      sass-utils.list-of(
+          tokens-mdc-tab.$prefix,
+          tokens-mdc-tab-indicator.$prefix,
+          tokens-mat-tab-header.$prefix,
+          tokens-mat-tab-header-with-background.$prefix
+      ),
+      $overrides
+  );
+}
+
 /// Outputs all (base, color, typography, and density) theme styles for the mat-tab.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
