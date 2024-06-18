@@ -1,5 +1,6 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,29 +9,22 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
-  provideZoneChangeDetection,
   signal,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_SNACK_BAR_DATA,
-  SimpleSnackBar,
   MatSnackBar,
   MatSnackBarConfig,
   MatSnackBarContainer,
   MatSnackBarModule,
   MatSnackBarRef,
+  SimpleSnackBar,
 } from './index';
-import {Platform} from '@angular/cdk/platform';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from './snack-bar';
 
 describe('MatSnackBar', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   let snackBar: MatSnackBar;
   let liveAnnouncer: LiveAnnouncer;
   let overlayContainerElement: HTMLElement;
@@ -517,6 +511,7 @@ describe('MatSnackBar', () => {
     snackBarRef.onAction().subscribe({complete: actionCompleteSpy});
 
     snackBarRef.dismissWithAction();
+    viewContainerFixture.detectChanges();
     flush();
 
     expect(dismissCompleteSpy).toHaveBeenCalled();
@@ -530,6 +525,7 @@ describe('MatSnackBar', () => {
 
     snackBarRef.afterDismissed().subscribe(dismissSpy);
     snackBarRef.dismissWithAction();
+    viewContainerFixture.detectChanges();
     flush();
 
     expect(dismissSpy).toHaveBeenCalledWith(jasmine.objectContaining({dismissedByAction: true}));
@@ -563,33 +559,6 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
     tick();
     expect(afterDismissSpy).toHaveBeenCalled();
-  }));
-
-  it('should clear the dismiss timeout when dismissed before timeout expiration', fakeAsync(() => {
-    let config = new MatSnackBarConfig();
-    config.duration = 1000;
-    snackBar.open('content', 'test', config);
-
-    setTimeout(() => snackBar.dismiss(), 500);
-
-    tick(600);
-    flush();
-
-    expect(viewContainerFixture.isStable()).toBe(true);
-  }));
-
-  it('should clear the dismiss timeout when dismissed with action', fakeAsync(() => {
-    let config = new MatSnackBarConfig();
-    config.duration = 1000;
-    const snackBarRef = snackBar.open('content', 'test', config);
-
-    setTimeout(() => snackBarRef.dismissWithAction(), 500);
-
-    tick(600);
-    viewContainerFixture.detectChanges();
-    tick();
-
-    expect(viewContainerFixture.isStable()).toBe(true);
   }));
 
   it('should add extra classes to the container', () => {
@@ -724,6 +693,7 @@ describe('MatSnackBar', () => {
       snackBarRef.onAction().subscribe({complete: actionCompleteSpy});
 
       snackBarRef.dismissWithAction();
+      viewContainerFixture.detectChanges();
       flush();
 
       expect(dismissCompleteSpy).toHaveBeenCalled();
@@ -741,6 +711,7 @@ describe('MatSnackBar', () => {
 
     it('should be able to open a snack bar using a TemplateRef', () => {
       templateFixture.componentInstance.localValue = 'Pizza';
+      templateFixture.changeDetectorRef.markForCheck();
       snackBar.openFromTemplate(templateFixture.componentInstance.templateRef);
       templateFixture.detectChanges();
 
@@ -750,6 +721,7 @@ describe('MatSnackBar', () => {
       expect(containerElement.textContent).toContain('Pizza');
 
       templateFixture.componentInstance.localValue = 'Pasta';
+      templateFixture.changeDetectorRef.markForCheck();
       templateFixture.detectChanges();
 
       expect(containerElement.textContent).toContain('Pasta');

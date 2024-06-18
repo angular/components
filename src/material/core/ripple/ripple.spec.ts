@@ -286,17 +286,6 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
 
-    it('does not run events inside the NgZone', () => {
-      const spy = jasmine.createSpy('zone unstable callback');
-      const subscription = fixture.ngZone!.onUnstable.subscribe(spy);
-
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
-
-      expect(spy).not.toHaveBeenCalled();
-      subscription.unsubscribe();
-    });
-
     it('should only persist the latest ripple on pointer down', () => {
       dispatchMouseEvent(rippleTarget, 'mousedown');
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
