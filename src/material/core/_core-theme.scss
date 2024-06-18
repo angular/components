@@ -18,15 +18,16 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include ripple-theme.base($theme);
     @include option-theme.base($theme);
     @include optgroup-theme.base($theme);
     @include pseudo-checkbox-theme.base($theme);
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-app.$prefix,
-        tokens-mat-app.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-app.$prefix,
+        tokens-mat-app.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -34,15 +35,16 @@
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  }
-  @else {
+  } @else {
     @include ripple-theme.color($theme);
     @include option-theme.color($theme);
     @include optgroup-theme.color($theme);
     @include pseudo-checkbox-theme.color($theme);
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-app.$prefix,
-        tokens-mat-app.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-app.$prefix,
+        tokens-mat-app.get-color-tokens($theme)
+      );
     }
   }
 }
@@ -50,8 +52,7 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include option-theme.typography($theme);
     @include optgroup-theme.typography($theme);
     @include pseudo-checkbox-theme.typography($theme);
@@ -62,8 +63,7 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     @include option-theme.density($theme);
     @include optgroup-theme.density($theme);
     @include pseudo-checkbox-theme.density($theme);
@@ -80,6 +80,7 @@
   $app-tokens: tokens-mat-app.get-token-slots();
   $ripple-tokens: tokens-mat-ripple.get-token-slots();
   $option-tokens: tokens-mat-option.get-token-slots();
+  $optgroup-tokens: tokens-mat-optgroup.get-token-slots();
   $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
   $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
 
@@ -87,8 +88,27 @@
     (prefix: tokens-mat-app.$prefix, tokens: $app-tokens),
     (prefix: tokens-mat-ripple.$prefix, tokens: $ripple-tokens),
     (prefix: tokens-mat-option.$prefix, tokens: $option-tokens),
+    (prefix: tokens-mat-optgroup.$prefix, tokens: $optgroup-tokens),
     (prefix: tokens-mat-full-pseudo-checkbox.$prefix, tokens: $full-pseudo-checkbox-tokens),
-    (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens),
+    (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens)
+  );
+}
+
+/// Returns the theme config with the given core tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(
+      tokens-mat-app.$prefix,
+      tokens-mat-ripple.$prefix,
+      tokens-mat-option.$prefix,
+      tokens-mat-optgroup.$prefix,
+      tokens-mat-full-pseudo-checkbox.$prefix,
+      tokens-mat-minimal-pseudo-checkbox.$prefix
+    ),
+    $overrides
   );
 }
 
@@ -104,8 +124,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -122,23 +141,37 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   $mat-app-tokens: token-utils.get-tokens-for($tokens, tokens-mat-app.$prefix, $options...);
   $mat-ripple-tokens: token-utils.get-tokens-for($tokens, tokens-mat-ripple.$prefix, $options...);
   $mat-option-tokens: token-utils.get-tokens-for($tokens, tokens-mat-option.$prefix, $options...);
-  $mat-optgroup-tokens:
-    token-utils.get-tokens-for($tokens, tokens-mat-optgroup.$prefix, $options...);
-  $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for($tokens,
-    tokens-mat-full-pseudo-checkbox.$prefix, $options...);
-  $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for($tokens,
-    tokens-mat-minimal-pseudo-checkbox.$prefix, $options...);
+  $mat-optgroup-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-optgroup.$prefix,
+    $options...
+  );
+  $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-full-pseudo-checkbox.$prefix,
+    $options...
+  );
+  $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-minimal-pseudo-checkbox.$prefix,
+    $options...
+  );
 
   @include token-utils.create-token-values(tokens-mat-app.$prefix, $mat-app-tokens);
   @include token-utils.create-token-values(tokens-mat-ripple.$prefix, $mat-ripple-tokens);
   @include token-utils.create-token-values(tokens-mat-option.$prefix, $mat-option-tokens);
   @include token-utils.create-token-values(tokens-mat-optgroup.$prefix, $mat-optgroup-tokens);
-  @include token-utils.create-token-values(tokens-mat-full-pseudo-checkbox.$prefix,
-    $mat-full-pseudo-checkbox-tokens);
-  @include token-utils.create-token-values(tokens-mat-minimal-pseudo-checkbox.$prefix,
-    $mat-minimal-pseudo-checkbox-tokens);
+  @include token-utils.create-token-values(
+    tokens-mat-full-pseudo-checkbox.$prefix,
+    $mat-full-pseudo-checkbox-tokens
+  );
+  @include token-utils.create-token-values(
+    tokens-mat-minimal-pseudo-checkbox.$prefix,
+    $mat-minimal-pseudo-checkbox-tokens
+  );
 }

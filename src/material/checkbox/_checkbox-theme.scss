@@ -121,11 +121,15 @@
   );
 }
 
-/// Returns a theme config with the given tokens overridden.
-/// @param {Map} $theme The material theme for an application.
+/// Returns the theme config with the given checkbox tokens overridden.
+/// @param {Map} $theme An M3 material theme.
 /// @param {Map} $overrides The token values to override in the theme.
 @function extend-theme($theme, $overrides: ()) {
-  @return token-utils.extend-theme($theme, ((mdc, checkbox), (mat, checkbox)), $overrides);
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(tokens-mdc-checkbox.$prefix, tokens-mat-checkbox.$prefix),
+    $overrides
+  );
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.

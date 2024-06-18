@@ -8,30 +8,46 @@
 
 @mixin _palette-styles($theme, $palette-name) {
   @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-full-pseudo-checkbox.$prefix,
-      tokens-mat-full-pseudo-checkbox.get-color-tokens($theme, $palette-name));
-    @include token-utils.create-token-values(tokens-mat-minimal-pseudo-checkbox.$prefix,
-      tokens-mat-minimal-pseudo-checkbox.get-color-tokens($theme, $palette-name));
+    @include token-utils.create-token-values(
+      tokens-mat-full-pseudo-checkbox.$prefix,
+      tokens-mat-full-pseudo-checkbox.get-color-tokens($theme, $palette-name)
+    );
+    @include token-utils.create-token-values(
+      tokens-mat-minimal-pseudo-checkbox.$prefix,
+      tokens-mat-minimal-pseudo-checkbox.get-color-tokens($theme, $palette-name)
+    );
   }
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
-  $mat-full-pseudo-checkbox-tokens:
-      token-utils.get-tokens-for($tokens, tokens-mat-full-pseudo-checkbox.$prefix, $options...);
-  $mat-minimal-pseudo-checkbox-tokens:
-      token-utils.get-tokens-for($tokens, tokens-mat-minimal-pseudo-checkbox.$prefix, $options...);
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-full-pseudo-checkbox.$prefix,
+    $options...
+  );
+  $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-minimal-pseudo-checkbox.$prefix,
+    $options...
+  );
   @include token-utils.create-token-values(
-      tokens-mat-full-pseudo-checkbox.$prefix, $mat-full-pseudo-checkbox-tokens);
+    tokens-mat-full-pseudo-checkbox.$prefix,
+    $mat-full-pseudo-checkbox-tokens
+  );
   @include token-utils.create-token-values(
-      tokens-mat-minimal-pseudo-checkbox.$prefix, $mat-minimal-pseudo-checkbox-tokens);
+    tokens-mat-minimal-pseudo-checkbox.$prefix,
+    $mat-minimal-pseudo-checkbox-tokens
+  );
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-pseudo-checkbox.
 /// @param {Map} $theme The theme to generate base styles for.
-@mixin base($theme) {}
+@mixin base($theme) {
+}
 
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
@@ -41,8 +57,28 @@
 
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-full-pseudo-checkbox.$prefix, tokens: $full-pseudo-checkbox-tokens),
-    (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens),
+    (
+      prefix: tokens-mat-full-pseudo-checkbox.$prefix,
+      tokens: $full-pseudo-checkbox-tokens,
+    ),
+    (
+      prefix: tokens-mat-minimal-pseudo-checkbox.$prefix,
+      tokens: $minimal-pseudo-checkbox-tokens,
+    )
+  );
+}
+
+/// Returns the theme config with the given pseudo-checkbox tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(
+      tokens-mat-full-pseudo-checkbox.$prefix,
+      tokens-mat-minimal-pseudo-checkbox.$prefix
+    ),
+    $overrides
   );
 }
 
@@ -54,8 +90,7 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
     // theme from their parent, rather than implementing their own theming, which is why we
     // don't attach to the `mat-*` classes. Also note that this needs to be below `.mat-primary`
@@ -96,8 +131,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);

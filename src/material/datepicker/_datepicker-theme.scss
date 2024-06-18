@@ -21,11 +21,15 @@ $calendar-weekday-table-font-size: 11px !default;
   $palette-color: inspection.get-theme-color($theme, $palette-name);
   $range-color: tokens-mat-datepicker.private-get-range-background-color($palette-color);
   $range-tokens: tokens-mat-datepicker.get-range-color-tokens($range-color);
-  $calendar-tokens:
-    tokens-mat-datepicker.private-get-calendar-color-palette-color-tokens($theme, $palette-name);
+  $calendar-tokens: tokens-mat-datepicker.private-get-calendar-color-palette-color-tokens(
+    $theme,
+    $palette-name
+  );
 
-  @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
-    map.merge($calendar-tokens, $range-tokens));
+  @include token-utils.create-token-values(
+    tokens-mat-datepicker.$prefix,
+    map.merge($calendar-tokens, $range-tokens)
+  );
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -34,11 +38,12 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
-        tokens-mat-datepicker.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-datepicker.$prefix,
+        tokens-mat-datepicker.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -51,11 +56,12 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
-        tokens-mat-datepicker.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-datepicker.$prefix,
+        tokens-mat-datepicker.get-color-tokens($theme)
+      );
     }
 
     .mat-datepicker-content {
@@ -70,14 +76,18 @@ $calendar-weekday-table-font-size: 11px !default;
 
     .mat-datepicker-toggle-active {
       &.mat-accent {
-        $accent-tokens:
-          tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens($theme, accent);
+        $accent-tokens: tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens(
+          $theme,
+          accent
+        );
         @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $accent-tokens);
       }
 
       &.mat-warn {
-        $warn-tokens:
-          tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens($theme, warn);
+        $warn-tokens: tokens-mat-datepicker.private-get-toggle-color-palette-color-tokens(
+          $theme,
+          warn
+        );
         @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $warn-tokens);
       }
     }
@@ -89,11 +99,12 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-datepicker.$prefix,
-        tokens-mat-datepicker.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-datepicker.$prefix,
+        tokens-mat-datepicker.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -103,7 +114,8 @@ $calendar-weekday-table-font-size: 11px !default;
   $comparison-color: tokens-mat-datepicker.$private-default-comparison-color,
   $overlap-color: tokens-mat-datepicker.$private-default-overlap-color,
   $overlap-selected-color:
-    tokens-mat-datepicker.private-get-default-overlap-selected-color($overlap-color)) {
+    tokens-mat-datepicker.private-get-default-overlap-selected-color($overlap-color)
+) {
   $tokens: tokens-mat-datepicker.get-range-color-tokens(
     $range-color: $range-color,
     $comparison-color: $comparison-color,
@@ -121,8 +133,7 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     // TODO(crisbeto): move this into the structural styles
     // once the icon button density is switched to tokens.
 
@@ -139,7 +150,21 @@ $calendar-weekday-table-font-size: 11px !default;
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-datepicker.$prefix, tokens: tokens-mat-datepicker.get-token-slots()),
+    (
+      prefix: tokens-mat-datepicker.$prefix,
+      tokens: tokens-mat-datepicker.get-token-slots(),
+    )
+  );
+}
+
+/// Returns the theme config with the given datepicker tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(tokens-mat-datepicker.$prefix),
+    $overrides
   );
 }
 
@@ -152,8 +177,7 @@ $calendar-weekday-table-font-size: 11px !default;
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-datepicker') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -170,8 +194,12 @@ $calendar-weekday-table-font-size: 11px !default;
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
-  $mat-datepicker-tokens:
-      token-utils.get-tokens-for($tokens, tokens-mat-datepicker.$prefix, $options...);
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mat-datepicker-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-datepicker.$prefix,
+    $options...
+  );
   @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $mat-datepicker-tokens);
 }

@@ -20,8 +20,7 @@ $use-system-typography-variables: false;
 @mixin current-selector-or-root($root: html) {
   @if & {
     @content;
-  }
-  @else {
+  } @else {
     #{$root} {
       @content;
     }
@@ -66,12 +65,10 @@ $use-system-typography-variables: false;
 @function safe-color-change($color, $args...) {
   $args: meta.keywords($args);
   $use-color-mix: $use-system-color-variables or
-      (is-css-var-name($color) and string.index($color, '--mat') == 1);
+    (is-css-var-name($color) and string.index($color, '--mat') == 1);
   @if (meta.type-of($color) == 'color') {
     @return color.change($color, $args...);
-  }
-  @else if ($color != null and
-      map.get($args, alpha) != null and $use-color-mix) {
+  } @else if ($color != null and map.get($args, alpha) != null and $use-color-mix) {
     $opacity: map.get($args, alpha);
     @if meta.type-of($opacity) == number {
       $opacity: ($opacity * 100) + '%';
@@ -112,4 +109,14 @@ $use-system-typography-variables: false;
 // by "--".
 @function is-css-var-name($value) {
   @return meta.type-of($value) == string and string.index($value, '--') == 1;
+}
+
+/// Creates a list of the given values. This helper can be used when creating lists to avoid the
+/// following common pitfall:
+/// $x: ((x, y))  // => incorrect, sass interprets as a list of strings  (equivalent to `(x, y)`)
+/// $x: ((x, y),) // => correct, sass interprets as a list of list of strings
+/// @param {ArgList} $items The items of the list.
+/// @return {List} A list containing the given items.
+@function list-of($items...) {
+  @return $items;
 }

@@ -82,6 +82,21 @@
   );
 }
 
+/// Returns the theme config with the given card tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+      $theme,
+      sass-utils.list-of(
+          tokens-mdc-elevated-card.$prefix,
+          tokens-mdc-outlined-card.$prefix,
+          tokens-mat-card.$prefix
+      ),
+      $overrides
+  );
+}
+
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-card') {
     @if inspection.get-theme-version($theme) == 1 {
