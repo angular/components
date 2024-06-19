@@ -127,6 +127,22 @@ export class CdkDropList<T = any> implements OnDestroy {
   @Input('cdkDropListAutoScrollStep')
   autoScrollStep: NumberInput;
 
+  /**
+   * Selector that will be used to resolve an alternate element container for the drop list.
+   * Passing an alternate container is useful for the cases where one might not have control
+   * over the parent node of the draggable items within the list (e.g. due to content projection).
+   * This allows for usages like:
+   *
+   * ```
+   * <div cdkDropList cdkDropListElementContainer=".inner">
+   *   <div class="inner">
+   *     <div cdkDrag></div>
+   *   </div>
+   * </div>
+   * ```
+   */
+  @Input('cdkDropListElementContainer') elementContainerSelector: string | null;
+
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')
   readonly dropped: EventEmitter<CdkDragDrop<T, any>> = new EventEmitter<CdkDragDrop<T, any>>();
@@ -293,6 +309,18 @@ export class CdkDropList<T = any> implements OnDestroy {
         // Only do this once since it involves traversing the DOM and the parents
         // shouldn't be able to change without the drop list being destroyed.
         this._scrollableParentsResolved = true;
+      }
+
+      if (this.elementContainerSelector) {
+        const container = this.element.nativeElement.querySelector(this.elementContainerSelector);
+
+        if (!container && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+          throw new Error(
+            `CdkDropList could not find an element container matching the selector "${this.elementContainerSelector}"`,
+          );
+        }
+
+        ref.withElementContainer(container as HTMLElement);
       }
 
       ref.disabled = this.disabled;
