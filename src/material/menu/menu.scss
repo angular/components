@@ -56,6 +56,13 @@ mat-menu {
   //    `mouseenter` event by dispatching it on tap.
   &.ng-animating {
     pointer-events: none;
+
+    // If the same menu is assigned to multiple triggers and the user moves quickly between them
+    // (e.g. in a nested menu), the panel for the old menu may show up as empty while it's
+    // animating away. Hide such cases since they can look off to users.
+    &:has(.mat-mdc-menu-content:empty) {
+      display: none;
+    }
   }
 
   @include cdk.high-contrast(active, off) {
