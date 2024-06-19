@@ -18,6 +18,9 @@ import type {DragRef} from '../drag-ref';
  * @docs-private
  */
 export class MixedSortStrategy implements DropListSortStrategy {
+  /** Root element container of the drop list. */
+  private _element: HTMLElement;
+
   /** Function used to determine if an item can be sorted into a specific index. */
   private _sortPredicate: SortPredicate<DragRef>;
 
@@ -50,7 +53,6 @@ export class MixedSortStrategy implements DropListSortStrategy {
   private _relatedNodes: [node: Node, nextSibling: Node | null][] = [];
 
   constructor(
-    private _element: HTMLElement,
     private _document: Document,
     private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
   ) {}
@@ -229,6 +231,13 @@ export class MixedSortStrategy implements DropListSortStrategy {
         item._sortFromLastPointerPosition();
       }
     });
+  }
+
+  withElementContainer(container: HTMLElement): void {
+    if (container !== this._element) {
+      this._element = container;
+      this._rootNode = undefined;
+    }
   }
 
   /**

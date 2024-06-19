@@ -29,6 +29,7 @@ export interface DropListSortStrategy {
   enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void;
   withItems(items: readonly DragRef[]): void;
   withSortPredicate(predicate: SortPredicate<DragRef>): void;
+  withElementContainer(container: HTMLElement): void;
   reset(): void;
   getActiveItemsSnapshot(): readonly DragRef[];
   getItemIndex(item: DragRef): number;
