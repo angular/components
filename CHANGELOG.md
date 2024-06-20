@@ -1,3 +1,25 @@
+<a name="18.1.0-next.3"></a>
+# 18.1.0-next.3 "copper-carousel" (2024-06-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b5e30156c](https://github.com/angular/components/commit/b5e30156c110b67fa5633062227b8767fe601532) | feat | **drag-drop:** add the ability to specify an alternate drop list container ([#29283](https://github.com/angular/components/pull/29283)) |
+| [09df51d8e](https://github.com/angular/components/commit/09df51d8ebb86a3ee76614b6775dd62136660567) | fix | **overlay:** incorrectly dispatching outside click for shadow DOM ([#29249](https://github.com/angular/components/pull/29249)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [008212a98](https://github.com/angular/components/commit/008212a9807fd01fd32fe136a075763b7b2c854d) | fix | **autocomplete:** autocomplete panel top is cut off in landscape mode ([#28982](https://github.com/angular/components/pull/28982)) |
+| [aaea0e272](https://github.com/angular/components/commit/aaea0e272635c973f6466b3db990a459a844f1d3) | fix | **bottom-sheet:** changed after checked error with zoneless ([#29277](https://github.com/angular/components/pull/29277)) |
+| [cee9b0415](https://github.com/angular/components/commit/cee9b04156a8485e28947951aa3afcca2bcc713c) | fix | **core:** generate mat-optgroup tokens in M3 ([#29257](https://github.com/angular/components/pull/29257)) |
+| [a4846a961](https://github.com/angular/components/commit/a4846a961924442649f0b19a3979fa92922b5b5f) | fix | **core:** implement elevation classes in M3 |
+| [6318f24d5](https://github.com/angular/components/commit/6318f24d57572b9aeb1da9b4556030fd38efad8a) | fix | **form-field:** outline label position ([#29138](https://github.com/angular/components/pull/29138)) |
+| [3550a8798](https://github.com/angular/components/commit/3550a8798a5aa51e945121c0fcf4e17b4e882faa) | fix | **menu:** animation issue when same menu is used for multiple nested triggers ([#29280](https://github.com/angular/components/pull/29280)) |
+| [03d00f573](https://github.com/angular/components/commit/03d00f57347bf6f0669dd2fc8fdb70fee4b22afd) | fix | **menu:** update elevation logic for M3 |
+| [99b33120e](https://github.com/angular/components/commit/99b33120e774768467120b77703ee4fb9d98d411) | fix | **paginator:** items per page form field touch target size insufficient ([#29109](https://github.com/angular/components/pull/29109)) |
+| [43b8dcbb1](https://github.com/angular/components/commit/43b8dcbb1f17a9d5fcedc88e996c241ab9e28dd8) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29096](https://github.com/angular/components/pull/29096)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.4"></a>
 # 18.0.4 "caesium-carnival" (2024-06-20)
 ### cdk
