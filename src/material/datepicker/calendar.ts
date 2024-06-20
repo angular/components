@@ -454,12 +454,16 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
         ? changes['maxDate']
         : undefined;
 
-    const change = minDateChange || maxDateChange || changes['dateFilter'];
+    const changeRequiringRerender = minDateChange || maxDateChange || changes['dateFilter'];
 
-    if (change && !change.firstChange) {
+    if (changeRequiringRerender && !changeRequiringRerender.firstChange) {
       const view = this._getCurrentViewComponent();
 
       if (view) {
+        // Schedule focus to be moved to the active date since re-rendering
+        // can blur the active cell. See #29265.
+        this._moveFocusOnNextTick = true;
+
         // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
         // passed down to the view via data bindings which won't be up-to-date when we call `_init`.
         this._changeDetectorRef.detectChanges();
