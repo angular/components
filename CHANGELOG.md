@@ -1,3 +1,24 @@
+<a name="18.0.4"></a>
+# 18.0.4 "caesium-carnival" (2024-06-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8e7ac0804](https://github.com/angular/components/commit/8e7ac0804844f7dee57eca2445b4a9f17a094e4d) | fix | **overlay:** incorrectly dispatching outside click for shadow DOM ([#29249](https://github.com/angular/components/pull/29249)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [303984fd9](https://github.com/angular/components/commit/303984fd9e262e3e434afb56bf2b29c0ef79ab92) | fix | **autocomplete:** autocomplete panel top is cut off in landscape mode ([#28982](https://github.com/angular/components/pull/28982)) |
+| [69ae4040e](https://github.com/angular/components/commit/69ae4040e558d9f10004cff81bdd453ed260abd9) | fix | **bottom-sheet:** changed after checked error with zoneless ([#29277](https://github.com/angular/components/pull/29277)) |
+| [317e371f0](https://github.com/angular/components/commit/317e371f0d6e47e7bf0fff7f72ab731d0727e53a) | fix | **core:** generate mat-optgroup tokens in M3 ([#29257](https://github.com/angular/components/pull/29257)) |
+| [93bc60964](https://github.com/angular/components/commit/93bc6096463bbc33c7430b75214cbc2400ac6a91) | fix | **core:** implement elevation classes in M3 |
+| [6310016f2](https://github.com/angular/components/commit/6310016f27263f08ac449971dd50914effcd2d90) | fix | **form-field:** outline label position ([#29138](https://github.com/angular/components/pull/29138)) |
+| [ce195dee4](https://github.com/angular/components/commit/ce195dee400616afd405c26464c03a5085fe3161) | fix | **menu:** animation issue when same menu is used for multiple nested triggers ([#29280](https://github.com/angular/components/pull/29280)) |
+| [9988ef2f5](https://github.com/angular/components/commit/9988ef2f5e632cd216a29067a593957013b4f108) | fix | **menu:** update elevation logic for M3 |
+| [bad8f6ad4](https://github.com/angular/components/commit/bad8f6ad4472c7533990c05589ce134c925314dd) | fix | **paginator:** items per page form field touch target size insufficient ([#29109](https://github.com/angular/components/pull/29109)) |
+| [f834a11d2](https://github.com/angular/components/commit/f834a11d2c9216daf0c7f9e23a7f1bbc67b40591) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29096](https://github.com/angular/components/pull/29096)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.0-next.2"></a>
 # 18.1.0-next.2 "ivory-infinity" (2024-06-12)
 ### cdk
