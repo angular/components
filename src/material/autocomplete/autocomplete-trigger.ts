@@ -462,7 +462,6 @@ export class MatAutocompleteTrigger
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this._element.nativeElement.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
   }
 
   _handleKeydown(event: KeyboardEvent): void {

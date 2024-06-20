@@ -172,7 +172,7 @@ export interface MatChipEvent {
 }
 
 // @public
-export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy, OnInit {
+export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
     protected _allowFocusEscape(): void;
     _blur(): void;
@@ -211,8 +211,6 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     _onChange: (value: any) => void;
     onContainerClick(event: MouseEvent): void;
     _onTouched: () => void;
