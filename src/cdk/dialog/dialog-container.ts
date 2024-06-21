@@ -68,7 +68,7 @@ export function throwDialogContentAlreadyAttachedError() {
     '[attr.aria-modal]': '_config.ariaModal',
     '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledByQueue[0]',
     '[attr.aria-label]': '_config.ariaLabel',
-    '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
+    '[attr.aria-describedby]': '_config.ariaLabel ? null : _ariaDescribedByQueue[0]',
   },
 })
 export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
@@ -94,6 +94,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    */
   _closeInteractionType: FocusOrigin | null = null;
 
+  _ariaLabel: string;
+
   /**
    * Queue of the IDs of the dialog's label element, based on their definition order. The first
    * ID will be used as the `aria-labelledby` value. We use a queue here to handle the case
@@ -101,6 +103,14 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * the rest are present.
    */
   _ariaLabelledByQueue: string[] = [];
+
+  /**
+   * Queue of the IDs of the dialog's label element, based on their definition order. The first
+   * ID will be used as the `aria-describedby` value. We use a queue here to handle the case
+   * where there are two or more titles in the DOM at a time and the first one is destroyed while
+   * the rest are present.
+   */
+  _ariaDescribedByQueue: string[] = [];
 
   protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -122,8 +132,16 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
     this._document = _document;
 
+    console.log('inside constructor this._config');
+    console.log(this._config);
+    if (this._config.ariaLabel) {
+      this._ariaLabel = this._config.ariaLabel;
+    }
     if (this._config.ariaLabelledBy) {
       this._ariaLabelledByQueue.push(this._config.ariaLabelledBy);
+    }
+    if (this._config.ariaDescribedBy) {
+      this._ariaDescribedByQueue.push(this._config.ariaDescribedBy);
     }
   }
 
@@ -137,6 +155,20 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
     if (index > -1) {
       this._ariaLabelledByQueue.splice(index, 1);
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  _addAriaDescribedBy(id: string) {
+    this._ariaDescribedByQueue.push(id);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  _removeAriaDescribedBy(id: string) {
+    const index = this._ariaDescribedByQueue.indexOf(id);
+
+    if (index > -1) {
+      this._ariaDescribedByQueue.splice(index, 1);
       this._changeDetectorRef.markForCheck();
     }
   }
