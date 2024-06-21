@@ -231,6 +231,8 @@
     "@angular/ng-dev/typescript": "5.5.1-rc",
     "browser-sync-client": "2.26.13",
     "dgeni-packages/typescript": "5.5.1-rc",
-    "**/https-proxy-agent": "5.0.0"
+    "**/https-proxy-agent": "5.0.0",
+    "string-width": "4.2.3",
+    "wrap-ansi": "7.0.0"
   }
 }

@@ -38,5 +38,9 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "typescript": "5.5.1-rc"
+  },
+  "resolutions": {
+    "string-width": "4.2.3",
+    "wrap-ansi": "7.0.0"
   }
 }

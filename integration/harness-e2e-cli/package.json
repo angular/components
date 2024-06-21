@@ -46,5 +46,9 @@
     "ts-node": "~10.9.1",
     "typescript": "~5.4.2",
     "wait-on": "^6.0.0"
+  },
+  "resolutions": {
+    "string-width": "4.2.3",
+    "wrap-ansi": "7.0.0"
   }
 }
