@@ -47,6 +47,7 @@ export class MatButton extends MatButtonBase {
 
 // @public
 export interface MatButtonConfig {
+    color?: ThemePalette;
     disabledInteractive?: boolean;
 }
 
