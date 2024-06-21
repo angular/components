@@ -123,9 +123,6 @@ export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
 
 /** Object that can be used to configure the default options for the select module. */
 export interface MatSelectConfig {
-  /** Whether option centering should be disabled. */
-  disableOptionCentering?: boolean;
-
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   typeaheadDebounceInterval?: number;
 
@@ -456,10 +453,6 @@ export class MatSelect
     this._multiple = value;
   }
   private _multiple: boolean = false;
-
-  /** Whether to center the active option over the trigger. */
-  @Input({transform: booleanAttribute})
-  disableOptionCentering = this._defaultOptions?.disableOptionCentering ?? false;
 
   /**
    * Function to compare the option values with the selected values. The first argument

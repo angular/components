@@ -225,16 +225,13 @@ describe('MDC-based MatPaginator', () => {
     fixture.detectChanges();
     const select: MatSelect = fixture.debugElement.query(By.directive(MatSelect)).componentInstance;
 
-    expect(select.disableOptionCentering).toBe(false);
     expect(select.panelClass).toBeFalsy();
 
     fixture.componentInstance.selectConfig = {
-      disableOptionCentering: true,
       panelClass: 'custom-class',
     };
     fixture.detectChanges();
 
-    expect(select.disableOptionCentering).toBe(true);
     expect(select.panelClass).toBe('custom-class');
   });
 
