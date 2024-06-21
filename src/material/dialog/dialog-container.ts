@@ -10,6 +10,7 @@ import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk
 import {OverlayRef} from '@angular/cdk/overlay';
 import {DOCUMENT} from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
@@ -25,7 +26,9 @@ import {
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {PlatformModule} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
+import {Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf} from 'rxjs';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -71,7 +74,10 @@ export const CLOSE_ANIMATION_DURATION = 75;
     '[class.mat-mdc-dialog-container-with-actions]': '_actionSectionCount > 0',
   },
 })
-export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+export class MatDialogContainer
+  extends CdkDialogContainer<MatDialogConfig>
+  implements AfterViewInit, OnDestroy
+{
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
@@ -93,6 +99,11 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Platform Observer */
+  // private _userAgentSubscription = Subscription.EMPTY;
+  private _getWindow(): Window {
+    return this._document?.defaultView || window;
+  }
 
   constructor(
     elementRef: ElementRef,
@@ -115,6 +126,30 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       overlayRef,
       focusMonitor,
     );
+  }
+
+  /** Get Dialog name from aria attributes */
+  private _getDialogName = async (): Promise<void> => {
+    const configData = this._config;
+    /**_ariaLabelledByQueue and _ariaDescribedByQueue are created if ariaLabelledBy
+        or ariaDescribedBy values are applied to the dialog config
+    */
+    const ariaLabelledByRefId = await this._ariaLabelledByQueue[0];
+    const ariaDescribedByRefId = await this._ariaDescribedByQueue[0];
+    /** Get Element to get name/title from if ariaLabelledBy or ariaDescribedBy */
+    const dialogNameElement =
+      document.getElementById(ariaLabelledByRefId) || document.getElementById(ariaDescribedByRefId);
+    const dialogNameInnerText =
+      /** If no ariaLabelledBy, ariaDescribedBy, or ariaLabel, create default aria label */
+      !dialogNameElement || !this._config.ariaLabel
+        ? 'Dialog Modal'
+        : /** Otherwise prioritize use of ariaLabel */
+          this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
+    return;
+  };
+  ngAfterViewInit() {
+    const window = this._getWindow();
+    this._getDialogName();
   }
 
   protected override _contentAttached(): void {
