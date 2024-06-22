@@ -120,6 +120,31 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     );
   }
 
+  /** Get Dialog name from aria attributes */
+  private _getDialogName = async (): Promise<string> => {
+    const configData = this._config;
+    /**_ariaLabelledByQueue and _ariaDescribedByQueue are created if ariaLabelledBy
+        or ariaDescribedBy values are applied to the dialog config */
+    const ariaLabelledByRefId = await this._ariaLabelledByQueue[0];
+    const ariaDescribedByRefId = await this._ariaDescribedByQueue[0];
+    /** Get Element to get name/title from if ariaLabelledBy or ariaDescribedBy */
+    const dialogNameElement =
+      document.getElementById(ariaLabelledByRefId) || document.getElementById(ariaDescribedByRefId);
+    const dialogNameInnerText =
+      /** If no ariaLabelledBy, ariaDescribedBy, or ariaLabel, create default aria label */
+      !dialogNameElement && !this._config.ariaLabel
+        ? 'Dialog Modal'
+        : /** Otherwise prioritize use of ariaLabel */
+          this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
+    this._config.ariaLabel = dialogNameInnerText || 'Dialog Modal';
+    console.log(`getDialogName this.config.ariaLabel: `);
+    console.log(this._config.ariaLabel);
+    return this._config.ariaLabel;
+  };
+  ngAfterViewInit() {
+    this._getDialogName();
+  }
+
   protected override _contentAttached(): void {
     // Delegate to the original dialog-container initialization (i.e. saving the
     // previous element, setting up the focus trap and moving focus to the container).
