@@ -1,16 +1,11 @@
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {MatSidenav, MatSidenavModule, MatSidenavContainer} from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
 describe('MatSidenav', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -34,6 +29,7 @@ describe('MatSidenav', () => {
     expect(sidenavEl.classList).toContain('mat-sidenav-fixed');
 
     fixture.componentInstance.fixed = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(sidenavEl.classList).not.toContain('mat-sidenav-fixed');
@@ -48,6 +44,7 @@ describe('MatSidenav', () => {
     expect(sidenavEl.style.bottom).toBe('30px');
 
     fixture.componentInstance.fixed = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(sidenavEl.style.top).toBeFalsy();
