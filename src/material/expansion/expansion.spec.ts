@@ -1,31 +1,30 @@
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
-  waitForAsync,
+  createKeyboardEvent,
+  dispatchEvent,
+  dispatchKeyboardEvent,
+} from '@angular/cdk/testing/private';
+import {Component, ViewChild} from '@angular/core';
+import {
+  ComponentFixture,
   TestBed,
   fakeAsync,
-  tick,
-  ComponentFixture,
   flush,
+  tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
   MatExpansionModule,
   MatExpansionPanel,
   MatExpansionPanelHeader,
-  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {
-  dispatchKeyboardEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-} from '@angular/cdk/testing/private';
 
 describe('MatExpansionPanel', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [
         MatExpansionModule,
         NoopAnimationsModule,
@@ -50,6 +49,7 @@ describe('MatExpansionPanel', () => {
     expect(headerEl.classList).not.toContain('mat-expanded');
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
 
@@ -77,6 +77,7 @@ describe('MatExpansionPanel', () => {
       .toBe('');
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(content.textContent.trim())
@@ -99,6 +100,7 @@ describe('MatExpansionPanel', () => {
   it('should not render lazy content from a child panel inside the parent', fakeAsync(() => {
     const fixture = TestBed.createComponent(NestedLazyPanelWithContent);
     fixture.componentInstance.parentExpanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const parentContent: HTMLElement = fixture.nativeElement.querySelector(
@@ -118,6 +120,7 @@ describe('MatExpansionPanel', () => {
     );
 
     fixture.componentInstance.childExpanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(childContent.textContent!.trim()).toBe(
@@ -129,10 +132,12 @@ describe('MatExpansionPanel', () => {
   it('emit correct events for change in panel expanded state', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(fixture.componentInstance.openCallback).toHaveBeenCalled();
 
     fixture.componentInstance.expanded = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(fixture.componentInstance.closeCallback).toHaveBeenCalled();
   });
@@ -224,6 +229,7 @@ describe('MatExpansionPanel', () => {
   it('should not be able to focus content while closed', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -236,6 +242,7 @@ describe('MatExpansionPanel', () => {
 
     button.blur();
     fixture.componentInstance.expanded = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -253,6 +260,7 @@ describe('MatExpansionPanel', () => {
   it('should restore focus to header if focused element is inside panel on close', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -265,6 +273,7 @@ describe('MatExpansionPanel', () => {
       .toBe(button);
 
     fixture.componentInstance.expanded = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -274,6 +283,7 @@ describe('MatExpansionPanel', () => {
   it('should not change focus origin if origin not specified', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -303,6 +313,7 @@ describe('MatExpansionPanel', () => {
     expect(styles.marginRight).toBe('37px');
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -328,6 +339,7 @@ describe('MatExpansionPanel', () => {
     expect(content.classList).not.toContain('mat-content-hide-toggle');
 
     fixture.componentInstance.hideToggle = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(header.querySelector('.mat-expansion-indicator'))
@@ -347,6 +359,7 @@ describe('MatExpansionPanel', () => {
     expect(arrow.style.transform).withContext('Expected no rotation.').toBe('rotate(0deg)');
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick(250);
 
@@ -361,6 +374,7 @@ describe('MatExpansionPanel', () => {
     let destroyedOk = false;
     fixture.componentInstance.panel.destroyed.subscribe(() => (destroyedOk = true));
     fixture.componentInstance.expansionShown = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(destroyedOk).toBe(true);
   });
@@ -390,12 +404,14 @@ describe('MatExpansionPanel', () => {
     fixture.componentInstance.panel.afterCollapse.subscribe(() => afterCollapse++);
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
     expect(afterExpand).toBe(1);
     expect(afterCollapse).toBe(0);
 
     fixture.componentInstance.expanded = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
     expect(afterExpand).toBe(1);
@@ -407,7 +423,6 @@ describe('MatExpansionPanel', () => {
       .configureTestingModule({
         imports: [MatExpansionModule, NoopAnimationsModule],
         providers: [
-          provideZoneChangeDetection(),
           {
             provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
             useValue: {
@@ -432,6 +447,7 @@ describe('MatExpansionPanel', () => {
     expect(header.nativeElement.style.height).toBe('16px');
 
     fixture.componentInstance.expanded = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(header.nativeElement.style.height).toBe('10px');
   });
@@ -460,6 +476,7 @@ describe('MatExpansionPanel', () => {
       expect(header.getAttribute('aria-disabled')).toBe('false');
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(header.getAttribute('aria-disabled')).toBe('true');
@@ -469,6 +486,7 @@ describe('MatExpansionPanel', () => {
       expect(panel.querySelector('.mat-expansion-indicator')).toBeTruthy();
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(panel.querySelector('.mat-expansion-indicator')).toBeFalsy();
@@ -479,6 +497,7 @@ describe('MatExpansionPanel', () => {
       expect(header.classList).not.toContain('mat-expanded');
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       header.click();
@@ -493,9 +512,11 @@ describe('MatExpansionPanel', () => {
       expect(header.classList).not.toContain('mat-expanded');
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.expanded = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.panel.expanded).toBe(true);
@@ -512,6 +533,7 @@ describe('MatExpansionPanel', () => {
         expect(header.classList).not.toContain('mat-expanded');
 
         fixture.componentInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         panelInstance.open();
@@ -538,6 +560,7 @@ describe('MatExpansionPanel', () => {
         expect(header.classList).not.toContain('mat-expanded');
 
         fixture.componentInstance.disabled = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         panelInstance.toggle();
@@ -558,6 +581,7 @@ describe('MatExpansionPanel', () => {
       expect(header.getAttribute('tabindex')).toBe('0');
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(header.getAttribute('tabindex')).toBe('-1');
