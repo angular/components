@@ -25,7 +25,6 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 
 /**
@@ -359,27 +358,11 @@ export class FocusTrap {
 
   /** Executes a function when the zone is stable. */
   private _executeOnStable(fn: () => any): void {
-    // TODO(mmalerba): Make this behave consistently across zonefull / zoneless.
-    if (!this._ngZone.isStable) {
-      // Subscribing `onStable` has slightly different behavior than `afterNextRender`.
-      // `afterNextRender` does not wait for state changes queued up in a Promise
-      // to avoid change after checked errors. In most cases we would consider this an
-      // acceptable behavior change, the dialog at least made its best effort to focus the
-      // first element. However, this is particularly problematic when combined with the
-      // current behavior of the mat-radio-group, which adjusts the tabindex of its child
-      // radios based on the selected value of the group. When the selected value is bound
-      // via `[(ngModel)]` it hits this "state change in a promise" edge-case and can wind up
-      // putting the focus on a radio button that is not supposed to be eligible to receive
-      // focus. For now, we side-step this whole sequence of events by continuing to use
-      // `onStable` in zonefull apps, but it should be noted that zoneless apps can still
-      // suffer from this issue.
-      this._ngZone.onStable.pipe(take(1)).subscribe(fn);
+    // TODO: remove this conditional when injector is required in the constructor.
+    if (this._injector) {
+      afterNextRender(fn, {injector: this._injector});
     } else {
-      if (this._injector) {
-        afterNextRender(fn, {injector: this._injector});
-      } else {
-        fn();
-      }
+      setTimeout(fn);
     }
   }
 }
