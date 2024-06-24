@@ -40,7 +40,6 @@ import {
   ComponentFixture,
   fakeAsync,
   flush,
-  inject,
   TestBed,
   tick,
 } from '@angular/core/testing';
@@ -64,7 +63,6 @@ import {
 } from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Subject, Subscription, EMPTY, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {MatSelectModule} from './index';
@@ -510,18 +508,6 @@ describe('MDC-based MatSelect', () => {
             .toBe(options[1].value);
           flush();
         }));
-
-        it('should announce changes via the keyboard on a closed select', fakeAsync(
-          inject([LiveAnnouncer], (liveAnnouncer: LiveAnnouncer) => {
-            spyOn(liveAnnouncer, 'announce');
-
-            dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
-
-            expect(liveAnnouncer.announce).toHaveBeenCalledWith('Steak', jasmine.any(Number));
-
-            flush();
-          }),
-        ));
 
         it('should not throw when reaching a reset option using the arrow keys on a closed select', fakeAsync(() => {
           fixture.componentInstance.foods = [

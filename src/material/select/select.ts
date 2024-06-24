@@ -948,14 +948,6 @@ export class MatSelect
     } else if (!this.multiple) {
       const previouslySelectedOption = this.selected;
       manager.onKeydown(event);
-      const selectedOption = this.selected;
-
-      // Since the value has changed, we need to announce it ourselves.
-      if (selectedOption && previouslySelectedOption !== selectedOption) {
-        // We set a duration on the live announcement, because we want the live element to be
-        // cleared after a while so that users can't navigate to it using the arrow keys.
-        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue, 10000);
-      }
     }
   }
 

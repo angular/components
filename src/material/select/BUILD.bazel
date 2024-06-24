@@ -63,7 +63,6 @@ ng_test_library(
     ),
     deps = [
         ":select",
-        "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
