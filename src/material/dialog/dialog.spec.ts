@@ -23,7 +23,6 @@ import {
   Injectable,
   Injector,
   NgModule,
-  NgZone,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -1260,9 +1259,7 @@ describe('MDC-based MatDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef}),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
       flush();
       viewContainerFixture.detectChanges();
@@ -1519,12 +1516,10 @@ describe('MDC-based MatDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {
-          viewContainerRef: testViewContainerRef,
-          restoreFocus: false,
-        }),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        restoreFocus: false,
+      });
 
       flush();
       viewContainerFixture.detectChanges();
@@ -1557,9 +1552,7 @@ describe('MDC-based MatDialog', () => {
       body.appendChild(otherButton);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef}),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
       flush();
       viewContainerFixture.detectChanges();
