@@ -1,29 +1,86 @@
-@use '@material/ripple' as mdc-ripple;
-@use '@material/tab' as mdc-tab;
-@use '@material/tab-indicator' as mdc-tab-indicator;
-@use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
-@use '@material/tab/tab-theme' as mdc-tab-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
-@use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
+@use '../core/tokens/m2/mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
 @use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
 @use '../core/tokens/token-utils';
-@use 'sass:map';
 
 
 $mat-tab-animation-duration: 500ms !default;
 
 // Combines the various structural styles we need for the tab group and tab nav bar.
 @mixin structural-styles {
-  @include mdc-custom-properties.configure(
-    $emit-fallback-values: false,
-    $emit-fallback-vars: false
-  ) {
-    @include mdc-tab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-    @include mdc-tab-indicator.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+  .mdc-tab {
+    min-width: 90px;
+    padding: 0 24px;
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: center;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .mdc-tab__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+    pointer-events: none;
+  }
+
+  .mdc-tab__text-label {
+    transition: 150ms color linear;
+    display: inline-block;
+    line-height: 1;
+    z-index: 2;
+  }
+
+  .mdc-tab--active .mdc-tab__text-label {
+    transition-delay: 100ms;
+  }
+
+  ._mat-animation-noopable .mdc-tab__text-label {
+    transition: none;
+  }
+
+  .mdc-tab-indicator {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .mdc-tab-indicator__content {
+    transition: var(--mat-tab-animation-duration, 250ms) transform cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left;
+    opacity: 0;
+  }
+
+  .mdc-tab-indicator__content--underline {
+    align-self: flex-end;
+    box-sizing: border-box;
+    width: 100%;
+    border-top-style: solid;
+  }
+
+  .mdc-tab-indicator--active .mdc-tab-indicator__content {
+    opacity: 1;
+  }
+
+  ._mat-animation-noopable, .mdc-tab-indicator--no-transition {
+    .mdc-tab-indicator__content {
+      transition: none;
+    }
   }
 
   .mat-mdc-tab-ripple {
@@ -37,14 +94,6 @@ $mat-tab-animation-duration: 500ms !default;
 }
 
 @mixin tab {
-  @include mdc-custom-properties.configure(
-    $emit-fallback-values: false,
-    $emit-fallback-vars: false
-  ) {
-    @include mdc-tab-indicator-theme.theme-styles(tokens-mdc-tab-indicator.get-token-slots());
-    @include mdc-tab-theme.secondary-navigation-tab-theme-styles(tokens-mdc-tab.get-token-slots());
-  }
-
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -53,11 +102,29 @@ $mat-tab-animation-duration: 500ms !default;
   // Tabs might be `button` elements so we have to reset the user agent styling.
   background: none;
 
+  @include token-utils.use-tokens(
+    tokens-mdc-secondary-navigation-tab.$prefix,
+    tokens-mdc-secondary-navigation-tab.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(height, container-height);
+  }
+
   &.mdc-tab {
     // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
     // is an opt-in behavior. Also technically we don't need to combine the two classes, but
     // we need the extra specificity to avoid issues with CSS insertion order.
     flex-grow: 0;
+  }
+
+  .mdc-tab-indicator__content--underline {
+    @include token-utils.use-tokens(
+      tokens-mdc-tab-indicator.$prefix,
+      tokens-mdc-tab-indicator.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(border-color, active-indicator-color);
+      @include token-utils.create-token-slot(border-top-width, active-indicator-height);
+      @include token-utils.create-token-slot(border-radius, active-indicator-shape);
+    }
   }
 
   @include token-utils.use-tokens(
@@ -185,18 +252,18 @@ $mat-tab-animation-duration: 500ms !default;
 
   // We need to handle the hover and focus indication ourselves, because we don't use MDC's ripple.
   &:hover .mdc-tab__ripple::before {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
+    opacity: 0.04;
   }
 
   &.cdk-program-focused,
   &.cdk-keyboard-focused {
     .mdc-tab__ripple::before {
-      opacity: map.get(mdc-ripple.$dark-ink-opacities, focus);
+      opacity: 0.12;
     }
   }
 
   .mat-ripple-element {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
+    opacity: 0.12;
 
     @include token-utils.use-tokens(
       tokens-mat-tab-header.$prefix,
@@ -243,7 +310,7 @@ $mat-tab-animation-duration: 500ms !default;
     }
 
     .mat-ripple-element {
-      opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
+      opacity: 0.12;
 
       @include token-utils.use-tokens(
         tokens-mat-tab-header.$prefix,
@@ -306,15 +373,6 @@ $mat-tab-animation-duration: 500ms !default;
     transition: transform 500ms cubic-bezier(0.35, 0, 0.25, 1);
 
     ._mat-animation-noopable & {
-      transition: none;
-    }
-  }
-
-  // The `span` is in the selector in order to increase the specificity, ensuring
-  // that it's always higher than the selector that declares the transition.
-  ._mat-animation-noopable {
-    span.mdc-tab-indicator__content,
-    span.mdc-tab__text-label {
       transition: none;
     }
   }

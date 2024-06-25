@@ -65,7 +65,7 @@
 @use './mdc/slider' as tokens-mdc-slider;
 @use './mdc/snack-bar' as tokens-mdc-snack-bar;
 @use './mdc/switch' as tokens-mdc-switch;
-@use './mdc/tab' as tokens-mdc-tab;
+@use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
 
 $_module-names: (
@@ -137,7 +137,7 @@ $_module-names: (
   tokens-mdc-slider,
   tokens-mdc-snack-bar,
   tokens-mdc-switch,
-  tokens-mdc-tab,
+  tokens-mdc-secondary-navigation-tab,
   tokens-mdc-tab-indicator
 );
 
