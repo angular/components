@@ -1,7 +1,5 @@
-@use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
-@use '@material/tab/tab-theme' as mdc-tab-theme;
 @use '../core/style/sass-utils';
-@use '../core/tokens/m2/mdc/tab' as tokens-mdc-tab;
+@use '../core/tokens/m2/mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
 @use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
@@ -20,14 +18,16 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-tab-indicator-theme.theme(tokens-mdc-tab-indicator.get-unthemable-tokens());
-      @include mdc-tab-theme.secondary-navigation-tab-theme(tokens-mdc-tab.get-unthemable-tokens());
       @include token-utils.create-token-values(
-          tokens-mat-tab-header.$prefix, tokens-mat-tab-header.get-unthemable-tokens());
+        tokens-mdc-secondary-navigation-tab.$prefix,
+        tokens-mdc-secondary-navigation-tab.get-unthemable-tokens());
       @include token-utils.create-token-values(
-          tokens-mat-tab-header-with-background.$prefix,
-          tokens-mat-tab-header-with-background.get-unthemable-tokens()
-      );
+        tokens-mdc-tab-indicator.$prefix, tokens-mdc-tab-indicator.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-tab-header.$prefix, tokens-mat-tab-header.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-tab-header-with-background.$prefix,
+        tokens-mat-tab-header-with-background.get-unthemable-tokens());
     }
   }
 }
@@ -74,9 +74,12 @@
 }
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include mdc-tab-theme.secondary-navigation-tab-theme(
-    tokens-mdc-tab.get-color-tokens($theme, $palette-name));
-  @include mdc-tab-indicator-theme.theme(
+  @include token-utils.create-token-values(
+    tokens-mdc-secondary-navigation-tab.$prefix,
+    tokens-mdc-secondary-navigation-tab.get-color-tokens($theme, $palette-name)
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-tab-indicator.$prefix,
     tokens-mdc-tab-indicator.get-color-tokens($theme, $palette-name));
   @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
    tokens-mat-tab-header.get-color-tokens($theme, $palette-name));
@@ -90,10 +93,11 @@
   }
   @else {
     .mat-mdc-tab-header {
-      @include mdc-tab-theme.secondary-navigation-tab-theme(
-          tokens-mdc-tab.get-typography-tokens($theme));
-      @include mdc-tab-indicator-theme.theme(
-          tokens-mdc-tab-indicator.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-secondary-navigation-tab.$prefix,
+        tokens-mdc-secondary-navigation-tab.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-tab-indicator.$prefix, tokens-mdc-tab-indicator.get-typography-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-typography-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
@@ -110,10 +114,11 @@
   }
   @else {
     .mat-mdc-tab-header {
-      @include mdc-tab-theme.secondary-navigation-tab-theme(
-          tokens-mdc-tab.get-density-tokens($theme));
-      @include mdc-tab-indicator-theme.theme(
-          tokens-mdc-tab-indicator.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-secondary-navigation-tab.$prefix,
+        tokens-mdc-secondary-navigation-tab.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-tab-indicator.$prefix, tokens-mdc-tab-indicator.get-density-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-density-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-tab-header-with-background.$prefix,
@@ -125,14 +130,14 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  $tab-tokens: tokens-mdc-tab.get-token-slots();
+  $tab-tokens: tokens-mdc-secondary-navigation-tab.get-token-slots();
   $tab-indicator-tokens: tokens-mdc-tab-indicator.get-token-slots();
   $tab-header-tokens: tokens-mat-tab-header.get-token-slots();
   $tab-header-with-background-tokens: tokens-mat-tab-header-with-background.get-token-slots();
 
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mdc-tab.$prefix, tokens: $tab-tokens),
+    (prefix: tokens-mdc-secondary-navigation-tab.$prefix, tokens: $tab-tokens),
     (prefix: tokens-mdc-tab-indicator.$prefix, tokens: $tab-indicator-tokens),
     (prefix: tokens-mat-tab-header.$prefix, tokens: $tab-header-tokens),
     (
@@ -176,8 +181,11 @@
       $tokens, tokens-mat-tab-header.$prefix, $options...);
   // Don't pass $options here, because the mdc-tab doesn't have color variants,
   // only the mdc-tab-indicator and mat-tab-header do.
-  $mdc-tab-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-tab.$prefix);
-  @include mdc-tab-theme.secondary-navigation-tab-theme($mdc-tab-tokens);
-  @include mdc-tab-indicator-theme.theme($mdc-tab-indicator-tokens);
+  $mdc-secondary-navigation-tab-tokens:
+    token-utils.get-tokens-for($tokens, tokens-mdc-secondary-navigation-tab.$prefix);
+  @include token-utils.create-token-values(tokens-mdc-secondary-navigation-tab.$prefix,
+    $mdc-secondary-navigation-tab-tokens);
+  @include token-utils.create-token-values(tokens-mdc-tab-indicator.$prefix,
+    $mdc-tab-indicator-tokens);
   @include token-utils.create-token-values(tokens-mat-tab-header.$prefix, $mat-tab-header-tokens);
 }
