@@ -1,10 +1,12 @@
-import {MediaMatcher} from '@angular/cdk/layout';
+import {BreakpointObserver, Breakpoints, MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {Subscription} from 'rxjs';
+import {NgFor} from '@angular/common';
 
 /** @title Responsive sidenav */
 @Component({
@@ -12,13 +14,17 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: 'sidenav-responsive-example.html',
   styleUrl: 'sidenav-responsive-example.css',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    NgFor,
+  ],
 })
 export class SidenavResponsiveExample implements OnDestroy {
-  mobileQuery: MediaQueryList;
-
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
-
   fillerContent = Array.from(
     {length: 50},
     () =>
@@ -29,16 +35,23 @@ export class SidenavResponsiveExample implements OnDestroy {
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   );
 
-  private _mobileQueryListener: () => void;
+  mobileQuery: boolean;
+  private breakpointSubscription: Subscription;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
+    this.breakpointSubscription = this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .subscribe(result => {
+        this.mobileQuery = result.matches;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.breakpointSubscription.unsubscribe();
   }
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
