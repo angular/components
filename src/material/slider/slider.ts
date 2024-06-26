@@ -136,7 +136,13 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   }
   private _min: number = 0;
 
-  /** Palette color of the slider. */
+  /**
+   * Theme color of the slider. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   color: ThemePalette;
 
