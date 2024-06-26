@@ -1,3 +1,24 @@
+<a name="18.1.0-next.4"></a>
+# 18.1.0-next.4 "plastic-pliers" (2024-06-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5f7680f76f](https://github.com/angular/components/commit/5f7680f76f0c6c5d81f4159fb1d103e8801f2b94) | fix | **a11y:** Make focus-trap behavior consistent across zoneful/zoneless ([#29225](https://github.com/angular/components/pull/29225)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5da528e44d](https://github.com/angular/components/commit/5da528e44d6fadca6e13f34b86f180a4b5239049) | feat | **button:** allow button color to be configured through DI ([#29297](https://github.com/angular/components/pull/29297)) |
+| [d9181b53a4](https://github.com/angular/components/commit/d9181b53a4b8bf68f5cf18c7618abffe1adadef2) | fix | **button-toggle:** skip disabled buttons during keyboard navigation ([#29308](https://github.com/angular/components/pull/29308)) |
+| [f67ffa5c0f](https://github.com/angular/components/commit/f67ffa5c0f3c45ca4ce1661b8be6356dd615feed) | fix | **button:** stack icons on top of touch target ([#29291](https://github.com/angular/components/pull/29291)) |
+| [e74065ad94](https://github.com/angular/components/commit/e74065ad9439e37eb2fd36d30ba62564c4bdcbce) | fix | **datepicker:** avoid losing focus when re-rendering the current view ([#29287](https://github.com/angular/components/pull/29287)) |
+| [36c627beaf](https://github.com/angular/components/commit/36c627beaff2dc486997d1954b36989400591dc5) | fix | **sidenav:** not closing on escape key press ([#29292](https://github.com/angular/components/pull/29292)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aa17c2d128](https://github.com/angular/components/commit/aa17c2d128c6a2e6a9a5b4b0f943b7b792ac5bea) | fix | remove workarounds for formControl directive ([#29296](https://github.com/angular/components/pull/29296)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.5"></a>
 # 18.0.5 "plastic-puppy" (2024-06-26)
 ### cdk
