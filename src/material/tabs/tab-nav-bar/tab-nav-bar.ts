@@ -112,7 +112,13 @@ export class MatTabNav
   /** Query list of all tab links of the tab navigation. */
   @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
 
-  /** Background color of the tab nav. */
+  /**
+   * Theme color of the background of the tab nav. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   get backgroundColor(): ThemePalette {
     return this._backgroundColor;
