@@ -5,10 +5,17 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {FocusableOption, FocusMonitor, IdGenerator} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {Platform} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -18,6 +25,7 @@ import {
   ElementRef,
   forwardRef,
   Inject,
+  inject,
   Input,
   NgZone,
   numberAttribute,
@@ -26,7 +34,6 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -36,20 +43,11 @@ import {
   RippleTarget,
   ThemePalette,
 } from '@angular/material/core';
-import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {Platform} from '@angular/cdk/platform';
-import {MatInkBar, InkBarItem} from '../ink-bar';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
+import {InkBarItem, MatInkBar} from '../ink-bar';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
-import {CdkObserveContent} from '@angular/cdk/observers';
-
-// Increasing integer for generating unique ids for tab nav components.
-let nextUniqueId = 0;
+import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -271,6 +269,9 @@ export class MatTabLink
   extends InkBarItem
   implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private readonly _destroyed = new Subject<void>();
 
   /** Whether the tab link is active or not. */
@@ -324,7 +325,7 @@ export class MatTabLink
   }
 
   /** Unique id for the tab. */
-  @Input() id = `mat-tab-link-${nextUniqueId++}`;
+  @Input() id = this._idGenerator.getId('mat-tab-link-');
 
   constructor(
     private _tabNavBar: MatTabNav,
@@ -437,8 +438,11 @@ export class MatTabLink
   standalone: true,
 })
 export class MatTabNavPanel {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Unique id for the tab panel. */
-  @Input() id = `mat-tab-nav-panel-${nextUniqueId++}`;
+  @Input() id = this._idGenerator.getId('mat-tab-nav-panel-');
 
   /** Id of the active tab in the nav bar. */
   _activeTabId?: string;

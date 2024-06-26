@@ -33,3 +33,4 @@ export {
   HighContrastModeDetector,
   HighContrastMode,
 } from './high-contrast-mode/high-contrast-mode-detector';
+export * from './id-generator/id-generator';

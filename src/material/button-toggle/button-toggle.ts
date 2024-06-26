@@ -6,12 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {FocusMonitor, IdGenerator} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, SPACE, ENTER} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  AfterViewInit,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -20,6 +23,9 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
+  inject,
+  InjectionToken,
   Input,
   OnDestroy,
   OnInit,
@@ -28,14 +34,9 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  InjectionToken,
-  Inject,
-  AfterViewInit,
-  booleanAttribute,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, MatPseudoCheckbox} from '@angular/material/core';
+import {MatPseudoCheckbox, MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -134,6 +135,9 @@ export class MatButtonToggleChange {
   standalone: true,
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _multiple = false;
   private _disabled = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
@@ -175,7 +179,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._name = value;
     this._markButtonsForCheck();
   }
-  private _name = `mat-button-toggle-group-${uniqueIdCounter++}`;
+  private _name = this._idGenerator.getId('mat-button-toggle-group-');
 
   /** Whether the toggle group is vertical. */
   @Input({transform: booleanAttribute}) vertical: boolean;

@@ -6,6 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
+import {AriaLivePoliteness, IdGenerator} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
+import {
+  BasePortalOutlet,
+  CdkPortalOutlet,
+  ComponentPortal,
+  DomPortal,
+  TemplatePortal,
+} from '@angular/cdk/portal';
+import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,22 +30,9 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {matSnackBarAnimations} from './snack-bar-animations';
-import {
-  BasePortalOutlet,
-  CdkPortalOutlet,
-  ComponentPortal,
-  DomPortal,
-  TemplatePortal,
-} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
-import {AriaLivePoliteness} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
-import {AnimationEvent} from '@angular/animations';
+import {matSnackBarAnimations} from './snack-bar-animations';
 import {MatSnackBarConfig} from './snack-bar-config';
-
-let uniqueId = 0;
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -60,6 +58,9 @@ let uniqueId = 0;
   },
 })
 export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _document = inject(DOCUMENT);
   private _trackedModals = new Set<Element>();
 
@@ -104,7 +105,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   _role?: 'status' | 'alert';
 
   /** Unique ID of the aria-live element. */
-  readonly _liveElementId = `mat-snack-bar-container-live-${uniqueId++}`;
+  readonly _liveElementId = this._idGenerator.getId('mat-snack-bar-container-live-');
 
   constructor(
     private _ngZone: NgZone,

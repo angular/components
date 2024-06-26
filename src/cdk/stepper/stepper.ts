@@ -9,8 +9,12 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
+  AfterContentInit,
   AfterViewInit,
+  APP_ID,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -21,8 +25,10 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
+  inject,
   InjectionToken,
   Input,
+  numberAttribute,
   OnChanges,
   OnDestroy,
   Optional,
@@ -31,11 +37,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  AfterContentInit,
-  booleanAttribute,
-  numberAttribute,
 } from '@angular/core';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 
@@ -236,6 +238,9 @@ export class CdkStep implements OnChanges {
   standalone: true,
 })
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _appId = inject(APP_ID);
+
   /** Emits when the component is destroyed. */
   protected readonly _destroyed = new Subject<void>();
 
@@ -420,7 +425,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
 
   /** Returns unique id for each step content element. */
   _getStepContentId(i: number): string {
-    return `cdk-step-content-${this._groupId}-${i}`;
+    return `cdk-step-content-${this._appId}${this._groupId}-${i}`;
   }
 
   /** Marks the component to be change detected. */
