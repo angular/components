@@ -28,16 +28,6 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 `<mat-radio-group>` is compatible with `@angular/forms` and supports both `FormsModule`
 and `ReactiveFormsModule`.
 
-### Default Color Configuration
-The default color for radio buttons can be configured globally using the `MAT_RADIO_DEFAULT_OPTIONS` provider
-
-```
-providers: [{
-    provide: MAT_RADIO_DEFAULT_OPTIONS,
-    useValue: { color: 'accent' },
-}]
-```
-
 ### Accessibility
 
 `MatRadioButton` uses an internal `<input type="radio">` to provide an accessible experience.
@@ -56,7 +46,7 @@ should not use the `attr.` prefix when binding these properties, as demonstrated
 ```
 
 Prefer placing all radio buttons inside of a `<mat-radio-group>` rather than creating standalone
-radio buttons because groups are easier to use exclusively with a keyboard. 
+radio buttons because groups are easier to use exclusively with a keyboard.
 
 You should provide an accessible label for all `<mat-radio-group>` elements via `aria-label` or
-`aria-labelledby`. 
+`aria-labelledby`.

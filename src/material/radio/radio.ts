@@ -74,6 +74,13 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
 export const MAT_RADIO_GROUP = new InjectionToken<MatRadioGroup>('MatRadioGroup');
 
 export interface MatRadioDefaultOptions {
+  /**
+   * Theme color of the radio button. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   color: ThemePalette;
 }
 
@@ -482,11 +489,17 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     this._required = value;
   }
 
-  /** Theme color of the radio button. */
+  /**
+   * Theme color of the radio button. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   get color(): ThemePalette {
-    // As per Material design specifications the selection control radio should use the accent color
-    // palette by default. https://material.io/guidelines/components/selection-controls.html
+    // As per M2 design specifications the selection control radio should use the accent color
+    // palette by default. https://m2.material.io/components/radio-buttons#specs
     return (
       this._color ||
       (this.radioGroup && this.radioGroup.color) ||
