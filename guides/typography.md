@@ -122,7 +122,7 @@ The `.mat-h5` and `.mat-h6` styles don't directly correspond to a specific Mater
 typography level. The `.mat-h5` style uses the `body-2` level with the font-size scaled down by
 `0.83`. The `.mat-h6` style uses the `body-2` level with the font-size scaled down by `0.67`.
 
-The `button` and `input` typography levels do not map to CSS classes.
+The `button` typography level does not map to a CSS class.
 
 The following example demonstrates usage of the typography styles emitted by the
 `typography-hierarchy` mixin.
