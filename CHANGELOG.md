@@ -1,3 +1,19 @@
+<a name="18.0.5"></a>
+# 18.0.5 "plastic-puppy" (2024-06-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0be4013d90](https://github.com/angular/components/commit/0be4013d90aad3a2c4b18d2d6fccaf3a30d1830f) | fix | **a11y:** Make focus-trap behavior consistent across zoneful/zoneless ([#29225](https://github.com/angular/components/pull/29225)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fad2a074e2](https://github.com/angular/components/commit/fad2a074e2f5ee4bac9ddb68486427ae66a2433d) | fix | **button-toggle:** skip disabled buttons during keyboard navigation ([#29308](https://github.com/angular/components/pull/29308)) |
+| [e5684fe2b7](https://github.com/angular/components/commit/e5684fe2b7964fc9c614a45568b99f1d24982f3f) | fix | **button:** stack icons on top of touch target ([#29291](https://github.com/angular/components/pull/29291)) |
+| [c1a40a26d1](https://github.com/angular/components/commit/c1a40a26d164a766efd3ef863b52de18b3bb4d09) | fix | **datepicker:** avoid losing focus when re-rendering the current view ([#29287](https://github.com/angular/components/pull/29287)) |
+| [7f575daab5](https://github.com/angular/components/commit/7f575daab5de7e77ef8346c5a85eb59108b76a48) | fix | **sidenav:** not closing on escape key press ([#29292](https://github.com/angular/components/pull/29292)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.4"></a>
 # 18.0.4 "caesium-carnival" (2024-06-20)
 ### cdk
