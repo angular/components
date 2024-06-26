@@ -36,22 +36,22 @@ export class SidenavResponsiveExample implements OnDestroy {
   );
 
   mobileQuery: boolean;
-  private breakpointSubscription: Subscription;
+  private _breakpointSubscription: Subscription;
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
-    private changeDetectorRef: ChangeDetectorRef,
+    private _breakpointObserver: BreakpointObserver,
+    private _changeDetectorRef: ChangeDetectorRef,
   ) {
-    this.breakpointSubscription = this.breakpointObserver
+    this._breakpointSubscription = this._breakpointObserver
       .observe([Breakpoints.Handset])
       .subscribe(result => {
         this.mobileQuery = result.matches;
-        this.changeDetectorRef.detectChanges();
+        this._changeDetectorRef.detectChanges();
       });
   }
 
   ngOnDestroy(): void {
-    this.breakpointSubscription.unsubscribe();
+    this._breakpointSubscription.unsubscribe();
   }
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
