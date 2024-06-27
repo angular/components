@@ -58,14 +58,6 @@ Default behavior of `mat-checkbox`. Always set `indeterminate` to `false`
 when user click on the `mat-checkbox`.
 This matches the behavior of native `<input type="checkbox">`.
 
-### Theming
-
-The color of a `<mat-checkbox>` can be changed by specifying a `$color-variant` when applying the
-`mat.checkbox-theme` or `mat.checkbox-color` mixins (see the
-[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default,
-checkboxes use the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`,
-or `'error'`.
-
 ### Accessibility
 
 `MatCheckbox` uses an internal `<input type="checkbox">` to provide an accessible experience.
