@@ -178,7 +178,7 @@ export class MatDialogContainer
 
   private _setAriaLabel = (): void => {
     const os = this._getUserPlatform();
-    if (os === 'mac') {
+    if (os === 'macos') {
       this._getDialogName();
     }
     return;
