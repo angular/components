@@ -157,8 +157,14 @@
   @return token-utils.extend-theme(
     $theme,
     sass-utils.list-of(
-      tokens-mdc-filled-text-field.$prefix,
-      tokens-mdc-outlined-text-field.$prefix,
+      (
+        namespace: tokens-mdc-filled-text-field.$prefix,
+        prefix: 'filled',
+      ),
+      (
+        namespace: tokens-mdc-outlined-text-field.$prefix,
+        prefix: 'outlined',
+      ),
       tokens-mat-form-field.$prefix
     ),
     $overrides

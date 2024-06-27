@@ -75,8 +75,14 @@
   @return token-utils.extend-theme(
     $theme,
     sass-utils.list-of(
-      tokens-mat-full-pseudo-checkbox.$prefix,
-      tokens-mat-minimal-pseudo-checkbox.$prefix
+      (
+        namespace: tokens-mat-full-pseudo-checkbox.$prefix,
+        prefix: 'full-',
+      ),
+      (
+        namespace: tokens-mat-minimal-pseudo-checkbox.$prefix,
+        prefix: 'minimal-',
+      )
     ),
     $overrides
   );

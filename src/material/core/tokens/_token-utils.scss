@@ -255,6 +255,11 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 
 // Returns a theme config with the given tokens overridden.
 /// @param {Map} $theme The material theme for an application.
+/// @param {List} $extend-namespaces The namespaces to extend in the theme. Each item can be either:
+///  1. A list, representing a namespace to match token names against.
+///  2. A map, representing a namespace to match tokens agaisnt + a prefix string that the token
+///     name must start with to match this namespace. The prefix will be stripped before matching
+///     the token name.
 /// @param {Map} $overrides The token values to override in the theme.
 @function extend-theme($theme, $extend-namespaces, $overrides: ()) {
   $internals: _mat-theming-internals-do-not-access;
@@ -268,18 +273,25 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   // Determine which system and namespace each shorthand token belongs to.
   $seen-tokens: ();
   @each $namespace in $extend-namespaces {
+    $prefix: '';
+    // Unpack namespaces that come with a prefix.
+    @if meta.type-of($namespace) == 'map' {
+      $prefix: map.get($namespace, prefix);
+      $namespace: map.get($namespace, namespace);
+    }
     $namespace-found: false;
     @each $system in $systems {
       $tokens: map.get($theme, $internals, $system, $namespace);
       @if ($tokens != null) {
         $namespace-found: true;
         @each $name, $value in $tokens {
-          @if map.has-key($seen-tokens, $name) {
-            @error #{'Error extending theme: Ambiguous token name `'}#{$name}#{
-            '` exists in multiple namespaces: `('}#{list.nth(map.get($seen-tokens, $name), 1)}#{
-              ')` and `('}#{$namespace}#{')`'};
+          $prefixed-name: $prefix + $name;
+          @if map.has-key($seen-tokens, $prefixed-name) {
+            @error #{'Error extending theme: Ambiguous token name `'}#{$prefixed-name}#{
+            '` exists in multiple namespaces: `('}#{
+              list.nth(map.get($seen-tokens, $prefixed-name), 1)}#{')` and `('}#{$namespace}#{')`'};
           }
-          $seen-tokens: map.set($seen-tokens, $name, ($namespace, $system));
+          $seen-tokens: map.set($seen-tokens, $prefixed-name, ($namespace, $system, $name));
         }
       }
     }
@@ -322,5 +334,6 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
     $namespace: list.append($namespace, $variant);
   }
   $system: list.nth($token-info, 2);
-  @return map.set($theme, $internals, $system, $namespace, $token, $value);
+  $token-name: list.nth($token-info, 3);
+  @return map.set($theme, $internals, $system, $namespace, $token-name, $value);
 }

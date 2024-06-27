@@ -262,6 +262,77 @@ describe('M3 theme', () => {
       );
     });
 
+    it('should allow accessing a namespace with a prefix', () => {
+      const css = transpile(`
+        @use '../../tokens/token-utils';
+
+        $theme: token-utils.extend-theme($theme,
+          (
+            (namespace: (mat, minimal-pseudo-checkbox), prefix: 'minimal-'),
+            (mat, full-pseudo-checkbox)
+          ),
+          (
+            minimal-selected-checkmark-color: magenta,
+            selected-checkmark-color: cyan
+          )
+        );
+
+        html {
+          @include mat.pseudo-checkbox-theme($theme);
+        }
+      `);
+
+      expect(css).toContain('--mat-minimal-pseudo-checkbox-selected-checkmark-color: magenta');
+      expect(css).toContain('--mat-full-pseudo-checkbox-selected-checkmark-color: cyan');
+    });
+
+    it('should not allow accessing a prefixed namespace without its prefix', () => {
+      expect(() =>
+        transpile(`
+        @use '../../tokens/token-utils';
+
+        $theme: token-utils.extend-theme($theme,
+          (
+            (namespace: (mat, minimal-pseudo-checkbox), prefix: 'minimal-'),
+          ),
+          (
+            selected-checkmark-color: magenta
+          )
+        );
+
+        html {
+          @include mat.pseudo-checkbox-theme($theme);
+        }
+        `),
+      ).toThrowError(
+        /Error extending theme: Unrecognized token `selected-checkmark-color`. Allowed tokens are:.* minimal-selected-checkmark-color/,
+      );
+    });
+
+    it('should detect name collisions that remain after prefixes are applied', () => {
+      expect(() =>
+        transpile(`
+        @use '../../tokens/token-utils';
+
+        $theme: token-utils.extend-theme($theme,
+          (
+            (namespace: (mat, minimal-pseudo-checkbox), prefix: 'both-'),
+            (namespace: (mat, full-pseudo-checkbox), prefix: 'both-')
+          ),
+          (
+            both-selected-checkmark-color: magenta
+          )
+        );
+
+        html {
+          @include mat.pseudo-checkbox-theme($theme);
+        }
+        `),
+      ).toThrowError(
+        /Error extending theme: Ambiguous token name `both-selected-checkmark-color` exists in multiple namespaces/,
+      );
+    });
+
     it('should not error when calling component extend-theme functions', () => {
       // Ensures that no components have issues with ambiguous token names.
       expect(() =>
@@ -307,7 +378,9 @@ describe('M3 theme', () => {
           $theme: mat.tooltip-extend-theme($theme, ());
           $theme: mat.tree-extend-theme($theme, ());
 
-          @include mat.all-component-themes($theme);
+          html {
+            @include mat.all-component-themes($theme);
+          }
         `),
       ).not.toThrow();
     });

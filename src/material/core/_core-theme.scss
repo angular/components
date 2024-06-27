@@ -101,12 +101,30 @@
   @return token-utils.extend-theme(
     $theme,
     sass-utils.list-of(
-      tokens-mat-app.$prefix,
-      tokens-mat-ripple.$prefix,
-      tokens-mat-option.$prefix,
-      tokens-mat-optgroup.$prefix,
-      tokens-mat-full-pseudo-checkbox.$prefix,
-      tokens-mat-minimal-pseudo-checkbox.$prefix
+      (
+        namespace: tokens-mat-app.$prefix,
+        prefix: 'app-',
+      ),
+      (
+        namespace: tokens-mat-ripple.$prefix,
+        prefix: 'ripple-',
+      ),
+      (
+        namespace: tokens-mat-option.$prefix,
+        prefix: 'option-',
+      ),
+      (
+        namespace: tokens-mat-optgroup.$prefix,
+        prefix: 'optgroup-',
+      ),
+      (
+        namespace: tokens-mat-full-pseudo-checkbox.$prefix,
+        prefix: 'pseudo-checkbox-full-',
+      ),
+      (
+        namespace: tokens-mat-minimal-pseudo-checkbox.$prefix,
+        prefix: 'pseudo-checkbox-minimal-',
+      )
     ),
     $overrides
   );

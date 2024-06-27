@@ -194,10 +194,19 @@
     $theme,
     sass-utils.list-of(
       tokens-mdc-fab.$prefix,
-      tokens-mdc-fab-small.$prefix,
-      tokens-mdc-extended-fab.$prefix,
+      (
+        namespace: tokens-mdc-fab-small.$prefix,
+        prefix: 'small-',
+      ),
+      (
+        namespace: tokens-mdc-extended-fab.$prefix,
+        prefix: 'extended-',
+      ),
       tokens-mat-fab.$prefix,
-      tokens-mat-fab-small.$prefix
+      (
+        namespace: tokens-mat-fab-small.$prefix,
+        prefix: 'small-',
+      )
     ),
     $overrides
   );
