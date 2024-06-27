@@ -691,8 +691,8 @@ describe('MDC-based MatSlider', () => {
     it('should show the active ripple on pointerdown', fakeAsync(() => {
       expect(isRippleVisible('active')).toBeFalse();
       pointerdown();
-      flush();
       expect(isRippleVisible('active')).toBeTrue();
+      flush();
     }));
 
     it('should hide the active ripple on pointerup', fakeAsync(() => {
@@ -1831,7 +1831,7 @@ function setValueByClick(
   input.focus();
   dispatchPointerEvent(inputElement, 'pointerup', x, y);
   dispatchEvent(input._hostElement, new Event('change'));
-  tick();
+  flush();
 }
 
 /** Slides the MatSlider's thumb to the given value. */
