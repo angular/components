@@ -1,18 +1,19 @@
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
+  A,
   DOWN_ARROW,
   END,
   ENTER,
+  ESCAPE,
   HOME,
   LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
   RIGHT_ARROW,
   SPACE,
   TAB,
   UP_ARROW,
-  A,
-  ESCAPE,
-  PAGE_DOWN,
-  PAGE_UP,
 } from '@angular/cdk/keycodes';
 import {OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
@@ -25,24 +26,24 @@ import {
 } from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   DebugElement,
   ElementRef,
   OnInit,
+  Provider,
   QueryList,
   ViewChild,
   ViewChildren,
-  Provider,
-  provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
-  inject,
-  TestBed,
   tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import {
   ControlValueAccessor,
@@ -55,17 +56,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {MatOption, MatOptionSelectionChange, ErrorStateMatcher} from '@angular/material/core';
-import {MAT_SELECT_CONFIG, MatSelectConfig} from '@angular/material/select';
+import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {
   FloatLabelType,
-  MatFormFieldModule,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
 } from '@angular/material/form-field';
+import {MAT_SELECT_CONFIG, MatSelectConfig} from '@angular/material/select';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {Subject, Subscription, EMPTY, Observable} from 'rxjs';
+import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {MatSelectModule} from './index';
 import {MatSelect} from './select';
@@ -79,11 +79,6 @@ import {
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
 describe('MDC-based MatSelect', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   let overlayContainerElement: HTMLElement;
   let dir: {value: 'ltr' | 'rtl'; change: Observable<string>};
   let scrolledSubject = new Subject();
@@ -176,6 +171,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should support setting a custom aria-label', fakeAsync(() => {
           fixture.componentInstance.ariaLabel = 'Custom Label';
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(select.getAttribute('aria-label')).toEqual('Custom Label');
@@ -184,6 +180,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should be able to add an extra aria-labelledby on top of the default', fakeAsync(() => {
           fixture.componentInstance.ariaLabelledby = 'myLabelId';
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           const labelId = fixture.nativeElement.querySelector('label').id;
@@ -202,6 +199,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should trim the trigger aria-labelledby when there is no label', fakeAsync(() => {
           fixture.componentInstance.hasLabel = false;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           flush();
           fixture.detectChanges();
@@ -219,6 +217,7 @@ describe('MDC-based MatSelect', () => {
           expect(select.getAttribute('aria-describedby')).toBeNull();
 
           fixture.componentInstance.hint = 'test';
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
           expect(select.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
@@ -227,12 +226,14 @@ describe('MDC-based MatSelect', () => {
 
         it('should support user binding to `aria-describedby`', fakeAsync(() => {
           fixture.componentInstance.ariaDescribedBy = 'test';
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           expect(select.getAttribute('aria-describedby')).toBe('test');
         }));
 
         it('should be able to override the tabindex', fakeAsync(() => {
           fixture.componentInstance.tabIndexOverride = 3;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(select.getAttribute('tabindex')).toBe('3');
@@ -244,6 +245,7 @@ describe('MDC-based MatSelect', () => {
             .toEqual('false');
 
           fixture.componentInstance.isRequired = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(select.getAttribute('aria-required'))
@@ -258,6 +260,7 @@ describe('MDC-based MatSelect', () => {
           );
 
           fixture.componentInstance.isRequired = true;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(select.classList)
@@ -271,6 +274,8 @@ describe('MDC-based MatSelect', () => {
             .toEqual('false');
 
           fixture.componentInstance.isRequired = true;
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
           fixture.componentInstance.control.markAsTouched();
           fixture.detectChanges();
 
@@ -511,23 +516,23 @@ describe('MDC-based MatSelect', () => {
           flush();
         }));
 
-        it('should announce changes via the keyboard on a closed select', fakeAsync(
-          inject([LiveAnnouncer], (liveAnnouncer: LiveAnnouncer) => {
-            spyOn(liveAnnouncer, 'announce');
+        it('should announce changes via the keyboard on a closed select', fakeAsync(() => {
+          const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+          spyOn(liveAnnouncer, 'announce');
 
-            dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+          dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
-            expect(liveAnnouncer.announce).toHaveBeenCalledWith('Steak', jasmine.any(Number));
+          expect(liveAnnouncer.announce).toHaveBeenCalledWith('Steak', jasmine.any(Number));
 
-            flush();
-          }),
-        ));
+          flush();
+        }));
 
         it('should not throw when reaching a reset option using the arrow keys on a closed select', fakeAsync(() => {
           fixture.componentInstance.foods = [
             {value: 'steak-0', viewValue: 'Steak'},
             {value: null, viewValue: 'None'},
           ];
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           fixture.componentInstance.control.setValue('steak-0');
 
@@ -634,6 +639,7 @@ describe('MDC-based MatSelect', () => {
           const selectInstance = fixture.componentInstance.select;
 
           fixture.componentInstance.typeaheadDebounceInterval = DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(selectInstance.panelOpen)
@@ -664,6 +670,7 @@ describe('MDC-based MatSelect', () => {
           const options = fixture.componentInstance.options.toArray();
 
           fixture.componentInstance.typeaheadDebounceInterval = 1337;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(formControl.value).withContext('Expected no initial value.').toBeFalsy();
@@ -1135,6 +1142,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should add a custom aria-labelledby to the panel', fakeAsync(() => {
           fixture.componentInstance.ariaLabelledby = 'myLabelId';
+          fixture.changeDetectorRef.markForCheck();
           fixture.componentInstance.select.open();
           fixture.detectChanges();
           flush();
@@ -1147,6 +1155,7 @@ describe('MDC-based MatSelect', () => {
         it('should trim the custom panel aria-labelledby when there is no label', fakeAsync(() => {
           fixture.componentInstance.hasLabel = false;
           fixture.componentInstance.ariaLabelledby = 'myLabelId';
+          fixture.changeDetectorRef.markForCheck();
           fixture.componentInstance.select.open();
           fixture.detectChanges();
           flush();
@@ -1158,6 +1167,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should clear aria-labelledby from the panel if an aria-label is set', fakeAsync(() => {
           fixture.componentInstance.ariaLabel = 'My label';
+          fixture.changeDetectorRef.markForCheck();
           fixture.componentInstance.select.open();
           fixture.detectChanges();
           flush();
@@ -1299,6 +1309,7 @@ describe('MDC-based MatSelect', () => {
           expect(options[2].getAttribute('aria-disabled')).toEqual('true');
 
           fixture.componentInstance.foods[2]['disabled'] = false;
+          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           expect(options[0].getAttribute('aria-disabled')).toEqual('false');
@@ -1532,6 +1543,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should be able to set a custom width on the select panel', fakeAsync(() => {
         fixture.componentInstance.panelWidth = '42px';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         trigger.click();
@@ -1544,6 +1556,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should not set a width on the panel if panelWidth is null', fakeAsync(() => {
         fixture.componentInstance.panelWidth = null;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         trigger.click();
@@ -1556,6 +1569,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should not set a width on the panel if panelWidth is an empty string', fakeAsync(() => {
         fixture.componentInstance.panelWidth = '';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         trigger.click();
@@ -1568,6 +1582,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should not attempt to open a select that does not have any options', fakeAsync(() => {
         fixture.componentInstance.foods = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         trigger.click();
@@ -1703,6 +1718,7 @@ describe('MDC-based MatSelect', () => {
           .toBeTruthy();
 
         fixture.componentInstance.disableRipple = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(options.every(option => option.disableRipple === true))
@@ -1712,6 +1728,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should not show ripples if they were disabled', fakeAsync(() => {
         fixture.componentInstance.disableRipple = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         trigger.click();
@@ -1919,6 +1936,7 @@ describe('MDC-based MatSelect', () => {
           .toBe(select.options.first);
 
         fixture.componentInstance.foods = [];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
@@ -1987,6 +2005,7 @@ describe('MDC-based MatSelect', () => {
         expect(trigger.textContent!.trim()).toBe('Pizza');
 
         fixture.componentInstance.foods[1].viewValue = 'Calzone';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(trigger.textContent!.trim()).toBe('Calzone');
@@ -1999,6 +2018,7 @@ describe('MDC-based MatSelect', () => {
         expect(trigger.textContent!.trim()).toBe('Pizza');
 
         fixture.componentInstance.capitalize = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         fixture.checkNoChanges();
 
@@ -2104,12 +2124,14 @@ describe('MDC-based MatSelect', () => {
         };
 
         fixture.componentInstance.foods = [{value: 'salad-8', viewValue: 'Salad'}];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         selectFirstOption();
 
         expect(spy).toHaveBeenCalledTimes(1);
 
         fixture.componentInstance.foods = [{value: 'fruit-9', viewValue: 'Fruit'}];
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         selectFirstOption();
 
@@ -2145,6 +2167,7 @@ describe('MDC-based MatSelect', () => {
 
       it('should take an initial view value with reactive forms', fakeAsync(() => {
         fixture.componentInstance.control = new FormControl('pizza-1');
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         const value = fixture.debugElement.query(By.css('.mat-mdc-select-value'))!;
@@ -2368,6 +2391,7 @@ describe('MDC-based MatSelect', () => {
           .toBeFalsy();
 
         fixture.componentInstance.isRequired = true;
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(label.querySelector('.mat-mdc-form-field-required-marker'))
@@ -2381,6 +2405,7 @@ describe('MDC-based MatSelect', () => {
         expect(control.value).toBeFalsy();
 
         fixture.componentInstance.select.value = 'pizza-1';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expect(control.value).toBe('pizza-1');
@@ -2458,6 +2483,7 @@ describe('MDC-based MatSelect', () => {
           fixture.componentInstance.foods.push({value: `value-${i}`, viewValue: `Option ${i}`});
         }
 
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         fixture.componentInstance.select.open();
         fixture.detectChanges();
@@ -2726,6 +2752,7 @@ describe('MDC-based MatSelect', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -2746,6 +2773,7 @@ describe('MDC-based MatSelect', () => {
         .toBe(false);
 
       fixture.componentInstance.isDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       flush();
 
@@ -2774,6 +2802,7 @@ describe('MDC-based MatSelect', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.isShowing = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const formField = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -2781,8 +2810,8 @@ describe('MDC-based MatSelect', () => {
       formField.style.width = '300px';
 
       trigger.click();
-      fixture.detectChanges();
       flush();
+      fixture.detectChanges();
 
       const value = fixture.debugElement.query(By.css('.mat-mdc-select-value'))!;
       expect(value.nativeElement.textContent)
@@ -2857,6 +2886,7 @@ describe('MDC-based MatSelect', () => {
       expect(fixture.componentInstance.control.value).toBeFalsy();
 
       fixture.componentInstance.floatLabel = 'always';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(label.classList.contains('mdc-floating-label--float-above'))
@@ -2880,6 +2910,7 @@ describe('MDC-based MatSelect', () => {
 
       const fixture = TestBed.createComponent(FloatLabelSelect);
       fixture.componentInstance.floatLabel = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const label = fixture.nativeElement.querySelector('.mat-mdc-form-field label');
 
@@ -2894,6 +2925,7 @@ describe('MDC-based MatSelect', () => {
       expect(fixture.componentInstance.placeholder).toBeTruthy();
 
       fixture.componentInstance.floatLabel = 'auto';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-mdc-select'), 'focus');
@@ -2961,6 +2993,7 @@ describe('MDC-based MatSelect', () => {
       const trigger = formField.querySelector('.mat-mdc-select-trigger');
       formField.style.width = '300px';
       fixture.componentInstance.isVisible = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       trigger.click();
@@ -3002,6 +3035,7 @@ describe('MDC-based MatSelect', () => {
 
     it('should transfer the theme to the select panel', fakeAsync(() => {
       fixture.componentInstance.theme = 'warn';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       fixture.componentInstance.select.open();
@@ -3020,6 +3054,7 @@ describe('MDC-based MatSelect', () => {
 
       // The first change detection run will throw the "ngModel is missing a name" error.
       expect(() => fixture.detectChanges()).toThrowError(/the name attribute must be set/g);
+      fixture.changeDetectorRef.markForCheck();
 
       // The second run shouldn't throw selection-model related errors.
       expect(() => fixture.detectChanges()).not.toThrow();
@@ -3269,6 +3304,7 @@ describe('MDC-based MatSelect', () => {
       const subscription = testComponent.select.stateChanges.subscribe(spy);
 
       testComponent.options = [];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -3296,6 +3332,7 @@ describe('MDC-based MatSelect', () => {
       expect(component.select.errorState).toBe(false);
 
       fixture.componentInstance.errorStateMatcher = {isErrorState: matcher};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(component.select.errorState).toBe(true);
@@ -3616,6 +3653,7 @@ describe('MDC-based MatSelect', () => {
 
       fixture.detectChanges();
       fixture.componentInstance.selectedFood = 'sandwich-2';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
@@ -3651,6 +3689,7 @@ describe('MDC-based MatSelect', () => {
       expect(trigger.textContent).toContain('Steak');
 
       fixture.componentInstance.selectedFood = null;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.select.value).toBeNull();
@@ -4162,6 +4201,7 @@ describe('MDC-based MatSelect', () => {
       fixture.componentInstance.sortComparator = (a, b, optionsArray) => {
         return optionsArray.indexOf(b) - optionsArray.indexOf(a);
       };
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       trigger.click();
@@ -4255,6 +4295,7 @@ describe('MDC-based MatSelect', () => {
         {value: 'pizza-1', viewValue: 'Pizza'},
         {value: null, viewValue: 'Tacos'},
       ];
+      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
       trigger.click();
@@ -4506,6 +4547,7 @@ describe('MDC-based MatSelect', () => {
     const select = fixture.componentInstance.select;
 
     fixture.componentInstance.select.value = fixture.componentInstance.foods[0].value;
+    fixture.changeDetectorRef.markForCheck();
     select.open();
     fixture.detectChanges();
 
@@ -5470,6 +5512,8 @@ class SelectInsideDynamicFormGroup {
   @ViewChild(MatSelect) select: MatSelect;
   form: FormGroup;
 
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
   constructor(private _formBuilder: FormBuilder) {
     this.assignGroup(false);
   }
@@ -5478,6 +5522,7 @@ class SelectInsideDynamicFormGroup {
     this.form = this._formBuilder.group({
       control: {value: '', disabled: isDisabled},
     });
+    this._changeDetectorRef.markForCheck();
   }
 }
 @Component({
