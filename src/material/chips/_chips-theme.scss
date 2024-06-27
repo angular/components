@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use '@material/chips/chip-theme' as mdc-chip-theme;
+@use '../core/style/sass-utils';
 @use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
 @use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
 @use '../core/tokens/token-utils';
