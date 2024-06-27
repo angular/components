@@ -92,7 +92,6 @@ export class MatFabButton extends MatButtonBase {
 
 // @public
 export interface MatFabDefaultOptions {
-    // (undocumented)
     color?: ThemePalette;
 }
 
