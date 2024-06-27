@@ -132,8 +132,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
     this._document = _document;
 
-    console.log('inside constructor this._config');
-    console.log(this._config);
     if (this._config.ariaLabel) {
       this._ariaLabel = this._config.ariaLabel;
     }
