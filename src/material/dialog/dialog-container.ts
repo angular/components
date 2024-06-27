@@ -142,7 +142,6 @@ export class MatDialogContainer
     } else if (!os && /linux/.test(userAgent)) {
       os = 'linux';
     }
-    // const platform = window.navigator.userAgent.platform
     return os;
   };
 
@@ -172,6 +171,7 @@ export class MatDialogContainer
     }
     return;
   };
+
   ngOnInit() {
     this._setAriaLabel();
   }
