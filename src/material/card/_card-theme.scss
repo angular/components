@@ -87,13 +87,19 @@
 /// @param {Map} $overrides The token values to override in the theme.
 @function extend-theme($theme, $overrides: ()) {
   @return token-utils.extend-theme(
-      $theme,
-      sass-utils.list-of(
-          tokens-mdc-elevated-card.$prefix,
-          tokens-mdc-outlined-card.$prefix,
-          tokens-mat-card.$prefix
+    $theme,
+    sass-utils.list-of(
+      (
+        namespace: tokens-mdc-elevated-card.$prefix,
+        prefix: 'elevated-',
       ),
-      $overrides
+      (
+        namespace: tokens-mdc-outlined-card.$prefix,
+        prefix: 'outlined-',
+      ),
+      tokens-mat-card.$prefix
+    ),
+    $overrides
   );
 }
 

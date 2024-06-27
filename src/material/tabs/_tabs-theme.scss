@@ -139,11 +139,7 @@
     $tokens,
     (prefix: tokens-mdc-secondary-navigation-tab.$prefix, tokens: $tab-tokens),
     (prefix: tokens-mdc-tab-indicator.$prefix, tokens: $tab-indicator-tokens),
-    (prefix: tokens-mat-tab-header.$prefix, tokens: $tab-header-tokens),
-    (
-      prefix: tokens-mat-tab-header-with-background.$prefix,
-      tokens: $tab-header-with-background-tokens,
-    ),
+    (prefix: tokens-mat-tab-header.$prefix, tokens: $tab-header-tokens)
   );
 }
 
@@ -152,14 +148,13 @@
 /// @param {Map} $overrides The token values to override in the theme.
 @function extend-theme($theme, $overrides: ()) {
   @return token-utils.extend-theme(
-      $theme,
-      sass-utils.list-of(
-          tokens-mdc-tab.$prefix,
-          tokens-mdc-tab-indicator.$prefix,
-          tokens-mat-tab-header.$prefix,
-          tokens-mat-tab-header-with-background.$prefix
-      ),
-      $overrides
+    $theme,
+    sass-utils.list-of(
+      tokens-mdc-secondary-navigation-tab.$prefix,
+      tokens-mdc-tab-indicator.$prefix,
+      tokens-mat-tab-header.$prefix
+    ),
+    $overrides
   );
 }
 

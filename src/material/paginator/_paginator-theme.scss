@@ -44,7 +44,8 @@
 @mixin density($theme) {
   $density-scale: inspection.get-theme-density($theme);
   $form-field-density: if(
-    (meta.type-of($density-scale) == 'number' and $density-scale >= -4) or $density-scale == maximum,
+    (meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
+      ($density-scale == maximum),
     -4,
     $density-scale
   );

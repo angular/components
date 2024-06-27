@@ -417,14 +417,38 @@
   @return token-utils.extend-theme(
     $theme,
     sass-utils.list-of(
-      tokens-mdc-filled-button.$prefix,
-      tokens-mdc-outlined-button.$prefix,
-      tokens-mdc-protected-button.$prefix,
-      tokens-mdc-text-button.$prefix,
-      tokens-mat-filled-button.$prefix,
-      tokens-mat-outlined-button.$prefix,
-      tokens-mat-protected-button.$prefix,
-      tokens-mat-text-button.$prefix
+      (
+        namespace: tokens-mdc-filled-button.$prefix,
+        prefix: 'filled-',
+      ),
+      (
+        namespace: tokens-mdc-outlined-button.$prefix,
+        prefix: 'outlined-',
+      ),
+      (
+        namespace: tokens-mdc-protected-button.$prefix,
+        prefix: 'protected-',
+      ),
+      (
+        namespace: tokens-mdc-text-button.$prefix,
+        prefix: 'text-',
+      ),
+      (
+        namespace: tokens-mat-filled-button.$prefix,
+        prefix: 'filled-',
+      ),
+      (
+        namespace: tokens-mat-outlined-button.$prefix,
+        prefix: 'outlined-',
+      ),
+      (
+        namespace: tokens-mat-protected-button.$prefix,
+        prefix: 'protected-',
+      ),
+      (
+        namespace: tokens-mat-text-button.$prefix,
+        prefix: 'text-',
+      )
     ),
     $overrides
   );
