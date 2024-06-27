@@ -40,6 +40,7 @@ export class YourDialog {
 ```
 
 ### Specifying global configuration defaults
+
 Default dialog options can be specified by providing an instance of `MatDialogConfig` for
 MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
 
@@ -52,6 +53,7 @@ MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
 ```
 
 ### Sharing data with the Dialog component.
+
 If you want to share data with your dialog, you can use the `data`
 option to pass information to the dialog component.
 
@@ -88,16 +90,18 @@ will be available implicitly in the template:
 <!-- example(dialog-data) -->
 
 ### Dialog content
+
 Several directives are available to make it easier to structure your dialog content:
 
-| Name                   | Description                                                                                                   |
-|------------------------|---------------------------------------------------------------------------------------------------------------|
-| `mat-dialog-title`     | \[Attr] Dialog title, applied to a heading element (e.g., `<h1>`, `<h2>`)                                     |
-| `<mat-dialog-content>` | Primary scrollable content of the dialog.                                                                     |
-| `<mat-dialog-actions>` | Container for action buttons at the bottom of the dialog. Button alignment can be controlled via the `align` attribute which can be set to `end` and `center`.                                                      |
-| `mat-dialog-close`     | \[Attr] Added to a `<button>`, makes the button close the dialog with an optional result from the bound value.|
+| Name                   | Description                                                                                                                                                    |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mat-dialog-title`     | \[Attr] Dialog title, applied to a heading element (e.g., `<h1>`, `<h2>`)                                                                                      |
+| `<mat-dialog-content>` | Primary scrollable content of the dialog.                                                                                                                      |
+| `<mat-dialog-actions>` | Container for action buttons at the bottom of the dialog. Button alignment can be controlled via the `align` attribute which can be set to `end` and `center`. |
+| `mat-dialog-close`     | \[Attr] Added to a `<button>`, makes the button close the dialog with an optional result from the bound value.                                                 |
 
 For example:
+
 ```html
 <h2 mat-dialog-title>Delete all elements?</h2>
 <mat-dialog-content>This will delete all elements that are currently on this page and cannot be undone.</mat-dialog-content>
@@ -119,6 +123,7 @@ You can control which elements are tab stops with the `tabindex` attribute
 <!-- example(dialog-content) -->
 
 ### Controlling the dialog animation
+
 You can control the duration of the dialog's enter and exit animations using the
 `enterAnimationDuration` and `exitAnimationDuration` options. If you want to disable the dialog's
 animation completely, you can do so by setting the properties to `0ms`.
@@ -130,11 +135,10 @@ animation completely, you can do so by setting the properties to `0ms`.
 `MatDialog` creates modal dialogs that implements the ARIA `role="dialog"` pattern by default.
 You can change the dialog's role to `alertdialog` via `MatDialogConfig`.
 
-You should provide an accessible label to this root dialog element by setting the `ariaLabel` or
-`ariaLabelledBy` properties of `MatDialogConfig`. You can additionally specify a description element
-ID via the `ariaDescribedBy` property of `MatDialogConfig`.
+In order to make your dialog title/name known and read by all screenreaders regardless of OS or browser, you should provide an accessible label to this root dialog element. You can do so either by setting the dialog name/title as a value to the `ariaLabel` property of `MatDialogConfig` or providing the id of the respective element with the dialog name as `ariaLabelledBy` property of `MatDialogConfig`. You can additionally specify a description element ID via the `ariaDescribedBy` property of `MatDialogConfig`. If none of these properties (`ariaLabel`,`ariaLabelledBy`, or `ariaDescribedBy`) are applied to `MatDialogConfig` the default aria-label value will be "Dialog Modal".
 
 #### Keyboard interaction
+
 By default, the escape key closes `MatDialog`. While you can disable this behavior via
 the `disableClose` property of `MatDialogConfig`, doing this breaks the expected interaction
 pattern for the ARIA `role="dialog"` pattern.
@@ -146,12 +150,12 @@ When opened, `MatDialog` traps browser focus such that it cannot escape the root
 You can customize which element receives focus with the `autoFocus` property of
 `MatDialogConfig`, which supports the following values.
 
-| Value            | Behavior                                                                 |
-|------------------|--------------------------------------------------------------------------|
-| `first-tabbable` | Focus the first tabbable element. This is the default setting.           |
-| `first-header`   | Focus the first header element (`role="heading"`, `h1` through `h6`)     |
-| `dialog`         | Focus the root `role="dialog"` element.                                  |
-| Any CSS selector | Focus the first element matching the given selector.                     |
+| Value            | Behavior                                                             |
+| ---------------- | -------------------------------------------------------------------- |
+| `first-tabbable` | Focus the first tabbable element. This is the default setting.       |
+| `first-header`   | Focus the first header element (`role="heading"`, `h1` through `h6`) |
+| `dialog`         | Focus the root `role="dialog"` element.                              |
+| Any CSS selector | Focus the first element matching the given selector.                 |
 
 While the default setting applies the best behavior for most applications, special cases may benefit
 from these alternatives. Always test your application to verify the behavior that works best for
