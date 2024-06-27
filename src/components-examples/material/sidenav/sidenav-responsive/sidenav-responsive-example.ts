@@ -1,12 +1,12 @@
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {BreakpointObserver, BreakpointState, Breakpoints} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {Subscription} from 'rxjs';
-import {NgFor} from '@angular/common';
+import {Observable, Subscription} from 'rxjs';
+import {CommonModule} from '@angular/common';
 
 /** @title Responsive sidenav */
 @Component({
@@ -15,15 +15,16 @@ import {NgFor} from '@angular/common';
   styleUrl: 'sidenav-responsive-example.css',
   standalone: true,
   imports: [
+    CommonModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    NgFor,
   ],
 })
 export class SidenavResponsiveExample implements OnDestroy {
+  isHandset: Observable<BreakpointState>;
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
   fillerContent = Array.from(
     {length: 50},
@@ -42,6 +43,10 @@ export class SidenavResponsiveExample implements OnDestroy {
     private _breakpointObserver: BreakpointObserver,
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
+    this.isHandset = _breakpointObserver.observe([
+      Breakpoints.HandsetLandscape,
+      Breakpoints.HandsetPortrait,
+    ]);
     this._breakpointSubscription = this._breakpointObserver
       .observe([Breakpoints.Handset])
       .subscribe(result => {
