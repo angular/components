@@ -34,8 +34,6 @@ let dialogElementUid = 0;
   host: {
     '(click)': '_onButtonClick($event)',
     '[attr.aria-label]': 'ariaLabel || null',
-    '[attr.aria-labelledby]': 'ariaLabelledBy || null',
-    '[attr.aria-describedby]': 'ariaDescribedBy || null',
     '[attr.type]': 'type',
   },
 })

@@ -142,10 +142,6 @@ export class MatDialogContainer
     } else if (!os && /linux/.test(userAgent)) {
       os = 'linux';
     }
-    console.log('userAgent:');
-    console.log(userAgent);
-    console.log(`os:`);
-    console.log(os);
     // const platform = window.navigator.userAgent.platform
     return os;
   };
@@ -156,8 +152,6 @@ export class MatDialogContainer
     // or ariaDescribedBy values are applied to the dialog config
     const ariaLabelledByRefId = this._ariaLabelledByQueue[0];
     const ariaDescribedByRefId = this._ariaDescribedByQueue[0];
-    console.log(`ariaLabelledByRefId: ${ariaLabelledByRefId}`);
-    console.log(`ariaDescribedByRefId: ${ariaDescribedByRefId}`);
     // Get Element to get name/title from if ariaLabelledBy or ariaDescribedBy
     const dialogNameElement =
       document.getElementById(ariaLabelledByRefId) || document.getElementById(ariaDescribedByRefId);
@@ -168,8 +162,6 @@ export class MatDialogContainer
         : // : Otherwise prioritize use of ariaLabel
           this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
     this._config.ariaLabel = dialogNameInnerText || 'Dialog Modal';
-    console.log(`getDialogName this.config.ariaLabel: `);
-    console.log(this._config.ariaLabel);
     return this._config.ariaLabel;
   };
 
