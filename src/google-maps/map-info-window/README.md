@@ -44,7 +44,7 @@ export class GoogleMapDemo {
   (mapClick)="addMarker($event)">
     @for (position of markerPositions; track position) {
       <map-advanced-marker
-        #marker="mapMarker"
+        #marker="mapAdvancedMarker"
         [position]="position"
         (mapClick)="openInfoWindow(marker)" />
     }
