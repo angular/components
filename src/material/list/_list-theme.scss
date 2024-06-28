@@ -46,14 +46,18 @@
     .mdc-list-item__start,
     .mdc-list-item__end {
       @include token-utils.create-token-values(
-        tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, primary));
+        tokens-mdc-radio.$prefix,
+        tokens-mdc-radio.get-color-tokens($theme, primary)
+      );
     }
 
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
         @include token-utils.create-token-values(
-          tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, accent));
+          tokens-mdc-radio.$prefix,
+          tokens-mdc-radio.get-color-tokens($theme, accent)
+        );
       }
     }
 
@@ -61,7 +65,9 @@
       .mdc-list-item__start,
       .mdc-list-item__end {
         @include token-utils.create-token-values(
-          tokens-mdc-radio.$prefix, tokens-mdc-radio.get-color-tokens($theme, warn));
+          tokens-mdc-radio.$prefix,
+          tokens-mdc-radio.get-color-tokens($theme, warn)
+        );
       }
     }
 
@@ -124,7 +130,9 @@
     .mdc-list-item__start,
     .mdc-list-item__end {
       @include token-utils.create-token-values(
-        tokens-mdc-radio.$prefix, tokens-mdc-radio.get-density-tokens($theme));
+        tokens-mdc-radio.$prefix,
+        tokens-mdc-radio.get-density-tokens($theme)
+      );
     }
 
     // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
@@ -191,14 +199,14 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-list.$prefix,
+      namespace: tokens-mat-list.$prefix,
       tokens: tokens-mat-list.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-list.$prefix,
+      namespace: tokens-mdc-list.$prefix,
       tokens: tokens-mdc-list.get-token-slots(),
     )
   );

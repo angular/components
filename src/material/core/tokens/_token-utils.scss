@@ -236,26 +236,6 @@ $_component-prefix: null;
   @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
 }
 
-/// Emits new token values for the given token overrides.
-/// Verifies that the overrides passed in are valid tokens.
-/// New token values are emitted under the current selector or root.
-@mixin batch-create-token-values($overrides: (), $token-maps...) {
-  @include _validate-token-overrides($overrides, $token-maps);
-
-  @each $token-map in $token-maps {
-    $prefix: map.get($token-map, prefix);
-    $tokens: map.get($token-map, tokens);
-
-    @each $name, $value in $tokens {
-      $tokens: map.set($tokens, $name, map.get($overrides, $name));
-    }
-
-    @include sass-utils.current-selector-or-root() {
-      @include create-token-values($prefix, $tokens);
-    }
-  }
-}
-
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
 /// @param {List} $prefix The token prefix for the given tokens.
 /// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
@@ -423,6 +403,50 @@ $_component-prefix: null;
 }
 
 /// Returns a theme config with the given tokens overridden.
+/// @param {Map} $overrides The token values to override in the theme.
+/// @param {List} $override-namespaces The namespaces available to override.
+/// New token values are emitted under the current selector or root.
+@mixin override-tokens($overrides, $override-namespaces...) {
+  // Determine which system and namespace each shorthand token belongs to.
+  $seen-tokens: ();
+  @each $namespace in $override-namespaces {
+    $prefix: map.get($namespace, prefix) or '';
+    $tokens: _filter-nulls(map.get($namespace, tokens));
+    $namespace: map.get($namespace, namespace);
+    @each $name, $value in $tokens {
+      $prefixed-name: $prefix + $name;
+      // If multiple namespaces have the same token name, report an error.
+      @if map.has-key($seen-tokens, $prefixed-name) {
+        @error #{'Error overriding token: Ambiguous token name `'}#{$prefixed-name}#{
+        '` exists in multiple namespaces: `('}#{
+          list.nth(map.get($seen-tokens, $prefixed-name), 1)}#{')` and `('}#{$namespace}#{')`'};
+      }
+      $seen-tokens: map.set($seen-tokens, $prefixed-name, ($namespace, $name));
+    }
+  }
+
+  // Collate the overrides.
+  $batched-overrides: ();
+  @each $token, $value in $overrides {
+    $token-info: map.get($seen-tokens, $token);
+    @if $token-info == null {
+      @error #{'Error overriding token: Unrecognized token `'}#{$token}#{
+        '`. Allowed tokens are: '}#{map.keys($seen-tokens)};
+    }
+    $namespace: list.nth($token-info, 1);
+    $token-name: list.nth($token-info, 2);
+    $batched-overrides: map.set($batched-overrides, $namespace, $token-name, $value);
+  }
+
+  // Apply the overrides
+  @include sass-utils.current-selector-or-root() {
+    @each $namespace, $tokens in $batched-overrides {
+      @include create-token-values($namespace, $tokens);
+    }
+  }
+}
+
+/// Returns a theme config with the given tokens overridden.
 /// @param {Map} $theme The material theme for an application.
 /// @param {List} $extend-namespaces The namespaces to extend in the theme. Each item can be either:
 ///  1. A list, representing a namespace to match token names against.
@@ -430,7 +454,7 @@ $_component-prefix: null;
 ///     name must start with to match this namespace. The prefix will be stripped before matching
 ///     the token name.
 /// @param {Map} $overrides The token values to override in the theme.
-@function extend-theme($theme, $extend-namespaces, $overrides: ()) {
+@function extend-theme($theme, $extend-namespaces, $overrides) {
   $internals: _mat-theming-internals-do-not-access;
   $systems: (color-tokens, typography-tokens, density-tokens, base-tokens);
   $variants: (primary, secondary, tertiary, error, surface);
@@ -448,6 +472,7 @@ $_component-prefix: null;
       $prefix: map.get($namespace, prefix);
       $namespace: map.get($namespace, namespace);
     }
+    // Check each system to see if it has tokens for the given namespace.
     $namespace-found: false;
     @each $system in $systems {
       $tokens: map.get($theme, $internals, $system, $namespace);
@@ -455,6 +480,7 @@ $_component-prefix: null;
         $namespace-found: true;
         @each $name, $value in $tokens {
           $prefixed-name: $prefix + $name;
+          // If multiple namespaces have the same token name, report an error.
           @if map.has-key($seen-tokens, $prefixed-name) {
             @error #{'Error extending theme: Ambiguous token name `'}#{$prefixed-name}#{
             '` exists in multiple namespaces: `('}#{
@@ -464,6 +490,7 @@ $_component-prefix: null;
         }
       }
     }
+    // If no system had tokens for the given namespace, report an error.
     @if not $namespace-found {
       @error #{'Error extending theme: Theme does not have tokens for namespace `('}#{
         $namespace}#{')`'};

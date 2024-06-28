@@ -54,10 +54,10 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-sort.$prefix,
+      namespace: tokens-mat-sort.$prefix,
       tokens: tokens-mat-sort.get-token-slots(),
     )
   );

@@ -98,31 +98,37 @@ $_has-inserted-loaded-marker: false;
   $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
   $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-app.$prefix,
+      namespace: tokens-mat-app.$prefix,
       tokens: $app-tokens,
+      prefix: 'app-',
     ),
     (
-      prefix: tokens-mat-ripple.$prefix,
+      namespace: tokens-mat-ripple.$prefix,
       tokens: $ripple-tokens,
+      prefix: 'ripple-',
     ),
     (
-      prefix: tokens-mat-option.$prefix,
+      namespace: tokens-mat-option.$prefix,
       tokens: $option-tokens,
+      prefix: 'option-',
     ),
     (
-      prefix: tokens-mat-optgroup.$prefix,
+      namespace: tokens-mat-optgroup.$prefix,
       tokens: $optgroup-tokens,
+      prefix: 'optgroup-',
     ),
     (
-      prefix: tokens-mat-full-pseudo-checkbox.$prefix,
+      namespace: tokens-mat-full-pseudo-checkbox.$prefix,
       tokens: $full-pseudo-checkbox-tokens,
+      prefix: 'pseudo-checkbox-full-',
     ),
     (
-      prefix: tokens-mat-minimal-pseudo-checkbox.$prefix,
+      namespace: tokens-mat-minimal-pseudo-checkbox.$prefix,
       tokens: $minimal-pseudo-checkbox-tokens,
+      prefix: 'pseudo-checkbox-minimal-',
     )
   );
 }

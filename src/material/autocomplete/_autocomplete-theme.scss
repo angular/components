@@ -71,10 +71,10 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-autocomplete.$prefix,
+      namespace: tokens-mat-autocomplete.$prefix,
       tokens: tokens-mat-autocomplete.get-token-slots(),
     )
   );

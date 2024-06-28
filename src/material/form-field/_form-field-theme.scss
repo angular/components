@@ -127,18 +127,20 @@
   $outlined-text-field-tokens: tokens-mdc-outlined-text-field.get-token-slots();
   $form-field-tokens: tokens-mat-form-field.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mdc-filled-text-field.$prefix,
+      namespace: tokens-mdc-filled-text-field.$prefix,
       tokens: $filled-text-field-tokens,
+      prefix: 'filled-',
     ),
     (
-      prefix: tokens-mdc-outlined-text-field.$prefix,
+      namespace: tokens-mdc-outlined-text-field.$prefix,
       tokens: $outlined-text-field-tokens,
+      prefix: 'outlined-',
     ),
     (
-      prefix: tokens-mat-form-field.$prefix,
+      namespace: tokens-mat-form-field.$prefix,
       tokens: $form-field-tokens,
     )
   );
@@ -153,11 +155,11 @@
     sass-utils.list-of(
       (
         namespace: tokens-mdc-filled-text-field.$prefix,
-        prefix: 'filled',
+        prefix: 'filled-',
       ),
       (
         namespace: tokens-mdc-outlined-text-field.$prefix,
-        prefix: 'outlined',
+        prefix: 'outlined-',
       ),
       tokens-mat-form-field.$prefix
     ),

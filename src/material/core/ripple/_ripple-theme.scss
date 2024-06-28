@@ -53,10 +53,10 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-ripple.$prefix,
+      namespace: tokens-mat-ripple.$prefix,
       tokens: tokens-mat-ripple.get-token-slots(),
     )
   );

@@ -72,10 +72,10 @@
 @mixin overrides($tokens: ()) {
   $circular-progress-tokens: tokens-mdc-circular-progress.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mdc-circular-progress.$prefix,
+      namespace: tokens-mdc-circular-progress.$prefix,
       tokens: $circular-progress-tokens,
     )
   );

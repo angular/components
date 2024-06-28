@@ -158,27 +158,30 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mdc-fab.$prefix,
+      namespace: tokens-mdc-fab.$prefix,
       tokens: tokens-mdc-fab.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-fab-small.$prefix,
+      namespace: tokens-mdc-fab-small.$prefix,
       tokens: tokens-mdc-fab-small.get-token-slots(),
+      prefix: 'small-',
     ),
     (
-      prefix: tokens-mdc-extended-fab.$prefix,
+      namespace: tokens-mdc-extended-fab.$prefix,
       tokens: tokens-mdc-extended-fab.get-token-slots(),
+      prefix: 'extended-',
     ),
     (
-      prefix: tokens-mat-fab.$prefix,
+      namespace: tokens-mat-fab.$prefix,
       tokens: tokens-mat-fab.get-token-slots(),
     ),
     (
-      prefix: tokens-mat-fab-small.$prefix,
+      namespace: tokens-mat-fab-small.$prefix,
       tokens: tokens-mat-fab-small.get-token-slots(),
+      prefix: 'small-',
     )
   );
 }

@@ -82,10 +82,10 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-badge.$prefix,
+      namespace: tokens-mat-badge.$prefix,
       tokens: tokens-mat-badge.get-token-slots(),
     )
   );

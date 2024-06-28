@@ -350,7 +350,8 @@ describe('M3 theme', () => {
     });
 
     it('should not error when calling component extend-theme functions', () => {
-      // Ensures that no components have issues with ambiguous token names.
+      // Ensures that no components have issues with ambiguous token names, by triggering the
+      // validation logic for each extend-theme function.
       expect(() =>
         transpile(`
           $theme: mat.core-extend-theme($theme, ());
@@ -397,6 +398,201 @@ describe('M3 theme', () => {
           html {
             @include mat.all-component-themes($theme);
           }
+        `),
+      ).not.toThrow();
+    });
+  });
+
+  describe('token override API', () => {
+    it('should emit override', () => {
+      const css = transpile(`
+        @use '../../tokens/token-utils';
+        @use '../../tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+
+        @include token-utils.override-tokens(
+          (
+            selected-checkmark-color: magenta
+          ),
+          (
+            namespace: tokens-mdc-checkbox.$prefix,
+            tokens: tokens-mdc-checkbox.get-token-slots()
+          )
+        );
+      `);
+
+      expect(css).toContain('--mdc-checkbox-selected-checkmark-color: magenta');
+    });
+
+    it('should error on ambiguous shorthand token name', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+          @use '../../tokens/m2/mat/full-pseudo-checkbox' as tokens-full-pcb;
+          @use '../../tokens/m2/mat/minimal-pseudo-checkbox' as tokens-minimal-pcb;
+
+          @include token-utils.override-tokens(
+            (
+              selected-checkmark-color: magenta
+            ),
+            (
+              namespace: tokens-full-pcb.$prefix,
+              tokens: tokens-full-pcb.get-token-slots()
+            ),
+            (
+              namespace: tokens-minimal-pcb.$prefix,
+              tokens: tokens-minimal-pcb.get-token-slots()
+            )
+          );
+        `),
+      ).toThrowError(
+        /Error overriding token: Ambiguous token name `selected-checkmark-color` exists in multiple namespaces: `\(mat, full-pseudo-checkbox\)` and `\(mat, minimal-pseudo-checkbox\)`/,
+      );
+    });
+
+    it('should error on unknown token', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+          @use '../../tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+
+          @include token-utils.override-tokens(
+            (
+              fake-token: magenta
+            ),
+            (
+              namespace: tokens-mdc-checkbox.$prefix,
+              tokens: tokens-mdc-checkbox.get-token-slots()
+            )
+          );
+        `),
+      ).toThrowError(
+        /Error overriding token: Unrecognized token `fake-token`. Allowed tokens are:/,
+      );
+    });
+
+    it('should allow accessing a namespace with a prefix', () => {
+      const css = transpile(`
+        @use '../../tokens/token-utils';
+        @use '../../tokens/m2/mat/full-pseudo-checkbox' as tokens-full-pcb;
+        @use '../../tokens/m2/mat/minimal-pseudo-checkbox' as tokens-minimal-pcb;
+
+        @include token-utils.override-tokens(
+          (
+            full-selected-checkmark-color: magenta,
+            minimal-selected-checkmark-color: cyan
+          ),
+          (
+            namespace: tokens-full-pcb.$prefix,
+            tokens: tokens-full-pcb.get-token-slots(),
+            prefix: 'full-'
+          ),
+          (
+            namespace: tokens-minimal-pcb.$prefix,
+            tokens: tokens-minimal-pcb.get-token-slots(),
+            prefix: 'minimal-'
+          )
+        );
+      `);
+
+      expect(css).toContain('--mat-full-pseudo-checkbox-selected-checkmark-color: magenta');
+      expect(css).toContain('--mat-minimal-pseudo-checkbox-selected-checkmark-color: cyan');
+    });
+
+    it('should not allow accessing a prefixed namespace without its prefix', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+          @use '../../tokens/m2/mat/minimal-pseudo-checkbox' as tokens-minimal-pcb;
+
+          @include token-utils.override-tokens(
+            (
+              selected-checkmark-color: magenta
+            ),
+            (
+              namespace: tokens-minimal-pcb.$prefix,
+              tokens: tokens-minimal-pcb.get-token-slots(),
+              prefix: 'minimal-'
+            )
+          );
+        `),
+      ).toThrowError(
+        /Error overriding token: Unrecognized token `selected-checkmark-color`. Allowed tokens are:.* minimal-selected-checkmark-color/,
+      );
+    });
+
+    it('should detect name collisions that remain after prefixes are applied', () => {
+      expect(() =>
+        transpile(`
+          @use '../../tokens/token-utils';
+          @use '../../tokens/m2/mat/full-pseudo-checkbox' as tokens-full-pcb;
+          @use '../../tokens/m2/mat/minimal-pseudo-checkbox' as tokens-minimal-pcb;
+
+          @include token-utils.override-tokens(
+            (
+              both-selected-checkmark-color: magenta,
+            ),
+            (
+              namespace: tokens-full-pcb.$prefix,
+              tokens: tokens-full-pcb.get-token-slots(),
+              prefix: 'both-'
+            ),
+            (
+              namespace: tokens-minimal-pcb.$prefix,
+              tokens: tokens-minimal-pcb.get-token-slots(),
+              prefix: 'both-'
+            )
+          );
+        `),
+      ).toThrowError(
+        /Error overriding token: Ambiguous token name `both-selected-checkmark-color` exists in multiple namespaces/,
+      );
+    });
+
+    it('should not error when calling component extend-theme functions', () => {
+      // Ensures that no components have issues with ambiguous token names, by triggering the
+      // validation logic for each override mixin.
+      expect(() =>
+        transpile(`
+          @include mat.core-overrides(());
+          @include mat.ripple-overrides(());
+          @include mat.option-overrides(());
+          @include mat.optgroup-overrides(());
+          @include mat.pseudo-checkbox-overrides(());
+          @include mat.autocomplete-overrides(());
+          @include mat.badge-overrides(());
+          @include mat.bottom-sheet-overrides(());
+          @include mat.button-overrides(());
+          @include mat.fab-overrides(());
+          @include mat.icon-button-overrides(());
+          @include mat.button-toggle-overrides(());
+          @include mat.card-overrides(());
+          @include mat.checkbox-overrides(());
+          @include mat.chips-overrides(());
+          @include mat.datepicker-overrides(());
+          @include mat.dialog-overrides(());
+          @include mat.divider-overrides(());
+          @include mat.expansion-overrides(());
+          @include mat.form-field-overrides(());
+          @include mat.grid-list-overrides(());
+          @include mat.icon-overrides(());
+          @include mat.list-overrides(());
+          @include mat.menu-overrides(());
+          @include mat.paginator-overrides(());
+          @include mat.progress-bar-overrides(());
+          @include mat.progress-spinner-overrides(());
+          @include mat.radio-overrides(());
+          @include mat.select-overrides(());
+          @include mat.sidenav-overrides(());
+          @include mat.slide-toggle-overrides(());
+          @include mat.slider-overrides(());
+          @include mat.snack-bar-overrides(());
+          @include mat.sort-overrides(());
+          @include mat.stepper-overrides(());
+          @include mat.table-overrides(());
+          @include mat.tabs-overrides(());
+          @include mat.toolbar-overrides(());
+          @include mat.tooltip-overrides(());
+          @include mat.tree-overrides(());
         `),
       ).not.toThrow();
     });

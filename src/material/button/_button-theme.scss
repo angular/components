@@ -344,39 +344,47 @@
   $mdc-text-button-tokens: tokens-mdc-text-button.get-token-slots();
   $mat-text-button-tokens: tokens-mat-text-button.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mdc-filled-button.$prefix,
+      namespace: tokens-mdc-filled-button.$prefix,
       tokens: $mdc-filled-button-tokens,
+      prefix: 'filled-',
     ),
     (
-      prefix: tokens-mat-filled-button.$prefix,
+      namespace: tokens-mat-filled-button.$prefix,
       tokens: $mat-filled-button-tokens,
+      prefix: 'filled-',
     ),
     (
-      prefix: tokens-mdc-outlined-button.$prefix,
+      namespace: tokens-mdc-outlined-button.$prefix,
       tokens: $mdc-outlined-button-tokens,
+      prefix: 'outlined-',
     ),
     (
-      prefix: tokens-mat-outlined-button.$prefix,
+      namespace: tokens-mat-outlined-button.$prefix,
       tokens: $mat-outlined-button-tokens,
+      prefix: 'outlined-',
     ),
     (
-      prefix: tokens-mdc-protected-button.$prefix,
+      namespace: tokens-mdc-protected-button.$prefix,
       tokens: $mdc-protected-button-tokens,
+      prefix: 'protected-',
     ),
     (
-      prefix: tokens-mat-protected-button.$prefix,
+      namespace: tokens-mat-protected-button.$prefix,
       tokens: $mat-protected-button-tokens,
+      prefix: 'protected-',
     ),
     (
-      prefix: tokens-mdc-text-button.$prefix,
+      namespace: tokens-mdc-text-button.$prefix,
       tokens: $mdc-text-button-tokens,
+      prefix: 'text-',
     ),
     (
-      prefix: tokens-mat-text-button.$prefix,
+      namespace: tokens-mat-text-button.$prefix,
       tokens: $mat-text-button-tokens,
+      prefix: 'text-',
     )
   );
 }

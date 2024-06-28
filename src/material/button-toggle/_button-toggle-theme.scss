@@ -92,14 +92,10 @@
 @mixin overrides($tokens: ()) {
   $legacy-tokens: tokens-mat-legacy-button-toggle.get-token-slots();
   $standard-tokens: tokens-mat-standard-button-toggle.get-token-slots();
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-legacy-button-toggle.$prefix,
-      tokens: $legacy-tokens,
-    ),
-    (
-      prefix: tokens-mat-standard-button-toggle.$prefix,
+      namespace: tokens-mat-standard-button-toggle.$prefix,
       tokens: $standard-tokens,
     )
   );

@@ -68,14 +68,14 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mdc-dialog.$prefix,
+      namespace: tokens-mdc-dialog.$prefix,
       tokens: tokens-mdc-dialog.get-token-slots(),
     ),
     (
-      prefix: tokens-mat-dialog.$prefix,
+      namespace: tokens-mat-dialog.$prefix,
       tokens: tokens-mat-dialog.get-token-slots(),
     )
   );

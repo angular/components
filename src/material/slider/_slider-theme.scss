@@ -100,14 +100,14 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-slider.$prefix,
+      namespace: tokens-mat-slider.$prefix,
       tokens: tokens-mat-slider.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-slider.$prefix,
+      namespace: tokens-mdc-slider.$prefix,
       tokens: tokens-mdc-slider.get-token-slots(),
     )
   );
