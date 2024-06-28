@@ -396,8 +396,7 @@
     font-size: mdc-chip-theme.$trailing-action-size;
     box-sizing: content-box;
   }
-  /** Increases mdc-dhip-remove trailing icon action touch-target
-    in order to fix b/286959517. */
+  //Increases mdc-dhip-remove trailing icon action touch-target in order to fix b/286959517
   &.mat-mdc-chip-trailing-icon.mdc-evolution-chip__action--trailing,
   &.mat-mdc-chip-trailing-icon.mdc-evolution-chip__icon--trailing {
     padding: 24px 12px;
