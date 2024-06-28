@@ -286,7 +286,7 @@ describe('M3 theme', () => {
           (
             (namespace: (mat, minimal-pseudo-checkbox), prefix: 'minimal-'),
             (mat, full-pseudo-checkbox)
-          ), 
+          ),
           (
             minimal-selected-checkmark-color: magenta,
             selected-checkmark-color: cyan
@@ -310,7 +310,7 @@ describe('M3 theme', () => {
         $theme: token-utils.extend-theme($theme,
           (
             (namespace: (mat, minimal-pseudo-checkbox), prefix: 'minimal-'),
-          ), 
+          ),
           (
             selected-checkmark-color: magenta
           )
@@ -334,7 +334,7 @@ describe('M3 theme', () => {
           (
             (namespace: (mat, minimal-pseudo-checkbox), prefix: 'both-'),
             (namespace: (mat, full-pseudo-checkbox), prefix: 'both-')
-          ), 
+          ),
           (
             both-selected-checkmark-color: magenta
           )

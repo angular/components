@@ -8,21 +8,33 @@
 
 import {Rule, SchematicContext} from '@angular-devkit/schematics';
 import {
-  createMigrationSchematicRule,
   NullableDevkitMigration,
   TargetVersion,
+  createMigrationSchematicRule,
 } from '@angular/cdk/schematics';
 
-import {materialUpgradeData} from './upgrade-data';
 import {M2ThemingMigration} from './migrations/m2-theming-v18';
+import {TokenOverridesMigration} from './migrations/token-overrides-v19';
+import {materialUpgradeData} from './upgrade-data';
 
-const materialMigrations: NullableDevkitMigration[] = [M2ThemingMigration];
+const materialMigrationsV18: NullableDevkitMigration[] = [M2ThemingMigration];
+const materialMigrationsV19: NullableDevkitMigration[] = [TokenOverridesMigration];
 
 /** Entry point for the migration schematics with target of Angular Material v18 */
 export function updateToV18(): Rule {
   return createMigrationSchematicRule(
     TargetVersion.V18,
-    materialMigrations,
+    materialMigrationsV18,
+    materialUpgradeData,
+    onMigrationComplete,
+  );
+}
+
+/** Entry point for the migration schematics with target of Angular Material v19 */
+export function updateToV19(): Rule {
+  return createMigrationSchematicRule(
+    TargetVersion.V19,
+    materialMigrationsV19,
     materialUpgradeData,
     onMigrationComplete,
   );

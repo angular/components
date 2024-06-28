@@ -123,7 +123,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-extended-fab-theme.theme(tokens-mdc-extended-fab.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-typography-tokens($theme)
+      );
       @include token-utils.create-token-values(
         tokens-mat-fab.$prefix,
         tokens-mat-fab.get-typography-tokens($theme)
@@ -257,9 +260,13 @@
     tokens-mat-fab-small.$prefix,
     $options...
   );
-  @include mdc-extended-fab-theme.theme($mdc-extended-fab-tokens);
-  @include mdc-fab-theme.theme($mdc-fab-tokens);
-  @include mdc-fab-small-theme.theme($mdc-fab-small-tokens);
+
+  @include token-utils.create-token-values(
+    tokens-mdc-extended-fab.$prefix,
+    $mdc-extended-fab-tokens
+  );
+  @include token-utils.create-token-values(tokens-mdc-fab.$prefix, $mdc-fab-tokens);
+  @include token-utils.create-token-values(tokens-mdc-fab-small.$prefix, $mdc-fab-small-tokens);
   @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-fab-tokens);
   @include token-utils.create-token-values(tokens-mat-fab-small.$prefix, $mat-fab-small-tokens);
 }
