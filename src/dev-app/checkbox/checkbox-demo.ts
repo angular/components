@@ -148,4 +148,11 @@ export class CheckboxDemo {
   checkboxColor() {
     return this.useAlternativeColor ? 'primary' : 'accent';
   }
+
+  checked_18005: boolean = false;
+
+  toggle_18005(): void {
+    this.checked_18005 = !this.checked_18005;
+    console.log('NOT TOGGLING, VALUE IS', this.checked_18005);
+  }
 }
