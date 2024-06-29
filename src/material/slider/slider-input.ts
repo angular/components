@@ -462,7 +462,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
       return;
     }
 
-    this.value = value;
+    this._setValue(value + '');
     this.valueChange.emit(this.value);
     this._onChangeFn?.(this.value);
     this._slider._onValueChange(this);
