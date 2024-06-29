@@ -1,32 +1,27 @@
-@use 'sass:map';
-@use '@material/icon-button/icon-button' as mdc-icon-button;
-@use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 
 @use './button-base';
 @use '../core/style/private';
+@use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 
-// The slots for tokens that will be configured in the theme can be emitted with no fallback.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $token-slots: tokens-mdc-icon-button.get-token-slots();
-
-  // Add the MDC component static styles.
-  @include mdc-icon-button.static-styles();
-
-  .mat-mdc-icon-button {
-    // Add the official slots for the MDC component.
-    @include mdc-icon-button-theme.theme-styles(map.merge($token-slots, (
-      // Exclude the state layer size since we'll re-emit it below with a default value.
-      state-layer-size: null,
-    )));
-  }
-}
 
 .mat-mdc-icon-button {
+  @include vendor-prefixes.user-select(none);
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  fill: currentColor;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 0;
+  overflow: visible;
+
   // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
   border-radius: 50%;
 
@@ -35,10 +30,6 @@
 
   // Ensure the icons are centered.
   text-align: center;
-
-  svg {
-    vertical-align: baseline;
-  }
 
   @include token-utils.use-tokens(
     tokens-mdc-icon-button.$prefix, tokens-mdc-icon-button.get-token-slots()) {
@@ -57,12 +48,18 @@
     // Icon size used to be placed on the host element. Now, in `theme-styles` it is placed on
     // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
     @include token-utils.create-token-slot(font-size, icon-size);
+    @include token-utils.create-token-slot(color, icon-color);
 
     @include button-base.mat-private-button-disabled {
-      // MDC's disabled styles target the `:disabled` selector which doesn't work on links.
-      // We re-apply the disabled icon color here since we support Material buttons on links too.
       @include token-utils.create-token-slot(color, disabled-icon-color);
     };
+
+    img,
+    svg {
+      @include token-utils.create-token-slot(width, icon-size);
+      @include token-utils.create-token-slot(height, icon-size);
+      vertical-align: baseline;
+    }
   }
 
   @include button-base.mat-private-button-interactive();
@@ -74,6 +71,11 @@
 
   .mat-mdc-button-persistent-ripple {
     border-radius: 50%;
+  }
+
+  // MDC used to include this and it seems like a lot of apps depend on it.
+  &[hidden] {
+    display: none;
   }
 
   // MDC adds some styles to icon buttons that conflict with some of our focus indicator styles
