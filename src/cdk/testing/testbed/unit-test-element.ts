@@ -277,13 +277,26 @@ export class UnitTestElement implements TestElement {
    * @param name Name of the event to be dispatched.
    */
   async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
-    const event = createFakeEvent(name);
-
-    if (data) {
-      // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
-      Object.assign(event, data);
+    // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+    const richEventData = Object.assign({view: window}, data || {});
+    let event: Event;
+    if (name.match(/^dblclick|click|mouse(over|enter|down|move|up|out|leave)$/)) {
+      event = new MouseEvent(name, richEventData);
+    } else if (name.match(/^pointer(over|enter|down|move|up|cancel|out|leave)/)) {
+      event = new PointerEvent(name, richEventData);
+    } else if (name.match(/^key(down|up|press)$/)) {
+      event = new KeyboardEvent(name, richEventData);
+    } else if (name === 'wheel') {
+      event = new WheelEvent(name, richEventData);
+    } else {
+      event = createFakeEvent(name, !!data?.bubbles, !!data?.cancelable);
+      // Try-catch in case readonly properties are being set.
+      try {
+        // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+        Object.assign(event, data || {});
+      } catch {
+      }
     }
-
     dispatchEvent(this.element, event);
     await this._stabilize();
   }

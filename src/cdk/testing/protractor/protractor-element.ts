@@ -331,14 +331,27 @@ export class ProtractorElement implements TestElement {
  * Protractor and is executed inside the browser.
  */
 function _dispatchEvent(name: string, element: ElementFinder, data?: Record<string, EventData>) {
-  const event = document.createEvent('Event');
-  event.initEvent(name);
-
-  if (data) {
-    // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
-    Object.assign(event, data);
+  // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+  const richEventData = Object.assign({view: window}, data || {});
+  let event: Event;
+  if (name.match(/^dblclick|click|mouse(over|enter|down|move|up|out|leave)$/)) {
+    event = new MouseEvent(name, richEventData);
+  } else if (name.match(/^pointer(over|enter|down|move|up|cancel|out|leave)/)) {
+    event = new PointerEvent(name, richEventData);
+  } else if (name.match(/^key(down|up|press)$/)) {
+    event = new KeyboardEvent(name, richEventData);
+  } else if (name === 'wheel') {
+    event = new WheelEvent(name, richEventData);
+  } else {
+    event = document.createEvent('Event');
+    event.initEvent(name, !!data?.bubbles, !!data?.cancelable);
+    // Try-catch in case readonly properties are being set.
+    try {
+      // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+      Object.assign(event, data || {});
+    } catch {
+    }
   }
-
   // This type has a string index signature, so we cannot access it using a dotted property access.
   element['dispatchEvent'](event);
 }
