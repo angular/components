@@ -72,6 +72,7 @@ export class DialogDemo {
     minHeight: '',
     maxWidth: '',
     maxHeight: '',
+    ariaLabelledBy: 'jazz-title',
     position: {
       top: '',
       bottom: '',
@@ -145,7 +146,7 @@ export class DialogDemo {
   selector: 'demo-jazz-dialog',
   template: `
     <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-      <p>Order printer ink refills.</p>
+      <p id="jazz-title">Order printer ink refills.</p>
 
       <mat-form-field>
         <mat-label>How many?</mat-label>
@@ -214,7 +215,7 @@ export class JazzDialog {
     }
   `,
   template: `
-    <h2 mat-dialog-title>Neptune</h2>
+    <h2 id="jazz-title" mat-dialog-title>Neptune</h2>
 
     <mat-dialog-content>
       <p>
@@ -277,7 +278,7 @@ export class ContentElementDialog {
     }
   `,
   template: `
-    <h2 mat-dialog-title>Neptune</h2>
+    <h2 id="jazz-title" mat-dialog-title>Neptune</h2>
 
     <mat-dialog-content>
       <iframe style="border: 0" src="https://en.wikipedia.org/wiki/Neptune"></iframe>

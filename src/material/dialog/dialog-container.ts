@@ -18,6 +18,7 @@ import {
   Inject,
   NgZone,
   OnDestroy,
+  OnInit,
   Optional,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
@@ -71,7 +72,10 @@ export const CLOSE_ANIMATION_DURATION = 75;
     '[class.mat-mdc-dialog-container-with-actions]': '_actionSectionCount > 0',
   },
 })
-export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+export class MatDialogContainer
+  extends CdkDialogContainer<MatDialogConfig>
+  implements OnInit, OnDestroy
+{
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
@@ -93,6 +97,11 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Platform Observer */
+  // private _userAgentSubscription = Subscription.EMPTY;
+  private _getWindow(): Window {
+    return this._document?.defaultView || window;
+  }
 
   constructor(
     elementRef: ElementRef,
@@ -115,6 +124,59 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       overlayRef,
       focusMonitor,
     );
+  }
+
+  /** Get userAgent to check for useragent operating system */
+  private _getUserPlatform = (): string => {
+    const window = this._getWindow();
+    let userAgent = window.navigator.userAgent.toLowerCase(),
+      macosPlatforms = /(macintosh|macintel|macppc|mac68k|macos)/i,
+      windowsPlatforms = /(win32|win64|windows|wince)/i,
+      iosPlatforms = /(iphone|ipad|ipod)/i,
+      os = '';
+    if (macosPlatforms.test(userAgent)) {
+      os = 'macos';
+    } else if (iosPlatforms.test(userAgent)) {
+      os = 'ios';
+    } else if (windowsPlatforms.test(userAgent)) {
+      os = 'windows';
+    } else if (/android/.test(userAgent)) {
+      os = 'android';
+    } else if (!os && /linux/.test(userAgent)) {
+      os = 'linux';
+    }
+    return os;
+  };
+
+  /** Get Dialog name from aria attributes */
+  private _getDialogName = (): string => {
+    // _ariaLabelledByQueue and _ariaDescribedByQueue are created if ariaLabelledBy
+    // or ariaDescribedBy values are applied to the dialog config
+    const ariaLabelledByRefId = this._ariaLabelledByQueue[0];
+    const ariaDescribedByRefId = this._ariaDescribedByQueue[0];
+    // Get Element to get name/title from if ariaLabelledBy or ariaDescribedBy
+    const dialogNameElement =
+      document.getElementById(ariaLabelledByRefId) || document.getElementById(ariaDescribedByRefId);
+    const dialogNameInnerText =
+      // If no ariaLabelledBy, ariaDescribedBy, or ariaLabel, create default aria label
+      !dialogNameElement && !this._config.ariaLabel
+        ? 'Dialog Modal'
+        : // : Otherwise prioritize use of ariaLabel
+          this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
+    this._config.ariaLabel = dialogNameInnerText || 'Dialog Modal';
+    return this._config.ariaLabel;
+  };
+
+  private _setAriaLabel = (): void => {
+    const os = this._getUserPlatform();
+    if (os === 'macos') {
+      this._getDialogName();
+    }
+    return;
+  };
+
+  ngOnInit() {
+    this._setAriaLabel();
   }
 
   protected override _contentAttached(): void {
