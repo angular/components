@@ -154,3 +154,9 @@ mat-cell.mat-mdc-cell,
 mat-footer-cell.mat-mdc-footer-cell {
   align-self: stretch;
 }
+
+// MDC table last row within tbody set bottom border as none for header cell as other mat-mdc-cell 
+// bottom border are set as none, this will make consistent layout for table
+.mat-mdc-table tbody .mdc-data-table__row:last-child .mat-mdc-header-cell {
+  border-bottom: none;
+}  
