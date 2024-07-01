@@ -1,8 +1,7 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
+import {MatChipsModule} from '@angular/material/chips';
 
 /**
  * @title Card with footer
@@ -12,10 +11,11 @@ import {MatCardModule} from '@angular/material/card';
   templateUrl: 'card-footer-example.html',
   styleUrl: 'card-footer-example.css',
   standalone: true,
-  imports: [MatCardModule, MatDividerModule, MatButtonModule, MatProgressBarModule],
+  imports: [MatCardModule, MatChipsModule, MatProgressBarModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardFooterExample {
-  longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
-  from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-  originally bred for hunting.`;
+  longText = `The Chihuahua is a Mexican breed of toy dog. It is named for the
+  Mexican state of Chihuahua and is among the smallest of all dog breeds. It is
+  usually kept as a companion animal or for showing.`;
 }

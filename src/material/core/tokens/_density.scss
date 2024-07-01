@@ -60,7 +60,7 @@ $_density-tokens: (
   (mdc, slider): (),
   (mdc, snackbar): (),
   (mdc, switch): (),
-  (mdc, tab): (
+  (mdc, secondary-navigation-tab): (
     container-height: (48px, 44px, 40px, 36px, 32px)
   ),
   (mdc, tab-indicator): (),
@@ -120,6 +120,7 @@ $_density-tokens: (
     container-size: (56px, 52px, 48px, 40px),
     form-field-container-height: (40px, 40px, 40px, 40px, 40px, 36px),
     form-field-container-vertical-padding: (8px, 8px, 8px, 8px, 8px, 6px),
+    touch-target-display: (block, block, none, none),
   ),
   (mat, radio): (
     touch-target-display: (block, block, none, none),

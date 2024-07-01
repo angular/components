@@ -21,12 +21,15 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {MatRipple, MatRippleLoader} from '@angular/material/core';
+import {MatRipple, MatRippleLoader, ThemePalette} from '@angular/material/core';
 
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
   /** Whether disabled buttons should be interactive. */
   disabledInteractive?: boolean;
+
+  /** Default palette color to apply to buttons. */
+  color?: ThemePalette;
 }
 
 /** Injection token that can be used to provide the default options the button component. */
@@ -167,6 +170,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
     const classList = (element as HTMLElement).classList;
 
     this.disabledInteractive = config?.disabledInteractive ?? false;
+    this.color = config?.color ?? null;
     this._rippleLoader?.configureRipple(element, {className: 'mat-mdc-button-ripple'});
 
     // For each of the variant selectors that is present in the button's host

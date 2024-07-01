@@ -35,6 +35,9 @@ interface CachedItemPosition<T> {
  * @docs-private
  */
 export class SingleAxisSortStrategy implements DropListSortStrategy {
+  /** Root element container of the drop list. */
+  private _element: HTMLElement;
+
   /** Function used to determine if an item can be sorted into a specific index. */
   private _sortPredicate: SortPredicate<DragRef>;
 
@@ -54,10 +57,7 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Layout direction of the drop list. */
   direction: Direction;
 
-  constructor(
-    private _element: HTMLElement,
-    private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
-  ) {}
+  constructor(private _dragDropRegistry: DragDropRegistry<DragRef, unknown>) {}
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as well as what direction
@@ -235,7 +235,7 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Resets the strategy to its initial state before dragging was started. */
   reset() {
     // TODO(crisbeto): may have to wait for the animations to finish.
-    this._activeDraggables.forEach(item => {
+    this._activeDraggables?.forEach(item => {
       const rootElement = item.getRootElement();
 
       if (rootElement) {
@@ -291,6 +291,10 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
         drag._sortFromLastPointerPosition();
       }
     });
+  }
+
+  withElementContainer(container: HTMLElement): void {
+    this._element = container;
   }
 
   /** Refreshes the position cache of the items and sibling containers. */

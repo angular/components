@@ -22,7 +22,6 @@ import {
   TabGroupPaginatedExample,
   TabGroupPreserveContentExample,
   TabGroupStretchedExample,
-  TabGroupThemeExample,
   TabNavBarBasicExample,
 } from '@angular/components-examples/material/tabs';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
@@ -37,7 +36,6 @@ import {MatTabsModule} from '@angular/material/tabs';
     TabGroupInvertedExample,
     TabGroupPaginatedExample,
     TabNavBarBasicExample,
-    TabGroupThemeExample,
     TabGroupStretchedExample,
     TabGroupPreserveContentExample,
     TabGroupLazyLoadedExample,

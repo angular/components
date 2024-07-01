@@ -31,6 +31,8 @@ import {
   ViewChild,
   ViewEncapsulation,
   afterRender,
+  computed,
+  contentChild,
   inject,
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
@@ -73,8 +75,10 @@ export interface MatFormFieldDefaultOptions {
   /** Default form field appearance style. */
   appearance?: MatFormFieldAppearance;
   /**
-   * Default color of the form field. This API is supported in M2 themes only, it has no effect in
-   * M3 themes. For information on applying color variants in M3, see
+   * Default theme color of the form field. This API is supported in M2 themes only, it has no
+   * effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
    * https://material.angular.io/guide/theming#using-component-color-variants
    */
   color?: ThemePalette;
@@ -194,13 +198,13 @@ export class MatFormField
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline | undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple | undefined;
 
-  @ContentChild(MatLabel) _labelChildNonStatic: MatLabel | undefined;
-  @ContentChild(MatLabel, {static: true}) _labelChildStatic: MatLabel | undefined;
   @ContentChild(_MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
   @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
   @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
   @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren: QueryList<MatError>;
   @ContentChildren(MatHint, {descendants: true}) _hintChildren: QueryList<MatHint>;
+
+  private readonly _labelChild = contentChild(MatLabel);
 
   /** Whether the required marker should be hidden. */
   @Input()
@@ -379,9 +383,7 @@ export class MatFormField
   /**
    * Gets the id of the label element. If no label is present, returns `null`.
    */
-  getLabelId(): string | null {
-    return this._hasFloatingLabel() ? this._labelId : null;
-  }
+  getLabelId = computed(() => (this._hasFloatingLabel() ? this._labelId : null));
 
   /**
    * Gets an ElementRef for the element that a overlay attached to the form field
@@ -551,9 +553,7 @@ export class MatFormField
     return !this._platform.isBrowser && this._prefixChildren.length && !this._shouldLabelFloat();
   }
 
-  _hasFloatingLabel() {
-    return !!this._labelChildNonStatic || !!this._labelChildStatic;
-  }
+  _hasFloatingLabel = computed(() => !!this._labelChild());
 
   _shouldLabelFloat() {
     return this._control.shouldLabelFloat || this._shouldAlwaysFloat();

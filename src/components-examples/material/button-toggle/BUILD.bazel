@@ -17,6 +17,7 @@ ng_module(
         "//src/cdk/testing/testbed",
         "//src/material/button-toggle",
         "//src/material/button-toggle/testing",
+        "//src/material/checkbox",
         "//src/material/icon",
         "@npm//@angular/platform-browser",
         "@npm//@types/jasmine",

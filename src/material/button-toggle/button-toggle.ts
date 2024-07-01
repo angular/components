@@ -320,35 +320,33 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
       return toggle.buttonId === buttonId;
     });
 
-    let nextButton;
+    let nextButton: MatButtonToggle | null = null;
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
-        nextButton = this._buttonToggles.get(index);
+        nextButton = this._buttonToggles.get(index) || null;
         break;
       case UP_ARROW:
-        nextButton = this._buttonToggles.get(this._getNextIndex(index, -1));
+        nextButton = this._getNextButton(index, -1);
         break;
       case LEFT_ARROW:
-        nextButton = this._buttonToggles.get(
-          this._getNextIndex(index, this.dir === 'ltr' ? -1 : 1),
-        );
+        nextButton = this._getNextButton(index, this.dir === 'ltr' ? -1 : 1);
         break;
       case DOWN_ARROW:
-        nextButton = this._buttonToggles.get(this._getNextIndex(index, 1));
+        nextButton = this._getNextButton(index, 1);
         break;
       case RIGHT_ARROW:
-        nextButton = this._buttonToggles.get(
-          this._getNextIndex(index, this.dir === 'ltr' ? 1 : -1),
-        );
+        nextButton = this._getNextButton(index, this.dir === 'ltr' ? 1 : -1);
         break;
       default:
         return;
     }
 
-    event.preventDefault();
-    nextButton?._onButtonClick();
-    nextButton?.focus();
+    if (nextButton) {
+      event.preventDefault();
+      nextButton._onButtonClick();
+      nextButton.focus();
+    }
   }
 
   /** Dispatch change event with current selection and group value. */
@@ -423,22 +421,33 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     });
     if (this.selected) {
       (this.selected as MatButtonToggle).tabIndex = 0;
-    } else if (this._buttonToggles.length > 0) {
-      this._buttonToggles.get(0)!.tabIndex = 0;
+    } else {
+      for (let i = 0; i < this._buttonToggles.length; i++) {
+        const toggle = this._buttonToggles.get(i)!;
+
+        if (!toggle.disabled) {
+          toggle.tabIndex = 0;
+          break;
+        }
+      }
     }
     this._markButtonsForCheck();
   }
 
-  /** Obtain the subsequent index to which the focus shifts. */
-  private _getNextIndex(index: number, offset: number): number {
-    let nextIndex = index + offset;
-    if (nextIndex === this._buttonToggles.length) {
-      nextIndex = 0;
+  /** Obtain the subsequent toggle to which the focus shifts. */
+  private _getNextButton(startIndex: number, offset: number): MatButtonToggle | null {
+    const items = this._buttonToggles;
+
+    for (let i = 1; i <= items.length; i++) {
+      const index = (startIndex + offset * i + items.length) % items.length;
+      const item = items.get(index);
+
+      if (item && !item.disabled) {
+        return item;
+      }
     }
-    if (nextIndex === -1) {
-      nextIndex = this._buttonToggles.length - 1;
-    }
-    return nextIndex;
+
+    return null;
   }
 
   /** Updates the selection state of the toggles in the group based on a value. */

@@ -7,8 +7,8 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ViewChild, ViewEncapsulation, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -34,12 +34,6 @@ describe('MatRipple', () => {
   function flushTransition() {
     dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
   }
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -260,6 +254,7 @@ describe('MatRipple', () => {
       let radius = Math.sqrt(TARGET_HEIGHT * TARGET_HEIGHT + TARGET_WIDTH * TARGET_WIDTH) / 2;
 
       rippleDirective.centered = true;
+      fixture.changeDetectorRef.markForCheck();
       rippleDirective.launch(0, 0);
 
       let rippleElement = rippleTarget.querySelector('.mat-ripple-element') as HTMLElement;
@@ -282,23 +277,13 @@ describe('MatRipple', () => {
       rippleTarget = fixture.debugElement.nativeElement.querySelector('.mat-ripple');
 
       fixture.componentInstance.isDestroyed = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
-    });
-
-    it('does not run events inside the NgZone', () => {
-      const spy = jasmine.createSpy('zone unstable callback');
-      const subscription = fixture.ngZone!.onUnstable.subscribe(spy);
-
-      dispatchMouseEvent(rippleTarget, 'mousedown');
-      dispatchMouseEvent(rippleTarget, 'mouseup');
-
-      expect(spy).not.toHaveBeenCalled();
-      subscription.unsubscribe();
     });
 
     it('should only persist the latest ripple on pointer down', () => {
@@ -648,6 +633,7 @@ describe('MatRipple', () => {
       const backgroundColor = 'rgba(12, 34, 56, 0.8)';
 
       controller.color = backgroundColor;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -659,6 +645,7 @@ describe('MatRipple', () => {
 
     it('does not respond to events when disabled input is set', () => {
       controller.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -667,6 +654,7 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
       controller.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -684,6 +672,7 @@ describe('MatRipple', () => {
 
       spyOn(controller.ripple, 'fadeOutAllNonPersistent').and.callThrough();
       controller.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(controller.ripple.fadeOutAllNonPersistent).toHaveBeenCalled();
@@ -704,6 +693,7 @@ describe('MatRipple', () => {
 
       // Set the trigger element, and now events should create ripples.
       controller.trigger = alternateTrigger;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(alternateTrigger, 'mousedown');
@@ -714,6 +704,7 @@ describe('MatRipple', () => {
 
     it('expands ripple from center if centered input is set', () => {
       controller.centered = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let elementRect = rippleTarget.getBoundingClientRect();
@@ -741,6 +732,7 @@ describe('MatRipple', () => {
       let customRadius = 42;
 
       controller.radius = customRadius;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       let elementRect = rippleTarget.getBoundingClientRect();
@@ -762,6 +754,7 @@ describe('MatRipple', () => {
 
     it('should be able to specify animation config through binding', () => {
       controller.animationConfig = {enterDuration: 120, exitDuration: 150};
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(rippleTarget, 'mousedown');

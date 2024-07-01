@@ -6,6 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,14 +30,9 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
 import {Subject, Subscription} from 'rxjs';
 import {distinctUntilChanged, startWith} from 'rxjs/operators';
-import {AnimationEvent} from '@angular/animations';
 import {matTabsAnimations} from './tabs-animations';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 
 /**
  * The portal host directive for the contents of the tab.
@@ -64,7 +64,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     this._centeringSub = this._host._beforeCentering
       .pipe(startWith(this._host._isCenterPosition(this._host._position)))
       .subscribe((isCentering: boolean) => {
-        if (isCentering && !this.hasAttached()) {
+        if (this._host._content && isCentering && !this.hasAttached()) {
           this.attach(this._host._content);
         }
       });

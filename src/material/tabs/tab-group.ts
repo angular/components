@@ -120,7 +120,13 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   /** Subscription to changes in the tab labels. */
   private _tabLabelSubscription = Subscription.EMPTY;
 
-  /** Theme color of the tab group. */
+  /**
+   * Theme color of the tab group. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   color: ThemePalette;
 
@@ -204,7 +210,12 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   preserveContent: boolean = false;
 
   /**
-   * Background color of the tab group.
+   * Theme color of the background of the tab group. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   *
    * @deprecated The background color should be customized through Sass theming APIs.
    * @breaking-change 20.0.0 Remove this input
    */

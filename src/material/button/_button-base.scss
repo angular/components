@@ -44,8 +44,10 @@
 
   // The content should appear over the state and ripple layers, otherwise they may adversely affect
   // the accessibility of the text content.
-  .mdc-button__label {
+  .mdc-button__label,
+  .mat-icon {
     z-index: 1;
+    position: relative;
   }
 
   // The focus indicator should match the bounds of the entire button.

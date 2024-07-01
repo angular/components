@@ -1,19 +1,12 @@
-import {fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {
-  Component,
-  provideZoneChangeDetection,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
 describe('MDC-based MatList', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
       imports: [
         MatListModule,
         ListWithOneAnchorItem,
@@ -97,6 +90,7 @@ describe('MDC-based MatList', () => {
   it('should update classes if number of lines change', () => {
     const fixture = TestBed.createComponent(ListWithDynamicNumberOfLines);
     fixture.debugElement.componentInstance.showThirdLine = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const listItem = fixture.debugElement.children[0].query(By.css('mat-list-item'))!;
@@ -105,6 +99,7 @@ describe('MDC-based MatList', () => {
     expect(listItem.nativeElement.classList).toContain('mdc-list-item');
 
     fixture.debugElement.componentInstance.showThirdLine = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(listItem.nativeElement.className).toContain('mdc-list-item--with-three-lines');
   });
@@ -182,6 +177,7 @@ describe('MDC-based MatList', () => {
     items.forEach(item => expect(item.rippleDisabled).toBe(false));
 
     fixture.componentInstance.disableItemRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     items.forEach(item => expect(item.rippleDisabled).toBe(true));
@@ -221,6 +217,7 @@ describe('MDC-based MatList', () => {
     expect(items.every(item => !item.rippleDisabled)).toBe(true);
 
     fixture.componentInstance.disableItemRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(items.every(item => item.rippleDisabled)).toBe(true);
@@ -253,6 +250,7 @@ describe('MDC-based MatList', () => {
     items.forEach(item => expect(item.rippleDisabled).toBe(false));
 
     fixture.componentInstance.disableListRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     items.forEach(item => expect(item.rippleDisabled).toBe(true));
@@ -268,6 +266,7 @@ describe('MDC-based MatList', () => {
     expect(items.every(item => !item.rippleDisabled)).toBe(true);
 
     fixture.componentInstance.disableListRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(items.every(item => item.rippleDisabled)).toBe(true);
@@ -297,6 +296,7 @@ describe('MDC-based MatList', () => {
       .toBe(0);
 
     fixture.componentInstance.disableListRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -331,6 +331,7 @@ describe('MDC-based MatList', () => {
       .toBe(0);
 
     fixture.componentInstance.disableListRipple = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -355,6 +356,7 @@ describe('MDC-based MatList', () => {
     ).toEqual([false, false, false]);
 
     fixture.componentInstance.firstItemDisabled = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(
@@ -374,6 +376,7 @@ describe('MDC-based MatList', () => {
     expect(listItems.every(item => item.classList.contains('mdc-list-item--disabled'))).toBe(false);
 
     fixture.componentInstance.listDisabled = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(listItems.every(item => item.classList.contains('mdc-list-item--disabled'))).toBe(true);
@@ -396,6 +399,7 @@ describe('MDC-based MatList', () => {
     expect(listItems.every(listItem => listItem.hasAttribute('disabled'))).toBe(true);
 
     fixture.componentInstance.disableList = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(listItems.every(listItem => !listItem.hasAttribute('disabled'))).toBe(true);
@@ -409,6 +413,7 @@ describe('MDC-based MatList', () => {
     expect(buttonItem.hasAttribute('disabled')).toBe(true);
 
     fixture.componentInstance.buttonItem.disabled = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(buttonItem.hasAttribute('disabled')).toBe(false);

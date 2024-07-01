@@ -31,7 +31,7 @@ describe('CardHarnessExample', () => {
 
   it('should act as a harness loader for user content', async () => {
     const card = await loader.getHarness(MatCardHarness.with({title: 'Shiba Inu'}));
-    const footerSubcomponents = (await card.getAllHarnesses(MatButtonHarness)) ?? [];
+    const footerSubcomponents = await card.getAllHarnesses(MatButtonHarness);
     expect(footerSubcomponents.length).toBe(2);
   });
 });
