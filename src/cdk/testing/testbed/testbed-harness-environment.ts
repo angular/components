@@ -15,7 +15,7 @@ import {
   stopHandlingAutoChangeDetectionStatus,
   TestElement,
 } from '@angular/cdk/testing';
-import {ComponentFixture, flush} from '@angular/core/testing';
+import {ComponentFixture, flush, tick} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
@@ -195,6 +195,14 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     // outside of the Angular zone. For test harnesses, we want to ensure that the
     // app is fully stabilized and therefore need to use our own zone interceptor.
     await this._taskState?.pipe(takeWhile(state => !state.stable)).toPromise();
+  }
+
+  async sleep(ms: number) {
+    if (isInFakeAsyncZone()) {
+      tick(ms); // TODO: Doesn't work for zoneless + fakeAsync.
+    } else {
+      await new Promise(resolve => setTimeout(resolve, ms));
+    }
   }
 
   /** Gets the root element for the document. */

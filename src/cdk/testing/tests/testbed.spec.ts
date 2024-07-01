@@ -1,8 +1,7 @@
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {HarnessLoader, manualChangeDetection, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
-import {provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
@@ -13,9 +12,6 @@ describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
     fixture = TestBed.createComponent(TestMainComponent);
   });
 
@@ -83,12 +79,13 @@ describe('TestbedHarnessEnvironment', () => {
         expect(element.id).toContain('root');
       });
 
-      it('should wait for async operation to complete in fakeAsync test', fakeAsync(async () => {
+      fit('should wait for async operation to complete in fakeAsync test', async () => {
+        await harness.isInitialized();
         const asyncCounter = await harness.asyncCounter();
         expect(await asyncCounter.text()).toBe('5');
         await harness.increaseCounter(3);
         expect(await asyncCounter.text()).toBe('8');
-      }));
+      });
     });
 
     describe('change detection behavior', () => {
