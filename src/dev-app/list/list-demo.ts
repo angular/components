@@ -8,7 +8,7 @@
 
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule, MatListOptionTogglePosition} from '@angular/material/list';
@@ -18,17 +18,38 @@ interface Link {
   name: string;
   href: string;
 }
+interface Shoes {
+  value: string;
+  name: string;
+}
 
 @Component({
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
   styleUrl: 'list-demo.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatListModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    ReactiveFormsModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListDemo {
   items: string[] = ['Pepper', 'Salt', 'Paprika'];
+
+  form: FormGroup;
+  shoes: Shoes[] = [
+    {value: 'boots', name: 'Boots'},
+    {value: 'clogs', name: 'Clogs'},
+    {value: 'loafers', name: 'Loafers'},
+    {value: 'moccasins', name: 'Moccasins'},
+    {value: 'sneakers', name: 'Sneakers'},
+  ];
+  shoesControl = new FormControl();
 
   togglePosition: MatListOptionTogglePosition = 'before';
 
@@ -83,6 +104,10 @@ export class ListDemo {
   constructor() {
     this.activatedRoute.url.subscribe(() => {
       this.cdr.markForCheck();
+    });
+
+    this.form = new FormGroup({
+      shoes: this.shoesControl,
     });
   }
 
