@@ -395,4 +395,11 @@ export class CdkVirtualForOf<T>
       index,
     };
   }
+
+  static ngTemplateContextGuard<T>(
+    directive: CdkVirtualForOf<T>,
+    context: unknown,
+  ): context is CdkVirtualForOfContext<T> {
+    return true;
+  }
 }
