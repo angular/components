@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {Observable, Subscription} from 'rxjs';
-import {CommonModule} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 
 /** @title Responsive sidenav */
 @Component({
@@ -15,7 +15,7 @@ import {CommonModule} from '@angular/common';
   styleUrl: 'sidenav-responsive-example.css',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
