@@ -40,6 +40,7 @@ export class MatPaginator implements OnInit, OnDestroy {
     disabled: boolean;
     _displayedPageSizeOptions: number[];
     firstPage(): void;
+    _focusPreviousOrNextIfDisabled(event: KeyboardEvent): void;
     _formFieldAppearance?: MatFormFieldAppearance;
     getNumberOfPages(): number;
     hasNextPage(): boolean;
@@ -70,8 +71,15 @@ export class MatPaginator implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     readonly page: EventEmitter<PageEvent>;
+    // (undocumented)
+    readonly _pageFirst = "mat-mdc-paginator-navigation-first";
     get pageIndex(): number;
     set pageIndex(value: number);
+    // (undocumented)
+    readonly _pageLast = "mat-mdc-paginator-navigation-last";
+    readonly _pageNext = "mat-mdc-paginator-navigation-next";
+    // (undocumented)
+    readonly _pagePrevious = "mat-mdc-paginator-navigation-previous";
     get pageSize(): number;
     set pageSize(value: number);
     readonly _pageSizeLabelId: string;
