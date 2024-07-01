@@ -1,6 +1,6 @@
 import {LOCALE_ID} from '@angular/core';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {DEC, FEB, JAN, MAR} from '../../testing';
+import {DEC, FEB, JAN, JUL, JUN, MAR} from '../../testing';
 import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 describe('NativeDateAdapter', () => {
@@ -463,6 +463,24 @@ describe('NativeDateAdapter', () => {
 
   it('should not throw when attempting to format a date with a year greater than 9999', () => {
     expect(() => adapter.format(new Date(10000, 1, 1), {})).not.toThrow();
+  });
+
+  it('should parse strings taking locale date formats into account', () => {
+    adapter.setLocale('fr-BE');
+    expect(adapter.parse('6/7/2023')).toEqual(new Date(2023, JUL, 6));
+    expect(adapter.parse('7/6/2023')).toEqual(new Date(2023, JUN, 7));
+    adapter.setLocale('en-US');
+    expect(adapter.parse('7/6/2023')).toEqual(new Date(2023, JUN, 7));
+    expect(adapter.parse('7/6/2023')).toEqual(new Date(2023, JUL, 6));
+  });
+
+  it('should infer current year if not supplied when parsing', () => {
+    expect(adapter.parse('01-01')).toEqual(new Date(new Date().getFullYear(), JAN, 1));
+  });
+
+  it('should not return dates with a non zero local time component when parsing', () => {
+    expect(adapter.parse('2023-01-01')).toEqual(new Date(2023, JAN, 1, 0, 0, 0));
+    expect(adapter.parse('1-1-2023')).toEqual(new Date(2023, JAN, 1, 0, 0, 0));
   });
 });
 
