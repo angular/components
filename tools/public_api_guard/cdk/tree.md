@@ -127,6 +127,8 @@ export class CdkTreeNode<T, K = T> implements FocusableOption, OnDestroy, OnInit
     // (undocumented)
     get isExpanded(): boolean;
     // (undocumented)
+    get isLeafNode(): boolean;
+    // (undocumented)
     get level(): number;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     // (undocumented)

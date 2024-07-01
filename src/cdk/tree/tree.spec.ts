@@ -145,20 +145,14 @@ describe('CdkTree', () => {
         let data = dataSource.data;
         dataSource.addChild(data[2]);
         fixture.detectChanges();
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'false';
-          }),
-        ).toBe(true);
+        let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
+        expect(ariaExpandedStates).toEqual([null, null, 'false', null]);
 
         component.treeControl.expandAll();
         fixture.detectChanges();
 
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'true';
-          }),
-        ).toBe(true);
+        ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
+        expect(ariaExpandedStates).toEqual([null, null, 'true', null]);
       });
 
       it('with the right data', () => {
@@ -805,11 +799,8 @@ describe('CdkTree', () => {
       });
 
       it('with the right aria-expanded attrs', () => {
-        expect(
-          getNodes(treeElement).every(node => {
-            return node.getAttribute('aria-expanded') === 'false';
-          }),
-        ).toBe(true);
+        let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
+        expect(ariaExpandedStates).toEqual([null, null, null]);
 
         component.toggleRecursively = false;
         fixture.changeDetectorRef.markForCheck();
@@ -822,7 +813,7 @@ describe('CdkTree', () => {
         fixture.detectChanges();
 
         const ariaExpanded = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpanded).toEqual(['false', 'true', 'false', 'false']);
+        expect(ariaExpanded).toEqual([null, 'true', 'false', null]);
       });
 
       it('should expand/collapse the node multiple times', () => {
@@ -886,6 +877,7 @@ describe('CdkTree', () => {
       });
 
       it('should expand/collapse the node recursively', () => {
+        fixture.changeDetectorRef.markForCheck();
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
