@@ -5,3 +5,7 @@ table {
 th.mat-sort-header-sorted {
   color: black;
 }
+
+.example-sorting-toggle-group {
+    margin: 8px;
+}

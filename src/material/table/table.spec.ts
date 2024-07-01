@@ -10,7 +10,7 @@ import {
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort';
+import {MatSort, MatSortable, MatSortHeader, MatSortModule} from '@angular/material/sort';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -194,6 +194,20 @@ describe('MDC-based MatTable', () => {
     ]);
   });
 
+  it('should render with MatTableDataSource and multi-sort', () => {
+    let fixture = TestBed.createComponent(MatTableWithMultiSortApp);
+    fixture.detectChanges();
+
+    const tableElement = fixture.nativeElement.querySelector('table')!;
+    const data = fixture.componentInstance.dataSource!.data;
+    expectTableToMatchContent(tableElement, [
+      ['Column A', 'Column B', 'Column C'],
+      [data[0].a, data[0].b, data[0].c],
+      [data[1].a, data[1].b, data[1].c],
+      [data[2].a, data[2].b, data[2].c],
+    ]);
+  });
+
   it('should render with MatTableDataSource and pagination', () => {
     let fixture = TestBed.createComponent(MatTableWithPaginatorApp);
     fixture.detectChanges();
@@ -247,6 +261,9 @@ describe('MDC-based MatTable', () => {
       tableElement = fixture.nativeElement.querySelector('table');
       component = fixture.componentInstance;
       dataSource = fixture.componentInstance.dataSource;
+
+      component.sort.matSortMultiple = false;
+      component.sort.sortState.clear();
     }));
 
     it('should create table and display data source contents', () => {
@@ -437,7 +454,8 @@ describe('MDC-based MatTable', () => {
             return '';
         }
       };
-      component.sort.direction = '';
+
+      component.sort.sortState.clear();
       component.sort.sort(component.sortHeader);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
@@ -632,6 +650,85 @@ describe('MDC-based MatTable', () => {
       ]);
     });
   });
+
+  describe('with MatTableDataSource and multi-sort', () => {
+    let tableElement: HTMLElement;
+    let fixture: ComponentFixture<ArrayDataSourceMatTableApp>;
+    let dataSource: MatTableDataSource<TestData>;
+    let component: ArrayDataSourceMatTableApp;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(ArrayDataSourceMatTableApp);
+      fixture.detectChanges();
+
+      tableElement = fixture.nativeElement.querySelector('table');
+      component = fixture.componentInstance;
+      dataSource = fixture.componentInstance.dataSource;
+
+      dataSource.data = [
+        { a: "a_3", b: "b_1", c: "c_1" },
+        { a: "a_2", b: "b_2", c: "c_1" },
+        { a: "a_1", b: "b_3", c: "c_2" },
+      ];
+
+      component.sort.matSortMultiple = true;
+      component.sort.sortState.clear();
+    }));
+
+    it('should be able to sort the table contents base on multiple columns at same time', () => {
+
+      const columnA = { id: 'a' } as MatSortable;
+      const columnB = { id: 'b' } as MatSortable;
+      const columnC = { id: 'c' } as MatSortable;
+
+      // Activate column A sort
+      component.sort.sort(columnA);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_3', 'c_2'],
+        ['a_2', 'b_2', 'c_1'],
+        ['a_3', 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      // reset sorting state
+      component.sort.sortState.clear();
+
+      // Activate column C sort
+      component.sort.sort(columnC);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_3', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_1'],
+        ['a_1', 'b_3', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      // Activate column B sort
+      component.sort.sort(columnB);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_3', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_1'],
+        ['a_1', 'b_3', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      // Activate column B sort again (reverse)
+      component.sort.sort(columnB);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_2', 'b_2', 'c_1'],
+        ['a_3', 'b_1', 'c_1'],
+        ['a_1', 'b_3', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
+  })
 });
 
 interface TestData {
@@ -714,7 +811,7 @@ class FakeDataSource extends DataSource<TestData> {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
@@ -750,7 +847,7 @@ class MatTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NativeHtmlTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -805,7 +902,7 @@ class NativeHtmlTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NestedTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -855,7 +952,7 @@ class StickyTableApp {
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -974,6 +1071,57 @@ class MatTableWithSortApp implements OnInit {
 
 @Component({
   template: `
+    <table mat-table [dataSource]="dataSource" matSort matSortMultiple>
+      <ng-container matColumnDef="column_a">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="a"> Column A</th>
+        <td mat-cell *matCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_b">
+        <th mat-header-cell *matHeaderCellDef> Column B</th>
+        <td mat-cell *matCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_c">
+        <th mat-header-cell *matHeaderCellDef> Column C</th>
+        <td mat-cell *matCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
+    </table>
+  `,
+  standalone: true,
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+})
+class MatTableWithMultiSortApp implements OnInit {
+  underlyingDataSource = new FakeDataSource();
+  dataSource = new MatTableDataSource<TestData>();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor() {
+    this.underlyingDataSource.data = [];
+
+    // Add three rows of data
+    this.underlyingDataSource.addData();
+    this.underlyingDataSource.addData();
+    this.underlyingDataSource.addData();
+
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
+
+  ngOnInit() {
+    this.dataSource!.sort = this.sort;
+  }
+}
+
+@Component({
+  template: `
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="column_a">
         <th mat-header-cell *matHeaderCellDef> Column A</th>
@@ -1043,7 +1191,7 @@ class MatTableWithPaginatorApp implements OnInit {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class TableWithNgContainerRow {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 }
 
@@ -1082,7 +1230,7 @@ class TableWithNgContainerRow {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatFlexTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   @ViewChild(MatTable) table: MatTable<TestData>;
 }
