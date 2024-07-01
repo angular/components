@@ -89,6 +89,10 @@ $_icon-prefix-infix-padding: 4px;
     text-align: right;
   }
 
+  &.mat-form-field-appearance-outline {
+    margin-top: form-field-sizing.$mat-form-field-outline-top-spacing / 2;
+  }
+
   @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
     tokens-mat-form-field.get-token-slots()) {
     @include mdc-typography.smooth-font();
