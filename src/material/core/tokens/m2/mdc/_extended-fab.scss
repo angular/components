@@ -1,3 +1,4 @@
+@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use '../../token-utils';
 @use '../../../theming/inspection';
 
@@ -38,18 +39,22 @@ $prefix: (mdc, extended-fab);
     pressed-ripple-color: null,
     pressed-ripple-opacity: null,
     pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null
+    pressed-state-layer-opacity: null,
+    container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    container-elevation: 6,
-    focus-container-elevation: 8,
-    hover-container-elevation: 8,
-    pressed-container-elevation: 12,
-    container-shadow-color: #000,
+    container-elevation-shadow: mdc-elevation.elevation-box-shadow(6),
+    focus-container-elevation-shadow: mdc-elevation.elevation-box-shadow(8),
+    hover-container-elevation-shadow: mdc-elevation.elevation-box-shadow(8),
+    pressed-container-elevation-shadow: mdc-elevation.elevation-box-shadow(12),
   );
 }
 

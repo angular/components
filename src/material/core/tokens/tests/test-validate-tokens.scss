@@ -9,8 +9,6 @@
 @use '@material/card/outlined-card-theme' as mdc-outlined-card-theme;
 @use '@material/checkbox/checkbox-theme' as mdc-checkbox-theme;
 @use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
-@use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
-@use '@material/fab/fab-theme' as mdc-fab-theme;
 @use '@material/linear-progress/linear-progress-theme' as mdc-linear-progress-theme;
 @use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '@material/list/list-theme' as mdc-list-theme;
@@ -35,8 +33,6 @@
 @use '../m2/mdc/elevated-card' as tokens-mdc-elevated-card;
 @use '../m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../m2/mdc/checkbox' as tokens-mdc-checkbox;
-@use '../m2/mdc/extended-fab' as tokens-mdc-extended-fab;
-@use '../m2/mdc/fab' as tokens-mdc-fab;
 @use '../m2/mdc/list' as tokens-mdc-list;
 @use '../m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 @use '../m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
@@ -136,17 +132,6 @@
   $component: 'm2.mdc.dialog',
   $slots: tokens-mdc-dialog.get-token-slots(),
   $reference: mdc-dialog-theme.$light-theme
-);
-// Note: we should validate the `fab-small` here as well, but MDC doesn't expose its light theme.
-@include validate-slots(
-  $component: 'm2.mdc.fab',
-  $slots: tokens-mdc-fab.get-token-slots(),
-  $reference: mdc-fab-theme.$light-theme
-);
-@include validate-slots(
-  $component: 'm2.mdc.extended-fab',
-  $slots: tokens-mdc-extended-fab.get-token-slots(),
-  $reference: mdc-extended-fab-theme.$extended-light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.filled-text-field',
