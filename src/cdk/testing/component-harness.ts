@@ -52,13 +52,13 @@ export type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = {
   [I in keyof T]: T[I] extends new (...args: any[]) => infer C // Map `ComponentHarnessConstructor<C>` to `C`.
     ? C
     : // Map `HarnessPredicate<C>` to `C`.
-    T[I] extends {harnessType: new (...args: any[]) => infer C}
-    ? C
-    : // Map `string` to `TestElement`.
-    T[I] extends string
-    ? TestElement
-    : // Map everything else to `never` (should not happen due to the type constraint on `T`).
-      never;
+      T[I] extends {harnessType: new (...args: any[]) => infer C}
+      ? C
+      : // Map `string` to `TestElement`.
+        T[I] extends string
+        ? TestElement
+        : // Map everything else to `never` (should not happen due to the type constraint on `T`).
+          never;
 }[number];
 
 /**
@@ -263,6 +263,13 @@ export interface LocatorFactory {
    * authors to wait for async tasks outside of the Angular zone.
    */
   waitForTasksOutsideAngular(): Promise<void>;
+
+  /**
+   * Waits for the given condition
+   */
+  until(condition: () => boolean | Promise<boolean>): Promise<void>;
+
+  sleep(ms: number): Promise<void>;
 }
 
 /**
@@ -399,6 +406,14 @@ export abstract class ComponentHarness {
   protected async waitForTasksOutsideAngular() {
     return this.locatorFactory.waitForTasksOutsideAngular();
   }
+
+  protected async sleep(ms: number) {
+    return this.locatorFactory.sleep(ms);
+  }
+
+  protected async until(condition: () => boolean | Promise<boolean>) {
+    return this.locatorFactory.until(condition);
+  }
 }
 
 /**
@@ -471,7 +486,10 @@ export class HarnessPredicate<T extends ComponentHarness> {
   private _descriptions: string[] = [];
   private _ancestor: string;
 
-  constructor(public harnessType: ComponentHarnessConstructor<T>, options: BaseHarnessFilters) {
+  constructor(
+    public harnessType: ComponentHarnessConstructor<T>,
+    options: BaseHarnessFilters,
+  ) {
     this._addBaseOptions(options);
   }
 

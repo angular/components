@@ -127,10 +127,16 @@ export class MainComponentHarness extends ComponentHarness {
 
   private _testTools = this.locatorFor(SubComponentHarness);
 
+  async isInitialized() {
+    await this.sleep(1000);
+  }
+
   async increaseCounter(times: number) {
     const button = await this.button();
     for (let i = 0; i < times; i++) {
+      const oldCount = await (await this.asyncCounter()).text();
       await button.click();
+      await this.until(async () => oldCount !== (await (await this.asyncCounter()).text()));
     }
   }
 
