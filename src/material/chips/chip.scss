@@ -713,10 +713,16 @@ $_avatar-trailing-padding: 8px;
     font-size: $_trailing-icon-size;
     box-sizing: content-box;
   }
-  //Increases mdc-dhip-remove trailing icon action touch-target in order to fix b/286959517
-  &.mat-mdc-chip-trailing-icon.mdc-evolution-chip__action--trailing,
-  &.mat-mdc-chip-trailing-icon.mdc-evolution-chip__icon--trailing {
-    padding: 24px 12px;
+}
+
+//Increases mdc-dhip-remove trailing icon action touch-target in order to fix b/286959517
+.mat-mdc-chip-trailing-icon.mdc-evolution-chip__action--trailing,
+.mat-mdc-chip-trailing-icon.mdc-evolution-chip__icon--trailing,
+.mdc-evolution-chip--with-primary-graphic.mdc-evolution-chip--with-trailing-action {
+  &.mat-mdc-chip-remove,
+  &.mat-mdc-standard-chip .mdc-evolution-chip__action--trailing,
+  &.mdc-evolution-chip--with-avatar .mdc-evolution-chip__action--trailing {
+    padding: 16px;
   }
 }
 
