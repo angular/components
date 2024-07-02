@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
+@use '../../../style/elevation';
 @use '../../token-utils';
-@use '@material/elevation' as mdc-elevation;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, select);
@@ -26,7 +26,7 @@ $prefix: (mat, select);
       focused-arrow-color: map.get($systems, md-sys-color, primary),
       invalid-arrow-color: map.get($systems, md-sys-color, error),
       container-elevation-shadow:
-        token-utils.hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
+        token-utils.hardcode(elevation.get-box-shadow(2), $exclude-hardcoded),
     )
   ), (
     // Color variants:

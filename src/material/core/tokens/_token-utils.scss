@@ -1,11 +1,11 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
-@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '@material/theme/theme' as mdc-theme;
 @use '@material/theme/keys' as mdc-keys;
 @use '@material/tokens/v0_161' as mdc-tokens;
+@use '../style/elevation';
 @use '../style/sass-utils';
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
@@ -161,7 +161,7 @@ $_component-prefix: null;
   $elevation: map.get($tokens, $elevation-token);
   $shadow-color: map.get($tokens, $shadow-color-token);
   @return map.merge($tokens, (
-    $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
+    $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
     $shadow-color-token: null,
   ));
 }

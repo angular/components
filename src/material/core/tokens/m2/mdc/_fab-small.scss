@@ -1,8 +1,7 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
-@use '../../../theming/inspection';
-@use '../../token-utils';
-
 @use 'sass:map';
+@use '../../../theming/inspection';
+@use '../../../style/elevation';
+@use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, fab-small);
@@ -53,10 +52,10 @@ $prefix: (mdc, fab-small);
   @return (
     // Background color of the FAB.
     container-color: inspection.get-theme-color($theme, background, card),
-    container-elevation-shadow: mdc-elevation.elevation-box-shadow(6),
-    focus-container-elevation-shadow: mdc-elevation.elevation-box-shadow(8),
-    hover-container-elevation-shadow: mdc-elevation.elevation-box-shadow(8),
-    pressed-container-elevation-shadow: mdc-elevation.elevation-box-shadow(12),
+    container-elevation-shadow: elevation.get-box-shadow(6),
+    focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
   );
 }
 
