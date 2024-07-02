@@ -1,5 +1,5 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use '../../token-utils';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -9,7 +9,7 @@ $prefix: (mat, dialog);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-elevation-shadow: mdc-elevation.elevation-box-shadow(24),
+    container-elevation-shadow: elevation.get-box-shadow(24),
     container-max-width: 80vw,
     container-small-max-width: 80vw,
     container-min-width: 0,

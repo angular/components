@@ -1,4 +1,3 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use '../../../style/elevation';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
@@ -60,7 +59,7 @@ $prefix: (mdc, outlined-card);
     container-color: inspection.get-theme-color($theme, background, card),
     // The border color of the card.
     outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    container-elevation: mdc-elevation.elevation-box-shadow(0),
+    container-elevation: elevation.get-box-shadow(0),
   );
 }
 
