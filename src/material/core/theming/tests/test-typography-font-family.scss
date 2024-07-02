@@ -1,7 +1,9 @@
-@use '@material/typography' as mdc-typography;
-@use '../../m2/typography' as m2-typography;
+@use 'sass:string';
 @use 'sass:map';
 @use 'sass:meta';
+@use '../../m2/typography' as m2-typography;
+
+$_font-family: string.unquote('Roboto, sans-serif');
 
 @function assert-font-family($test-name, $obj, $expected) {
   @each $level-name, $level in $obj {
@@ -16,7 +18,7 @@
 $no-font-family: assert-font-family(
   'should take default MDC font family if none is specified',
   m2-typography.define-typography-config(),
-  mdc-typography.$font-family);
+  $_font-family);
 
 $only-top-level-font-family: assert-font-family(
   'should take custom font family if specified at top level',
@@ -40,7 +42,7 @@ $individual-levels-without-font-families: assert-font-family(
     $button: m2-typography.define-typography-level($font-size: 1px),
     $overline: m2-typography.define-typography-level($font-size: 1px),
   ),
-  mdc-typography.$font-family
+  $_font-family
 );
 
 $individual-levels-without-font-families-with-top-level-family: assert-font-family(
