@@ -97,8 +97,6 @@ export class MatDialogContainer
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
-  /** Platform Observer */
-  // private _userAgentSubscription = Subscription.EMPTY;
   private _getWindow(): Window {
     return this._document?.defaultView || window;
   }
@@ -169,7 +167,7 @@ export class MatDialogContainer
 
   private _setAriaLabel = (): void => {
     const os = this._getUserPlatform();
-    if (os === 'macos') {
+    if (os === 'macos' || os === 'ios') {
       this._getDialogName();
     }
     return;
