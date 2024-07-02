@@ -3,6 +3,7 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   BACKSPACE,
   DELETE,
+  DOWN_ARROW,
   END,
   ENTER,
   HOME,
@@ -10,6 +11,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   TAB,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
@@ -308,6 +310,48 @@ describe('MDC-based MatChipGrid', () => {
           expect(document.activeElement)
             .withContext('Expected focused item not to have changed.')
             .toBe(previousActiveElement);
+        });
+
+        it('should focus primary action in next row when pressing DOWN ARROW on primary action', () => {
+          chips.first.focus();
+          expect(document.activeElement).toBe(primaryActions[0]);
+
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', DOWN_ARROW);
+          fixture.detectChanges();
+
+          expect(document.activeElement).toBe(primaryActions[1]);
+        });
+
+        it('should focus primary action in previous row when pressing UP ARROW on primary action', () => {
+          const lastIndex = primaryActions.length - 1;
+          chips.last.focus();
+          expect(document.activeElement).toBe(primaryActions[lastIndex]);
+
+          dispatchKeyboardEvent(primaryActions[lastIndex], 'keydown', UP_ARROW);
+          fixture.detectChanges();
+
+          expect(document.activeElement).toBe(primaryActions[lastIndex - 1]);
+        });
+
+        it('should focus(trailing action in next row when pressing DOWN ARROW on(trailing action', () => {
+          trailingActions[0].focus();
+          expect(document.activeElement).toBe(trailingActions[0]);
+
+          dispatchKeyboardEvent(trailingActions[0], 'keydown', DOWN_ARROW);
+          fixture.detectChanges();
+
+          expect(document.activeElement).toBe(trailingActions[1]);
+        });
+
+        it('should focus trailing action in previous row when pressing UP ARROW on trailing action', () => {
+          const lastIndex = trailingActions.length - 1;
+          trailingActions[lastIndex].focus();
+          expect(document.activeElement).toBe(trailingActions[lastIndex]);
+
+          dispatchKeyboardEvent(trailingActions[lastIndex], 'keydown', UP_ARROW);
+          fixture.detectChanges();
+
+          expect(document.activeElement).toBe(trailingActions[lastIndex - 1]);
         });
       });
 
@@ -1034,11 +1078,8 @@ describe('MDC-based MatChipGrid', () => {
   template: `
     <mat-chip-grid [tabIndex]="tabIndex" [role]="role" #chipGrid>
       @for (i of chips; track i) {
-  <mat-chip-row
-                    [editable]="editable">
-        {{name}} {{i + 1}}
-      </mat-chip-row>
-}
+        <mat-chip-row [editable]="editable">{{name}} {{i + 1}}</mat-chip-row>
+      }
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
 })
@@ -1056,8 +1097,8 @@ class StandardChipGrid {
       <mat-label>Add a chip</mat-label>
       <mat-chip-grid #chipGrid>
         @for (chip of chips; track chip) {
-  <mat-chip-row (removed)="remove(chip)">{{chip}}</mat-chip-row>
-}
+          <mat-chip-row (removed)="remove(chip)">{{chip}}</mat-chip-row>
+        }
       </mat-chip-grid>
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
@@ -1081,10 +1122,10 @@ class FormFieldChipGrid {
       <mat-label>New food...</mat-label>
       <mat-chip-grid #chipGrid placeholder="Food" [formControl]="control">
         @for (food of foods; track food) {
-  <mat-chip-row [value]="food.value" (removed)="remove(food)">
-          {{ food.viewValue }}
-        </mat-chip-row>
-}
+          <mat-chip-row [value]="food.value" (removed)="remove(food)">
+            {{ food.viewValue }}
+          </mat-chip-row>
+        }
       </mat-chip-grid>
       <input
           [matChipInputFor]="chipGrid"
@@ -1143,10 +1184,8 @@ class InputChipGrid {
   <mat-form-field>
     <mat-chip-grid #chipGrid [formControl]="formControl">
       @for (food of foods; track food) {
-  <mat-chip-row [value]="food.value">
-      {{food.viewValue}}
-      </mat-chip-row>
-}
+        <mat-chip-row [value]="food.value">{{food.viewValue}}</mat-chip-row>
+      }
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>
     <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
@@ -1179,8 +1218,8 @@ class ChipGridWithFormErrorMessages {
   template: `
     <mat-chip-grid #chipGrid>
       @for (i of numbers; track i) {
-  <mat-chip-row (removed)="remove(i)">{{i}}</mat-chip-row>
-}
+        <mat-chip-row (removed)="remove(i)">{{i}}</mat-chip-row>
+      }
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-chip-grid>`,
   animations: [
@@ -1208,11 +1247,11 @@ class StandardChipGridWithAnimations {
     <mat-form-field>
       <mat-chip-grid #chipGrid>
         @for (i of chips; track i) {
-  <mat-chip-row [value]="i" (removed)="removeChip($event)">
-          Chip {{i + 1}}
-          <span matChipRemove>Remove</span>
-        </mat-chip-row>
-}
+          <mat-chip-row [value]="i" (removed)="removeChip($event)">
+            Chip {{i + 1}}
+            <span matChipRemove>Remove</span>
+          </mat-chip-row>
+        }
       </mat-chip-grid>
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
