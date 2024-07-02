@@ -1,7 +1,5 @@
 @use '@material/feature-targeting/feature-targeting';
-@use '@material/density/functions' as density-functions;
 @use '@material/list/evolution-mixins' as mdc-list;
-@use '@material/list/evolution-variables' as mdc-list-variables;
 @use '../core/mdc-helpers/mdc-helpers';
 
 // For compatibility with the non-MDC selection list, we support avatars that are
@@ -56,27 +54,6 @@
           border-radius: 50%;
         }
       }
-    }
-  }
-}
-
-@mixin density-styles($density-scale) {
-  $one-line-tall-height: density-functions.prop-value(
-    $density-config: mdc-list-variables.$one-line-item-tall-density-config,
-    $density-scale: $density-scale,
-    $property-name: height,
-  );
-
-  $two-line-tall-height: density-functions.prop-value(
-    $density-config: mdc-list-variables.$two-line-item-tall-density-config,
-    $density-scale: $density-scale,
-    $property-name: height,
-  );
-
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    .mat-mdc-list-option-with-trailing-avatar {
-      @include mdc-list.one-line-item-height($one-line-tall-height);
-      @include mdc-list.two-line-item-height($two-line-tall-height);
     }
   }
 }
