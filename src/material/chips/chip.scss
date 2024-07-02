@@ -1,227 +1,563 @@
 @use '@angular/cdk';
-@use '@material/chips/chip' as mdc-chip;
-@use '@material/chips/chip-theme' as mdc-chip-theme;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
 @use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
+@use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use '@material/theme/custom-properties' as mdc-custom-properties;
 
-// The slots for tokens that will be configured in the theme can be emitted with no fallback.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-chip-token-slots: tokens-mdc-chip.get-token-slots();
-  $mat-chip-token-slots: tokens-mat-chip.get-token-slots();
+$_checkmark-size: 20px;
+$_trailing-icon-size: 18px;
+$_action-padding: 12px;
+$_graphic-padding: 6px;
+$_trailing-action-padding: 8px;
+$_avatar-leading-padding: 4px;
+$_avatar-trailing-padding: 8px;
 
-  // Add the MDC chip static styles.
-  @include mdc-chip.static-styles();
+.mdc-evolution-chip,
+.mdc-evolution-chip__cell,
+.mdc-evolution-chip__action {
+  display: inline-flex;
+  align-items: center;
+}
 
-  .mat-mdc-standard-chip {
-    // Add the official slots for the MDC chip.
-    @include mdc-chip-theme.theme-styles($mdc-chip-token-slots);
+.mdc-evolution-chip {
+  position: relative;
+  max-width: 100%;
+}
+
+.mdc-evolution-chip__cell,
+.mdc-evolution-chip__action {
+  height: 100%;
+}
+
+.mdc-evolution-chip__cell--primary {
+  // Ensures that the trailing icon is pushed to the end if the chip has a set width.
+  flex-basis: 100%;
+  overflow-x: hidden;
+}
+
+.mdc-evolution-chip__cell--trailing {
+  flex: 1 0 auto;
+}
+
+.mdc-evolution-chip__action {
+  align-items: center;
+  background: none;
+  border: none;
+  box-sizing: content-box;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  outline: none;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mdc-evolution-chip__action--presentational {
+  cursor: auto;
+}
+
+.mdc-evolution-chip--disabled,
+.mdc-evolution-chip__action:disabled {
+  pointer-events: none;
+}
+
+.mdc-evolution-chip__action--primary {
+  // This element can be placed on a `button` node which usually has some user agent styles.
+  // Reset the font so that the typography from the root element can propagate down.
+  font: inherit;
+  letter-spacing: inherit;
+  white-space: inherit;
+  overflow-x: hidden;
+
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip &::before {
+      @include token-utils.create-token-slot(border-width, outline-width);
+      @include token-utils.create-token-slot(border-radius, container-shape-radius);
+      box-sizing: border-box;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      pointer-events: none;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+      border-style: solid;
+    }
+
+    .mat-mdc-standard-chip & {
+      padding-left: $_action-padding;
+      padding-right: $_action-padding;
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
+      padding-left: 0;
+      padding-right: $_action-padding;
+    }
+
+    [dir='rtl'] .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
+      padding-left: $_action-padding;
+      padding-right: 0;
+    }
+
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) &::before {
+      @include token-utils.create-token-slot(border-color, outline-color);
+    }
+
+    &:not(.mdc-evolution-chip__action--presentational):not(.mdc-ripple-upgraded):focus::before {
+      @include token-utils.create-token-slot(border-color, focus-outline-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled &::before {
+      @include token-utils.create-token-slot(border-color, disabled-outline-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--selected &::before {
+      @include token-utils.create-token-slot(border-width, flat-selected-outline-width);
+    }
   }
 
-  // The highlighted attribute is used to make the chip appear as selected on-demand,
-  // aside from showing the selected indicator. We achieve this by re-mapping the base
-  // tokens to the highlighted ones. Note that we only need to do this for the tokens
-  // that we don't re-implement ourselves below.
-  // TODO(crisbeto): with some future refactors we may be able to clean this up.
-  .mat-mdc-chip-highlighted {
-    @include token-utils.use-tokens(tokens-mdc-chip.$prefix, $mdc-chip-token-slots) {
-      $highlighted-remapped-tokens: (
-        with-icon-icon-color: with-icon-selected-icon-color,
-        elevated-container-color: elevated-selected-container-color,
-        label-text-color: selected-label-text-color,
-        outline-width: flat-selected-outline-width,
+  // Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
+  // inherit the font size, because they wrap the label in a `button` that has user agent styles.
+  .mat-mdc-basic-chip & {
+    font: inherit;
+  }
+
+  // Moved out into variables, because the selectors are too long.
+  $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
+  $with-trailing: '.mdc-evolution-chip--with-trailing-action';
+
+  .mat-mdc-standard-chip#{$with-trailing} & {
+    padding-left: $_action-padding;
+    padding-right: 0;
+  }
+
+  [dir='rtl'] .mat-mdc-standard-chip#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: $_action-padding;
+  }
+
+  .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  [dir='rtl'] .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic} & {
+    padding-left: 0;
+    padding-right: $_action-padding;
+  }
+
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic} & {
+    padding-left: $_action-padding;
+    padding-right: 0;
+  }
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.mdc-evolution-chip__action--trailing {
+  position: relative;
+  overflow: visible;
+
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+      @include token-utils.create-token-slot(color, with-trailing-icon-trailing-icon-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+      @include token-utils.create-token-slot(color,
+        with-trailing-icon-disabled-trailing-icon-color);
+    }
+  }
+
+  // Moved out into variables, because the selectors are too long.
+  $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
+  $with-trailing: '.mdc-evolution-chip--with-trailing-action';
+
+  .mat-mdc-standard-chip#{$with-trailing} & {
+    padding-left: $_trailing-action-padding;
+    padding-right: $_trailing-action-padding;
+  }
+
+  .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_trailing-action-padding;
+    padding-right: $_trailing-action-padding;
+  }
+
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_avatar-trailing-padding;
+    padding-right: $_avatar-trailing-padding;
+  }
+
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_avatar-trailing-padding;
+    padding-right: $_avatar-trailing-padding;
+  }
+
+}
+
+.mdc-evolution-chip__text-label {
+  @include vendor-prefixes.user-select(none);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip & {
+      @include token-utils.create-token-slot(font-family, label-text-font);
+      @include token-utils.create-token-slot(line-height, label-text-line-height);
+      @include token-utils.create-token-slot(font-size, label-text-size);
+      @include token-utils.create-token-slot(font-weight, label-text-weight);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    }
+
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+      @include token-utils.create-token-slot(color, label-text-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) & {
+      @include token-utils.create-token-slot(color, selected-label-text-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled &,
+    .mat-mdc-standard-chip.mdc-evolution-chip--selected.mdc-evolution-chip--disabled & {
+      @include token-utils.create-token-slot(color, disabled-label-text-color);
+    }
+  }
+}
+
+.mdc-evolution-chip__graphic {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  position: relative;
+  flex: 1 0 auto;
+
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip & {
+      @include token-utils.create-token-slot(width, with-avatar-avatar-size);
+      @include token-utils.create-token-slot(height, with-avatar-avatar-size);
+      @include token-utils.create-token-slot(font-size, with-avatar-avatar-size);
+    }
+  }
+
+  .mdc-evolution-chip--selecting & {
+    transition: width 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Moved out into variables, because the selectors are too long.
+  $with-icon: '.mdc-evolution-chip--with-primary-icon';
+  $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
+  $with-trailing: '.mdc-evolution-chip--with-trailing-action';
+
+  .mdc-evolution-chip--selectable:not(.mdc-evolution-chip--selected):not(#{$with-icon}) & {
+    width: 0;
+  }
+
+  .mat-mdc-standard-chip#{$with-graphic} & {
+    padding-left: $_graphic-padding;
+    padding-right: $_graphic-padding;
+  }
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic} & {
+    padding-left: $_avatar-leading-padding;
+    padding-right: $_avatar-trailing-padding;
+  }
+
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic} & {
+    padding-left: $_avatar-trailing-padding;
+    padding-right: $_avatar-leading-padding;
+  }
+
+  .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_graphic-padding;
+    padding-right: $_graphic-padding;
+  }
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_avatar-leading-padding;
+    padding-right: $_avatar-trailing-padding;
+  }
+
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+    padding-left: $_avatar-trailing-padding;
+    padding-right: $_avatar-leading-padding;
+  }
+}
+
+.mdc-evolution-chip__checkmark {
+  position: absolute;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  height: $_checkmark-size;
+  width: $_checkmark-size;
+
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+      @include token-utils.create-token-slot(color, with-icon-selected-icon-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+      @include token-utils.create-token-slot(color, with-icon-disabled-icon-color);
+    }
+  }
+
+  .mdc-evolution-chip--selecting & {
+    transition: transform 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate(-75%, -50%);
+  }
+
+  .mdc-evolution-chip--selected & {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+.mdc-evolution-chip__checkmark-svg {
+  display: block;
+}
+
+.mdc-evolution-chip__checkmark-path {
+  stroke-width: 2px;
+  stroke-dasharray: 29.7833385;
+  stroke-dashoffset: 29.7833385;
+  stroke: currentColor;
+
+  .mdc-evolution-chip--selecting & {
+    transition: stroke-dashoffset 150ms 45ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mdc-evolution-chip--selected & {
+    stroke-dashoffset: 0;
+  }
+
+  @include cdk.high-contrast(active, off) {
+    // SVG colors won't be changed in high contrast mode and since the checkmark is white
+    // by default, it'll blend in with the background in black-on-white mode. Override the
+    // color to ensure that it's visible. We need !important, because the theme styles are
+    // very specific.
+    stroke: CanvasText !important;
+  }
+}
+
+.mdc-evolution-chip__icon--trailing {
+  .mat-mdc-standard-chip & {
+    height: $_trailing-icon-size;
+    width: $_trailing-icon-size;
+    font-size: $_trailing-icon-size;
+  }
+
+  $disabled-icon-opacity: null;
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    $disabled-icon-opacity:
+      #{token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity)};
+  }
+
+  // If the trailing icon is a chip-remove button, we have to factor in the trailing action
+  // opacity as well as the disabled opacity.
+  .mdc-evolution-chip--disabled &.mat-mdc-chip-remove {
+    @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+      opacity: calc(
+        var(#{token-utils.get-token-variable(trailing-action-opacity)}) *
+        var(#{$disabled-icon-opacity})
       );
 
-      @each $selected, $base in $highlighted-remapped-tokens {
-        #{token-utils.get-token-variable($selected)}: var(token-utils.get-token-variable($base));
-      }
-    }
-  }
-
-  // Add additional slots for the MDC chip tokens, needed in Angular Material.
-  $disabled-trailing-icon-opacity: 1;
-
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, $mdc-chip-token-slots) {
-    .mat-mdc-chip-focus-overlay {
-      @include token-utils.create-token-slot(background, focus-state-layer-color);
-
-      .mat-mdc-chip-selected &,
-      .mat-mdc-chip-highlighted & {
-        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
-      }
-
-      .mat-mdc-chip:hover & {
-        @include token-utils.create-token-slot(background, hover-state-layer-color);
-        @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
-      }
-
-      .mat-mdc-chip-selected:hover,
-      .mat-mdc-chip-highlighted:hover & {
-        @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
-        @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
-      }
-
-      .mat-mdc-chip.cdk-focused & {
-        @include token-utils.create-token-slot(background, focus-state-layer-color);
-        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
-      }
-
-      .mat-mdc-chip-selected.cdk-focused &,
-      .mat-mdc-chip-highlighted.cdk-focused & {
-        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
-        @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
-      }
-    }
-
-    .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
-      @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
-    }
-
-    .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-      $disabled-trailing-icon-opacity:
-        token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
-
-      @include token-utils.create-token-slot(
-          opacity, with-trailing-icon-disabled-trailing-icon-opacity);
-    }
-
-    .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
-      @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
-    }
-  }
-
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, $mat-chip-token-slots) {
-    // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
-    // Now that MDC supports disabled styles, we should switch to using theirs.
-    .mat-mdc-standard-chip {
-      &.mdc-evolution-chip--disabled {
-        @include token-utils.create-token-slot(opacity, disabled-container-opacity);
-      }
-
-      &.mdc-evolution-chip--selected,
-      &.mat-mdc-chip-highlighted {
-        .mdc-evolution-chip__icon--trailing {
-          @include token-utils.create-token-slot(color, selected-trailing-icon-color);
-        }
-
-        &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-          @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
-        }
-      }
-    }
-
-    .mat-mdc-chip-remove {
-      @include token-utils.create-token-slot(opacity, trailing-action-opacity);
-
       &:focus {
-        @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
-      }
-
-      &::after {
-        @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
-      }
-
-      &:hover::after {
-        @include token-utils.create-token-slot(opacity, trailing-action-hover-state-layer-opacity);
-      }
-
-      &:focus::after {
-        @include token-utils.create-token-slot(opacity, trailing-action-focus-state-layer-opacity);
-      }
-    }
-
-    .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
-    .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
-      @include token-utils.create-token-slot(
-          background, selected-trailing-action-state-layer-color);
-    }
-
-    // If the trailing icon is a chip-remove button, we have to factor in the trailing action
-    // opacity as well as the disabled opacity.
-    .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-      &.mat-mdc-chip-remove {
         opacity: calc(
-          var(#{token-utils.get-token-variable(trailing-action-opacity)}) *
-          var(#{$disabled-trailing-icon-opacity})
+          var(#{token-utils.get-token-variable(trailing-action-focus-opacity)}) *
+          var(#{$disabled-icon-opacity})
         );
-
-        &:focus {
-          opacity: calc(
-            var(#{token-utils.get-token-variable(trailing-action-focus-opacity)}) *
-            var(#{$disabled-trailing-icon-opacity})
-          );
-        }
       }
     }
   }
 }
 
-// We *should* be able to include these styles through MDC's
-// `theme-styles` mixin, but we can't at the time of writing.
-@mixin _missing-mdc-theme-styles() {
-  .mat-mdc-standard-chip {
-    @include mdc-chip-theme.outline-style(solid);
-    @include mdc-chip-theme.checkmark-size(mdc-chip-theme.$checkmark-size);
-    @include mdc-chip-theme.trailing-action-size(mdc-chip-theme.$trailing-action-size);
-    @include mdc-chip-theme.horizontal-padding(
-      mdc-chip-theme.$leading-padding,
-      mdc-chip-theme.$trailing-padding
-    );
-    @include mdc-chip-theme.with-graphic-horizontal-padding(
-      mdc-chip-theme.$graphic-leading-padding,
-      mdc-chip-theme.$graphic-trailing-padding,
-      mdc-chip-theme.$trailing-padding
-    );
-    @include mdc-chip-theme.with-trailing-action-horizontal-padding(
-      mdc-chip-theme.$leading-padding,
-      mdc-chip-theme.$trailing-action-leading-padding,
-      mdc-chip-theme.$trailing-action-trailing-padding
-    );
-    @include mdc-chip-theme.with-graphic-and-trailing-action-horizontal-padding(
-      mdc-chip-theme.$graphic-leading-padding,
-      mdc-chip-theme.$graphic-trailing-padding,
-      mdc-chip-theme.$trailing-action-leading-padding,
-      mdc-chip-theme.$trailing-action-trailing-padding
-    );
+.mat-mdc-standard-chip {
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    @include token-utils.create-token-slot(border-radius, container-shape-radius);
+    @include token-utils.create-token-slot(height, container-height);
+
+    &:not(.mdc-evolution-chip--disabled) {
+      @include token-utils.create-token-slot(background-color, elevated-container-color);
+    }
+
+    &.mdc-evolution-chip--disabled {
+      @include token-utils.create-token-slot(background-color, elevated-disabled-container-color);
+    }
+
+    &.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
+      @include token-utils.create-token-slot(background-color, elevated-selected-container-color);
+    }
+
+    &.mdc-evolution-chip--selected.mdc-evolution-chip--disabled {
+      @include token-utils.create-token-slot(background-color,
+        flat-disabled-selected-container-color);
+    }
   }
 
-  .mdc-evolution-chip--with-avatar {
-    @include mdc-chip-theme.with-graphic-horizontal-padding(
-      mdc-chip-theme.$avatar-leading-padding,
-      mdc-chip-theme.$avatar-trailing-padding,
-      mdc-chip-theme.$trailing-padding
-    );
-    @include mdc-chip-theme.with-graphic-and-trailing-action-horizontal-padding(
-      mdc-chip-theme.$avatar-leading-padding,
-      mdc-chip-theme.$avatar-trailing-padding,
-      mdc-chip-theme.$trailing-action-leading-padding,
-      mdc-chip-theme.$trailing-action-trailing-padding
-    );
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
   }
 }
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include _missing-mdc-theme-styles();
+.mdc-evolution-chip__icon--primary {
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    .mat-mdc-standard-chip & {
+      @include token-utils.create-token-slot(border-radius, with-avatar-avatar-shape-radius);
+      @include token-utils.create-token-slot(width, with-icon-icon-size);
+      @include token-utils.create-token-slot(height, with-icon-icon-size);
+      @include token-utils.create-token-slot(font-size, with-icon-icon-size);
+    }
+
+    .mdc-evolution-chip--selected & {
+      opacity: 0;
+    }
+
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+      @include token-utils.create-token-slot(color, with-icon-icon-color);
+    }
+
+    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+      @include token-utils.create-token-slot(color, with-icon-disabled-icon-color);
+    }
+  }
+}
+
+// The highlighted attribute is used to make the chip appear as selected on-demand,
+// aside from showing the selected indicator. We achieve this by re-mapping the base
+// tokens to the highlighted ones. Note that we only need to do this for the tokens
+// that we don't re-implement ourselves below.
+// TODO(crisbeto): with some future refactors we may be able to clean this up.
+.mat-mdc-chip-highlighted {
+  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+    $highlighted-remapped-tokens: (
+      with-icon-icon-color: with-icon-selected-icon-color,
+      elevated-container-color: elevated-selected-container-color,
+      label-text-color: selected-label-text-color,
+      outline-width: flat-selected-outline-width,
+    );
+
+    @each $selected, $base in $highlighted-remapped-tokens {
+      #{token-utils.get-token-variable($selected)}: var(token-utils.get-token-variable($base));
+    }
+  }
+}
+
+// Add additional slots for the MDC chip tokens, needed in Angular Material.
+@include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  .mat-mdc-chip-focus-overlay {
+    @include token-utils.create-token-slot(background, focus-state-layer-color);
+
+    .mat-mdc-chip-selected &,
+    .mat-mdc-chip-highlighted & {
+      @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+    }
+
+    .mat-mdc-chip:hover & {
+      @include token-utils.create-token-slot(background, hover-state-layer-color);
+      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+    }
+
+    .mat-mdc-chip-selected:hover,
+    .mat-mdc-chip-highlighted:hover & {
+      @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
+      @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
+    }
+
+    .mat-mdc-chip.cdk-focused & {
+      @include token-utils.create-token-slot(background, focus-state-layer-color);
+      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+    }
+
+    .mat-mdc-chip-selected.cdk-focused &,
+    .mat-mdc-chip-highlighted.cdk-focused & {
+      @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+      @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
+    }
+  }
+
+  .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
+    @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
+  }
+
+  .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+    @include token-utils.create-token-slot(
+      opacity, with-trailing-icon-disabled-trailing-icon-opacity);
+  }
+
+  .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
+    @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
+  }
+}
+
+@include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
+  // Now that MDC supports disabled styles, we should switch to using theirs.
+  .mat-mdc-standard-chip {
+    &.mdc-evolution-chip--disabled {
+      @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+    }
+
+    &.mdc-evolution-chip--selected,
+    &.mat-mdc-chip-highlighted {
+      .mdc-evolution-chip__icon--trailing {
+        @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+      }
+
+      &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+        @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
+      }
+    }
+  }
+
+  .mat-mdc-chip-remove {
+    @include token-utils.create-token-slot(opacity, trailing-action-opacity);
+
+    &:focus {
+      @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
+    }
+
+    &::after {
+      @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
+    }
+
+    &:hover::after {
+      @include token-utils.create-token-slot(opacity, trailing-action-hover-state-layer-opacity);
+    }
+
+    &:focus::after {
+      @include token-utils.create-token-slot(opacity, trailing-action-focus-state-layer-opacity);
+    }
+  }
+
+  .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
+  .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
+    @include token-utils.create-token-slot(background, selected-trailing-action-state-layer-color);
+  }
 }
 
 .mat-mdc-standard-chip {
   -webkit-tap-highlight-color: transparent;
-
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-
-    .mdc-evolution-chip__checkmark-path {
-      // SVG colors won't be changed in high contrast mode and since the checkmark is white
-      // by default, it'll blend in with the background in black-on-white mode. Override the
-      // color to ensure that it's visible. We need !important, because the theme styles are
-      // very specific.
-      stroke: CanvasText !important;
-    }
-  }
 
   // MDC sets `overflow: hidden` on these elements in order to truncate the text. This is
   // unnecessary since our chips don't truncate their text and it makes it difficult to style
@@ -230,19 +566,6 @@
   .mdc-evolution-chip__action--primary,
   .mat-mdc-chip-action-label {
     overflow: visible;
-  }
-
-  // Ensures that the trailing icon is pushed to the end if the chip has a set width.
-  .mdc-evolution-chip__cell--primary {
-    flex-basis: 100%;
-  }
-
-  // This element can be placed on a `button` node which usually has some user agent styles.
-  // Reset the font so that the typography from the root element can propagate down.
-  .mdc-evolution-chip__action--primary {
-    font: inherit;
-    letter-spacing: inherit;
-    white-space: inherit;
   }
 
   // MDC sizes and positions this element using `width`, `height` and `padding`.
@@ -265,12 +588,6 @@
       animation-duration: 1ms;
     }
   }
-}
-
-// Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
-// inherit the font size, because they wrap the label in a `button` that has user agent styles.
-.mat-mdc-basic-chip .mdc-evolution-chip__action--primary {
-  font: inherit;
 }
 
 // MDC's focus and hover indication is handled through their ripple which we currently
@@ -391,9 +708,9 @@
   }
 
   .mat-icon {
-    width: mdc-chip-theme.$trailing-action-size;
-    height: mdc-chip-theme.$trailing-action-size;
-    font-size: mdc-chip-theme.$trailing-action-size;
+    width: $_trailing-icon-size;
+    height: $_trailing-icon-size;
+    font-size: $_trailing-icon-size;
     box-sizing: content-box;
   }
 }
