@@ -1,7 +1,7 @@
 @use 'sass:map';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
-@use '@material/elevation' as mdc-elevation;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, datepicker);
@@ -67,10 +67,10 @@ $prefix: (mat, datepicker);
     ),
     calendar-container-background-color: map.get($systems, md-sys-color, surface-container-high),
     calendar-container-text-color: map.get($systems, md-sys-color, on-surface),
-    calendar-container-elevation-shadow: token-utils.hardcode(mdc-elevation.elevation-box-shadow(0),
+    calendar-container-elevation-shadow: token-utils.hardcode(elevation.get-box-shadow(0),
       $exclude-hardcoded),
     calendar-container-touch-elevation-shadow:
-      token-utils.hardcode(mdc-elevation.elevation-box-shadow(0), $exclude-hardcoded),
+      token-utils.hardcode(elevation.get-box-shadow(0), $exclude-hardcoded),
     calendar-container-shape: map.get($systems, md-sys-shape, corner-large),
     calendar-container-touch-shape: map.get($systems, md-sys-shape, corner-extra-large),
     calendar-text-font: map.get($systems, md-sys-typescale, body-large-font),

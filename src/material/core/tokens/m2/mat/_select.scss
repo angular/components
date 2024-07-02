@@ -2,8 +2,8 @@
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, select);
@@ -12,7 +12,7 @@ $prefix: (mat, select);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-elevation-shadow: mdc-elevation.elevation-box-shadow(8),
+    container-elevation-shadow: elevation.get-box-shadow(8),
   );
 }
 

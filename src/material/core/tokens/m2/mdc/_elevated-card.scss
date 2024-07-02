@@ -1,5 +1,5 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use '../../../theming/inspection';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -51,7 +51,7 @@ $prefix: (mdc, elevated-card);
   @return (
     // The background color of the card.
     container-color: inspection.get-theme-color($theme, background, card),
-    container-elevation: mdc-elevation.elevation-box-shadow(1),
+    container-elevation: elevation.get-box-shadow(1),
   );
 }
 
