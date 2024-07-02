@@ -1,4 +1,3 @@
-@use '@material/typography/typography';
 @use '@material/feature-targeting/feature-targeting';
 @use '@material/density/functions' as density-functions;
 @use '@material/list/evolution-mixins' as mdc-list;
@@ -22,8 +21,33 @@
       @include mdc-list.item-end-size(40px, $query: $query);
 
       &.mdc-list-item--with-two-lines {
+        $top: 32px;
+        $bottom: 20px;
+
         .mdc-list-item__primary-text {
-          @include typography.text-baseline($top: 32px, $bottom: 20px, $query: $query);
+          display: block;
+          margin-top: 0;
+          line-height: normal;
+          margin-bottom: $bottom * -1;
+
+          // This was used by MDC to set the text baseline. We should figure out a way to
+          // remove it, because it can introduce unnecessary whitespace at the beginning
+          // of the element.
+          &::before {
+            display: inline-block;
+            width: 0;
+            height: $top;
+            content: '';
+            vertical-align: 0;
+          }
+
+          &::after {
+            display: inline-block;
+            width: 0;
+            height: $bottom;
+            content: '';
+            vertical-align: $bottom * -1;
+          }
         }
       }
 

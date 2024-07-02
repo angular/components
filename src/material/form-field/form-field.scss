@@ -8,7 +8,6 @@
 @use '@material/line-ripple/line-ripple' as mdc-line-ripple;
 @use '@material/line-ripple/line-ripple-theme' as mdc-line-ripple-theme;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '@material/typography' as mdc-typography;
 @use '../core/tokens/token-utils';
 @use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/vendor-prefixes';
@@ -91,7 +90,7 @@ $_icon-prefix-infix-padding: 4px;
 
   @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
     tokens-mat-form-field.get-token-slots()) {
-    @include mdc-typography.smooth-font();
+    @include vendor-prefixes.smooth-font();
     @include token-utils.create-token-slot(font-family, container-text-font);
     @include token-utils.create-token-slot(line-height, container-text-line-height);
     @include token-utils.create-token-slot(font-size, container-text-size);

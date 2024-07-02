@@ -5,7 +5,6 @@
 @use '@material/button/button-filled-theme' as mdc-button-filled-theme;
 @use '@material/button/button-protected-theme' as mdc-button-protected-theme;
 @use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
-@use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
 
 @use './button-base';
@@ -155,7 +154,7 @@
   // Similar to MDC's `_icon-structure`, apart from the margin which we
   // handle via custom tokens in `mat-private-button-horizontal-layout`.
   & > .mat-icon {
-    $icon-size: mdc-typography.px-to-rem(18px);
+    $icon-size: 1.125rem;
     display: inline-block;
     position: relative;
     vertical-align: top;
