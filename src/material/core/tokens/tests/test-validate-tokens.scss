@@ -18,7 +18,6 @@
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
-@use '@material/chips/chip-theme' as mdc-chips-theme;
 @use '@material/dialog/dialog-theme' as mdc-dialog-theme;
 @use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
 @use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
@@ -122,11 +121,6 @@
   $component: 'm2.mdc.slider',
   $slots: tokens-mdc-slider.get-token-slots(),
   $reference: mdc-slider-theme.$light-theme
-);
-@include validate-slots(
-  $component: 'm2.mdc.chips',
-  $slots: tokens-mdc-chip.get-token-slots(),
-  $reference: mdc-chips-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.dialog',

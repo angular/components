@@ -19,21 +19,9 @@ $prefix: (mdc, chip);
 @function get-unthemable-tokens() {
   @return (
     // The shape & radius of the chip.
-    container-shape:
-      (
-        family: 'rounded',
-        radius: (
-          16px 16px 16px 16px,
-        )
-      ),
+    container-shape-radius: 16px,
     // The shape & radius of the avatar.
-    with-avatar-avatar-shape:
-      (
-        family: 'rounded',
-        radius: (
-          14px 14px 14px 14px,
-        )
-      ),
+    with-avatar-avatar-shape-radius: 14px,
     // The width & height of the chip avatar.
     with-avatar-avatar-size: 28px,
     // The width & height of the chip icon.
