@@ -1,5 +1,4 @@
 @use '@material/textfield/variables' as mdc-textfield-variables;
-@use '@material/typography/typography' as mdc-typography;
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
@@ -25,7 +24,7 @@ $_enable-form-field-will-change-reset: true;
   // Note: We increase specificity here because the MDC textfield seems to override this,
   // depending on the CSS order, with an affix selector joint with the input.
   .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
-    @include mdc-typography.smooth-font();
+    @include vendor-prefixes.smooth-font();
     font: inherit;
     letter-spacing: inherit;
     text-decoration: inherit;
@@ -34,7 +33,7 @@ $_enable-form-field-will-change-reset: true;
   }
 
   .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
-    @include mdc-typography.smooth-font();
+    @include vendor-prefixes.smooth-font();
 
     // In order to ensure proper alignment of the floating label, we reset its line-height.
     // The line-height is not important as the element is absolutely positioned and only has one

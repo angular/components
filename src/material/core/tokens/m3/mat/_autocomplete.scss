@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '@material/elevation/elevation-theme' as mdc-elevation;
+@use '../../../style/elevation';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -15,7 +15,7 @@ $prefix: (mat, autocomplete);
     background-color: map.get($systems, md-sys-color, surface-container),
     container-shape: map.get($systems, md-sys-shape, corner-extra-small),
     container-elevation-shadow:
-      token-utils.hardcode(mdc-elevation.elevation-box-shadow(2), $exclude-hardcoded),
+      token-utils.hardcode(elevation.get-box-shadow(2), $exclude-hardcoded),
   );
 
   @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);

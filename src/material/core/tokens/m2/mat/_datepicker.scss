@@ -1,9 +1,9 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use 'sass:color';
 @use 'sass:meta';
 @use 'sass:math';
 @use '../../token-utils';
 @use '../../../theming/inspection';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -34,8 +34,8 @@ $private-default-overlap-color: #a8dab5;
   @return (
     calendar-container-shape: 4px,
     calendar-container-touch-shape: 4px,
-    calendar-container-elevation-shadow: mdc-elevation.elevation-box-shadow(4),
-    calendar-container-touch-elevation-shadow: mdc-elevation.elevation-box-shadow(24),
+    calendar-container-elevation-shadow: elevation.get-box-shadow(4),
+    calendar-container-touch-elevation-shadow: elevation.get-box-shadow(24),
   );
 }
 

@@ -70,6 +70,11 @@ $prefix: 'mat-elevation-z';
   }
 }
 
+// Gets the box shadow value for a specific elevation.
+@function get-box-shadow($z-value, $shadow-color: black) {
+  @return mdc-elevation.elevation-box-shadow($z-value, $shadow-color);
+}
+
 // Returns a string that can be used as the value for a transition property for elevation.
 // Calling this function directly is useful in situations where a component needs to transition
 // more than one property.

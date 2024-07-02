@@ -1,8 +1,8 @@
 // TODO(mmalerba): this file should be split into separate cohesive partials for things like
 //  "theming", "typography", "core".
+@use 'sass:string';
 @use '../typography/typography';
 @use '@material/feature-targeting' as mdc-feature-targeting;
-@use '@material/typography' as mdc-typography;
 @use '@material/theme/theme-color' as mdc-theme-color;
 @use '@material/theme/css' as mdc-theme-css;
 
@@ -32,7 +32,7 @@ $mdc-typography-styles-query: typography;
 @function private-fallback-typography-from-mdc() {
   // This is very close to what we have in `define-typography-config`, but we can't use it here,
   // because it would cause a circular import and moving it here doesn't make sense.
-  $font-family: mdc-typography.$font-family;
+  $font-family: string.unquote('Roboto, sans-serif');
   @return (
     font-family: $font-family,
     headline-1: typography.typography-config-level-from-mdc(headline1, $font-family),

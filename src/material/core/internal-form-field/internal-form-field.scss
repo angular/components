@@ -1,6 +1,6 @@
 @use '@material/form-field/form-field' as mdc-form-field;
-@use '@material/typography/typography' as mdc-typography;
 @use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../style/vendor-prefixes';
 @use '../mdc-helpers/mdc-helpers';
 
 @include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
@@ -8,5 +8,5 @@
 }
 
 .mat-internal-form-field {
-  @include mdc-typography.smooth-font();
+  @include vendor-prefixes.smooth-font();
 }

@@ -1,7 +1,6 @@
 @use 'sass:math';
 @use 'sass:map';
 @use '@material/textfield' as mdc-textfield;
-@use '@material/density' as mdc-density;
 @use '../../token-utils';
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
@@ -105,12 +104,16 @@ $prefix: (mat, form-field);
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
-  $height: mdc-density.prop-value(
-    $density-config: mdc-textfield.$density-config,
-    $density-scale: inspection.get-theme-density($theme),
-    $property-name: height,
+  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+  $size-scale: (
+    0: 56px,
+    -1: 52px,
+    -2: 48px,
+    -3: 44px,
+    -4: 40px,
+    -5: 36px,
   );
+  $height: map.get($size-scale, $density-scale);
   $hide-label: $height < mdc-textfield.$minimum-height-for-filled-label;
 
   // We computed the desired height of the form-field using the density configuration. The

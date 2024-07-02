@@ -1,6 +1,5 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use '@material/typography/typography' as mdc-typography;
 @use '../core/style/vendor-prefixes';
 @use '../core/style/variables';
 @use '../core/tokens/token-utils';
@@ -22,7 +21,7 @@ $scale: 0.75 !default;
 
   @include token-utils.use-tokens(
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include mdc-typography.smooth-font();
+    @include vendor-prefixes.smooth-font();
     @include token-utils.create-token-slot(color, enabled-trigger-text-color);
     @include token-utils.create-token-slot(font-family, trigger-text-font);
     @include token-utils.create-token-slot(line-height, trigger-text-line-height);

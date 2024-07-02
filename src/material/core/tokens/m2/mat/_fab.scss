@@ -1,6 +1,4 @@
-@use 'sass:map';
 @use 'sass:meta';
-@use '@material/ripple/ripple-theme' as mdc-ripple-theme;
 @use '../../token-utils';
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
@@ -19,10 +17,6 @@ $prefix: (mat, fab);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $ripple-opacities: if($is-dark,
-    mdc-ripple-theme.$light-ink-opacities,
-    mdc-ripple-theme.$dark-ink-opacities
-  );
 
   @return (
     // Color of icons and text projected into a FAB.
@@ -38,13 +32,13 @@ $prefix: (mat, fab);
     ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
 
     // Opacity of the ripple when the button is hovered.
-    hover-state-layer-opacity: map.get($ripple-opacities, hover),
+    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
 
     // Opacity of the ripple when the button is focused.
-    focus-state-layer-opacity: map.get($ripple-opacities, focus),
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
 
     // Opacity of the ripple when the button is pressed.
-    pressed-state-layer-opacity: map.get($ripple-opacities, press),
+    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
 
     // MDC doesn't have tokens for disabled FABs so we need to implemented them ourselves.
     // Background color of the container when the FAB is disabled.
