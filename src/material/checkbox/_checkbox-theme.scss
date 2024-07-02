@@ -51,13 +51,15 @@
       &.mat-primary {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, primary));
+          tokens-mdc-checkbox.get-color-tokens($theme, primary)
+        );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, warn));
+          tokens-mdc-checkbox.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -106,16 +108,27 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
+  @include token-utils.override-tokens(
     $tokens,
     (
-      prefix: tokens-mat-checkbox.$prefix,
+      namespace: tokens-mat-checkbox.$prefix,
       tokens: tokens-mat-checkbox.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-checkbox.$prefix,
+      namespace: tokens-mdc-checkbox.$prefix,
       tokens: tokens-mdc-checkbox.get-token-slots(),
     )
+  );
+}
+
+/// Returns the theme config with the given checkbox tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(tokens-mdc-checkbox.$prefix, tokens-mat-checkbox.$prefix),
+    $overrides
   );
 }
 

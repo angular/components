@@ -10,6 +10,7 @@
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
 @use '../m2/typography' as m2-typography;
+@use '../theming/inspection';
 
 // Indicates whether we're building internally. Used for backwards compatibility.
 $private-is-internal-build: false;
@@ -60,8 +61,11 @@ $_component-prefix: null;
 @mixin _configure-token-prefix($first, $rest...) {
   $_component-prefix: '' !global;
   @each $item in $rest {
-    $_component-prefix:
-      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
+    $_component-prefix: if(
+      $_component-prefix == '',
+      $item,
+      '#{$_component-prefix}-#{$item}'
+    ) !global;
   }
   @include mdc-custom-properties.configure($varname-prefix: $first) {
     @content;
@@ -92,8 +96,7 @@ $_component-prefix: null;
 
     @if ($emit-fallback == true) {
       $fallback: map.get($_tokens, $token);
-    }
-    @else if ($emit-fallback) {
+    } @else if ($emit-fallback) {
       $fallback: $emit-fallback;
     }
 
@@ -131,8 +134,7 @@ $_component-prefix: null;
 
   @if ($fallback != null) {
     @return var($var, $fallback);
-  }
-  @else {
+  } @else {
     @return var($var);
   }
 }
@@ -150,7 +152,10 @@ $_component-prefix: null;
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {List} Map of token names to values
 @function get-mdc-tokens($component, $systems, $exclude-hardcoded) {
-  $fn: meta.get-function($name: 'md-comp-' + $component + '-values', $module: 'mdc-tokens');
+  $fn: meta.get-function(
+    $name: 'md-comp-' + $component + '-values',
+    $module: 'mdc-tokens',
+  );
   @return meta.call($fn, $systems, $exclude-hardcoded);
 }
 
@@ -160,10 +165,13 @@ $_component-prefix: null;
 @function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
   $elevation: map.get($tokens, $elevation-token);
   $shadow-color: map.get($tokens, $shadow-color-token);
-  @return map.merge($tokens, (
-    $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
-    $shadow-color-token: null,
-  ));
+  @return map.merge(
+    $tokens,
+    (
+      $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
+      $shadow-color-token: null,
+    )
+  );
 }
 
 /// Checks whether a list starts wih a given prefix
@@ -217,7 +225,8 @@ $_component-prefix: null;
   $overrides: map.get($tokens, list.append($prefix, $color-variant));
   @if $overrides == null {
     $variants: _supported-color-variants($tokens, $prefix);
-    $secondary-message: if($variants == (),
+    $secondary-message: if(
+      $variants == (),
       'Mixin does not support color variants',
       'Supported color variants are: #{$variants}'
     );
@@ -225,26 +234,6 @@ $_component-prefix: null;
     @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
   }
   @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
-}
-
-/// Emits new token values for the given token overrides.
-/// Verifies that the overrides passed in are valid tokens.
-/// New token values are emitted under the current selector or root.
-@mixin batch-create-token-values($overrides: (), $token-maps...) {
-  @include _validate-token-overrides($overrides, $token-maps);
-
-  @each $token-map in $token-maps {
-    $prefix: map.get($token-map, prefix);
-    $tokens: map.get($token-map, tokens);
-
-    @each $name, $value in $tokens {
-      $tokens: map.set($tokens, $name, map.get($overrides, $name));
-    }
-
-    @include sass-utils.current-selector-or-root() {
-      @include create-token-values($prefix, $tokens);
-    }
-  }
 }
 
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
@@ -277,7 +266,12 @@ $_component-prefix: null;
   $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
   $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
   $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
-  @return map.merge($result, ($prefix: $used-m3-tokens));
+  @return map.merge(
+    $result,
+    (
+      $prefix: $used-m3-tokens,
+    )
+  );
 }
 
 /// Hardcode the given value, or null if hardcoded values are excluded.
@@ -294,8 +288,11 @@ $_component-prefix: null;
 @function generate-typography-tokens($systems, $base-name, $typography-level) {
   $result: ();
   @each $prop in (font, line-height, size, tracking, weight) {
-    $result: map.set($result, #{$base-name}-#{$prop},
-      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
+    $result: map.set(
+      $result,
+      #{$base-name}-#{$prop},
+      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop})
+    );
   }
   @return $result;
 }
@@ -343,11 +340,10 @@ $_component-prefix: null;
     $color: map.get($tokens, $color-key);
     $opacity: map.get($opacity-lookup, $opacity-key);
 
-    @if(meta.type-of($color) == 'color') {
+    @if (meta.type-of($color) == 'color') {
       $result: map.remove($result, $opacity-key);
       $result: map.set($result, $color-key, rgba($color, $opacity));
-    }
-    @else if($color != null) {
+    } @else if($color != null) {
       $result: map.remove($result, $opacity-key);
       $combined-color: #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
       $result: map.set($result, $color-key, $combined-color);
@@ -393,7 +389,6 @@ $_component-prefix: null;
   @return $result;
 }
 
-
 /// Filters keys with a null value out of the map.
 /// @param {Map} $map The map to filter.
 /// @return {Map} The given map with all of the null keys filtered out.
@@ -405,4 +400,136 @@ $_component-prefix: null;
     }
   }
   @return $result;
+}
+
+/// Returns a theme config with the given tokens overridden.
+/// @param {Map} $overrides The token values to override in the theme.
+/// @param {List} $override-namespaces The namespaces available to override.
+/// New token values are emitted under the current selector or root.
+@mixin override-tokens($overrides, $override-namespaces...) {
+  // Determine which system and namespace each shorthand token belongs to.
+  $seen-tokens: ();
+  @each $namespace in $override-namespaces {
+    $prefix: map.get($namespace, prefix) or '';
+    $tokens: _filter-nulls(map.get($namespace, tokens));
+    $namespace: map.get($namespace, namespace);
+    @each $name, $value in $tokens {
+      $prefixed-name: $prefix + $name;
+      // If multiple namespaces have the same token name, report an error.
+      @if map.has-key($seen-tokens, $prefixed-name) {
+        @error #{'Error overriding token: Ambiguous token name `'}#{$prefixed-name}#{
+        '` exists in multiple namespaces: `('}#{
+          list.nth(map.get($seen-tokens, $prefixed-name), 1)}#{')` and `('}#{$namespace}#{')`'};
+      }
+      $seen-tokens: map.set($seen-tokens, $prefixed-name, ($namespace, $name));
+    }
+  }
+
+  // Collate the overrides.
+  $batched-overrides: ();
+  @each $token, $value in $overrides {
+    $token-info: map.get($seen-tokens, $token);
+    @if $token-info == null {
+      @error #{'Error overriding token: Unrecognized token `'}#{$token}#{
+        '`. Allowed tokens are: '}#{map.keys($seen-tokens)};
+    }
+    $namespace: list.nth($token-info, 1);
+    $token-name: list.nth($token-info, 2);
+    $batched-overrides: map.set($batched-overrides, $namespace, $token-name, $value);
+  }
+
+  // Apply the overrides
+  @include sass-utils.current-selector-or-root() {
+    @each $namespace, $tokens in $batched-overrides {
+      @include create-token-values($namespace, $tokens);
+    }
+  }
+}
+
+/// Returns a theme config with the given tokens overridden.
+/// @param {Map} $theme The material theme for an application.
+/// @param {List} $extend-namespaces The namespaces to extend in the theme. Each item can be either:
+///  1. A list, representing a namespace to match token names against.
+///  2. A map, representing a namespace to match tokens agaisnt + a prefix string that the token
+///     name must start with to match this namespace. The prefix will be stripped before matching
+///     the token name.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $extend-namespaces, $overrides) {
+  $internals: _mat-theming-internals-do-not-access;
+  $systems: (color-tokens, typography-tokens, density-tokens, base-tokens);
+  $variants: (primary, secondary, tertiary, error, surface);
+
+  @if (inspection.get-theme-version($theme) < 1) {
+    @error #{'The `extend-theme` functions are only supported for M3 themes'};
+  }
+
+  // Determine which system and namespace each shorthand token belongs to.
+  $seen-tokens: ();
+  @each $namespace in $extend-namespaces {
+    $prefix: '';
+    // Unpack namespaces that come with a prefix.
+    @if meta.type-of($namespace) == 'map' {
+      $prefix: map.get($namespace, prefix);
+      $namespace: map.get($namespace, namespace);
+    }
+    // Check each system to see if it has tokens for the given namespace.
+    $namespace-found: false;
+    @each $system in $systems {
+      $tokens: map.get($theme, $internals, $system, $namespace);
+      @if ($tokens != null) {
+        $namespace-found: true;
+        @each $name, $value in $tokens {
+          $prefixed-name: $prefix + $name;
+          // If multiple namespaces have the same token name, report an error.
+          @if map.has-key($seen-tokens, $prefixed-name) {
+            @error #{'Error extending theme: Ambiguous token name `'}#{$prefixed-name}#{
+            '` exists in multiple namespaces: `('}#{
+              list.nth(map.get($seen-tokens, $prefixed-name), 1)}#{')` and `('}#{$namespace}#{')`'};
+          }
+          $seen-tokens: map.set($seen-tokens, $prefixed-name, ($namespace, $system, $name));
+        }
+      }
+    }
+    // If no system had tokens for the given namespace, report an error.
+    @if not $namespace-found {
+      @error #{'Error extending theme: Theme does not have tokens for namespace `('}#{
+        $namespace}#{')`'};
+    }
+  }
+
+  // Update internal tokens based on given overrides.
+  @each $token, $value in $overrides {
+    @if (meta.type-of($value) == 'map') {
+      $variant: $token;
+      $variant-overrides: $value;
+      @if (list.index($variants, $variant) == null) {
+        @error #{'Error extending theme: Unrecognized color variant `'}#{$variant}#{
+          '`. Allowed variants are: '}#{$variants};
+      }
+      @each $token, $value in $variant-overrides {
+        $theme: _update-token($theme, $seen-tokens, $token, $value, $variant);
+      }
+    } @else {
+      $theme: _update-token($theme, $seen-tokens, $token, $value);
+    }
+  }
+
+  @return $theme;
+}
+
+// Update the given token in the given theme.
+@function _update-token($theme, $seen-tokens, $token, $value, $variant: null) {
+  $internals: _mat-theming-internals-do-not-access;
+  $token-info: map.get($seen-tokens, $token);
+  @if $token-info == null {
+    @error #{'Error extending theme: Unrecognized token `'}#{$token}#{'`. Allowed tokens are: '}#{
+      map.keys($seen-tokens)};
+  }
+  $namespace: list.nth($token-info, 1);
+  @if ($variant != null) {
+    $namespace: list.append($namespace, $variant);
+  }
+  $system: list.nth($token-info, 2);
+  $token-name: list.nth($token-info, 3);
+  @return map.set($theme, $internals, $system, $namespace, $token-name, $value);
 }

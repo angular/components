@@ -33,8 +33,9 @@ $_fallback-size: 40px;
     @include token-utils.use-tokens($prefix, $slots) {
       $layer-size: token-utils.get-token-variable(state-layer-size);
       padding: calc((var(#{$layer-size}, #{$_fallback-size}) - #{$_icon-size}) / 2);
-      margin: calc((var(#{$layer-size}, #{$_fallback-size}) -
-        var(#{$layer-size}, #{$_fallback-size})) / 2);
+      margin: calc(
+        (var(#{$layer-size}, #{$_fallback-size}) - var(#{$layer-size}, #{$_fallback-size})) / 2
+      );
 
       @if ($include-state-layer-styles) {
         @include _state-layer-styles;
@@ -52,8 +53,9 @@ $_fallback-size: 40px;
 
       @include token-utils.use-tokens($prefix, $slots) {
         $layer-size: token-utils.get-token-variable(state-layer-size);
-        $offset: calc((var(#{$layer-size}, #{$_fallback-size}) -
-          var(#{$layer-size}, #{$_fallback-size})) / 2);
+        $offset: calc(
+          (var(#{$layer-size}, #{$_fallback-size}) - var(#{$layer-size}, #{$_fallback-size})) / 2
+        );
         width: var(#{$layer-size}, #{$_fallback-size});
         height: var(#{$layer-size}, #{$_fallback-size});
         top: $offset;
@@ -81,8 +83,9 @@ $_fallback-size: 40px;
     background-color: transparent;
     pointer-events: none;
     will-change: background-color, border-color;
-    transition: background-color $_transition-duration $_exit-curve,
-                border-color $_transition-duration $_exit-curve;
+    transition:
+      background-color $_transition-duration $_exit-curve,
+      border-color $_transition-duration $_exit-curve;
 
     @include token-utils.use-tokens($prefix, $slots) {
       $layer-size: token-utils.get-token-variable(state-layer-size);
@@ -178,8 +181,9 @@ $_fallback-size: 40px;
     border-width: math.div(math.floor($_mark-stroke-size), 2);
     border-style: solid;
     opacity: 0;
-    transition: opacity $_transition-duration $_exit-curve,
-                transform $_transition-duration $_exit-curve;
+    transition:
+      opacity $_transition-duration $_exit-curve,
+      transform $_transition-duration $_exit-curve;
 
     @include cdk.high-contrast(active, off) {
       margin: 0 1px;
@@ -210,8 +214,7 @@ $_fallback-size: 40px;
 
   .mdc-checkbox--anim-unchecked-checked {
     .mdc-checkbox__checkmark-path {
-      animation: mdc-checkbox-unchecked-checked-checkmark-path
-        $_transition-duration * 2 linear;
+      animation: mdc-checkbox-unchecked-checked-checkmark-path $_transition-duration * 2 linear;
       transition: none;
     }
   }
@@ -244,30 +247,31 @@ $_fallback-size: 40px;
 
   .mdc-checkbox--anim-indeterminate-checked {
     .mdc-checkbox__checkmark {
-      animation: mdc-checkbox-indeterminate-checked-checkmark
-        $_indeterminate-change-duration linear;
+      animation: mdc-checkbox-indeterminate-checked-checkmark $_indeterminate-change-duration
+        linear;
       transition: none;
     }
 
     .mdc-checkbox__mixedmark {
-      animation: mdc-checkbox-indeterminate-checked-mixedmark
-        $_indeterminate-change-duration linear;
+      animation: mdc-checkbox-indeterminate-checked-mixedmark $_indeterminate-change-duration
+        linear;
       transition: none;
     }
   }
 
   .mdc-checkbox--anim-indeterminate-unchecked {
     .mdc-checkbox__mixedmark {
-      animation: mdc-checkbox-indeterminate-unchecked-mixedmark
-        $_indeterminate-change-duration * 0.6 linear;
+      animation: mdc-checkbox-indeterminate-unchecked-mixedmark $_indeterminate-change-duration *
+        0.6 linear;
       transition: none;
     }
   }
 
   .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
   .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-    transition: border-color $_transition-duration $_enter-curve,
-                background-color $_transition-duration $_enter-curve;
+    transition:
+      border-color $_transition-duration $_enter-curve,
+      background-color $_transition-duration $_enter-curve;
 
     .mdc-checkbox__checkmark-path {
       stroke-dashoffset: 0;
@@ -276,8 +280,9 @@ $_fallback-size: 40px;
 
   .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
     .mdc-checkbox__checkmark {
-      transition: opacity $_transition-duration * 2 $_enter-curve,
-                  transform $_transition-duration * 2 $_enter-curve;
+      transition:
+        opacity $_transition-duration * 2 $_enter-curve,
+        transform $_transition-duration * 2 $_enter-curve;
       opacity: 1;
     }
 
@@ -289,8 +294,9 @@ $_fallback-size: 40px;
     .mdc-checkbox__checkmark {
       transform: rotate(45deg);
       opacity: 0;
-      transition: opacity $_transition-duration $_exit-curve,
-                  transform $_transition-duration $_exit-curve;
+      transition:
+        opacity $_transition-duration $_exit-curve,
+        transform $_transition-duration $_exit-curve;
     }
 
     .mdc-checkbox__mixedmark {
@@ -300,7 +306,8 @@ $_fallback-size: 40px;
   }
 
   @keyframes mdc-checkbox-unchecked-checked-checkmark-path {
-    0%, 50% {
+    0%,
+    50% {
       stroke-dashoffset: $_path-length;
     }
 
@@ -314,7 +321,8 @@ $_fallback-size: 40px;
   }
 
   @keyframes mdc-checkbox-unchecked-indeterminate-mixedmark {
-    0%, 68.2% {
+    0%,
+    68.2% {
       transform: scaleX(0);
     }
 
@@ -399,7 +407,8 @@ $_fallback-size: 40px;
       opacity: 1;
     }
 
-    32.8%, 100% {
+    32.8%,
+    100% {
       transform: scaleX(0);
       opacity: 0;
     }
@@ -409,7 +418,8 @@ $_fallback-size: 40px;
 // Conditionally disables the animations of the checkbox.
 @mixin checkbox-noop-animations() {
   &._mat-animation-noopable .mdc-checkbox {
-    *, *::before {
+    *,
+    *::before {
       transition: none !important;
       animation: none !important;
     }
@@ -422,34 +432,22 @@ $_fallback-size: 40px;
   &:hover {
     .mdc-checkbox__ripple {
       @include token-utils.create-token-slot(opacity, unselected-hover-state-layer-opacity);
-      @include token-utils.create-token-slot(
-        background-color,
-        unselected-hover-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, unselected-hover-state-layer-color);
     }
 
     .mat-mdc-checkbox-ripple .mat-ripple-element {
-      @include token-utils.create-token-slot(
-        background-color,
-        unselected-hover-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, unselected-hover-state-layer-color);
     }
   }
 
   .mdc-checkbox__native-control:focus {
     & ~ .mdc-checkbox__ripple {
       @include token-utils.create-token-slot(opacity, unselected-focus-state-layer-opacity);
-      @include token-utils.create-token-slot(
-        background-color,
-        unselected-focus-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, unselected-focus-state-layer-color);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      @include token-utils.create-token-slot(
-        background-color,
-        unselected-focus-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, unselected-focus-state-layer-color);
     }
   }
 
@@ -473,51 +471,33 @@ $_fallback-size: 40px;
   &:hover .mdc-checkbox__native-control:checked {
     & ~ .mdc-checkbox__ripple {
       @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-hover-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-hover-state-layer-color);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-hover-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-hover-state-layer-color);
     }
   }
 
   .mdc-checkbox__native-control:focus:checked {
     & ~ .mdc-checkbox__ripple {
       @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-focus-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-focus-state-layer-color);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-focus-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-focus-state-layer-color);
     }
   }
 
   &:active .mdc-checkbox__native-control:checked {
     & ~ .mdc-checkbox__ripple {
       @include token-utils.create-token-slot(opacity, selected-pressed-state-layer-opacity);
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-pressed-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-pressed-state-layer-color);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      @include token-utils.create-token-slot(
-        background-color,
-        selected-pressed-state-layer-color
-      );
+      @include token-utils.create-token-slot(background-color, selected-pressed-state-layer-color);
     }
   }
 }
