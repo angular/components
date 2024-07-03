@@ -221,12 +221,10 @@ export class MatPaginator implements OnInit, OnDestroy {
     if (!this.showFirstLastButtons && button.disabled) {
       if (button === nextButton) {
         if (!previousButton.disabled) {
-          console.log(document.activeElement);
           previousButton.focus();
         }
       } else if (button === previousButton) {
         if (!nextButton.disabled) {
-          console.log(document.activeElement);
           nextButton.focus();
         }
       }
