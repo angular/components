@@ -100,9 +100,6 @@ export class MatDialogContainer
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
-  private _getWindow(): Window {
-    return this._document?.defaultView || window;
-  }
 
   constructor(
     elementRef: ElementRef,
@@ -130,24 +127,17 @@ export class MatDialogContainer
 
   /** Get userAgent to check for useragent operating system */
   private _getUserPlatform = (): string => {
-    const window = this._getWindow();
-    console.log('Testing Platform CDK');
-    console.log('this._platform:');
-    console.log(this._platform);
-    let userAgent = window.navigator.userAgent.toLowerCase(),
-      macosPlatforms = /(macintosh|macintel|macppc|mac68k|macos)/i,
-      windowsPlatforms = /(win32|win64|windows|wince)/i,
-      iosPlatforms = /(iphone|ipad|ipod)/i,
-      os = '';
-    if (macosPlatforms.test(userAgent)) {
+    let os = '';
+
+    if (this._platform.MAC) {
       os = 'macos';
-    } else if (iosPlatforms.test(userAgent)) {
+    } else if (this._platform.IOS) {
       os = 'ios';
-    } else if (windowsPlatforms.test(userAgent)) {
+    } else if (this._platform.WINDOWS) {
       os = 'windows';
-    } else if (/android/.test(userAgent)) {
+    } else if (this._platform.ANDROID) {
       os = 'android';
-    } else if (!os && /linux/.test(userAgent)) {
+    } else if (this._platform.LINUX) {
       os = 'linux';
     }
     return os;
