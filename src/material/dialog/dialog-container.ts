@@ -27,6 +27,7 @@ import {
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
@@ -105,6 +106,7 @@ export class MatDialogContainer
 
   constructor(
     elementRef: ElementRef,
+    _platform: Platform,
     focusTrapFactory: FocusTrapFactory,
     @Optional() @Inject(DOCUMENT) _document: any,
     dialogConfig: MatDialogConfig,
@@ -129,6 +131,9 @@ export class MatDialogContainer
   /** Get userAgent to check for useragent operating system */
   private _getUserPlatform = (): string => {
     const window = this._getWindow();
+    console.log('Testing Platform CDK');
+    console.log('this._platform:');
+    console.log(this._platform);
     let userAgent = window.navigator.userAgent.toLowerCase(),
       macosPlatforms = /(macintosh|macintel|macppc|mac68k|macos)/i,
       windowsPlatforms = /(win32|win64|windows|wince)/i,

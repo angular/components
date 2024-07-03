@@ -86,6 +86,13 @@ export class Platform {
   /** Whether the current browser is Safari. */
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 
+  /** Whether the device is a Mac device/OS. */
+  MAC: boolean =
+    !this.isBrowser && /(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent);
+
+  /** Whether the device is a Windows device/OS. */
+  WINDOWS: boolean = !this.isBrowser && /(win32|win64|windows|wince)/i.test(navigator.userAgent);
+
   /** Backwards-compatible constructor. */
   constructor(..._args: unknown[]);
 
