@@ -5,6 +5,7 @@
 ```ts
 
 import { ChangeDetectorRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/button';
@@ -12,6 +13,7 @@ import * as i2 from '@angular/material/select';
 import * as i3 from '@angular/material/tooltip';
 import { InjectionToken } from '@angular/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { MatIconButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -39,18 +41,24 @@ export class MatPaginator implements OnInit, OnDestroy {
     color: ThemePalette;
     disabled: boolean;
     _displayedPageSizeOptions: number[];
+    // (undocumented)
+    firstButtonRef: ElementRef;
     firstPage(): void;
     _formFieldAppearance?: MatFormFieldAppearance;
     getNumberOfPages(): number;
+    handleButtonBlur(buttonRef: MatIconButton): void;
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
     hidePageSize: boolean;
     initialized: Observable<void>;
     // (undocumented)
     _intl: MatPaginatorIntl;
+    // (undocumented)
+    lastButtonRef: ElementRef;
     lastPage(): void;
     get length(): number;
     set length(value: number);
+    nextButtonRef: ElementRef;
     _nextButtonsDisabled(): boolean;
     nextPage(): void;
     // (undocumented)
@@ -77,6 +85,8 @@ export class MatPaginator implements OnInit, OnDestroy {
     readonly _pageSizeLabelId: string;
     get pageSizeOptions(): number[];
     set pageSizeOptions(value: number[] | readonly number[]);
+    // (undocumented)
+    previousButtonRef: ElementRef;
     _previousButtonsDisabled(): boolean;
     previousPage(): void;
     selectConfig: MatPaginatorSelectConfig;
