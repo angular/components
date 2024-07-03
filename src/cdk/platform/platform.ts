@@ -91,5 +91,8 @@ export class Platform {
   /** Whether the device is a Windows device/OS. */
   WINDOWS: boolean = !this.isBrowser && /(win32|win64|windows|wince)/i.test(navigator.userAgent);
 
+  /** Whether the device is a Linux device. */
+  LINUX: boolean = !this.isBrowser && /linux/.test(navigator.userAgent);
+
   constructor(@Inject(PLATFORM_ID) private _platformId: Object) {}
 }
