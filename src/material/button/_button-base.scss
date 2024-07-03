@@ -1,8 +1,5 @@
-@use '@material/touch-target' as mdc-touch-target;
-
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
-@use '../core/mdc-helpers/mdc-helpers';
 
 // Adds styles necessary to provide stateful interactions with the button. This includes providing
 // content for the state container's ::before and ::after so that they can be given a background
@@ -126,9 +123,19 @@
   // the button itself would require us to wrap it in another div. See:
   // https://github.com/material-components/material-components-web/tree/master/packages/mdc-button#making-buttons-accessible
   .mat-mdc-button-touch-target {
-    @include mdc-touch-target.touch-target(
-      $set-width: $is-square,
-      $query: mdc-helpers.$mdc-base-styles-query);
+    position: absolute;
+    top: 50%;
+    height: 48px;
+
+    @if $is-square {
+      left: 50%;
+      width: 48px;
+      transform: translate(-50%, -50%);
+    } @else {
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+    }
 
     @include token-utils.use-tokens($prefix, $slots) {
       @include token-utils.create-token-slot(display, touch-target-display);
