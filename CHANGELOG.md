@@ -1,3 +1,12 @@
+<a name="18.0.6"></a>
+# 18.0.6 "gallium-grape" (2024-07-03)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e5c5f151c](https://github.com/angular/components/commit/e5c5f151cc3a5293f629bfa84bcddb0b391cf268) | fix | **core:** add fallback if ripples get stuck ([#29323](https://github.com/angular/components/pull/29323)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.0-next.4"></a>
 # 18.1.0-next.4 "plastic-pliers" (2024-06-26)
 ### cdk
