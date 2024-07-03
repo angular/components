@@ -226,7 +226,7 @@ interface ExampleFlatNode {
         {{node.name}}
       </mat-tree-node>
       <!-- This is the tree node template for expandable nodes -->
-      <mat-tree-node *matTreeNodeDef="let node;when: flatTreeHasChild" matTreeNodePadding>
+      <mat-tree-node *matTreeNodeDef="let node;when: flatTreeHasChild" matTreeNodePadding isExpandable>
         <button matTreeNodeToggle>
           Toggle
         </button>
@@ -239,7 +239,7 @@ interface ExampleFlatNode {
         {{node.name}}
       </mat-tree-node>
       <!-- This is the tree node template for expandable nodes -->
-      <mat-nested-tree-node *matTreeNodeDef="let node; when: nestedTreeHasChild">
+      <mat-nested-tree-node *matTreeNodeDef="let node; when: nestedTreeHasChild" isExpandable>
         <button matTreeNodeToggle>
           Toggle
         </button>
