@@ -1,3 +1,12 @@
+<a name="18.1.0-rc.0"></a>
+# 18.1.0-rc.0 "zirconium-zoo" (2024-07-03)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [674538b77](https://github.com/angular/components/commit/674538b778e75d229ada06d19c362752db3a18cc) | fix | **core:** add fallback if ripples get stuck ([#29323](https://github.com/angular/components/pull/29323)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.0.6"></a>
 # 18.0.6 "gallium-grape" (2024-07-03)
 ### material
