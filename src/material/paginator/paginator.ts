@@ -211,8 +211,7 @@ export class MatPaginator implements OnInit, OnDestroy {
   @ViewChild('lastButton', {read: ElementRef, static: false})
   lastButtonRef: ElementRef;
 
-  /** Function to change focus to next appropriate button whenever
-   * current button becomes disabled and focus comes off*/
+  /** Changes focus to next appropriate button whenever current button becomes disabled. */
   handleButtonBlur(buttonRef: MatIconButton) {
     const button = buttonRef._elementRef.nativeElement;
     const nextButton = this.nextButtonRef.nativeElement;
