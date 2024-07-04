@@ -23,7 +23,7 @@ import {AsyncPipe} from '@angular/common';
     MatListModule,
   ],
 })
-export class SidenavResponsiveExample implements OnDestroy {
+export class SidenavResponsiveExample {
   isHandset: Observable<BreakpointState>;
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
   fillerContent = Array.from(
@@ -36,9 +36,6 @@ export class SidenavResponsiveExample implements OnDestroy {
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   );
 
-  mobileQuery: boolean;
-  private _breakpointSubscription: Subscription;
-
   constructor(
     private _breakpointObserver: BreakpointObserver,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -47,16 +44,6 @@ export class SidenavResponsiveExample implements OnDestroy {
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait,
     ]);
-    this._breakpointSubscription = this._breakpointObserver
-      .observe([Breakpoints.Handset])
-      .subscribe(result => {
-        this.mobileQuery = result.matches;
-        this._changeDetectorRef.detectChanges();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this._breakpointSubscription.unsubscribe();
   }
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
