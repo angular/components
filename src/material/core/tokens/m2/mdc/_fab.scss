@@ -9,6 +9,10 @@ $prefix: (mdc, fab);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 50%,
+    container-elevation-shadow: elevation.get-box-shadow(6),
+    focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
 
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
@@ -53,10 +57,6 @@ $prefix: (mdc, fab);
   @return (
     // Background color of the FAB.
     container-color: inspection.get-theme-color($theme, background, card),
-    container-elevation-shadow: elevation.get-box-shadow(6),
-    focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
   );
 }
 

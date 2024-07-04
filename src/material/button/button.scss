@@ -1,15 +1,6 @@
-@use 'sass:map';
-@use '@material/button/button' as mdc-button;
-@use '@material/button/variables' as mdc-button-variables;
-@use '@material/button/button-text-theme' as mdc-button-text-theme;
-@use '@material/button/button-filled-theme' as mdc-button-filled-theme;
-@use '@material/button/button-protected-theme' as mdc-button-protected-theme;
-@use '@material/button/button-outlined-theme' as mdc-button-outlined-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-
 @use './button-base';
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/style/private' as style-private;
+@use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
@@ -21,127 +12,233 @@
 @use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 @use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
 
-@include mdc-helpers.disable-mdc-fallback-declarations {
-  @include mdc-button.static-styles-without-ripple($query: mdc-helpers.$mdc-base-styles-query);
-}
-
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  .mat-mdc-button {
-    $mdc-text-button-slots: tokens-mdc-text-button.get-token-slots();
-
-    @include mdc-button-text-theme.theme-styles($mdc-text-button-slots);
-    @include button-base.mat-private-button-horizontal-layout(tokens-mat-text-button.$prefix,
-      tokens-mat-text-button.get-token-slots(), true);
-    @include button-base.mat-private-button-ripple(tokens-mat-text-button.$prefix,
-      tokens-mat-text-button.get-token-slots());
-    @include button-base.mat-private-button-touch-target(false, tokens-mat-text-button.$prefix,
-      tokens-mat-text-button.get-token-slots());
-
-    @include token-utils.use-tokens(tokens-mdc-text-button.$prefix, $mdc-text-button-slots) {
-      // We need to re-apply the disabled tokens since MDC uses
-      // `:disabled` which doesn't apply to anchors.
-      @include button-base.mat-private-button-disabled {
-        @include token-utils.create-token-slot(color, disabled-label-text-color);
-      }
-    }
-  }
-
-  .mat-mdc-unelevated-button {
-    $mdc-filled-button-slots: tokens-mdc-filled-button.get-token-slots();
-
-    @include mdc-button-filled-theme.theme-styles($mdc-filled-button-slots);
-    @include button-base.mat-private-button-horizontal-layout(tokens-mat-filled-button.$prefix,
-      tokens-mat-filled-button.get-token-slots(), false);
-    @include button-base.mat-private-button-ripple(tokens-mat-filled-button.$prefix,
-      tokens-mat-filled-button.get-token-slots());
-    @include button-base.mat-private-button-touch-target(false, tokens-mat-filled-button.$prefix,
-      tokens-mat-filled-button.get-token-slots());
-
-    @include token-utils.use-tokens(tokens-mdc-filled-button.$prefix, $mdc-filled-button-slots) {
-      // We need to re-apply the disabled tokens since MDC uses
-      // `:disabled` which doesn't apply to anchors.
-      @include button-base.mat-private-button-disabled {
-        @include token-utils.create-token-slot(color, disabled-label-text-color);
-        @include token-utils.create-token-slot(background-color, disabled-container-color);
-      }
-    }
-  }
-
-  .mat-mdc-raised-button {
-    $mdc-button-protected-slots: tokens-mdc-protected-button.get-token-slots();
-
-    @include mdc-button-protected-theme.theme-styles(map.merge($mdc-button-protected-slots, (
-      // Exclude the elevation tokens here since we output them manually below.
-      container-elevation: null,
-      hover-container-elevation: null,
-      disabled-container-elevation: null,
-      focus-container-elevation: null,
-      pressed-container-elevation: null,
-      container-shadow-color: null,
-    )));
-    @include button-base.mat-private-button-horizontal-layout(tokens-mat-protected-button.$prefix,
-      tokens-mat-protected-button.get-token-slots(), false);
-    @include button-base.mat-private-button-ripple(tokens-mat-protected-button.$prefix,
-      tokens-mat-protected-button.get-token-slots());
-    @include button-base.mat-private-button-touch-target(false, tokens-mat-protected-button.$prefix,
-      tokens-mat-protected-button.get-token-slots());
-
-    @include token-utils.use-tokens(
-      tokens-mdc-protected-button.$prefix,
-      $mdc-button-protected-slots) {
-      @include button-base.mat-private-button-elevation(container-elevation);
-
-      &:hover {
-        @include button-base.mat-private-button-elevation(hover-container-elevation);
-      }
-
-      &:focus {
-        @include button-base.mat-private-button-elevation(focus-container-elevation);
-      }
-
-      &:active, &:focus:active {
-        @include button-base.mat-private-button-elevation(pressed-container-elevation);
-      }
-
-      // We need to re-apply the disabled tokens since MDC uses
-      // `:disabled` which doesn't apply to anchors.
-      @include button-base.mat-private-button-disabled {
-        @include token-utils.create-token-slot(color, disabled-label-text-color);
-        @include token-utils.create-token-slot(background-color, disabled-container-color);
-
-        &.mat-mdc-button-disabled {
-          @include button-base.mat-private-button-elevation(disabled-container-elevation);
-        }
-      }
-    }
-  }
-
-  .mat-mdc-outlined-button {
-    $mdc-outlined-button-slots: tokens-mdc-outlined-button.get-token-slots();
-
-    @include mdc-button-outlined-theme.theme-styles($mdc-outlined-button-slots);
-    @include button-base.mat-private-button-horizontal-layout(tokens-mat-outlined-button.$prefix,
-      tokens-mat-outlined-button.get-token-slots(), false);
-    @include button-base.mat-private-button-ripple(tokens-mat-outlined-button.$prefix,
-      tokens-mat-outlined-button.get-token-slots());
-    @include button-base.mat-private-button-touch-target(false, tokens-mat-outlined-button.$prefix,
-      tokens-mat-outlined-button.get-token-slots());
-
-    @include token-utils.use-tokens(
-      tokens-mdc-outlined-button.$prefix,
-      $mdc-outlined-button-slots) {
-      // We need to re-apply the disabled tokens since MDC uses
-      // `:disabled` which doesn't apply to anchors.
-      @include button-base.mat-private-button-disabled {
-        @include token-utils.create-token-slot(color, disabled-label-text-color);
-        @include token-utils.create-token-slot(border-color, disabled-outline-color);
-      }
-    }
-  }
-}
-
 .mat-mdc-button-base {
   text-decoration: none;
+}
+
+.mdc-button {
+  @include vendor-prefixes.user-select(none);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 64px;
+  border: none;
+  outline: none;
+  line-height: inherit;
+  -webkit-appearance: none;
+  overflow: visible;
+  vertical-align: middle;
+  background: transparent;
+  padding: 0 8px;
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:active {
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  .mdc-button__label {
+    position: relative;
+  }
+}
+
+.mat-mdc-button {
+  $mat-text-button-slots: tokens-mat-text-button.get-token-slots();
+
+  @include button-base.mat-private-button-horizontal-layout(tokens-mat-text-button.$prefix,
+    $mat-text-button-slots, true);
+  @include button-base.mat-private-button-ripple(tokens-mat-text-button.$prefix,
+    $mat-text-button-slots);
+  @include button-base.mat-private-button-touch-target(false, tokens-mat-text-button.$prefix,
+    $mat-text-button-slots);
+
+  @include token-utils.use-tokens(
+    tokens-mdc-text-button.$prefix,
+    tokens-mdc-text-button.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(height, container-height);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(text-transform, label-text-transform);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+
+    &, .mdc-button__ripple {
+      @include token-utils.create-token-slot(border-radius, container-shape);
+    }
+
+    &:not(:disabled) {
+      @include token-utils.create-token-slot(color, label-text-color);
+    }
+
+    // We need to re-apply the disabled tokens since MDC uses
+    // `:disabled` which doesn't apply to anchors.
+    @include button-base.mat-private-button-disabled {
+      @include token-utils.create-token-slot(color, disabled-label-text-color);
+    }
+  }
+}
+
+.mat-mdc-unelevated-button {
+  $mat-filled-button-slots: tokens-mat-filled-button.get-token-slots();
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include button-base.mat-private-button-horizontal-layout(tokens-mat-filled-button.$prefix,
+    $mat-filled-button-slots, false);
+  @include button-base.mat-private-button-ripple(tokens-mat-filled-button.$prefix,
+    $mat-filled-button-slots);
+  @include button-base.mat-private-button-touch-target(false, tokens-mat-filled-button.$prefix,
+    $mat-filled-button-slots);
+
+  @include token-utils.use-tokens(
+    tokens-mdc-filled-button.$prefix,
+    tokens-mdc-filled-button.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(height, container-height);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(text-transform, label-text-transform);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+
+    &:not(:disabled) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(background-color, container-color);
+    }
+
+    &, .mdc-button__ripple {
+      @include token-utils.create-token-slot(border-radius, container-shape);
+    }
+
+    // We need to re-apply the disabled tokens since MDC uses
+    // `:disabled` which doesn't apply to anchors.
+    @include button-base.mat-private-button-disabled {
+      @include token-utils.create-token-slot(color, disabled-label-text-color);
+      @include token-utils.create-token-slot(background-color, disabled-container-color);
+    }
+  }
+}
+
+.mat-mdc-raised-button {
+  $mat-protected-button-slots: tokens-mat-protected-button.get-token-slots();
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include button-base.mat-private-button-horizontal-layout(tokens-mat-protected-button.$prefix,
+    $mat-protected-button-slots, false);
+  @include button-base.mat-private-button-ripple(tokens-mat-protected-button.$prefix,
+    $mat-protected-button-slots);
+  @include button-base.mat-private-button-touch-target(false, tokens-mat-protected-button.$prefix,
+    $mat-protected-button-slots);
+
+  @include token-utils.use-tokens(
+    tokens-mdc-protected-button.$prefix,
+    tokens-mdc-protected-button.get-token-slots()
+  ) {
+    @include button-base.mat-private-button-elevation(container-elevation);
+    @include token-utils.create-token-slot(height, container-height);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(text-transform, label-text-transform);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+
+    &:not(:disabled) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(background-color, container-color);
+    }
+
+    &, .mdc-button__ripple {
+      @include token-utils.create-token-slot(border-radius, container-shape);
+    }
+
+    &:hover {
+      @include button-base.mat-private-button-elevation(hover-container-elevation);
+    }
+
+    &:focus {
+      @include button-base.mat-private-button-elevation(focus-container-elevation);
+    }
+
+    &:active, &:focus:active {
+      @include button-base.mat-private-button-elevation(pressed-container-elevation);
+    }
+
+    // We need to re-apply the disabled tokens since MDC uses
+    // `:disabled` which doesn't apply to anchors.
+    @include button-base.mat-private-button-disabled {
+      @include token-utils.create-token-slot(color, disabled-label-text-color);
+      @include token-utils.create-token-slot(background-color, disabled-container-color);
+
+      &.mat-mdc-button-disabled {
+        @include button-base.mat-private-button-elevation(disabled-container-elevation);
+      }
+    }
+  }
+}
+
+.mat-mdc-outlined-button {
+  $mat-outlined-button-slots: tokens-mat-outlined-button.get-token-slots();
+  border-style: solid;
+  transition: border 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include button-base.mat-private-button-horizontal-layout(tokens-mat-outlined-button.$prefix,
+    $mat-outlined-button-slots, false);
+  @include button-base.mat-private-button-ripple(tokens-mat-outlined-button.$prefix,
+    $mat-outlined-button-slots);
+  @include button-base.mat-private-button-touch-target(false, tokens-mat-outlined-button.$prefix,
+    $mat-outlined-button-slots);
+
+  @include token-utils.use-tokens(
+    tokens-mdc-outlined-button.$prefix,
+    tokens-mdc-outlined-button.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(height, container-height);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(text-transform, label-text-transform);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(border-width, outline-width);
+
+    &:not(:disabled) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(border-color, outline-color);
+    }
+
+    // We need to re-apply the disabled tokens since MDC uses
+    // `:disabled` which doesn't apply to anchors.
+    @include button-base.mat-private-button-disabled {
+      @include token-utils.create-token-slot(color, disabled-label-text-color);
+      @include token-utils.create-token-slot(border-color, disabled-outline-color);
+    }
+
+    // TODO(crisbeto): this causes a weird gap between the ripple and the
+    // outline. We should remove it and update the screenshot tests.
+    .mdc-button__ripple {
+      @include token-utils.create-token-slot(border-width, outline-width);
+      border-style: solid;
+      border-color: transparent;
+    }
+  }
 }
 
 .mat-mdc-button,
@@ -173,12 +270,11 @@
 // then. See: https://github.com/angular/components/issues/13738
 .mat-mdc-outlined-button .mat-mdc-button-ripple,
 .mat-mdc-outlined-button .mdc-button__ripple {
-  $offset: -(mdc-button-variables.$outlined-border-width);
+  $offset: -1px;
   top: $offset;
   left: $offset;
   bottom: $offset;
   right: $offset;
-  border-width: $offset;
 }
 
 // For the button element, default inset/offset values are necessary to ensure that
