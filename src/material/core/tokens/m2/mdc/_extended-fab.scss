@@ -10,6 +10,10 @@ $prefix: (mdc, extended-fab);
   @return (
     container-height: 48px,
     container-shape: 24px,
+    container-elevation-shadow: elevation.get-box-shadow(6),
+    focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
 
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
@@ -49,12 +53,7 @@ $prefix: (mdc, extended-fab);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  @return (
-    container-elevation-shadow: elevation.get-box-shadow(6),
-    focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
