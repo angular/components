@@ -1,14 +1,39 @@
-@use '@material/chips/chip-set' as mdc-chip-set;
-@use '../core/mdc-helpers/mdc-helpers';
-
-@include mdc-chip-set.core-styles($query: mdc-helpers.$mdc-base-styles-query);
-
 // Ensures that the internal chip container spans the entire outer container width, if the
 // outer container width is customized. This is used by some wrapper components in g3.
 .mat-mdc-chip-set {
+  display: flex;
+
+  &:focus {
+    outline: none;
+  }
+
   .mdc-evolution-chip-set__chips {
     min-width: 100%;
+    margin-left: -8px;
+    margin-right: 0;
   }
+
+  .mdc-evolution-chip {
+    margin: 4px 0 4px 8px;
+  }
+
+  [dir='rtl'] & {
+    .mdc-evolution-chip-set__chips {
+      margin-left: 0;
+      margin-right: -8px;
+    }
+
+    .mdc-evolution-chip {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+}
+
+.mdc-evolution-chip-set__chips {
+  display: flex;
+  flex-flow: wrap;
+  min-width: 0;
 }
 
 // Angular Material supports vertically-stacked chips, which MDC does not.

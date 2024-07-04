@@ -1,4 +1,3 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
 @use 'sass:map';
 @use '../../token-utils';
 @use '../../../theming/inspection';
@@ -22,7 +21,7 @@ $prefix: (mat, app);
 
   @for $zValue from 0 through 24 {
     $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
-    $shadow: mdc-elevation.elevation-box-shadow($zValue,
+    $shadow: elevation.get-box-shadow($zValue,
       if($elevation-color == null, elevation.$color, $elevation-color));
     $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
   }

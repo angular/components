@@ -1,7 +1,7 @@
-@use '../../../theming/inspection';
-@use '../../token-utils';
-
 @use 'sass:map';
+@use '../../../theming/inspection';
+@use '../../../style/elevation';
+@use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, fab-small);
@@ -9,17 +9,18 @@ $prefix: (mdc, fab-small);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 50%,
-    icon-size: 24px,
-
-    // We don't use this token, because it doesn't set the color of any text inside the FAB.
-    // We create a custom token for it instead.
-    icon-color: null,
+    container-elevation-shadow: elevation.get-box-shadow(6),
+    focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
 
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
     container-height: null,
     container-width: null,
+    icon-size: null,
+    icon-color: null,
 
     focus-icon-color: null,
     focus-outline-color: null,
@@ -40,7 +41,13 @@ $prefix: (mdc, fab-small);
     pressed-ripple-color: null,
     pressed-ripple-opacity: null,
     pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null
+    pressed-state-layer-opacity: null,
+
+    container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
   );
 }
 
@@ -49,11 +56,6 @@ $prefix: (mdc, fab-small);
   @return (
     // Background color of the FAB.
     container-color: inspection.get-theme-color($theme, background, card),
-    container-elevation: 6,
-    focus-container-elevation: 8,
-    hover-container-elevation: 8,
-    pressed-container-elevation: 12,
-    container-shadow-color: #000,
   );
 }
 

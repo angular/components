@@ -1,7 +1,10 @@
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:meta';
+@use 'sass:string';
 @use '@material/typography' as mdc-typography;
+
+$_default-font-family: string.unquote('Roboto, sans-serif');
 
 /// Defines a typography level from the Material Design spec.
 /// @param {String} $font-size The font-size for this level.
@@ -123,7 +126,7 @@
 @function define-typography-config(
   // TODO(mmalerba): rename this function to define-typography-config,
   //  and create a predefined px based config for people that need it.
-  $font-family: mdc-typography.$font-family,
+  $font-family: $_default-font-family,
   $headline-1: null,
   $headline-2: null,
   $headline-3: null,
@@ -180,7 +183,7 @@
 @function define-rem-typography-config(
   // TODO(mmalerba): rename this function to define-typography-config,
   //  and create a predefined px based config for people that need it.
-  $font-family: mdc-typography.$font-family,
+  $font-family: $_default-font-family,
   $headline-1: null,
   $headline-2: null,
   $headline-3: null,

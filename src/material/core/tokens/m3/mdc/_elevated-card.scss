@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use '../../../style/elevation';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -11,5 +13,9 @@ $prefix: (mdc, elevated-card);
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $mdc-tokens: token-utils.get-mdc-tokens('elevated-card', $systems, $exclude-hardcoded);
 
-  @return token-utils.namespace-tokens($prefix, $mdc-tokens, $token-slots);
+  @if ($elevation != null) {
+    $tokens: map.set($tokens, container-elevation, elevation.get-box-shadow($elevation));
+  }
+
+  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

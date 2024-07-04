@@ -69,11 +69,11 @@ const HOST_SELECTOR_MDC_CLASS_PAIR: {attribute: string; mdcClasses: string[]}[] 
   },
   {
     attribute: 'mat-fab',
-    mdcClasses: ['mdc-fab', 'mat-mdc-fab'],
+    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mat-mdc-fab'],
   },
   {
     attribute: 'mat-mini-fab',
-    mdcClasses: ['mdc-fab', 'mdc-fab--mini', 'mat-mdc-mini-fab'],
+    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mdc-fab--mini', 'mat-mdc-mini-fab'],
   },
   {
     attribute: 'mat-icon-button',

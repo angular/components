@@ -1,5 +1,6 @@
 @use '../../../style/elevation';
 @use '../../../theming/inspection';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
 
@@ -50,12 +51,7 @@ $prefix: (mdc, elevated-card);
   @return (
     // The background color of the card.
     container-color: inspection.get-theme-color($theme, background, card),
-    // The elevation level of the card.
-    // (Part of the color tokens because it needs to be combined with the shadow color to generate
-    // the final box-shadow).
-    container-elevation: 1,
-    // The color of the card's shadow.
-    container-shadow-color: if($elevation != null, $elevation, elevation.$color),
+    container-elevation: elevation.get-box-shadow(1),
   );
 }
 

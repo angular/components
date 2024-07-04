@@ -1,10 +1,7 @@
-@use 'sass:map';
-@use '@material/animation' as mdc-animation;
 @use '@material/switch/switch' as mdc-switch;
 @use '@material/switch/switch-theme' as mdc-switch-theme;
-@use '@material/ripple' as mdc-ripple;
-@use '../core/style/layout-common';
 @use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '../core/style/layout-common';
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
@@ -86,14 +83,14 @@
   }
 
   .mdc-switch:hover #{mdc-switch.$ripple-target}::after {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, hover);
-    transition: mdc-animation.enter(opacity, 75ms);
+    opacity: 0.04;
+    transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
   }
 
   // Needs a little more specificity so the :hover styles don't override it.
   &.mat-mdc-slide-toggle-focused {
     .mdc-switch #{mdc-switch.$ripple-target}::after {
-      opacity: map.get(mdc-ripple.$dark-ink-opacities, focus);
+      opacity: 0.12;
     }
 
     // For slide-toggles render the focus indicator when we know
@@ -103,10 +100,8 @@
     }
   }
 
-  // We use an Angular Material ripple rather than an MDC ripple due to size concerns, so we need to
-  // style it appropriately.
   .mat-ripple-element {
-    opacity: map.get(mdc-ripple.$dark-ink-opacities, press);
+    opacity: 0.12;
   }
 
   // Slide-toggle components have to set `border-radius: 50%` in order to support density scaling

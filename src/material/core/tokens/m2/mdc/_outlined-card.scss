@@ -58,12 +58,7 @@ $prefix: (mdc, outlined-card);
     container-color: inspection.get-theme-color($theme, background, card),
     // The border color of the card.
     outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    // The elevation level of the card.
-    // (Part of the color tokens because it needs to be combined with the shadow color to generate
-    // the final box-shadow).
-    container-elevation: 0,
-    // The color of the card's shadow.
-    container-shadow-color: if($elevation != null, $elevation, elevation.$color),
+    container-elevation: elevation.get-box-shadow(0),
   );
 }
 
