@@ -1,7 +1,7 @@
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, secondary-navigation-tab);
+$prefix: (mdc, tab);
 
 /// Generates the tokens for MDC tab
 /// @param {Map} $systems The MDC system tokens

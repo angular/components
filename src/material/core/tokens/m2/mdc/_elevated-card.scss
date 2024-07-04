@@ -1,4 +1,4 @@
-@use '@material/elevation/elevation-theme' as mdc-elevation;
+@use '../../../style/elevation';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-utils';
@@ -35,7 +35,6 @@ $prefix: (mdc, elevated-card);
     pressed-container-elevation: null,
     pressed-state-layer-color: null,
     pressed-state-layer-opacity: null,
-    container-shadow-color: null,
     // Angular Material does not currently support surface tint.
     container-surface-tint-layer-color: null,
     // MDC does not seem to use these tokens.
@@ -51,7 +50,12 @@ $prefix: (mdc, elevated-card);
   @return (
     // The background color of the card.
     container-color: inspection.get-theme-color($theme, background, card),
-    container-elevation: mdc-elevation.elevation-box-shadow(1),
+    // The elevation level of the card.
+    // (Part of the color tokens because it needs to be combined with the shadow color to generate
+    // the final box-shadow).
+    container-elevation: 1,
+    // The color of the card's shadow.
+    container-shadow-color: if($elevation != null, $elevation, elevation.$color),
   );
 }
 

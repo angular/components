@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 
 /**
@@ -10,7 +10,6 @@ import {MatCardModule} from '@angular/material/card';
   styleUrl: 'card-media-size-example.css',
   standalone: true,
   imports: [MatCardModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardMediaSizeExample {
   longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog

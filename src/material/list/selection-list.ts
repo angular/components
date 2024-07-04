@@ -9,16 +9,16 @@
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {A, ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {A, ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Input,
   NgZone,
   OnChanges,
@@ -27,8 +27,6 @@ import {
   QueryList,
   SimpleChanges,
   ViewEncapsulation,
-  forwardRef,
-  inject,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
@@ -153,8 +151,6 @@ export class MatSelectionList
   /** View to model callback that should be called if the list or its options lost focus. */
   _onTouched: () => void = () => {};
 
-  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
   constructor(
     public _element: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
@@ -250,7 +246,6 @@ export class MatSelectionList
   /** Implemented as a part of ControlValueAccessor. */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
   }
 
   /**

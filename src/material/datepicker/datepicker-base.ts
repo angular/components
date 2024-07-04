@@ -325,9 +325,7 @@ export interface MatDatepickerPanel<
   closedStream: EventEmitter<void>;
   /**
    * Color palette to use on the datepicker's calendar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes.
-   *
-   * For information on applying color variants in M3, see
+   * has no effect in M3 themes. For information on applying color variants in M3, see
    * https://material.angular.io/guide/theming#using-component-color-variants
    */
   color: ThemePalette;
@@ -381,11 +379,9 @@ export abstract class MatDatepickerBase<
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
 
   /**
-   * Theme color of the datepicker's calendar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes.
-   *
-   * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/theming#using-component-color-variants.
+   * Color palette to use on the datepicker's calendar. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
    */
   @Input()
   get color(): ThemePalette {
@@ -528,8 +524,6 @@ export abstract class MatDatepickerBase<
 
   private _injector = inject(Injector);
 
-  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
   constructor(
     private _overlay: Overlay,
     /**
@@ -548,10 +542,6 @@ export abstract class MatDatepickerBase<
     }
 
     this._scrollStrategy = scrollStrategy;
-
-    this._model.selectionChanged.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

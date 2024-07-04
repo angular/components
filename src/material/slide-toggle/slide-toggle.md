@@ -17,6 +17,10 @@ specify an appropriate label.
 `<mat-slide-toggle>` is compatible with `@angular/forms` and supports both `FormsModule`
 and `ReactiveFormsModule`.
 
+### Theming
+The color of a `<mat-slide-toggle>` can be changed by using the `color` property. By default,
+slide-toggles use the theme's accent color. This can be changed to `'primary'` or `'warn'`.
+
 ### Accessibility
 
 `MatSlideToggle` uses an internal `<button role="switch">` to provide an accessible experience. This

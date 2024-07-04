@@ -114,6 +114,14 @@ Use the `MAT_CHIPS_DEFAULT_OPTIONS` token to specify default options for the chi
 })
 ```
 
+### Theming
+
+The color of a `<mat-datepicker>` can be changed by specifying a `$color-variant` when applying the
+`mat.datepicker-theme` or `mat.datepicker-color` mixins (see the
+[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default, the
+datepicker uses the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`,
+or `'error'`.
+
 ### Interaction Patterns
 
 The chips components support 3 user interaction patterns, each with its own container and chip elements:

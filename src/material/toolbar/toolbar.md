@@ -4,21 +4,24 @@
 
 ### Single row
 
-In the simplest case, a toolbar may be placed at the top of your application and 
+In the most situations, a toolbar will be placed at the top of your application and will only 
 have a single row that includes the title of your application.
 
-<!-- example(toolbar-simple) -->
+<!-- example({"example":"toolbar-overview",
+              "file":"toolbar-overview-example.html", 
+              "region":"toolbar-simple"}) -->
 
 ### Multiple rows
 
-The Material Design spec used to describe toolbars with multiple rows. This can 
-be done by placing `<mat-toolbar-row>` elements inside a `<mat-toolbar>`.
+The Material Design specifications describe that toolbars can also have multiple rows. Creating
+toolbars with multiple rows in Angular Material can be done by placing `<mat-toolbar-row>` elements
+inside of a `<mat-toolbar>`.
 
 <!-- example({"example":"toolbar-multirow",
               "file":"toolbar-multirow-example.html", 
               "region":"toolbar-row"}) -->
 
-**Note**: Placing content outside a `<mat-toolbar-row>` when multiple rows are specified is not
+**Note**: Placing content outside of a `<mat-toolbar-row>` when multiple rows are specified is not
 supported.
 
 ### Positioning toolbar content
@@ -35,6 +38,11 @@ easily accomplished with `display: flex`:
 <!-- example({"example":"toolbar-multirow",
               "file":"toolbar-multirow-example.css", 
               "region":"toolbar-position-content-style"}) -->
+
+### Theming
+The color of a `<mat-toolbar>` can be changed by using the `color` property. By default, toolbars
+use a neutral background color based on the current theme (light or dark). This can be changed to 
+`'primary'`, `'accent'`, or `'warn'`.  
 
 ### Accessibility
 By default, the toolbar assumes that it will be used in a purely decorative fashion and thus sets

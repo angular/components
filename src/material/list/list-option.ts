@@ -129,13 +129,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     this.togglePosition = value;
   }
 
-  /**
-   * Theme color of the list option. This sets the color of the checkbox/radio.
-   * This API is supported in M2 themes only, it has no effect in M3 themes.
-   *
-   * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/theming#using-component-color-variants.
-   */
+  /** Theme color of the list option. This sets the color of the checkbox/radio. */
   @Input()
   get color(): ThemePalette {
     return this._color || this._selectionList.color;

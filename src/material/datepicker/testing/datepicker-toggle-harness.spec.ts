@@ -1,16 +1,22 @@
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatCalendarHarness} from './calendar-harness';
 import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
+import {MatCalendarHarness} from './calendar-harness';
 
 describe('MatDatepickerToggleHarness', () => {
   let fixture: ComponentFixture<DatepickerToggleHarnessTest>;
   let loader: HarnessLoader;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,7 +43,6 @@ describe('MatDatepickerToggleHarness', () => {
     expect(await toggle.isDisabled()).toBe(false);
 
     fixture.componentInstance.disabled = true;
-    fixture.changeDetectorRef.markForCheck();
     expect(await toggle.isDisabled()).toBe(true);
   });
 
@@ -63,7 +68,6 @@ describe('MatDatepickerToggleHarness', () => {
 
   it('should be able to open and close a calendar in touch mode', async () => {
     fixture.componentInstance.touchUi = true;
-    fixture.changeDetectorRef.markForCheck();
     const toggle = await loader.getHarness(MatDatepickerToggleHarness.with({selector: '#basic'}));
     expect(await toggle.isCalendarOpen()).toBe(false);
 

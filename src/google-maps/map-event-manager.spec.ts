@@ -1,4 +1,4 @@
-import {type NgZone} from '@angular/core';
+import {NgZone} from '@angular/core';
 import {MapEventManager} from './map-event-manager';
 
 describe('MapEventManager', () => {

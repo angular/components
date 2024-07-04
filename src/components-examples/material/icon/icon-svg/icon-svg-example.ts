@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconRegistry, MatIconModule} from '@angular/material/icon';
 
@@ -20,7 +20,6 @@ const THUMBUP_ICON =
   templateUrl: 'icon-svg-example.html',
   standalone: true,
   imports: [MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconSvgExample {
   constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {

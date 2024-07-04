@@ -1,6 +1,21 @@
 <mat-card>
   <mat-card-content>
-    <h2 class="example-h2">Slide toggle configuration</h2>
+    <h2 class="example-h2">Slider configuration</h2>
+
+    <section class="example-section">
+      <label class="example-margin">Color:</label>
+      <mat-radio-group [(ngModel)]="color">
+        <mat-radio-button class="example-margin" value="primary">
+          Primary
+        </mat-radio-button>
+        <mat-radio-button class="example-margin" value="accent">
+          Accent
+        </mat-radio-button>
+        <mat-radio-button class="example-margin" value="warn">
+          Warn
+        </mat-radio-button>
+      </mat-radio-group>
+    </section>
 
     <section class="example-section">
       <mat-checkbox class="example-margin" [(ngModel)]="checked">Checked</mat-checkbox>
@@ -19,6 +34,7 @@
     <section class="example-section">
       <mat-slide-toggle
           class="example-margin"
+          [color]="color"
           [checked]="checked"
           [disabled]="disabled">
         Slide me!

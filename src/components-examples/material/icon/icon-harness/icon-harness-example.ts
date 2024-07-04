@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 
 /**
@@ -9,6 +9,5 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'icon-harness-example.html',
   standalone: true,
   imports: [MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconHarnessExample {}

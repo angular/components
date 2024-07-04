@@ -12,7 +12,6 @@ import {
   ToolbarMultirowExample,
   ToolbarOverviewExample,
 } from '@angular/components-examples/material/toolbar';
-import {ToolbarSimpleExample} from '@angular/components-examples/material/toolbar/toolbar-simple/toolbar-simple-example';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -30,7 +29,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     ToolbarBasicExample,
     ToolbarMultirowExample,
     ToolbarOverviewExample,
-    ToolbarSimpleExample,
     ToolbarHarnessExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

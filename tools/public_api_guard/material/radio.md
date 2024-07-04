@@ -109,6 +109,7 @@ export class MatRadioChange {
 
 // @public (undocumented)
 export interface MatRadioDefaultOptions {
+    // (undocumented)
     color: ThemePalette;
 }
 

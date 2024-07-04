@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, ElementRef, Provider, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {AfterViewInit, Component, ElementRef, Type, ViewChild, Provider} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {patchElementFocus} from '../../testing/private';
 import {
   A11yModule,
-  ConfigurableFocusTrap,
   ConfigurableFocusTrapFactory,
+  ConfigurableFocusTrap,
   EventListenerFocusTrapInertStrategy,
   FOCUS_TRAP_INERT_STRATEGY,
 } from '../index';
@@ -31,7 +31,6 @@ describe('EventListenerFocusTrapInertStrategy', () => {
     const fixture = createComponent(SimpleFocusTrap, providers);
     const componentInstance = fixture.componentInstance;
     fixture.detectChanges();
-    flush();
 
     componentInstance.secondFocusableElement.nativeElement.focus();
     flush();
@@ -44,7 +43,6 @@ describe('EventListenerFocusTrapInertStrategy', () => {
   it('should not intercept focus if it moved outside the trap and back in again', fakeAsync(() => {
     const fixture = createComponent(SimpleFocusTrap, providers);
     fixture.detectChanges();
-    flush();
     const {secondFocusableElement, outsideFocusableElement} = fixture.componentInstance;
 
     outsideFocusableElement.nativeElement.focus();

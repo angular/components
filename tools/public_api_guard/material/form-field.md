@@ -24,7 +24,6 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
-import { Signal } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
@@ -91,10 +90,10 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _formFieldControl: MatFormFieldControl_2<any>;
     getConnectedOverlayOrigin(): ElementRef;
     _getDisplayedMessages(): 'error' | 'hint';
-    getLabelId: Signal<string | null>;
+    getLabelId(): string | null;
     _handleLabelResized(): void;
     // (undocumented)
-    _hasFloatingLabel: Signal<boolean>;
+    _hasFloatingLabel(): boolean;
     // (undocumented)
     _hasIconPrefix: boolean;
     // (undocumented)
@@ -115,6 +114,10 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     readonly _hintLabelId: string;
     // (undocumented)
     _iconPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _labelChildNonStatic: MatLabel | undefined;
+    // (undocumented)
+    _labelChildStatic: MatLabel | undefined;
     // (undocumented)
     readonly _labelId: string;
     // (undocumented)
@@ -146,7 +149,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _textPrefixContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChildNonStatic", "_labelChildStatic", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, [null, null, null, null, null, { optional: true; }, { optional: true; }, null]>;
 }

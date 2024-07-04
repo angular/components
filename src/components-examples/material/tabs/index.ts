@@ -10,6 +10,7 @@ export {TabGroupHeaderBelowExample} from './tab-group-header-below/tab-group-hea
 export {TabGroupLazyLoadedExample} from './tab-group-lazy-loaded/tab-group-lazy-loaded-example';
 export {TabGroupPreserveContentExample} from './tab-group-preserve-content/tab-group-preserve-content-example';
 export {TabGroupStretchedExample} from './tab-group-stretched/tab-group-stretched-example';
+export {TabGroupThemeExample} from './tab-group-theme/tab-group-theme-example';
 export {TabNavBarBasicExample} from './tab-nav-bar-basic/tab-nav-bar-basic-example';
 export {TabGroupPaginatedExample} from './tab-group-paginated/tab-group-paginated-example';
 export {TabGroupInvertedExample} from './tab-group-inverted/tab-group-inverted-example';

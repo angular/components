@@ -21,33 +21,21 @@ class Walker extends Lint.RuleWalker {
   private _enabled: boolean;
 
   constructor(
-    private _sourceFile: ts.SourceFile,
+    sourceFile: ts.SourceFile,
     options: Lint.IOptions,
     private _typeChecker: ts.TypeChecker,
   ) {
-    super(_sourceFile, options);
+    super(sourceFile, options);
 
     // Globs that are used to determine which files to lint.
     const fileGlobs: string[] = options.ruleArguments[0];
 
     // Whether the file should be checked at all.
-    this._enabled = !fileGlobs.some(p => minimatch(_sourceFile.fileName, p));
-  }
-
-  override visitIdentifier(node: ts.Identifier): void {
-    if (!this._enabled) {
-      return;
-    }
-
-    const symbol = this._typeChecker.getSymbolAtLocation(node);
-    const decl = symbol?.valueDeclaration;
-    if (decl && ts.isVariableDeclaration(decl) && decl.name.getText() === 'Zone') {
-      this.addFailureAtNode(node, `Using Zone is not allowed.`);
-    }
+    this._enabled = !fileGlobs.some(p => minimatch(sourceFile.fileName, p));
   }
 
   override visitPropertyAccessExpression(node: ts.PropertyAccessExpression) {
-    if (!this._enabled || this._sourceFile.fileName.endsWith('.spec.ts')) {
+    if (!this._enabled) {
       return;
     }
 
@@ -72,17 +60,5 @@ class Walker extends Lint.RuleWalker {
         this.addFailureAtNode(specifier, `Using zone change detection is not allowed.`);
       }
     });
-
-    if (this._sourceFile.fileName.endsWith('.spec.ts')) {
-      node.elements.forEach(specifier => {
-        if (specifier.name.getText() === 'NgZone' && !specifier.isTypeOnly) {
-          this.addFailureAtNode(
-            specifier,
-            `Using NgZone is not allowed in zoneless tests. Tests that explicitly test Zone.js` +
-              ` integration should go in .zone.spec.ts files.`,
-          );
-        }
-      });
-    }
   }
 }

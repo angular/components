@@ -1,7 +1,7 @@
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatRadioButtonHarness, MatRadioGroupHarness} from './radio-harness';
@@ -13,6 +13,7 @@ describe('radio harness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatRadioModule, ReactiveFormsModule, MultipleRadioButtonsHarnessTest],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MultipleRadioButtonsHarnessTest);
@@ -50,7 +51,6 @@ describe('radio harness', () => {
         'radio-button names',
       async () => {
         fixture.componentInstance.thirdGroupButtonName = 'other-name';
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         await expectAsync(
@@ -69,13 +69,11 @@ describe('radio harness', () => {
       expect(await groups[2].getName()).toBe('third-group-name');
 
       fixture.componentInstance.secondGroupId = 'new-group';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(await groups[1].getName()).toBe('new-group-name');
 
       fixture.componentInstance.thirdGroupButtonName = 'other-button-name';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       await expectAsync(groups[2].getName()).toBeRejectedWithError(
@@ -91,7 +89,6 @@ describe('radio harness', () => {
       expect(await groups[2].getId()).toBe('');
 
       fixture.componentInstance.secondGroupId = 'new-group-name';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(await groups[1].getId()).toBe('new-group-name');
@@ -208,7 +205,6 @@ describe('radio harness', () => {
       expect(await firstRadio.isDisabled()).toBe(false);
 
       fixture.componentInstance.disableAll = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(await firstRadio.isDisabled()).toBe(true);
@@ -240,7 +236,6 @@ describe('radio harness', () => {
 
     it('should not be able to check disabled radio-button', async () => {
       fixture.componentInstance.disableAll = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const radioButton = await loader.getHarness(MatRadioButtonHarness.with({selector: '#opt3'}));
@@ -249,7 +244,6 @@ describe('radio harness', () => {
       expect(await radioButton.isChecked()).toBe(false);
 
       fixture.componentInstance.disableAll = false;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(await radioButton.isChecked()).toBe(false);

@@ -1,31 +1,45 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, Directive, ElementRef, Provider, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
 import {
-  FormControl,
-  FormGroup,
+  Type,
+  Component,
+  ViewChild,
+  ElementRef,
+  Directive,
+  Provider,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {ComponentFixture, TestBed, inject, fakeAsync, tick, flush} from '@angular/core/testing';
+import {
   FormsModule,
-  NG_VALIDATORS,
-  NgModel,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  NG_VALIDATORS,
   Validator,
+  NgModel,
   Validators,
 } from '@angular/forms';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Directionality} from '@angular/cdk/bidi';
+import {OverlayContainer} from '@angular/cdk/overlay';
 import {ErrorStateMatcher, MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from './datepicker-module';
 import {MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Subscription} from 'rxjs';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {MatDateRangeInput} from './date-range-input';
-import {MatEndDate, MatStartDate} from './date-range-input-parts';
 import {MatDateRangePicker} from './date-range-picker';
-import {MatDatepickerModule} from './datepicker-module';
+import {MatStartDate, MatEndDate} from './date-range-input-parts';
+import {Subscription} from 'rxjs';
 
 describe('MatDateRangeInput', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
+
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [
@@ -85,7 +99,6 @@ describe('MatDateRangeInput', () => {
     expect(separator.textContent).toBe('–');
 
     fixture.componentInstance.separator = '/';
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(separator.textContent).toBe('/');
@@ -137,7 +150,6 @@ describe('MatDateRangeInput', () => {
     expect(end.nativeElement.disabled).toBe(false);
 
     fixture.componentInstance.rangeDisabled = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(start.nativeElement.disabled).toBe(true);
     expect(end.nativeElement.disabled).toBe(true);
@@ -283,7 +295,6 @@ describe('MatDateRangeInput', () => {
   it('should pass the minimum date from the range input to the inner inputs', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.minDate = new Date(2020, 3, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
@@ -302,7 +313,6 @@ describe('MatDateRangeInput', () => {
   it('should pass the maximum date from the range input to the inner inputs', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.maxDate = new Date(2020, 1, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
@@ -321,7 +331,6 @@ describe('MatDateRangeInput', () => {
   it('should pass the date filter function from the range input to the inner inputs', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.dateFilter = () => false;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
@@ -352,12 +361,10 @@ describe('MatDateRangeInput', () => {
     subscription.add(end.valueChanges.subscribe(spy));
 
     fixture.componentInstance.dateFilter = () => false;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(2);
 
     fixture.componentInstance.dateFilter = () => true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(4);
 
@@ -382,12 +389,10 @@ describe('MatDateRangeInput', () => {
       subscription.add(end.valueChanges.subscribe(spy));
 
       fixture.componentInstance.dateFilter = () => false;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(2);
 
       fixture.componentInstance.dateFilter = () => false;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(2);
 
@@ -445,7 +450,6 @@ describe('MatDateRangeInput', () => {
   it('should revalidate if a validation field changes', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.minDate = new Date(2020, 3, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance.range.controls;
 
@@ -458,7 +462,6 @@ describe('MatDateRangeInput', () => {
     expect(end.errors?.['matDatepickerMin']).toBeTruthy();
 
     fixture.componentInstance.minDate = new Date(2019, 3, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(start.errors?.['matDatepickerMin']).toBeFalsy();
@@ -468,7 +471,6 @@ describe('MatDateRangeInput', () => {
   it('should set the formatted date value as the input value', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.minDate = new Date(2020, 3, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const date = new Date(2020, 1, 2);
     const {start, end, range} = fixture.componentInstance;
@@ -502,7 +504,6 @@ describe('MatDateRangeInput', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.minDate = new Date(2020, 1, 2);
     fixture.componentInstance.maxDate = new Date(2020, 1, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance;
 
@@ -614,7 +615,6 @@ describe('MatDateRangeInput', () => {
       2,
     );
     fixture.componentInstance.comparisonEnd = new Date(2020, 1, 5);
-    fixture.changeDetectorRef.markForCheck();
     inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
       overlayContainerElement = overlayContainer.getContainerElement();
     })();
@@ -643,7 +643,6 @@ describe('MatDateRangeInput', () => {
     const fixture = createComponent(RangePickerNgModel);
     fixture.componentInstance.start = start;
     fixture.componentInstance.end = end;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     tick();
     fixture.detectChanges();
@@ -656,7 +655,6 @@ describe('MatDateRangeInput', () => {
     const assignAndAssert = (start: Date, end: Date) => {
       fixture.componentInstance.start = start;
       fixture.componentInstance.end = end;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -687,7 +685,6 @@ describe('MatDateRangeInput', () => {
     const fixture = createComponent(RangePickerNgModel);
     fixture.componentInstance.start = new Date(2020, 1, 2);
     fixture.componentInstance.end = new Date(2020, 2, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
     const {startModel, endModel} = fixture.componentInstance;
@@ -702,7 +699,6 @@ describe('MatDateRangeInput', () => {
     const fixture = createComponent(RangePickerNgModel);
     fixture.componentInstance.start = new Date(2020, 1, 2);
     fixture.componentInstance.end = new Date(2020, 2, 2);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     flush();
     const {startModel, endModel, startInput, endInput} = fixture.componentInstance;
@@ -974,12 +970,10 @@ describe('MatDateRangeInput', () => {
 
     validator.validate.calls.reset();
     fixture.componentInstance.min = minDate;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(validator.validate).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.min = new Date(minDate);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -993,12 +987,10 @@ describe('MatDateRangeInput', () => {
 
     validator.validate.calls.reset();
     fixture.componentInstance.max = maxDate;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(validator.validate).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.max = new Date(maxDate);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -1013,12 +1005,10 @@ describe('MatDateRangeInput', () => {
     const subscription = fixture.componentInstance.rangeInput.stateChanges.subscribe(spy);
 
     fixture.componentInstance.minDate = minDate;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.minDate = new Date(minDate);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
 
@@ -1034,12 +1024,10 @@ describe('MatDateRangeInput', () => {
     const subscription = fixture.componentInstance.rangeInput.stateChanges.subscribe(spy);
 
     fixture.componentInstance.maxDate = maxDate;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.maxDate = new Date(maxDate);
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
 
@@ -1130,7 +1118,6 @@ describe('MatDateRangeInput', () => {
       },
       Validators.required,
     );
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.rangeInput.required).toBe(true);
@@ -1142,7 +1129,6 @@ describe('MatDateRangeInput', () => {
       start: new FormControl<Date | null>(null, Validators.required),
       end: new FormControl<Date | null>(null),
     });
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.rangeInput.required).toBe(true);

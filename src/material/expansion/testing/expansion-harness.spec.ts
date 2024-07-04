@@ -1,7 +1,7 @@
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAccordionTogglePosition, MatExpansionModule} from '@angular/material/expansion';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAccordionHarness} from './accordion-harness';
@@ -14,6 +14,7 @@ describe('MatExpansionHarness', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatExpansionModule, NoopAnimationsModule, ExpansionHarnessTestComponent],
+      providers: [provideZoneChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpansionHarnessTestComponent);
@@ -119,7 +120,6 @@ describe('MatExpansionHarness', () => {
     const panel = await loader.getHarness(MatExpansionPanelHarness.with({title: /Panel#1/}));
     expect(await panel.isExpanded()).toBe(false);
     fixture.componentInstance.panel1Expanded = true;
-    fixture.changeDetectorRef.markForCheck();
     expect(await panel.isExpanded()).toBe(true);
   });
 
@@ -127,7 +127,6 @@ describe('MatExpansionHarness', () => {
     const panel = await loader.getHarness(MatExpansionPanelHarness.with({content: /Panel#1/}));
     expect(await panel.getTitle()).toBe('Title of Panel#1');
     fixture.componentInstance.panel1Title = 'new title';
-    fixture.changeDetectorRef.markForCheck();
     expect(await panel.getTitle()).toBe('new title');
   });
 
@@ -135,7 +134,6 @@ describe('MatExpansionHarness', () => {
     const panel = await loader.getHarness(MatExpansionPanelHarness.with({content: /Panel#1/}));
     expect(await panel.getDescription()).toBe('Description of Panel#1');
     fixture.componentInstance.panel1Description = 'new description';
-    fixture.changeDetectorRef.markForCheck();
     expect(await panel.getDescription()).toBe('new description');
   });
 
@@ -145,7 +143,6 @@ describe('MatExpansionHarness', () => {
     );
     expect(await panel.isDisabled()).toBe(true);
     fixture.componentInstance.isDisabled = false;
-    fixture.changeDetectorRef.markForCheck();
     expect(await panel.isDisabled()).toBe(false);
   });
 
@@ -184,7 +181,6 @@ describe('MatExpansionHarness', () => {
     const panel = await loader.getHarness(MatExpansionPanelHarness);
     expect(await panel.getTextContent()).toBe('Content of Panel#1');
     fixture.componentInstance.panel1Content = 'new content';
-    fixture.changeDetectorRef.markForCheck();
     expect(await panel.getTextContent()).toBe('new content');
   });
 
@@ -223,7 +219,6 @@ describe('MatExpansionHarness', () => {
     });
     expect(toggleIndicatorChecks.every(s => s)).toBe(true);
     fixture.componentInstance.hideToggleIndicators = true;
-    fixture.changeDetectorRef.markForCheck();
     toggleIndicatorChecks = await parallel(() => expansionPanels.map(p => p.hasToggleIndicator()));
     expect(toggleIndicatorChecks.every(s => !s)).toBe(true);
   });
@@ -239,7 +234,6 @@ describe('MatExpansionHarness', () => {
     );
     expect(togglePositions.every(p => p === 'after')).toBe(true);
     fixture.componentInstance.toggleIndicatorsPosition = 'before';
-    fixture.changeDetectorRef.markForCheck();
     togglePositions = await parallel(() => {
       return expansionPanels.map(p => p.getToggleIndicatorPosition());
     });
@@ -265,7 +259,6 @@ describe('MatExpansionHarness', () => {
     const accordion = await loader.getHarness(MatAccordionHarness);
     expect(await accordion.isMulti()).toBe(false);
     fixture.componentInstance.multiMode = true;
-    fixture.changeDetectorRef.markForCheck();
     expect(await accordion.isMulti()).toBe(true);
   });
 });

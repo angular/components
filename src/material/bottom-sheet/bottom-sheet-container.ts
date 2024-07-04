@@ -92,17 +92,15 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     this._breakpointSubscription = breakpointObserver
       .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
       .subscribe(() => {
-        const classList = (this._elementRef.nativeElement as HTMLElement).classList;
-
-        classList.toggle(
+        this._toggleClass(
           'mat-bottom-sheet-container-medium',
           breakpointObserver.isMatched(Breakpoints.Medium),
         );
-        classList.toggle(
+        this._toggleClass(
           'mat-bottom-sheet-container-large',
           breakpointObserver.isMatched(Breakpoints.Large),
         );
-        classList.toggle(
+        this._toggleClass(
           'mat-bottom-sheet-container-xlarge',
           breakpointObserver.isMatched(Breakpoints.XLarge),
         );
@@ -113,7 +111,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
   enter(): void {
     if (!this._destroyed) {
       this._animationState = 'visible';
-      this._changeDetectorRef.markForCheck();
       this._changeDetectorRef.detectChanges();
     }
   }
@@ -145,4 +142,8 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
   }
 
   protected override _captureInitialFocus(): void {}
+
+  private _toggleClass(cssClass: string, add: boolean) {
+    this._elementRef.nativeElement.classList.toggle(cssClass, add);
+  }
 }

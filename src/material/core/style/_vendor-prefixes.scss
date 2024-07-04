@@ -48,9 +48,4 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
-
-@mixin mask-image($value) {
-  -webkit-mask-image: $value;
-  mask-image: $value;
-}
 // stylelint-enable

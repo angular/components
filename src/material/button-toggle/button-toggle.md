@@ -19,7 +19,7 @@ and `ngModel` is not supported.
 ### Appearance
 By default, the appearance of `mat-button-toggle-group` and `mat-button-toggle` will follow the
 latest Material Design guidelines. If you want to, you can switch back to the appearance that was
-following a previous Material Design spec by using the `appearance` input. The `appearance` can
+following the previous Material Design spec by using the `appearance` input. The `appearance` can
 be configured globally using the `MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS` injection token.
 
 <!-- example(button-toggle-appearance) -->

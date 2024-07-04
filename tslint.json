@@ -187,12 +187,10 @@
       [
         // Allow in tests that specficially test integration with Zone.js.
         "**/*.zone.spec.ts",
-        // TODO: Test harnesses infrastructure still relies on Zone.js.
-        "**/src/cdk/testing/testbed/task-state-zone-interceptor.ts",
-        "**/src/cdk/testing/testbed/testbed-harness-environment.ts",
+        // TODO(mmalerba): following files to be cleaned up and removed from this list:
+        "**/src/cdk/a11y/focus-trap/focus-trap.ts",
         "**/src/cdk/testing/tests/testbed.spec.ts",
-        // TODO: Tooltip harness still relies on Zone.js.
-        "**/src/material/tooltip/testing/tooltip-harness.spec.ts"
+        "**/src/material/**/*.spec.ts"
       ]
     ]
   },
