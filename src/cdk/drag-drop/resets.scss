@@ -6,3 +6,10 @@
     color: inherit;
   }
 }
+
+// These elements get `pointer-events: none` when they're created, but any descendants might
+// override it back to `auto`. Reset them here since they can affect the pointer position detection.
+.cdk-drag-placeholder *,
+.cdk-drag-preview * {
+  pointer-events: none !important;
+}
