@@ -60,7 +60,7 @@ export class MatDatepickerInputEvent<D, S = unknown> {
  * Function that can be used to filter out dates from a calendar.
  * Datepicker can sometimes receive a null value as input for the date argument.
  * This doesn't represent a "null date" but rather signifies that no date has been selected yet in the calendar.
- * */
+ */
 export type DateFilterFn<D> = (date: D | null) => boolean;
 
 /**
