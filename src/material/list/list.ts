@@ -59,6 +59,9 @@ export class MatList extends MatListBase {}
     '[class.mdc-list-item--with-leading-avatar]': '_avatars.length !== 0',
     '[class.mdc-list-item--with-leading-icon]': '_icons.length !== 0',
     '[class.mdc-list-item--with-trailing-meta]': '_meta.length !== 0',
+    // Utility class that makes it easier to target the case where there's both a leading
+    // and a trailing icon. Avoids having to write out all the combinations.
+    '[class.mat-mdc-list-item-both-leading-and-trailing]': '_hasBothLeadingAndTrailing()',
     '[class._mat-animation-noopable]': '_noopAnimations',
     '[attr.aria-current]': '_getAriaCurrent()',
   },
@@ -102,5 +105,9 @@ export class MatListItem extends MatListItemBase {
    */
   _getAriaCurrent(): string | null {
     return this._hostElement.nodeName === 'A' && this._activated ? 'page' : null;
+  }
+
+  protected _hasBothLeadingAndTrailing(): boolean {
+    return this._meta.length !== 0 && (this._avatars.length !== 0 || this._icons.length !== 0);
   }
 }
