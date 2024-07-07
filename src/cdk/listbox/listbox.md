@@ -120,23 +120,6 @@ The CDK Listbox supports both template driven forms and reactive forms.
   "region": "listbox"
 }) -->
 
-#### Forms validation
-
-The CDK listbox integrates with Angular's form validation API and has the following built-in
-validation errors:
-
-- `cdkListboxUnexpectedOptionValues` - Raised when the bound value contains values that do not
-  appear as option value in the listbox. The validation error contains a `values` property that
-  lists the invalid values
-- `cdkListboxUnexpectedMultipleValues` - Raised when a single-selection listbox is bound to a value
-  containing multiple selected options.
-
-<!-- example({
-  "example": "cdk-listbox-forms-validation",
-  "file": "cdk-listbox-forms-validation-example.ts",
-  "region": "errors"
-}) -->
-
 ### Disabling options
 
 You can disable options for selection by setting `cdkOptionDisabled`.
