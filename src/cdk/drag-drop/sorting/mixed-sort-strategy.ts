@@ -11,6 +11,8 @@ import {moveItemInArray} from '../drag-utils';
 import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
 import {DragDropRegistry} from '../drag-drop-registry';
 import type {DragRef} from '../drag-ref';
+import {getMutableClientRect} from '../dom/dom-rect';
+import {combineTransforms} from '../dom/styling';
 
 /**
  * Strategy that only supports sorting on a list that might wrap.
@@ -52,6 +54,9 @@ export class MixedSortStrategy implements DropListSortStrategy {
    */
   private _relatedNodes: [node: Node, nextSibling: Node | null][] = [];
 
+  /** Cache of the dimensions of all the items inside the container. */
+  private _itemPositions: CachedItemPosition<DragRef>[] = [];
+
   constructor(
     private _document: Document,
     private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
@@ -86,6 +91,7 @@ export class MixedSortStrategy implements DropListSortStrategy {
     pointerY: number,
     pointerDelta: {x: number; y: number},
   ): {previousIndex: number; currentIndex: number} | null {
+    const siblings = this._itemPositions.slice();
     const newIndex = this._getItemIndexFromPointerPosition(item, pointerX, pointerY);
     const previousSwap = this._previousSwap;
 
@@ -106,20 +112,84 @@ export class MixedSortStrategy implements DropListSortStrategy {
     }
 
     const previousIndex = this.getItemIndex(item);
-    const current = item.getPlaceholderElement();
+    const siblingAtNewPosition = siblings[newIndex];
+    const previousPosition = siblings[previousIndex].clientRect;
+    const newPosition = siblingAtNewPosition.clientRect;
     const overlapElement = toSwapWith.getRootElement();
 
-    if (newIndex > previousIndex) {
-      overlapElement.after(current);
-    } else {
-      overlapElement.before(current);
+    const delta = this._getDelta(newPosition.top, previousPosition.top, pointerDelta);
+
+    if (delta === 0) return null;
+    if (delta === 1 && previousIndex > newIndex) return null;
+    if (delta === -1 && previousIndex < newIndex) return null;
+
+    const startIndex = Math.min(previousIndex, newIndex);
+    const endIndex = Math.max(previousIndex, newIndex);
+
+    let itemPositions = this._itemPositions.slice();
+
+    if (delta === 1) {
+      for (let i = startIndex; i < endIndex; i++) {
+        itemPositions = this._updateItemPosition(i, itemPositions, delta);
+        moveItemInArray(itemPositions, i, i + 1);
+      }
+    } else if (delta === -1) {
+      for (let i = endIndex; i > startIndex; i--) {
+        itemPositions = this._updateItemPosition(i, itemPositions, delta);
+        moveItemInArray(itemPositions, i, i - 1);
+      }
     }
 
+    const threshold = this._getThreshold();
+    let currentTop = itemPositions[0].clientRect.top;
+
+    for (let i = 0; i < itemPositions.length; i++) {
+      const sibling = itemPositions[i];
+      const isDraggedItem = sibling.drag === item;
+
+      const element = isDraggedItem
+        ? sibling.drag.getPlaceholderElement()
+        : sibling.drag.getRootElement();
+
+      const marginRight = +getComputedStyle(element).marginRight.split('px')[0];
+
+      if (Math.round(sibling.clientRect.right + marginRight) > Math.round(threshold)) {
+        const nextPosition = itemPositions[i + 1];
+        if (nextPosition) {
+          currentTop = nextPosition.clientRect.top;
+        }
+
+        itemPositions = this._updateItemPositionToDown(itemPositions, i);
+      } else if (sibling.clientRect.top !== currentTop) {
+        currentTop = sibling.clientRect.top;
+        itemPositions = this._updateItemPositionToUp(itemPositions, i);
+      }
+    }
+
+    const oldOrder = this._itemPositions.slice();
+    this._itemPositions = itemPositions.slice();
     moveItemInArray(this._activeItems, previousIndex, newIndex);
 
+    itemPositions.forEach((sibling, index) => {
+      if (oldOrder[index] === sibling) {
+        return;
+      }
+
+      const isDraggedItem = sibling.drag === item;
+      const elementToOffset = isDraggedItem
+        ? item.getPlaceholderElement()
+        : sibling.drag.getRootElement();
+
+      elementToOffset.style.transform = combineTransforms(
+        `translate3d(${Math.round(sibling.transform.x)}px, ${Math.round(
+          sibling.transform.y,
+        )}px, 0)`,
+      );
+    });
+
     const newOverlapElement = this._getRootNode().elementFromPoint(pointerX, pointerY);
-    // Note: it's tempting to save the entire `pointerDelta` object here, however that'll
-    // break this functionality, because the same object is passed for all `sort` calls.
+    // // Note: it's tempting to save the entire `pointerDelta` object here, however that'll
+    // // break this functionality, because the same object is passed for all `sort` calls.
     previousSwap.deltaX = pointerDelta.x;
     previousSwap.deltaY = pointerDelta.y;
     previousSwap.drag = toSwapWith;
@@ -127,8 +197,8 @@ export class MixedSortStrategy implements DropListSortStrategy {
       overlapElement === newOverlapElement || overlapElement.contains(newOverlapElement);
 
     return {
-      previousIndex,
-      currentIndex: newIndex,
+      previousIndex: 1,
+      currentIndex: 3,
     };
   }
 
@@ -167,11 +237,14 @@ export class MixedSortStrategy implements DropListSortStrategy {
       this._activeItems.push(item);
       this._element.appendChild(item.getPlaceholderElement());
     }
+
+    this._cacheItemPosition();
   }
 
   /** Sets the items that are currently part of the list. */
   withItems(items: readonly DragRef[]): void {
     this._activeItems = items.slice();
+    this._cacheItemPosition();
   }
 
   /** Assigns a sort predicate to the strategy. */
@@ -181,27 +254,15 @@ export class MixedSortStrategy implements DropListSortStrategy {
 
   /** Resets the strategy to its initial state before dragging was started. */
   reset(): void {
-    const root = this._element;
     const previousSwap = this._previousSwap;
-
-    // Moving elements around in the DOM can break things like the `@for` loop, because it
-    // uses comment nodes to know where to insert elements. To avoid such issues, we restore
-    // the DOM nodes in the list to their original order when the list is reset.
-    // Note that this could be simpler if we just saved all the nodes, cleared the root
-    // and then appended them in the original order. We don't do it, because it can break
-    // down depending on when the snapshot was taken. E.g. we may end up snapshotting the
-    // placeholder element which is removed after dragging.
-    for (let i = this._relatedNodes.length - 1; i > -1; i--) {
-      const [node, nextSibling] = this._relatedNodes[i];
-      if (node.parentNode === root && node.nextSibling !== nextSibling) {
-        if (nextSibling === null) {
-          root.appendChild(node);
-        } else if (nextSibling.parentNode === root) {
-          root.insertBefore(node, nextSibling);
-        }
+    this._activeItems?.forEach(item => {
+      const rootElement = item.getRootElement();
+      if (rootElement) {
+        // const initialTransform = this._itemPositions.find(p => p.drag === item)
+        rootElement.style.transform = '';
       }
-    }
-
+    });
+    this._itemPositions = [];
     this._relatedNodes = [];
     this._activeItems = [];
     previousSwap.drag = null;
@@ -256,12 +317,14 @@ export class MixedSortStrategy implements DropListSortStrategy {
       Math.floor(pointerX),
       Math.floor(pointerY),
     );
-    const index = elementAtPoint
-      ? this._activeItems.findIndex(item => {
-          const root = item.getRootElement();
-          return elementAtPoint === root || root.contains(elementAtPoint);
-        })
-      : -1;
+
+    const index =
+      elementAtPoint && !elementAtPoint?.getAnimations().length
+        ? this._activeItems.findIndex(item => {
+            const root = item.getRootElement();
+            return elementAtPoint === root || root.contains(elementAtPoint);
+          })
+        : -1;
     return index === -1 || !this._sortPredicate(index, item) ? -1 : index;
   }
 
@@ -311,4 +374,312 @@ export class MixedSortStrategy implements DropListSortStrategy {
 
     return minIndex;
   }
+
+  private _cacheItemPosition() {
+    this._itemPositions = this._activeItems.map(drag => {
+      const elementToMeasure = drag.getVisibleElement();
+      return {
+        drag,
+        clientRect: getMutableClientRect(elementToMeasure),
+        transform: {
+          x: 0,
+          y: 0,
+        },
+      };
+    });
+  }
+
+  private _updateItemPosition(
+    currentIndex: number,
+    siblings: CachedItemPosition<DragRef>[],
+    delta: number,
+  ) {
+    let siblingsUpdated = siblings.slice();
+    const offsetVertical = this._getOffset(currentIndex, siblingsUpdated, delta, false);
+    const offsetHorizontal = this._getOffset(currentIndex, siblingsUpdated, delta, true);
+
+    const immediateIndex = currentIndex + delta * 1;
+    const currentItem = siblingsUpdated[currentIndex];
+    const immediateSibling = siblingsUpdated[immediateIndex];
+
+    const currentItemUpdated: CachedItemPosition<DragRef> = {
+      ...currentItem,
+      clientRect: {
+        ...currentItem.clientRect,
+        x: currentItem.clientRect.x + offsetHorizontal.itemOffset,
+        left: currentItem.clientRect.left + offsetHorizontal.itemOffset,
+        right: currentItem.clientRect.right + offsetHorizontal.itemOffset,
+        y: currentItem.clientRect.y + offsetVertical.itemOffset,
+        top: currentItem.clientRect.top + offsetVertical.itemOffset,
+        bottom: currentItem.clientRect.bottom + offsetVertical.itemOffset,
+      },
+      transform: {
+        x: currentItem.transform.x + offsetHorizontal.itemOffset,
+        y: currentItem.transform.y + offsetVertical.itemOffset,
+      },
+    };
+
+    const immediateSiblingUpdated: CachedItemPosition<DragRef> = {
+      ...immediateSibling,
+      clientRect: {
+        ...immediateSibling.clientRect,
+        x: immediateSibling.clientRect.x + offsetHorizontal.siblingOffset,
+        left: immediateSibling.clientRect.left + offsetHorizontal.siblingOffset,
+        right: immediateSibling.clientRect.right + offsetHorizontal.siblingOffset,
+        y: immediateSibling.clientRect.y + offsetVertical.siblingOffset,
+        top: immediateSibling.clientRect.top + offsetVertical.siblingOffset,
+        bottom: immediateSibling.clientRect.bottom + offsetVertical.siblingOffset,
+      },
+      transform: {
+        x: immediateSibling.transform.x + offsetHorizontal.siblingOffset,
+        y: immediateSibling.transform.y + offsetVertical.siblingOffset,
+      },
+    };
+
+    if (offsetVertical.itemOffset !== offsetVertical.siblingOffset) {
+      const offset =
+        (currentItemUpdated.clientRect.right - immediateSibling.clientRect.right) * delta;
+      const top = delta === 1 ? immediateSibling.clientRect.top : currentItem.clientRect.top;
+
+      const ignoreItem = delta === 1 ? immediateSibling.drag : currentItem.drag;
+
+      siblingsUpdated = this._updateItemPositionHorizontalOnRow(
+        siblingsUpdated,
+        top,
+        offset,
+        ignoreItem,
+      );
+    }
+    siblingsUpdated[currentIndex] = currentItemUpdated;
+    siblingsUpdated[immediateIndex] = immediateSiblingUpdated;
+
+    return siblingsUpdated;
+  }
+
+  private _updateItemPositionToUp(siblings: CachedItemPosition<DragRef>[], currentIndex: number) {
+    let siblingsUpdated = siblings.slice();
+    const immediateSibling = siblingsUpdated[currentIndex - 1];
+    const currentItem = siblingsUpdated[currentIndex];
+
+    const nextEmptySlotLeft = immediateSibling.clientRect.right + this._getContainerGapPixel();
+
+    const threshold = this._getThreshold();
+    if (
+      nextEmptySlotLeft + currentItem.clientRect.right - currentItem.clientRect.left <=
+      threshold
+    ) {
+      const offsetLeft = nextEmptySlotLeft - currentItem.clientRect.left;
+      const offsetTop = immediateSibling.clientRect.top - currentItem.clientRect.top;
+
+      const nextSibling = siblingsUpdated[currentIndex + 1];
+      if (nextSibling) {
+        const offset = currentItem.clientRect.left - nextSibling.clientRect.left;
+        siblingsUpdated = this._updateItemPositionHorizontalOnRow(
+          siblingsUpdated,
+          currentItem.clientRect.top,
+          offset,
+          currentItem.drag,
+        );
+      }
+
+      siblingsUpdated[currentIndex] = {
+        ...currentItem,
+        clientRect: {
+          ...currentItem.clientRect,
+          x: nextEmptySlotLeft,
+          left: nextEmptySlotLeft,
+          right: currentItem.clientRect.right - currentItem.clientRect.left + nextEmptySlotLeft,
+          y: immediateSibling.clientRect.y,
+          top: immediateSibling.clientRect.top,
+          bottom:
+            currentItem.clientRect.bottom -
+            currentItem.clientRect.top +
+            immediateSibling.clientRect.top,
+        },
+        transform: {
+          x: currentItem.transform.x + offsetLeft,
+          y: currentItem.transform.y + offsetTop,
+        },
+      };
+    }
+
+    return siblingsUpdated;
+  }
+
+  private _updateItemPositionToDown(siblings: CachedItemPosition<DragRef>[], currentIndex: number) {
+    let siblingsUpdated = siblings.slice();
+    const currentItem = siblingsUpdated[currentIndex];
+    const immediateSibling = siblingsUpdated[currentIndex + 1];
+    let offsetLeft = 0;
+    let offsetTop = 0;
+
+    if (immediateSibling) {
+      offsetLeft = immediateSibling.clientRect.left - currentItem.clientRect.left;
+      offsetTop = immediateSibling.clientRect.top - currentItem.clientRect.top;
+    } else {
+      const firstSibling = siblings.find(
+        item => item.clientRect.top === currentItem.clientRect.top,
+      );
+
+      if (firstSibling) {
+        offsetLeft = firstSibling.clientRect.left - currentItem.clientRect.left;
+      }
+
+      offsetTop =
+        currentItem.clientRect.bottom - currentItem.clientRect.top + this._getContainerGapPixel();
+    }
+
+    const currentItemUpdated: CachedItemPosition<DragRef> = {
+      ...currentItem,
+      clientRect: {
+        ...currentItem.clientRect,
+        x: currentItem.clientRect.x + offsetLeft,
+        left: currentItem.clientRect.left + offsetLeft,
+        right: currentItem.clientRect.right + offsetLeft,
+        y: currentItem.clientRect.y + offsetTop,
+        top: currentItem.clientRect.top + offsetTop,
+        bottom: currentItem.clientRect.bottom + offsetTop,
+      },
+      transform: {
+        x: currentItem.transform.x + offsetLeft,
+        y: currentItem.transform.y + offsetTop,
+      },
+    };
+
+    if (immediateSibling) {
+      const offset =
+        currentItemUpdated.clientRect.right -
+        immediateSibling.clientRect.left +
+        this._getContainerGapPixel();
+
+      siblingsUpdated = this._updateItemPositionHorizontalOnRow(
+        siblingsUpdated,
+        immediateSibling.clientRect.top,
+        offset,
+      );
+    }
+
+    siblingsUpdated[currentIndex] = currentItemUpdated;
+    return siblingsUpdated;
+  }
+
+  private _updateItemPositionHorizontalOnRow(
+    siblings: CachedItemPosition<DragRef>[],
+    top: number,
+    offset: number,
+    ignoreItem?: DragRef,
+  ) {
+    const siblingsUpdated = siblings.slice();
+
+    siblingsUpdated
+      .filter(item => (!ignoreItem || item.drag !== ignoreItem) && item.clientRect.top === top)
+      .forEach(curentItem => {
+        const index = siblingsUpdated.findIndex(item => item.drag === curentItem.drag);
+        siblingsUpdated[index] = {
+          ...siblingsUpdated[index],
+          clientRect: {
+            ...siblingsUpdated[index].clientRect,
+            x: siblingsUpdated[index].clientRect.x + offset,
+            left: siblingsUpdated[index].clientRect.left + offset,
+            right: siblingsUpdated[index].clientRect.right + offset,
+          },
+          transform: {
+            ...siblingsUpdated[index].transform,
+            x: siblingsUpdated[index].transform.x + offset,
+          },
+        };
+      });
+
+    return siblingsUpdated;
+  }
+
+  /**
+   * Gets the offset horizontal in pixels by which the item that is being dragged should be moved
+   * @param currentIndex Current position of the item
+   * @param siblings All of the items in the list
+   * @param delta Direction in which the user is moving
+   * @param isHorizontal Orientation in which the user is moving
+   * @returns {Object} The offset horizontal
+   * @returns {number} return.itemOffset The offset of item
+   * @returns {number} return.siblingOffset The offset of sibling
+   */
+  private _getOffset(
+    currentIndex: number,
+    siblings: CachedItemPosition<DragRef>[],
+    delta: number,
+    isHorizontal: boolean,
+  ) {
+    const currentPosition = siblings[currentIndex].clientRect;
+    const immediateSibling = siblings[currentIndex + delta].clientRect;
+
+    let itemOffset = 0;
+    let siblingOffset = 0;
+
+    if (immediateSibling) {
+      const start = isHorizontal ? 'left' : 'top';
+      const end = isHorizontal ? 'right' : 'bottom';
+
+      if (delta === 1) {
+        itemOffset = immediateSibling[end] - currentPosition[end];
+        siblingOffset = currentPosition[start] - immediateSibling[start];
+
+        if (isHorizontal && immediateSibling[end] < currentPosition[end]) {
+          itemOffset = immediateSibling[start] - currentPosition[start];
+        }
+      } else {
+        itemOffset = immediateSibling[start] - currentPosition[start];
+        siblingOffset = currentPosition[end] - immediateSibling[end];
+
+        if (isHorizontal && immediateSibling[end] > currentPosition[end]) {
+          siblingOffset = currentPosition[start] - immediateSibling[start];
+        }
+      }
+    }
+
+    return {
+      itemOffset,
+      siblingOffset,
+    };
+  }
+
+  private _getContainerGapPixel() {
+    const containerStyle = getComputedStyle(this._element);
+    const displayStyle = containerStyle.display;
+
+    if (displayStyle.includes('flex') || displayStyle.includes('grid')) {
+      return containerStyle.gap ? +containerStyle.gap.split('px')[0] : 0;
+    }
+    return 0;
+  }
+
+  private _getDelta(newTop: number, previousTop: number, pointerDelta: {x: number; y: number}) {
+    if (newTop === previousTop) {
+      return pointerDelta.x;
+    }
+
+    return newTop > previousTop ? 1 : -1;
+  }
+
+  private _getThreshold() {
+    const containerStyle = getComputedStyle(this._element);
+    const paddingRight = +containerStyle.paddingRight.split('px')[0];
+
+    return getMutableClientRect(this._element).right - paddingRight;
+  }
+}
+
+/**
+ * Entry in the position cache for draggable items.
+ * @docs-private
+ */
+interface CachedItemPosition<T> {
+  /** Instance of the drag item. */
+  drag: T;
+  /** Dimensions of the item. */
+  clientRect: DOMRect;
+  /** Inline transform that the drag item had when dragging started. */
+  transform: {
+    x: number;
+    y: number;
+  };
 }
