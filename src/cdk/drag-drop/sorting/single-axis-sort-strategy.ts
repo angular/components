@@ -128,6 +128,8 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
       // Update the offset to reflect the new position.
       sibling.offset += offset;
 
+      const transformAmount = Math.round(sibling.offset * (1 / sibling.drag.scale));
+
       // Since we're moving the items with a `transform`, we need to adjust their cached
       // client rects to reflect their new position, as well as swap their positions in the cache.
       // Note that we shouldn't use `getBoundingClientRect` here to update the cache, because the
@@ -136,13 +138,13 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
         // Round the transforms since some browsers will
         // blur the elements, for sub-pixel transforms.
         elementToOffset.style.transform = combineTransforms(
-          `translate3d(${Math.round(sibling.offset)}px, 0, 0)`,
+          `translate3d(${transformAmount}px, 0, 0)`,
           sibling.initialTransform,
         );
         adjustDomRect(sibling.clientRect, 0, offset);
       } else {
         elementToOffset.style.transform = combineTransforms(
-          `translate3d(0, ${Math.round(sibling.offset)}px, 0)`,
+          `translate3d(0, ${transformAmount}px, 0)`,
           sibling.initialTransform,
         );
         adjustDomRect(sibling.clientRect, offset, 0);

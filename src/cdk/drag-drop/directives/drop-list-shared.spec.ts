@@ -5006,6 +5006,7 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
       [cdkDragBoundary]="boundarySelector"
       [cdkDragPreviewClass]="previewClass"
       [cdkDragPreviewContainer]="previewContainer"
+      [cdkDragScale]="scale"
       [style.height.px]="item.height"
       [style.margin-bottom.px]="item.margin"
       (cdkDragStarted)="startedSpy($event)"
@@ -5041,6 +5042,7 @@ export class DraggableInDropZone implements AfterViewInit {
   previewContainer: PreviewContainer = 'global';
   dropDisabled = signal(false);
   dropLockAxis = signal<DragAxis | undefined>(undefined);
+  scale = 1;
 
   constructor(protected _elementRef: ElementRef) {}
 

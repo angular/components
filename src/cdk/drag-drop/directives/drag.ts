@@ -30,6 +30,7 @@ import {
   AfterViewInit,
   inject,
   Injector,
+  numberAttribute,
 } from '@angular/core';
 import {coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Observable, Observer, Subject, merge} from 'rxjs';
@@ -159,6 +160,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    */
   @Input('cdkDragPreviewContainer') previewContainer: PreviewContainer;
 
+  /**
+   * If the parent of the dragged element has a `scale` transform, it can throw off the
+   * positioning when the user starts dragging. Use this input to notify the CDK of the scale.
+   */
+  @Input({alias: 'cdkDragScale', transform: numberAttribute})
+  scale: number = 1;
+
   /** Emits when the user starts dragging the item. */
   @Output('cdkDragStarted') readonly started: EventEmitter<CdkDragStart> =
     new EventEmitter<CdkDragStart>();
@@ -261,6 +269,11 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     if (dropContainer) {
       this._dragRef._withDropContainer(dropContainer._dropListRef);
       dropContainer.addItem(this);
+
+      // The drop container reads this so we need to sync it here.
+      dropContainer._dropListRef.beforeStarted.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this._dragRef.scale = this.scale;
+      });
     }
 
     this._syncInputs(this._dragRef);
@@ -448,6 +461,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
         ref.disabled = this.disabled;
         ref.lockAxis = this.lockAxis;
+        ref.scale = this.scale;
         ref.dragStartDelay =
           typeof dragStartDelay === 'object' && dragStartDelay
             ? dragStartDelay

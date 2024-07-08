@@ -1470,34 +1470,41 @@ describe('Standalone CdkDrag', () => {
     cleanup();
   }));
 
-  it(
-    'should update the free drag position if the user moves their pointer after the page ' +
-      'is scrolled',
-    fakeAsync(() => {
-      const fixture = createComponent(StandaloneDraggable);
-      fixture.detectChanges();
+  it('should update the free drag position if the user moves their pointer after the page is scrolled', fakeAsync(() => {
+    const fixture = createComponent(StandaloneDraggable);
+    fixture.detectChanges();
 
-      const cleanup = makeScrollable();
-      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+    const cleanup = makeScrollable();
+    const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
-      expect(dragElement.style.transform).toBeFalsy();
-      startDraggingViaMouse(fixture, dragElement, 0, 0);
-      dispatchMouseEvent(document, 'mousemove', 50, 100);
-      fixture.detectChanges();
+    expect(dragElement.style.transform).toBeFalsy();
+    startDraggingViaMouse(fixture, dragElement, 0, 0);
+    dispatchMouseEvent(document, 'mousemove', 50, 100);
+    fixture.detectChanges();
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+    expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
 
-      scrollTo(0, 500);
-      dispatchFakeEvent(document, 'scroll');
-      fixture.detectChanges();
-      dispatchMouseEvent(document, 'mousemove', 50, 200);
-      fixture.detectChanges();
+    scrollTo(0, 500);
+    dispatchFakeEvent(document, 'scroll');
+    fixture.detectChanges();
+    dispatchMouseEvent(document, 'mousemove', 50, 200);
+    fixture.detectChanges();
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 700px, 0px)');
+    expect(dragElement.style.transform).toBe('translate3d(50px, 700px, 0px)');
 
-      cleanup();
-    }),
-  );
+    cleanup();
+  }));
+
+  it('should account for scale when moving the element', fakeAsync(() => {
+    const fixture = createComponent(StandaloneDraggable);
+    fixture.componentInstance.scale = 0.5;
+    fixture.detectChanges();
+    const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+    expect(dragElement.style.transform).toBeFalsy();
+    dragElementViaMouse(fixture, dragElement, 50, 100);
+    expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
+  }));
 
   describe('with a handle', () => {
     it('should not be able to drag the entire element if it has a handle', fakeAsync(() => {
@@ -1718,6 +1725,7 @@ describe('Standalone CdkDrag', () => {
         [cdkDragFreeDragPosition]="freeDragPosition"
         [cdkDragDisabled]="dragDisabled()"
         [cdkDragLockAxis]="dragLockAxis()"
+        [cdkDragScale]="scale"
         (cdkDragStarted)="startedSpy($event)"
         (cdkDragReleased)="releasedSpy($event)"
         (cdkDragEnded)="endedSpy($event)"
@@ -1745,6 +1753,7 @@ class StandaloneDraggable {
   freeDragPosition?: {x: number; y: number};
   dragDisabled = signal(false);
   dragLockAxis = signal<DragAxis | undefined>(undefined);
+  scale = 1;
 }
 
 @Component({
