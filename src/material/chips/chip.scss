@@ -695,16 +695,21 @@ $_avatar-trailing-padding: 8px;
 
   // Used as a state overlay.
   &::after {
-    $offset: 2px;
+    $offset: 18px; /*size of the remove icon*/
     content: '';
     display: block;
     opacity: 0;
     position: absolute;
-    top: 0 - $offset;
-    bottom: 0 - $offset;
-    left: 8px - $offset;
-    right: 8px - $offset;
+    top: 2 - $offset;
+    bottom: 2 - $offset;
+    left: 12 - $offset;
+    right: 12 - $offset;
     border-radius: 50%;
+    // Increases touch target to improve accessibility and fix b/286959517
+    z-index: 100;
+    pointer-events: all;
+    height: 48px;
+    width: 48px;
   }
 
   .mat-icon {
@@ -712,28 +717,6 @@ $_avatar-trailing-padding: 8px;
     height: $_trailing-icon-size;
     font-size: $_trailing-icon-size;
     box-sizing: content-box;
-  }
-}
-
-//Increases mdc-dhip-remove trailing icon action touch-target in order to fix b/286959517
-.mat-mdc-chip-trailing-icon.mdc-evolution-chip__action--trailing,
-.mat-mdc-chip-trailing-icon.mdc-evolution-chip__icon--trailing,
-.mdc-evolution-chip--with-primary-graphic.mdc-evolution-chip--with-trailing-action {
-  &.mat-mdc-chip-remove,
-  &.mat-mdc-standard-chip .mdc-evolution-chip__action--trailing,
-  &.mdc-evolution-chip--with-avatar .mdc-evolution-chip__action--trailing {
-    padding: 16px;
-  }
-}
-
-// Increases mdc-chip-remove trailing icon action touch-target in order to fix b/286959517
-.mat-mdc-chip-trailing-icon.mdc-evolution-chip__action--trailing,
-.mat-mdc-chip-trailing-icon.mdc-evolution-chip__icon--trailing,
-.mdc-evolution-chip--with-primary-graphic.mdc-evolution-chip--with-trailing-action {
-  &.mat-mdc-chip-remove,
-  &.mat-mdc-standard-chip .mdc-evolution-chip__action--trailing,
-  &.mdc-evolution-chip--with-avatar .mdc-evolution-chip__action--trailing {
-    padding: 16px;
   }
 }
 
