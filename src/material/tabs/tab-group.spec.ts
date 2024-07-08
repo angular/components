@@ -792,7 +792,7 @@ describe('MDC-based MatTabGroup', () => {
       );
 
       expect(contentElements.map(element => element.style.visibility)).toEqual([
-        '',
+        'visible',
         'hidden',
         'hidden',
         'hidden',
@@ -805,7 +805,7 @@ describe('MDC-based MatTabGroup', () => {
       expect(contentElements.map(element => element.style.visibility)).toEqual([
         'hidden',
         'hidden',
-        '',
+        'visible',
         'hidden',
       ]);
 
@@ -815,7 +815,7 @@ describe('MDC-based MatTabGroup', () => {
 
       expect(contentElements.map(element => element.style.visibility)).toEqual([
         'hidden',
-        '',
+        'visible',
         'hidden',
         'hidden',
       ]);
