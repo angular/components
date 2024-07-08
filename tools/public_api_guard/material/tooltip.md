@@ -76,7 +76,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     set hideDelay(value: NumberInput);
     _isTooltipVisible(): boolean;
     get message(): string;
-    set message(value: string);
+    set message(value: string | null | undefined);
     // (undocumented)
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
