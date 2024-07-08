@@ -41,6 +41,8 @@ $mat-slider-horizontal-margin: 8px !default;
       right: $mat-slider-horizontal-margin;
     }
 
+    touch-action: none;
+
     // Unset the default "width" property from the MDC slider class. We don't want
     // the slider to automatically expand horizontally for backwards compatibility.
     width: auto;
