@@ -50,13 +50,13 @@ export class MatPaginatorHarness extends ComponentHarness {
 
   /** Returns whether or not the next page button is disabled. */
   async isNextPageDisabled(): Promise<boolean> {
-    const disabledValue = await (await this._nextButton()).getAttribute('disabled');
+    const disabledValue = await (await this._nextButton()).getAttribute('aria-disabled');
     return disabledValue == 'true';
   }
 
   /* Returns whether or not the previous page button is disabled. */
   async isPreviousPageDisabled(): Promise<boolean> {
-    const disabledValue = await (await this._previousButton()).getAttribute('disabled');
+    const disabledValue = await (await this._previousButton()).getAttribute('aria-disabled');
     return disabledValue == 'true';
   }
 
