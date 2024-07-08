@@ -695,7 +695,7 @@ $_avatar-trailing-padding: 8px;
 
   // Used as a state overlay.
   &::after {
-    $offset: 18px; // size of the remove icon
+    $offset: $_trailing-icon-size; // size of the remove icon
     content: '';
     display: block;
     opacity: 0;
