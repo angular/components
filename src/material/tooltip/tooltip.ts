@@ -300,7 +300,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     return this._message;
   }
 
-  set message(value: string) {
+  set message(value: string | null | undefined) {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message, 'tooltip');
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
