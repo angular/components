@@ -413,12 +413,12 @@ describe('MDC-based MatTooltip', () => {
     it('should not show tooltip if message is not present or empty', () => {
       assertTooltipInstance(tooltipDirective, false);
 
-      tooltipDirective.message = undefined!;
+      tooltipDirective.message = undefined;
       fixture.detectChanges();
       tooltipDirective.show();
       assertTooltipInstance(tooltipDirective, false);
 
-      tooltipDirective.message = null!;
+      tooltipDirective.message = null;
       fixture.detectChanges();
       tooltipDirective.show();
       assertTooltipInstance(tooltipDirective, false);
