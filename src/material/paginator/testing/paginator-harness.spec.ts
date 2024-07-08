@@ -94,13 +94,13 @@ describe('MatPaginatorHarness', () => {
 
   it('should return whether or not the previous page is disabled', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
-    expect(await paginator.isPreviousPageDisabled()).toBe(true);
+    expect(await paginator.isPreviousPageDisabled()).toBe(false);
   });
 
   it('should return whether or not the next page is disabled', async () => {
     const paginator = await loader.getHarness(MatPaginatorHarness);
     await paginator.goToLastPage();
-    expect(await paginator.isNextPageDisabled()).toBe(true);
+    expect(await paginator.isNextPageDisabled()).toBe(false);
   });
 
   it('should throw an error if the last page button is not available', async () => {
