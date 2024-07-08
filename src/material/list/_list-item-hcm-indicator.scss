@@ -1,5 +1,4 @@
 @use '@angular/cdk';
-@use '@material/list/evolution-variables' as mdc-list-variables;
 
 // Renders a circle indicator when Windows Hich Constrast mode (HCM) is enabled. In some
 // situations, such as a selected option, the list item communicates the selected state by changing
@@ -12,7 +11,7 @@
       content: '';
       position: absolute;
       top: 50%;
-      right: mdc-list-variables.$side-padding;
+      right: 16px;
       transform: translateY(-50%);
       width: $size;
       height: 0;
@@ -23,7 +22,7 @@
     [dir='rtl'] {
       &::after {
         right: auto;
-        left: mdc-list-variables.$side-padding;
+        left: 16px;
       }
     }
   }
