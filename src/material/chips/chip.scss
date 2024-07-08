@@ -695,7 +695,7 @@ $_avatar-trailing-padding: 8px;
 
   // Used as a state overlay.
   &::after {
-    $offset: 18px; /*size of the remove icon*/
+    $offset: 18px; // size of the remove icon
     content: '';
     display: block;
     opacity: 0;
@@ -705,7 +705,7 @@ $_avatar-trailing-padding: 8px;
     left: 12 - $offset;
     right: 12 - $offset;
     border-radius: 50%;
-    // Increases touch target to improve accessibility and fix b/286959517
+    // Increases touch target size to improve accessibility and fix b/286959517
     z-index: 100;
     pointer-events: all;
     height: 48px;
