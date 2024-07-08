@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Inject,
   InjectionToken,
@@ -19,7 +18,6 @@ import {
   OnInit,
   Optional,
   Output,
-  ViewChild,
   ViewEncapsulation,
   booleanAttribute,
   numberAttribute,
@@ -200,56 +198,6 @@ export class MatPaginator implements OnInit, OnDestroy {
 
   /** Emits when the paginator is initialized. */
   initialized: Observable<void> = this._initializedStream;
-
-  /** Element references for paginator buttons */
-  @ViewChild('nextButton', {read: ElementRef, static: false})
-  nextButtonRef: ElementRef;
-  @ViewChild('previousButton', {read: ElementRef, static: false})
-  previousButtonRef: ElementRef;
-  @ViewChild('firstButton', {read: ElementRef, static: false})
-  firstButtonRef: ElementRef;
-  @ViewChild('lastButton', {read: ElementRef, static: false})
-  lastButtonRef: ElementRef;
-
-  /** Changes focus to next appropriate button whenever current button becomes disabled. */
-  handleButtonBlur(buttonRef: MatIconButton) {
-    const button = buttonRef._elementRef.nativeElement;
-    const nextButton = this.nextButtonRef.nativeElement;
-    const previousButton = this.previousButtonRef.nativeElement;
-
-    if (!this.showFirstLastButtons && button.disabled) {
-      if (button === nextButton) {
-        if (!previousButton.disabled) {
-          previousButton.focus();
-        }
-      } else if (button === previousButton) {
-        if (!nextButton.disabled) {
-          nextButton.focus();
-        }
-      }
-    } else if (this.showFirstLastButtons && button.disabled) {
-      const firstButton = this.firstButtonRef.nativeElement;
-      const lastButton = this.lastButtonRef.nativeElement;
-
-      if (button === nextButton) {
-        if (!previousButton.disabled) {
-          previousButton.focus();
-        }
-      } else if (button === previousButton) {
-        if (!nextButton.disabled) {
-          nextButton.focus();
-        }
-      } else if (button === firstButton) {
-        setTimeout(() => {
-          nextButton.focus();
-        }, 100);
-      } else if (button === lastButton) {
-        setTimeout(() => {
-          previousButton.focus();
-        }, 100);
-      }
-    }
-  }
 
   constructor(
     public _intl: MatPaginatorIntl,
