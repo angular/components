@@ -1,10 +1,12 @@
-import {MediaMatcher} from '@angular/cdk/layout';
+import {BreakpointObserver, BreakpointState, Breakpoints} from '@angular/cdk/layout';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {Observable, Subscription} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
 
 /** @title Responsive sidenav */
 @Component({
@@ -12,13 +14,18 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: 'sidenav-responsive-example.html',
   styleUrl: 'sidenav-responsive-example.css',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
+  imports: [
+    AsyncPipe,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+  ],
 })
-export class SidenavResponsiveExample implements OnDestroy {
-  mobileQuery: MediaQueryList;
-
+export class SidenavResponsiveExample {
+  isHandset: Observable<BreakpointState>;
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
-
   fillerContent = Array.from(
     {length: 50},
     () =>
@@ -29,16 +36,14 @@ export class SidenavResponsiveExample implements OnDestroy {
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   );
 
-  private _mobileQueryListener: () => void;
-
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+  constructor(
+    private _breakpointObserver: BreakpointObserver,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {
+    this.isHandset = _breakpointObserver.observe([
+      Breakpoints.HandsetLandscape,
+      Breakpoints.HandsetPortrait,
+    ]);
   }
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);

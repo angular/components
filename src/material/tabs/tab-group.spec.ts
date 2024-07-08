@@ -1,17 +1,25 @@
 import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
-import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
   flush,
+  TestBed,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {
   MAT_TABS_CONFIG,
@@ -23,6 +31,11 @@ import {
 } from './index';
 
 describe('MDC-based MatTabGroup', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -102,17 +115,14 @@ describe('MDC-based MatTabGroup', () => {
     it('should set to correct tab on fast change', waitForAsync(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       setTimeout(() => {
         component.selectedIndex = 1;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         setTimeout(() => {
           component.selectedIndex = 0;
-          fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
           fixture.whenStable().then(() => {
             expect(component.selectedIndex).toBe(0);
@@ -130,7 +140,6 @@ describe('MDC-based MatTabGroup', () => {
       checkSelectedIndex(1, fixture);
 
       tabComponent.selectedIndex = 2;
-      fixture.changeDetectorRef.markForCheck();
 
       checkSelectedIndex(2, fixture);
       tick();
@@ -152,7 +161,6 @@ describe('MDC-based MatTabGroup', () => {
 
       // Move to third tab
       component.selectedIndex = 2;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(tabs[0].position).toBeLessThan(0);
       expect(tabs[1].position).toBeLessThan(0);
@@ -160,7 +168,6 @@ describe('MDC-based MatTabGroup', () => {
 
       // Move to the first tab
       component.selectedIndex = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(tabs[0].position).toBe(0);
       expect(tabs[1].position).toBeGreaterThan(0);
@@ -175,13 +182,11 @@ describe('MDC-based MatTabGroup', () => {
 
       // Set the index to be negative, expect first tab selected
       fixture.componentInstance.selectedIndex = -1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(component.selectedIndex).toBe(0);
 
       // Set the index beyond the size of the tabs, expect last tab selected
       fixture.componentInstance.selectedIndex = 3;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(component.selectedIndex).toBe(2);
     });
@@ -214,7 +219,6 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should allow disabling ripples for tab-group labels', () => {
       fixture.componentInstance.disableRipple = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const testElement = fixture.nativeElement;
@@ -243,7 +247,6 @@ describe('MDC-based MatTabGroup', () => {
       expect(tabs[2].isActive).toBe(false);
 
       fixture.componentInstance.selectedIndex = 2;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -378,7 +381,6 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should be able to set a tabindex on the inner content element', () => {
       fixture.componentInstance.contentTabIndex = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const contentElements = Array.from<HTMLElement>(
         fixture.nativeElement.querySelectorAll('mat-tab-body'),
@@ -387,7 +389,6 @@ describe('MDC-based MatTabGroup', () => {
       expect(contentElements.map(e => e.getAttribute('tabindex'))).toEqual([null, '1', null]);
 
       fixture.componentInstance.selectedIndex = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(contentElements.map(e => e.getAttribute('tabindex'))).toEqual(['1', null, null]);
@@ -429,7 +430,6 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should set the aria-label attribute', () => {
       fixture.componentInstance.ariaLabel = 'Fruit';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tab.getAttribute('aria-label')).toBe('Fruit');
@@ -437,7 +437,6 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should set the aria-labelledby attribute', () => {
       fixture.componentInstance.ariaLabelledby = 'fruit-label';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tab.getAttribute('aria-labelledby')).toBe('fruit-label');
@@ -446,14 +445,12 @@ describe('MDC-based MatTabGroup', () => {
     it('should not be able to set both an aria-label and aria-labelledby', () => {
       fixture.componentInstance.ariaLabel = 'Fruit';
       fixture.componentInstance.ariaLabelledby = 'fruit-label';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tab.getAttribute('aria-label')).toBe('Fruit');
       expect(tab.hasAttribute('aria-labelledby')).toBe(false);
 
       fixture.componentInstance.ariaLabel = 'Veggie';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(tab.getAttribute('aria-label')).toBe('Veggie');
     });
@@ -502,7 +499,6 @@ describe('MDC-based MatTabGroup', () => {
       expect(labels[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       fixture.componentInstance.isDisabled = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tabs[2].disabled).toBe(true);
@@ -537,7 +533,6 @@ describe('MDC-based MatTabGroup', () => {
       // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
       fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
       fixture.componentInstance.selectedIndex = 4;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -546,7 +541,6 @@ describe('MDC-based MatTabGroup', () => {
 
       // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
       fixture.componentInstance.selectedIndex = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -565,7 +559,6 @@ describe('MDC-based MatTabGroup', () => {
 
       const numberOfTabs = component._tabs.length;
       fixture.componentInstance.selectedIndex = numberOfTabs - 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -584,12 +577,10 @@ describe('MDC-based MatTabGroup', () => {
       ).componentInstance;
 
       fixture.componentInstance.selectedIndex = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Add a new tab at the beginning.
       fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(component.selectedIndex).toBe(2);
@@ -599,7 +590,6 @@ describe('MDC-based MatTabGroup', () => {
     it('should maintain the selected tab if a tab is removed', () => {
       // Select the second tab.
       fixture.componentInstance.selectedIndex = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const component: MatTabGroup = fixture.debugElement.query(
@@ -608,7 +598,6 @@ describe('MDC-based MatTabGroup', () => {
 
       // Remove the first tab that is right before the selected one.
       fixture.componentInstance.tabs.splice(0, 1);
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Since the first tab has been removed and the second one was selected before, the selected
@@ -625,7 +614,6 @@ describe('MDC-based MatTabGroup', () => {
 
       fixture.componentInstance.tabs.push({label: 'Last tab', content: 'at the end'});
       fixture.componentInstance.selectedIndex = 3;
-      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
       tick();
@@ -637,13 +625,11 @@ describe('MDC-based MatTabGroup', () => {
     it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
       fixture.detectChanges();
       fixture.componentInstance.selectedIndex = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Add a new tab at the beginning.
       spyOn(fixture.componentInstance, 'handleSelection');
       fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -662,7 +648,6 @@ describe('MDC-based MatTabGroup', () => {
         label: 'New',
         content: 'New',
       };
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -674,14 +659,12 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should be able to disable the pagination', fakeAsync(() => {
       fixture.componentInstance.disablePagination = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
       for (let i = 0; i < 50; i++) {
         fixture.componentInstance.tabs.push({label: `Extra ${i}`, content: ''});
       }
-      fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
       tick();
@@ -735,7 +718,6 @@ describe('MDC-based MatTabGroup', () => {
 
       fixture.componentInstance.otherLabel = 'Chips';
       fixture.componentInstance.otherContent = 'Salt, vinegar';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
@@ -771,14 +753,12 @@ describe('MDC-based MatTabGroup', () => {
 
     it('should be able to opt into keeping the inactive tab content in the DOM', fakeAsync(() => {
       fixture.componentInstance.preserveContent = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
       expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
 
       tabGroup.selectedIndex = 3;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -933,7 +913,6 @@ describe('MDC-based MatTabGroup', () => {
       expect(window.scrollY).toBe(250);
 
       fixture.componentInstance.tabGroup.selectedIndex = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(window.scrollY).toBe(250);
@@ -964,7 +943,6 @@ describe('MDC-based MatTabGroup', () => {
 
       fixture.componentInstance.labelClassList = 'custom-label-class';
       fixture.componentInstance.bodyClassList = 'custom-body-class';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
@@ -972,7 +950,6 @@ describe('MDC-based MatTabGroup', () => {
 
       delete fixture.componentInstance.labelClassList;
       delete fixture.componentInstance.bodyClassList;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
@@ -985,7 +962,6 @@ describe('MDC-based MatTabGroup', () => {
 
       fixture.componentInstance.labelClassList = ['custom-label-class'];
       fixture.componentInstance.bodyClassList = ['custom-body-class'];
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
@@ -993,7 +969,6 @@ describe('MDC-based MatTabGroup', () => {
 
       delete fixture.componentInstance.labelClassList;
       delete fixture.componentInstance.bodyClassList;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(labelElements[0].nativeElement.classList).not.toContain('custom-label-class');
@@ -1074,6 +1049,11 @@ describe('nested MatTabGroup with enabled animations', () => {
 });
 
 describe('MatTabGroup with ink bar fit to content', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
 
   beforeEach(fakeAsync(() => {
@@ -1099,7 +1079,6 @@ describe('MatTabGroup with ink bar fit to content', () => {
 
   it('should be able to move the ink bar between content and full', () => {
     fixture.componentInstance.fitInkBarToContent = false;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
@@ -1108,7 +1087,6 @@ describe('MatTabGroup with ink bar fit to content', () => {
     expect(indicatorElement.parentElement).toBe(tabElement);
 
     fixture.componentInstance.fitInkBarToContent = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const contentElement = tabElement.querySelector('.mdc-tab__content');

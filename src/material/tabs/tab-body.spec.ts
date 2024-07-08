@@ -1,26 +1,30 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
-import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 import {
-  AfterViewInit,
+  AfterContentInit,
   Component,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
-  inject,
-  signal,
+  provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
-import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Subject} from 'rxjs';
+import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
+import {By} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
 
 describe('MDC-based MatTabBody', () => {
   let dir: Direction = 'ltr';
   let dirChange: Subject<Direction> = new Subject<Direction>();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     dir = 'ltr';
@@ -121,7 +125,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be left position with negative position', () => {
       fixture.componentInstance.position = -1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('left');
@@ -129,7 +132,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('center');
@@ -137,7 +139,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('right');
@@ -155,7 +156,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be right position with negative position', () => {
       fixture.componentInstance.position = -1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('right');
@@ -163,7 +163,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('center');
@@ -171,7 +170,6 @@ describe('MDC-based MatTabBody', () => {
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('left');
@@ -220,22 +218,22 @@ describe('MDC-based MatTabBody', () => {
 @Component({
   template: `
     <ng-template>Tab Body Content</ng-template>
-    <mat-tab-body [content]="content()" [position]="position" [origin]="origin"></mat-tab-body>
+    <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
   `,
   standalone: true,
   imports: [CommonModule, PortalModule, MatRippleModule, MatTabBody],
 })
-class SimpleTabBodyApp implements AfterViewInit {
-  content = signal<TemplatePortal | undefined>(undefined);
+class SimpleTabBodyApp implements AfterContentInit {
+  content: TemplatePortal;
   position: number;
   origin: number | null;
 
   @ViewChild(MatTabBody) tabBody: MatTabBody;
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  private readonly _viewContainerRef = inject(ViewContainerRef);
+  constructor(private _viewContainerRef: ViewContainerRef) {}
 
-  ngAfterViewInit() {
-    this.content.set(new TemplatePortal(this.template, this._viewContainerRef));
+  ngAfterContentInit() {
+    this.content = new TemplatePortal(this.template, this._viewContainerRef);
   }
 }

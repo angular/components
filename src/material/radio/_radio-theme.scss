@@ -1,3 +1,4 @@
+@use '@material/radio/radio-theme' as mdc-radio-theme;
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -15,10 +16,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-unthemable-tokens());
-      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-unthemable-tokens());
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -34,24 +36,27 @@
   } @else {
     .mat-mdc-radio-button {
       &.mat-primary {
-        @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme, primary));
-        @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-          tokens-mat-radio.get-color-tokens($theme, primary));
+        @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, primary));
+        @include token-utils.create-token-values(
+          tokens-mat-radio.$prefix,
+          tokens-mat-radio.get-color-tokens($theme, primary)
+        );
       }
 
       &.mat-accent {
-        @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme));
-        @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-          tokens-mat-radio.get-color-tokens($theme));
+        @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme));
+        @include token-utils.create-token-values(
+          tokens-mat-radio.$prefix,
+          tokens-mat-radio.get-color-tokens($theme)
+        );
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme, warn));
-        @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-          tokens-mat-radio.get-color-tokens($theme, warn));
+        @include mdc-radio-theme.theme(tokens-mdc-radio.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mat-radio.$prefix,
+          tokens-mat-radio.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -64,10 +69,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-typography-tokens($theme));
-      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-typography-tokens($theme));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -81,10 +87,11 @@
     $density-scale: inspection.get-theme-density($theme);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-density-tokens($theme));
-      @include token-utils.create-token-values(tokens-mat-radio.$prefix,
-        tokens-mat-radio.get-density-tokens($theme));
+      @include mdc-radio-theme.theme(tokens-mdc-radio.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-radio.$prefix,
+        tokens-mat-radio.get-density-tokens($theme)
+      );
     }
   }
 }
@@ -135,6 +142,6 @@
   );
   $mdc-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-radio.$prefix, $options...);
   $mat-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mat-radio.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mdc-radio.$prefix, $mdc-radio-tokens);
+  @include mdc-radio-theme.theme($mdc-radio-tokens);
   @include token-utils.create-token-values(tokens-mat-radio.$prefix, $mat-radio-tokens);
 }

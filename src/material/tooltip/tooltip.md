@@ -5,11 +5,11 @@ over or longpresses an element.
 
 ### Positioning
 
-The tooltip will be displayed below the element by default, but this can be configured using the
+The tooltip will be displayed below the element but this can be configured using the
 `matTooltipPosition` input.
-The tooltip can be displayed above, below, left, or right of the element. If the tooltip should 
-switch left/right positions in an RTL layout direction, then the input values `before` and `after` 
-should be used instead of `left` and `right`, respectively.
+The tooltip can be displayed above, below, left, or right of the element. By default the position
+will be below. If the tooltip should switch left/right positions in an RTL layout direction, then
+the positions `before` and `after` should be used instead of `left` and `right`, respectively.
 
 | Position  | Description                                                                          |
 |-----------|--------------------------------------------------------------------------------------|
@@ -38,7 +38,7 @@ it will display the same as if this setting was turned off.
 By default, the tooltip will be immediately shown when the user's mouse hovers over the tooltip's
 trigger element and immediately hides when the user's mouse leaves.
 
-On mobile, the tooltip displays when the user longpresses the element and hides after a
+On mobile, the tooltip is displayed when the user longpresses the element and hides after a
 delay of 1500ms.
 
 #### Show and hide delays
@@ -58,7 +58,7 @@ your options using the `MAT_TOOLTIP_DEFAULT_OPTIONS` injection token.
 
 <!-- example(tooltip-modified-defaults) -->
 
-#### Manually showing and hiding the tooltip
+#### Manually calling show() and hide()
 
 To manually cause the tooltip to show or hide, you can call the `show` and `hide` directive methods,
 which both accept a number in milliseconds to delay before applying the display change.
@@ -74,7 +74,7 @@ shown.
 
 `MatTooltip` adds an `aria-describedby` description that provides a reference
 to a visually hidden element containing the tooltip's message. This provides screen-readers
-the information needed to read out the tooltip's contents when the user focuses on
+the information needed to read out the tooltip's contents when the end-user focuses on
 tooltip's trigger. The element referenced by `aria-describedby` is not the tooltip itself,
 but instead an invisible copy of the tooltip content that is always present in the DOM.
 

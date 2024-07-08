@@ -25,6 +25,7 @@ import {
   Type,
   ViewChild,
   ViewChildren,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {MatRipple} from '@angular/material/core';
@@ -63,7 +64,7 @@ describe('MDC-based MatMenu', () => {
     declarations: any[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers,
+      providers: [provideZoneChangeDetection(), ...providers],
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
     }).compileComponents();
@@ -200,7 +201,6 @@ describe('MDC-based MatMenu', () => {
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
     fixture.componentInstance.restoreFocus = false;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     // A click without a mousedown before it is considered a keyboard open.

@@ -1,20 +1,26 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {DOWN_ARROW, END, HOME, UP_ARROW} from '@angular/cdk/keycodes';
+import {waitForAsync, TestBed, inject} from '@angular/core/testing';
 import {
-  createKeyboardEvent,
-  dispatchEvent,
-  dispatchKeyboardEvent,
-} from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {TestBed, inject, waitForAsync} from '@angular/core/testing';
+  Component,
+  ViewChild,
+  QueryList,
+  ViewChildren,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
-  MatAccordion,
   MatExpansionModule,
+  MatAccordion,
   MatExpansionPanel,
   MatExpansionPanelHeader,
 } from './index';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
+import {DOWN_ARROW, UP_ARROW, HOME, END} from '@angular/cdk/keycodes';
+import {FocusMonitor} from '@angular/cdk/a11y';
 
 describe('MatAccordion', () => {
   let focusMonitor: FocusMonitor;
@@ -30,6 +36,7 @@ describe('MatAccordion', () => {
         SetOfItems,
         NestedAccordions,
       ],
+      providers: [provideZoneChangeDetection()],
     });
     TestBed.compileComponents();
 
@@ -59,7 +66,6 @@ describe('MatAccordion', () => {
   it('should allow multiple items to be expanded simultaneously', () => {
     const fixture = TestBed.createComponent(SetOfItems);
     fixture.componentInstance.multi = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const panels = fixture.debugElement.queryAll(By.css('.mat-expansion-panel'));
@@ -80,7 +86,6 @@ describe('MatAccordion', () => {
 
     fixture.componentInstance.multi = true;
     fixture.componentInstance.panels.toArray()[1].expanded = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(panels[0].classes['mat-expanded']).toBeFalsy();
     expect(panels[1].classes['mat-expanded']).toBeTruthy();
@@ -104,7 +109,6 @@ describe('MatAccordion', () => {
 
     fixture.componentInstance.multi = true;
     fixture.componentInstance.panels.toArray()[1].disabled = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     fixture.componentInstance.accordion.openAll();
     fixture.detectChanges();
@@ -138,7 +142,6 @@ describe('MatAccordion', () => {
       .toBeTruthy();
 
     fixture.componentInstance.hideToggle = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(panel.nativeElement.querySelector('.mat-expansion-indicator'))
@@ -157,7 +160,6 @@ describe('MatAccordion', () => {
       .toBeTruthy();
 
     fixture.componentInstance.togglePosition = 'before';
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(panel.nativeElement.querySelector('.mat-expansion-toggle-indicator-before'))
@@ -229,7 +231,6 @@ describe('MatAccordion', () => {
     focusMonitor.focusVia(headerElements[0].nativeElement, 'keyboard');
     headers.forEach(header => spyOn(header, 'focus'));
     panels[1].disabled = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     dispatchKeyboardEvent(headerElements[0].nativeElement, 'keydown', DOWN_ARROW);

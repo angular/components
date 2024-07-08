@@ -6,13 +6,13 @@ import {
   dispatchMouseEvent,
   wrappedErrorMessage,
 } from '@angular/cdk/testing/private';
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
-import {MatTableModule} from '@angular/material/table';
-import {By} from '@angular/platform-browser';
+import {Component, ElementRef, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {MatTableModule} from '@angular/material/table';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
   MatSort,
@@ -29,6 +29,11 @@ import {
 } from './sort-errors';
 
 describe('MatSort', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
   describe('without default options', () => {
     let fixture: ComponentFixture<SimpleMatSortApp>;
     let component: SimpleMatSortApp;
@@ -195,7 +200,6 @@ describe('MatSort', () => {
       it('should be correct when sort has been disabled', () => {
         // Mousing over the first sort should set the view state to hint
         component.disabledColumnSort = true;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         component.dispatchMouseEvent('defaultA', 'mouseenter');
@@ -205,7 +209,6 @@ describe('MatSort', () => {
       it('should be correct when sorting programmatically', () => {
         component.active = 'defaultB';
         component.direction = 'asc';
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
         expectedStates.set('defaultB', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
@@ -217,24 +220,20 @@ describe('MatSort', () => {
       component.disableClear = true;
 
       component.start = 'asc';
-      fixture.changeDetectorRef.markForCheck();
       testSingleColumnSortDirectionSequence(fixture, ['asc', 'desc']);
 
       // Reverse directions
       component.start = 'desc';
-      fixture.changeDetectorRef.markForCheck();
       testSingleColumnSortDirectionSequence(fixture, ['desc', 'asc']);
     });
 
     it('should be able to cycle asc -> desc -> [none]', () => {
       component.start = 'asc';
-      fixture.changeDetectorRef.markForCheck();
       testSingleColumnSortDirectionSequence(fixture, ['asc', 'desc', '']);
     });
 
     it('should be able to cycle desc -> asc -> [none]', () => {
       component.start = 'desc';
-      fixture.changeDetectorRef.markForCheck();
       testSingleColumnSortDirectionSequence(fixture, ['desc', 'asc', '']);
     });
 
@@ -247,7 +246,6 @@ describe('MatSort', () => {
       expect(container.getAttribute('role')).toBe('button');
 
       component.disabledColumnSort = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       component.sort('defaultA');
@@ -265,7 +263,6 @@ describe('MatSort', () => {
       expect(container.getAttribute('tabindex')).toBe('0');
 
       component.disableAllSort = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       component.sort('defaultA');
@@ -399,7 +396,6 @@ describe('MatSort', () => {
       // Switch sorting to a different column before asserting.
       component.sort('defaultB');
       fixture.componentInstance.disabledColumnSort = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -412,7 +408,6 @@ describe('MatSort', () => {
 
       component.sort('defaultA');
       fixture.componentInstance.disabledColumnSort = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -449,7 +444,6 @@ describe('MatSort', () => {
       expect(descriptionElement?.textContent).toBe('Sort second column');
 
       fixture.componentInstance.secondColumnDescription = 'Sort 2nd column';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       descriptionId = sortButton.getAttribute('aria-describedby');
       descriptionElement = document.getElementById(descriptionId);
@@ -507,7 +501,6 @@ describe('MatSort', () => {
       expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(false);
 
       matSortWithArrowPositionComponent.arrowPosition = 'before';
-      matSortWithArrowPositionFixture.changeDetectorRef.markForCheck();
 
       matSortWithArrowPositionFixture.detectChanges();
 

@@ -1,11 +1,25 @@
-@use '../core/tokens/m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
-@use '../core/tokens/token-utils';
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@material/tooltip/tooltip' as mdc-tooltip;
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
+@use '../core/tokens/m2/mdc/plain-tooltip' as m2-mdc-plain-tooltip;
+
+@include mdc-custom-properties.configure($emit-fallback-values: false,
+  $emit-fallback-vars: false) {
+  $mdc-tooltip-token-slots: m2-mdc-plain-tooltip.get-token-slots();
+
+  // Add the MDC tooltip static styles.
+  @include mdc-tooltip.static-styles();
+
+  .mat-mdc-tooltip {
+    // Add the official slots for the MDC tooltip.
+    @include mdc-plain-tooltip-theme.theme-styles($mdc-tooltip-token-slots);
+  }
+}
 
 .mat-mdc-tooltip {
   // We don't use MDC's positioning so this has to be relative.
   position: relative;
   transform: scale(0);
-  display: inline-flex;
 
   // Increases the area of the tooltip so the user's pointer can go from the trigger directly to it.
   &::before {
@@ -45,63 +59,12 @@
   }
 }
 
-.mat-mdc-tooltip-surface {
-  word-break: normal;
-  overflow-wrap: anywhere;
-  padding: 4px 8px;
-  min-width: 40px;
-  max-width: 200px;
-  min-height: 24px;
-  max-height: 40vh;
-  box-sizing: border-box;
-  overflow: hidden;
-  text-align: center;
-
-  // TODO(crisbeto): these styles aren't necessary, but they were present in
-  // MDC and removing them is likely to cause screenshot differences.
-  will-change: transform, opacity;
-
-  @include token-utils.use-tokens(
-    tokens-mdc-plain-tooltip.$prefix,
-    tokens-mdc-plain-tooltip.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(color, supporting-text-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(font-family, supporting-text-font);
-    @include token-utils.create-token-slot(font-size, supporting-text-size);
-    @include token-utils.create-token-slot(font-weight, supporting-text-weight);
-    @include token-utils.create-token-slot(line-height, supporting-text-line-height);
-    @include token-utils.create-token-slot(letter-spacing, supporting-text-tracking);
-  }
-
-  // Renders an outline in high contrast mode.
-  &::before {
-    position: absolute;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border: 1px solid transparent;
-    border-radius: inherit;
-    content: '';
-    pointer-events: none;
-  }
-
-  .mdc-tooltip--multiline & {
-    text-align: left;
-  }
-
-  [dir='rtl'] .mdc-tooltip--multiline & {
-    text-align: right;
-  }
-}
-
 // We need the additional specificity here, because it can be overridden by `.cdk-overlay-panel`.
 .mat-mdc-tooltip-panel.mat-mdc-tooltip-panel-non-interactive {
   pointer-events: none;
 }
+
+// TODO(crisbeto): we may be able to use MDC directly for these animations.
 
 @keyframes mat-mdc-tooltip-show {
   0% {

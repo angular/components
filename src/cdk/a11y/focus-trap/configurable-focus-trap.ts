@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injector, NgZone} from '@angular/core';
+import {NgZone} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
-import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
 import {FocusTrap} from './focus-trap';
-import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {FocusTrapManager, ManagedFocusTrap} from './focus-trap-manager';
+import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
+import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
 
 /**
  * Class that allows for trapping focus within a DOM element.
@@ -41,9 +41,8 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     private _focusTrapManager: FocusTrapManager,
     private _inertStrategy: FocusTrapInertStrategy,
     config: ConfigurableFocusTrapConfig,
-    injector?: Injector,
   ) {
-    super(_element, _checker, _ngZone, _document, config.defer, injector);
+    super(_element, _checker, _ngZone, _document, config.defer);
     this._focusTrapManager.register(this);
   }
 

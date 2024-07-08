@@ -131,6 +131,14 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 
 <!-- example(datepicker-value) -->
 
+### Changing the datepicker colors
+
+The color of the datepicker can be changed by specifying a `$color-variant` when applying the
+`mat.datepicker-theme` or `mat.datepicker-color` mixins (see the
+[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default, the
+datepicker uses the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`, or
+`'error'`.
+
 ### Date validation
 
 There are three properties that add date validation to the datepicker input. The first two are the

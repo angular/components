@@ -12,7 +12,7 @@ import {
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
-import {ChangeDetectorRef, Component, ViewChild, inject} from '@angular/core';
+import {Component, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -32,6 +32,11 @@ describe('MDC-based MatTabHeader', () => {
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
   let resizeEvents: Subject<ResizeObserverEntry[]>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -223,7 +228,6 @@ describe('MDC-based MatTabHeader', () => {
     it('should focus disabled items when moving focus using END', () => {
       appComponent.tabHeader.focusIndex = 0;
       appComponent.tabs[3].disabled = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
 
@@ -341,13 +345,11 @@ describe('MDC-based MatTabHeader', () => {
 
       it('should update the scroll distance if a tab is removed and no tabs are selected', fakeAsync(() => {
         appComponent.selectedIndex = 0;
-        fixture.changeDetectorRef.markForCheck();
         appComponent.addTabsForScrolling();
         fixture.detectChanges();
 
         // Focus the last tab so the header scrolls to the end.
         appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const {offsetLeft, offsetWidth} = appComponent.getSelectedLabel(
           appComponent.tabHeader.focusIndex,
@@ -357,7 +359,6 @@ describe('MDC-based MatTabHeader', () => {
 
         // Remove the first two tabs which includes the selected tab.
         appComponent.tabs = appComponent.tabs.slice(2);
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tick();
 
@@ -382,14 +383,12 @@ describe('MDC-based MatTabHeader', () => {
 
         // Focus on the last tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = appComponent.tabs.length - 1;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         const {offsetLeft} = appComponent.getSelectedLabel(appComponent.tabHeader.focusIndex);
         expect(offsetLeft).toBe(0);
 
         // Focus on the first tab, expect this to be the maximum scroll distance.
         appComponent.tabHeader.focusIndex = 0;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(appComponent.tabHeader.scrollDistance).toBe(0);
       });
@@ -657,7 +656,6 @@ describe('MDC-based MatTabHeader', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.dir = 'rtl';
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -769,8 +767,6 @@ class SimpleTabHeaderApp {
 
   @ViewChild(MatTabHeader, {static: true}) tabHeader: MatTabHeader;
 
-  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
   constructor() {
     this.tabs[this.disabledTabIndex].disabled = true;
   }
@@ -779,7 +775,6 @@ class SimpleTabHeaderApp {
     for (let i = 0; i < amount; i++) {
       this.tabs.push({label: 'new'});
     }
-    this._changeDetectorRef.markForCheck();
   }
 
   getViewLength() {

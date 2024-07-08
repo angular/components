@@ -46,7 +46,6 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -56,7 +55,6 @@ import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export type DateFilterFn<D> = (date: D | null) => boolean;
@@ -440,7 +438,6 @@ export interface MatDatepickerControl<D> {
 // @public
 export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> implements MatDatepickerControl<D | null>, OnDestroy {
     constructor(elementRef: ElementRef<HTMLInputElement>, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats, _formField?: _MatFormFieldPartial | undefined);
-    protected _ariaOwns: WritableSignal<string | null>;
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
     get dateFilter(): DateFilterFn<D | null>;
@@ -574,7 +571,6 @@ export class MatDatepickerToggleIcon {
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, control: ControlContainer, _dateAdapter: DateAdapter<D>, _formField?: _MatFormFieldPartial | undefined);
     _ariaDescribedBy: string | null;
-    _ariaOwns: WritableSignal<string | null>;
     comparisonEnd: D | null;
     comparisonStart: D | null;
     controlType: string;

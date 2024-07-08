@@ -7,12 +7,12 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, Injector, NgZone, Optional, inject} from '@angular/core';
+import {Inject, Injectable, Optional, NgZone} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
-import {EventListenerFocusTrapInertStrategy} from './event-listener-inert-strategy';
 import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-inert-strategy';
+import {EventListenerFocusTrapInertStrategy} from './event-listener-inert-strategy';
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
@@ -20,8 +20,6 @@ import {FocusTrapManager} from './focus-trap-manager';
 export class ConfigurableFocusTrapFactory {
   private _document: Document;
   private _inertStrategy: FocusTrapInertStrategy;
-
-  private readonly _injector = inject(Injector);
 
   constructor(
     private _checker: InteractivityChecker,
@@ -67,7 +65,6 @@ export class ConfigurableFocusTrapFactory {
       this._focusTrapManager,
       this._inertStrategy,
       configObject,
-      this._injector,
     );
   }
 }

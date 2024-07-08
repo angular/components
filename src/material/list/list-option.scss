@@ -1,6 +1,9 @@
+@use '@material/radio/radio' as mdc-radio;
+@use '@material/radio/radio-theme' as mdc-radio-theme;
+
 @use '../checkbox/checkbox-common';
-@use '../radio/radio-common';
 @use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use './list-option-trailing-avatar-compat';
 @use './list-item-hcm-indicator';
 
@@ -9,12 +12,29 @@
 @include list-option-trailing-avatar-compat.core-styles($query: mdc-helpers.$mdc-base-styles-query);
 
 .mat-mdc-list-option {
+  // The MDC-based list-option uses the MDC checkbox/radio for the selection indicators.
+  // We need to ensure that the checkbox and radio styles are not included for the list-option.
+  @include mdc-helpers.disable-mdc-fallback-declarations {
+    @include mdc-radio.static-styles(
+      $query: mdc-helpers.$mdc-base-styles-without-animation-query);
+
+    &:not(._mat-animation-noopable) {
+      @include mdc-radio.static-styles($query: animation);
+    }
+  }
+
   // We can't use the MDC checkbox here directly, because this checkbox is purely
   // decorative and including the MDC one will bring in unnecessary JS.
   @include checkbox-common.checkbox-structure(false);
   @include checkbox-common.checkbox-noop-animations;
-  @include radio-common.radio-structure(false);
-  @include radio-common.radio-noop-animations;
+
+  // We can't use the MDC radio here directly, because this radio is purely
+  // decorative and including the MDC one will bring in unnecessary JS.
+  .mdc-radio {
+    // MDC theme styles also include structural styles so we have to include the theme at least
+    // once here. The values will be overwritten by our own theme file afterwards.
+    @include mdc-radio-theme.theme-styles(tokens-mdc-radio.get-token-slots());
+  }
 
   // The internal checkbox/radio is purely decorative, but because it's an `input`, the user can
   // still focus it by tabbing or clicking. Furthermore, `mat-list-option` has the `option` role

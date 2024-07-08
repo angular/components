@@ -2,7 +2,6 @@
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, app);

@@ -28,6 +28,7 @@ ng_module(
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
         "@npm//@types/jasmine",
+        "@npm//rxjs",
     ],
 )
 

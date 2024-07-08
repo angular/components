@@ -1,14 +1,14 @@
+import {ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
+import {Component, ViewChild, Type, Provider, provideZoneChangeDetection} from '@angular/core';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {ChangeDetectorRef, Component, Provider, Type, ViewChild, inject} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  MatPaginatorModule,
   MatPaginator,
   MatPaginatorIntl,
-  MatPaginatorModule,
   MatPaginatorSelectConfig,
 } from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
@@ -17,7 +17,7 @@ describe('MDC-based MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
-      providers: [MatPaginatorIntl, ...providers],
+      providers: [provideZoneChangeDetection(), MatPaginatorIntl, ...providers],
       declarations: [type],
     }).compileComponents();
 
@@ -35,7 +35,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = 100;
         component.pageSize = 10;
         component.pageIndex = 1;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('11 – 20 of 100');
       });
@@ -47,7 +46,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = 200;
         component.pageSize = 20;
         component.pageIndex = 2;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('41 – 60 of 200');
       });
@@ -59,7 +57,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = 0;
         component.pageSize = 5;
         component.pageIndex = 2;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('0 of 0');
       });
@@ -71,7 +68,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = 12;
         component.pageSize = 5;
         component.pageIndex = 2;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('11 – 12 of 12');
       });
@@ -83,7 +79,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = 10;
         component.pageSize = 5;
         component.pageIndex = 2;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('11 – 15 of 10');
       });
@@ -95,7 +90,6 @@ describe('MDC-based MatPaginator', () => {
         component.length = -5;
         component.pageSize = 5;
         component.pageIndex = 2;
-        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(rangeElement.textContent!.trim()).toBe('11 – 15 of 0');
       });
@@ -173,7 +167,6 @@ describe('MDC-based MatPaginator', () => {
     expect(getLastButton(fixture)).withContext('Expected last button to not exist.').toBeNull();
 
     fixture.componentInstance.showFirstLastButtons = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(getFirstButton(fixture))
@@ -199,7 +192,6 @@ describe('MDC-based MatPaginator', () => {
     const component = fixture.componentInstance;
     const paginator = component.paginator;
     paginator.pageSize = -1337;
-    fixture.changeDetectorRef.markForCheck();
     expect(paginator.pageSize).toBeGreaterThanOrEqual(0);
   });
 
@@ -217,14 +209,12 @@ describe('MDC-based MatPaginator', () => {
     const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-mdc-form-field');
 
     component.color = 'accent';
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(formField.classList).not.toContain('mat-warn');
     expect(formField.classList).toContain('mat-accent');
 
     component.color = 'warn';
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(formField.classList).toContain('mat-warn');
     expect(formField.classList).not.toContain('mat-accent');
@@ -242,7 +232,6 @@ describe('MDC-based MatPaginator', () => {
       disableOptionCentering: true,
       panelClass: 'custom-class',
     };
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(select.disableOptionCentering).toBe(true);
@@ -259,7 +248,6 @@ describe('MDC-based MatPaginator', () => {
       component = fixture.componentInstance;
       paginator = component.paginator;
       component.showFirstLastButtons = true;
-      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     });
 
@@ -332,17 +320,14 @@ describe('MDC-based MatPaginator', () => {
     expect(rangeElement.innerText.trim()).toBe('1 – 10 of 100');
 
     paginator.length = 99;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(rangeElement.innerText.trim()).toBe('1 – 10 of 99');
 
     paginator.pageSize = 6;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(rangeElement.innerText.trim()).toBe('1 – 6 of 99');
 
     paginator.pageIndex = 1;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(rangeElement.innerText.trim()).toBe('7 – 12 of 99');
 
@@ -350,7 +335,6 @@ describe('MDC-based MatPaginator', () => {
     expect(fixture.nativeElement.querySelector('.mat-mdc-select')).not.toBeNull();
     paginator.pageSize = 10;
     paginator.pageSizeOptions = [10];
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mat-mdc-select')).toBeNull();
   });
@@ -376,13 +360,11 @@ describe('MDC-based MatPaginator', () => {
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
 
     component.pageSize = 30;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
 
     component.pageSizeOptions = [100, 25, 10, 5];
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
   });
@@ -396,7 +378,6 @@ describe('MDC-based MatPaginator', () => {
     component.pageIndex = 4;
     component.pageSize = 10;
     component.length = 100;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     // The first item of the page should be item with index 40
@@ -446,19 +427,16 @@ describe('MDC-based MatPaginator', () => {
 
     component.pageSize = 10;
     component.length = 100;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(paginator.getNumberOfPages()).toBe(10);
 
     component.pageSize = 10;
     component.length = 0;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(paginator.getNumberOfPages()).toBe(0);
 
     component.pageSize = 10;
     component.length = 10;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(paginator.getNumberOfPages()).toBe(1);
   });
@@ -474,7 +452,6 @@ describe('MDC-based MatPaginator', () => {
     // Remove options so that the paginator only uses the current page size (10) as an option.
     // Should no longer show the select component since there is only one option.
     component.pageSizeOptions = [];
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mat-mdc-select')).toBeNull();
   });
@@ -499,7 +476,6 @@ describe('MDC-based MatPaginator', () => {
       .toBeTruthy();
 
     fixture.componentInstance.hidePageSize = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(element.querySelector('.mat-mdc-paginator-page-size'))
@@ -515,7 +491,6 @@ describe('MDC-based MatPaginator', () => {
 
     fixture.componentInstance.pageIndex = 1;
     fixture.componentInstance.showFirstLastButtons = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(select.disabled).toBe(false);
@@ -525,7 +500,6 @@ describe('MDC-based MatPaginator', () => {
     expect(getLastButton(fixture).hasAttribute('disabled')).toBe(false);
 
     fixture.componentInstance.disabled = true;
-    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(select.disabled).toBe(true);
@@ -614,11 +588,8 @@ class MatPaginatorApp {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
   goToLastPage() {
     this.pageIndex = Math.ceil(this.length / this.pageSize) - 1;
-    this._changeDetectorRef.markForCheck();
   }
 }
 

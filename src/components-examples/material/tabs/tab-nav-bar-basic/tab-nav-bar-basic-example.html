@@ -1,5 +1,5 @@
 <!-- #docregion mat-tab-nav -->
-<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+<nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel">
   @for (link of links; track link) {
     <a mat-tab-link
       (click)="activeLink = link"
@@ -10,6 +10,9 @@
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <!-- #enddocregion mat-tab-nav -->
 
+<button mat-raised-button class="example-action-button" (click)="toggleBackground()">
+  Toggle background
+</button>
 <button mat-raised-button class="example-action-button" (click)="addLink()">
   Add link
 </button>

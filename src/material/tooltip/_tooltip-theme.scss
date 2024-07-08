@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use '@material/tooltip/plain-tooltip-theme' as mdc-plain-tooltip-theme;
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -13,10 +15,7 @@
   @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-unthemable-tokens()
-      );
+      @include mdc-plain-tooltip-theme.theme(tokens-mdc-plain-tooltip.get-unthemable-tokens());
     }
   }
 }
@@ -26,11 +25,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
   @else {
+    $mdc-tooltip-color-tokens: tokens-mdc-plain-tooltip.get-color-tokens($theme);
+
+    // Add values for MDC tooltip tokens.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-color-tokens($theme)
-      );
+      @include mdc-plain-tooltip-theme.theme($mdc-tooltip-color-tokens);
     }
   }
 }
@@ -40,11 +39,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
+    $mdc-tooltip-typography-tokens: tokens-mdc-plain-tooltip.get-typography-tokens($theme);
+
+    // Add values for MDC tooltip tokens.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-typography-tokens($theme)
-      );
+      @include mdc-plain-tooltip-theme.theme($mdc-tooltip-typography-tokens);
     }
   }
 }
@@ -54,11 +53,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
+    $mdc-tooltip-density-tokens: tokens-mdc-plain-tooltip.get-density-tokens($theme);
+
+    // Add values for MDC tooltip tokens.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-density-tokens($theme)
-      );
+      @include mdc-plain-tooltip-theme.theme($mdc-tooltip-density-tokens);
     }
   }
 }
@@ -94,7 +93,6 @@
   @include validation.selector-defined(
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   @if $tokens != () {
-    $tokens: token-utils.get-tokens-for($tokens, tokens-mdc-plain-tooltip.$prefix);
-    @include token-utils.create-token-values(tokens-mdc-plain-tooltip.$prefix, $tokens);
+    @include mdc-plain-tooltip-theme.theme(map.get($tokens, tokens-mdc-plain-tooltip.$prefix));
   }
 }

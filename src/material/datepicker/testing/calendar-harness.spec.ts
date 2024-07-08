@@ -1,15 +1,15 @@
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '@angular/material/core';
 import {
-  DateRange,
-  DefaultMatCalendarRangeStrategy,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatDatepickerModule,
+  DateRange,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  DefaultMatCalendarRangeStrategy,
 } from '@angular/material/datepicker';
-import {CalendarView, MatCalendarHarness} from './calendar-harness';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatCalendarHarness, CalendarView} from './calendar-harness';
 
 /** Date at which the calendars are set. */
 const calendarDate = new Date(2020, 7, 1);
@@ -17,6 +17,11 @@ const calendarDate = new Date(2020, 7, 1);
 describe('MatCalendarHarness', () => {
   let fixture: ComponentFixture<CalendarHarnessTest>;
   let loader: HarnessLoader;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -111,7 +116,6 @@ describe('MatCalendarHarness', () => {
       calendarDate.getMonth(),
       20,
     );
-    fixture.changeDetectorRef.markForCheck();
 
     const calendar = await loader.getHarness(MatCalendarHarness.with({selector: '#single'}));
     const cells = await calendar.getCells();
@@ -194,7 +198,6 @@ describe('MatCalendarHarness', () => {
       calendarDate.getMonth(),
       8,
     );
-    fixture.changeDetectorRef.markForCheck();
 
     expect(await allCells[4].isComparisonRangeStart()).toBe(true);
     expect(await allCells[4].isInComparisonRange()).toBe(true);
@@ -274,7 +277,6 @@ describe('MatCalendarHarness', () => {
       calendarDate.getMonth(),
       3,
     );
-    fixture.changeDetectorRef.markForCheck();
 
     const calendar = await loader.getHarness(MatCalendarHarness.with({selector: '#single'}));
     const cells = await calendar.getCells({disabled: true});
@@ -294,7 +296,6 @@ describe('MatCalendarHarness', () => {
       calendarDate.getMonth(),
       8,
     );
-    fixture.changeDetectorRef.markForCheck();
 
     const cells = await calendar.getCells({inComparisonRange: true});
     expect(await parallel(() => cells.map(cell => cell.getText()))).toEqual(['5', '6', '7', '8']);

@@ -21,6 +21,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
@@ -90,7 +91,8 @@ export class MatChipGrid
     ControlValueAccessor,
     DoCheck,
     MatFormFieldControl<any>,
-    OnDestroy
+    OnDestroy,
+    OnInit
 {
   /**
    * Implemented as part of MatFormFieldControl.
@@ -276,6 +278,14 @@ export class MatChipGrid
       parentForm,
       this.stateChanges,
     );
+  }
+
+  ngOnInit() {
+    if (this.ngControl) {
+      this.ngControl.control?.events.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   ngAfterContentInit() {

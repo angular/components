@@ -35,13 +35,7 @@ export interface ProgressAnimationEnd {
 
 /** Default `mat-progress-bar` options that can be overridden. */
 export interface MatProgressBarDefaultOptions {
-  /**
-   * Default theme color of the progress bar. This API is supported in M2 themes only,
-   * it has no effect in M3 themes.
-   *
-   * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/theming#using-component-color-variants.
-   */
+  /** Default color of the progress bar. */
   color?: ThemePalette;
 
   /** Default mode of the progress bar. */
@@ -134,13 +128,7 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   _isNoopAnimation = false;
 
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
-  /**
-   * Theme color of the progress bar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes.
-   *
-   * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/theming#using-component-color-variants.
-   */
+  /** Theme palette color of the progress bar. */
   @Input()
   get color() {
     return this._color || this._defaultColor;

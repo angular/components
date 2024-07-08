@@ -20,9 +20,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.rulers": [100],
-  "bazel.buildifierExecutable": "node_modules/.bin/buildifier",
-  "bazel.buildifierFixOnFormat": true,
-  "bazel.executable": "node_modules/.bin/bazel"
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
