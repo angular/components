@@ -145,27 +145,24 @@ export class MatDialogContainer
 
   /** Get Dialog name from aria attributes */
   private _getDialogName = (): string => {
-    // _ariaLabelledByQueue and _ariaDescribedByQueue are created if ariaLabelledBy
-    // or ariaDescribedBy values are applied to the dialog config
+    // _ariaLabelledByQueue is created if ariaLabelledBy values are applied
+    // to the dialog config
     const ariaLabelledByRefId = this._ariaLabelledByQueue[0];
-    const ariaDescribedByRefId = this._ariaDescribedByQueue[0];
-    // Get Element to get name/title from if ariaLabelledBy or ariaDescribedBy
-    const dialogNameElement =
-      document.getElementById(ariaLabelledByRefId) || document.getElementById(ariaDescribedByRefId);
+    // Get Element to get name/title from if ariaLabelledBy
+    const dialogNameElement = document.getElementById(ariaLabelledByRefId);
     const dialogNameInnerText =
-      // If no ariaLabelledBy, ariaDescribedBy, or ariaLabel, create default aria label
+      // If no ariaLabelledBy or ariaLabel, create default aria label
       !dialogNameElement && !this._config.ariaLabel
         ? 'Dialog Modal'
         : // : Otherwise prioritize use of ariaLabel
           this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
-    this._config.ariaLabel = dialogNameInnerText || 'Dialog Modal';
-    return this._config.ariaLabel;
+    return dialogNameInnerText || 'Dialog Modal';
   };
 
   private _setAriaLabel = (): void => {
     const os = this._getUserPlatform();
     if (os === 'macos' || os === 'ios') {
-      this._getDialogName();
+      this._config.ariaLabel = this._getDialogName();
     }
     return;
   };
