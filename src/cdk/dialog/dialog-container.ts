@@ -75,7 +75,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
   implements OnDestroy
 {
-  public _platform = inject(Platform);
+  protected _platform = inject(Platform);
   protected _document: Document;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
@@ -93,8 +93,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * after the dialog is closed.
    */
   _closeInteractionType: FocusOrigin | null = null;
-
-  _ariaLabel: string;
 
   /**
    * Queue of the IDs of the dialog's label element, based on their definition order. The first
@@ -124,9 +122,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
     this._document = _document;
 
-    if (this._config.ariaLabel) {
-      this._ariaLabel = this._config.ariaLabel;
-    }
     if (this._config.ariaLabelledBy) {
       this._ariaLabelledByQueue.push(this._config.ariaLabelledBy);
     }

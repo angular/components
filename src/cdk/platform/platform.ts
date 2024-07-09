@@ -85,14 +85,8 @@ export class Platform {
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 
   /** Whether the device is a Mac device/OS. */
-  MAC: boolean =
+  MAC_OS: boolean =
     !this.isBrowser && /(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent);
-
-  /** Whether the device is a Windows device/OS. */
-  WINDOWS: boolean = !this.isBrowser && /(win32|win64|windows|wince)/i.test(navigator.userAgent);
-
-  /** Whether the device is a Linux device. */
-  LINUX: boolean = !this.isBrowser && /linux/.test(navigator.userAgent);
 
   constructor(@Inject(PLATFORM_ID) private _platformId: Object) {}
 }
