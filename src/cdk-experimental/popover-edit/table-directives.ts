@@ -173,6 +173,7 @@ const POPOVER_EDIT_INPUTS = [
   {name: 'context', alias: 'cdkPopoverEditContext'},
   {name: 'colspan', alias: 'cdkPopoverEditColspan'},
   {name: 'disabled', alias: 'cdkPopoverEditDisabled'},
+  {name: 'ariaLabel', alias: 'cdkPopoverEditAriaLabel'},
 ];
 
 /**
@@ -195,6 +196,9 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
    * is defined within the cell.
    */
   context?: C;
+
+  /** Aria label to set on the popover dialog element. */
+  ariaLabel?: string;
 
   /**
    * Specifies that the popup should cover additional table cells before and/or after
@@ -302,7 +306,10 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     });
 
     this.initFocusTrap();
-    this.overlayRef.overlayElement.setAttribute('aria-role', 'dialog');
+    this.overlayRef.overlayElement.setAttribute('role', 'dialog');
+    if (this.ariaLabel) {
+      this.overlayRef.overlayElement.setAttribute('aria-label', this.ariaLabel);
+    }
 
     this.overlayRef.detachments().subscribe(() => this.closeEditOverlay());
   }
