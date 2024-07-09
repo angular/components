@@ -414,6 +414,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     dataAccessor: (data: T, name: string) => string;
     headerCell: CdkHeaderCellDef;
     headerText: string;
+    footerText: string;
     footerTextTransform: (name: string) => string;
     justify: 'start' | 'end' | 'center';
     get name(): string;
