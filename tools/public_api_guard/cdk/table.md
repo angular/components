@@ -594,8 +594,8 @@ export const TEXT_COLUMN_OPTIONS: InjectionToken<TextColumnOptions<any>>;
 // @public
 export interface TextColumnOptions<T> {
     defaultDataAccessor?: (data: T, name: string) => string;
-    defaultFooterDataAccessor?: (name: string) => string;
     defaultHeaderTextTransform?: (name: string) => string;
+    defaultFooterTextTransform?: (name: string) => string;
 }
 
 // (No @packageDocumentation comment for this package)
