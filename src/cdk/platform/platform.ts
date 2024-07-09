@@ -87,7 +87,7 @@ export class Platform {
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 
   /** Whether the device is a Mac device/OS. */
-  MAC: boolean =
+  MAC_OS: boolean =
     !this.isBrowser && /(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent);
 
   /** Whether the device is a Windows device/OS. */

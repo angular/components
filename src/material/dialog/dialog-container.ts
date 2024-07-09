@@ -103,7 +103,6 @@ export class MatDialogContainer
 
   constructor(
     elementRef: ElementRef,
-    _platform: Platform,
     focusTrapFactory: FocusTrapFactory,
     @Optional() @Inject(DOCUMENT) _document: any,
     dialogConfig: MatDialogConfig,
@@ -125,24 +124,6 @@ export class MatDialogContainer
     );
   }
 
-  /** Get userAgent to check for useragent operating system */
-  private _getUserPlatform = (): string => {
-    let os = '';
-
-    if (this._platform.MAC) {
-      os = 'macos';
-    } else if (this._platform.IOS) {
-      os = 'ios';
-    } else if (this._platform.WINDOWS) {
-      os = 'windows';
-    } else if (this._platform.ANDROID) {
-      os = 'android';
-    } else if (this._platform.LINUX) {
-      os = 'linux';
-    }
-    return os;
-  };
-
   /** Get Dialog name from aria attributes */
   private _getDialogName = (): string => {
     // _ariaLabelledByQueue is created if ariaLabelledBy values are applied
@@ -160,8 +141,10 @@ export class MatDialogContainer
   };
 
   private _setAriaLabel = (): void => {
-    const os = this._getUserPlatform();
-    if (os === 'macos' || os === 'ios') {
+    /* Check for platform's operating system & provide
+      aria-labelledby value or default text as dialog
+      name if platform is MAC_OS or IOS. Fixes b/274674581 */
+    if (this._platform.MAC_OS || this._platform.IOS) {
       this._config.ariaLabel = this._getDialogName();
     }
     return;

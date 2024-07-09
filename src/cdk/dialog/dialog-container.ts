@@ -75,7 +75,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
   implements OnDestroy
 {
-  public _platform = inject(Platform);
+  protected _platform = inject(Platform);
   protected _document: Document;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
