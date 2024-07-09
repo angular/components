@@ -17,7 +17,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell} from './cell';
+import {
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCellDef,
+  CdkHeaderCell,
+  CdkCell,
+  CdkFooterCellDef,
+  CdkFooterCell,
+} from './cell';
 import {CdkTable} from './table';
 import {
   getTableTextColumnMissingParentTableError,
@@ -26,13 +34,15 @@ import {
 import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
 
 /**
- * Column that simply shows text content for the header and row cells. Assumes that the table
- * is using the native table implementation (`<table>`).
+ * Column that simply shows text content for the header, row cells, and optionally for the footer.
+ * Assumes that the table is using the native table implementation (`<table>`).
  *
  * By default, the name of this column will be the header text and data property accessor.
  * The header text can be overridden with the `headerText` input. Cell values can be overridden with
- * the `dataAccessor` input. Change the text justification to the start or end using the `justify`
- * input.
+ * the `dataAccessor` input. If the table has a footer definition, the default footer text for this
+ * column will be empty. The footer text can be overridden with the `footerText` or
+ * `footerDataAccessor` input. Change the text justification to the start or end using the
+ * `justify` input.
  */
 @Component({
   selector: 'cdk-text-column',
@@ -43,6 +53,9 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
       </th>
       <td cdk-cell *cdkCellDef="let data" [style.text-align]="justify">
         {{dataAccessor(data, name)}}
+      </td>
+      <td cdk-footer-cell *cdkFooterCellDef [style.text-align]="justify">
+        {{footerTextTransform(name)}}
       </td>
     </ng-container>
   `,
@@ -55,7 +68,15 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCellDef, CdkCell],
+  imports: [
+    CdkCell,
+    CdkCellDef,
+    CdkColumnDef,
+    CdkFooterCell,
+    CdkFooterCellDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+  ],
 })
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
@@ -86,6 +107,20 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    */
   @Input() dataAccessor: (data: T, name: string) => string;
 
+  /**
+   * Text label that should be used for the column footer. If this property is not
+   * set, the footer won't be displayed unless `footerDataAccessor` is set.
+   */
+  @Input() footerText: string;
+
+  /**
+   * Footer data accessor function. If this property is set, it will take precedence over the
+   * footerText property. If footerText is set and footerDataAccessor is not, footerText will be
+   * used. If neither is set, and the table has a footer defined, the footer cells will render an
+   * empty string.
+   */
+  @Input() footerTextTransform: (name: string) => string;
+
   /** Alignment of the cell values. */
   @Input() justify: 'start' | 'end' | 'center' = 'start';
 
@@ -110,12 +145,18 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    */
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell: CdkHeaderCellDef;
 
+  /**
+   * The column footerCell is provided to the column during `ngOnInit` with a static query.
+   * @docs-private
+   */
+  @ViewChild(CdkFooterCellDef, {static: true}) footerCell: CdkFooterCellDef;
+
   constructor(
     // `CdkTextColumn` is always requiring a table, but we just assert it manually
     // for better error reporting.
     // tslint:disable-next-line: lightweight-tokens
-    @Optional() private _table: CdkTable<T>,
-    @Optional() @Inject(TEXT_COLUMN_OPTIONS) private _options: TextColumnOptions<T>,
+    @Optional() private readonly _table: CdkTable<T>,
+    @Optional() @Inject(TEXT_COLUMN_OPTIONS) private readonly _options: TextColumnOptions<T>,
   ) {
     this._options = _options || {};
   }
@@ -132,12 +173,15 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
         this._options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
     }
 
+    this._defineFooterTextTransform();
+
     if (this._table) {
       // Provide the cell and headerCell directly to the table with the static `ViewChild` query,
       // since the columnDef will not pick up its content by the time the table finishes checking
       // its content and initializing the rows.
       this.columnDef.cell = this.cell;
       this.columnDef.headerCell = this.headerCell;
+      this.columnDef.footerCell = this.footerCell;
       this._table.addColumnDef(this.columnDef);
     } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getTableTextColumnMissingParentTableError();
@@ -154,7 +198,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * Creates a default header text. Use the options' header text transformation function if one
    * has been provided. Otherwise simply capitalize the column name.
    */
-  _createDefaultHeaderText() {
+  _createDefaultHeaderText(): string {
     const name = this.name;
 
     if (!name && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -169,9 +213,27 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   }
 
   /** Synchronizes the column definition name with the text column name. */
-  private _syncColumnDefName() {
+  private _syncColumnDefName(): void {
     if (this.columnDef) {
       this.columnDef.name = this.name;
+    }
+  }
+
+  /**
+   * Defines the function to transform the footer text for the column.
+   * If `footerTextTransform` is not set, it will:
+   * - Use `footerText` if defined, or
+   * - Use `defaultFooterTextTransform` from options, or
+   * - Default to an empty string.
+   */
+  private _defineFooterTextTransform(): void {
+    if (!this.footerTextTransform) {
+      // footerText can just be an empty string
+      if (this.footerText !== undefined) {
+        this.footerTextTransform = () => this.footerText;
+      } else {
+        this.footerTextTransform = this._options.defaultFooterTextTransform || (() => '');
+      }
     }
   }
 }

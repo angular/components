@@ -414,6 +414,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     dataAccessor: (data: T, name: string) => string;
     headerCell: CdkHeaderCellDef;
     headerText: string;
+    footerTextTransform: (name: string) => string;
     justify: 'start' | 'end' | 'center';
     get name(): string;
     set name(name: string);
@@ -593,6 +594,7 @@ export const TEXT_COLUMN_OPTIONS: InjectionToken<TextColumnOptions<any>>;
 // @public
 export interface TextColumnOptions<T> {
     defaultDataAccessor?: (data: T, name: string) => string;
+    defaultFooterDataAccessor?: (name: string) => string;
     defaultHeaderTextTransform?: (name: string) => string;
 }
 

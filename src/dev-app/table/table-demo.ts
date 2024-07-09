@@ -42,6 +42,7 @@ import {
   TableStickyHeaderExample,
   TableTextColumnAdvancedExample,
   TableTextColumnExample,
+  TableTextColumnWithFooterExample,
   TableWithRipplesExample,
   TableWrappedExample,
 } from '@angular/components-examples/material/table';
@@ -75,6 +76,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TableStickyHeaderExample,
     TableTextColumnAdvancedExample,
     TableTextColumnExample,
+    TableTextColumnWithFooterExample,
     TableWrappedExample,
     TableReorderableExample,
     TableRecycleRowsExample,
