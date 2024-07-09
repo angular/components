@@ -1,5 +1,3 @@
-@use '@material/textfield/variables' as mdc-textfield-variables;
-
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
@@ -18,7 +16,7 @@
     top: 0;
     left: 0;
     right: 0;
-    padding: 0 mdc-textfield-variables.$padding-horizontal;
+    padding: 0 16px;
   }
 
   .mat-mdc-form-field-subscript-dynamic-size {

@@ -1,5 +1,3 @@
-@use '@material/textfield/filled-text-field-theme' as mdc-filled-text-field-theme;
-@use '@material/textfield/outlined-text-field-theme' as mdc-outlined-text-field-theme;
 @use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
 @use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
@@ -43,28 +41,28 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-filled-text-field-theme.theme(
-          tokens-mdc-filled-text-field.get-color-tokens($theme));
-      @include mdc-outlined-text-field-theme.theme(
-          tokens-mdc-outlined-text-field.get-color-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-filled-text-field.$prefix,
+        tokens-mdc-filled-text-field.get-color-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-outlined-text-field.$prefix,
+        tokens-mdc-outlined-text-field.get-color-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
         tokens-mat-form-field.get-color-tokens($theme));
     }
 
     .mat-mdc-form-field.mat-accent {
-      @include mdc-filled-text-field-theme.theme(
-          tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, accent));
-      @include mdc-outlined-text-field-theme.theme(
-          tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, accent));
+      @include token-utils.create-token-values(tokens-mdc-filled-text-field.$prefix,
+        tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, accent));
+      @include token-utils.create-token-values(tokens-mdc-outlined-text-field.$prefix,
+        tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, accent));
       @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
         tokens-mat-form-field.private-get-color-palette-color-tokens($theme, accent));
     }
 
     .mat-mdc-form-field.mat-warn {
-      @include mdc-filled-text-field-theme.theme(
-          tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, warn));
-      @include mdc-outlined-text-field-theme.theme(
-          tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, warn));
+      @include token-utils.create-token-values(tokens-mdc-filled-text-field.$prefix,
+        tokens-mdc-filled-text-field.private-get-color-palette-color-tokens($theme, warn));
+      @include token-utils.create-token-values(tokens-mdc-outlined-text-field.$prefix,
+        tokens-mdc-outlined-text-field.private-get-color-palette-color-tokens($theme, warn));
       @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
         tokens-mat-form-field.private-get-color-palette-color-tokens($theme, warn));
     }
@@ -79,10 +77,10 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-filled-text-field-theme.theme(
-          tokens-mdc-filled-text-field.get-typography-tokens($theme));
-      @include mdc-outlined-text-field-theme.theme(
-          tokens-mdc-outlined-text-field.get-typography-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-filled-text-field.$prefix,
+        tokens-mdc-filled-text-field.get-typography-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-outlined-text-field.$prefix,
+        tokens-mdc-outlined-text-field.get-typography-tokens($theme));
       @include token-utils.create-token-values(tokens-mat-form-field.$prefix,
         tokens-mat-form-field.get-typography-tokens($theme));
     }
@@ -152,7 +150,9 @@
     token-utils.get-tokens-for($tokens, tokens-mdc-outlined-text-field.$prefix, $options...);
   $mat-form-field-tokens:
     token-utils.get-tokens-for($tokens, tokens-mat-form-field.$prefix, $options...);
-  @include mdc-filled-text-field-theme.theme($mdc-filled-text-field-tokens);
-  @include mdc-outlined-text-field-theme.theme($mdc-outlined-text-field-tokens);
+  @include token-utils.create-token-values(tokens-mdc-filled-text-field.$prefix,
+    $mdc-filled-text-field-tokens);
+  @include token-utils.create-token-values(tokens-mdc-outlined-text-field.$prefix,
+    $mdc-outlined-text-field-tokens);
   @include token-utils.create-token-values(tokens-mat-form-field.$prefix, $mat-form-field-tokens);
 }
