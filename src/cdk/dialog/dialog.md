@@ -159,6 +159,14 @@ If you're using a `TemplateRef` for your dialog content, the data is available i
 </ng-template>
 ```
 
+If you're using a `TemplateRef` and need to access the `DialogRef`, you can use the following:
+
+```html
+<ng-template let-data let-dialogRef="dialogRef">
+    Hello, {{data.name}}
+</ng-template>
+```
+
 <!-- example(cdk-dialog-data) -->
 
 ### Accessibility

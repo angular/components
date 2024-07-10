@@ -1,6 +1,4 @@
 @use 'sass:map';
-@use '@material/list/evolution-mixins';
-@use '@material/list/list-theme' as mdc-list-theme;
 
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
@@ -20,7 +18,8 @@
   }
   @else {
     @include sass-utils.current-selector-or-root() {
-      @include mdc-list-theme.theme(tokens-mdc-list.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix, tokens-mdc-list.get-unthemable-tokens());
       @include token-utils.create-token-values(
         tokens-mat-list.$prefix, tokens-mat-list.get-unthemable-tokens());
     }
@@ -32,11 +31,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   }
   @else {
-    $mdc-list-color-tokens: tokens-mdc-list.get-color-tokens($theme);
-
-    // Add values for MDC list tokens.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-list-theme.theme($mdc-list-color-tokens);
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix, tokens-mdc-list.get-color-tokens($theme));
       @include token-utils.create-token-values(
         tokens-mat-list.$prefix, tokens-mat-list.get-color-tokens($theme));
     }
@@ -79,8 +76,13 @@
     // There is no token for activated color on nav list.
     // TODO(mmalerba): Add a token to MDC or make a custom one.
     .mat-mdc-list-base.mat-mdc-list-base {
-      @include evolution-mixins.list-selected-ink-color(
-          inspection.get-theme-color($theme, primary));
+      .mdc-list-item--selected,
+      .mdc-list-item--activated {
+        .mdc-list-item__primary-text,
+        .mdc-list-item__start {
+          color: inspection.get-theme-color($theme, primary);
+        }
+      }
     }
 
     // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can
@@ -102,11 +104,10 @@
   }
   @else {
     $density-scale: inspection.get-theme-density($theme);
-    $mdc-list-density-tokens: tokens-mdc-list.get-density-tokens($theme);
 
-    // Add values for MDC list tokens.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-list-theme.theme($mdc-list-density-tokens);
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix, tokens-mdc-list.get-density-tokens($theme));
       @include token-utils.create-token-values(
         tokens-mat-list.$prefix, tokens-mat-list.get-density-tokens($theme));
     }
@@ -155,11 +156,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
-    $mdc-list-typography-tokens: tokens-mdc-list.get-typography-tokens($theme);
-
-    // Add values for MDC list tokens.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-list-theme.theme($mdc-list-typography-tokens);
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix, tokens-mdc-list.get-typography-tokens($theme));
       @include token-utils.create-token-values(
         tokens-mat-list.$prefix, tokens-mat-list.get-typography-tokens($theme));
     }
@@ -204,8 +203,8 @@
 @mixin _theme-from-tokens($tokens) {
   @include validation.selector-defined(
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
-  @include mdc-list-theme.theme(token-utils.get-tokens-for($tokens, tokens-mdc-list.$prefix));
-
+  $mdc-list-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-list.$prefix);
   $mat-list-tokens: token-utils.get-tokens-for($tokens, tokens-mat-list.$prefix);
+  @include token-utils.create-token-values(tokens-mdc-list.$prefix, $mdc-list-tokens);
   @include token-utils.create-token-values(tokens-mat-list.$prefix, $mat-list-tokens);
 }

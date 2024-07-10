@@ -73,6 +73,8 @@ export class MatListItem extends MatListItemBase {
     _activated: boolean;
     _getAriaCurrent(): string | null;
     // (undocumented)
+    protected _hasBothLeadingAndTrailing(): boolean;
+    // (undocumented)
     _itemText: ElementRef<HTMLElement>;
     // (undocumented)
     _lines: QueryList<MatListItemLine>;
@@ -170,6 +172,8 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     _getTogglePosition(): MatListOptionTogglePosition;
     // (undocumented)
     _handleBlur(): void;
+    // (undocumented)
+    protected _hasBothLeadingAndTrailing(): boolean;
     _hasCheckboxAt(position: MatListOptionTogglePosition): boolean;
     _hasIconsOrAvatarsAt(position: 'before' | 'after'): boolean;
     _hasProjected(type: 'icons' | 'avatars', position: 'before' | 'after'): boolean;

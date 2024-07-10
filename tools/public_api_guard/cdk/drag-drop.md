@@ -76,6 +76,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    static ngAcceptInputType_scale: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
@@ -92,6 +94,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     _resetPreviewTemplate(preview: CdkDragPreview): void;
     rootElementSelector: string;
+    scale: number;
     setFreeDragPosition(value: Point): void;
     // (undocumented)
     _setPlaceholderTemplate(placeholder: CdkDragPlaceholder): void;
@@ -99,7 +102,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     _setPreviewTemplate(preview: CdkDragPreview): void;
     readonly started: EventEmitter<CdkDragStart>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": { "alias": "cdkDragData"; "required": false; }; "lockAxis": { "alias": "cdkDragLockAxis"; "required": false; }; "rootElementSelector": { "alias": "cdkDragRootElement"; "required": false; }; "boundaryElement": { "alias": "cdkDragBoundary"; "required": false; }; "dragStartDelay": { "alias": "cdkDragStartDelay"; "required": false; }; "freeDragPosition": { "alias": "cdkDragFreeDragPosition"; "required": false; }; "disabled": { "alias": "cdkDragDisabled"; "required": false; }; "constrainPosition": { "alias": "cdkDragConstrainPosition"; "required": false; }; "previewClass": { "alias": "cdkDragPreviewClass"; "required": false; }; "previewContainer": { "alias": "cdkDragPreviewContainer"; "required": false; }; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": { "alias": "cdkDragData"; "required": false; }; "lockAxis": { "alias": "cdkDragLockAxis"; "required": false; }; "rootElementSelector": { "alias": "cdkDragRootElement"; "required": false; }; "boundaryElement": { "alias": "cdkDragBoundary"; "required": false; }; "dragStartDelay": { "alias": "cdkDragStartDelay"; "required": false; }; "freeDragPosition": { "alias": "cdkDragFreeDragPosition"; "required": false; }; "disabled": { "alias": "cdkDragDisabled"; "required": false; }; "constrainPosition": { "alias": "cdkDragConstrainPosition"; "required": false; }; "previewClass": { "alias": "cdkDragPreviewClass"; "required": false; }; "previewContainer": { "alias": "cdkDragPreviewContainer"; "required": false; }; "scale": { "alias": "cdkDragScale"; "required": false; }; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDrag<any>, [null, { optional: true; skipSelf: true; }, null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; self: true; }, { optional: true; skipSelf: true; }]>;
 }
@@ -440,6 +443,7 @@ export class DragRef<T = any> {
         event: MouseEvent | TouchEvent;
     }>;
     reset(): void;
+    scale: number;
     setFreeDragPosition(value: Point): this;
     _sortFromLastPointerPosition(): void;
     readonly started: Subject<{

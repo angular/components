@@ -311,4 +311,29 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
   }));
+
+  it('should lay out the elements correctly when scaled', fakeAsync(() => {
+    const fixture = createComponent(DraggableInDropZone);
+    fixture.componentInstance.scale = 0.5;
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.dragItems.map(i => i.element.nativeElement);
+    const {top, left} = items[0].getBoundingClientRect();
+
+    startDraggingViaMouse(fixture, items[0], left, top);
+
+    const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+    const target = items[1];
+    const targetRect = target.getBoundingClientRect();
+
+    dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
+    fixture.detectChanges();
+
+    expect(placeholder.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT * 2}px, 0px)`);
+    expect(target.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT * 2}px, 0px)`);
+
+    dispatchMouseEvent(document, 'mouseup');
+    fixture.detectChanges();
+    flush();
+  }));
 });

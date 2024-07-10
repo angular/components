@@ -1,12 +1,63 @@
 @use '../checkbox/checkbox-common';
 @use '../radio/radio-common';
-@use '../core/mdc-helpers/mdc-helpers';
-@use './list-option-trailing-avatar-compat';
 @use './list-item-hcm-indicator';
 
-// For compatibility with the non-MDC list, we support avatars that are shown at the end
-// of the list option. We create a class similar to MDC's `--trailing-icon` one.
-@include list-option-trailing-avatar-compat.core-styles($query: mdc-helpers.$mdc-base-styles-query);
+// For compatibility with the non-MDC selection list, we support avatars that are
+// shown at the end of the list option. This is not supported by the MDC list as the
+// spec only defines avatars at the beginning of a list item. For selection list options,
+// we support changing the checkbox position to `before`. This results in the avatar from
+// the list start being moved to the end. Similar to MDC's `--trailing-icon` class, we
+// implement a `--trailing-avatar` class that is based on the original `--leading-avatar`
+// implementation. See: https://github.com/material-components/material-components-web/blob/3f342c3f4715fd3587f327ce4ea6b5dd314c5c55/packages/mdc-list/_evolution-mixins.scss#L198-L217
+.mat-mdc-list-option-with-trailing-avatar {
+  &.mdc-list-item,
+  [dir='rtl'] &.mdc-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mdc-list-item__end {
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &.mdc-list-item--with-two-lines {
+    $top: 32px;
+    $bottom: 20px;
+
+    .mdc-list-item__primary-text {
+      display: block;
+      margin-top: 0;
+      line-height: normal;
+      margin-bottom: $bottom * -1;
+
+      // This was used by MDC to set the text baseline. We should figure out a way to
+      // remove it, because it can introduce unnecessary whitespace at the beginning
+      // of the element.
+      &::before {
+        display: inline-block;
+        width: 0;
+        height: $top;
+        content: '';
+        vertical-align: 0;
+      }
+
+      &::after {
+        display: inline-block;
+        width: 0;
+        height: $bottom;
+        content: '';
+        vertical-align: $bottom * -1;
+      }
+    }
+  }
+
+  .mdc-list-item__end {
+    border-radius: 50%;
+  }
+}
 
 .mat-mdc-list-option {
   // We can't use the MDC checkbox here directly, because this checkbox is purely

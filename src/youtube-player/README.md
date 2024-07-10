@@ -8,8 +8,8 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 To install, run `ng add @angular/youtube-player`.
 
 ## Usage
-Import the component either by adding the `YouTubePlayerModule` to your app or  by importing
-`YouTubePlayer` into a standalone component. Then add the `<yotube-player videoId="<your ID>"`
+Import the component either by adding the `YouTubePlayerModule` to your app or by importing
+`YouTubePlayer` into a standalone component. Then add the `<youtube-player videoId="<your ID>"`
 to your template.
 
 ## Example
@@ -60,7 +60,7 @@ export class YourApp {}
 ```
 
 ## Loading behavior
-By default the `<youtube-player/>` will show a placeholder element instead of loading the API
+By default, the `<youtube-player/>` will show a placeholder element instead of loading the API
 up-front until the user interacts with it. This speeds up the initial render of the page by not
 loading unnecessary JavaScript for a video that might not be played. Once the user clicks on the
 video, the API will be loaded and the placeholder will be swapped out with the actual video.
