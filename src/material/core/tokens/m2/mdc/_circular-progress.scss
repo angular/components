@@ -32,10 +32,10 @@ $prefix: (mdc, circular-progress);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-color-tokens($theme, $palette-name: primary) {
   @return (
     // The color of the progress spinner's active indicator.
-    active-indicator-color: inspection.get-theme-color($theme, primary)
+    active-indicator-color: inspection.get-theme-color($theme, $palette-name)
   );
 }
 
