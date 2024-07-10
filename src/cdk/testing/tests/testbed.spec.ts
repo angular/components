@@ -1,17 +1,25 @@
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {HarnessLoader, manualChangeDetection, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
-import {MainComponentHarness} from './harnesses/main-component-harness';
+import {
+  BrokenMainComponentZonelessHarness,
+  MainComponentHarness,
+  MainComponentZonelessHarness,
+} from './harnesses/main-component-harness';
 import {TestMainComponent} from './test-main-component';
 
 describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
+    });
     fixture = TestBed.createComponent(TestMainComponent);
   });
 
@@ -79,12 +87,53 @@ describe('TestbedHarnessEnvironment', () => {
         expect(element.id).toContain('root');
       });
 
-      fit('should wait for async operation to complete in fakeAsync test', async () => {
-        await harness.isInitialized();
+      it('should auto-wait for async operation to complete in fake async test', fakeAsync(async () => {
         const asyncCounter = await harness.asyncCounter();
         expect(await asyncCounter.text()).toBe('5');
         await harness.increaseCounter(3);
         expect(await asyncCounter.text()).toBe('8');
+      }));
+
+      it('should wait for async operation to complete in real async test', async () => {
+        const asyncCounter = await harness.asyncCounter();
+        expect(await asyncCounter.text()).toBe('5');
+        await harness.increaseCounter(3);
+        expect(await asyncCounter.text()).toBe('8');
+      });
+    });
+
+    describe('zoneless ComponentHarness', () => {
+      let harness: MainComponentZonelessHarness;
+      let brokenHarness: BrokenMainComponentZonelessHarness;
+
+      beforeEach(async () => {
+        harness = await TestbedHarnessEnvironment.harnessForFixture(
+          fixture,
+          MainComponentZonelessHarness,
+        );
+        brokenHarness = await TestbedHarnessEnvironment.harnessForFixture(
+          fixture,
+          BrokenMainComponentZonelessHarness,
+        );
+      });
+
+      it('should wait for async operation to complete in real async test', async () => {
+        await harness.untilInitialized();
+        const asyncCounter = await harness.asyncCounter();
+        expect(await asyncCounter.text()).toBe('5');
+        await harness.increaseCounter(3);
+        expect(await asyncCounter.text()).toBe('8');
+      });
+
+      it(`should not wait for async operation to complete in real async test if harness doesn't explicitly await`, async () => {
+        const asyncCounter = await brokenHarness.asyncCounter();
+        expect(await asyncCounter.text()).toBe('0');
+        await brokenHarness.increaseCounter(3);
+        expect(await asyncCounter.text()).toBe('0');
+      });
+
+      it('should timeout when waiting until condition that is never true', async () => {
+        const asyncCounter = await brokenHarness.untilCounterIs100();
       });
     });
 

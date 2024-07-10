@@ -44,12 +44,17 @@ const activeFixtures = new Set<ComponentFixture<unknown>>();
  * Installs a handler for change detection batching status changes for a specific fixture.
  * @param fixture The fixture to handle change detection batching for.
  */
-function installAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
+function installAutoChangeDetectionStatusHandler(
+  fixture: ComponentFixture<unknown>,
+  zoneless: boolean,
+) {
   if (!activeFixtures.size) {
     handleAutoChangeDetectionStatus(({isDisabled, onDetectChangesNow}) => {
       disableAutoChangeDetection = isDisabled;
       if (onDetectChangesNow) {
-        Promise.all(Array.from(activeFixtures).map(detectChanges)).then(onDetectChangesNow);
+        Promise.all(Array.from(activeFixtures).map(f => detectChanges(f, zoneless))).then(
+          onDetectChangesNow,
+        );
       }
     });
   }
@@ -76,12 +81,14 @@ function isInFakeAsyncZone() {
  * Triggers change detection for a specific fixture.
  * @param fixture The fixture to trigger change detection for.
  */
-async function detectChanges(fixture: ComponentFixture<unknown>) {
+async function detectChanges(fixture: ComponentFixture<unknown>, zoneless: boolean) {
   fixture.detectChanges();
-  if (isInFakeAsyncZone()) {
-    flush();
-  } else {
-    await fixture.whenStable();
+  if (!zoneless) {
+    if (isInFakeAsyncZone()) {
+      flush();
+    } else {
+      await fixture.whenStable();
+    }
   }
 }
 
@@ -103,14 +110,15 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     rawRootElement: Element,
     private _fixture: ComponentFixture<unknown>,
     options?: TestbedHarnessEnvironmentOptions,
+    zoneless?: boolean,
   ) {
-    super(rawRootElement);
+    super(rawRootElement, zoneless);
     this._options = {...defaultEnvironmentOptions, ...options};
     if (typeof Zone !== 'undefined') {
       this._taskState = TaskStateZoneInterceptor.setup();
     }
     this._stabilizeCallback = () => this.forceStabilize();
-    installAutoChangeDetectionStatusHandler(_fixture);
+    installAutoChangeDetectionStatusHandler(_fixture, this.zoneless);
     _fixture.componentRef.onDestroy(() => {
       uninstallAutoChangeDetectionStatusHandler(_fixture);
       this._destroyed = true;
@@ -122,7 +130,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     fixture: ComponentFixture<unknown>,
     options?: TestbedHarnessEnvironmentOptions,
   ): HarnessLoader {
-    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
+    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options, true);
   }
 
   /**
@@ -133,7 +141,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     fixture: ComponentFixture<unknown>,
     options?: TestbedHarnessEnvironmentOptions,
   ): HarnessLoader {
-    return new TestbedHarnessEnvironment(document.body, fixture, options);
+    return new TestbedHarnessEnvironment(document.body, fixture, options, true);
   }
 
   /** Gets the native DOM element corresponding to the given TestElement. */
@@ -155,7 +163,12 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     harnessType: ComponentHarnessConstructor<T>,
     options?: TestbedHarnessEnvironmentOptions,
   ): Promise<T> {
-    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
+    const environment = new TestbedHarnessEnvironment(
+      fixture.nativeElement,
+      fixture,
+      options,
+      harnessType.zoneless,
+    );
     await environment.forceStabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
@@ -171,7 +184,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
         throw Error('Harness is attempting to use a fixture that has already been destroyed.');
       }
 
-      await detectChanges(this._fixture);
+      await detectChanges(this._fixture, this.zoneless);
     }
   }
 
@@ -180,6 +193,9 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * authors to wait for async tasks outside of the Angular zone.
    */
   async waitForTasksOutsideAngular(): Promise<void> {
+    if (this.zoneless) {
+      return;
+    }
     // If we run in the fake async zone, we run "flush" to run any scheduled tasks. This
     // ensures that the harnesses behave inside of the FakeAsyncTestZone similar to the
     // "AsyncTestZone" and the root zone (i.e. neither fakeAsync or async). Note that we
@@ -216,8 +232,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   /** Creates a `HarnessLoader` rooted at the given raw element. */
-  protected createEnvironment(element: Element): HarnessEnvironment<Element> {
-    return new TestbedHarnessEnvironment(element, this._fixture, this._options);
+  protected createEnvironment(element: Element, zoneless = false): HarnessEnvironment<Element> {
+    return new TestbedHarnessEnvironment(element, this._fixture, this._options, zoneless);
   }
 
   /**

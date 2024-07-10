@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {manualChangeDetection, parallel} from './change-detection';
+import {parallel} from './change-detection';
 import {
   AsyncFactoryFn,
   ComponentHarness,
@@ -54,11 +54,14 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
   private _rootElement: TestElement | undefined;
 
-  protected constructor(protected rawRootElement: E) {}
+  protected constructor(
+    protected rawRootElement: E,
+    protected zoneless = false,
+  ) {}
 
   // Implemented as part of the `LocatorFactory` interface.
   documentRootLocatorFactory(): LocatorFactory {
-    return this.createEnvironment(this.getDocumentRoot());
+    return this.createEnvironment(this.getDocumentRoot(), this.zoneless);
   }
 
   // Implemented as part of the `LocatorFactory` interface.
@@ -97,19 +100,20 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       await _assertResultFound(this.getAllRawElements(selector), [
         _getDescriptionForHarnessLoaderQuery(selector),
       ]),
+      this.zoneless,
     );
   }
 
   // Implemented as part of the `LocatorFactory` interface.
   async harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null> {
     const elements = await this.getAllRawElements(selector);
-    return elements[0] ? this.createEnvironment(elements[0]) : null;
+    return elements[0] ? this.createEnvironment(elements[0], this.zoneless) : null;
   }
 
   // Implemented as part of the `LocatorFactory` interface.
   async harnessLoaderForAll(selector: string): Promise<HarnessLoader[]> {
     const elements = await this.getAllRawElements(selector);
-    return elements.map(element => this.createEnvironment(element));
+    return elements.map(element => this.createEnvironment(element, this.zoneless));
   }
 
   // Implemented as part of the `HarnessLoader` interface.
@@ -138,12 +142,15 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       await _assertResultFound(this.getAllRawElements(selector), [
         _getDescriptionForHarnessLoaderQuery(selector),
       ]),
+      this.zoneless,
     );
   }
 
   // Implemented as part of the `HarnessLoader` interface.
   async getAllChildLoaders(selector: string): Promise<HarnessLoader[]> {
-    return (await this.getAllRawElements(selector)).map(e => this.createEnvironment(e));
+    return (await this.getAllRawElements(selector)).map(e =>
+      this.createEnvironment(e, this.zoneless),
+    );
   }
 
   /** Creates a `ComponentHarness` for the given harness type with the given raw host element. */
@@ -151,7 +158,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     harnessType: ComponentHarnessConstructor<T>,
     element: E,
   ): T {
-    return new harnessType(this.createEnvironment(element));
+    return new harnessType(this.createEnvironment(element, harnessType.zoneless));
   }
 
   // Part of LocatorFactory interface, subclasses will implement.
@@ -163,12 +170,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   // Part of LocatorFactory interface, subclasses will implement.
   abstract sleep(ms: number): Promise<void>;
 
-  async until(condition: () => boolean | Promise<boolean>) {
-    await manualChangeDetection(async () => {
-      while (!(await condition())) {
-        await this.sleep(0);
-      }
-    });
+  async until(log: string, condition: () => boolean | Promise<boolean>) {
+    console.log(`Waiting for condition: ${log}  (PENDING...)`);
+    while (!(await condition())) {
+      await this.sleep(1);
+    }
+    console.log(`Waiting for condition: ${log}  (COMPLETE!)`);
   }
 
   /** Gets the root element for the document. */
@@ -178,7 +185,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   protected abstract createTestElement(element: E): TestElement;
 
   /** Creates a `HarnessLoader` rooted at the given raw element. */
-  protected abstract createEnvironment(element: E): HarnessEnvironment<E>;
+  protected abstract createEnvironment(element: E, zoneless?: boolean): HarnessEnvironment<E>;
 
   /**
    * Gets a list of all elements matching the given selector under this environment's root element.
