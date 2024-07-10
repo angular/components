@@ -1,3 +1,16 @@
+<a name="18.2.0-next.0"></a>
+# 18.2.0-next.0 "pumice-reverie" (2024-07-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b2c051d2c1](https://github.com/angular/components/commit/b2c051d2c1b67f4c149aee1573a4aceddb496157) | feat | **drag-drop:** add input to specify dragged item scale ([#29392](https://github.com/angular/components/pull/29392)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1f992d06c6](https://github.com/angular/components/commit/1f992d06c693a6e09332ac83d837c9ff8e1fdf7b) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29273](https://github.com/angular/components/pull/29273)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.0"></a>
 # 18.1.0 "coral-odyssey" (2024-07-10)
 ### cdk
