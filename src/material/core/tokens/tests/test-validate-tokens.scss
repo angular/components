@@ -13,7 +13,6 @@
 @use '@material/list/list-theme' as mdc-list-theme;
 @use '@material/tooltip/plain-tooltip-theme' as mdc-plaintip-tooltip-theme;
 @use '@material/radio/radio-theme' as mdc-radio-theme;
-@use '@material/switch/switch-theme' as mdc-switch-theme;
 @use '@material/tab-indicator/tab-indicator-theme' as mdc-tab-indicator-theme;
 @use '@material/snackbar/snackbar-theme' as mdc-snackbar-theme;
 @use '@material/slider/slider-theme' as mdc-slider-theme;
@@ -34,7 +33,6 @@
 @use '../m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 @use '../m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use '../m2/mdc/radio' as tokens-mdc-radio;
-@use '../m2/mdc/switch' as tokens-mdc-switch;
 @use '../m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../m2/mdc/slider' as tokens-mdc-slider;
@@ -98,11 +96,6 @@
   $component: 'm2.mdc.radio',
   $slots: tokens-mdc-radio.get-token-slots(),
   $reference: mdc-radio-theme.$light-theme
-);
-@include validate-slots(
-  $component: 'm2.mdc.switch',
-  $slots: tokens-mdc-switch.get-token-slots(),
-  $reference: mdc-switch-theme.$light-theme
 );
 @include validate-slots(
   $component: 'm2.mdc.tab-indicator',

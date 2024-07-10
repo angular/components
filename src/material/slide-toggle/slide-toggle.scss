@@ -1,57 +1,481 @@
-@use '@material/switch/switch' as mdc-switch;
-@use '@material/switch/switch-theme' as mdc-switch-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
+@use '@angular/cdk';
 @use '../core/style/layout-common';
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-switch-token-slots: tokens-mdc-switch.get-token-slots();
+$_mdc-slots: (tokens-mdc-switch.$prefix, tokens-mdc-switch.get-token-slots());
+$_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 
-  // Add the MDC switch static styles.
-  @include mdc-switch.static-styles-without-ripple();
+.mdc-switch {
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 0;
+  position: relative;
 
-  .mat-mdc-slide-toggle .mat-internal-form-field {
-    @include token-utils.use-tokens(
-      tokens-mat-switch.$prefix,
-      tokens-mat-switch.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(color, label-text-color);
-      @include token-utils.create-token-slot(font-family, label-text-font);
-      @include token-utils.create-token-slot(line-height, label-text-line-height);
-      @include token-utils.create-token-slot(font-size, label-text-size);
-      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
-      @include token-utils.create-token-slot(font-weight, label-text-weight);
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, track-width);
+  }
+}
+
+.mdc-switch__track {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(height, track-height);
+    @include token-utils.create-token-slot(border-radius, track-shape);
+
+    .mdc-switch:disabled & {
+      @include token-utils.create-token-slot(opacity, disabled-track-opacity);
     }
   }
 
-  // TODO(wagnermaciel): Use our custom token system to emit this css rule.
-  .mat-mdc-slide-toggle .mdc-switch--disabled + label {
-    color: var(--mdc-switch-disabled-label-text-color);
-  }
+  &::before,
+  &::after {
+    border: 1px solid transparent;
+    border-radius: inherit;
+    box-sizing: border-box;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
 
-  .mdc-switch {
-    // Add the official slots for the MDC switch
-    @include mdc-switch-theme.theme-styles($mdc-switch-token-slots);
-
-    // The tokens are outputting handle-elevation and disabled-handle-elevation
-    // as the values for box-shadow. Rather the value that should be displayed
-    // is calculated using the tokens for elevation and the handle-shadow-color
-    // within theme-styles and is stored in new variables that end in -shadow.
-
-    // TODO(amysorto): remove these overrides once MDC emits correct value for
-    // box-shadow.
-
-    // Override box-shadow with correct values.
-    &:enabled .mdc-switch__shadow {
-      box-shadow: var(--mdc-switch-handle-elevation-shadow);
+    @include cdk.high-contrast(active, off) {
+      border-color: currentColor;
     }
 
-    &:disabled .mdc-switch__shadow {
-      box-shadow: var(--mdc-switch-disabled-handle-elevation-shadow);
+    @include token-utils.use-tokens($_mat-slots...) {
+      @include token-utils.create-token-slot(border-width, track-outline-width);
+      @include token-utils.create-token-slot(border-color, track-outline-color);
+
+      .mdc-switch--selected & {
+        @include token-utils.create-token-slot(border-width, selected-track-outline-width);
+        @include token-utils.create-token-slot(border-color, selected-track-outline-color);
+      }
+
+      .mdc-switch--disabled & {
+        @include token-utils.create-token-slot(border-width,
+          disabled-unselected-track-outline-width);
+        @include token-utils.create-token-slot(border-color,
+          disabled-unselected-track-outline-color);
+      }
     }
   }
+
+  &::before {
+    transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
+    transform: translateX(0);
+
+    .mdc-switch--selected & {
+      transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
+      transform: translateX(100%);
+
+      [dir='rtl'] .mdc-switch--selected & {
+        transform: translateX(-100%);
+      }
+    }
+
+    @include token-utils.use-tokens($_mat-slots...) {
+      .mdc-switch--selected & {
+        @include token-utils.create-token-slot(opacity, hidden-track-opacity);
+        @include token-utils.create-token-slot(transition, hidden-track-transition);
+      }
+
+      .mdc-switch--unselected & {
+        @include token-utils.create-token-slot(opacity, visible-track-opacity);
+        @include token-utils.create-token-slot(transition, visible-track-transition);
+      }
+    }
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, unselected-track-color);
+
+      .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+        @include token-utils.create-token-slot(background, unselected-hover-track-color);
+      }
+
+      .mdc-switch:enabled:focus:not(:active) & {
+        @include token-utils.create-token-slot(background, unselected-focus-track-color);
+      }
+
+      .mdc-switch:enabled:active & {
+        @include token-utils.create-token-slot(background, unselected-pressed-track-color);
+      }
+
+      .mdc-switch:disabled & {
+        @include token-utils.create-token-slot(background, disabled-unselected-track-color);
+      }
+    }
+  }
+
+  &::after {
+    transform: translateX(-100%);
+
+    [dir='rtl'] & {
+      transform: translateX(100%);
+    }
+
+    .mdc-switch--selected & {
+      transform: translateX(0);
+    }
+
+    @include token-utils.use-tokens($_mat-slots...) {
+      .mdc-switch--selected & {
+        @include token-utils.create-token-slot(opacity, visible-track-opacity);
+        @include token-utils.create-token-slot(transition, visible-track-transition);
+      }
+
+      .mdc-switch--unselected & {
+        @include token-utils.create-token-slot(opacity, hidden-track-opacity);
+        @include token-utils.create-token-slot(transition, hidden-track-transition);
+      }
+    }
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, selected-track-color);
+
+      .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+        @include token-utils.create-token-slot(background, selected-hover-track-color);
+      }
+
+      .mdc-switch:enabled:focus:not(:active) & {
+        @include token-utils.create-token-slot(background, selected-focus-track-color);
+      }
+
+      .mdc-switch:enabled:active & {
+        @include token-utils.create-token-slot(background, selected-pressed-track-color);
+      }
+
+      .mdc-switch:disabled & {
+        @include token-utils.create-token-slot(background, disabled-selected-track-color);
+      }
+    }
+  }
+}
+
+.mdc-switch__handle-track {
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  left: 0;
+  right: auto;
+  transform: translateX(0);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+
+  .mdc-switch--selected & {
+    transform: translateX(100%);
+
+    [dir='rtl'] & {
+      transform: translateX(-100%);
+    }
+  }
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    width: calc(100% - var(#{token-utils.get-token-variable(handle-width)}));
+  }
+}
+
+.mdc-switch__handle {
+  display: flex;
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: auto;
+
+  // Used for M3 animations. Does not affect the M2 slide-toggle
+  // because the width and height are static, and the margin is unused.
+  transition:
+    width 75ms cubic-bezier(0.4, 0, 0.2, 1),
+    height 75ms cubic-bezier(0.4, 0, 0.2, 1),
+    margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, handle-width);
+    @include token-utils.create-token-slot(height, handle-height);
+    @include token-utils.create-token-slot(border-radius, handle-shape);
+  }
+
+  @include token-utils.use-tokens($_mat-slots...) {
+    .mat-mdc-slide-toggle .mdc-switch--unselected & {
+      @include token-utils.create-token-slot(width, unselected-handle-size);
+      @include token-utils.create-token-slot(height, unselected-handle-size);
+      @include token-utils.create-token-slot(margin, unselected-handle-horizontal-margin);
+
+      &:has(.mdc-switch__icons) {
+        @include token-utils.create-token-slot(margin,
+          unselected-with-icon-handle-horizontal-margin);
+      }
+    }
+
+    .mat-mdc-slide-toggle .mdc-switch--selected & {
+      @include token-utils.create-token-slot(width, selected-handle-size);
+      @include token-utils.create-token-slot(height, selected-handle-size);
+      @include token-utils.create-token-slot(margin, selected-handle-horizontal-margin);
+
+      &:has(.mdc-switch__icons) {
+        @include token-utils.create-token-slot(margin, selected-with-icon-handle-horizontal-margin);
+      }
+    }
+
+    .mat-mdc-slide-toggle &:has(.mdc-switch__icons) {
+      @include token-utils.create-token-slot(width, with-icon-handle-size);
+      @include token-utils.create-token-slot(height, with-icon-handle-size);
+    }
+
+    .mat-mdc-slide-toggle:active .mdc-switch:not(.mdc-switch--disabled) & {
+      @include token-utils.create-token-slot(width, pressed-handle-size);
+      @include token-utils.create-token-slot(height, pressed-handle-size);
+    }
+
+    .mat-mdc-slide-toggle:active .mdc-switch--selected:not(.mdc-switch--disabled) & {
+      @include token-utils.create-token-slot(margin, selected-pressed-handle-horizontal-margin);
+    }
+
+    .mat-mdc-slide-toggle:active .mdc-switch--unselected:not(.mdc-switch--disabled) & {
+      @include token-utils.create-token-slot(margin, unselected-pressed-handle-horizontal-margin);
+    }
+
+    .mdc-switch--disabled.mdc-switch--selected &::after {
+      @include token-utils.create-token-slot(opacity, disabled-selected-handle-opacity);
+    }
+
+    .mdc-switch--disabled.mdc-switch--unselected &::after {
+      @include token-utils.create-token-slot(opacity, disabled-unselected-handle-opacity);
+    }
+  }
+
+  &::before,
+  &::after {
+    border: 1px solid transparent;
+    border-radius: inherit;
+    box-sizing: border-box;
+    content: '';
+    width: 100%;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transition: background-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+
+    @include cdk.high-contrast(active, off) {
+      border-color: currentColor;
+    }
+  }
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    &::after {
+      .mdc-switch--selected:enabled & {
+        @include token-utils.create-token-slot(background, selected-handle-color);
+      }
+
+      .mdc-switch--selected:enabled:hover:not(:focus):not(:active) & {
+        @include token-utils.create-token-slot(background, selected-hover-handle-color);
+      }
+
+      .mdc-switch--selected:enabled:focus:not(:active) & {
+        @include token-utils.create-token-slot(background, selected-focus-handle-color);
+      }
+
+      .mdc-switch--selected:enabled:active & {
+        @include token-utils.create-token-slot(background, selected-pressed-handle-color);
+      }
+
+      .mdc-switch--selected:disabled & {
+        @include token-utils.create-token-slot(background, disabled-selected-handle-color);
+      }
+
+      .mdc-switch--unselected:enabled & {
+        @include token-utils.create-token-slot(background, unselected-handle-color);
+      }
+
+      .mdc-switch--unselected:enabled:hover:not(:focus):not(:active) & {
+        @include token-utils.create-token-slot(background, unselected-hover-handle-color);
+      }
+
+      .mdc-switch--unselected:enabled:focus:not(:active) & {
+        @include token-utils.create-token-slot(background, unselected-focus-handle-color);
+      }
+
+      .mdc-switch--unselected:enabled:active & {
+        @include token-utils.create-token-slot(background, unselected-pressed-handle-color);
+      }
+
+      .mdc-switch--unselected:disabled & {
+        @include token-utils.create-token-slot(background, disabled-unselected-handle-color);
+      }
+    }
+
+    &::before {
+      @include token-utils.create-token-slot(background, handle-surface-color);
+    }
+  }
+}
+
+.mdc-switch__shadow {
+  border-radius: inherit;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    .mdc-switch:enabled & {
+      @include token-utils.create-token-slot(box-shadow, handle-elevation-shadow);
+    }
+
+    .mdc-switch:disabled & {
+      @include token-utils.create-token-slot(box-shadow, disabled-handle-elevation-shadow);
+    }
+  }
+}
+
+.mdc-switch__ripple {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, state-layer-size);
+    @include token-utils.create-token-slot(height, state-layer-size);
+  }
+
+  &::after {
+    content: '';
+    opacity: 0;
+
+    .mdc-switch:disabled & {
+      display: none;
+    }
+
+    .mdc-switch:hover & {
+      opacity: 0.04;
+      transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    // Needs a little more specificity so the :hover styles don't override it.
+    .mat-mdc-slide-toggle.mat-mdc-slide-toggle-focused .mdc-switch & {
+      opacity: 0.12;
+    }
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      .mdc-switch--unselected:enabled:hover:not(:focus) & {
+        @include token-utils.create-token-slot(background, unselected-hover-state-layer-color);
+      }
+
+      .mdc-switch--unselected:enabled:focus & {
+        @include token-utils.create-token-slot(background, unselected-focus-state-layer-color);
+      }
+
+      .mdc-switch--unselected:enabled:active & {
+        @include token-utils.create-token-slot(background, unselected-pressed-state-layer-color);
+        @include token-utils.create-token-slot(opacity, unselected-pressed-state-layer-opacity);
+        transition: opacity 75ms linear;
+      }
+
+      .mdc-switch--selected:enabled:hover:not(:focus) & {
+        @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
+      }
+
+      .mdc-switch--selected:enabled:focus & {
+        @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+      }
+
+      .mdc-switch--selected:enabled:active & {
+        @include token-utils.create-token-slot(background, selected-pressed-state-layer-color);
+        @include token-utils.create-token-slot(opacity, selected-pressed-state-layer-opacity);
+        transition: opacity 75ms linear;
+      }
+    }
+  }
+}
+
+.mdc-switch__icons {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    .mdc-switch--unselected:disabled & {
+      @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
+    }
+
+    .mdc-switch--selected:disabled & {
+      @include token-utils.create-token-slot(opacity, disabled-selected-icon-opacity);
+    }
+  }
+}
+
+.mdc-switch__icon {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 30ms 0ms cubic-bezier(0.4, 0, 1, 1);
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    .mdc-switch--unselected & {
+      @include token-utils.create-token-slot(width, unselected-icon-size);
+      @include token-utils.create-token-slot(height, unselected-icon-size);
+      @include token-utils.create-token-slot(fill, unselected-icon-color);
+    }
+
+    .mdc-switch--unselected:disabled & {
+      @include token-utils.create-token-slot(fill, disabled-unselected-icon-color);
+    }
+
+    .mdc-switch--selected & {
+      @include token-utils.create-token-slot(width, selected-icon-size);
+      @include token-utils.create-token-slot(height, selected-icon-size);
+      @include token-utils.create-token-slot(fill, selected-icon-color);
+    }
+
+    .mdc-switch--selected:disabled & {
+      @include token-utils.create-token-slot(fill, disabled-selected-icon-color);
+    }
+  }
+}
+
+.mdc-switch--selected .mdc-switch__icon--on,
+.mdc-switch--unselected .mdc-switch__icon--off {
+  opacity: 1;
+  transition: opacity 45ms 30ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .mat-mdc-slide-toggle {
@@ -63,7 +487,7 @@
 
   // The ripple needs extra specificity so the base ripple styling doesn't override its `position`.
   .mat-mdc-slide-toggle-ripple,
-  #{mdc-switch.$ripple-target}::after {
+  .mdc-switch__ripple::after {
     @include layout-common.fill();
     border-radius: 50%;
     // Disable pointer events for the ripple container so that it doesn't eat the mouse events meant
@@ -77,26 +501,21 @@
     }
   }
 
-  #{mdc-switch.$ripple-target}::after {
-    content: '';
-    opacity: 0;
-  }
-
-  .mdc-switch:hover #{mdc-switch.$ripple-target}::after {
-    opacity: 0.04;
-    transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
-  }
-
   // Needs a little more specificity so the :hover styles don't override it.
-  &.mat-mdc-slide-toggle-focused {
-    .mdc-switch #{mdc-switch.$ripple-target}::after {
-      opacity: 0.12;
-    }
+  // For slide-toggles render the focus indicator when we know
+  // the hidden input is focused (slightly different for each control).
+  &.mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before {
+    content: '';
+  }
 
-    // For slide-toggles render the focus indicator when we know
-    // the hidden input is focused (slightly different for each control).
-    .mat-mdc-focus-indicator::before {
-      content: '';
+  .mat-internal-form-field {
+    @include token-utils.use-tokens($_mat-slots...) {
+      @include token-utils.create-token-slot(color, label-text-color);
+      @include token-utils.create-token-slot(font-family, label-text-font);
+      @include token-utils.create-token-slot(line-height, label-text-line-height);
+      @include token-utils.create-token-slot(font-size, label-text-size);
+      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+      @include token-utils.create-token-slot(font-weight, label-text-weight);
     }
   }
 
@@ -112,7 +531,6 @@
 
   &._mat-animation-noopable {
     .mdc-switch__handle-track,
-    .mdc-elevation-overlay,
     .mdc-switch__icon,
     .mdc-switch__handle::before,
     .mdc-switch__handle::after,
@@ -126,129 +544,9 @@
   .mdc-switch:enabled + .mdc-label {
     cursor: pointer;
   }
-}
 
-// Used for M3 animations. Does not affect the M2 slide-toggle
-// because the width and height are static, and the margin is unused.
-.mdc-switch__handle {
-  transition:
-    width 75ms cubic-bezier(0.4, 0, 0.2, 1),
-    height 75ms cubic-bezier(0.4, 0, 0.2, 1),
-    margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-// The hidden and visible track represent whichever track is visible or
-// hidden in the ui. This could be the .mdc-switch__track :before or
-// :after depending on whether the switch is selected or unselected.
-//
-// The m2 slide-toggle uses transforms to hide & show the tracks while
-// the m3 slide-toggle uses opacity.
-
-@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
-  .mdc-switch--selected .mdc-switch__track {
-    &::before {
-      @include token-utils.create-token-slot(opacity, hidden-track-opacity);
-      @include token-utils.create-token-slot(transition, hidden-track-transition);
-    }
-    &::after {
-      @include token-utils.create-token-slot(opacity, visible-track-opacity);
-      @include token-utils.create-token-slot(transition, visible-track-transition);
-    }
-  }
-
-  .mdc-switch--unselected .mdc-switch__track {
-    &::before {
-      @include token-utils.create-token-slot(opacity, visible-track-opacity);
-      @include token-utils.create-token-slot(transition, visible-track-transition);
-    }
-    &::after {
-      @include token-utils.create-token-slot(opacity, hidden-track-opacity);
-      @include token-utils.create-token-slot(transition, hidden-track-transition);
-    }
-  }
-}
-
-@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
-  .mat-mdc-slide-toggle {
-    .mdc-switch--unselected .mdc-switch__handle {
-      @include token-utils.create-token-slot(width, unselected-handle-size);
-      @include token-utils.create-token-slot(height, unselected-handle-size);
-    }
-
-    .mdc-switch--selected .mdc-switch__handle {
-      @include token-utils.create-token-slot(width, selected-handle-size);
-      @include token-utils.create-token-slot(height, selected-handle-size);
-    }
-
-    .mdc-switch__handle:has(.mdc-switch__icons) {
-      @include token-utils.create-token-slot(width, with-icon-handle-size);
-      @include token-utils.create-token-slot(height, with-icon-handle-size);
-    }
-
-    &:active .mdc-switch:not(.mdc-switch--disabled) .mdc-switch__handle {
-      @include token-utils.create-token-slot(width, pressed-handle-size);
-      @include token-utils.create-token-slot(height, pressed-handle-size);
-    }
-  }
-}
-
-@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
-  .mat-mdc-slide-toggle {
-    .mdc-switch--selected .mdc-switch__handle {
-      @include token-utils.create-token-slot(margin, selected-handle-horizontal-margin);
-
-      &:has(.mdc-switch__icons) {
-        @include token-utils.create-token-slot(margin, selected-with-icon-handle-horizontal-margin);
-      }
-    }
-
-    .mdc-switch--unselected .mdc-switch__handle {
-      @include token-utils.create-token-slot(margin, unselected-handle-horizontal-margin);
-
-      &:has(.mdc-switch__icons) {
-        @include token-utils.create-token-slot(
-          margin,
-          unselected-with-icon-handle-horizontal-margin
-        );
-      }
-    }
-
-    &:active .mdc-switch--selected:not(.mdc-switch--disabled) .mdc-switch__handle {
-      @include token-utils.create-token-slot(margin, selected-pressed-handle-horizontal-margin);
-    }
-
-    &:active .mdc-switch--unselected:not(.mdc-switch--disabled) .mdc-switch__handle {
-      @include token-utils.create-token-slot(margin, unselected-pressed-handle-horizontal-margin);
-    }
-  }
-}
-
-@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
-  .mdc-switch__track::after,
-  .mdc-switch__track::before {
-    @include token-utils.create-token-slot(border-width, track-outline-width);
-    @include token-utils.create-token-slot(border-color, track-outline-color);
-  }
-
-  .mdc-switch--selected .mdc-switch__track::after,
-  .mdc-switch--selected .mdc-switch__track::before {
-    @include token-utils.create-token-slot(border-width, selected-track-outline-width);
-    @include token-utils.create-token-slot(border-color, selected-track-outline-color);
-  }
-
-  .mdc-switch--disabled .mdc-switch__track::after,
-  .mdc-switch--disabled .mdc-switch__track::before {
-    @include token-utils.create-token-slot(border-width, disabled-unselected-track-outline-width);
-    @include token-utils.create-token-slot(border-color, disabled-unselected-track-outline-color);
-  }
-}
-
-@include token-utils.use-tokens(tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots()) {
-  .mdc-switch--disabled.mdc-switch--selected .mdc-switch__handle::after {
-    @include token-utils.create-token-slot(opacity, disabled-selected-handle-opacity);
-  }
-
-  .mdc-switch--disabled.mdc-switch--unselected .mdc-switch__handle::after {
-    @include token-utils.create-token-slot(opacity, disabled-unselected-handle-opacity);
+  // TODO(wagnermaciel): Use our custom token system to emit this css rule.
+  .mdc-switch--disabled + label {
+    color: var(--mdc-switch-disabled-label-text-color);
   }
 }
