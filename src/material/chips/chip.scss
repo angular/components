@@ -695,21 +695,20 @@ $_avatar-trailing-padding: 8px;
 
   // Used as a state overlay.
   &::after {
-    $offset: $_trailing-icon-size; // size of the remove icon
+    $_touch-target-size: 48px;
+    $_ripple-size: 24px;
     content: '';
     display: block;
     opacity: 0;
     position: absolute;
-    top: 2 - $offset;
-    bottom: 2 - $offset;
-    left: 12 - $offset;
-    right: 12 - $offset;
-    border-radius: 50%;
     // Increases touch target size to improve accessibility and fix b/286959517
     z-index: 100;
     pointer-events: all;
-    height: 48px;
-    width: 48px;
+    box-sizing: border-box;
+    padding: calc(($_touch-target-size - $_ripple-size)/2);
+    margin: calc((($_touch-target-size - $_ripple-size)/2) * -1);
+    -webkit-background-clip: content-box;
+    background-clip: content-box;
   }
 
   .mat-icon {
