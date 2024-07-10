@@ -1,4 +1,3 @@
-@use '@material/textfield' as mdc-textfield;
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/tokens/token-utils';
 
@@ -51,7 +50,8 @@
     .mdc-floating-label--float-above {
       // Needs to be in a string form to work around an internal check that incorrectly flags this
       // interpolation in `calc` as unnecessary. If we don't have it, Sass won't evaluate it.
-      $translate: 'calc(#{mdc-textfield.get-outlined-label-position-y(var(#{$height}))} * -1)';
+      $offset: 'calc(6.75px + var(#{$height}) / 2)';
+      $translate: 'calc(#{$offset} * -1)';
       --mat-mdc-form-field-label-transform: translateY(#{$translate})
         scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
       transform: var(--mat-mdc-form-field-label-transform);

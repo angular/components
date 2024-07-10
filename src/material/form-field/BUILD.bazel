@@ -57,6 +57,7 @@ sass_library(
         "_form-field-native-select.scss",
         "_form-field-subscript.scss",
         "_mdc-text-field-density-overrides.scss",
+        "_mdc-text-field-structure.scss",
         "_mdc-text-field-structure-overrides.scss",
         "_mdc-text-field-textarea-overrides.scss",
         "_user-agent-overrides.scss",

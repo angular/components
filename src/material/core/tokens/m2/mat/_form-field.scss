@@ -1,6 +1,5 @@
 @use 'sass:math';
 @use 'sass:map';
-@use '@material/textfield' as mdc-textfield;
 @use '../../token-utils';
 @use '../../../style/sass-utils';
 @use '../../../theming/theming';
@@ -114,14 +113,14 @@ $prefix: (mat, form-field);
     -5: 36px,
   );
   $height: map.get($size-scale, $density-scale);
-  $hide-label: $height < mdc-textfield.$minimum-height-for-filled-label;
+  $hide-label: $height < 52px;
 
   // We computed the desired height of the form-field using the density configuration. The
   // spec only describes vertical spacing/alignment in non-dense mode. This means that we
   // cannot update the spacing to explicit numbers based on the density scale. Instead, we
   // determine the height reduction and equally subtract it from the default `top` and `bottom`
   // padding that is provided by the Material Design specification.
-  $vertical-deduction: math.div(mdc-textfield.$height - $height, 2);
+  $vertical-deduction: math.div(56px - $height, 2);
 
   // Note: these calculations are trivial enough that we could do them at runtime with `calc`
   // and the value of the `height` token. The problem is that because we need to hide the label
