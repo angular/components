@@ -1,4 +1,3 @@
-@use '@material/textfield/variables' as mdc-textfield-variables;
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
@@ -101,8 +100,8 @@ $_enable-form-field-will-change-reset: true;
   [dir='rtl'] {
     // Undo the above padding removals which only apply in LTR languages.
     .mat-mdc-text-field-wrapper {
-      padding-left: mdc-textfield-variables.$padding-horizontal;
-      padding-right: mdc-textfield-variables.$padding-horizontal;
+      padding-left: 16px;
+      padding-right: 16px;
     }
     // ...and apply the correct padding resets for RTL languages.
     .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
@@ -162,16 +161,6 @@ $_enable-form-field-will-change-reset: true;
   // Note: Increased specificity needed here since MDC overwrites the padding on `:focus`.
   .mat-mdc-form-field .mat-mdc-text-field-wrapper.mdc-text-field .mdc-notched-outline__notch {
     padding-top: 0;
-  }
-
-  // Unset the baseline adjustment styles that are applied to the `.mdc-text-field` before
-  // pseudo element. We control the vertical alignment of form field controls using infix
-  // spacing since we support custom form-field controls. Those don't necessarily have an
-  // explicit height that matches with the Material Design specification. If the height isn't
-  // explicitly set to a specific value by MDC, the control will not align correctly vertically.
-  // e.g. No vertical spacing to the bottom-line if the control is too large.
-  .mat-mdc-text-field-wrapper::before {
-    content: none;
   }
 
   // This fixes an issue where the notch appears to be thicker than the rest of the outline when
