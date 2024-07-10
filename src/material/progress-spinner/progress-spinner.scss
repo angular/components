@@ -1,21 +1,6 @@
 @use '@angular/cdk';
-@use '@material/circular-progress/circular-progress' as mdc-circular-progress;
-@use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '../core/tokens/m2/mdc/circular-progress' as m2-mdc-circular-progress;
-
-// The slots for tokens that will be configured in the theme can be emitted with no fallback.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-circular-progress-token-slots: m2-mdc-circular-progress.get-token-slots();
-
-  // Add the MDC progress spinner static styles.
-  @include mdc-circular-progress.static-styles();
-
-  .mat-mdc-progress-spinner {
-    // Add the official slots for the MDC circular progress.
-    @include mdc-circular-progress-theme.theme-styles($mdc-circular-progress-token-slots);
-  }
-}
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 
 .mat-mdc-progress-spinner {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
@@ -26,21 +11,31 @@
 
   // Spinners with a diameter less than half the existing line-height will become distorted.
   // Explicitly set the line-height to 0px to avoid this issue.
-  // https://github.com/material-components/material-components-web/issues/7118
   line-height: 0;
+  position: relative;
+  direction: ltr;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.6, 1);
+
+  circle {
+    @include token-utils.use-tokens(
+      tokens-mdc-circular-progress.$prefix,
+      tokens-mdc-circular-progress.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(stroke-width, active-indicator-width);
+    }
+  }
 
   &._mat-animation-noopable {
-    &,
-    .mdc-circular-progress__determinate-circle {
+    &, .mdc-circular-progress__determinate-circle {
       // The spinner itself has a transition on `opacity`.
-      transition: none;
+      transition: none !important;
     }
 
     .mdc-circular-progress__indeterminate-circle-graphic,
     .mdc-circular-progress__spinner-layer,
     .mdc-circular-progress__indeterminate-container {
       // Disables the rotation animations.
-      animation: none;
+      animation: none !important;
     }
 
     .mdc-circular-progress__indeterminate-container circle {
@@ -59,5 +54,174 @@
       // so we have to fall back to `CanvasText` which isn't supported on IE.
       stroke: CanvasText;
     }
+  }
+}
+
+.mdc-circular-progress__determinate-container,
+.mdc-circular-progress__indeterminate-circle-graphic,
+.mdc-circular-progress__indeterminate-container,
+.mdc-circular-progress__spinner-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.mdc-circular-progress__determinate-container {
+  transform: rotate(-90deg);
+
+  .mdc-circular-progress--indeterminate & {
+    opacity: 0;
+  }
+}
+
+.mdc-circular-progress__indeterminate-container {
+  font-size: 0;
+  letter-spacing: 0;
+  white-space: nowrap;
+  opacity: 0;
+
+  .mdc-circular-progress--indeterminate & {
+    opacity: 1;
+    animation: mdc-circular-progress-container-rotate 1568.2352941176ms linear infinite;
+  }
+}
+
+.mdc-circular-progress__determinate-circle-graphic,
+.mdc-circular-progress__indeterminate-circle-graphic {
+  fill: transparent;
+}
+
+.mat-mdc-progress-spinner .mdc-circular-progress__determinate-circle,
+.mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  @include token-utils.use-tokens(
+    tokens-mdc-circular-progress.$prefix,
+    tokens-mdc-circular-progress.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(stroke, active-indicator-color);
+  }
+
+  @include cdk.high-contrast(active, off) {
+    stroke: CanvasText;
+  }
+}
+
+.mdc-circular-progress__determinate-circle {
+  transition: stroke-dashoffset 500ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mdc-circular-progress__gap-patch {
+  position: absolute;
+  top: 0;
+  left: 47.5%;
+  box-sizing: border-box;
+  width: 5%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mdc-circular-progress__indeterminate-circle-graphic {
+  .mdc-circular-progress__gap-patch & {
+    left: -900%;
+    width: 2000%;
+    transform: rotate(180deg);
+  }
+
+  .mdc-circular-progress__circle-clipper & {
+    width: 200%;
+  }
+
+  .mdc-circular-progress__circle-right & {
+    left: -100%;
+  }
+
+  .mdc-circular-progress--indeterminate .mdc-circular-progress__circle-left & {
+    animation: mdc-circular-progress-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+
+  .mdc-circular-progress--indeterminate .mdc-circular-progress__circle-right & {
+    animation: mdc-circular-progress-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+}
+
+.mdc-circular-progress__circle-clipper {
+  display: inline-flex;
+  position: relative;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mdc-circular-progress__spinner-layer {
+  .mdc-circular-progress--indeterminate & {
+    animation: mdc-circular-progress-spinner-layer-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1)
+      infinite both;
+  }
+}
+
+@keyframes mdc-circular-progress-container-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mdc-circular-progress-spinner-layer-rotate {
+  12.5% {
+    transform: rotate(135deg);
+  }
+
+  25% {
+    transform: rotate(270deg);
+  }
+
+  37.5% {
+    transform: rotate(405deg);
+  }
+
+  50% {
+    transform: rotate(540deg);
+  }
+
+  62.5% {
+    transform: rotate(675deg);
+  }
+
+  75% {
+    transform: rotate(810deg);
+  }
+
+  87.5% {
+    transform: rotate(945deg);
+  }
+
+  100% {
+    transform: rotate(1080deg);
+  }
+}
+
+@keyframes mdc-circular-progress-left-spin {
+  from {
+    transform: rotate(265deg);
+  }
+
+  50% {
+    transform: rotate(130deg);
+  }
+
+  to {
+    transform: rotate(265deg);
+  }
+}
+
+@keyframes mdc-circular-progress-right-spin {
+  from {
+    transform: rotate(-265deg);
+  }
+
+  50% {
+    transform: rotate(-130deg);
+  }
+
+  to {
+    transform: rotate(-265deg);
   }
 }
