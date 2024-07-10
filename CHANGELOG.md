@@ -1,9 +1,27 @@
-<a name="18.1.0-rc.0"></a>
-# 18.1.0-rc.0 "zirconium-zoo" (2024-07-03)
+<a name="18.1.0"></a>
+# 18.1.0 "coral-odyssey" (2024-07-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0bc6583892](https://github.com/angular/components/commit/0bc65838926e88723bfc677fc3e4de81826cfe5b) | feat | **drag-drop:** add mixed orientation support |
+| [b5e30156c1](https://github.com/angular/components/commit/b5e30156c110b67fa5633062227b8767fe601532) | feat | **drag-drop:** add the ability to specify an alternate drop list container ([#29283](https://github.com/angular/components/pull/29283)) |
+| [03d4e134c8](https://github.com/angular/components/commit/03d4e134c84f4e9bba6e222e68f7fcc2e3dd3935) | fix | **drag-drop:** reset pointer events on descendants ([#29370](https://github.com/angular/components/pull/29370)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [674538b77](https://github.com/angular/components/commit/674538b778e75d229ada06d19c362752db3a18cc) | fix | **core:** add fallback if ripples get stuck ([#29323](https://github.com/angular/components/pull/29323)) |
+| [5da528e44d](https://github.com/angular/components/commit/5da528e44d6fadca6e13f34b86f180a4b5239049) | feat | **button:** allow button color to be configured through DI ([#29297](https://github.com/angular/components/pull/29297)) |
+| [6f698fa4e2](https://github.com/angular/components/commit/6f698fa4e24ef4637b2c83f43cb608df967a78b5) | feat | **core:** add option to configure prefix of system variables ([#29139](https://github.com/angular/components/pull/29139)) |
+| [5a97c03928](https://github.com/angular/components/commit/5a97c03928a8f4063353015747da37a39efad6a3) | fix | **chips:** navigate between rows on up/down arrow ([#29364](https://github.com/angular/components/pull/29364)) |
+| [566057b8f5](https://github.com/angular/components/commit/566057b8f58fab1b5328cbd4336b7b19ea412fd3) | fix | **divider:** non-text color contrast issues ([#28995](https://github.com/angular/components/pull/28995)) |
+| [65b56400bd](https://github.com/angular/components/commit/65b56400bd69035d291867a81257fad2dcb3ed5a) | fix | **tabs:** remove visibility style when hydrating ([#29220](https://github.com/angular/components/pull/29220)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fc6beeae18](https://github.com/angular/components/commit/fc6beeae18cba6ff5744a8381aee6edf6211cb5e) | fix | **popover-edit:** Fix dialog role and allow aria label on popup ([#29380](https://github.com/angular/components/pull/29380)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aa17c2d128](https://github.com/angular/components/commit/aa17c2d128c6a2e6a9a5b4b0f943b7b792ac5bea) | fix | remove workarounds for formControl directive ([#29296](https://github.com/angular/components/pull/29296)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -13,27 +31,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [e5c5f151c](https://github.com/angular/components/commit/e5c5f151cc3a5293f629bfa84bcddb0b391cf268) | fix | **core:** add fallback if ripples get stuck ([#29323](https://github.com/angular/components/pull/29323)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.1.0-next.4"></a>
-# 18.1.0-next.4 "plastic-pliers" (2024-06-26)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5f7680f76f](https://github.com/angular/components/commit/5f7680f76f0c6c5d81f4159fb1d103e8801f2b94) | fix | **a11y:** Make focus-trap behavior consistent across zoneful/zoneless ([#29225](https://github.com/angular/components/pull/29225)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5da528e44d](https://github.com/angular/components/commit/5da528e44d6fadca6e13f34b86f180a4b5239049) | feat | **button:** allow button color to be configured through DI ([#29297](https://github.com/angular/components/pull/29297)) |
-| [d9181b53a4](https://github.com/angular/components/commit/d9181b53a4b8bf68f5cf18c7618abffe1adadef2) | fix | **button-toggle:** skip disabled buttons during keyboard navigation ([#29308](https://github.com/angular/components/pull/29308)) |
-| [f67ffa5c0f](https://github.com/angular/components/commit/f67ffa5c0f3c45ca4ce1661b8be6356dd615feed) | fix | **button:** stack icons on top of touch target ([#29291](https://github.com/angular/components/pull/29291)) |
-| [e74065ad94](https://github.com/angular/components/commit/e74065ad9439e37eb2fd36d30ba62564c4bdcbce) | fix | **datepicker:** avoid losing focus when re-rendering the current view ([#29287](https://github.com/angular/components/pull/29287)) |
-| [36c627beaf](https://github.com/angular/components/commit/36c627beaff2dc486997d1954b36989400591dc5) | fix | **sidenav:** not closing on escape key press ([#29292](https://github.com/angular/components/pull/29292)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [aa17c2d128](https://github.com/angular/components/commit/aa17c2d128c6a2e6a9a5b4b0f943b7b792ac5bea) | fix | remove workarounds for formControl directive ([#29296](https://github.com/angular/components/pull/29296)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -50,28 +47,6 @@
 | [e5684fe2b7](https://github.com/angular/components/commit/e5684fe2b7964fc9c614a45568b99f1d24982f3f) | fix | **button:** stack icons on top of touch target ([#29291](https://github.com/angular/components/pull/29291)) |
 | [c1a40a26d1](https://github.com/angular/components/commit/c1a40a26d164a766efd3ef863b52de18b3bb4d09) | fix | **datepicker:** avoid losing focus when re-rendering the current view ([#29287](https://github.com/angular/components/pull/29287)) |
 | [7f575daab5](https://github.com/angular/components/commit/7f575daab5de7e77ef8346c5a85eb59108b76a48) | fix | **sidenav:** not closing on escape key press ([#29292](https://github.com/angular/components/pull/29292)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.1.0-next.3"></a>
-# 18.1.0-next.3 "copper-carousel" (2024-06-20)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b5e30156c](https://github.com/angular/components/commit/b5e30156c110b67fa5633062227b8767fe601532) | feat | **drag-drop:** add the ability to specify an alternate drop list container ([#29283](https://github.com/angular/components/pull/29283)) |
-| [09df51d8e](https://github.com/angular/components/commit/09df51d8ebb86a3ee76614b6775dd62136660567) | fix | **overlay:** incorrectly dispatching outside click for shadow DOM ([#29249](https://github.com/angular/components/pull/29249)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [008212a98](https://github.com/angular/components/commit/008212a9807fd01fd32fe136a075763b7b2c854d) | fix | **autocomplete:** autocomplete panel top is cut off in landscape mode ([#28982](https://github.com/angular/components/pull/28982)) |
-| [aaea0e272](https://github.com/angular/components/commit/aaea0e272635c973f6466b3db990a459a844f1d3) | fix | **bottom-sheet:** changed after checked error with zoneless ([#29277](https://github.com/angular/components/pull/29277)) |
-| [cee9b0415](https://github.com/angular/components/commit/cee9b04156a8485e28947951aa3afcca2bcc713c) | fix | **core:** generate mat-optgroup tokens in M3 ([#29257](https://github.com/angular/components/pull/29257)) |
-| [a4846a961](https://github.com/angular/components/commit/a4846a961924442649f0b19a3979fa92922b5b5f) | fix | **core:** implement elevation classes in M3 |
-| [6318f24d5](https://github.com/angular/components/commit/6318f24d57572b9aeb1da9b4556030fd38efad8a) | fix | **form-field:** outline label position ([#29138](https://github.com/angular/components/pull/29138)) |
-| [3550a8798](https://github.com/angular/components/commit/3550a8798a5aa51e945121c0fcf4e17b4e882faa) | fix | **menu:** animation issue when same menu is used for multiple nested triggers ([#29280](https://github.com/angular/components/pull/29280)) |
-| [03d00f573](https://github.com/angular/components/commit/03d00f57347bf6f0669dd2fc8fdb70fee4b22afd) | fix | **menu:** update elevation logic for M3 |
-| [99b33120e](https://github.com/angular/components/commit/99b33120e774768467120b77703ee4fb9d98d411) | fix | **paginator:** items per page form field touch target size insufficient ([#29109](https://github.com/angular/components/pull/29109)) |
-| [43b8dcbb1](https://github.com/angular/components/commit/43b8dcbb1f17a9d5fcedc88e996c241ab9e28dd8) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29096](https://github.com/angular/components/pull/29096)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -96,25 +71,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="18.1.0-next.2"></a>
-# 18.1.0-next.2 "ivory-infinity" (2024-06-12)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0bc6583892](https://github.com/angular/components/commit/0bc65838926e88723bfc677fc3e4de81826cfe5b) | feat | **drag-drop:** add mixed orientation support |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6f698fa4e2](https://github.com/angular/components/commit/6f698fa4e24ef4637b2c83f43cb608df967a78b5) | feat | **core:** add option to configure prefix of system variables ([#29139](https://github.com/angular/components/pull/29139)) |
-| [e7312037f7](https://github.com/angular/components/commit/e7312037f75dad5482b06868542ec2a715c116fc) | fix | **dialog:** Make autofocus work with animations disabled ([#29195](https://github.com/angular/components/pull/29195)) |
-| [3b32d0e7c9](https://github.com/angular/components/commit/3b32d0e7c95b358d30f8b7e6b0570ab8ba815a06) | fix | **dialog:** Make focus behavior consistent across zoneful/zoneless apps ([#29192](https://github.com/angular/components/pull/29192)) |
-| [566057b8f5](https://github.com/angular/components/commit/566057b8f58fab1b5328cbd4336b7b19ea412fd3) | fix | **divider:** non-text color contrast issues ([#28995](https://github.com/angular/components/pull/28995)) |
-| [e3abc65d7d](https://github.com/angular/components/commit/e3abc65d7d191f2adf1c294bdb84f532d4eac05c) | fix | **radio:** mark radio-group for check on touch ([#29203](https://github.com/angular/components/pull/29203)) |
-| [3da43230e6](https://github.com/angular/components/commit/3da43230e62c8983af5c21c4c1fc66ea2e5e7d52) | fix | **schematics:** estimate missing hues in M3 schematic ([#29231](https://github.com/angular/components/pull/29231)) |
-| [d717de5150](https://github.com/angular/components/commit/d717de51501e04a0410217c07fc31929ff2e983a) | fix | **snack-bar:** fix overrides mixin name typo ([#29180](https://github.com/angular/components/pull/29180)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="18.0.3"></a>
 # 18.0.3 "gossamer-glacier" (2024-06-12)
 ### material
@@ -125,23 +81,6 @@
 | [81d4527f91](https://github.com/angular/components/commit/81d4527f9130605f69dea31a092a60261bde25db) | fix | **radio:** mark radio-group for check on touch ([#29203](https://github.com/angular/components/pull/29203)) |
 | [0f4d1862d3](https://github.com/angular/components/commit/0f4d1862d30366978176a4a87b7799915d3caedd) | fix | **schematics:** estimate missing hues in M3 schematic ([#29231](https://github.com/angular/components/pull/29231)) |
 | [faf348438d](https://github.com/angular/components/commit/faf348438d57db80e8ac5187ffe3900fe398fe77) | fix | **snack-bar:** fix overrides mixin name typo ([#29180](https://github.com/angular/components/pull/29180)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.1.0-next.1"></a>
-# 18.1.0-next.1 "velvet-violoncello" (2024-06-05)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [f4387fda12](https://github.com/angular/components/commit/f4387fda12e3e647e807111344c793efa1d14235) | fix | **testing:** TestbedHarnessEnvironment should work when Zone is not present ([#29176](https://github.com/angular/components/pull/29176)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c4a1407e75](https://github.com/angular/components/commit/c4a1407e75d9e408b0edbd5a106e1b520eb5ad2e) | fix | **core:** hide ripples inside drag&drop elements ([#29184](https://github.com/angular/components/pull/29184)) |
-| [b9fedfe9f9](https://github.com/angular/components/commit/b9fedfe9f900111d749262b2e25cc2fff8aac01f) | fix | **datepicker:** Move aria-live attribute so month can also be announced when using previous and next month buttons ([#29137](https://github.com/angular/components/pull/29137)) |
-| [71297ad7ef](https://github.com/angular/components/commit/71297ad7ef74baa058607356692b8e955791c484) | fix | **radio:** Ensure focus and selected states stay linked ([#29082](https://github.com/angular/components/pull/29082)) |
-| [c9e1d4aedd](https://github.com/angular/components/commit/c9e1d4aedd929b611b908633afac28a2bfb474d2) | fix | **schematics:** theming API migration not working with CRLF line endings ([#29171](https://github.com/angular/components/pull/29171)) |
-| [3314414e17](https://github.com/angular/components/commit/3314414e174a3fda90d18c8d00cf284a77f04e9c) | fix | **slider:** Tick marks changes position as the slider is changed (for a step that is decimal number) ([#29108](https://github.com/angular/components/pull/29108)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -159,11 +98,6 @@
 | [3945ed62cd](https://github.com/angular/components/commit/3945ed62cd102db07a600d2c3d1eae51844dcae6) | fix | **radio:** Ensure focus and selected states stay linked ([#29082](https://github.com/angular/components/pull/29082)) |
 | [8d44ed99c6](https://github.com/angular/components/commit/8d44ed99c69e9ee40881a80b1916998383a0cddf) | fix | **schematics:** theming API migration not working with CRLF line endings ([#29171](https://github.com/angular/components/pull/29171)) |
 | [5e3d13d559](https://github.com/angular/components/commit/5e3d13d559c963b8b913ef35569cfbfe01ea207a) | fix | **slider:** Tick marks changes position as the slider is changed (for a step that is decimal number) ([#29108](https://github.com/angular/components/pull/29108)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.1.0-next.0"></a>
-# 18.1.0-next.0 "plastic-moose" (2024-05-29)
 
 <!-- CHANGELOG SPLIT MARKER -->
 
