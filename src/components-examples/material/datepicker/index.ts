@@ -25,3 +25,4 @@ export {DatepickerStartViewExample} from './datepicker-start-view/datepicker-sta
 export {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
 export {DatepickerValueExample} from './datepicker-value/datepicker-value-example';
 export {DatepickerViewsSelectionExample} from './datepicker-views-selection/datepicker-views-selection-example';
+export {DatepickerDialogExample} from './datepicker-dialog/datepicker-dialog-example';
