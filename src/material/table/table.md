@@ -372,6 +372,8 @@ to resolve this.
 
 When using the `multiTemplateDataRows` directive to support multiple rows for each data object, the context of `*matRowDef` is the same except that the `index` value is replaced by `dataIndex` and `renderIndex`.
 
+<!--- example(table-multiple-row-template) -->
+
 ### Accessibility
 
 By default, `MatTable` applies `role="table"`, assuming the table's contains primarily static
