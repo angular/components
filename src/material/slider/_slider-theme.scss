@@ -1,4 +1,3 @@
-@use '@material/slider/slider-theme' as mdc-slider-theme;
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
@@ -16,11 +15,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
-    // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      $mat-tokens: tokens-mat-slider.get-unthemable-tokens();
-      @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-tokens);
-      @include mdc-slider-theme.theme(tokens-mdc-slider.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-unthemable-tokens());
     }
   }
 }
@@ -35,40 +34,24 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
-    $is-dark: inspection.get-theme-type($theme) == dark;
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-color-tokens($theme));
+      @include token-utils.create-token-values(tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-color-tokens($theme));
 
-    $mdc-color-tokens: token-utils.resolve-elevation(
-        tokens-mdc-slider.get-color-tokens($theme),
-        handle-elevation,
-        handle-shadow-color
-    );
-
-    $mat-slider-color-tokens: tokens-mat-slider.get-color-tokens($theme);
-
-  // Add values for MDC slider tokens.
-  @include sass-utils.current-selector-or-root() {
-    @include mdc-slider-theme.theme($mdc-color-tokens);
-    @include token-utils.create-token-values(
-      tokens-mat-slider.$prefix,
-      $mat-slider-color-tokens
-    );
-
-    .mat-accent {
-      @include token-utils.create-token-values(
-        tokens-mat-slider.$prefix,
-        tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent),
-      );
-      @include mdc-slider-theme.theme(
-        tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
-    }
+      .mat-accent {
+        @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
+        @include token-utils.create-token-values(tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent));
+      }
 
       .mat-warn {
-        @include token-utils.create-token-values(
-          tokens-mat-slider.$prefix,
-          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn),
-        );
-        @include mdc-slider-theme.theme(
-            tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
+        @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
+        @include token-utils.create-token-values(tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn));
       }
     }
   }
@@ -82,9 +65,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   }
   @else {
-    // Add values for MDC slider tokens.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-slider-theme.theme(tokens-mdc-slider.get-typography-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-typography-tokens($theme));
     }
   }
 }
@@ -97,9 +80,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   }
   @else {
-    // Add values for MDC slider tokens.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-slider-theme.theme(tokens-mdc-slider.get-density-tokens($theme));
+      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-density-tokens($theme));
     }
   }
 }
@@ -144,6 +127,6 @@
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mdc-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-slider.$prefix, $options...);
   $mat-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mat-slider.$prefix, $options...);
-  @include mdc-slider-theme.theme($mdc-slider-tokens);
+  @include token-utils.create-token-values(tokens-mdc-slider.$prefix, $mdc-slider-tokens);
   @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-slider-tokens);
 }
