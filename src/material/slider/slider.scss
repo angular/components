@@ -1,166 +1,432 @@
-@use 'sass:map';
-@use '@material/slider/slider' as mdc-slider;
-@use '@material/slider/slider-theme' as mdc-slider-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '../core/tokens/m2/mat/slider' as m2-mat-slider;
-@use '../core/tokens/m2/mdc/slider' as m2-mdc-slider;
+@use '@angular/cdk';
+@use '../core/tokens/m2/mat/slider' as tokens-mat-slider;
+@use '../core/tokens/m2/mdc/slider' as tokens-mdc-slider;
 @use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 $mat-slider-min-size: 128px !default;
 $mat-slider-horizontal-margin: 8px !default;
+$_mdc-slots: (tokens-mdc-slider.$prefix, tokens-mdc-slider.get-token-slots());
+$_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-slider-token-slots: m2-mdc-slider.get-token-slots();
+.mdc-slider__track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  pointer-events: none;
 
-  // Add MDC slider static styles.
-  @include mdc-slider.static-styles();
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(height, inactive-track-height);
+  }
+}
 
-  .mat-mdc-slider {
-    // Add the official slots for the MDC slider.
-    @include mdc-slider-theme.theme-styles(map.merge($mdc-slider-token-slots, (
-      // MDC emits the incorrect box-shadow on .mdc-slider__thumb-knob, so we
-      // emit the elevation slot ourselves instead.
-      handle-elevation: null,
-      handle-shadow-color: null,
-    )));
+.mdc-slider__track--active,
+.mdc-slider__track--inactive {
+  display: flex;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
 
-    // Emit the elevation slot directly on the slider thumb
-    .mdc-slider__thumb-knob {
-      @include token-utils.use-tokens(
-        m2-mdc-slider.$prefix, $mdc-slider-token-slots) {
-        @include token-utils.create-token-slot(box-shadow, handle-elevation);
-      }
+.mdc-slider__track--active {
+  overflow: hidden;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(border-radius, active-track-shape);
+    $active-height-ref: var(#{token-utils.get-token-variable(active-track-height)});
+    $inactive-height-ref: var(#{token-utils.get-token-variable(inactive-track-height)});
+    height: $active-height-ref;
+    top: calc((#{$inactive-height-ref} - #{$active-height-ref}) / 2);
+  }
+}
+
+.mdc-slider__track--active_fill {
+  border-top-style: solid;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  transform-origin: left;
+  transition: transform 80ms ease;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(border-color, active-track-color);
+    @include token-utils.create-token-slot(border-top-width, active-track-height);
+
+    .mdc-slider--disabled & {
+      @include token-utils.create-token-slot(border-color, disabled-active-track-color);
     }
+  }
 
-    display: inline-block;
+  [dir='rtl'] & {
+    -webkit-transform-origin: right;
+    transform-origin: right;
+  }
+}
+
+.mdc-slider__track--inactive {
+  left: 0;
+  top: 0;
+  opacity: 0.24;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(background-color, inactive-track-color);
+    @include token-utils.create-token-slot(height, inactive-track-height);
+    @include token-utils.create-token-slot(border-radius, inactive-track-shape);
+
+    .mdc-slider--disabled & {
+      @include token-utils.create-token-slot(background-color, disabled-inactive-track-color);
+      opacity: 0.24;
+    }
+  }
+
+  &::before {
+    position: absolute;
     box-sizing: border-box;
-    outline: none;
-    vertical-align: middle;
-    margin: {
-      left: $mat-slider-horizontal-margin;
-      right: $mat-slider-horizontal-margin;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+
+    @include cdk.high-contrast(active, off) {
+      border-color: CanvasText;
+    }
+  }
+}
+
+.mdc-slider__value-indicator-container {
+  bottom: 44px;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%);
+
+  @include token-utils.use-tokens($_mat-slots...) {
+    @include token-utils.create-token-slot(transform, value-indicator-container-transform);
+  }
+
+  .mdc-slider__thumb--with-indicator & {
+    pointer-events: auto;
+  }
+}
+
+.mdc-slider__value-indicator {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  height: 32px;
+  padding: 0 12px;
+  transform: scale(0);
+  transform-origin: bottom;
+  opacity: 1;
+  transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
+
+  // Stop parent word-break from altering
+  // the word-break of the value indicator.
+  word-break: normal;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(background-color, label-container-color);
+    @include token-utils.create-token-slot(color, label-label-text-color);
+  }
+
+  @include token-utils.use-tokens($_mat-slots...) {
+    @include token-utils.create-token-slot(width, value-indicator-width);
+    @include token-utils.create-token-slot(height, value-indicator-height);
+    @include token-utils.create-token-slot(padding, value-indicator-padding);
+    @include token-utils.create-token-slot(opacity, value-indicator-opacity);
+    @include token-utils.create-token-slot(border-radius, value-indicator-border-radius);
+  }
+
+  .mdc-slider__thumb--with-indicator & {
+    transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
+    transform: scale(1);
+  }
+
+  &::before {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid;
+    bottom: -5px;
+    content: '';
+    height: 0;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 0;
+
+    @include token-utils.use-tokens($_mat-slots...) {
+      @include token-utils.create-token-slot(display, value-indicator-caret-display);
     }
 
-    // Unset the default "width" property from the MDC slider class. We don't want
-    // the slider to automatically expand horizontally for backwards compatibility.
-    width: auto;
-    min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
-    -webkit-tap-highlight-color: transparent;
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(border-top-color, label-container-color);
+    }
+  }
 
-    .mdc-slider__input {
-      // It's common for apps to globally set `box-sizing: border-box` which messes up our
-      // measurements. Explicitly set `content-box` to avoid issues like #26246.
-      box-sizing: content-box;
-      pointer-events: auto;
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
 
-      &.mat-mdc-slider-input-no-pointer-events {
-        pointer-events: none;
-      }
+    @include cdk.high-contrast(active, off) {
+      border-color: CanvasText;
+    }
+  }
+}
 
-      &.mat-slider__right-input {
-        left: auto;
-        right: 0;
-      }
+.mdc-slider__value-indicator-text {
+  text-align: center;
+
+  @include token-utils.use-tokens($_mat-slots...) {
+    @include token-utils.create-token-slot(width, value-indicator-width);
+    @include token-utils.create-token-slot(transform, value-indicator-text-transform);
+  }
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(font-family, label-label-text-font);
+    @include token-utils.create-token-slot(font-size, label-label-text-size);
+    @include token-utils.create-token-slot(font-weight, label-label-text-weight);
+    @include token-utils.create-token-slot(line-height, label-label-text-line-height);
+    @include token-utils.create-token-slot(letter-spacing, label-label-text-tracking);
+  }
+}
+
+.mdc-slider__thumb {
+  @include vendor-prefixes.user-select(none);
+  display: flex;
+  left: -24px;
+  outline: none;
+  position: absolute;
+  height: 48px;
+  width: 48px;
+  pointer-events: none;
+
+  .mdc-slider--discrete & {
+    transition: transform 80ms ease;
+  }
+
+  .mdc-slider--disabled & {
+    pointer-events: none;
+  }
+}
+
+.mdc-slider__thumb--top {
+  z-index: 1;
+}
+
+.mdc-slider__thumb-knob {
+  position: absolute;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+
+  @include token-utils.use-tokens($_mdc-slots...) {
+    $width-ref: var(#{token-utils.get-token-variable(handle-width)});
+    $height-ref: var(#{token-utils.get-token-variable(handle-height)});
+    width: $width-ref;
+    height: $height-ref;
+    border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
+
+    @include token-utils.create-token-slot(box-shadow, handle-elevation);
+    @include token-utils.create-token-slot(background-color, handle-color);
+    @include token-utils.create-token-slot(border-color, handle-color);
+    @include token-utils.create-token-slot(border-radius, handle-shape);
+
+    .mdc-slider__thumb:hover & {
+      @include token-utils.create-token-slot(background-color, hover-handle-color);
+      @include token-utils.create-token-slot(border-color, hover-handle-color);
     }
 
+    .mdc-slider__thumb--focused & {
+      @include token-utils.create-token-slot(background-color, focus-handle-color);
+      @include token-utils.create-token-slot(border-color, focus-handle-color);
+    }
+
+    .mdc-slider--disabled & {
+      @include token-utils.create-token-slot(background-color, disabled-handle-color);
+      @include token-utils.create-token-slot(border-color, disabled-handle-color);
+    }
+  }
+
+  .mdc-slider__thumb--top &,
+  .mdc-slider__thumb--top.mdc-slider__thumb:hover &,
+  .mdc-slider__thumb--top.mdc-slider__thumb--focused & {
+    border: solid 1px #fff;
+    box-sizing: content-box;
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(border-color, with-overlap-handle-outline-color);
+      @include token-utils.create-token-slot(border-width, with-overlap-handle-outline-width);
+    }
+  }
+}
+
+.mdc-slider__tick-marks {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  padding: 0 1px;
+  position: absolute;
+  width: 100%;
+}
+
+.mdc-slider__tick-mark--active,
+.mdc-slider__tick-mark--inactive {
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, with-tick-marks-container-size);
+    @include token-utils.create-token-slot(height, with-tick-marks-container-size);
+    @include token-utils.create-token-slot(border-radius, with-tick-marks-container-shape);
+  }
+}
+
+.mdc-slider__tick-mark--inactive {
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(opacity, with-tick-marks-inactive-container-opacity);
+    @include token-utils.create-token-slot(background-color,
+      with-tick-marks-inactive-container-color);
+
+    .mdc-slider--disabled & {
+      @include token-utils.create-token-slot(opacity, with-tick-marks-inactive-container-opacity);
+      @include token-utils.create-token-slot(background-color,
+        with-tick-marks-disabled-container-color);
+    }
+  }
+}
+
+.mdc-slider__tick-mark--active {
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(opacity, with-tick-marks-active-container-opacity);
+    @include token-utils.create-token-slot(background-color,
+      with-tick-marks-active-container-color);
+  }
+}
+
+.mdc-slider__input {
+  cursor: pointer;
+  left: 2px;
+  margin: 0;
+  height: 44px;
+  opacity: 0;
+  position: absolute;
+  top: 2px;
+  width: 44px;
+
+  // It's common for apps to globally set `box-sizing: border-box` which messes up our
+  // measurements. Explicitly set `content-box` to avoid issues like #26246.
+  box-sizing: content-box;
+
+  &.mat-mdc-slider-input-no-pointer-events {
+    pointer-events: none;
+  }
+
+  &.mat-slider__right-input {
+    left: auto;
+    right: 0;
+  }
+}
+
+.mat-mdc-slider {
+  display: inline-block;
+  box-sizing: border-box;
+  outline: none;
+  vertical-align: middle;
+  cursor: pointer;
+  height: 48px;
+  margin: 0 $mat-slider-horizontal-margin;
+  position: relative;
+  touch-action: pan-y;
+
+  // Unset the default "width" property from the MDC slider class. We don't want
+  // the slider to automatically expand horizontally for backwards compatibility.
+  width: auto;
+  min-width: $mat-slider-min-size - (2 * $mat-slider-horizontal-margin);
+  -webkit-tap-highlight-color: transparent;
+
+  &.mdc-slider--disabled {
+    cursor: auto;
+    opacity: 0.38;
+  }
+
+  .mdc-slider__thumb,
+  .mdc-slider__track--active_fill {
+    transition-duration: 0ms;
+  }
+
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  // We need to repeat these styles to override discrete slider styling.
+  &.mdc-slider--discrete {
     .mdc-slider__thumb,
     .mdc-slider__track--active_fill {
       transition-duration: 0ms;
     }
-    &.mat-mdc-slider-with-animation {
-      .mdc-slider__thumb,
-      .mdc-slider__track--active_fill {
-        transition-duration: 80ms;
+  }
+
+  &.mat-mdc-slider-with-animation {
+    .mdc-slider__thumb,
+    .mdc-slider__track--active_fill {
+      transition-duration: 80ms;
+    }
+  }
+
+  // Add slots for custom Angular Material slider tokens.
+  @include token-utils.use-tokens($_mat-slots...) {
+    // The `.mat-ripple` wrapper here is redundant, but we need it to
+    // increase the specificity due to how some styles are setup in g3.
+    .mat-ripple {
+      .mat-ripple-element {
+        @include token-utils.create-token-slot(background-color, ripple-color);
+      }
+
+      .mat-mdc-slider-hover-ripple {
+        @include token-utils.create-token-slot(background-color, hover-state-layer-color);
+      }
+
+      .mat-mdc-slider-focus-ripple,
+      .mat-mdc-slider-active-ripple {
+        @include token-utils.create-token-slot(background-color, focus-state-layer-color);
       }
     }
+  }
 
-    // We need to repeat these styles to override discrete slider styling.
-    &.mdc-slider--discrete {
-      .mdc-slider__thumb,
-      .mdc-slider__track--active_fill {
-        transition-duration: 0ms;
-      }
-    }
-    &.mat-mdc-slider-with-animation {
-      .mdc-slider__thumb,
-      .mdc-slider__track--active_fill {
-        transition-duration: 80ms;
-      }
-    }
-
-    .mdc-slider__track,
-    .mdc-slider__thumb {
-      pointer-events: none;
-    }
-
-    // Add slots for custom Angular Material slider tokens.
-    @include token-utils.use-tokens(m2-mat-slider.$prefix, m2-mat-slider.get-token-slots()) {
-      .mdc-slider__value-indicator-container {
-        @include token-utils.create-token-slot(transform, value-indicator-container-transform);
-      }
-
-      .mdc-slider__value-indicator {
-        @include token-utils.create-token-slot(width, value-indicator-width);
-        @include token-utils.create-token-slot(height, value-indicator-height);
-        @include token-utils.create-token-slot(padding, value-indicator-padding);
-        @include token-utils.create-token-slot(opacity, value-indicator-opacity);
-        @include token-utils.create-token-slot(border-radius, value-indicator-border-radius);
-
-        &::before {
-          @include token-utils.create-token-slot(display, value-indicator-caret-display);
-        }
-      }
-
-      .mdc-slider__value-indicator-text {
-        @include token-utils.create-token-slot(width, value-indicator-width);
-        @include token-utils.create-token-slot(transform, value-indicator-text-transform);
-      }
-
-      // The `.mat-ripple` wrapper here is redundant, but we need it to
-      // increase the specificity due to how some styles are setup in g3.
-      .mat-ripple {
-        // These ripple colors are custom so we have to introduce our own tokens.
-        .mat-ripple-element {
-          @include token-utils.create-token-slot(background-color, ripple-color);
-        }
-
-        .mat-mdc-slider-hover-ripple {
-          @include token-utils.create-token-slot(background-color, hover-state-layer-color);
-        }
-
-        .mat-mdc-slider-focus-ripple,
-        .mat-mdc-slider-active-ripple {
-          @include token-utils.create-token-slot(background-color, focus-state-layer-color);
-        }
-      }
-    }
-
-    &._mat-animation-noopable {
-      &.mdc-slider--discrete .mdc-slider__thumb,
-      &.mdc-slider--discrete .mdc-slider__track--active_fill,
-      .mdc-slider__value-indicator {
-        transition: none;
-      }
-    }
-
-    // Slider components have to set `border-radius: 50%` in order to support density scaling
-    // which will clip a square focus indicator so we have to turn it into a circle.
-    .mat-mdc-focus-indicator::before {
-      border-radius: 50%;
-    }
-
-    // Stop parent word-break from altering
-    // the word-break of the value indicator.
+  &._mat-animation-noopable {
+    &.mdc-slider--discrete .mdc-slider__thumb,
+    &.mdc-slider--discrete .mdc-slider__track--active_fill,
     .mdc-slider__value-indicator {
-      word-break: normal;
+      transition: none;
     }
+  }
 
-    .mdc-slider__value-indicator-text {
-      text-align: center;
-    }
+  // Slider components have to set `border-radius: 50%` in order to support density scaling
+  // which will clip a square focus indicator so we have to turn it into a circle.
+  .mat-mdc-focus-indicator::before {
+    border-radius: 50%;
   }
-  // In the MDC slider the focus indicator is inside the thumb.
-  .mdc-slider__thumb--focused .mat-mdc-focus-indicator::before {
-    content: '';
-  }
+}
+
+// In the MDC slider the focus indicator is inside the thumb.
+.mdc-slider__thumb--focused .mat-mdc-focus-indicator::before {
+  content: '';
 }

@@ -39,6 +39,8 @@ $prefix: (mdc, slider);
     with-tick-marks-container-size: 2px,
     // Opacity of inactive container with tick marks.
     with-tick-marks-inactive-container-opacity: 0.6,
+    // Elevation for the handle.
+    handle-elevation: elevation.get-box-shadow(1),
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
     // =============================================================================================
@@ -49,6 +51,7 @@ $prefix: (mdc, slider);
     focus-state-layer-opacity: null,
     hover-state-layer-opacity: null,
     pressed-state-layer-opacity: null,
+    handle-shadow-color: null,
     // MDC does not seem to use these tokens.
     hover-state-layer-color: null,
     pressed-handle-color: null,
@@ -81,12 +84,6 @@ $prefix: (mdc, slider);
       with-overlap-handle-outline-color: #fff,
       // Color of container with tick marks when disabled.
       with-tick-marks-disabled-container-color: $on-surface,
-      // (Part of the color tokens because it needs to be combined with the
-      // shadow color to generate the box-shadow.)
-      // Elevation level for handle.
-      handle-elevation: 1,
-      // Color of handle shadow.
-      handle-shadow-color: if($elevation != null, $elevation, elevation.$color),
     )
   );
 }
