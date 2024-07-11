@@ -1,7 +1,6 @@
 @use '../../token-utils';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, option);
@@ -29,14 +28,6 @@ $prefix: (mat, option);
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  // TODO(crisbeto): The earlier implementation of the option used MDC's APIs to create the
-  // typography tokens. As a result, we unintentionally allowed `null` typography configs to be
-  // passed in. Since there a lot of apps that now depend on this pattern, we need this temporary
-  // fallback.
-  @if ($theme == null) {
-    $theme: mdc-helpers.private-fallback-typography-from-mdc();
-  }
-
   @return (
     label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
     label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
