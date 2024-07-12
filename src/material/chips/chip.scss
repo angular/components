@@ -538,7 +538,7 @@ $_avatar-trailing-padding: 8px;
     }
 
     &::after {
-      @include token-utils.create-token-slot(background, trailing-action-state-layer-color);
+      @include token-utils.create-token-slot(background-color, trailing-action-state-layer-color);
     }
 
     &:hover::after {
@@ -552,7 +552,8 @@ $_avatar-trailing-padding: 8px;
 
   .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
   .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
-    @include token-utils.create-token-slot(background, selected-trailing-action-state-layer-color);
+    @include token-utils.create-token-slot(background-color,
+      selected-trailing-action-state-layer-color);
   }
 }
 
@@ -697,17 +698,20 @@ $_avatar-trailing-padding: 8px;
   &::after {
     $_touch-target-size: 48px;
     $_ripple-size: 24px;
+    $offset: 3px;
     content: '';
     display: block;
     opacity: 0;
     position: absolute;
-    // Increases touch target size to improve accessibility and fix b/286959517
-    z-index: 100;
-    pointer-events: all;
+    top: 0 - $offset;
+    bottom: 0 - $offset;
+    left: 8px - $offset;
+    right: 8px - $offset;
+    border-radius: 50%;
     box-sizing: border-box;
     padding: calc(($_touch-target-size - $_ripple-size)/2);
     margin: calc((($_touch-target-size - $_ripple-size)/2) * -1);
-    -webkit-background-clip: content-box;
+    // stylelint-disable material/no-prefixes
     background-clip: content-box;
   }
 
