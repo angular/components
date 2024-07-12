@@ -267,7 +267,7 @@ export interface LocatorFactory {
   /**
    * Waits for the given condition
    */
-  until(condition: () => boolean | Promise<boolean>): Promise<void>;
+  until(log: string, condition: () => boolean | Promise<boolean>): Promise<void>;
 
   sleep(ms: number): Promise<void>;
 }
@@ -411,8 +411,8 @@ export abstract class ComponentHarness {
     return this.locatorFactory.sleep(ms);
   }
 
-  protected async until(condition: () => boolean | Promise<boolean>) {
-    return this.locatorFactory.until(condition);
+  protected async until(log: string, condition: () => boolean | Promise<boolean>) {
+    return this.locatorFactory.until(log, condition);
   }
 }
 

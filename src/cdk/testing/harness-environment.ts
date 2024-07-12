@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {manualChangeDetection, parallel} from './change-detection';
+import {parallel} from './change-detection';
 import {
   AsyncFactoryFn,
   ComponentHarness,
@@ -163,12 +163,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   // Part of LocatorFactory interface, subclasses will implement.
   abstract sleep(ms: number): Promise<void>;
 
-  async until(condition: () => boolean | Promise<boolean>) {
-    await manualChangeDetection(async () => {
-      while (!(await condition())) {
-        await this.sleep(0);
-      }
-    });
+  async until(log: string, condition: () => boolean | Promise<boolean>) {
+    console.log(`Waiting for condition: ${log} (PENDING...)`);
+    while (!(await condition())) {
+      await this.sleep(1);
+    }
+    console.log(`Waiting for condition: ${log} (COMPLETE!)`);
   }
 
   /** Gets the root element for the document. */

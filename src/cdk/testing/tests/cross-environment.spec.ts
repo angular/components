@@ -14,6 +14,7 @@ import {
   HarnessPredicate,
   parallel,
   TestElement,
+  waitForZoneInHarnesses,
 } from '@angular/cdk/testing';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
@@ -120,7 +121,7 @@ export function crossEnvironmentSpecs(
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness = await getMainComponentHarnessFromEnvironment();
+      harness = await waitForZoneInHarnesses(getMainComponentHarnessFromEnvironment);
     });
 
     it('should locate a required element based on CSS selector', async () => {

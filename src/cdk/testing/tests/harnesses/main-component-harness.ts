@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {waitForZoneInHarnesses} from '../../change-detection';
 import {ComponentHarness} from '../../component-harness';
 import {TestElement, TestKey} from '../../test-element';
 import {CompoundSelectorHarness} from './compound-selector-harness';
@@ -127,16 +128,10 @@ export class MainComponentHarness extends ComponentHarness {
 
   private _testTools = this.locatorFor(SubComponentHarness);
 
-  async isInitialized() {
-    await this.sleep(1000);
-  }
-
   async increaseCounter(times: number) {
     const button = await this.button();
     for (let i = 0; i < times; i++) {
-      const oldCount = await (await this.asyncCounter()).text();
-      await button.click();
-      await this.until(async () => oldCount !== (await (await this.asyncCounter()).text()));
+      await waitForZoneInHarnesses(() => button.click());
     }
   }
 
@@ -164,5 +159,42 @@ export class MainComponentHarness extends ComponentHarness {
     // timeout to be scheduled outside of the NgZone.
     await this.waitForTasksOutsideAngular();
     return (await this.taskStateTestResult()).text();
+  }
+}
+
+export class MainComponentZonelessHarness extends MainComponentHarness {
+  async untilInitialized() {
+    await this.until(
+      'counter initialized',
+      async () => (await (await this.asyncCounter()).text()) !== '0',
+    );
+  }
+
+  override async increaseCounter(times: number) {
+    const button = await this.button();
+    for (let i = 0; i < times; i++) {
+      const oldCount = await (await this.asyncCounter()).text();
+      await button.click();
+      await this.until(
+        `counter incremented to ${Number(oldCount) + 1}`,
+        async () => oldCount !== (await (await this.asyncCounter()).text()),
+      );
+    }
+  }
+}
+
+export class BrokenMainComponentZonelessHarness extends MainComponentHarness {
+  override async increaseCounter(times: number) {
+    const button = await this.button();
+    for (let i = 0; i < times; i++) {
+      await button.click();
+    }
+  }
+
+  async untilCounterIs100() {
+    return this.until(
+      'counter is 100',
+      async () => (await (await this.asyncCounter()).text()) === '100',
+    );
   }
 }

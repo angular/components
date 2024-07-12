@@ -189,3 +189,16 @@ export function parallel<T>(values: () => (T | PromiseLike<T>)[]): Promise<T[]>;
 export async function parallel<T>(values: () => Iterable<T | PromiseLike<T>>): Promise<T[]> {
   return batchChangeDetection(() => Promise.all(values()), true);
 }
+
+let zoneless = true;
+
+export const zonelessHarnesses = () => zoneless;
+
+export async function waitForZoneInHarnesses<T>(fn: () => Promise<T>) {
+  zoneless = false;
+  try {
+    return await fn();
+  } finally {
+    zoneless = true;
+  }
+}
