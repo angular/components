@@ -340,7 +340,7 @@ export class MatChipGrid
       // Delay until the next tick, because this can cause a "changed after checked"
       // error if the input does something on focus (e.g. opens an autocomplete).
       Promise.resolve().then(() => this._chipInput.focus());
-    } else if (this._chips.length) {
+    } else if (this._chips.length && this._keyManager.activeItemIndex !== 0) {
       this._keyManager.setFirstItemActive();
     }
 
