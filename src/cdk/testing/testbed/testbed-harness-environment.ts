@@ -14,6 +14,7 @@ import {
   HarnessLoader,
   stopHandlingAutoChangeDetectionStatus,
   TestElement,
+  zonelessHarnesses,
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush, tick} from '@angular/core/testing';
 import {Observable} from 'rxjs';
@@ -78,6 +79,9 @@ function isInFakeAsyncZone() {
  */
 async function detectChanges(fixture: ComponentFixture<unknown>) {
   fixture.detectChanges();
+  if (zonelessHarnesses()) {
+    return;
+  }
   if (isInFakeAsyncZone()) {
     flush();
   } else {
@@ -180,6 +184,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * authors to wait for async tasks outside of the Angular zone.
    */
   async waitForTasksOutsideAngular(): Promise<void> {
+    if (zonelessHarnesses()) {
+      return;
+    }
+
     // If we run in the fake async zone, we run "flush" to run any scheduled tasks. This
     // ensures that the harnesses behave inside of the FakeAsyncTestZone similar to the
     // "AsyncTestZone" and the root zone (i.e. neither fakeAsync or async). Note that we
