@@ -23,6 +23,32 @@ customizable with this system, see [Theming your own components][theme-your-own]
 Angular Material's theming APIs are built with [Sass](https://sass-lang.com). This document assumes
 familiarity with CSS and Sass basics, including variables, functions, and mixins.
 
+### Consuming MDC/MAT Tokens in Angular Material
+
+Angular Material (MAT) leverages Material Design Components (MDC) for its visual styles. 
+To customize the appearance of your components, you can interact with the underlying MDC or MAT tokens using Sass. Here are the two primary approaches:
+- `Using Sass Variables Directly`
+This method involves referencing pre-defined Sass variables exposed by MAT. It offers a concise way to access specific tokens:
+
+```scss
+  mat-toolbar {
+    --mat-toolbar-container-background-color: #{mat.get-theme-color($my-theme, primary-container)};
+    --mat-toolbar-container-text-color: #{mat.get-theme-color($my-theme, on-primary-container)};
+  }
+```
+
+- `Using Override Mixins`
+The recommended approach for consuming MDC/MAT tokens is through override mixins.
+
+```scss
+  mat-toolbar {
+    @include mat.toolbar-overrides((
+      container-background-color: mat.get-theme-color($my-theme, primary-container),
+      container-text-color: mat.get-theme-color($my-theme, on-primary-container)
+    ));
+  }
+```
+
 ### Custom themes with Sass
 
 A **theme file** is a Sass file that calls Angular Material Sass mixins to output color,
