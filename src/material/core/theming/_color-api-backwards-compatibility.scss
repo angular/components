@@ -1,6 +1,7 @@
 @use '../../badge/badge-theme';
 @use '../../button/button-theme';
 @use '../../button/fab-theme';
+@use '../../button/icon-button-theme';
 @use '../../checkbox/checkbox-theme';
 @use '../../chips/chips-theme';
 @use '../../datepicker/datepicker-theme';
@@ -80,6 +81,7 @@ $_overrides-only: true;
 
   &.mat-mdc-button-base {
     @include button-theme.color($theme, $primary-options...);
+    @include icon-button-theme.color($theme, $primary-options...);
   }
 
   &.mat-mdc-standard-chip {
