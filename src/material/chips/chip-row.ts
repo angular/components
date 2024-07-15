@@ -70,7 +70,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '(focus)': '_handleFocus($event)',
-    '(dblclick)': '_handleDoubleclick($event)',
+    '(click)': '_handleClick($event)',
   },
   providers: [
     {provide: MatChip, useExisting: MatChipRow},
@@ -164,7 +164,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
-  _handleDoubleclick(event: MouseEvent) {
+  _handleClick(event: MouseEvent) {
     if (!this.disabled && this.editable) {
       this._startEditing(event);
     }

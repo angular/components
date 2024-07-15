@@ -234,9 +234,9 @@ describe('MDC-based Row Chips', () => {
         fixture.detectChanges();
       });
 
-      it('should begin editing on double click', () => {
+      it('should begin editing on click', () => {
         expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
-        dispatchFakeEvent(chipNativeElement, 'dblclick');
+        dispatchFakeEvent(chipNativeElement, 'click');
         fixture.detectChanges();
         expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeTruthy();
       });
@@ -257,7 +257,7 @@ describe('MDC-based Row Chips', () => {
         testComponent.editable = true;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        dispatchFakeEvent(chipNativeElement, 'dblclick');
+        dispatchFakeEvent(chipNativeElement, 'click');
         fixture.detectChanges();
         flush();
 
@@ -329,7 +329,7 @@ describe('MDC-based Row Chips', () => {
         testComponent.useCustomEditInput = false;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        dispatchFakeEvent(chipNativeElement, 'dblclick');
+        dispatchFakeEvent(chipNativeElement, 'click');
         fixture.detectChanges();
         const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
         const editInputNoProject =
