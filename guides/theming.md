@@ -27,6 +27,7 @@ familiarity with CSS and Sass basics, including variables, functions, and mixins
 
 Angular Material (MAT) leverages Material Design Components (MDC) for its visual styles. 
 To customize the appearance of your components, you can interact with the underlying MDC or MAT tokens using Sass. Here are the two primary approaches:
+
 - `Using Sass Variables Directly`
 This method involves referencing pre-defined Sass variables exposed by MAT. It offers a concise way to access specific tokens:
 
