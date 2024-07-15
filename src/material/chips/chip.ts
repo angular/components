@@ -280,6 +280,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     this._isBasicChip =
       element.hasAttribute(this.basicChipAttrName) ||
       element.tagName.toLowerCase() === this.basicChipAttrName;
+    this.role = 'presentation';
   }
 
   ngAfterViewInit() {
