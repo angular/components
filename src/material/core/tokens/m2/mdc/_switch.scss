@@ -89,8 +89,10 @@ $prefix: (mdc, switch);
       disabled-unselected-icon-color: $icon-color,
       // Color of track when disabled.
       disabled-unselected-track-color: $on-surface,
+      // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mdc-surface-color, #fff)`
+      // which made it basically hardcoded to #fff. Should it be based on the theme?
       // Color of slide-toggle handle's surface.
-      handle-surface-color: surface,
+      handle-surface-color: #fff,
       // Color of icon (ex. checkmark) when selected
       selected-icon-color: $icon-color,
       // Color of handle when unselected and focused.
