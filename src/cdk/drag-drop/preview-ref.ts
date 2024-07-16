@@ -39,6 +39,10 @@ export class PreviewRef {
   /** Reference to the preview element. */
   private _preview: HTMLElement;
 
+  get element(): HTMLElement {
+    return this._preview;
+  }
+
   constructor(
     private _document: Document,
     private _rootElement: HTMLElement,
