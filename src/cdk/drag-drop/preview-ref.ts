@@ -39,7 +39,7 @@ export class PreviewRef {
   /** Reference to the preview element. */
   private _preview: HTMLElement;
 
-  public get element(): HTMLElement {
+  get element(): HTMLElement {
     return this._preview;
   }
 
