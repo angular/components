@@ -393,6 +393,20 @@ $mat-tab-animation-duration: 500ms !default;
   [mat-align-tabs='end'] > #{$parent} & {
     justify-content: flex-end;
   }
+
+  // Prevent the header from collapsing when it is a drop list. This is useful,
+  // because its height may become zero once all the tabs are dragged out.
+  // Note that ideally we would do this by default, rather than only in a drop
+  // list, but it ended up being hugely breaking internally.
+  .cdk-drop-list &,
+  &.cdk-drop-list {
+    @include token-utils.use-tokens(
+      tokens-mdc-secondary-navigation-tab.$prefix,
+      tokens-mdc-secondary-navigation-tab.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(min-height, container-height);
+    }
+  }
 }
 
 // Structural styles for the element that wraps the paginated container's content.
