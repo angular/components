@@ -548,7 +548,8 @@ $_avatar-trailing-padding: 8px;
 
   .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
   .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
-    @include token-utils.create-token-slot(background-color, selected-trailing-action-state-layer-color);
+    @include token-utils.create-token-slot(background-color,
+      selected-trailing-action-state-layer-color);
   }
 }
 
