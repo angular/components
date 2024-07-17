@@ -47,7 +47,7 @@ export { MatHint }
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
-    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
+    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, _ngZone: NgZone, _formField?: MatFormField | undefined);
     autofilled: boolean;
     controlType: string;
     protected _dirtyCheckNativeValue(): void;

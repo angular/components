@@ -58,6 +58,19 @@
   </mat-card-content>
 </mat-card>
 
+<mat-card class="demo-card demo-number-input-tooltip">
+  <mat-toolbar color="primary">Number Input + Tooltip</mat-toolbar>
+  <mat-card-content>
+    <form>
+      <mat-form-field>
+        <mat-label>Pump Flow</mat-label>
+        <input matNativeControl value="10" type="number"><!--  -->
+        <span matSuffix matTooltip="Milliliter per Minute">ml/min</span>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+</mat-card>
+
 <mat-card class="demo-card demo-basic">
   <mat-toolbar color="primary">Error messages</mat-toolbar>
   <mat-card-content>
