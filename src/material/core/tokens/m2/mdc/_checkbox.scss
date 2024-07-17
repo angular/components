@@ -4,7 +4,6 @@
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -61,7 +60,7 @@ $prefix: (mdc, checkbox);
   // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   @if (token-utils.$private-is-internal-build) {
-    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($palette-selected, $is-dark);
+    $contrast-tone: token-utils.contrast-tone($palette-selected, $is-dark);
     $selected-checkmark-color: if($contrast-tone == 'dark', #000, #fff);
   }
   @else {
