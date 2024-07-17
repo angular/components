@@ -102,7 +102,7 @@ describe('MDC-based Row Chips', () => {
       });
 
       it('should have the correct role', () => {
-        expect(chipNativeElement.getAttribute('role')).toBe('presentation');
+        expect(chipNativeElement.getAttribute('role')).toBe('row');
       });
 
       it('should be able to set a custom role', () => {

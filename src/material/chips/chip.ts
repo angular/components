@@ -87,6 +87,7 @@ export interface MatChipEvent {
     '[attr.role]': 'role',
     '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-hidden]': 'true',
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
@@ -280,7 +281,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     this._isBasicChip =
       element.hasAttribute(this.basicChipAttrName) ||
       element.tagName.toLowerCase() === this.basicChipAttrName;
-    this.role = 'presentation';
   }
 
   ngAfterViewInit() {
