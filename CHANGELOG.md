@@ -1,3 +1,40 @@
+<a name="18.2.0-next.1"></a>
+# 18.2.0-next.1 "osmium-opal" (2024-07-17)
+## Deprecations
+### material
+- Tree controller deprecated. Use one of levelAccessor or childrenAccessor instead. To be removed in a future version.
+   * BaseTreeControl, TreeControl, FlatTreeControl, and NestedTreeControl deprecated
+   * CdkTree#treeControl deprecated. Provide one of CdkTree#levelAccessor or CdkTree#childrenAccessor instead.
+   * MatTreeFlattener deprecated. Use MatTree#childrenAccessor and MatTreeNode#isExpandable instead.
+   * MatTreeFlatDataSource deprecated. Use one of levelAccessor or childrenAccessor instead of TreeControl.
+  
+  Note when upgrading: isExpandable works differently on Trees using treeControl than trees using childrenAccessor or levelAccessor. Nodes on trees that have a treeControl are expandable by default. Nodes on trees using childrenAccessor or levelAccessor are *not* expandable by default. Provide isExpandable to override default behavior.
+- Setting tabindex of tree nodes deprecated. By default, Tree ignores tabindex passed to tree nodes.
+   * MatTreeNode#tabIndex deprecated. MatTreeNode ignores Input tabIndex and manages its own focus behavior.
+   * MatTreeNode#defaultTabIndex deprecated. MatTreeNode ignores defaultTabIndex and manages its own focus behavior.
+   * MatNestedTreeNode#tabIndex deprecated. MatTreeNode ignores Input defaultTabIndex and manages its own focus behavior.
+   * LegacyTreeKeyManager and LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER deprecated. Inject a TreeKeyManagerFactory to customize keyboard behavior.
+  
+  Note when upgrading: an opt-out is available for keyboard functionality changes. Provide LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER to opt-out of Tree managing its own focus. When provided, Tree does not manage it’s own focus and respects tabindex passed to TreeNode. When provided, have the same focus behavior as before this commit is applied.
+  
+  Add Legacy Keyboard Interface demo, which shows usage of LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER. Add Custom Key Manager, which shows usage of injecting a TreeKeyManagerStrategy
+- disabled renamed to isDisabled.
+   * CdkTreeNode#disabled deprecated and alias to CdkTreeNode#isDisabled
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [095947c8c](https://github.com/angular/components/commit/095947c8c3a79fecf4e56fc39ab61b0cc6e03eea) | fix | **button:** support palettes for icon button in M3 ([#29433](https://github.com/angular/components/pull/29433)) |
+| [e69b2b09e](https://github.com/angular/components/commit/e69b2b09efaf577cd5fe92b70808479f975913af) | fix | **chips:** fix focus issue ([#29427](https://github.com/angular/components/pull/29427)) |
+| [b116643a0](https://github.com/angular/components/commit/b116643a062749fa2c964820ae9f9c0e76c40717) | fix | **core:** require theme for option typography ([#29416](https://github.com/angular/components/pull/29416)) |
+| [92ab713a6](https://github.com/angular/components/commit/92ab713a65e2d622f975a6e610f981563a12b592) | fix | **tabs:** prevent tab header from collapsing when empty inside a drop list ([#29418](https://github.com/angular/components/pull/29418)) |
+| [ff36c80f9](https://github.com/angular/components/commit/ff36c80f9c7a14f0e9f36eafc3e1423d34e7c916) | fix | **tree:** add levelAccessor, childrenAccessor, TreeKeyManager; a11y and docs improvements ([#29062](https://github.com/angular/components/pull/29062)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [565566151](https://github.com/angular/components/commit/565566151a7a68ee2956b96a5b8d6b48d4762ef9) | fix | **drag-drop:** remove preview after animate to placeholder animation completes ([#29439](https://github.com/angular/components/pull/29439)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.0-next.0"></a>
 # 18.2.0-next.0 "pumice-reverie" (2024-07-10)
 ### cdk
