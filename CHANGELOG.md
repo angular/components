@@ -1,3 +1,19 @@
+<a name="18.1.1"></a>
+# 18.1.1 "tantalum-tale" (2024-07-17)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ca634cb7b](https://github.com/angular/components/commit/ca634cb7ba6800b2dc23b15b319d8aef6ede64df) | fix | **drag-drop:** remove preview after animate to placeholder animation completes ([#29439](https://github.com/angular/components/pull/29439)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b7959c241](https://github.com/angular/components/commit/b7959c241d56ebfbcfb09c2fdce12ebdc6e2d6ad) | fix | **button:** support palettes for icon button in M3 ([#29433](https://github.com/angular/components/pull/29433)) |
+| [ffe1c35c0](https://github.com/angular/components/commit/ffe1c35c0b2b59acfbc49bfc345e477f680e1f44) | fix | **chips:** fix focus issue ([#29427](https://github.com/angular/components/pull/29427)) |
+| [57cc0b04b](https://github.com/angular/components/commit/57cc0b04b4be19b3cba08ae509e066f7ba40e61d) | fix | **core:** require theme for option typography ([#29416](https://github.com/angular/components/pull/29416)) |
+| [2e5e415ec](https://github.com/angular/components/commit/2e5e415ec573b2fd6593b116429080fbe7b24dc2) | fix | **tabs:** prevent tab header from collapsing when empty inside a drop list ([#29418](https://github.com/angular/components/pull/29418)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.0"></a>
 # 18.1.0 "coral-odyssey" (2024-07-10)
 ### cdk
