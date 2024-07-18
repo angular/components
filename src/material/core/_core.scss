@@ -4,7 +4,6 @@
 @use './ripple/ripple';
 @use './style/elevation';
 @use './focus-indicators/private';
-@use './mdc-helpers/mdc-helpers';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
@@ -20,24 +19,22 @@
   // user's content isn't inside of a `mat-sidenav-container`.
   @at-root {
     // Note: we need to emit fallback values here to avoid errors in internal builds.
-    @include mdc-helpers.disable-mdc-fallback-declarations {
-      @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
-        .mat-app-background {
-          @include token-utils.create-token-slot(background-color, background-color, transparent);
-          @include token-utils.create-token-slot(color, text-color, inherit);
-        }
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
+      .mat-app-background {
+        @include token-utils.create-token-slot(background-color, background-color, transparent);
+        @include token-utils.create-token-slot(color, text-color, inherit);
+      }
 
-        // Provides external CSS classes for each elevation value. Each CSS class is formatted as
-        // `mat-elevation-z$zValue` where `$zValue` corresponds to the z-space to which the element
-        // is elevated.
-        @for $zValue from 0 through 24 {
-          $selector: elevation.$prefix + $zValue;
-          // We need the `mat-mdc-elevation-specific`, because some MDC mixins
-          // come with elevation baked in and we don't have a way of removing it.
-          .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
-            @include token-utils.create-token-slot(box-shadow, 'elevation-shadow-level-#{$zValue}',
-              none);
-          }
+      // Provides external CSS classes for each elevation value. Each CSS class is formatted as
+      // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
+      // is elevated.
+      @for $z-value from 0 through 24 {
+        $selector: elevation.$prefix + $z-value;
+        // We need the `mat-mdc-elevation-specific`, because some MDC mixins
+        // come with elevation baked in and we don't have a way of removing it.
+        .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
+          @include token-utils.create-token-slot(box-shadow, 'elevation-shadow-level-#{$z-value}',
+            none);
         }
       }
     }
