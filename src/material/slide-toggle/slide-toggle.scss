@@ -78,11 +78,11 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   }
 
   &::before {
-    transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 300ms 0ms cubic-bezier(0, 0, 0.2, 1);
     transform: translateX(0);
 
     .mdc-switch--selected & {
-      transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
+      transition: transform 300ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
       transform: translateX(100%);
 
       [dir='rtl'] .mdc-switch--selected & {
@@ -173,7 +173,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   pointer-events: none;
   position: absolute;
   top: 0;
-  transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 300ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
   left: 0;
   right: auto;
   transform: translateX(0);
@@ -208,9 +208,9 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   // Used for M3 animations. Does not affect the M2 slide-toggle
   // because the width and height are static, and the margin is unused.
   transition:
-    width 75ms cubic-bezier(0.4, 0, 0.2, 1),
-    height 75ms cubic-bezier(0.4, 0, 0.2, 1),
-    margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
+    width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    height 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    margin 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   [dir='rtl'] & {
     left: auto;
