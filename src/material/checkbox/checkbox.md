@@ -74,3 +74,9 @@ binding these properties, as demonstrated below.
 <mat-checkbox [aria-label]="isSubscribedToEmailsMessage">
 </mat-checkbox>
 ```
+
+Additionally, `MatCheckbox` now supports the following accessibility properties:
+
+- **`aria-expanded`**: Indicates whether the checkbox controls the visibility of another element. This should be a boolean value (`true` or `false`).
+- **`aria-controls`**: Specifies the ID of the element that the checkbox controls.
+- **`aria-owns`**: Specifies the ID of the element that the checkbox visually owns.
