@@ -2,6 +2,8 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:string';
+@use 'sass:color';
+@use 'sass:math';
 @use '@material/tokens/v0_161' as mdc-tokens;
 @use '../style/elevation';
 @use '../style/sass-utils';
@@ -365,6 +367,66 @@ $_component-prefix: null;
   }
 
   @return $result;
+}
+
+/// Inherited function from MDC that computes which contrast tone to use on top of a color.
+/// This is used only in a narrow set of use cases when generating M2 button tokens to maintain
+/// backwards compatibility.
+/// @param {Color} $value Color for which we're calculating the contrast tone.
+/// @param {Boolean} $is-dark Whether the current theme is dark.
+/// @return {Map} Either `dark` or `light`.
+@function contrast-tone($value, $is-dark) {
+  @if ($value == 'dark') {
+    @return 'light';
+  }
+
+  @if ($value == 'light') {
+    @return 'dark';
+  }
+
+  // Fallback if the app is using a non-color palette (e.g. CSS variable based).
+  @if (meta.type-of($value) != 'color') {
+    @return if($is-dark, 'light', 'dark');
+  }
+
+  $minimum-contrast: 3.1;
+  $light-contrast: _contrast($value, #fff);
+  $dark-contrast: _contrast($value, rgba(0, 0, 0, 0.87));
+
+  @if ($light-contrast < $minimum-contrast) and ($dark-contrast > $light-contrast) {
+    @return 'dark';
+  }
+
+  @return 'light';
+}
+
+@function _linear-channel-value($channel-value) {
+  $normalized-channel-value: math.div($channel-value, 255);
+
+  @if ($normalized-channel-value < 0.03928) {
+    @return math.div($normalized-channel-value, 12.92);
+  }
+
+  @return math.pow(math.div($normalized-channel-value + 0.055, 1.055), 2.4);
+}
+
+// Calculate the luminance for a color.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _luminance($color) {
+  $red: _linear-channel-value(color.red($color));
+  $green: _linear-channel-value(color.green($color));
+  $blue: _linear-channel-value(color.blue($color));
+
+  @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
+}
+
+// Calculate the contrast ratio between two colors.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _contrast($back, $front) {
+  $back-lum: _luminance($back) + 0.05;
+  $fore-lum: _luminance($front) + 0.05;
+
+  @return math.div(math.max($back-lum, $fore-lum), math.min($back-lum, $fore-lum));
 }
 
 /// Verifies that the token overrides exist and are used in one of the given token maps.

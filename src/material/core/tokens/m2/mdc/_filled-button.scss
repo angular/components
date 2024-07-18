@@ -3,7 +3,6 @@
 @use '../../../style/sass-utils';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, filled-button);
@@ -71,7 +70,7 @@ $prefix: (mdc, filled-button);
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   @if (token-utils.$private-is-internal-build) {
     $is-dark: inspection.get-theme-type($theme) == dark;
-    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $contrast-tone: token-utils.contrast-tone($container-color, $is-dark);
     $label-text-color: if($contrast-tone == 'dark', #000, #fff);
   }
   @else {

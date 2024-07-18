@@ -3,7 +3,6 @@
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, filled-button);
@@ -60,7 +59,7 @@ $prefix: (mat, filled-button);
   @if (token-utils.$private-is-internal-build or meta.type-of($contrast-color) != 'color') {
     $is-dark: inspection.get-theme-type($theme) == dark;
     $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $contrast-tone: token-utils.contrast-tone($container-color, $is-dark);
     $color: if($contrast-tone == 'dark', #000, #fff);
     $state-layer-color: $color;
     $ripple-color: rgba($color, 0.1);
