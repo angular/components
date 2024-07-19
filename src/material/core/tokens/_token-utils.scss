@@ -1,11 +1,11 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
-@use '@material/elevation/elevation-theme' as mdc-elevation-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '@material/theme/theme' as mdc-theme;
-@use '@material/theme/keys' as mdc-keys;
+@use 'sass:string';
+@use 'sass:color';
+@use 'sass:math';
 @use '@material/tokens/v0_161' as mdc-tokens;
+@use '../style/elevation';
 @use '../style/sass-utils';
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
@@ -57,25 +57,31 @@ $placeholder-density-config: 0;
 $_tokens: null;
 $_component-prefix: null;
 
-@mixin _configure-token-prefix($first, $rest...) {
-  $_component-prefix: '' !global;
-  @each $item in $rest {
-    $_component-prefix:
-      if($_component-prefix == '', $item, '#{$_component-prefix}-#{$item}') !global;
-  }
-  @include mdc-custom-properties.configure($varname-prefix: $first) {
-    @content;
-  }
-  $_component-prefix: null !global;
-}
-
 // Sets the token prefix and map to use when creating token slots.
 @mixin use-tokens($prefix, $tokens) {
+  $_component-prefix: $prefix !global;
   $_tokens: $tokens !global;
-  @include _configure-token-prefix($prefix...) {
-    @content;
-  }
+
+  @content;
+
+  $_component-prefix: null !global;
   $_tokens: null !global;
+}
+
+// Combines a prefix and a string to generate a CSS variable name for a token.
+@function _get-css-variable($prefix, $name) {
+  @if $prefix == null or $name == null {
+    @error 'Must specify both prefix and name when generating token';
+  }
+
+  $string-prefix: '';
+
+  // Prefixes are lists so we need to combine them.
+  @each $part in $prefix {
+    $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
+  }
+
+  @return string.unquote('--#{$string-prefix}-#{$name}');
 }
 
 // Emits a slot for the given token, provided that it has a non-null value in the token map passed
@@ -97,8 +103,9 @@ $_component-prefix: null;
       $fallback: $emit-fallback;
     }
 
-    $value: mdc-custom-properties.create('#{$_component-prefix}-#{$token}', $fallback: $fallback);
-    @include mdc-theme.property($property, $value);
+    $var-name: _get-css-variable($_component-prefix, $token);
+    $var-reference: if($fallback == null, var(#{$var-name}), var(#{$var-name}, #{$fallback}));
+    #{$property}: #{$var-reference};
   }
 }
 
@@ -112,7 +119,7 @@ $_component-prefix: null;
     @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
   }
 
-  @return mdc-custom-properties.create-varname('#{$_component-prefix}-#{$token}');
+  @return _get-css-variable($_component-prefix, $token);
 }
 
 // TODO(crisbeto): should be able to replace the usages of `get-token-variable` with this.
@@ -137,9 +144,14 @@ $_component-prefix: null;
   }
 }
 
+// Outputs a map of tokens under a specific prefix.
 @mixin create-token-values($prefix, $tokens) {
-  @include _configure-token-prefix($prefix...) {
-    @include mdc-keys.declare-custom-properties($tokens, $_component-prefix);
+  @if $tokens != null {
+    @each $key, $value in $tokens {
+      @if $value != null {
+        #{_get-css-variable($prefix, $key)}: #{$value};
+      }
+    }
   }
 }
 
@@ -161,7 +173,7 @@ $_component-prefix: null;
   $elevation: map.get($tokens, $elevation-token);
   $shadow-color: map.get($tokens, $shadow-color-token);
   @return map.merge($tokens, (
-    $elevation-token: mdc-elevation-theme.elevation-box-shadow($elevation, $shadow-color),
+    $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
     $shadow-color-token: null,
   ));
 }
@@ -355,6 +367,66 @@ $_component-prefix: null;
   }
 
   @return $result;
+}
+
+/// Inherited function from MDC that computes which contrast tone to use on top of a color.
+/// This is used only in a narrow set of use cases when generating M2 button tokens to maintain
+/// backwards compatibility.
+/// @param {Color} $value Color for which we're calculating the contrast tone.
+/// @param {Boolean} $is-dark Whether the current theme is dark.
+/// @return {Map} Either `dark` or `light`.
+@function contrast-tone($value, $is-dark) {
+  @if ($value == 'dark') {
+    @return 'light';
+  }
+
+  @if ($value == 'light') {
+    @return 'dark';
+  }
+
+  // Fallback if the app is using a non-color palette (e.g. CSS variable based).
+  @if (meta.type-of($value) != 'color') {
+    @return if($is-dark, 'light', 'dark');
+  }
+
+  $minimum-contrast: 3.1;
+  $light-contrast: _contrast($value, #fff);
+  $dark-contrast: _contrast($value, rgba(0, 0, 0, 0.87));
+
+  @if ($light-contrast < $minimum-contrast) and ($dark-contrast > $light-contrast) {
+    @return 'dark';
+  }
+
+  @return 'light';
+}
+
+@function _linear-channel-value($channel-value) {
+  $normalized-channel-value: math.div($channel-value, 255);
+
+  @if ($normalized-channel-value < 0.03928) {
+    @return math.div($normalized-channel-value, 12.92);
+  }
+
+  @return math.pow(math.div($normalized-channel-value + 0.055, 1.055), 2.4);
+}
+
+// Calculate the luminance for a color.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _luminance($color) {
+  $red: _linear-channel-value(color.red($color));
+  $green: _linear-channel-value(color.green($color));
+  $blue: _linear-channel-value(color.blue($color));
+
+  @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
+}
+
+// Calculate the contrast ratio between two colors.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _contrast($back, $front) {
+  $back-lum: _luminance($back) + 0.05;
+  $fore-lum: _luminance($front) + 0.05;
+
+  @return math.div(math.max($back-lum, $fore-lum), math.min($back-lum, $fore-lum));
 }
 
 /// Verifies that the token overrides exist and are used in one of the given token maps.

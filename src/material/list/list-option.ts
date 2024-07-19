@@ -83,6 +83,10 @@ export interface SelectionList extends MatListBase {
     '[class.mdc-list-item--with-trailing-checkbox]': '_hasCheckboxAt("after")',
     '[class.mdc-list-item--with-leading-radio]': '_hasRadioAt("before")',
     '[class.mdc-list-item--with-trailing-radio]': '_hasRadioAt("after")',
+
+    // Utility class that makes it easier to target the case where there's both a leading
+    // and a trailing icon. Avoids having to write out all the combinations.
+    '[class.mat-mdc-list-item-both-leading-and-trailing]': '_hasBothLeadingAndTrailing()',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_noopAnimations',
@@ -129,7 +133,13 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     this.togglePosition = value;
   }
 
-  /** Theme color of the list option. This sets the color of the checkbox/radio. */
+  /**
+   * Theme color of the list option. This sets the color of the checkbox/radio.
+   * This API is supported in M2 themes only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   get color(): ThemePalette {
     return this._color || this._selectionList.color;
@@ -330,5 +340,19 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   /** Sets the tabindex of the list option. */
   _setTabindex(value: number) {
     this._hostElement.setAttribute('tabindex', value + '');
+  }
+
+  protected _hasBothLeadingAndTrailing(): boolean {
+    const hasLeading =
+      this._hasProjected('avatars', 'before') ||
+      this._hasProjected('icons', 'before') ||
+      this._hasCheckboxAt('before') ||
+      this._hasRadioAt('before');
+    const hasTrailing =
+      this._hasProjected('icons', 'after') ||
+      this._hasProjected('avatars', 'after') ||
+      this._hasCheckboxAt('after') ||
+      this._hasRadioAt('after');
+    return hasLeading && hasTrailing;
   }
 }

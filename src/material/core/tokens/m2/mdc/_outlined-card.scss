@@ -41,6 +41,7 @@ $prefix: (mdc, outlined-card);
     pressed-outline-color: null,
     pressed-state-layer-color: null,
     pressed-state-layer-opacity: null,
+    container-shadow-color: null,
     // Angular Material does not currently support surface tint.
     container-surface-tint-layer-color: null,
     // MDC does not seem to use these tokens.
@@ -58,12 +59,7 @@ $prefix: (mdc, outlined-card);
     container-color: inspection.get-theme-color($theme, background, card),
     // The border color of the card.
     outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    // The elevation level of the card.
-    // (Part of the color tokens because it needs to be combined with the shadow color to generate
-    // the final box-shadow).
-    container-elevation: 0,
-    // The color of the card's shadow.
-    container-shadow-color: if($elevation != null, $elevation, elevation.$color),
+    container-elevation: elevation.get-box-shadow(0),
   );
 }
 

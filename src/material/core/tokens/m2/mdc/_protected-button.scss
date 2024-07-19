@@ -1,9 +1,9 @@
 @use 'sass:map';
 @use '../../token-utils';
 @use '../../../style/sass-utils';
+@use '../../../style/elevation';
 @use '../../../theming/inspection';
 @use '../../../theming/theming';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, protected-button);
@@ -17,7 +17,11 @@ $prefix: (mdc, protected-button);
 @function get-unthemable-tokens() {
   @return (
     container-shape: 4px,
-    keep-touch-target: false,
+    container-elevation-shadow: elevation.get-box-shadow(2),
+    disabled-container-elevation-shadow: elevation.get-box-shadow(0),
+    focus-container-elevation-shadow: elevation.get-box-shadow(4),
+    hover-container-elevation-shadow: elevation.get-box-shadow(4),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(8),
 
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
@@ -39,6 +43,13 @@ $prefix: (mdc, protected-button);
     focus-state-layer-color: null,
     hover-state-layer-color: null,
     pressed-state-layer-color: null,
+    keep-touch-target: null,
+    container-elevation: null,
+    disabled-container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
   );
 }
 
@@ -53,12 +64,6 @@ $prefix: (mdc, protected-button);
       0.12),
     disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button,
       if($is-dark, 0.5, 0.38)),
-    container-elevation: 2,
-    disabled-container-elevation: 0,
-    focus-container-elevation: 4,
-    hover-container-elevation: 4,
-    pressed-container-elevation: 8,
-    container-shadow-color: #000,
   );
 }
 
@@ -71,7 +76,7 @@ $prefix: (mdc, protected-button);
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   @if (token-utils.$private-is-internal-build) {
     $is-dark: inspection.get-theme-type($theme) == dark;
-    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $contrast-tone: token-utils.contrast-tone($container-color, $is-dark);
     $label-text-color: if($contrast-tone == 'dark', #000, #fff);
   }
   @else {

@@ -1,7 +1,5 @@
 @use 'sass:map';
 @use 'sass:math';
-@use '@material/density/functions' as mdc-density-functions;
-@use '@material/icon-button/icon-button-theme' as mdc-icon-button-theme;
 @use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 @use '../core/style/sass-utils';
@@ -18,7 +16,8 @@
   @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-icon-button-theme.theme(tokens-mdc-icon-button.get-unthemable-tokens());
+      @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix,
+        tokens-mdc-icon-button.get-unthemable-tokens());
     }
   }
 }
@@ -34,13 +33,17 @@
     tokens-mat-icon-button.get-color-tokens($theme)
   );
 
-  @include mdc-icon-button-theme.theme($mdc-tokens);
+  @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix, $mdc-tokens);
   @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
 }
 
-@mixin color($theme) {
+/// Outputs color theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+/// $color-variant: The color variant to use for the button: primary, secondary, tertiary, or error.
+@mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
     @include sass-utils.current-selector-or-root() {
@@ -82,19 +85,15 @@
   @else {
     $icon-size: 24px;
     $density-scale: inspection.get-theme-density($theme);
-    // Manually apply the expected density theming, and include the padding
-    // as it was applied before
-    $calculated-size: mdc-density-functions.prop-value(
-      $density-config: (
-        size: (
-          default: 48px,
-          maximum: 48px,
-          minimum: 28px,
-        ),
-      ),
-      $density-scale: $density-scale,
-      $property-name: size,
+    $size-map: (
+      0: 48px,
+      -1: 44px,
+      -2: 40px,
+      -3: 36px,
+      -4: 32px,
+      -5: 28px,
     );
+    $calculated-size: map.get($size-map, $density-scale);
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
@@ -105,9 +104,7 @@
     .mat-mdc-icon-button.mat-mdc-button-base {
       // Match the styles that used to be present. This is necessary for backwards
       // compat to match the previous implementations selector count (two classes).
-      @include mdc-icon-button-theme.theme((
-        state-layer-size: $calculated-size,
-      ));
+      --mdc-icon-button-state-layer-size: #{$calculated-size};
 
       // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
       // Currently fails validation because the variable is "undefined"
@@ -129,10 +126,14 @@
   );
 }
 
-@mixin theme($theme) {
+/// Outputs all (base, color, typography, and density) theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+/// $color-variant: The color variant to use for the button: primary, secondary, tertiary, or error.
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
     }
     @else {
       @include base($theme);
@@ -149,12 +150,14 @@
   }
 }
 
-@mixin _theme-from-tokens($tokens) {
+@mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   @if ($tokens != ()) {
-    @include mdc-icon-button-theme.theme(map.get($tokens, tokens-mdc-icon-button.$prefix));
-    @include token-utils.create-token-values(
-        tokens-mat-icon-button.$prefix, map.get($tokens, tokens-mat-icon-button.$prefix));
+    $mdc-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-icon-button.$prefix, $options...);
+    $mat-tokens: token-utils.get-tokens-for($tokens, tokens-mat-icon-button.$prefix, $options...);
+
+    @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix, $mdc-tokens);
+    @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
   }
 }

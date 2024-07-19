@@ -288,6 +288,12 @@ export class DragRef<T = any> {
   /** Class to be added to the preview element. */
   previewClass: string | string[] | undefined;
 
+  /**
+   * If the parent of the dragged element has a `scale` transform, it can throw off the
+   * positioning when the user starts dragging. Use this input to notify the CDK of the scale.
+   */
+  scale: number = 1;
+
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
     return this._disabled || !!(this._dropContainer && this._dropContainer.disabled);
@@ -1100,7 +1106,9 @@ export class DragRef<T = any> {
         const handler = ((event: TransitionEvent) => {
           if (
             !event ||
-            (_getEventTarget(event) === this._preview && event.propertyName === 'transform')
+            (this._preview &&
+              _getEventTarget(event) === this._preview.element &&
+              event.propertyName === 'transform')
           ) {
             this._preview?.removeEventListener('transitionend', handler);
             resolve();
@@ -1288,7 +1296,8 @@ export class DragRef<T = any> {
    * @param y New transform value along the Y axis.
    */
   private _applyRootElementTransform(x: number, y: number) {
-    const transform = getTransform(x, y);
+    const scale = 1 / this.scale;
+    const transform = getTransform(x * scale, y * scale);
     const styles = this._rootElement.style;
 
     // Cache the previous transform amount only after the first drag sequence, because

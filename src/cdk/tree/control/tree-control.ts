@@ -12,6 +12,9 @@ import {Observable} from 'rxjs';
  * Tree control interface. User can implement TreeControl to expand/collapse dataNodes in the tree.
  * The CDKTree will use this TreeControl to expand/collapse a node.
  * User can also use it outside the `<cdk-tree>` to control the expansion status of the tree.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future version.
+ * @breaking-change 21.0.0
  */
 export interface TreeControl<T, K = T> {
   /** The saved tree nodes data for `expandAll` action. */

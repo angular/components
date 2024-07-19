@@ -1,11 +1,8 @@
-@use 'sass:map';
 @use 'sass:meta';
-@use '@material/ripple/ripple-theme' as mdc-ripple-theme;
 @use '../../token-utils';
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../../mdc-helpers/mdc-helpers';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, filled-button);
@@ -29,10 +26,6 @@ $prefix: (mat, filled-button);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $ripple-opacities: if($is-dark,
-    mdc-ripple-theme.$light-ink-opacities,
-    mdc-ripple-theme.$dark-ink-opacities
-  );
 
   @return (
     // Color of the element that shows the hover, focus and pressed states.
@@ -45,13 +38,13 @@ $prefix: (mat, filled-button);
     ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
 
     // Opacity of the ripple when the button is hovered.
-    hover-state-layer-opacity: map.get($ripple-opacities, hover),
+    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
 
     // Opacity of the ripple when the button is focused.
-    focus-state-layer-opacity: map.get($ripple-opacities, focus),
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
 
     // Opacity of the ripple when the button is pressed.
-    pressed-state-layer-opacity: map.get($ripple-opacities, press),
+    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
   );
 }
 
@@ -66,7 +59,7 @@ $prefix: (mat, filled-button);
   @if (token-utils.$private-is-internal-build or meta.type-of($contrast-color) != 'color') {
     $is-dark: inspection.get-theme-type($theme) == dark;
     $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: mdc-helpers.variable-safe-contrast-tone($container-color, $is-dark);
+    $contrast-tone: token-utils.contrast-tone($container-color, $is-dark);
     $color: if($contrast-tone == 'dark', #000, #fff);
     $state-layer-color: $color;
     $ripple-color: rgba($color, 0.1);

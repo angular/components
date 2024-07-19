@@ -1,7 +1,5 @@
-@use '@material/typography' as mdc-typography;
-@use '@material/textfield/variables' as mdc-textfield-variables;
-
 @use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 
 @mixin private-form-field-subscript() {
@@ -18,7 +16,7 @@
     top: 0;
     left: 0;
     right: 0;
-    padding: 0 mdc-textfield-variables.$padding-horizontal;
+    padding: 0 16px;
   }
 
   .mat-mdc-form-field-subscript-dynamic-size {
@@ -68,7 +66,7 @@
   .mat-mdc-form-field-bottom-align::before {
     @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
       tokens-mat-form-field.get-token-slots()) {
-      @include mdc-typography.smooth-font();
+      @include vendor-prefixes.smooth-font();
       @include token-utils.create-token-slot(font-family, subscript-text-font);
       @include token-utils.create-token-slot(line-height, subscript-text-line-height);
       @include token-utils.create-token-slot(font-size, subscript-text-size);

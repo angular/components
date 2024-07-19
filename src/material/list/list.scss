@@ -1,87 +1,61 @@
-@use 'sass:map';
-@use '@material/list/list' as mdc-list;
-@use '@material/list/list-theme' as mdc-list-theme;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
 @use '../core/style/layout-common';
-@use '../core/tokens/m2/mat/list' as m2-mat-list;
-@use '../core/tokens/m2/mdc/list' as m2-mdc-list;
+@use '../core/tokens/m2/mat/list' as tokens-mat-list;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/tokens/token-utils';
 @use './list-item-hcm-indicator';
+@use './list-inherited-structure';
 
-// The slots for tokens that will be configured in the theme can be emitted with no fallback.
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  $mdc-list-token-slots: m2-mdc-list.get-token-slots();
+@include list-inherited-structure.private-list-inherited-structural-styles;
 
-  // Add the MDC list static styles.
-  @include mdc-list.static-styles();
+// Add additional slots for the MDC list tokens, needed in Angular Material.
+@include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
+  // MDC allows focus and hover colors to take precedence over disabled color. We add the disabled
+  // color here with higher specificity so that the disabled color takes precedence.
+  // TODO(mmalerba): Dicuss with MDC whether to change this in their code.
+  .mdc-list-item.mdc-list-item--disabled .mdc-list-item__primary-text {
+    @include token-utils.create-token-slot(color, list-item-disabled-label-text-color);
+  }
 
-  // Add the official slots for the MDC list.
-  @include mdc-list-theme.theme-styles(map.merge($mdc-list-token-slots, (
-    // We structure the avatar differently from how MDC expects, so we add these slots ourselves.
-      list-item-leading-avatar-shape: null,
-      list-item-leading-avatar-color: null,
-    // We add this slot ourselves with more specificity, so we don't need MDC to emit it.
-      list-item-disabled-label-text-color: null,
-    // We don't use MDC's state layers, so we add these slots ourselves instead.
-      list-item-hover-state-layer-color: null,
-      list-item-hover-state-layer-opacity: null,
-      list-item-focus-state-layer-color: null,
-      list-item-focus-state-layer-opacity: null,
-      list-item-disabled-state-layer-color: null,
-      list-item-disabled-state-layer-opacity: null,
-  )));
+  // We don't use MDC's state layer since it's tied in with their ripple. Instead we emit slots
+  // for our own state layer.
+  // TODO(mmalerba): Consider using MDC's ripple & state layer.
+  .mdc-list-item:hover::before {
+    @include token-utils.create-token-slot(background-color, list-item-hover-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-hover-state-layer-opacity);
+  }
+  .mdc-list-item.mdc-list-item--disabled::before {
+    @include token-utils.create-token-slot(background-color, list-item-disabled-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-disabled-state-layer-opacity);
+  }
+  .mdc-list-item:focus::before {
+    @include token-utils.create-token-slot(background-color, list-item-focus-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-focus-state-layer-opacity);
+  }
 
-  // Add additional slots for the MDC list tokens, needed in Angular Material.
-  @include token-utils.use-tokens(m2-mdc-list.$prefix, $mdc-list-token-slots) {
-    // MDC allows focus and hover colors to take precedence over disabled color. We add the disabled
-    // color here with higher specificity so that the disabled color takes precedence.
-    // TODO(mmalerba): Dicuss with MDC whether to change this in their code.
-    .mdc-list-item.mdc-list-item--disabled .mdc-list-item__primary-text {
-      @include token-utils.create-token-slot(color, list-item-disabled-label-text-color);
+  // Apply the disabled opacity to the checkbox/radio indicators.
+  // TODO(mmalerba): We should probably stop doing this and allow the checkbox/radio to decide
+  //  what their disabled state looks like. This is done for now to avoid screenshot diffs.
+  .mdc-list-item--disabled {
+    .mdc-radio,
+    .mdc-checkbox {
+      @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
     }
+  }
 
-    // We don't use MDC's state layer since it's tied in with their ripple. Instead we emit slots
-    // for our own state layer.
-    // TODO(mmalerba): Consider using MDC's ripple & state layer.
-    .mdc-list-item:hover::before {
-      @include token-utils.create-token-slot(background-color, list-item-hover-state-layer-color);
-      @include token-utils.create-token-slot(opacity, list-item-hover-state-layer-opacity);
-    }
-    .mdc-list-item.mdc-list-item--disabled::before {
-      @include token-utils.create-token-slot(
-              background-color, list-item-disabled-state-layer-color);
-      @include token-utils.create-token-slot(opacity, list-item-disabled-state-layer-opacity);
-    }
-    .mdc-list-item:focus::before {
-      @include token-utils.create-token-slot(background-color, list-item-focus-state-layer-color);
-      @include token-utils.create-token-slot(opacity, list-item-focus-state-layer-opacity);
-    }
+  // In Angular Material we put the avatar class directly on the .mdc-list-item__start element,
+  // rather than nested inside it, so we need to emit avatar slots ourselves.
+  // TODO(mmalerba): We should try to change MDC's recommended DOM or change ours to match their
+  //  recommendation.
+  .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
+    @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
+    @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
+  }
 
-    // Apply the disabled opacity to the checkbox/radio indicators.
-    // TODO(mmalerba): We should probably stop doing this and allow the checkbox/radio to decide
-    //  what their disabled state looks like. This is done for now to avoid screenshot diffs.
-    .mdc-list-item--disabled {
-      .mdc-radio,
-      .mdc-checkbox {
-        @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
-      }
-    }
-
-    // In Angular Material we put the avatar class directly on the .mdc-list-item__start element,
-    // rather than nested inside it, so we need to emit avatar slots ourselves.
-    // TODO(mmalerba): We should try to change MDC's recommended DOM or change ours to match their
-    //  recommendation.
-    .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
-      @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
-      @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
-    }
-
-    // Set font-size of leading icon to same value as its width and height. Ensure icon scales to
-    // "list-item-leading-icon-size" token. In Angular Material, the icon is on the same element as
-    // ".mdc-list-item__start", rather than a child of ".mdc-list-item__start".
-    .mat-mdc-list-item-icon {
-      @include token-utils.create-token-slot(font-size, list-item-leading-icon-size);
-    }
+  // Set font-size of leading icon to same value as its width and height. Ensure icon scales to
+  // "list-item-leading-icon-size" token. In Angular Material, the icon is on the same element as
+  // ".mdc-list-item__start", rather than a child of ".mdc-list-item__start".
+  .mat-mdc-list-item-icon {
+    @include token-utils.create-token-slot(font-size, list-item-leading-icon-size);
   }
 }
 
@@ -200,7 +174,7 @@ mat-action-list button {
   }
 }
 
-@include token-utils.use-tokens(m2-mat-list.$prefix, m2-mat-list.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-list.$prefix, tokens-mat-list.get-token-slots()) {
   .mdc-list-item--with-leading-icon .mdc-list-item__start {
     @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
     @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);

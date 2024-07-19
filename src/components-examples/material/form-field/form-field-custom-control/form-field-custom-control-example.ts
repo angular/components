@@ -13,6 +13,7 @@ import {
   input,
   model,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -175,19 +176,20 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
       this._required();
       this._disabled();
       // Propagate state changes.
-      this.stateChanges.next();
+      untracked(() => this.stateChanges.next());
     });
 
     effect(() => {
       if (this._disabled()) {
-        this.parts.disable();
+        untracked(() => this.parts.disable());
       } else {
-        this.parts.enable();
+        untracked(() => this.parts.enable());
       }
     });
 
     effect(() => {
-      this.parts.setValue(this._value() || new MyTel('', '', ''));
+      const value = this._value() || new MyTel('', '', '');
+      untracked(() => this.parts.setValue(value));
     });
 
     this.parts.statusChanges.pipe(takeUntilDestroyed()).subscribe(() => {

@@ -4,7 +4,6 @@
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
-@use '@material/circular-progress/circular-progress-theme' as mdc-circular-progress-theme;
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-progress-spinner.
@@ -14,11 +13,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   }
   @else {
-    // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include mdc-circular-progress-theme.theme(
-          tokens-mdc-circular-progress.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-unthemable-tokens());
     }
   }
 }
@@ -33,19 +30,18 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
-    $mdc-circular-progress-color-tokens: tokens-mdc-circular-progress.get-color-tokens($theme);
-
     @include sass-utils.current-selector-or-root() {
-      @include mdc-circular-progress-theme.theme($mdc-circular-progress-color-tokens);
+      @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-color-tokens($theme, primary));
 
       .mat-accent {
-        $color: inspection.get-theme-color($theme, accent);
-        @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
+        @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, accent));
       }
 
       .mat-warn {
-        $color: inspection.get-theme-color($theme, warn);
-        @include mdc-circular-progress-theme.theme((active-indicator-color: $color));
+        @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, warn));
       }
     }
   }
@@ -101,6 +97,7 @@
   @include validation.selector-defined(
       'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
   $mdc-circular-progress-tokens:
-      token-utils.get-tokens-for($tokens, tokens-mdc-circular-progress.$prefix, $options...);
-  @include mdc-circular-progress-theme.theme($mdc-circular-progress-tokens);
+    token-utils.get-tokens-for($tokens, tokens-mdc-circular-progress.$prefix, $options...);
+  @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
+    $mdc-circular-progress-tokens);
 }

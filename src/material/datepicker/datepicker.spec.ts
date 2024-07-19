@@ -1726,6 +1726,7 @@ describe('MatDatepicker', () => {
         testComponent.minDate = new Date(2020, JAN, 1);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
+        flush();
 
         expect(getDisabledCells()).not.toBe(disabledCellCount);
         disabledCellCount = getDisabledCells();
@@ -1733,6 +1734,7 @@ describe('MatDatepicker', () => {
         testComponent.maxDate = new Date(2020, JAN, 10);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
+        flush();
 
         expect(getDisabledCells()).not.toBe(disabledCellCount);
       }));

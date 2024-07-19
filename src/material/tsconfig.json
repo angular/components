@@ -2,7 +2,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "..",
+    "rootDirs": ["..", "../../tools"],
     "baseUrl": ".",
     "paths": {
       "@angular/cdk": ["../cdk"],

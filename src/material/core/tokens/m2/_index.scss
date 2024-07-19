@@ -67,7 +67,7 @@
 @use './mdc/slider' as tokens-mdc-slider;
 @use './mdc/snack-bar' as tokens-mdc-snack-bar;
 @use './mdc/switch' as tokens-mdc-switch;
-@use './mdc/tab' as tokens-mdc-tab;
+@use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
 @use '../../theming/inspection';
 
@@ -179,7 +179,7 @@
     _get-tokens-for-module($theme, tokens-mdc-snack-bar),
     _get-tokens-for-module($theme, tokens-mdc-switch),
     _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
-    _get-tokens-for-module($theme, tokens-mdc-tab),
+    _get-tokens-for-module($theme, tokens-mdc-secondary-navigation-tab),
     _get-tokens-for-module($theme, tokens-mdc-text-button)
   );
 }

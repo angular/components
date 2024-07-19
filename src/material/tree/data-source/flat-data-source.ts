@@ -44,6 +44,10 @@ import {map, take} from 'rxjs/operators';
  *   level: 2
  * }
  * and the output flattened type is `F` with additional information.
+ *
+ * @deprecated Use MatTree#childrenAccessor and MatTreeNode#isExpandable
+ * instead. To be removed in a future version.
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlattener<T, F, K = F> {
   constructor(
@@ -122,6 +126,10 @@ export class MatTreeFlattener<T, F, K = F> {
  * to `MatTree`.
  * The nested tree nodes of type `T` are flattened through `MatTreeFlattener`, and converted
  * to type `F` for `MatTree` to consume.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
+ * version.
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   private readonly _flattenedData = new BehaviorSubject<F[]>([]);

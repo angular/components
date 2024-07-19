@@ -23,14 +23,12 @@ import {
   Injectable,
   Injector,
   NgModule,
-  NgZone,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   createNgModuleRef,
   forwardRef,
-  provideZoneChangeDetection,
   signal,
 } from '@angular/core';
 import {
@@ -84,8 +82,6 @@ describe('MDC-based MatDialog', () => {
         ComponentWithContentElementTemplateRef,
       ],
       providers: [
-        provideZoneChangeDetection(),
-        provideZoneChangeDetection(),
         {provide: Location, useClass: SpyLocation},
         {
           provide: ScrollDispatcher,
@@ -137,6 +133,7 @@ describe('MDC-based MatDialog', () => {
   it('should open a dialog with a template', () => {
     const templateRefFixture = TestBed.createComponent(ComponentWithTemplateRef);
     templateRefFixture.componentInstance.localValue = 'Bees';
+    templateRefFixture.changeDetectorRef.markForCheck();
     templateRefFixture.detectChanges();
 
     const data = {value: 'Knees'};
@@ -232,24 +229,6 @@ describe('MDC-based MatDialog', () => {
     expect(afterCloseCallback).toHaveBeenCalledWith('Charmander');
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
-
-  it('should invoke the afterClosed callback inside the NgZone', fakeAsync(
-    inject([NgZone], (zone: NgZone) => {
-      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
-      const afterCloseCallback = jasmine.createSpy('afterClose callback');
-
-      dialogRef.afterClosed().subscribe(() => {
-        afterCloseCallback(NgZone.isInAngularZone());
-      });
-      zone.run(() => {
-        dialogRef.close();
-        viewContainerFixture.detectChanges();
-        flush();
-      });
-
-      expect(afterCloseCallback).toHaveBeenCalledWith(true);
-    }),
-  ));
 
   it('should dispose of dialog if view container is destroyed while animating', fakeAsync(() => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -1077,8 +1056,8 @@ describe('MDC-based MatDialog', () => {
         autoFocus: 'first-heading',
       });
 
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       let firstHeader = overlayContainerElement.querySelector(
@@ -1110,8 +1089,8 @@ describe('MDC-based MatDialog', () => {
         autoFocus: 'button',
       });
 
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       let firstButton = overlayContainerElement.querySelector(
@@ -1228,8 +1207,8 @@ describe('MDC-based MatDialog', () => {
         autoFocus: 'first-heading',
       });
 
+      flush();
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
 
       let firstHeader = overlayContainerElement.querySelector(
         'h2[tabindex="-1"]',
@@ -1280,12 +1259,10 @@ describe('MDC-based MatDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef}),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
-      viewContainerFixture.detectChanges();
       flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'dialog-trigger',
@@ -1539,15 +1516,13 @@ describe('MDC-based MatDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {
-          viewContainerRef: testViewContainerRef,
-          restoreFocus: false,
-        }),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        restoreFocus: false,
+      });
 
-      viewContainerFixture.detectChanges();
       flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'dialog-trigger',
@@ -1577,12 +1552,10 @@ describe('MDC-based MatDialog', () => {
       body.appendChild(otherButton);
       button.focus();
 
-      const dialogRef = TestBed.inject(NgZone).run(() =>
-        dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef}),
-      );
+      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
-      viewContainerFixture.detectChanges();
       flush();
+      viewContainerFixture.detectChanges();
 
       expect(document.activeElement!.id).not.toBe(
         'dialog-trigger',
@@ -1681,8 +1654,9 @@ describe('MDC-based MatDialog', () => {
 
       const hostFixture = TestBed.createComponent(OnPushHost);
       hostFixture.componentInstance.child.open();
-      hostFixture.autoDetectChanges();
+      hostFixture.detectChanges();
       flush();
+      hostFixture.detectChanges();
 
       const overlayContainer = TestBed.inject(OverlayContainer);
       const title = overlayContainer.getContainerElement().querySelector('[mat-dialog-title]')!;
@@ -1696,6 +1670,7 @@ describe('MDC-based MatDialog', () => {
       hostFixture.componentInstance.child.dialogRef?.componentInstance.showTitle.set(false);
       hostFixture.detectChanges();
       flush();
+      hostFixture.detectChanges();
       expect(container.getAttribute('aria-labelledby')).toBe(null);
     }));
 
@@ -1779,6 +1754,7 @@ describe('MDC-based MatDialog', () => {
         expect(container.getAttribute('aria-labelledby')).toBe(title.id);
 
         hostInstance.shownTitle = 'second';
+        viewContainerFixture.changeDetectorRef.markForCheck();
         viewContainerFixture.detectChanges();
         flush();
         viewContainerFixture.detectChanges();
@@ -1793,6 +1769,7 @@ describe('MDC-based MatDialog', () => {
         const container = overlayContainerElement.querySelector('mat-dialog-container')!;
 
         hostInstance.shownTitle = 'all';
+        viewContainerFixture.changeDetectorRef.markForCheck();
         viewContainerFixture.detectChanges();
         flush();
         viewContainerFixture.detectChanges();
@@ -1803,6 +1780,7 @@ describe('MDC-based MatDialog', () => {
         expect(container.getAttribute('aria-labelledby')).toBe(titles[0].id);
 
         hostInstance.shownTitle = 'second';
+        viewContainerFixture.changeDetectorRef.markForCheck();
         viewContainerFixture.detectChanges();
         flush();
         viewContainerFixture.detectChanges();
@@ -1906,6 +1884,7 @@ describe('MDC-based MatDialog', () => {
 
     dialogRef.close();
     viewContainerFixture.componentInstance.showChildView = false;
+    viewContainerFixture.changeDetectorRef.markForCheck();
     viewContainerFixture.detectChanges();
     flush();
 
@@ -1923,7 +1902,6 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, NoopAnimationsModule, ComponentThatProvidesMatDialog],
       providers: [
-        provideZoneChangeDetection(),
         {
           provide: OverlayContainer,
           useFactory: () => {
@@ -2041,10 +2019,7 @@ describe('MDC-based MatDialog with default options', () => {
         ComponentWithChildViewContainer,
         DirectiveWithViewContainer,
       ],
-      providers: [
-        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
-        provideZoneChangeDetection(),
-      ],
+      providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
 
     TestBed.compileComponents();

@@ -27,7 +27,13 @@ export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 /** Default `mat-progress-spinner` options that can be overridden. */
 export interface MatProgressSpinnerDefaultOptions {
-  /** Default color of the spinner. */
+  /**
+   * Default theme color of the progress spinner. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   color?: ThemePalette;
   /** Diameter of the spinner. */
   diameter?: number;
@@ -95,7 +101,13 @@ export class MatProgressSpinner {
   _noopAnimations: boolean;
 
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
-  /** Theme palette color of the progress spinner. */
+  /**
+   * Theme color of the progress spinner. This API is supported in M2 themes only, it
+   * has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants.
+   */
   @Input()
   get color() {
     return this._color || this._defaultColor;

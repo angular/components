@@ -53,12 +53,16 @@ $prefix: (mdc, switch);
     unselected-hover-state-layer-opacity: 0.04,
     // Opacity of ripple when unselected and pressed.
     unselected-pressed-state-layer-opacity: 0.1,
+
+    // Unused tokens
+    handle-elevation: null,
+    handle-shadow-color: null,
+    disabled-handle-elevation: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $elevation: inspection.get-theme-color($theme, foreground, elevation);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #f5f5f5, #424242);
   $hairline: if($is-dark, #616161, #e0e0e0);
@@ -85,14 +89,10 @@ $prefix: (mdc, switch);
       disabled-unselected-icon-color: $icon-color,
       // Color of track when disabled.
       disabled-unselected-track-color: $on-surface,
+      // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mdc-surface-color, #fff)`
+      // which made it basically hardcoded to #fff. Should it be based on the theme?
       // Color of slide-toggle handle's surface.
-      handle-surface-color: surface,
-      // Elevation level for handle.
-      handle-elevation: 1,
-      // Color of handle's shadow
-      handle-shadow-color: if($elevation != null, $elevation, elevation.$color),
-      // Elevation level for handle when disabled.
-      disabled-handle-elevation: 0,
+      handle-surface-color: #fff,
       // Color of icon (ex. checkmark) when selected
       selected-icon-color: $icon-color,
       // Color of handle when unselected and focused.
@@ -119,6 +119,10 @@ $prefix: (mdc, switch);
       unselected-pressed-track-color: $hairline,
       // Color of track when selected.
       unselected-track-color: $hairline,
+      // Elevation level for handle.
+      handle-elevation-shadow: elevation.get-box-shadow(1),
+      // Elevation level for handle when disabled.
+      disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
     )
   );
 }

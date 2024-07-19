@@ -11,10 +11,18 @@ import {BaseTreeControl} from './base-tree-control';
 
 /** Optional set of configuration that can be provided to the NestedTreeControl. */
 export interface NestedTreeControlOptions<T, K> {
+  /** Function to determine if the provided node is expandable. */
+  isExpandable?: (dataNode: T) => boolean;
   trackBy?: (dataNode: T) => K;
 }
 
-/** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
+/**
+ * Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
+ * version.
+ * @breaking-change 21.0.0
+ */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
   /** Construct with nested tree function getChildren. */
   constructor(
@@ -25,6 +33,10 @@ export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     if (this.options) {
       this.trackBy = this.options.trackBy;
+    }
+
+    if (this.options?.isExpandable) {
+      this.isExpandable = this.options.isExpandable;
     }
   }
 

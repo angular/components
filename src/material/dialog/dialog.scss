@@ -1,8 +1,6 @@
 @use '@angular/cdk';
-@use '@material/typography/typography' as mdc-typography;
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
-@use '../core/mdc-helpers/mdc-helpers';
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
 
@@ -19,20 +17,14 @@ $mat-dialog-button-horizontal-margin: 8px !default;
 $_emit-fallbacks: true;
 
 @mixin _use-mat-tokens {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include token-utils.use-tokens(tokens-mat-dialog.$prefix,
-      tokens-mat-dialog.get-token-slots()) {
-      @content;
-    }
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    @content;
   }
 }
 
 @mixin _use-mdc-tokens {
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include token-utils.use-tokens(tokens-mdc-dialog.$prefix,
-      tokens-mdc-dialog.get-token-slots()) {
-      @content;
-    }
+  @include token-utils.use-tokens(tokens-mdc-dialog.$prefix, tokens-mdc-dialog.get-token-slots()) {
+    @content;
   }
 }
 
@@ -153,11 +145,22 @@ $_emit-fallbacks: true;
 }
 
 .mat-mdc-dialog-title {
-  @include mdc-typography.text-baseline($top: 40px, $display: block, $lineHeight: null);
+  display: block;
   position: relative;
   flex-shrink: 0;
   box-sizing: border-box;
   margin: 0 0 1px;
+
+  // This was used by MDC to set the text baseline. We should figure out a way to
+  // remove it, because it can introduce unnecessary whitespace at the beginning
+  // of the element.
+  &::before {
+    display: inline-block;
+    width: 0;
+    height: 40px;
+    content: '';
+    vertical-align: 0;
+  }
 
   [dir='rtl'] & {
     text-align: right;

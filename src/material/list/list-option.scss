@@ -1,40 +1,71 @@
-@use '@material/radio/radio' as mdc-radio;
-@use '@material/radio/radio-theme' as mdc-radio-theme;
-
 @use '../checkbox/checkbox-common';
-@use '../core/mdc-helpers/mdc-helpers';
-@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
-@use './list-option-trailing-avatar-compat';
+@use '../radio/radio-common';
 @use './list-item-hcm-indicator';
 
-// For compatibility with the non-MDC list, we support avatars that are shown at the end
-// of the list option. We create a class similar to MDC's `--trailing-icon` one.
-@include list-option-trailing-avatar-compat.core-styles($query: mdc-helpers.$mdc-base-styles-query);
+// For compatibility with the non-MDC selection list, we support avatars that are
+// shown at the end of the list option. This is not supported by the MDC list as the
+// spec only defines avatars at the beginning of a list item. For selection list options,
+// we support changing the checkbox position to `before`. This results in the avatar from
+// the list start being moved to the end. Similar to MDC's `--trailing-icon` class, we
+// implement a `--trailing-avatar` class that is based on the original `--leading-avatar`
+// implementation. See: https://github.com/material-components/material-components-web/blob/3f342c3f4715fd3587f327ce4ea6b5dd314c5c55/packages/mdc-list/_evolution-mixins.scss#L198-L217
+.mat-mdc-list-option-with-trailing-avatar {
+  &.mdc-list-item,
+  [dir='rtl'] &.mdc-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
-.mat-mdc-list-option {
-  // The MDC-based list-option uses the MDC checkbox/radio for the selection indicators.
-  // We need to ensure that the checkbox and radio styles are not included for the list-option.
-  @include mdc-helpers.disable-mdc-fallback-declarations {
-    @include mdc-radio.static-styles(
-      $query: mdc-helpers.$mdc-base-styles-without-animation-query);
+  .mdc-list-item__end {
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 40px;
+    height: 40px;
+  }
 
-    &:not(._mat-animation-noopable) {
-      @include mdc-radio.static-styles($query: animation);
+  &.mdc-list-item--with-two-lines {
+    $top: 32px;
+    $bottom: 20px;
+
+    .mdc-list-item__primary-text {
+      display: block;
+      margin-top: 0;
+      line-height: normal;
+      margin-bottom: $bottom * -1;
+
+      // This was used by MDC to set the text baseline. We should figure out a way to
+      // remove it, because it can introduce unnecessary whitespace at the beginning
+      // of the element.
+      &::before {
+        display: inline-block;
+        width: 0;
+        height: $top;
+        content: '';
+        vertical-align: 0;
+      }
+
+      &::after {
+        display: inline-block;
+        width: 0;
+        height: $bottom;
+        content: '';
+        vertical-align: $bottom * -1;
+      }
     }
   }
 
+  .mdc-list-item__end {
+    border-radius: 50%;
+  }
+}
+
+.mat-mdc-list-option {
   // We can't use the MDC checkbox here directly, because this checkbox is purely
   // decorative and including the MDC one will bring in unnecessary JS.
   @include checkbox-common.checkbox-structure(false);
   @include checkbox-common.checkbox-noop-animations;
-
-  // We can't use the MDC radio here directly, because this radio is purely
-  // decorative and including the MDC one will bring in unnecessary JS.
-  .mdc-radio {
-    // MDC theme styles also include structural styles so we have to include the theme at least
-    // once here. The values will be overwritten by our own theme file afterwards.
-    @include mdc-radio-theme.theme-styles(tokens-mdc-radio.get-token-slots());
-  }
+  @include radio-common.radio-structure(false);
+  @include radio-common.radio-noop-animations;
 
   // The internal checkbox/radio is purely decorative, but because it's an `input`, the user can
   // still focus it by tabbing or clicking. Furthermore, `mat-list-option` has the `option` role

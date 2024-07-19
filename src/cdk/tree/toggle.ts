@@ -11,12 +11,15 @@ import {Directive, Input, booleanAttribute} from '@angular/core';
 import {CdkTree, CdkTreeNode} from './tree';
 
 /**
- * Node toggle to expand/collapse the node.
+ * Node toggle to expand and collapse the node.
  */
 @Directive({
   selector: '[cdkTreeNodeToggle]',
   host: {
-    '(click)': '_toggle($event)',
+    '(click)': '_toggle(); $event.stopPropagation();',
+    '(keydown.Enter)': '_toggle(); $event.preventDefault();',
+    '(keydown.Space)': '_toggle(); $event.preventDefault();',
+    'tabindex': '-1',
   },
   standalone: true,
 })
@@ -30,11 +33,15 @@ export class CdkTreeNodeToggle<T, K = T> {
     protected _treeNode: CdkTreeNode<T, K>,
   ) {}
 
-  _toggle(event: Event): void {
+  // Toggle the expanded or collapsed state of this node.
+  //
+  // Focus this node with expanding or collapsing it. This ensures that the active node will always
+  // be visible when expanding and collapsing.
+  _toggle(): void {
     this.recursive
-      ? this._tree.treeControl.toggleDescendants(this._treeNode.data)
-      : this._tree.treeControl.toggle(this._treeNode.data);
+      ? this._tree.toggleDescendants(this._treeNode.data)
+      : this._tree.toggle(this._treeNode.data);
 
-    event.stopPropagation();
+    this._tree._keyManager.focusItem(this._treeNode);
   }
 }

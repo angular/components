@@ -26,6 +26,7 @@ const POPOVER_EDIT_INPUTS = [
   {name: 'context', alias: 'matPopoverEditContext'},
   {name: 'colspan', alias: 'matPopoverEditColspan'},
   {name: 'disabled', alias: 'matPopoverEditDisabled'},
+  {name: 'ariaLabel', alias: 'matPopoverEditAriaLabel'},
 ];
 
 const EDIT_PANE_CLASS = 'mat-edit-pane';

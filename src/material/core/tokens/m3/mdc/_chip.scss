@@ -16,10 +16,7 @@ $prefix: (mdc, chip);
   $tokens: sass-utils.merge-all(
     token-utils.generate-typography-tokens($systems, label-text, label-large),
     (
-      container-shape: token-utils.hardcode((
-        family: rounded,
-        radius: 8px,
-      ), $exclude-hardcoded),
+      container-shape-radius: token-utils.hardcode(8px, $exclude-hardcoded),
       with-avatar-avatar-size: token-utils.hardcode(24px, $exclude-hardcoded),
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
       disabled-label-text-color: sass-utils.safe-color-change(

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '@material/elevation' as mdc-elevation;
+@use '../../../style/elevation';
 @use '../../token-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -19,7 +19,7 @@ $prefix: (mat, app);
 
   @if ($shadow-color) {
     @for $zValue from 0 through 24 {
-      $shadow: mdc-elevation.elevation-box-shadow($zValue, $shadow-color);
+      $shadow: elevation.get-box-shadow($zValue, $shadow-color);
       $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
     }
   }

@@ -1,7 +1,7 @@
-@use '../../token-utils';
-@use '../../../theming/inspection';
-
 @use 'sass:map';
+@use '../../token-utils';
+@use '../../../style/elevation';
+@use '../../../theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, extended-fab);
@@ -10,6 +10,10 @@ $prefix: (mdc, extended-fab);
   @return (
     container-height: 48px,
     container-shape: 24px,
+    container-elevation-shadow: elevation.get-box-shadow(6),
+    focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
 
     // =============================================================================================
     // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
@@ -38,19 +42,18 @@ $prefix: (mdc, extended-fab);
     pressed-ripple-color: null,
     pressed-ripple-opacity: null,
     pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null
+    pressed-state-layer-opacity: null,
+    container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  @return (
-    container-elevation: 6,
-    focus-container-elevation: 8,
-    hover-container-elevation: 8,
-    pressed-container-elevation: 12,
-    container-shadow-color: #000,
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.

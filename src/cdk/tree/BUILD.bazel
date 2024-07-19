@@ -18,7 +18,9 @@ ng_module(
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
+        "//src/cdk/coercion/private",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],
@@ -32,8 +34,11 @@ ng_test_library(
     ),
     deps = [
         ":tree",
+        "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/testbed",
         "@npm//rxjs",
     ],
 )

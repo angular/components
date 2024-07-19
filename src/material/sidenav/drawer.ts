@@ -322,6 +322,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   readonly _modeChanged = new Subject<void>();
 
   private _injector = inject(Injector);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -593,6 +594,8 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
       }
     }
 
+    // Needed to ensure that the closing sequence fires off correctly.
+    this._changeDetectorRef.markForCheck();
     this._updateFocusTrapState();
 
     return new Promise<MatDrawerToggleResult>(resolve => {

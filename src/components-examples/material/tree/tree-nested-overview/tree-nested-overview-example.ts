@@ -1,5 +1,5 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatTreeNestedDataSource, MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -42,6 +42,7 @@ const TREE_DATA: FoodNode[] = [
   styleUrl: 'tree-nested-overview-example.css',
   standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeNestedOverviewExample {
   treeControl = new NestedTreeControl<FoodNode>(node => node.children);

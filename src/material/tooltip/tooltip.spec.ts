@@ -18,20 +18,19 @@ import {
   Component,
   DebugElement,
   ElementRef,
-  NgZone,
   ViewChild,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import {
   ComponentFixture,
+  TestBed,
   fakeAsync,
   flush,
   inject,
-  TestBed,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {
   MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -41,7 +40,6 @@ import {
   TooltipPosition,
   TooltipTouchGestures,
 } from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 const initialTooltipMessage = 'initial tooltip message';
 
@@ -50,11 +48,6 @@ describe('MDC-based MatTooltip', () => {
   let dir: {value: Direction; change: Subject<Direction>};
   let platform: Platform;
   let focusMonitor: FocusMonitor;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -180,7 +173,6 @@ describe('MDC-based MatTooltip', () => {
         .configureTestingModule({
           imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
           providers: [
-            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {showDelay: 1337, hideDelay: 7331},
@@ -218,7 +210,6 @@ describe('MDC-based MatTooltip', () => {
           imports: [MatTooltipModule, OverlayModule],
           declarations: [TooltipDemoWithoutPositionBinding],
           providers: [
-            provideZoneChangeDetection(),
             {
               provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
               useValue: {position: 'right'},
@@ -360,6 +351,7 @@ describe('MDC-based MatTooltip', () => {
     it('should not show if disabled', fakeAsync(() => {
       // Test that disabling the tooltip will not set the tooltip visible
       tooltipDirective.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show();
       fixture.detectChanges();
       tick(0);
@@ -368,6 +360,7 @@ describe('MDC-based MatTooltip', () => {
       // Test to make sure setting disabled to false will show the tooltip
       // Sanity check to make sure everything was correct before (detectChanges, tick)
       tooltipDirective.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show();
       fixture.detectChanges();
       tick(0);
@@ -420,12 +413,12 @@ describe('MDC-based MatTooltip', () => {
     it('should not show tooltip if message is not present or empty', () => {
       assertTooltipInstance(tooltipDirective, false);
 
-      tooltipDirective.message = undefined!;
+      tooltipDirective.message = undefined;
       fixture.detectChanges();
       tooltipDirective.show();
       assertTooltipInstance(tooltipDirective, false);
 
-      tooltipDirective.message = null!;
+      tooltipDirective.message = null;
       fixture.detectChanges();
       tooltipDirective.show();
       assertTooltipInstance(tooltipDirective, false);
@@ -541,6 +534,7 @@ describe('MDC-based MatTooltip', () => {
 
       // Enable the classes via ngClass syntax
       fixture.componentInstance.showTooltipClass = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Make sure classes are correctly added
@@ -666,6 +660,7 @@ describe('MDC-based MatTooltip', () => {
     it('should throw when trying to assign an invalid position', () => {
       expect(() => {
         fixture.componentInstance.position = 'everywhere';
+        fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tooltipDirective.show();
       }).toThrowError('Tooltip position "everywhere" is invalid.');
@@ -723,6 +718,7 @@ describe('MDC-based MatTooltip', () => {
 
     it('should be able to set the tooltip message as a number', fakeAsync(() => {
       fixture.componentInstance.message = 100;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tooltipDirective.message).toBe('100');
@@ -896,6 +892,7 @@ describe('MDC-based MatTooltip', () => {
       buttonElement.style.top = buttonElement.style.left = '200px';
 
       fixture.componentInstance.message = 'hi';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       setPositionAndShow('below');
 
@@ -932,10 +929,12 @@ describe('MDC-based MatTooltip', () => {
       buttonElement.style.position = 'fixed';
       buttonElement.style.top = buttonElement.style.left = '200px';
       fixture.componentInstance.message = 'hi';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dir.value = 'ltr';
       tooltipDirective.position = 'after';
+      fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show(0);
       fixture.detectChanges();
       tick(0);
@@ -1183,25 +1182,6 @@ describe('MDC-based MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible())
         .withContext('Expected tooltip hidden when scrolled out of view, after throttle limit')
         .toBe(false);
-    }));
-
-    it('should execute the `hide` call, after scrolling away, inside the NgZone', fakeAsync(() => {
-      const inZoneSpy = jasmine.createSpy('in zone spy');
-
-      tooltipDirective.show();
-      fixture.detectChanges();
-      tick(0);
-
-      spyOn(tooltipDirective._tooltipInstance!, 'hide').and.callFake(() => {
-        inZoneSpy(NgZone.isInAngularZone());
-      });
-
-      fixture.componentInstance.scrollDown();
-      tick(100);
-      fixture.detectChanges();
-
-      expect(inZoneSpy).toHaveBeenCalled();
-      expect(inZoneSpy).toHaveBeenCalledWith(true);
     }));
   });
 

@@ -200,6 +200,8 @@ Note that if the data properties do not match the column names, or if a more com
 accessor is required, then a custom `sortingDataAccessor` function can be set to override the
 default data accessor on the `MatTableDataSource`.
 
+When updating the data soure asynchronously avoid doing so by recreating the entire `MatTableDataSource` as this could break sorting. Rather update it through the `MatTableDataSource.data` property.
+
 If you are not using the `MatTableDataSource`, but instead implementing custom logic to sort your
 data, listen to the sort's `(matSortChange)` event and re-order your data according to the sort state.
 If you are providing a data array directly to the table, don't forget to call `renderRows()` on the

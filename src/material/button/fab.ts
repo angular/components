@@ -27,6 +27,13 @@ import {ThemePalette} from '@angular/material/core';
 
 /** Default FAB options that can be overridden. */
 export interface MatFabDefaultOptions {
+  /**
+   * Default theme color of the button. This API is supported in M2 themes
+   * only, it has no effect in M3 themes.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/theming#using-component-color-variants
+   */
   color?: ThemePalette;
 }
 

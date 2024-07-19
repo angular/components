@@ -1,12 +1,40 @@
-@use '@material/form-field/form-field' as mdc-form-field;
-@use '@material/typography/typography' as mdc-typography;
-@use '@material/theme/custom-properties' as mdc-custom-properties;
-@use '../mdc-helpers/mdc-helpers';
-
-@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
-  @include mdc-form-field.static-styles($query: mdc-helpers.$mdc-base-styles-query);
-}
+@use '../style/vendor-prefixes';
 
 .mat-internal-form-field {
-  @include mdc-typography.smooth-font();
+  @include vendor-prefixes.smooth-font();
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+
+  & > label {
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 4px;
+    padding-right: 0;
+    order: 0;
+  }
+
+  [dir='rtl'] & > label {
+    margin-left: auto;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 4px;
+  }
+}
+
+.mdc-form-field--align-end {
+  & > label {
+    margin-left: auto;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 4px;
+    order: -1;
+  }
+
+  [dir='rtl'] .mdc-form-field--align-end & label {
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 4px;
+    padding-right: 0;
+  }
 }

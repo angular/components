@@ -6,13 +6,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
@@ -23,11 +17,6 @@ import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
 describe('MDC-based MatTabNavBar', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-    });
-  });
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
@@ -103,6 +92,7 @@ describe('MDC-based MatTabNavBar', () => {
         .toBe(true);
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tabLinkElements.every(tabLink => tabLink.getAttribute('aria-disabled') === 'true'))
@@ -120,6 +110,7 @@ describe('MDC-based MatTabNavBar', () => {
         .toEqual([0, -1, -1]);
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tabLinkElements.every(tabLink => tabLink.tabIndex === -1))
@@ -133,6 +124,7 @@ describe('MDC-based MatTabNavBar', () => {
       expect(tabLinkElement.classList).not.toContain('mat-mdc-tab-disabled');
 
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tabLinkElement.classList).toContain('mat-mdc-tab-disabled');
@@ -141,6 +133,7 @@ describe('MDC-based MatTabNavBar', () => {
     it('should prevent default keyboard actions on disabled links', () => {
       const link = fixture.debugElement.query(By.css('a')).nativeElement;
       fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const spaceEvent = dispatchKeyboardEvent(link, 'keydown', SPACE);
@@ -170,6 +163,7 @@ describe('MDC-based MatTabNavBar', () => {
       spyOn(inkBar, 'alignToElement');
 
       fixture.componentInstance.tabs = [1, 2, 3, 4];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -185,6 +179,7 @@ describe('MDC-based MatTabNavBar', () => {
       });
 
       fixture.componentInstance.label = 'label change';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(spy.calls.any()).toBe(false);
@@ -208,6 +203,7 @@ describe('MDC-based MatTabNavBar', () => {
       spyOn(inkBar, 'hide');
 
       fixture.componentInstance.tabLinks.forEach(link => (link.active = false));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inkBar.hide).toHaveBeenCalled();
@@ -238,6 +234,7 @@ describe('MDC-based MatTabNavBar', () => {
     let link = fixture.debugElement.nativeElement.querySelector('.mat-mdc-tab-link');
 
     fixture.componentInstance.isDestroyed = true;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     dispatchMouseEvent(link, 'mousedown');
@@ -253,11 +250,13 @@ describe('MDC-based MatTabNavBar', () => {
 
     instance.tabs = [];
     instance.activeIndex = 1;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(instance.tabNavBar.selectedIndex).toBe(-1);
 
     instance.tabs = [0, 1, 2];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(instance.tabNavBar.selectedIndex).toBe(1);
@@ -374,6 +373,7 @@ describe('MDC-based MatTabNavBar', () => {
         .toBe(true);
 
       fixture.componentInstance.disableRippleOnBar = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => tabLink.rippleDisabled))
@@ -390,6 +390,7 @@ describe('MDC-based MatTabNavBar', () => {
 
       firstTab.disableRipple = true;
       fixture.componentInstance.disableRippleOnBar = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(firstTab.rippleDisabled)
@@ -413,6 +414,7 @@ describe('MDC-based MatTabNavBar', () => {
       const tabLinkElement = tabLinkDebug.nativeElement;
 
       fixture.componentInstance.disableRippleOnLink = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       dispatchMouseEvent(tabLinkElement, 'mousedown');
@@ -454,6 +456,7 @@ describe('MDC-based MatTabNavBar', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
       fixture.componentInstance.fitInkBarToContent = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     });
 
@@ -467,6 +470,7 @@ describe('MDC-based MatTabNavBar', () => {
 
     it('should be able to move the ink bar between content and full', () => {
       fixture.componentInstance.fitInkBarToContent = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
@@ -475,6 +479,7 @@ describe('MDC-based MatTabNavBar', () => {
       expect(indicatorElement.parentElement).toBe(tabElement);
 
       fixture.componentInstance.fitInkBarToContent = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const contentElement = tabElement.querySelector('.mdc-tab__content');

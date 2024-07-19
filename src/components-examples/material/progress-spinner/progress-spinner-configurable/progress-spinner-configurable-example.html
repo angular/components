@@ -3,21 +3,6 @@
     <h2 class="example-h2">Progress spinner configuration</h2>
 
     <section class="example-section">
-      <label class="example-margin">Color:</label>
-      <mat-radio-group [(ngModel)]="color">
-        <mat-radio-button class="example-margin" value="primary">
-          Primary
-        </mat-radio-button>
-        <mat-radio-button class="example-margin" value="accent">
-          Accent
-        </mat-radio-button>
-        <mat-radio-button class="example-margin" value="warn">
-          Warn
-        </mat-radio-button>
-      </mat-radio-group>
-    </section>
-
-    <section class="example-section">
       <label class="example-margin">Mode:</label>
       <mat-radio-group [(ngModel)]="mode">
         <mat-radio-button class="example-margin" value="determinate">
@@ -46,7 +31,6 @@
 
     <mat-progress-spinner
         class="example-margin"
-        [color]="color"
         [mode]="mode"
         [value]="value">
     </mat-progress-spinner>

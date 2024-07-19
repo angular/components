@@ -3,7 +3,13 @@ import {ApplicationRef, Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatRipple, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
-import {MAT_FAB_DEFAULT_OPTIONS, MatButton, MatButtonModule, MatFabDefaultOptions} from './index';
+import {
+  MAT_BUTTON_CONFIG,
+  MAT_FAB_DEFAULT_OPTIONS,
+  MatButton,
+  MatButtonModule,
+  MatFabDefaultOptions,
+} from './index';
 
 describe('MDC-based MatButton', () => {
   beforeEach(waitForAsync(() => {
@@ -372,6 +378,30 @@ describe('MDC-based MatButton', () => {
     expect(
       buttonNativeElements.every(element => !!element.querySelector('.mat-mdc-focus-indicator')),
     ).toBe(true);
+  });
+
+  it('should be able to configure the default color of buttons', () => {
+    @Component({
+      template: `<button mat-button>Click me</button>`,
+      standalone: true,
+      imports: [MatButtonModule],
+    })
+    class ConfigTestApp {}
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [MatButtonModule, ConfigTestApp],
+      providers: [
+        {
+          provide: MAT_BUTTON_CONFIG,
+          useValue: {color: 'warn'},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(ConfigTestApp);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button');
+    expect(button.classList).toContain('mat-warn');
   });
 
   describe('interactive disabled buttons', () => {
