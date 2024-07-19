@@ -21,6 +21,7 @@ ng_module(
         "//src/material/input",
         "//src/material/tabs",
         "//src/material/toolbar",
+        "//src/material/tooltip",
         "@npm//@angular/forms",
     ],
 )
