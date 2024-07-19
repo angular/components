@@ -731,12 +731,9 @@ export class MatAutocompleteTrigger
     if (toSelect) {
       this._clearPreviousSelectedOption(toSelect);
       this._assignOptionValue(toSelect.value);
-      // TODO(crisbeto): this should wait until the animation is done, otherwise the value
-      // gets reset while the panel is still animating which looks glitchy. It'll likely break
-      // some tests to change it at this point.
-      this._onChange(toSelect.value);
-      panel._emitSelectEvent(toSelect);
-      this._element.nativeElement.focus();
+      panel._animationDone
+        .pipe(take(1))
+        .subscribe({next: () => this._handleAutoCompleteEvent(panel, toSelect)});
     } else if (
       panel.requireSelection &&
       this._element.nativeElement.value !== this._valueOnAttach
@@ -753,6 +750,11 @@ export class MatAutocompleteTrigger
     }
 
     this.closePanel();
+  }
+
+  private _handleAutoCompleteEvent(panel: MatAutocomplete, toSelect: MatOption<any>): void {
+    this._onChange(toSelect.value);
+    panel._emitSelectEvent(toSelect);
   }
 
   /**
