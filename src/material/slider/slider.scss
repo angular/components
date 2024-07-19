@@ -110,7 +110,6 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   justify-content: center;
   padding: 0 8px;
   box-sizing: border-box;
-  
   @include token-utils.use-tokens($_mat-slots...) {
     @include token-utils.create-token-slot(transform, value-indicator-container-transform);
   }
