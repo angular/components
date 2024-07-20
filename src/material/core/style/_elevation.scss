@@ -1,7 +1,96 @@
 @use 'sass:map';
+@use 'sass:math';
 @use 'sass:meta';
-@use 'variables';
-@use '@material/elevation/elevation-theme' as mdc-elevation;
+@use 'sass:string';
+@use './variables';
+
+$_umbra-opacity: 0.2;
+$_penumbra-opacity: 0.14;
+$_ambient-opacity: 0.12;
+
+$_umbra-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 2px 1px -1px',
+  2: '0px 3px 1px -2px',
+  3: '0px 3px 3px -2px',
+  4: '0px 2px 4px -1px',
+  5: '0px 3px 5px -1px',
+  6: '0px 3px 5px -1px',
+  7: '0px 4px 5px -2px',
+  8: '0px 5px 5px -3px',
+  9: '0px 5px 6px -3px',
+  10: '0px 6px 6px -3px',
+  11: '0px 6px 7px -4px',
+  12: '0px 7px 8px -4px',
+  13: '0px 7px 8px -4px',
+  14: '0px 7px 9px -4px',
+  15: '0px 8px 9px -5px',
+  16: '0px 8px 10px -5px',
+  17: '0px 8px 11px -5px',
+  18: '0px 9px 11px -5px',
+  19: '0px 9px 12px -6px',
+  20: '0px 10px 13px -6px',
+  21: '0px 10px 13px -6px',
+  22: '0px 10px 14px -6px',
+  23: '0px 11px 14px -7px',
+  24: '0px 11px 15px -7px',
+);
+
+$_penumbra-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 1px 1px 0px',
+  2: '0px 2px 2px 0px',
+  3: '0px 3px 4px 0px',
+  4: '0px 4px 5px 0px',
+  5: '0px 5px 8px 0px',
+  6: '0px 6px 10px 0px',
+  7: '0px 7px 10px 1px',
+  8: '0px 8px 10px 1px',
+  9: '0px 9px 12px 1px',
+  10: '0px 10px 14px 1px',
+  11: '0px 11px 15px 1px',
+  12: '0px 12px 17px 2px',
+  13: '0px 13px 19px 2px',
+  14: '0px 14px 21px 2px',
+  15: '0px 15px 22px 2px',
+  16: '0px 16px 24px 2px',
+  17: '0px 17px 26px 2px',
+  18: '0px 18px 28px 2px',
+  19: '0px 19px 29px 2px',
+  20: '0px 20px 31px 3px',
+  21: '0px 21px 33px 3px',
+  22: '0px 22px 35px 3px',
+  23: '0px 23px 36px 3px',
+  24: '0px 24px 38px 3px',
+);
+
+$_ambient-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 1px 3px 0px',
+  2: '0px 1px 5px 0px',
+  3: '0px 1px 8px 0px',
+  4: '0px 1px 10px 0px',
+  5: '0px 1px 14px 0px',
+  6: '0px 1px 18px 0px',
+  7: '0px 2px 16px 1px',
+  8: '0px 3px 14px 2px',
+  9: '0px 3px 16px 2px',
+  10: '0px 4px 18px 3px',
+  11: '0px 4px 20px 3px',
+  12: '0px 5px 22px 4px',
+  13: '0px 5px 24px 4px',
+  14: '0px 5px 26px 4px',
+  15: '0px 6px 28px 5px',
+  16: '0px 6px 30px 5px',
+  17: '0px 6px 32px 5px',
+  18: '0px 7px 34px 6px',
+  19: '0px 7px 36px 6px',
+  20: '0px 8px 38px 7px',
+  21: '0px 8px 40px 7px',
+  22: '0px 8px 42px 7px',
+  23: '0px 9px 44px 8px',
+  24: '0px 9px 46px 8px',
+);
 
 // A collection of mixins and CSS classes that can be used to apply elevation to a material
 // element.
@@ -37,29 +126,7 @@ $prefix: 'mat-elevation-z';
 // Applies the correct css rules to an element to give it the elevation specified by $zValue.
 // The $zValue must be between 0 and 24.
 @mixin elevation($zValue, $color: $color, $opacity: null) {
-  @if meta.type-of($color) == color and $opacity == null {
-    @include mdc-elevation.elevation($zValue, $color);
-  }
-  @else {
-    // Copied from @material/elevation/_elevation-theme.scss#_box-shadow
-    // TODO(mmalerba): Add support for graceful handling of CSS var color to MDC.
-    $umbra-z-value: map.get(mdc-elevation.$umbra-map, $zValue);
-    $penumbra-z-value: map.get(mdc-elevation.$penumbra-map, $zValue);
-    $ambient-z-value: map.get(mdc-elevation.$ambient-map, $zValue);
-
-    $color-opacity: if($opacity != null, $opacity, 1);
-    $umbra-color: _compute-color-opacity($color, mdc-elevation.$umbra-opacity * $color-opacity);
-    $penumbra-color:
-      _compute-color-opacity($color, mdc-elevation.$penumbra-opacity * $color-opacity);
-    $ambient-color: _compute-color-opacity($color, mdc-elevation.$ambient-opacity * $color-opacity);
-
-    $box-shadow: (
-      #{'#{$umbra-z-value} #{$umbra-color}'},
-      #{'#{$penumbra-z-value} #{$penumbra-color}'},
-      #{$ambient-z-value} $ambient-color
-    );
-    @include mdc-elevation.shadow($box-shadow);
-  }
+  box-shadow: get-box-shadow($zValue, $color, $opacity);
 }
 
 // Applies the elevation to an element in a manner that allows
@@ -71,8 +138,30 @@ $prefix: 'mat-elevation-z';
 }
 
 // Gets the box shadow value for a specific elevation.
-@function get-box-shadow($z-value, $shadow-color: black) {
-  @return mdc-elevation.elevation-box-shadow($z-value, $shadow-color);
+@function get-box-shadow($zValue, $shadow-color: black, $opacity: null) {
+  @if $zValue == null {
+    @return null;
+  }
+
+  @if meta.type-of($zValue) != number or not math.is-unitless($zValue) {
+    @error '$zValue must be a unitless number, but received `#{$zValue}`';
+  }
+
+  @if $zValue < 0 or $zValue > 24 {
+    @error '$zValue must be between 0 and 24, but received `#{$zValue}`';
+  }
+
+  $umbra-z-value: map.get($_umbra-map, $zValue);
+  $penumbra-z-value: map.get($_penumbra-map, $zValue);
+  $ambient-z-value: map.get($_ambient-map, $zValue);
+
+  $color-opacity: if($opacity != null, $opacity, 1);
+  $umbra-color: _compute-color-opacity($shadow-color, $_umbra-opacity * $color-opacity);
+  $penumbra-color: _compute-color-opacity($shadow-color, $_penumbra-opacity * $color-opacity);
+  $ambient-color: _compute-color-opacity($shadow-color, $_ambient-opacity * $color-opacity);
+
+  @return string.unquote('#{$umbra-z-value} #{$umbra-color}, #{$penumbra-z-value} ' +
+          '#{$penumbra-color}, #{$ambient-z-value} #{$ambient-color}');
 }
 
 // Returns a string that can be used as the value for a transition property for elevation.
