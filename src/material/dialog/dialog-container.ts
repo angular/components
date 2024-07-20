@@ -27,7 +27,6 @@ import {
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
