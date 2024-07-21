@@ -149,11 +149,10 @@ export interface MatTooltipDefaultOptions {
   disableTooltipInteractivity?: boolean;
 
   /**
-   * Default classes to be applied to the tooltip. Supports the same syntax as `ngClass`. These
-   * default classes will not be applied if `tooltipClass` is defined directly on the tooltip
-   * element, as it will override the default.
+   * Default classes to be applied to the tooltip. These default classes will not be applied if
+   * `tooltipClass` is defined directly on the tooltip element, as it will override the default.
    */
-  tooltipClass?: string | string[] | Set<string> | {[key: string]: any};
+  tooltipClass?: string | string[];
 }
 
 /**

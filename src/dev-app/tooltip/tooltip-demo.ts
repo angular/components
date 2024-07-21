@@ -8,7 +8,6 @@
 import {
   TooltipAutoHideExample,
   TooltipCustomClassExample,
-  TooltipDefaultCustomClassExample,
   TooltipDelayExample,
   TooltipDisabledExample,
   TooltipHarnessExample,
@@ -28,7 +27,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   imports: [
     TooltipAutoHideExample,
     TooltipCustomClassExample,
-    TooltipDefaultCustomClassExample,
     TooltipDelayExample,
     TooltipDisabledExample,
     TooltipManualExample,
