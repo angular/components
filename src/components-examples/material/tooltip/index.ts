@@ -1,5 +1,6 @@
 export {TooltipAutoHideExample} from './tooltip-auto-hide/tooltip-auto-hide-example';
 export {TooltipCustomClassExample} from './tooltip-custom-class/tooltip-custom-class-example';
+export {TooltipDefaultCustomClassExample} from './tooltip-default-custom-class/tooltip-default-custom-class-example';
 export {TooltipDelayExample} from './tooltip-delay/tooltip-delay-example';
 export {TooltipDisabledExample} from './tooltip-disabled/tooltip-disabled-example';
 export {TooltipManualExample} from './tooltip-manual/tooltip-manual-example';

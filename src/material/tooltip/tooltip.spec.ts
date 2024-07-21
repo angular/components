@@ -233,6 +233,65 @@ describe('MDC-based MatTooltip', () => {
       expect(tooltipDirective._getOverlayPosition().fallback.overlayX).toBe('end');
     }));
 
+    it('should be able to define a default (global) tooltip class', fakeAsync(() => {
+      TestBed.resetTestingModule()
+        .configureTestingModule({
+          declarations: [TooltipDemoWithoutTooltipClassBinding],
+          imports: [MatTooltipModule, OverlayModule],
+          providers: [
+            {
+              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+              useValue: {tooltipClass: 'my-default-tooltip-class'},
+            },
+          ],
+        })
+        .compileComponents();
+
+      const fixture = TestBed.createComponent(TooltipDemoWithoutTooltipClassBinding);
+      fixture.detectChanges();
+      tooltipDirective = fixture.componentInstance.tooltip;
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick();
+      const overlayRef = tooltipDirective._overlayRef!;
+      const tooltipElement = overlayRef.overlayElement.querySelector(
+        '.mat-mdc-tooltip',
+      ) as HTMLElement;
+
+      expect(tooltipDirective.tooltipClass).toBe('my-default-tooltip-class');
+      expect(tooltipElement.classList).toContain('my-default-tooltip-class');
+    }));
+
+    it('should be able to provide tooltip class over the custom default one', fakeAsync(() => {
+      TestBed.resetTestingModule()
+        .configureTestingModule({
+          declarations: [TooltipDemoWithTooltipClassBinding],
+          imports: [MatTooltipModule, OverlayModule],
+          providers: [
+            {
+              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+              useValue: {tooltipClass: 'my-default-tooltip-class'},
+            },
+          ],
+        })
+        .compileComponents();
+
+      const fixture = TestBed.createComponent(TooltipDemoWithTooltipClassBinding);
+      fixture.detectChanges();
+      tooltipDirective = fixture.componentInstance.tooltip;
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick();
+      const overlayRef = tooltipDirective._overlayRef!;
+      const tooltipElement = overlayRef.overlayElement.querySelector(
+        '.mat-mdc-tooltip',
+      ) as HTMLElement;
+
+      expect(tooltipDirective.tooltipClass).not.toBe('my-default-tooltip-class');
+      expect(tooltipElement.classList).not.toContain('my-default-tooltip-class');
+      expect(tooltipElement.classList).toContain('fixed-tooltip-class');
+    }));
+
     it('should position on the bottom-left by default', fakeAsync(() => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
@@ -1655,6 +1714,28 @@ class TooltipOnDraggableElement {
   template: `<button #button [matTooltip]="message">Button</button>`,
 })
 class TooltipDemoWithoutPositionBinding {
+  message: any = initialTooltipMessage;
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+}
+
+@Component({
+  selector: 'app',
+  template: `<button #button [matTooltip]="message">Button</button>`,
+})
+class TooltipDemoWithoutTooltipClassBinding {
+  message = initialTooltipMessage;
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+}
+
+@Component({
+  selector: 'app',
+  template: `
+    <button #button matTooltipClass="fixed-tooltip-class" [matTooltip]="message">Button</button>
+  `,
+})
+class TooltipDemoWithTooltipClassBinding {
   message: any = initialTooltipMessage;
   @ViewChild(MatTooltip) tooltip: MatTooltip;
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
