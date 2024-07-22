@@ -2,9 +2,136 @@
 @use 'sass:math';
 @use 'sass:meta';
 @use 'sass:string';
-@use '@material/typography' as mdc-typography;
 
 $_default-font-family: string.unquote('Roboto, sans-serif');
+
+@function _px-to-rem($px) {
+  @return math.div($px, 16px) * 1rem;
+}
+
+@function _get-letter-spacing($tracking, $font-size) {
+  @return math.div($tracking, $font-size * 16) * 1em;
+}
+
+$_mdc-levels: (
+  headline1: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(96px),
+    line-height: _px-to-rem(96px),
+    font-weight: 300,
+    letter-spacing: _get-letter-spacing(-1.5, 6),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  headline2: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(60px),
+    line-height: _px-to-rem(60px),
+    font-weight: 300,
+    letter-spacing: _get-letter-spacing(-0.5, 3.75),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  headline3: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(48px),
+    line-height: _px-to-rem(50px),
+    font-weight: 400,
+    letter-spacing: normal,
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  headline4: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(34px),
+    line-height: _px-to-rem(40px),
+    font-weight: 400,
+    letter-spacing: _get-letter-spacing(0.25, 2.125),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  headline5: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(24px),
+    line-height: _px-to-rem(32px),
+    font-weight: 400,
+    letter-spacing: normal,
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  headline6: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(20px),
+    line-height: _px-to-rem(32px),
+    font-weight: 500,
+    letter-spacing: _get-letter-spacing(0.25, 1.25),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  subtitle1: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(16px),
+    line-height: _px-to-rem(28px),
+    font-weight: 400,
+    letter-spacing: _get-letter-spacing(0.15, 1),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  subtitle2: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(14px),
+    line-height: _px-to-rem(22px),
+    font-weight: 500,
+    letter-spacing: _get-letter-spacing(0.1, 0.875),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  body1: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(16px),
+    line-height: _px-to-rem(24px),
+    font-weight: 400,
+    letter-spacing: _get-letter-spacing(0.5, 1),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  body2: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(14px),
+    line-height: _px-to-rem(20px),
+    font-weight: 400,
+    letter-spacing: _get-letter-spacing(0.25, 0.875),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  caption: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(12px),
+    line-height: _px-to-rem(20px),
+    font-weight: 400,
+    letter-spacing: _get-letter-spacing(0.4, 0.75),
+    text-decoration: inherit,
+    text-transform: inherit,
+  ),
+  button: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(14px),
+    line-height: _px-to-rem(36px),
+    font-weight: 500,
+    letter-spacing: _get-letter-spacing(1.25, 0.875),
+    text-decoration: none,
+    text-transform: uppercase,
+  ),
+  overline: (
+    font-family: $_default-font-family,
+    font-size: _px-to-rem(12px),
+    line-height: _px-to-rem(32px),
+    font-weight: 500,
+    letter-spacing: _get-letter-spacing(2, 0.75),
+    text-decoration: none,
+    text-transform: uppercase,
+  ),
+);
 
 /// Defines a typography level from the Material Design spec.
 /// @param {String} $font-size The font-size for this level.
@@ -217,7 +344,7 @@ $_default-font-family: string.unquote('Roboto, sans-serif');
 
 // Converts an MDC typography level config to an Angular Material one.
 @function typography-config-level-from-mdc($mdc-level, $font-family: null) {
-  $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
+  $mdc-level-config: map.get($_mdc-levels, $mdc-level);
 
   // Explicitly default the font family to null since we'll apply it globally
   // through the `define-typgraphy-config`/`define-legacy-typography-config`.
