@@ -1,0 +1,80 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'secondary-container'),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'container-size': if($exclude-hardcoded-values, null, 40px),
+    'disabled-container-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-container-opacity': if($exclude-hardcoded-values, null, 0.12),
+    'disabled-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-icon-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'focus-icon-color': map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'hover-icon-color': map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'icon-color': map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'icon-size': if($exclude-hardcoded-values, null, 24px),
+    'pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'selected-container-color':
+      map.get($deps, 'md-sys-color', 'secondary-container'),
+    'toggle-selected-focus-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-hover-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-selected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'toggle-unselected-focus-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-hover-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'toggle-unselected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'unselected-container-color':
+      map.get($deps, 'md-sys-color', 'surface-variant')
+  );
+}

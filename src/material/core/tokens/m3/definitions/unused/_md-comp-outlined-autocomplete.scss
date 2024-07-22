@@ -1,0 +1,259 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'menu-cascading-menu-indicator-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'menu-cascading-menu-indicator-icon-size':
+      if($exclude-hardcoded-values, null, 24px),
+    'menu-container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'menu-container-elevation': map.get($deps, 'md-sys-elevation', 'level2'),
+    'menu-container-shadow-color': map.get($deps, 'md-sys-color', 'shadow'),
+    'menu-container-shape': map.get($deps, 'md-sys-shape', 'corner-extra-small'),
+    'menu-container-surface-tint-layer-color':
+      map.get($deps, 'md-sys-color', 'surface-tint'),
+    'menu-divider-color': map.get($deps, 'md-sys-color', 'surface-variant'),
+    'menu-divider-height': if($exclude-hardcoded-values, null, 1px),
+    'menu-list-item-container-height': if($exclude-hardcoded-values, null, 48px),
+    'menu-list-item-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'menu-list-item-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'label-large-font'),
+    'menu-list-item-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-large-line-height'),
+    'menu-list-item-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'label-large-size'),
+    'menu-list-item-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.outlined-autocomplete.menu.list-item.label-text.tracking cannot be
+    // represented in the "font" property shorthand. Consider using the discrete properties instead.
+    'menu-list-item-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-large-weight')
+          map.get($deps, 'md-sys-typescale', 'label-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-large-font')
+      ),
+    'menu-list-item-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-large-weight'),
+    'menu-list-item-selected-container-color':
+      map.get($deps, 'md-sys-color', 'surface-variant'),
+    'text-field-caret-color': map.get($deps, 'md-sys-color', 'primary'),
+    'text-field-container-color':
+      map.get($deps, 'md-sys-color', 'surface-variant'),
+    'text-field-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-extra-small'),
+    'text-field-disabled-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-input-text-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'text-field-disabled-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-label-text-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'text-field-disabled-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-leading-icon-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'text-field-disabled-outline-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-outline-opacity':
+      if($exclude-hardcoded-values, null, 0.12),
+    'text-field-disabled-outline-width':
+      if($exclude-hardcoded-values, null, 1px),
+    'text-field-disabled-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-supporting-text-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'text-field-disabled-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-disabled-trailing-icon-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'text-field-error-focus-caret-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-focus-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-error-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-focus-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-error-focus-outline-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-focus-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-focus-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-hover-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-error-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-error-container'),
+    'text-field-error-hover-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-error-hover-outline-color':
+      map.get($deps, 'md-sys-color', 'on-error-container'),
+    'text-field-error-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-error-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'text-field-error-hover-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-hover-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-error-container'),
+    'text-field-error-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-error-label-text-color': map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-error-outline-color': map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-error-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'error'),
+    'text-field-focus-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'text-field-focus-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-focus-outline-color': map.get($deps, 'md-sys-color', 'primary'),
+    'text-field-focus-outline-width': if($exclude-hardcoded-values, null, 2px),
+    'text-field-focus-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-focus-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-hover-input-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-hover-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-hover-outline-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-hover-outline-width': if($exclude-hardcoded-values, null, 1px),
+    'text-field-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'text-field-hover-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-hover-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-input-text-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'text-field-input-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-large-font'),
+    'text-field-input-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-large-line-height'),
+    'text-field-input-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-large-size'),
+    'text-field-input-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.outlined-autocomplete.text-field.input-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'text-field-input-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-large-weight')
+          map.get($deps, 'md-sys-typescale', 'body-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-large-font')
+      ),
+    'text-field-input-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-large-weight'),
+    'text-field-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-large-font'),
+    'text-field-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-large-line-height'),
+    'text-field-label-text-populated-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-small-line-height'),
+    'text-field-label-text-populated-size':
+      map.get($deps, 'md-sys-typescale', 'body-small-size'),
+    'text-field-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-large-size'),
+    'text-field-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.outlined-autocomplete.text-field.label-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'text-field-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-large-weight')
+          map.get($deps, 'md-sys-typescale', 'body-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-large-font')
+      ),
+    'text-field-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-large-weight'),
+    'text-field-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-leading-icon-size': if($exclude-hardcoded-values, null, 24px),
+    'text-field-outline-color': map.get($deps, 'md-sys-color', 'outline'),
+    'text-field-outline-width': if($exclude-hardcoded-values, null, 1px),
+    'text-field-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-supporting-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-small-font'),
+    'text-field-supporting-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-small-line-height'),
+    'text-field-supporting-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-small-size'),
+    'text-field-supporting-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-small-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.outlined-autocomplete.text-field.supporting-text.tracking cannot be
+    // represented in the "font" property shorthand. Consider using the discrete properties instead.
+    'text-field-supporting-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-small-weight')
+          map.get($deps, 'md-sys-typescale', 'body-small-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-small-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-small-font')
+      ),
+    'text-field-supporting-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-small-weight'),
+    'text-field-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'text-field-trailing-icon-size': if($exclude-hardcoded-values, null, 24px)
+  );
+}

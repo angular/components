@@ -1,0 +1,19 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'color': map.get($deps, 'md-sys-color', 'outline-variant'),
+    'thickness': if($exclude-hardcoded-values, null, 1px)
+  );
+}

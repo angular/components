@@ -1,0 +1,87 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'container-elevation': map.get($deps, 'md-sys-elevation', 'level3'),
+    'container-height': if($exclude-hardcoded-values, null, 512px),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-extra-large'),
+    'container-surface-tint-layer-color':
+      map.get($deps, 'md-sys-color', 'surface-tint'),
+    'container-width': if($exclude-hardcoded-values, null, 328px),
+    'header-container-height': if($exclude-hardcoded-values, null, 120px),
+    'header-container-width': if($exclude-hardcoded-values, null, 328px),
+    'header-headline-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'header-headline-font':
+      map.get($deps, 'md-sys-typescale', 'headline-large-font'),
+    'header-headline-line-height':
+      map.get($deps, 'md-sys-typescale', 'headline-large-line-height'),
+    'header-headline-size':
+      map.get($deps, 'md-sys-typescale', 'headline-large-size'),
+    'header-headline-tracking':
+      map.get($deps, 'md-sys-typescale', 'headline-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-input.modal.header.headline.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'header-headline-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'headline-large-weight')
+          map.get($deps, 'md-sys-typescale', 'headline-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'headline-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'headline-large-font')
+      ),
+    'header-headline-weight':
+      map.get($deps, 'md-sys-typescale', 'headline-large-weight'),
+    'header-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'header-supporting-text-font':
+      map.get($deps, 'md-sys-typescale', 'label-large-font'),
+    'header-supporting-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-large-line-height'),
+    'header-supporting-text-size':
+      map.get($deps, 'md-sys-typescale', 'label-large-size'),
+    'header-supporting-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-input.modal.header.supporting-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'header-supporting-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-large-weight')
+          map.get($deps, 'md-sys-typescale', 'label-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-large-font')
+      ),
+    'header-supporting-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-large-weight')
+  );
+}

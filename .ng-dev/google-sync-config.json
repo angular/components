@@ -33,6 +33,7 @@
     "src/material/module.ts",
     "src/material/core/index.ts",
     "src/material/core/theming/tests/**/*",
+    "src/material/core/tokens/m3/definitions/unused/**/*",
     "src/material/expansion/index.ts",
     "src/material-experimental/theming/_format-tokens.scss",
     "**/*import.scss"
