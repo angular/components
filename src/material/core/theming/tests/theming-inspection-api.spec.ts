@@ -347,7 +347,7 @@ describe('theming inspection api', () => {
       expect(css).toMatch('font-size: 2rem;');
       expect(css).toMatch('font-weight: 400;');
       expect(css).toMatch('line-height: 2.5rem;');
-      expect(css).toMatch('letter-spacing: 0rem;');
+      expect(css).toMatch('letter-spacing: 0;');
     });
 
     it('should error on invalid typescale', () => {

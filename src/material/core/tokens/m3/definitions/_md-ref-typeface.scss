@@ -1,0 +1,14 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'brand': if($exclude-hardcoded-values, null, (Roboto)),
+    'plain': if($exclude-hardcoded-values, null, (Roboto)),
+    'weight-bold': if($exclude-hardcoded-values, null, 700),
+    'weight-medium': if($exclude-hardcoded-values, null, 500),
+    'weight-regular': if($exclude-hardcoded-values, null, 400)
+  );
+}

@@ -1,0 +1,108 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-height': if($exclude-hardcoded-values, null, 40px),
+    'disabled-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-icon-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'disabled-label-text-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-label-text-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'disabled-outline-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-outline-opacity': if($exclude-hardcoded-values, null, 0.12),
+    'focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'label-text-font': map.get($deps, 'md-sys-typescale', 'label-large-font'),
+    'label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-large-line-height'),
+    'label-text-size': map.get($deps, 'md-sys-typescale', 'label-large-size'),
+    'label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.outlined-segmented-button.label-text.tracking cannot be represented in
+    // the "font" property shorthand. Consider using the discrete properties instead.
+    'label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-large-weight')
+          map.get($deps, 'md-sys-typescale', 'label-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-large-font')
+      ),
+    'label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-large-weight'),
+    'outline-color': map.get($deps, 'md-sys-color', 'outline'),
+    'outline-width': if($exclude-hardcoded-values, null, 1px),
+    'pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'selected-container-color':
+      map.get($deps, 'md-sys-color', 'secondary-container'),
+    'selected-focus-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-hover-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-pressed-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'selected-with-icon-icon-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'unselected-focus-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-hover-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-label-text-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-pressed-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'unselected-with-icon-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'with-icon-icon-size': if($exclude-hardcoded-values, null, 18px)
+  );
+}

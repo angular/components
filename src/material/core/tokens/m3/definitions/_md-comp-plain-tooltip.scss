@@ -1,0 +1,51 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-shape';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'inverse-surface'),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-extra-small'),
+    'supporting-text-color':
+      map.get($deps, 'md-sys-color', 'inverse-on-surface'),
+    'supporting-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-small-font'),
+    'supporting-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-small-line-height'),
+    'supporting-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-small-size'),
+    'supporting-text-tracking':
+    map.get($deps, 'md-sys-typescale', 'body-small-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.plain-tooltip.supporting-text.tracking cannot be represented in the
+    // "font" property shorthand. Consider using the discrete properties instead.
+    'supporting-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-small-weight')
+          map.get($deps, 'md-sys-typescale', 'body-small-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-small-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-small-font')
+      ),
+    'supporting-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-small-weight')
+  );
+}

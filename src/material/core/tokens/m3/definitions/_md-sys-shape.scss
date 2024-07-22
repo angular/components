@@ -1,0 +1,24 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'corner-extra-large': if($exclude-hardcoded-values, null, 28px),
+    'corner-extra-large-top':
+      if($exclude-hardcoded-values, null, (28px 28px 0 0)),
+    'corner-extra-small': if($exclude-hardcoded-values, null, 4px),
+    'corner-extra-small-top':
+      if($exclude-hardcoded-values, null, (4px 4px 0 0)),
+    'corner-full': if($exclude-hardcoded-values, null, 9999px),
+    'corner-large': if($exclude-hardcoded-values, null, 16px),
+    'corner-large-end': if($exclude-hardcoded-values, null, (0 16px 16px 0)),
+    'corner-large-start':
+      if($exclude-hardcoded-values, null, (16px 0 0 16px)),
+    'corner-large-top': if($exclude-hardcoded-values, null, (16px 16px 0 0)),
+    'corner-medium': if($exclude-hardcoded-values, null, 12px),
+    'corner-none': if($exclude-hardcoded-values, null, 0),
+    'corner-small': if($exclude-hardcoded-values, null, 8px)
+  );
+}

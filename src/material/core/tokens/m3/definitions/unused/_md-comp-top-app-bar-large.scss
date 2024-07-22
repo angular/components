@@ -1,0 +1,59 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'container-elevation': map.get($deps, 'md-sys-elevation', 'level0'),
+    'container-height': if($exclude-hardcoded-values, null, 152px),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-none'),
+    'container-surface-tint-layer-color':
+      map.get($deps, 'md-sys-color', 'surface-tint'),
+    'headline-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'headline-font': map.get($deps, 'md-sys-typescale', 'headline-medium-font'),
+    'headline-line-height':
+      map.get($deps, 'md-sys-typescale', 'headline-medium-line-height'),
+    'headline-size': map.get($deps, 'md-sys-typescale', 'headline-medium-size'),
+    'headline-tracking':
+      map.get($deps, 'md-sys-typescale', 'headline-medium-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.top-app-bar.large.headline.tracking cannot be represented in the "font"
+    // property shorthand. Consider using the discrete properties instead.
+    'headline-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'headline-medium-weight')
+          map.get($deps, 'md-sys-typescale', 'headline-medium-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'headline-medium-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'headline-medium-font')
+      ),
+    'headline-weight':
+      map.get($deps, 'md-sys-typescale', 'headline-medium-weight'),
+    'leading-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'leading-icon-size': if($exclude-hardcoded-values, null, 24px),
+    'trailing-icon-color': map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'trailing-icon-size': if($exclude-hardcoded-values, null, 24px)
+  );
+}
