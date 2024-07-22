@@ -555,7 +555,10 @@ export class MatFormField
 
   _hasFloatingLabel = computed(() => !!this._labelChild());
 
-  _shouldLabelFloat() {
+  _shouldLabelFloat(): boolean {
+    if (!this._hasFloatingLabel()) {
+      return false;
+    }
     return this._control.shouldLabelFloat || this._shouldAlwaysFloat();
   }
 

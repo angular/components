@@ -29,6 +29,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {BehaviorSubject} from 'rxjs';
 
 let max = 5;
 
@@ -100,8 +101,13 @@ export class InputDemo {
   fillAppearance: string;
   outlineAppearance: string;
 
+  hasLabel$ = new BehaviorSubject(true);
+
   constructor() {
-    setTimeout(() => this.delayedFormControl.setValue('hello'), 100);
+    setTimeout(() => {
+      this.delayedFormControl.setValue('hello');
+      this.hasLabel$.next(false);
+    }, 100);
   }
 
   addABunch(n: number) {
