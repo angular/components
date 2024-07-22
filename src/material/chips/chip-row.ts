@@ -125,7 +125,6 @@ export class MatChipRow extends MatChip implements AfterViewInit {
       _document,
       animationMode,
       globalRippleOptions,
-      tabIndex,
     );
 
     this.role = 'row';
