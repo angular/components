@@ -13,7 +13,6 @@ import {
   ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
