@@ -147,6 +147,12 @@ export interface MatTooltipDefaultOptions {
 
   /** Disables the ability for the user to interact with the tooltip element. */
   disableTooltipInteractivity?: boolean;
+
+  /**
+   * Default classes to be applied to the tooltip. These default classes will not be applied if
+   * `tooltipClass` is defined directly on the tooltip element, as it will override the default.
+   */
+  tooltipClass?: string | string[];
 }
 
 /**
@@ -388,6 +394,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
       if (_defaultOptions.touchGestures) {
         this.touchGestures = _defaultOptions.touchGestures;
+      }
+
+      if (_defaultOptions.tooltipClass) {
+        this.tooltipClass = _defaultOptions.tooltipClass;
       }
     }
 
