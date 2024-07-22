@@ -4,12 +4,12 @@
 @use 'sass:string';
 @use 'sass:color';
 @use 'sass:math';
-@use '@material/tokens/v0_161' as mdc-tokens;
 @use '../style/elevation';
 @use '../style/sass-utils';
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
 @use '../m2/typography' as m2-typography;
+@use './m3/definitions' as m3-token-definitions;
 
 // Indicates whether we're building internally. Used for backwards compatibility.
 $private-is-internal-build: false;
@@ -162,7 +162,8 @@ $_component-prefix: null;
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @return {List} Map of token names to values
 @function get-mdc-tokens($component, $systems, $exclude-hardcoded) {
-  $fn: meta.get-function($name: 'md-comp-' + $component + '-values', $module: 'mdc-tokens');
+  $full-name: 'md-comp-' + $component + '-values';
+  $fn: meta.get-function($name: $full-name, $module: 'm3-token-definitions');
   @return meta.call($fn, $systems, $exclude-hardcoded);
 }
 

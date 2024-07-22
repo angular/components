@@ -1,8 +1,8 @@
 @use 'sass:map';
-@use '@material/tokens/v0_161' as mdc-tokens;
 @use '../style/sass-utils';
 @use '../m2' as m2-theming;
 @use './m3';
+@use './m3/definitions' as m3-token-definitions;
 @use '../tokens/m2' as m2-tokens;
 @use './density';
 @use './format-tokens';
@@ -21,7 +21,7 @@
 }
 
 /// Creates a set of `md-ref-palette` tokens from the given palettes. (See
-/// https://github.com/material-components/material-components-web/blob/master/packages/mdc-tokens/v0_161/_md-ref-palette.scss)
+/// ./m3/definitions/_md-ref-palette.scss)
 /// @param {Map} $primary The primary palette
 /// @param {Map} $secondary The secondary palette
 /// @param {Map} $tertiary The tertiary palette
@@ -40,7 +40,7 @@
 }
 
 /// Creates a set of `md-ref-typeface` tokens from the given palettes. (See
-/// https://github.com/material-components/material-components-web/blob/master/packages/mdc-tokens/v0_161/_md-ref-typeface.scss)
+/// ./m3/definitions/_md-ref-typeface.scss)
 /// @param {List|String} $brand The font-family to use for brand text
 /// @param {List|String} $plain The font-family to use for plain text
 /// @param {String} $bold The font-weight to use for bold text
@@ -145,8 +145,8 @@ $_cached-token-slots: null;
   );
 
   $sys-colors: if($type == dark,
-    mdc-tokens.md-sys-color-values-dark($ref),
-    mdc-tokens.md-sys-color-values-light($ref));
+    m3-token-definitions.md-sys-color-values-dark($ref),
+    m3-token-definitions.md-sys-color-values-light($ref));
 
   @each $name, $value in $sys-colors {
     --#{$system-variables-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
@@ -165,7 +165,7 @@ $_cached-token-slots: null;
     md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
   );
 
-  $sys-typescale: mdc-tokens.md-sys-typescale-values($ref);
+  $sys-typescale: m3-token-definitions.md-sys-typescale-values($ref);
 
   @each $name, $value in $sys-typescale {
     --#{$system-variables-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
@@ -182,8 +182,8 @@ $_cached-token-slots: null;
 
 @function _get-sys-color($type, $ref, $prefix) {
   $mdc-sys-color: if($type == dark,
-    mdc-tokens.md-sys-color-values-dark($ref),
-    mdc-tokens.md-sys-color-values-light($ref));
+    m3-token-definitions.md-sys-color-values-dark($ref),
+    m3-token-definitions.md-sys-color-values-light($ref));
 
   @if (sass-utils.$use-system-color-variables) {
     $keys: (
@@ -343,7 +343,7 @@ $_cached-token-slots: null;
 
     @return create-map($keys, $prefix);
   }
-  @return mdc-tokens.md-sys-typescale-values($ref);
+  @return m3-token-definitions.md-sys-typescale-values($ref);
 }
 
 /// Generates a set of namespaced color tokens for all components.
@@ -364,12 +364,12 @@ $_cached-token-slots: null;
     md-sys-color: $sys-color,
     // Because the elevation values are always combined with color values to create the box shadow,
     // elevation needs to be part of the color dimension.
-    md-sys-elevation: mdc-tokens.md-sys-elevation-values(),
+    md-sys-elevation: m3-token-definitions.md-sys-elevation-values(),
     // Because the state values are sometimes combined with color values to create rgba colors,
     // state needs to be part of color dimension.
     // TODO(mmalerba): If at some point we remove the need for these combined values, we can move
     //  state to the base dimension.
-    md-sys-state: mdc-tokens.md-sys-state-values(),
+    md-sys-state: m3-token-definitions.md-sys-state-values(),
   )));
 }
 
@@ -405,7 +405,7 @@ $system-variables-prefix) {
 @function generate-base-tokens() {
   // TODO(mmalerba): Exclude density tokens once implemented.
   @return _generate-tokens((
-    md-sys-motion: mdc-tokens.md-sys-motion-values(),
-    md-sys-shape: mdc-tokens.md-sys-shape-values(),
+    md-sys-motion: m3-token-definitions.md-sys-motion-values(),
+    md-sys-shape: m3-token-definitions.md-sys-shape-values(),
   ), $include-non-systemized: true);
 }

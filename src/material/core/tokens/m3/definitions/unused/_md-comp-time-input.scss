@@ -1,0 +1,222 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'container-elevation': map.get($deps, 'md-sys-elevation', 'level3'),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-extra-large'),
+    'headline-color': map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'headline-font': map.get($deps, 'md-sys-typescale', 'label-medium-font'),
+    'headline-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-medium-line-height'),
+    'headline-size': map.get($deps, 'md-sys-typescale', 'label-medium-size'),
+    'headline-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-medium-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.time-input.headline.tracking cannot be represented in the "font" property
+    // shorthand. Consider using the discrete properties instead.
+    'headline-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-medium-weight')
+          map.get($deps, 'md-sys-typescale', 'label-medium-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-medium-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-medium-font')
+      ),
+    'headline-weight': map.get($deps, 'md-sys-typescale', 'label-medium-weight'),
+    'period-selector-container-height':
+      if($exclude-hardcoded-values, null, 72px),
+    'period-selector-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-small'),
+    'period-selector-container-width': if($exclude-hardcoded-values, null, 52px),
+    'period-selector-focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'period-selector-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'period-selector-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'title-medium-font'),
+    'period-selector-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'title-medium-line-height'),
+    'period-selector-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'title-medium-size'),
+    'period-selector-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'title-medium-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.time-input.period-selector.label-text.tracking cannot be represented in
+    // the "font" property shorthand. Consider using the discrete properties instead.
+    'period-selector-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'title-medium-weight')
+          map.get($deps, 'md-sys-typescale', 'title-medium-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'title-medium-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'title-medium-font')
+      ),
+    'period-selector-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'title-medium-weight'),
+    'period-selector-outline-color': map.get($deps, 'md-sys-color', 'outline'),
+    'period-selector-outline-width': if($exclude-hardcoded-values, null, 1px),
+    'period-selector-pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'period-selector-selected-container-color':
+      map.get($deps, 'md-sys-color', 'tertiary-container'),
+    'period-selector-selected-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-pressed-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-selected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-tertiary-container'),
+    'period-selector-unselected-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-pressed-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'period-selector-unselected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'surface-tint-layer-color': map.get($deps, 'md-sys-color', 'surface-tint'),
+    'time-input-field-container-color':
+      map.get($deps, 'md-sys-color', 'surface-variant'),
+    'time-input-field-container-height':
+      if($exclude-hardcoded-values, null, 72px),
+    'time-input-field-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-small'),
+    'time-input-field-container-width':
+      if($exclude-hardcoded-values, null, 96px),
+    'time-input-field-focus-container-color':
+      map.get($deps, 'md-sys-color', 'primary-container'),
+    'time-input-field-focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-primary-container'),
+    'time-input-field-focus-outline-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'time-input-field-focus-outline-width':
+      if($exclude-hardcoded-values, null, 2px),
+    'time-input-field-hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'time-input-field-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'time-input-field-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'time-input-field-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'time-input-field-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'display-medium-font'),
+    'time-input-field-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'display-medium-line-height'),
+    'time-input-field-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'display-medium-size'),
+    'time-input-field-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'display-medium-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.time-input.time-input-field.label-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'time-input-field-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'display-medium-weight')
+          map.get($deps, 'md-sys-typescale', 'display-medium-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'display-medium-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'display-medium-font')
+      ),
+    'time-input-field-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'display-medium-weight'),
+    'time-input-field-separator-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'time-input-field-separator-font':
+      map.get($deps, 'md-sys-typescale', 'display-large-font'),
+    'time-input-field-separator-line-height':
+      map.get($deps, 'md-sys-typescale', 'display-large-line-height'),
+    'time-input-field-separator-size':
+      map.get($deps, 'md-sys-typescale', 'display-large-size'),
+    'time-input-field-separator-tracking':
+      map.get($deps, 'md-sys-typescale', 'display-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.time-input.time-input-field.separator.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'time-input-field-separator-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'display-large-weight')
+          map.get($deps, 'md-sys-typescale', 'display-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'display-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'display-large-font')
+      ),
+    'time-input-field-separator-weight':
+      map.get($deps, 'md-sys-typescale', 'display-large-weight'),
+    'time-input-field-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'time-input-field-supporting-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-small-font'),
+    'time-input-field-supporting-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-small-line-height'),
+    'time-input-field-supporting-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-small-size'),
+    'time-input-field-supporting-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-small-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.time-input.time-input-field.supporting-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'time-input-field-supporting-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-small-weight')
+          map.get($deps, 'md-sys-typescale', 'body-small-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-small-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-small-font')
+      ),
+    'time-input-field-supporting-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-small-weight')
+  );
+}

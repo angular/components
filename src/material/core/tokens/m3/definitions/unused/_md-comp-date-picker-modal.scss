@@ -1,0 +1,313 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'container-elevation': map.get($deps, 'md-sys-elevation', 'level3'),
+    'container-height': if($exclude-hardcoded-values, null, 568px),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-extra-large'),
+    'container-surface-tint-layer-color':
+      map.get($deps, 'md-sys-color', 'surface-tint'),
+    'container-width': if($exclude-hardcoded-values, null, 360px),
+    'date-container-height': if($exclude-hardcoded-values, null, 40px),
+    'date-container-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'date-container-width': if($exclude-hardcoded-values, null, 40px),
+    'date-focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'date-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'date-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-large-font'),
+    'date-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-large-line-height'),
+    'date-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-large-size'),
+    'date-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.date.label-text.tracking cannot be represented in
+    // the "font" property shorthand. Consider using the discrete properties instead.
+    'date-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-large-weight')
+          map.get($deps, 'md-sys-typescale', 'body-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-large-font')
+      ),
+    'date-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-large-weight'),
+    'date-pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'date-selected-container-color': map.get($deps, 'md-sys-color', 'primary'),
+    'date-selected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'date-selected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'date-selected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'date-selected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'date-state-layer-height': if($exclude-hardcoded-values, null, 40px),
+    'date-state-layer-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'date-state-layer-width': if($exclude-hardcoded-values, null, 40px),
+    'date-today-container-outline-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'date-today-container-outline-width':
+      if($exclude-hardcoded-values, null, 1px),
+    'date-today-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'date-today-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'date-today-label-text-color': map.get($deps, 'md-sys-color', 'primary'),
+    'date-today-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'date-unselected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'date-unselected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'date-unselected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'date-unselected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'header-container-height': if($exclude-hardcoded-values, null, 120px),
+    'header-container-width': if($exclude-hardcoded-values, null, 360px),
+    'header-headline-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'header-headline-font':
+      map.get($deps, 'md-sys-typescale', 'headline-large-font'),
+    'header-headline-line-height':
+      map.get($deps, 'md-sys-typescale', 'headline-large-line-height'),
+    'header-headline-size':
+      map.get($deps, 'md-sys-typescale', 'headline-large-size'),
+    'header-headline-tracking':
+      map.get($deps, 'md-sys-typescale', 'headline-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.header.headline.tracking cannot be represented in
+    // the "font" property shorthand. Consider using the discrete properties instead.
+    'header-headline-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'headline-large-weight')
+          map.get($deps, 'md-sys-typescale', 'headline-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'headline-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'headline-large-font')
+      ),
+    'header-headline-weight':
+      map.get($deps, 'md-sys-typescale', 'headline-large-weight'),
+    'header-supporting-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'header-supporting-text-font':
+      map.get($deps, 'md-sys-typescale', 'label-large-font'),
+    'header-supporting-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-large-line-height'),
+    'header-supporting-text-size':
+      map.get($deps, 'md-sys-typescale', 'label-large-size'),
+    'header-supporting-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.header.supporting-text.tracking cannot be represented
+    // in the "font" property shorthand. Consider using the discrete properties instead.
+    'header-supporting-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-large-weight')
+          map.get($deps, 'md-sys-typescale', 'label-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-large-font')
+      ),
+    'header-supporting-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-large-weight'),
+    'range-selection-active-indicator-container-color':
+      map.get($deps, 'md-sys-color', 'secondary-container'),
+    'range-selection-active-indicator-container-height':
+      if($exclude-hardcoded-values, null, 40px),
+    'range-selection-active-indicator-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-full'),
+    'range-selection-container-elevation':
+      map.get($deps, 'md-sys-elevation', 'level0'),
+    'range-selection-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-none'),
+    'range-selection-date-in-range-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary-container'),
+    'range-selection-date-in-range-focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'range-selection-date-in-range-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary-container'),
+    'range-selection-date-in-range-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'range-selection-date-in-range-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-secondary-container'),
+    'range-selection-date-in-range-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary-container'),
+    'range-selection-date-in-range-pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'range-selection-header-container-height':
+      if($exclude-hardcoded-values, null, 128px),
+    'range-selection-header-headline-font':
+      map.get($deps, 'md-sys-typescale', 'title-large-font'),
+    'range-selection-header-headline-line-height':
+      map.get($deps, 'md-sys-typescale', 'title-large-line-height'),
+    'range-selection-header-headline-size':
+      map.get($deps, 'md-sys-typescale', 'title-large-size'),
+    'range-selection-header-headline-tracking':
+      map.get($deps, 'md-sys-typescale', 'title-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.range-selection.header.headline.tracking cannot be
+    // represented in the "font" property shorthand. Consider using the discrete properties instead.
+    'range-selection-header-headline-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'title-large-weight')
+          map.get($deps, 'md-sys-typescale', 'title-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'title-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'title-large-font')
+      ),
+    'range-selection-header-headline-weight':
+      map.get($deps, 'md-sys-typescale', 'title-large-weight'),
+    'range-selection-month-subhead-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'range-selection-month-subhead-font':
+      map.get($deps, 'md-sys-typescale', 'title-small-font'),
+    'range-selection-month-subhead-line-height':
+      map.get($deps, 'md-sys-typescale', 'title-small-line-height'),
+    'range-selection-month-subhead-size':
+      map.get($deps, 'md-sys-typescale', 'title-small-size'),
+    'range-selection-month-subhead-tracking':
+      map.get($deps, 'md-sys-typescale', 'title-small-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.range-selection.month.subhead.tracking cannot be
+    // represented in the "font" property shorthand. Consider using the discrete properties instead.
+    'range-selection-month-subhead-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'title-small-weight')
+          map.get($deps, 'md-sys-typescale', 'title-small-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'title-small-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'title-small-font')
+      ),
+    'range-selection-month-subhead-weight':
+      map.get($deps, 'md-sys-typescale', 'title-small-weight'),
+    'weekdays-label-text-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'weekdays-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-large-font'),
+    'weekdays-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-large-line-height'),
+    'weekdays-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-large-size'),
+    'weekdays-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.weekdays.label-text.tracking cannot be represented in
+    // the "font" property shorthand. Consider using the discrete properties instead.
+    'weekdays-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-large-weight')
+          map.get($deps, 'md-sys-typescale', 'body-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-large-font')
+      ),
+    'weekdays-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-large-weight'),
+    'year-selection-year-container-height':
+      if($exclude-hardcoded-values, null, 36px),
+    'year-selection-year-container-width':
+      if($exclude-hardcoded-values, null, 72px),
+    'year-selection-year-focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'year-selection-year-hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'year-selection-year-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'body-large-font'),
+    'year-selection-year-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'body-large-line-height'),
+    'year-selection-year-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'body-large-size'),
+    'year-selection-year-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'body-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.date-picker.modal.year-selection.year.label-text.tracking cannot be
+    // represented in the "font" property shorthand. Consider using the discrete properties instead.
+    'year-selection-year-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'body-large-weight')
+          map.get($deps, 'md-sys-typescale', 'body-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'body-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'body-large-font')
+      ),
+    'year-selection-year-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'body-large-weight'),
+    'year-selection-year-pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'year-selection-year-selected-container-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'year-selection-year-selected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'year-selection-year-selected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'year-selection-year-selected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'year-selection-year-selected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'year-selection-year-state-layer-height':
+      if($exclude-hardcoded-values, null, 36px),
+    'year-selection-year-state-layer-shape':
+      map.get($deps, 'md-sys-shape', 'corner-full'),
+    'year-selection-year-state-layer-width':
+      if($exclude-hardcoded-values, null, 72px),
+    'year-selection-year-unselected-focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'year-selection-year-unselected-hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'year-selection-year-unselected-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'year-selection-year-unselected-pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant')
+  );
+}

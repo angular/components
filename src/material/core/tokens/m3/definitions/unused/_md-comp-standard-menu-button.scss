@@ -1,0 +1,94 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'container-height': if($exclude-hardcoded-values, null, 40px),
+    'container-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'disabled-label-text-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-label-text-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'disabled-trailing-icon-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-trailing-icon-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'focus-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'focus-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'focus-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'hover-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'hover-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'hover-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'label-text-color': map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'label-text-font': map.get($deps, 'md-sys-typescale', 'label-large-font'),
+    'label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-large-line-height'),
+    'label-text-size': map.get($deps, 'md-sys-typescale', 'label-large-size'),
+    'label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-large-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.standard-menu-button.label-text.tracking cannot be represented in the
+    // "font" property shorthand. Consider using the discrete properties instead.
+    'label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-large-weight')
+          map.get($deps, 'md-sys-typescale', 'label-large-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-large-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-large-font')
+      ),
+    'label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-large-weight'),
+    'pressed-label-text-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'pressed-state-layer-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'pressed-trailing-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'trailing-icon-color': map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'trailing-icon-size': if($exclude-hardcoded-values, null, 18px),
+    'with-icon-disabled-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'with-icon-disabled-leading-icon-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'with-icon-focus-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'with-icon-hover-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'with-icon-leading-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'with-icon-leading-icon-size': if($exclude-hardcoded-values, null, 18px),
+    'with-icon-pressed-icon-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant')
+  );
+}

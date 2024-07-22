@@ -1,0 +1,46 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'duration-extra-long1': if($exclude-hardcoded-values, null, 700ms),
+    'duration-extra-long2': if($exclude-hardcoded-values, null, 800ms),
+    'duration-extra-long3': if($exclude-hardcoded-values, null, 900ms),
+    'duration-extra-long4': if($exclude-hardcoded-values, null, 1000ms),
+    'duration-long1': if($exclude-hardcoded-values, null, 450ms),
+    'duration-long2': if($exclude-hardcoded-values, null, 500ms),
+    'duration-long3': if($exclude-hardcoded-values, null, 550ms),
+    'duration-long4': if($exclude-hardcoded-values, null, 600ms),
+    'duration-medium1': if($exclude-hardcoded-values, null, 250ms),
+    'duration-medium2': if($exclude-hardcoded-values, null, 300ms),
+    'duration-medium3': if($exclude-hardcoded-values, null, 350ms),
+    'duration-medium4': if($exclude-hardcoded-values, null, 400ms),
+    'duration-short1': if($exclude-hardcoded-values, null, 50ms),
+    'duration-short2': if($exclude-hardcoded-values, null, 100ms),
+    'duration-short3': if($exclude-hardcoded-values, null, 150ms),
+    'duration-short4': if($exclude-hardcoded-values, null, 200ms),
+    'easing-emphasized':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.2, 0, 0, 1)),
+    'easing-emphasized-accelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.3, 0, 0.8, 0.15)),
+    'easing-emphasized-decelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.05, 0.7, 0.1, 1)),
+    'easing-legacy':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.4, 0, 0.2, 1)),
+    'easing-legacy-accelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.4, 0, 1, 1)),
+    'easing-legacy-decelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0, 0, 0.2, 1)),
+    'easing-linear':
+      if($exclude-hardcoded-values, null, cubic-bezier(0, 0, 1, 1)),
+    'easing-standard':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.2, 0, 0, 1)),
+    'easing-standard-accelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0.3, 0, 1, 1)),
+    'easing-standard-decelerate':
+      if($exclude-hardcoded-values, null, cubic-bezier(0, 0, 0, 1)),
+    'path': /** TODO: type "motion_path" is not supported. */ null
+  );
+}
