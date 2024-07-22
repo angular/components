@@ -123,6 +123,7 @@ export interface MatTooltipDefaultOptions {
     position?: TooltipPosition;
     positionAtOrigin?: boolean;
     showDelay: number;
+    tooltipClass?: string | string[];
     touchendHideDelay: number;
     touchGestures?: TooltipTouchGestures;
     touchLongPressShowDelay?: number;
