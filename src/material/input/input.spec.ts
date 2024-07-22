@@ -157,7 +157,8 @@ describe('MatMdcInput without forms', () => {
     fixture.detectChanges();
 
     expect(formField._control.empty).toBe(false);
-    expect(formField._shouldLabelFloat()).toBe(true);
+    // should not float label if there is no label
+    expect(formField._shouldLabelFloat()).toBe(false);
   }));
 
   it('should not be empty when the value set before view init', fakeAsync(() => {
@@ -1531,6 +1532,62 @@ describe('MatFormField default options', () => {
     ).toBe(true);
   });
 });
+describe('MatFormField without label', () => {
+  it('should not float the label when no label is defined.', () => {
+    let fixture = createComponent(MatInputWithoutDefinedLabel);
+    fixture.detectChanges();
+
+    const inputEl = fixture.debugElement.query(By.css('input'))!;
+    const formField = fixture.debugElement.query(By.directive(MatFormField))!
+      .componentInstance as MatFormField;
+
+    // Update the value of the input and set focus.
+    inputEl.nativeElement.value = 'Text';
+    fixture.detectChanges();
+
+    // should not float label if there is no label
+    expect(formField._shouldLabelFloat()).toBe(false);
+  });
+
+  it('should not float the label when the label is removed after it has been shown', () => {
+    let fixture = createComponent(MatInputWithCondictionalLabel);
+    fixture.detectChanges();
+    const inputEl = fixture.debugElement.query(By.css('input'))!;
+    const formField = fixture.debugElement.query(By.directive(MatFormField))!
+      .componentInstance as MatFormField;
+
+    // initially, label is present
+    expect(fixture.nativeElement.querySelector('label')).not.toBeNull();
+
+    // removing label after it has been shown
+    fixture.componentInstance.hasLabel = false;
+    inputEl.nativeElement.value = 'Text';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // now expected to not have a label
+    expect(fixture.nativeElement.querySelector('label')).toBeNull();
+    // should not float label since there is no label
+    expect(formField._shouldLabelFloat()).toBe(false);
+  });
+
+  it('should float the label when the label is not removed', () => {
+    let fixture = createComponent(MatInputWithCondictionalLabel);
+    fixture.detectChanges();
+    const inputEl = fixture.debugElement.query(By.css('input'))!;
+    const formField = fixture.debugElement.query(By.directive(MatFormField))!
+      .componentInstance as MatFormField;
+
+    inputEl.nativeElement.value = 'Text';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // Expected to have a label
+    expect(fixture.nativeElement.querySelector('label')).not.toBeNull();
+    // should float label since there is a label
+    expect(formField._shouldLabelFloat()).toBe(true);
+  });
+});
 
 function configureTestingModule(
   component: Type<any>,
@@ -1785,6 +1842,28 @@ class MatInputWithStaticLabel {}
 })
 class MatInputWithDynamicLabel {
   shouldFloat: 'always' | 'auto' = 'always';
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput placeholder="Label">
+    </mat-form-field>
+  `,
+})
+class MatInputWithoutDefinedLabel {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      @if (hasLabel) {
+        <mat-label>Label</mat-label>
+      }
+      <input matInput>
+    </mat-form-field>`,
+})
+class MatInputWithCondictionalLabel {
+  hasLabel = true;
 }
 
 @Component({

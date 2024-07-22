@@ -881,6 +881,41 @@
 </mat-card>
 
 <mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Without label</mat-toolbar>
+  <mat-card-content>
+    <h4>Label removed</h4>
+    <p>
+    <mat-form-field appearance="outline">
+      @if (hasLabel$ | async){
+        <mat-label>My input</mat-label>
+      }
+      <input matInput type="text" />
+    </mat-form-field>
+    </p>
+    <p>
+    <mat-form-field>
+      @if (hasLabel$ | async){
+        <mat-label>My input</mat-label>
+      }
+      <input matInput type="text" />
+    </mat-form-field>
+    </p>
+    <h4>No defined label</h4>
+    <p>
+    <mat-form-field appearance="outline">
+      <input matInput type="text"/>
+    </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput type="text"/>
+      </mat-form-field>
+    </p>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="demo-card demo-basic">
   <mat-card-content>
     <button (click)="showHidden = !showHidden">Show/hide hidden form-field</button>
     <button (click)="hiddenLabel = hiddenLabel + '!!'">Add !!</button>
