@@ -6,6 +6,7 @@ export {TableFilteringExample} from './table-filtering/table-filtering-example';
 export {TableFooterRowExample} from './table-footer-row/table-footer-row-example';
 export {TableHttpExample} from './table-http/table-http-example';
 export {TableMultipleHeaderFooterExample} from './table-multiple-header-footer/table-multiple-header-footer-example';
+export {TableMultipleRowTemplateExample} from './table-multiple-row-template/table-multiple-row-template-example';
 export {TableOverviewExample} from './table-overview/table-overview-example';
 export {TablePaginationExample} from './table-pagination/table-pagination-example';
 export {TableRowContextExample} from './table-row-context/table-row-context-example';
