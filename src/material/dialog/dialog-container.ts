@@ -128,9 +128,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     //   1. Foundation does not allow us to disable animations.
     //   2. Foundation contains unnecessary features we don't need and aren't
     //      tree-shakeable. e.g. background scrim, keyboard event handlers for ESC button.
-    //   3. Foundation uses unnecessary timers for animations to work around limitations
-    //      in React's `setState` mechanism.
-    //      https://github.com/material-components/material-components-web/pull/3682.
     this._startOpenAnimation();
   }
 

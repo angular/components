@@ -2,7 +2,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 
-// MDC text-field uses `@material/ripple` in order to show a focus and hover effect for
+// MDC text-field used to use their ripple in order to show a focus and hover effect for
 // text-fields. This is unnecessary because the ripples bring in a lot of unnecessary
 // styles and runtime code while the actual goal for the text-field is simply showing a
 // focus and hover effect. The ripples will unnecessarily provide CSS selectors and JS

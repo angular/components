@@ -87,8 +87,6 @@ a.mdc-list-item--activated {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 
-  // MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
-  // lists. See: https://github.com/material-components/material-components-web/issues/6443
   &:not(.mat-mdc-list-item-interactive) {
     cursor: default;
   }
@@ -137,10 +135,6 @@ a.mdc-list-item--activated {
 }
 
 .mat-mdc-list-item.mdc-list-item--with-three-lines {
-  // List item lines or titles never wrap. MDC always enables wrapping for secondary text
-  // if the list item has acquired three lines. We unset these styles for line elements.
-  // https://github.com/material-components/material-components-web/blob/348665978ce73694ad4518626dd70cdf5b984113/packages/mdc-list/_evolution-mixins.scss#L205-L206.
-  // TODO: Consider removing once MDC supports the explicit tertiary line list variant.
   .mat-mdc-list-item-line.mdc-list-item__secondary-text {
     white-space: nowrap;
     line-height: normal;

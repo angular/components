@@ -51,10 +51,7 @@ using native CSS Flexbox and CSS Grid.
 
 ## What's your relationship to [MDC Web][]?
 
-MDC Web and Angular Material were created independently by two different teams inside Google.
-The Angular team is now working with the MDC team to share more code to reduce duplication. To that
-end, we are developing new, API-compatible versions of the Angular Material components backed by
-MDC Web. [See @jelbourn's 2019 ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891) for more details.
+Read more about the [current state of our relationship with MDC Web on our blog](https://blog.angular.dev/the-future-of-material-support-in-angular-7fa0662ecc4b).
 
 
 [StackOverflow]: https://stackoverflow.com

@@ -5,7 +5,6 @@ import * as path from 'path';
 
 import {compareNodes} from '../../../../../tools/postcss/compare-nodes';
 import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
-import {pathToFileURL} from 'url';
 
 // Note: For Windows compatibility, we need to resolve the directory paths through runfiles
 // which are guaranteed to reside in the source tree.
@@ -13,17 +12,6 @@ const testDir = path.join(runfiles.resolvePackageRelative('../_all-theme.scss'),
 const packagesDir = path.join(runfiles.resolveWorkspaceRelative('src/cdk/_index.scss'), '../..');
 
 const localPackageSassImporter = createLocalAngularPackageImporter(packagesDir);
-
-const mdcSassImporter = {
-  findFileUrl: (url: string) => {
-    if (url.toString().startsWith('@material')) {
-      return pathToFileURL(
-        path.join(runfiles.resolveWorkspaceRelative('./node_modules'), url),
-      ) as URL;
-    }
-    return null;
-  },
-};
 
 describe('theming api', () => {
   /** Map of known selectors for density styles and their corresponding AST rule. */
@@ -267,7 +255,7 @@ describe('theming api', () => {
       `,
       {
         loadPaths: [testDir],
-        importers: [localPackageSassImporter, mdcSassImporter],
+        importers: [localPackageSassImporter],
       },
     ).css.toString();
   }

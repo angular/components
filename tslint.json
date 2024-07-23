@@ -181,7 +181,7 @@
     ],
     "no-unescaped-html-tag": true,
     // Ensures that all rxjs imports come only from `rxjs` and `rxjs/operators`.
-    "import-blacklist": [true, ["^rxjs(?!$|/operators$).*", "^@material/"]],
+    "import-blacklist": [true, ["^rxjs(?!$|/operators$).*"]],
     "no-zone-dependencies": [
       true,
       [
