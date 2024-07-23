@@ -8,7 +8,7 @@
 // we support changing the checkbox position to `before`. This results in the avatar from
 // the list start being moved to the end. Similar to MDC's `--trailing-icon` class, we
 // implement a `--trailing-avatar` class that is based on the original `--leading-avatar`
-// implementation. See: https://github.com/material-components/material-components-web/blob/3f342c3f4715fd3587f327ce4ea6b5dd314c5c55/packages/mdc-list/_evolution-mixins.scss#L198-L217
+// implementation.
 .mat-mdc-list-option-with-trailing-avatar {
   &.mdc-list-item,
   [dir='rtl'] &.mdc-list-item {

@@ -41,7 +41,6 @@ sass_library(
     name = "select_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -50,7 +49,6 @@ sass_binary(
     name = "select_scss",
     src = "select.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
         "//src/material:sass_lib",
     ],

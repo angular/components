@@ -33,7 +33,6 @@ sass_library(
     ],
     deps = [
         ":form_field_partials",
-        "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -43,7 +42,6 @@ sass_binary(
     src = "form-field.scss",
     deps = [
         ":form_field_partials",
-        "//:mdc_sass_lib",
         "//src/material:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
@@ -63,7 +61,6 @@ sass_library(
         "_user-agent-overrides.scss",
     ],
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],

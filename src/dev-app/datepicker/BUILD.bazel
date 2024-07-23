@@ -27,7 +27,6 @@ sass_binary(
     name = "datepicker_demo_scss",
     src = "datepicker-demo.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/material:sass_lib",
     ],
 )

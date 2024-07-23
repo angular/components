@@ -6,7 +6,6 @@ load(
     "MATERIAL_EXPERIMENTAL_ENTRYPOINTS",
     "MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS",
 )
-load("//:packages.bzl", "MDC_PACKAGES")
 
 # Base list of externals which should not be bundled into the APF package output.
 # Note that we want to disable sorting of the externals as we manually group entries.
@@ -51,23 +50,11 @@ PKG_EXTERNALS = [
     "rxjs",
     "rxjs/operators",
     "selenium-webdriver",
-
-    # TODO: Remove slider deep dependencies after we remove depencies on MDC's javascript
-    "@material/slider/adapter",
-    "@material/slider/foundation",
-    "@material/slider/types",
 ]
-
-# Configures the externals for all MDC packages.
-def setup_mdc_externals():
-    for pkg_name in MDC_PACKAGES:
-        PKG_EXTERNALS.append(pkg_name)
 
 # Creates externals for a given package and its entry-points.
 def setup_entry_point_externals(packageName, entryPoints):
     PKG_EXTERNALS.extend(["@angular/%s/%s" % (packageName, ep) for ep in entryPoints])
-
-setup_mdc_externals()
 
 setup_entry_point_externals("cdk", CDK_ENTRYPOINTS)
 setup_entry_point_externals("cdk-experimental", CDK_EXPERIMENTAL_ENTRYPOINTS)

@@ -34,7 +34,6 @@ sass_library(
     name = "slider_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -43,7 +42,6 @@ sass_binary(
     name = "slider_scss",
     src = "slider.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],

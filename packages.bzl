@@ -1,7 +1,6 @@
 # Each individual package uses a placeholder for the version of Angular to ensure they're
 # all in-sync. This map is passed to each ng_package rule to stamp out the appropriate
 # version for the placeholders.
-MDC_PACKAGE_VERSION = "15.0.0-canary.7f224ddd4.0"
 TSLIB_PACKAGE_VERSION = "^2.3.0"
 RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
 
@@ -9,8 +8,6 @@ RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
 # value pair. These replacements occur during building of `npm_package` and `ng_package` stamping in
 # the peer dependencies and versions, primarily in `package.json`s.
 NPM_PACKAGE_SUBSTITUTIONS = {
-    # Version of `material-components-web`
-    "0.0.0-MDC": MDC_PACKAGE_VERSION,
     # Peer dependency version on the Angular framework.
     "0.0.0-NG": "{STABLE_FRAMEWORK_PEER_DEP_RANGE}",
     # Version of `tslib`
@@ -27,59 +24,6 @@ NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
     "0.0.0-PLACEHOLDER": "0.0.0",
     "0.0.0-NG": ">=0.0.0",
 })
-
-# List of MDC packages (used for package externals and for Sass target deps)
-# *Note*: Keep in sync with `/package.json`.
-MDC_PACKAGES = [
-    "@material/animation",
-    "@material/auto-init",
-    "@material/banner",
-    "@material/base",
-    "@material/button",
-    "@material/card",
-    "@material/checkbox",
-    "@material/chips",
-    "@material/circular-progress",
-    "@material/data-table",
-    "@material/density",
-    "@material/dialog",
-    "@material/dom",
-    "@material/drawer",
-    "@material/elevation",
-    "@material/fab",
-    "@material/feature-targeting",
-    "@material/floating-label",
-    "@material/form-field",
-    "@material/icon-button",
-    "@material/image-list",
-    "@material/layout-grid",
-    "@material/line-ripple",
-    "@material/linear-progress",
-    "@material/list",
-    "@material/menu",
-    "@material/menu-surface",
-    "@material/notched-outline",
-    "@material/radio",
-    "@material/ripple",
-    "@material/rtl",
-    "@material/segmented-button",
-    "@material/select",
-    "@material/shape",
-    "@material/slider",
-    "@material/snackbar",
-    "@material/switch",
-    "@material/tab",
-    "@material/tab-bar",
-    "@material/tab-indicator",
-    "@material/tab-scroller",
-    "@material/textfield",
-    "@material/theme",
-    "@material/tooltip",
-    "@material/tokens",
-    "@material/top-app-bar",
-    "@material/touch-target",
-    "@material/typography",
-]
 
 ANGULAR_PACKAGES_CONFIG = [
     ("@angular/animations", struct(entry_points = ["browser"])),

@@ -68,7 +68,6 @@ We aim for great user experience with the following screen readers:
 [Material Design]: https://material.io
 [Google Maps JavaScript API]: https://developers.google.com/maps/documentation/javascript/tutorial
 [YouTube Player API]: https://developers.google.com/youtube/iframe_api_reference
-[MDC Web]: https://github.com/material-components/material-components-web/
 [cdk-docs]: https://material.angular.io/cdk/categories
 [mat-docs]: https://material.angular.io
 [map-docs]: https://github.com/angular/components/blob/main/src/google-maps/README.md

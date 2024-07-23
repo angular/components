@@ -18,8 +18,7 @@
       "@angular/google-maps": ["../google-maps"],
       "@angular/components-examples": ["../components-examples"],
       "@angular/components-examples/*": ["../components-examples/*"],
-      "@angular/youtube-player": ["../youtube-player"],
-      "@material/*": ["../../node_modules/@material/*/index.d.ts"]
+      "@angular/youtube-player": ["../youtube-player"]
     }
   },
   "include": ["./**/*.ts"]

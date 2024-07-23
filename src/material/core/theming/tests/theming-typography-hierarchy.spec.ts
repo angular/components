@@ -3,7 +3,6 @@ import {runfiles} from '@bazel/runfiles';
 import * as path from 'path';
 
 import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
-import {pathToFileURL} from 'url';
 
 // Note: For Windows compatibility, we need to resolve the directory paths through runfiles
 // which are guaranteed to reside in the source tree.
@@ -11,17 +10,6 @@ const testDir = path.join(runfiles.resolvePackageRelative('../_all-theme.scss'),
 const packagesDir = path.join(runfiles.resolveWorkspaceRelative('src/cdk/_index.scss'), '../..');
 
 const localPackageSassImporter = createLocalAngularPackageImporter(packagesDir);
-
-const mdcSassImporter = {
-  findFileUrl: (url: string) => {
-    if (url.toString().startsWith('@material')) {
-      return pathToFileURL(
-        path.join(runfiles.resolveWorkspaceRelative('./node_modules'), url),
-      ) as URL;
-    }
-    return null;
-  },
-};
 
 /** Transpiles given Sass content into CSS. */
 function transpile(content: string) {
@@ -37,7 +25,7 @@ function transpile(content: string) {
       `,
     {
       loadPaths: [testDir],
-      importers: [localPackageSassImporter, mdcSassImporter],
+      importers: [localPackageSassImporter],
     },
   ).css.toString();
 }
