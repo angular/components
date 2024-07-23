@@ -30,41 +30,53 @@ export type DefaultFunctionDoc = NormalizedFunctionParameters & ParameterContain
  * an object.
  */
 export function normalizeFunctionParameters(doc: DefaultFunctionDoc) {
-  if (doc.parameters) {
-    doc.parameters.forEach(parameter => {
-      let [parameterName, parameterType] = parameter.split(':');
-
-      // If the parameter is optional, the name here will contain a '?'. We store whether the
-      // parameter is optional and remove the '?' for comparison.
-      let isOptional = false;
-      if (parameterName.includes('?')) {
-        isOptional = true;
-        parameterName = parameterName.replace('?', '');
-      }
-
-      doc.params = doc.params || [];
-
-      if (!parameterType) {
-        console.warn(
-          `Missing parameter type information (${parameterName}) in ` +
-            `${doc.fileInfo.relativePath}:${doc.startingLine}`,
-        );
-        return;
-      }
-
-      const existingParameterInfo = doc.params.find(p => p.name == parameterName);
-
-      if (!existingParameterInfo) {
-        doc.params.push({
-          name: parameterName,
-          type: parameterType.trim(),
-          isOptional: isOptional,
-          description: '',
-        });
-      } else {
-        existingParameterInfo.type = parameterType.trim();
-        existingParameterInfo.isOptional = isOptional;
-      }
-    });
+  if (!doc.parameters?.length) {
+    return;
   }
+
+  doc.parameters.forEach(parameter => {
+    const colonIndex = parameter.indexOf(':');
+    let parameterName: string;
+    let parameterType: string;
+
+    if (colonIndex === -1) {
+      parameterName = parameter;
+      parameterType = '';
+    } else {
+      parameterName = parameter.slice(0, colonIndex);
+      parameterType = parameter.slice(colonIndex + 1).trim();
+    }
+
+    // If the parameter is optional, the name here will contain a '?'. We store whether the
+    // parameter is optional and remove the '?' for comparison.
+    let isOptional = false;
+    if (parameterName.includes('?')) {
+      isOptional = true;
+      parameterName = parameterName.replace('?', '');
+    }
+
+    doc.params = doc.params || [];
+
+    if (!parameterType) {
+      console.warn(
+        `Missing parameter type information (${parameterName}) in ` +
+          `${doc.fileInfo.relativePath}:${doc.startingLine}`,
+      );
+      return;
+    }
+
+    const existingParameterInfo = doc.params.find(p => p.name == parameterName);
+
+    if (!existingParameterInfo) {
+      doc.params.push({
+        name: parameterName,
+        type: parameterType,
+        isOptional: isOptional,
+        description: '',
+      });
+    } else {
+      existingParameterInfo.type = parameterType;
+      existingParameterInfo.isOptional = isOptional;
+    }
+  });
 }
