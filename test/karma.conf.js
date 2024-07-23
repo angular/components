@@ -51,7 +51,6 @@ module.exports = config => {
         watched: false,
       },
       {pattern: 'node_modules/luxon/build/amd/**/*', included: false, watched: false},
-      {pattern: 'node_modules/@material/*/dist/*', included: false, watched: false},
       {pattern: 'node_modules/kagekiri/**', included: false, watched: false},
 
       // is copied into the "dist/" folder so that the Karma config can use it.

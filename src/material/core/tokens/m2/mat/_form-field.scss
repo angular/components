@@ -52,8 +52,6 @@ $prefix: (mat, form-field);
     error-hover-trailing-icon-color: unset,
     error-trailing-icon-color: unset,
 
-    // These values are taken from the MDC select implementation:
-    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-select/_select-theme.scss
     enabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
     disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
 

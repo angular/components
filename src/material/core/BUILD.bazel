@@ -58,7 +58,6 @@ sass_library(
         exclude = ALL_THEMING_FILES + ["./tokens/m3/definitions/unused/**/*_.scss"],
     ),
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
     ],
 )

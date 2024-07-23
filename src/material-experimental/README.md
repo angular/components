@@ -8,10 +8,10 @@ Material, breaking changes may occur with any release.
 Assuming your application is already up and running using Angular Material, you can add this
 component by following these steps:
 
-1. Install Angular Material Experimental & MDC WEB:
+1. Install Angular Material Experimental:
 
    ```bash
-   npm i material-components-web @angular/material-experimental
+   npm i @angular/material-experimental
    ```
 
 2. In your `angular.json`, make sure `node_modules/` is listed as a Sass include path. This is

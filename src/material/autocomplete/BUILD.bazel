@@ -27,16 +27,12 @@ ng_module(
 sass_library(
     name = "autocomplete_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//:mdc_sass_lib",
-    ],
 )
 
 sass_binary(
     name = "autocomplete_scss",
     src = "autocomplete.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],

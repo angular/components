@@ -5,7 +5,6 @@ import {runfiles} from '@bazel/runfiles';
 import {compileString} from 'sass';
 import * as path from 'path';
 import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
-import {pathToFileURL} from 'url';
 import {generateSCSSTheme} from './index';
 import {Schema} from './schema';
 
@@ -14,17 +13,6 @@ import {Schema} from './schema';
 const testDir = runfiles.resolvePackageRelative('../m3-theme');
 const packagesDir = path.join(runfiles.resolveWorkspaceRelative('src/cdk/_index.scss'), '../..');
 const localPackageSassImporter = createLocalAngularPackageImporter(packagesDir);
-
-const mdcSassImporter = {
-  findFileUrl: (url: string) => {
-    if (url.toString().startsWith('@material')) {
-      return pathToFileURL(
-        path.join(runfiles.resolveWorkspaceRelative('./node_modules'), url),
-      ) as URL;
-    }
-    return null;
-  },
-};
 
 describe('material-m3-theme-schematic', () => {
   let runner: SchematicTestRunner;
@@ -53,7 +41,7 @@ describe('material-m3-theme-schematic', () => {
         `,
       {
         loadPaths: [testDir],
-        importers: [localPackageSassImporter, mdcSassImporter],
+        importers: [localPackageSassImporter],
       },
     ).css.toString();
   }

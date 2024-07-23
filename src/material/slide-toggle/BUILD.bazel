@@ -32,7 +32,6 @@ sass_library(
     name = "slide_toggle_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -41,7 +40,6 @@ sass_binary(
     name = "slide_toggle_scss",
     src = "slide-toggle.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],

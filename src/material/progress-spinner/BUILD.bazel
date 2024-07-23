@@ -31,7 +31,6 @@ sass_library(
     name = "progress_spinner_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//:mdc_sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -40,7 +39,6 @@ sass_binary(
     name = "progress_spinner_scss",
     src = "progress-spinner.scss",
     deps = [
-        "//:mdc_sass_lib",
         "//src/material:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
