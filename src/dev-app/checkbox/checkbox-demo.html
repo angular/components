@@ -26,19 +26,20 @@
                 (change)="isIndeterminate = false"
                 [indeterminate]="isIndeterminate"
                 [disabled]="isDisabled"
-                [labelPosition]="labelPosition">
+                [disabledInteractive]="isDisabledInteractive"
+                [labelPosition]="labelPosition"
+                [matTooltip]="isDisabled ? 'Tooltip that only shows up when disabled' : null">
     Do you want to <em>foobar</em> the <em>bazquux</em>?
 
   </mat-checkbox> - <strong>{{printResult()}}</strong>
 </form>
 <div class="demo-checkbox">
-  <input id="indeterminate-toggle"
-         type="checkbox"
-         [(ngModel)]="isIndeterminate"
-         [disabled]="isDisabled">
+  <input id="indeterminate-toggle" type="checkbox" [(ngModel)]="isIndeterminate">
   <label for="indeterminate-toggle">Toggle Indeterminate</label>
   <input id="disabled-toggle" type="checkbox" [(ngModel)]="isDisabled">
   <label for="disabled-toggle">Toggle Disabled</label>
+  <input id="disabled-interactive-toggle" type="checkbox" [(ngModel)]="isDisabledInteractive">
+  <label for="disabled-interactive-toggle">Toggle Disabled Interactive</label>
   <input id="color-toggle" type="checkbox" [(ngModel)]="useAlternativeColor">
   <label for="color-toggle">Toggle Color</label>
 </div>

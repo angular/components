@@ -444,6 +444,28 @@ describe('MDC-based MatCheckbox', () => {
       expect(checkboxNativeElement.querySelector('svg')!.getAttribute('focusable')).toBe('false');
     }));
 
+    it('should be able to mark a checkbox as disabled while keeping it interactive', fakeAsync(() => {
+      testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(checkboxNativeElement.classList).not.toContain(
+        'mat-mdc-checkbox-disabled-interactive',
+      );
+      expect(inputElement.hasAttribute('aria-disabled')).toBe(false);
+      expect(inputElement.tabIndex).toBe(-1);
+      expect(inputElement.disabled).toBe(true);
+
+      testComponent.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(checkboxNativeElement.classList).toContain('mat-mdc-checkbox-disabled-interactive');
+      expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      expect(inputElement.tabIndex).toBe(0);
+      expect(inputElement.disabled).toBe(false);
+    }));
+
     describe('ripple elements', () => {
       it('should show ripples on label mousedown', fakeAsync(() => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
@@ -1111,6 +1133,7 @@ describe('MatCheckboxDefaultOptions', () => {
         [color]="checkboxColor"
         [disableRipple]="disableRipple"
         [value]="checkboxValue"
+        [disabledInteractive]="disabledInteractive"
         (change)="onCheckboxChange($event)">
       Simple checkbox
     </mat-checkbox>
@@ -1120,13 +1143,14 @@ describe('MatCheckboxDefaultOptions', () => {
 })
 class SingleCheckbox {
   labelPos: 'before' | 'after' = 'after';
-  isChecked: boolean = false;
-  isRequired: boolean = false;
-  isIndeterminate: boolean = false;
-  isDisabled: boolean = false;
-  disableRipple: boolean = false;
-  parentElementClicked: boolean = false;
-  parentElementKeyedUp: boolean = false;
+  isChecked = false;
+  isRequired = false;
+  isIndeterminate = false;
+  isDisabled = false;
+  disableRipple = false;
+  parentElementClicked = false;
+  parentElementKeyedUp = false;
+  disabledInteractive = false;
   checkboxId: string | null = 'simple-check';
   checkboxColor: ThemePalette = 'primary';
   checkboxValue: string = 'single_checkbox';
@@ -1143,9 +1167,9 @@ class SingleCheckbox {
   imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModel {
-  isGood: boolean = false;
-  isRequired: boolean = true;
-  isDisabled: boolean = false;
+  isGood = false;
+  isRequired = true;
+  isDisabled = false;
 }
 
 @Component({

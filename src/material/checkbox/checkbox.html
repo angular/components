@@ -10,14 +10,15 @@
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
            [attr.aria-checked]="indeterminate ? 'mixed' : null"
+           [attr.aria-disabled]="disabled && disabledInteractive ? true : null"
            [attr.name]="name"
            [attr.value]="value"
            [checked]="checked"
            [indeterminate]="indeterminate"
-           [disabled]="disabled"
+           [disabled]="disabled && !disabledInteractive"
            [id]="inputId"
            [required]="required"
-           [tabIndex]="disabled ? -1 : tabIndex"
+           [tabIndex]="disabled && !disabledInteractive ? -1 : tabIndex"
            (blur)="_onBlur()"
            (click)="_onInputClick()"
            (change)="_onInteractionEvent($event)"/>
@@ -43,9 +44,7 @@
     (#14385). Putting a click handler on the <label/> caused this bug because the browser produced
     an unnecessary accessibility tree node.
   -->
-  <label class="mdc-label"
-         #label
-         [for]="inputId">
+  <label class="mdc-label" #label [for]="inputId">
     <ng-content></ng-content>
   </label>
 </div>

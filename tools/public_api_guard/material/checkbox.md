@@ -59,6 +59,7 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     protected _createChangeEvent(isChecked: boolean): MatCheckboxChange;
     get disabled(): boolean;
     set disabled(value: boolean);
+    disabledInteractive: boolean;
     disableRipple: boolean;
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
@@ -81,6 +82,8 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     static ngAcceptInputType_checked: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
@@ -123,7 +126,7 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "color": { "alias": "color"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckbox, [null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }]>;
 }
@@ -141,6 +144,7 @@ export type MatCheckboxClickAction = 'noop' | 'check' | 'check-indeterminate' | 
 export interface MatCheckboxDefaultOptions {
     clickAction?: MatCheckboxClickAction;
     color?: ThemePalette;
+    disabledInteractive?: boolean;
 }
 
 // @public (undocumented)

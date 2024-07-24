@@ -18,8 +18,12 @@ export interface MatCheckboxDefaultOptions {
    * https://material.angular.io/guide/theming#using-component-color-variants
    */
   color?: ThemePalette;
+
   /** Default checkbox click action for checkboxes. */
   clickAction?: MatCheckboxClickAction;
+
+  /** Whether disabled checkboxes should be interactive. */
+  disabledInteractive?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-checkbox`. */
@@ -36,6 +40,7 @@ export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOption
   return {
     color: 'accent',
     clickAction: 'check-indeterminate',
+    disabledInteractive: false,
   };
 }
 

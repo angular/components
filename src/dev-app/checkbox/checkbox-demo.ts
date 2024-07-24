@@ -13,6 +13,7 @@ import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material
 import {MatPseudoCheckboxModule, ThemePalette} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltip} from '@angular/material/tooltip';
 
 export interface Task {
   name: string;
@@ -114,15 +115,17 @@ export class MatCheckboxDemoNestedChecklist {
     ClickActionNoop,
     ClickActionCheck,
     AnimationsNoop,
+    MatTooltip,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxDemo {
-  isIndeterminate: boolean = false;
-  isChecked: boolean = false;
-  isDisabled: boolean = false;
+  isIndeterminate = false;
+  isChecked = false;
+  isDisabled = false;
+  isDisabledInteractive = false;
   labelPosition: 'before' | 'after' = 'after';
-  useAlternativeColor: boolean = false;
+  useAlternativeColor = false;
 
   demoRequired = false;
   demoLabelAfter = false;
