@@ -98,6 +98,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     // Add classes that users can use to more easily target disabled or checked checkboxes.
     '[class.mat-mdc-checkbox-disabled]': 'disabled',
     '[class.mat-mdc-checkbox-checked]': 'checked',
+    '[class.mat-mdc-checkbox-disabled-interactive]': 'disabledInteractive',
     '[class]': 'color ? "mat-" + color : "mat-accent"',
   },
   providers: [
@@ -211,6 +212,10 @@ export class MatCheckbox
    */
   @Input() color: string | undefined;
 
+  /** Whether the checkbox should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute})
+  disabledInteractive: boolean;
+
   /**
    * Reference to the MatRipple instance of the checkbox.
    * @deprecated Considered an implementation detail. To be removed.
@@ -241,6 +246,7 @@ export class MatCheckbox
     this.color = this._options.color || defaults.color;
     this.tabIndex = parseInt(tabIndex) || 0;
     this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
+    this.disabledInteractive = _options?.disabledInteractive ?? false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -422,7 +428,10 @@ export class MatCheckbox
       // It is important to only emit it, if the native input triggered one, because
       // we don't want to trigger a change event, when the `checked` variable changes for example.
       this._emitChangeEvent();
-    } else if (!this.disabled && clickAction === 'noop') {
+    } else if (
+      (this.disabled && this.disabledInteractive) ||
+      (!this.disabled && clickAction === 'noop')
+    ) {
       // Reset native input when clicked with noop. The native checkbox becomes checked after
       // click, reset it to be align with `checked` value of `mat-checkbox`.
       this._inputElement.nativeElement.checked = this.checked;

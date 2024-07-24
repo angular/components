@@ -42,14 +42,24 @@
     }
   }
 
-  &.mat-mdc-checkbox-disabled label {
-    cursor: default;
+  &.mat-mdc-checkbox-disabled {
+    &.mat-mdc-checkbox-disabled-interactive {
+      pointer-events: auto;
 
-    @include token-utils.use-tokens(
-      tokens-mat-checkbox.$prefix,
-      tokens-mat-checkbox.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(color, disabled-label-color);
+      input {
+        cursor: default;
+      }
+    }
+
+    label {
+      cursor: default;
+
+      @include token-utils.use-tokens(
+        tokens-mat-checkbox.$prefix,
+        tokens-mat-checkbox.get-token-slots()
+      ) {
+        @include token-utils.create-token-slot(color, disabled-label-color);
+      }
     }
   }
 
