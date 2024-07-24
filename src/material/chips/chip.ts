@@ -84,7 +84,6 @@ export interface MatChipEvent {
     '[id]': 'id',
     '[attr.role]': 'role',
     '[attr.aria-label]': 'ariaLabel',
-    '[attr.aria-hidden]': 'true',
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
