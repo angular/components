@@ -1,85 +1,18 @@
+<a name="18.2.0-next.2"></a>
+# 18.2.0-next.2 "velvet-guitar" (2024-07-24)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8417601015](https://github.com/angular/components/commit/8417601015e7c3a96a8a6801213e764058ee8aba) | feat | **checkbox:** add the ability to interact with disabled checkboxes ([#29474](https://github.com/angular/components/pull/29474)) |
+| [a018fb0ee8](https://github.com/angular/components/commit/a018fb0ee8ac711e7fba7d0d528fa56f348f6361) | feat | **tooltip:** replicate tooltipClass to default MatTooltipDefaultOptions ([#29467](https://github.com/angular/components/pull/29467)) |
+| [d6aed80446](https://github.com/angular/components/commit/d6aed804460d4b75082d7d04e051f2cae9b4f8f6) | fix | **chips:** remove button is too small ([#29351](https://github.com/angular/components/pull/29351)) |
+| [13aef8cf87](https://github.com/angular/components/commit/13aef8cf87409a706f3634caa75d5b04505a8ec9) | fix | **form-field:** hiding a label after it has been ([#29461](https://github.com/angular/components/pull/29461)) |
+| [10da6c6375](https://github.com/angular/components/commit/10da6c63757200b5848c00e560eabe8642435fe8) | fix | **input:** Number input not changing on wheel interaction ([#29449](https://github.com/angular/components/pull/29449)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.2"></a>
 # 18.1.2 "velvet-violin" (2024-07-24)
-## Breaking Changes
-### material
--  updates chip remove button touch target to increase accessibility of the button especially on touch/mobile devices.
-  
-  * refactor(material/chips): chip remove touch target size is insufficient
-  
-  Updates fix to Autocomplete Component Chips component where the
-  touch target size is too small and fails minimum accessibility
-  size of 48x48 px. Addresses nit fixes from PR review.
-  
-  Fixes b/286959517
-- updates padding size of remove touch target to
-  satisfy minimum 48x48 accessibility size.
-  
-  * fix(material/chip): remove button is too small
-  
-  Fixes Angular Components Chip component where the touch target of the
-  remove button of a chip is too small. Updates .mat-mdc-chip-remove to
-  target more specific styles to override original style of padding: 8px
-  so that the user has a larger touch target particularly on mobile
-  devices.
-  
-  Fixes b/286959517
-  
-  * refactor(material/chips): remove button is too small
-  
-  Fixes lint errors from previous commit for Angular Components
-  Chip component where the remove button touch target is too small,
-  particularly for touch/mobile devices. Increases padding on all
-  sides.
-  
-  Fixes b/286959517
-  
-  * fix(material/chips): increase chip remove button touch target size
-  
-  Fixes issue with Angular Component Chip's touch target size by
-  increasing the padding on chips with a trailing icon that has
-  an action.
-  
-  Fixes b/286959517
--  updates chip remove button touch target to increase accessibility of the button especially on touch/mobile devices.
-  
-  * fix(material/chips): chips remove touch target is too small to be accessible
-  
-  Updates Angular Components Chips component by increasing its
-  .mat-mdc-chip-remove::after styles to increase the size of the
-  touch target to make it more accessible/clickable.
-  
-  Fixes b/286959517
-  
-  * refactor(material/chips): fix lint errors
-  
-  Updates fix for Angular Components Chips component where there
-  were lint formatting errors.
-  
-  * refactor(material/chips): replace px with _trailing-icon-size variable
-  
-  Updates previous Angular Components Chip component fix and makes it
-  adaptable by swapping the hard-coded 18px offset to equal the
-  variable for -icon-size.
-  
-  * refactor(material/chips): updates touch target centering method
-  
-  Updates previous Angular Component Chip component fix which
-  added padding to the ::after pseudo-element and attempted to
-  calculate centering. Changes calculation based on using
-   with padding values countered
-  with margin negative values to center the touch target.
-  
-  * refactor(material/chips): updates ::after styles and fix lint errors
-  
-  Updates Angular Component Chips component fix to change ::after
-  background property changes to be background-color specifically to
-  avoid overriding background-clip styles. Suppresses lint warning
-  material/no-prefixes for background-clip since it's majority
-  compatible with browsers.
-  
-  Fixes b/286959517
-  
-  (cherry picked from commit d6aed804460d4b75082d7d04e051f2cae9b4f8f6)
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
