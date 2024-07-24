@@ -1,3 +1,15 @@
+<a name="18.1.2"></a>
+# 18.1.2 "velvet-violin" (2024-07-24)
+
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cf61af53bd](https://github.com/angular/components/commit/cf61af53bdb5178cfc80157b9abae2ca1819f4b0) | fix | **chips:** remove button is too small ([#29351](https://github.com/angular/components/pull/29351)) |
+| [c79ec264aa](https://github.com/angular/components/commit/c79ec264aa454b31f6cefa6a1b032884c565ae2e) | fix | **form-field:** hiding a label after it has been ([#29461](https://github.com/angular/components/pull/29461)) |
+| [15238d255f](https://github.com/angular/components/commit/15238d255f563348677fd81690735a708d3bda5c) | fix | **input:** Number input not changing on wheel interaction ([#29449](https://github.com/angular/components/pull/29449)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.1"></a>
 # 18.1.1 "tantalum-tale" (2024-07-17)
 ### cdk
