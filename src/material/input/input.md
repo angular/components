@@ -12,7 +12,7 @@ and `formControl`.
 The only limitation is that the `type` attribute can only be one of the values supported by
 `matNativeControl`. 
 
-### `matNativeControl` and `matInput`
+### `matNativeControl` and `matInput` explained
 
 `matInput` is a directive that enhances native `input` and `textarea` elements within a `mat-form-field` component.
  It provides Angular Material styling and behavior, such as floating labels, error states, and theming. Use this when
