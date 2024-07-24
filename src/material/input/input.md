@@ -10,7 +10,18 @@ on elements inside `<mat-form-field>` as well. This includes Angular directives 
 and `formControl`.
 
 The only limitation is that the `type` attribute can only be one of the values supported by
-`matNativeControl`.
+`matNativeControl`. 
+
+### `matNativeControl` and `matInput`
+
+`matInput` is a directive that enhances native `input` and `textarea` elements within a `mat-form-field` component.
+ It provides Angular Material styling and behavior, such as floating labels, error states, and theming. Use this when
+ you want to create a standard input or textarea field with Angular Material styling.
+
+`matNativeControl` is a directive that allows you to use native HTML input elements like `select`, `input`, and `textarea`
+ within a mat-form-field while still benefiting from Angular Material's styling and behavior. 
+ This is particularly useful for custom input components or when you need to leverage native browser features. Use it when
+ you need to use a native HTML element for specific features or customization, while still integrating it with the `mat-form-field` component.
 
 ### Supported `<input>` types
 
