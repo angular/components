@@ -1,0 +1,21 @@
+<section>
+  <h4>Chips inside of a Template-driven form</h4>
+  <mat-form-field class="example-form-field">
+    <mat-label>Video keywords</mat-label>
+    <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords">
+    @for (keyword of templateKeywords(); track keyword) {
+      <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
+        {{keyword}}
+      <button matChipRemove aria-label="'remove template form' + keyword">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      </mat-chip-row>
+    }
+    </mat-chip-grid>
+    <input
+      placeholder="New keyword..."
+      [matChipInputFor]="templateChipGrid"
+      (matChipInputTokenEnd)="addTemplateKeyword($event)"
+    />
+  </mat-form-field>
+</section>
