@@ -31,8 +31,8 @@ $prefix: (mat, switch);
     // the m3 slide-toggle uses opacity.
     visible-track-opacity: token-utils.hardcode(1, $exclude-hardcoded),
     hidden-track-opacity: token-utils.hardcode(0, $exclude-hardcoded),
-    visible-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
-    hidden-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
+    visible-track-transition: token-utils.hardcode(opacity 300ms, $exclude-hardcoded),
+    hidden-track-transition: token-utils.hardcode(opacity 300ms, $exclude-hardcoded),
     track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
     track-outline-color: map.get($systems, md-sys-color, outline),
     selected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
