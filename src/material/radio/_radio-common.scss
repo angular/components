@@ -219,9 +219,27 @@ $_icon-size: 20px;
     }
   }
 
-  .mdc-radio--disabled {
-    cursor: default;
-    pointer-events: none;
+  @if ($is-interactive) {
+    &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
+      pointer-events: auto;
+
+      @include token-utils.use-tokens($tokens...) {
+        .mdc-radio__native-control:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle {
+          @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
+          @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
+        }
+
+        &:hover .mdc-radio__native-control:checked + .mdc-radio__background,
+        .mdc-radio__native-control:checked:focus + .mdc-radio__background,
+        .mdc-radio__native-control + .mdc-radio__background {
+          .mdc-radio__inner-circle,
+          .mdc-radio__outer-circle {
+            @include token-utils.create-token-slot(border-color, disabled-selected-icon-color);
+            @include token-utils.create-token-slot(opacity, disabled-selected-icon-opacity);
+          }
+        }
+      }
+    }
   }
 }
 

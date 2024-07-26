@@ -5,13 +5,14 @@
     <input #input class="mdc-radio__native-control" type="radio"
            [id]="inputId"
            [checked]="checked"
-           [disabled]="disabled"
+           [disabled]="disabled && !disabledInteractive"
            [attr.name]="name"
            [attr.value]="value"
            [required]="required"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
+           [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
            (change)="_onInputInteraction($event)">
     <div class="mdc-radio__background">
       <div class="mdc-radio__outer-circle"></div>
