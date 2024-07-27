@@ -303,18 +303,16 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 
     &.mat-calendar-body-today {
       $shadow: token-utils.get-token-variable(calendar-date-today-selected-state-outline-color);
-      box-shadow: inset 0 0 0 1px var(#{$shadow});
+      box-shadow: inset 0 0 0 1px #{$shadow};
     }
   }
 }
 
 @include token-utils.use-tokens($_tokens...) {
-  $range-var-name:
+  $range-color:
     token-utils.get-token-variable(calendar-date-in-range-state-background-color);
-  $comparison-var-name:
+  $comparison-color:
     token-utils.get-token-variable(calendar-date-in-comparison-range-state-background-color);
-  $comparison-color: var(#{$comparison-var-name});
-  $range-color:  var(#{$range-var-name});
 
   .mat-calendar-body-in-range::before {
     @include token-utils.create-token-slot(background,

@@ -111,7 +111,7 @@ $_component-prefix: null;
 
 // Returns the name of a token including the current prefix. Intended to be used in calculations
 // involving tokens. `create-token-slot` should be used when outputting tokens.
-@function get-token-variable($token) {
+@function get-token-variable-name($token) {
   @if $_component-prefix == null or $_tokens == null {
     @error '`get-token-variable` must be used within `use-tokens`';
   }
@@ -125,7 +125,7 @@ $_component-prefix: null;
 // TODO(crisbeto): should be able to replace the usages of `get-token-variable` with this.
 // Returns a `var()` reference to a specific token. Intended for declarations
 // where the token has to be referenced as a part of a larger expression.
-@function get-token-variable-reference($token, $emit-fallback: false) {
+@function get-token-variable($token, $use-tokens-fallback: false, $fallback: null) {
   @if $_component-prefix == null or $_tokens == null {
     @error '`get-token-variable-reference` must be used within `use-tokens`';
   }
@@ -133,8 +133,11 @@ $_component-prefix: null;
     @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
   }
 
-  $var: get-token-variable($token);
-  $fallback: if($emit-fallback, map.get($_tokens, $token), null);
+  $var: get-token-variable-name($token);
+
+  @if ($use-tokens-fallback) {
+    $fallback: map.get($_tokens, $token);
+  }
 
   @if ($fallback != null) {
     @return var($var, $fallback);

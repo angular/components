@@ -130,12 +130,12 @@
     @include _supports-max {
       @include token-utils.use-tokens($outlined-slots...) {
         $shape-var: token-utils.get-token-variable(container-shape);
-        padding-right: max(16px, var(#{$shape-var}));
-        padding-left: max(16px, calc(var(#{$shape-var}) + 4px));
+        padding-right: max(16px, #{$shape-var});
+        padding-left: max(16px, calc(#{$shape-var} + 4px));
 
         [dir='rtl'] & {
-          padding-right: max(16px, calc(var(#{$shape-var}) + 4px));
-          padding-left: max(16px, var(#{$shape-var}));
+          padding-right: max(16px, calc(#{$shape-var} + 4px));
+          padding-left: max(16px, #{$shape-var});
         }
       }
     }
@@ -345,7 +345,7 @@
       @include _supports-max {
         .mdc-text-field--outlined .mdc-notched-outline & {
           $shape-var: token-utils.get-token-variable(container-shape);
-          width: max(12px, var(#{$shape-var}));
+          width: max(12px, #{$shape-var});
         }
       }
     }
@@ -397,7 +397,7 @@
       @include _supports-max {
         .mdc-text-field--outlined .mdc-notched-outline & {
           $shape-var: token-utils.get-token-variable(container-shape);
-          max-width: calc(100% - max(12px, var(#{$shape-var})) * 2);
+          max-width: calc(100% - max(12px, #{$shape-var}) * 2);
         }
       }
     }

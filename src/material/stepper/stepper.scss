@@ -6,7 +6,7 @@
 
 // Gets the `calc` expression for the vertical padding of the stepper header.
 @function _get-vertical-padding-calc() {
-  $height: var(#{token-utils.get-token-variable(header-height)});
+  $height: token-utils.get-token-variable(header-height);
   @return calc(calc(#{$height} - #{stepper-variables.$label-header-height}) / 2);
 }
 

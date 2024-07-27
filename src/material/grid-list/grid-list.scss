@@ -74,7 +74,7 @@ $text-padding: 16px;
   @include token-utils.use-tokens(
     tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
     $secondary-token-name: token-utils.get-token-variable(tile-header-secondary-text-size);
-    @include list-common.base(var(#{$secondary-token-name}));
+    @include list-common.base(#{$secondary-token-name});
     @include token-utils.create-token-slot(font-size, tile-header-primary-text-size);
   }
 }
@@ -83,7 +83,7 @@ $text-padding: 16px;
   @include token-utils.use-tokens(
     tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
     $secondary-token-name: token-utils.get-token-variable(tile-footer-secondary-text-size);
-    @include list-common.base(var(#{$secondary-token-name}));
+    @include list-common.base(#{$secondary-token-name});
     @include token-utils.create-token-slot(font-size, tile-footer-primary-text-size);
   }
 }

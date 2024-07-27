@@ -47,7 +47,7 @@
   ) {
     $track-variable: token-utils.get-token-variable(track-height);
     $indicator-height-variable: token-utils.get-token-variable(active-indicator-height);
-    height: max(var(#{$track-variable}), var(#{$indicator-height-variable}));
+    height: max(#{$track-variable}, #{$indicator-height-variable});
   }
 
   @include cdk.high-contrast(active, off) {
@@ -219,7 +219,7 @@
       tokens-mdc-linear-progress.get-token-slots()
     ) {
       $track-variable: token-utils.get-token-variable(track-height);
-      transform: rotate(180deg) translateX(calc(var(#{$track-variable}) * -2.5));
+      transform: rotate(180deg) translateX(calc(#{$track-variable} * -2.5));
     }
   }
 }

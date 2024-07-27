@@ -192,7 +192,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   }
 
   @include token-utils.use-tokens($_mdc-slots...) {
-    width: calc(100% - var(#{token-utils.get-token-variable(handle-width)}));
+    width: calc(100% - #{token-utils.get-token-variable(handle-width)});
   }
 }
 

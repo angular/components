@@ -31,10 +31,9 @@ $_fallback-size: 40px;
     vertical-align: bottom;
 
     @include token-utils.use-tokens($prefix, $slots) {
-      $layer-size: token-utils.get-token-variable(state-layer-size);
-      padding: calc((var(#{$layer-size}, #{$_fallback-size}) - #{$_icon-size}) / 2);
-      margin: calc((var(#{$layer-size}, #{$_fallback-size}) -
-        var(#{$layer-size}, #{$_fallback-size})) / 2);
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
+      margin: calc((#{$layer-size} - #{$layer-size}) / 2);
 
       @if ($include-state-layer-styles) {
         @include _state-layer-styles;
@@ -51,11 +50,10 @@ $_fallback-size: 40px;
       cursor: inherit;
 
       @include token-utils.use-tokens($prefix, $slots) {
-        $layer-size: token-utils.get-token-variable(state-layer-size);
-        $offset: calc((var(#{$layer-size}, #{$_fallback-size}) -
-          var(#{$layer-size}, #{$_fallback-size})) / 2);
-        width: var(#{$layer-size}, #{$_fallback-size});
-        height: var(#{$layer-size}, #{$_fallback-size});
+        $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+        $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
+        width: $layer-size;
+        height: $layer-size;
         top: $offset;
         right: $offset;
         left: $offset;
@@ -85,8 +83,8 @@ $_fallback-size: 40px;
                 border-color $_transition-duration $_exit-curve;
 
     @include token-utils.use-tokens($prefix, $slots) {
-      $layer-size: token-utils.get-token-variable(state-layer-size);
-      $offset: calc((var(#{$layer-size}, $_fallback-size) - #{$_icon-size}) / 2);
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
 
       @include token-utils.create-token-slot(border-color, unselected-icon-color);
       top: $offset;
