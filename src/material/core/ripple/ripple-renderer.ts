@@ -36,8 +36,8 @@ interface RippleEventListeners {
  * animation config specified.
  */
 export const defaultRippleAnimationConfig = {
-  enterDuration: 225,
-  exitDuration: 150,
+  enterDuration: 450,
+  exitDuration: 375,
 };
 
 /**
@@ -57,6 +57,12 @@ const pointerDownEvents = ['mousedown', 'touchstart'];
 
 /** Events that signal that the pointer is up. */
 const pointerUpEvents = ['mouseup', 'mouseleave', 'touchend', 'touchcancel'];
+
+const PRESSED_OPACITY = 0.12;
+const INITIAL_ORIGIN_SCALE = 0.2;
+const PADDING = 10;
+const SOFT_EDGE_MINIMUM_SIZE = 75;
+const SOFT_EDGE_CONTAINER_RATIO = 0.35;
 
 /**
  * Helper service that performs DOM manipulations. Not intended to be used outside this module.
@@ -123,31 +129,58 @@ export class RippleRenderer implements EventListenerObject {
       this._containerRect || this._containerElement.getBoundingClientRect());
     const animationConfig = {...defaultRippleAnimationConfig, ...config.animation};
 
+    const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
+    const { height, width } = containerRect;
+    const maxDim = Math.max(height, width);
+    const softEdgeSize = Math.max(
+      SOFT_EDGE_CONTAINER_RATIO * maxDim,
+      SOFT_EDGE_MINIMUM_SIZE,
+    );
+
+    const initialSize = Math.floor(maxDim * INITIAL_ORIGIN_SCALE);
+    const hypotenuse = radius * 2;
+    const maxRadius = hypotenuse + PADDING;
+
+    const rippleScale = `${(maxRadius + softEdgeSize) / initialSize}`;
+    const rippleSize = `${initialSize}px`;
+
+    const endPoint = {
+      x: (width - initialSize) / 2,
+      y: (height - initialSize) / 2,
+    };
+
+    let startPoint;
     if (config.centered) {
-      x = containerRect.left + containerRect.width / 2;
-      y = containerRect.top + containerRect.height / 2;
+      startPoint = endPoint;
+    } else {
+      startPoint = {
+        x: (x - containerRect.left) - initialSize / 2,
+        y: (y - containerRect.top) - initialSize / 2
+      };
     }
 
-    const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
-    const offsetX = x - containerRect.left;
-    const offsetY = y - containerRect.top;
     const enterDuration = animationConfig.enterDuration;
 
     const ripple = document.createElement('div');
     ripple.classList.add('mat-ripple-element');
 
-    ripple.style.left = `${offsetX - radius}px`;
-    ripple.style.top = `${offsetY - radius}px`;
-    ripple.style.height = `${radius * 2}px`;
-    ripple.style.width = `${radius * 2}px`;
+    ripple.style.transition = ``;
+    ripple.style.opacity = "0";
+    ripple.style.left = `0px`;
+    ripple.style.top = `0px`;
+    ripple.style.height = `${rippleSize}`;
+    ripple.style.width = `${rippleSize}`;
+    ripple.style.transform = `translate(${startPoint.x}px, ${startPoint.y}px) scale(1)`;
 
     // If a custom color has been specified, set it as inline style. If no color is
     // set, the default color will be applied through the ripple theme styles.
     if (config.color != null) {
-      ripple.style.backgroundColor = config.color;
+      ripple.style.background = `radial-gradient(closest-side, ${config.color} ` +
+        `max(calc(100% - 70px), 65%), transparent 100%)`;
     }
 
-    ripple.style.transitionDuration = `${enterDuration}ms`;
+    ripple.style.transition =
+      `opacity 105ms linear, transform ${enterDuration}ms cubic-bezier(0.2, 0, 0, 1)`;
 
     this._containerElement.appendChild(ripple);
 
@@ -176,11 +209,9 @@ export class RippleRenderer implements EventListenerObject {
     // Exposed reference to the ripple that will be returned.
     const rippleRef = new RippleRef(this, ripple, config, animationForciblyDisabledThroughCss);
 
-    // Start the enter animation by setting the transform/scale to 100%. The animation will
-    // execute as part of this statement because we forced a style recalculation before.
-    // Note: We use a 3d transform here in order to avoid an issue in Safari where
-    // the ripples aren't clipped when inside the shadow DOM (see #24028).
-    ripple.style.transform = 'scale3d(1, 1, 1)';
+    ripple.style.transform = 
+      `translate(${endPoint.x}px, ${endPoint.y}px) scale(${rippleScale})`;
+    ripple.style.opacity = `${PRESSED_OPACITY}`;
 
     rippleRef.state = RippleState.FADING_IN;
 
