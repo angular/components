@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {ChangeDetectionStrategy, Component, Injectable} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Injectable, inject} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatIconModule} from '@angular/material/icon';
@@ -133,13 +133,17 @@ export class LoadmoreDatabase {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeLoadmoreExample {
+  private _database = inject(LoadmoreDatabase);
+
   nodeMap = new Map<string, FlatNode>();
   treeControl: FlatTreeControl<FlatNode>;
   treeFlattener: MatTreeFlattener<NestedNode, FlatNode>;
   // Flat tree data source
   dataSource: MatTreeFlatDataSource<NestedNode, FlatNode>;
 
-  constructor(private _database: LoadmoreDatabase) {
+  constructor() {
+    const _database = this._database;
+
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,

@@ -22,9 +22,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarAnnotatedComponentExample {
-  durationInSeconds = 5;
+  private _snackBar = inject(MatSnackBar);
 
-  constructor(private _snackBar: MatSnackBar) {}
+  durationInSeconds = 5;
 
   openSnackBar() {
     this._snackBar.openFromComponent(PizzaPartyAnnotatedComponent, {

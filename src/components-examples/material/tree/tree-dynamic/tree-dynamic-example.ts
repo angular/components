@@ -1,6 +1,6 @@
 import {CollectionViewer, SelectionChange, DataSource} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {ChangeDetectionStrategy, Component, Injectable} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Injectable, inject} from '@angular/core';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -145,7 +145,9 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeDynamicExample {
-  constructor(database: DynamicDatabase) {
+  constructor() {
+    const database = inject(DynamicDatabase);
+
     this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new DynamicDataSource(this.treeControl, database);
 
