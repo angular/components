@@ -63,3 +63,21 @@
   </mat-radio-group>
   <p>Your favorite season is: {{favoriteSeason}}</p>
 </section>
+
+<h1>Disabled interactive group</h1>
+<section class="demo-section">
+  <mat-radio-group
+    disabled
+    [disabledInteractive]="disabledInteractive"
+    [(ngModel)]="favoriteSeason">
+    @for (season of seasonOptions; track season) {
+      <mat-radio-button [value]="season" matTooltip="This is a tooltip" matTooltipPosition="above">
+        {{season}}
+      </mat-radio-button>
+    }
+  </mat-radio-group>
+
+  <div>
+    <mat-checkbox [(ngModel)]="disabledInteractive">Disabled interactive</mat-checkbox>
+  </div>
+</section>

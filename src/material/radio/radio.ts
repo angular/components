@@ -25,6 +25,7 @@ import {
   InjectionToken,
   Injector,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -82,6 +83,9 @@ export interface MatRadioDefaultOptions {
    * https://material.angular.io/guide/theming#using-component-color-variants.
    */
   color: ThemePalette;
+
+  /** Whether disabled radio buttons should be interactive. */
+  disabledInteractive?: boolean;
 }
 
 export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptions>(
@@ -95,6 +99,7 @@ export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptio
 export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
   return {
     color: 'accent',
+    disabledInteractive: false,
   };
 }
 
@@ -248,6 +253,17 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     this._markRadiosForCheck();
   }
 
+  /** Whether buttons in the group should be interactive while they're disabled. */
+  @Input({transform: booleanAttribute})
+  get disabledInteractive(): boolean {
+    return this._disabledInteractive;
+  }
+  set disabledInteractive(value: boolean) {
+    this._disabledInteractive = value;
+    this._markRadiosForCheck();
+  }
+  private _disabledInteractive = false;
+
   constructor(private _changeDetector: ChangeDetectorRef) {}
 
   /**
@@ -371,6 +387,8 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class.mat-mdc-radio-checked]': 'checked',
+    '[class.mat-mdc-radio-disabled]': 'disabled',
+    '[class.mat-mdc-radio-disabled-interactive]': 'disabledInteractive',
     '[class._mat-animation-noopable]': '_noopAnimations',
     // Needs to be removed since it causes some a11y issues (see #21266).
     '[attr.tabindex]': 'null',
@@ -389,6 +407,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
+  private _ngZone = inject(NgZone);
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
   /** The unique ID for the radio button. */
@@ -502,7 +521,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     return (
       this._color ||
       (this.radioGroup && this.radioGroup.color) ||
-      (this._providerOverride && this._providerOverride.color) ||
+      (this._defaultOptions && this._defaultOptions.color) ||
       'accent'
     );
   }
@@ -510,6 +529,18 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     this._color = newValue;
   }
   private _color: ThemePalette;
+
+  /** Whether the radio button should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute})
+  get disabledInteractive(): boolean {
+    return (
+      this._disabledInteractive || (this.radioGroup !== null && this.radioGroup.disabledInteractive)
+    );
+  }
+  set disabledInteractive(value: boolean) {
+    this._disabledInteractive = value;
+  }
+  private _disabledInteractive: boolean;
 
   /**
    * Event emitted when the checked state of this radio button changes.
@@ -565,13 +596,14 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
     @Optional()
     @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-    private _providerOverride?: MatRadioDefaultOptions,
+    private _defaultOptions?: MatRadioDefaultOptions,
     @Attribute('tabindex') tabIndex?: string,
   ) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
     this._noopAnimations = animationMode === 'NoopAnimations';
+    this._disabledInteractive = _defaultOptions?.disabledInteractive ?? false;
 
     if (tabIndex) {
       this.tabIndex = numberAttribute(tabIndex, 0);
@@ -629,9 +661,17 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
         this.radioGroup._touch();
       }
     });
+
+    // We bind this outside of the zone, because:
+    // 1. Its logic is completely DOM-related so we can avoid some change detections.
+    // 2. There appear to be some internal tests that break when this triggers a change detection.
+    this._ngZone.runOutsideAngular(() => {
+      this._inputElement.nativeElement.addEventListener('click', this._onInputClick);
+    });
   }
 
   ngOnDestroy() {
+    this._inputElement.nativeElement.removeEventListener('click', this._onInputClick);
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._removeUniqueSelectionListener();
   }
@@ -643,17 +683,6 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
-  }
-
-  _onInputClick(event: Event) {
-    // We have to stop propagation for click events on the visual hidden input element.
-    // By default, when a user clicks on a label element, a generated click event will be
-    // dispatched on the associated input element. Since we are using a label element as our
-    // root container, the click event on the `radio-button` will be executed twice.
-    // The real click event will bubble up, and the generated click event also tries to bubble up.
-    // This will lead to multiple click events.
-    // Preventing bubbling for the second event will solve that issue.
-    event.stopPropagation();
   }
 
   /** Triggered when the radio button receives an interaction from the user. */
@@ -681,7 +710,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   _onTouchTargetClick(event: Event) {
     this._onInputInteraction(event);
 
-    if (!this.disabled) {
+    if (!this.disabled || this.disabledInteractive) {
       // Normally the input should be focused already, but if the click
       // comes from the touch target, then we might have to focus it ourselves.
       this._inputElement.nativeElement.focus();
@@ -695,6 +724,20 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
       this._changeDetector.markForCheck();
     }
   }
+
+  /** Called when the input is clicked. */
+  private _onInputClick = (event: Event) => {
+    // If the input is disabled while interactive, we need to prevent the
+    // selection from happening in this event handler. Note that even though
+    // this happens on `click` events, the logic applies when the user is
+    // navigating with the keyboard as well. An alternative way of doing
+    // this is by resetting the `checked` state in the `change` callback but
+    // it isn't optimal, because it can allow a pre-checked disabled button
+    // to be un-checked. This approach seems to cover everything.
+    if (this.disabled && this.disabledInteractive) {
+      event.preventDefault();
+    }
+  };
 
   /** Gets the tabindex for the underlying input element. */
   private _updateTabIndex() {

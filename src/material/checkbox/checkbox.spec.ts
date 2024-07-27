@@ -466,6 +466,19 @@ describe('MDC-based MatCheckbox', () => {
       expect(inputElement.disabled).toBe(false);
     }));
 
+    it('should not change the checked state if disabled and interactive', fakeAsync(() => {
+      testComponent.isDisabled = testComponent.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(inputElement.checked).toBe(false);
+
+      inputElement.click();
+      fixture.detectChanges();
+
+      expect(inputElement.checked).toBe(false);
+    }));
+
     describe('ripple elements', () => {
       it('should show ripples on label mousedown', fakeAsync(() => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
