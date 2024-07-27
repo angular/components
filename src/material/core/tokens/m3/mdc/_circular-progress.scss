@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, circular-progress);
@@ -10,8 +10,8 @@ $prefix: (mdc, circular-progress);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC circular-progress
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens:
-    token-utils.get-mdc-tokens('circular-progress-indicator', $systems, $exclude-hardcoded);
+  $mdc-tokens: token-definition-utils.get-mdc-tokens(
+      'circular-progress-indicator', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed
     secondary: (
@@ -25,5 +25,6 @@ $prefix: (mdc, circular-progress);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, ($mdc-tokens, $variant-tokens), $token-slots);
+  @return token-definition-utils.namespace-tokens(
+      $prefix, ($mdc-tokens, $variant-tokens), $token-slots);
 }

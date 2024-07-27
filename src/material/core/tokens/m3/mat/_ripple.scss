@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, ripple);
@@ -15,5 +15,5 @@ $prefix: (mat, ripple);
     color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.1),
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

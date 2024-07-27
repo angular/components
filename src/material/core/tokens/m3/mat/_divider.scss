@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, divider);
@@ -11,9 +11,9 @@ $prefix: (mat, divider);
 /// @return {Map} A set of custom tokens for the mat-divider
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
-    width: token-utils.hardcode(1px, $exclude-hardcoded),
+    width: token-definition-utils.hardcode(1px, $exclude-hardcoded),
     color: map.get($systems, md-sys-color, outline),
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

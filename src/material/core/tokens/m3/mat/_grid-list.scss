@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, grid-list);
@@ -17,5 +17,5 @@ $prefix: (mat, grid-list);
     tile-footer-secondary-text-size: map.get($systems, md-sys-typescale, body-medium),
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, optgroup);
@@ -12,11 +12,11 @@ $prefix: (mat, optgroup);
 /// @return {Map} A set of custom tokens for the mat-optgroup
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-utils.generate-typography-tokens($systems, label-text, title-small),
+    token-definition-utils.generate-typography-tokens($systems, label-text, title-small),
     (
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

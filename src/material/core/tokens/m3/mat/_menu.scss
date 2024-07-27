@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, menu);
@@ -12,15 +12,15 @@ $prefix: (mat, menu);
 /// @return {Map} A set of custom tokens for the mat-menu
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-utils.generate-typography-tokens($systems, item-label-text, label-large),
+    token-definition-utils.generate-typography-tokens($systems, item-label-text, label-large),
     (
       container-shape: map.get($systems, md-sys-shape, corner-extra-small),
       divider-color: map.get($systems, md-sys-color, surface-variant),
-      divider-bottom-spacing: token-utils.hardcode(8px, $exclude-hardcoded),
-      divider-top-spacing: token-utils.hardcode(8px, $exclude-hardcoded),
+      divider-bottom-spacing: token-definition-utils.hardcode(8px, $exclude-hardcoded),
+      divider-top-spacing: token-definition-utils.hardcode(8px, $exclude-hardcoded),
       item-label-text-color: map.get($systems, md-sys-color, on-surface),
       item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      item-icon-size: token-utils.hardcode(24px, $exclude-hardcoded),
+      item-icon-size: token-definition-utils.hardcode(24px, $exclude-hardcoded),
       item-hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
@@ -29,17 +29,17 @@ $prefix: (mat, menu);
         map.get($systems, md-sys-color, on-surface),
         $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
       ),
-      item-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
-      item-leading-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
-      item-trailing-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
-      item-with-icon-leading-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
-      item-with-icon-trailing-spacing: token-utils.hardcode(12px, $exclude-hardcoded),
+      item-spacing: token-definition-utils.hardcode(12px, $exclude-hardcoded),
+      item-leading-spacing: token-definition-utils.hardcode(12px, $exclude-hardcoded),
+      item-trailing-spacing: token-definition-utils.hardcode(12px, $exclude-hardcoded),
+      item-with-icon-leading-spacing: token-definition-utils.hardcode(12px, $exclude-hardcoded),
+      item-with-icon-trailing-spacing: token-definition-utils.hardcode(12px, $exclude-hardcoded),
       container-color: map.get($systems, md-sys-color, surface-container),
       // Note that this uses a value, rather than a computed box-shadow, because we use
       // the value at runtime to determine which shadow to set based on the menu's depth.
-      base-elevation-level: token-utils.hardcode(2, $exclude-hardcoded),
+      base-elevation-level: token-definition-utils.hardcode(2, $exclude-hardcoded),
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

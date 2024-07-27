@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, stepper);
@@ -33,7 +33,7 @@ $prefix: (mat, stepper);
       header-error-state-label-text-color: map.get($systems, md-sys-color, error),
       header-error-state-icon-foreground-color: map.get($systems, md-sys-color, error),
       header-error-state-icon-background-color:
-        token-utils.hardcode(transparent, $exclude-hardcoded),
+        token-definition-utils.hardcode(transparent, $exclude-hardcoded),
       container-text-font: map.get($systems, md-sys-typescale, body-medium-font),
       header-label-text-font: map.get($systems, md-sys-typescale, title-small-font),
       header-label-text-size: map.get($systems, md-sys-typescale, title-small-size),
@@ -75,5 +75,5 @@ $prefix: (mat, stepper);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-utils';
+@use '../../token-definition-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, icon);
@@ -11,7 +11,7 @@ $prefix: (mat, icon);
 /// @return {Map} A set of custom tokens for the mat-icon
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: ((
-    color: token-utils.hardcode(inherit, $exclude-hardcoded),
+    color: token-definition-utils.hardcode(inherit, $exclude-hardcoded),
   ), (
     // Color variants:
     surface: (), // Default, no overrides needed.
@@ -29,5 +29,5 @@ $prefix: (mat, icon);
     )
   ));
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
 }
