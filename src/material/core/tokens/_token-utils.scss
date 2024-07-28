@@ -122,7 +122,6 @@ $_component-prefix: null;
   @return _get-css-variable($_component-prefix, $token);
 }
 
-// TODO(crisbeto): should be able to replace the usages of `get-token-variable` with this.
 // Returns a `var()` reference to a specific token. Intended for declarations
 // where the token has to be referenced as a part of a larger expression.
 @function get-token-variable($token, $use-tokens-fallback: false, $fallback: null) {
