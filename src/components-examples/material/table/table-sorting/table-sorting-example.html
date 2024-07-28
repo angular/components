@@ -1,36 +1,52 @@
+<div>
+  <mat-button-toggle-group #multiSorting="matButtonToggleGroup" class="example-sorting-toggle-group">
+    <mat-button-toggle [value]="false">Single column sorting</mat-button-toggle>
+    <mat-button-toggle [value]="true">Multi column sorting</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
 <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+       [matSortMultiple]="multiSorting.value"
        class="mat-elevation-z8">
 
   <!-- Position Column -->
-  <ng-container matColumnDef="position">
+  <ng-container matColumnDef="firstName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
-      No.
+      First name
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="lastName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+      Last name
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by weight">
+      Position
     </th>
     <td mat-cell *matCellDef="let element"> {{element.position}} </td>
   </ng-container>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
-      Name
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="office">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+      Office
     </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-  </ng-container>
-
-  <!-- Weight Column -->
-  <ng-container matColumnDef="weight">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by weight">
-      Weight
-    </th>
-    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.office}} </td>
   </ng-container>
 
   <!-- Symbol Column -->
-  <ng-container matColumnDef="symbol">
+  <ng-container matColumnDef="salary">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
-      Symbol
+      Salary
     </th>
-    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.salary}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -171,50 +171,63 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * @param sort The connected MatSort that holds the current sort state.
    */
   sortData: (data: T[], sort: MatSort) => T[] = (data: T[], sort: MatSort): T[] => {
-    const active = sort.active;
-    const direction = sort.direction;
-    if (!active || direction == '') {
+    const sortState = Array.from(sort.sortState.values());
+
+    if (!sortState.length) {
       return data;
     }
 
     return data.sort((a, b) => {
-      let valueA = this.sortingDataAccessor(a, active);
-      let valueB = this.sortingDataAccessor(b, active);
+      return sortState
+        // Skip unsorted columns
+        .filter(it => it.direction !== '')
 
-      // If there are data in the column that can be converted to a number,
-      // it must be ensured that the rest of the data
-      // is of the same type so as not to order incorrectly.
-      const valueAType = typeof valueA;
-      const valueBType = typeof valueB;
+        // Apply sorting to each 'sorted' column, consider next column only if previous resulted in sort == 0
+        .reduce((previous, s) => {
 
-      if (valueAType !== valueBType) {
-        if (valueAType === 'number') {
-          valueA += '';
-        }
-        if (valueBType === 'number') {
-          valueB += '';
-        }
-      }
+          // We only calculate next column sort if previous sorting was 0
+          if (previous !== 0) {
+            return previous;
+          }
 
-      // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
-      // one value exists while the other doesn't. In this case, existing value should come last.
-      // This avoids inconsistent results when comparing values to undefined/null.
-      // If neither value exists, return 0 (equal).
-      let comparatorResult = 0;
-      if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
-        }
-      } else if (valueA != null) {
-        comparatorResult = 1;
-      } else if (valueB != null) {
-        comparatorResult = -1;
-      }
+          let valueA = this.sortingDataAccessor(a, s.active);
+          let valueB = this.sortingDataAccessor(b, s.active);
 
-      return comparatorResult * (direction == 'asc' ? 1 : -1);
+          // If there are data in the column that can be converted to a r,
+          // it must be ensured that the rest of the data
+          // is of the same type so as not to order incorrectly.
+          const valueAType = typeof valueA;
+          const valueBType = typeof valueB;
+
+          if (valueAType !== valueBType) {
+            if (valueAType === 'number') {
+              valueA += '';
+            }
+            if (valueBType === 'number') {
+              valueB += '';
+            }
+          }
+
+          // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
+          // one value exists while the other doesn't. In this case, existing value should come last.
+          // This avoids inconsistent results when comparing values to undefined/null.
+          // If neither value exists, return 0 (equal).
+          let comparatorResult = 0;
+          if (valueA != null && valueB != null) {
+            // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
+            if (valueA > valueB) {
+              comparatorResult = 1;
+            } else if (valueA < valueB) {
+              comparatorResult = -1;
+            }
+          } else if (valueA != null) {
+            comparatorResult = 1;
+          } else if (valueB != null) {
+            comparatorResult = -1;
+          }
+
+          return comparatorResult * (s.direction === 'asc' ? 1 : -1);
+        }, 0);
     });
   };
 
@@ -271,10 +284,10 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
       : observableOf(null);
     const pageChange: Observable<PageEvent | null | void> = this._paginator
       ? (merge(
-          this._paginator.page,
-          this._internalPageChanges,
-          this._paginator.initialized,
-        ) as Observable<PageEvent | void>)
+        this._paginator.page,
+        this._internalPageChanges,
+        this._paginator.initialized,
+      ) as Observable<PageEvent | void>)
       : observableOf(null);
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.

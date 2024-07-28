@@ -7,6 +7,7 @@
  */
 
 import {
+  booleanAttribute,
   Directive,
   EventEmitter,
   Inject,
@@ -17,7 +18,7 @@ import {
   OnInit,
   Optional,
   Output,
-  booleanAttribute,
+  SimpleChanges,
 } from '@angular/core';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {SortDirection} from './sort-direction';
@@ -26,6 +27,7 @@ import {
   getSortHeaderMissingIdError,
   getSortInvalidDirectionError,
 } from './sort-errors';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Position of the arrow that displays when sorted. */
 export type SortHeaderArrowPosition = 'before' | 'after';
@@ -79,6 +81,9 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
 
+  /** Map holding the sort state for each column */
+  sortState = new Map<string, Sort>;
+
   /** Used to notify any child components listening to state changes. */
   readonly _stateChanges = new Subject<void>();
 
@@ -108,6 +113,17 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
     this._direction = direction;
   }
   private _direction: SortDirection = '';
+
+  /** Whether to enable the multi-sorting feature  */
+  @Input('matSortMultiple')
+  get matSortMultiple(): boolean {
+    return this._sortMultiple;
+  }
+
+  set matSortMultiple(value: any) {
+    this._sortMultiple = coerceBooleanProperty(value);
+  }
+  private _sortMultiple = false;
 
   /**
    * Whether to disable the user from clearing the sort by finishing the sort direction cycle.
@@ -160,14 +176,53 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
 
   /** Sets the active sort id and determines the new sort direction. */
   sort(sortable: MatSortable): void {
-    if (this.active != sortable.id) {
-      this.active = sortable.id;
-      this.direction = sortable.start ? sortable.start : this.start;
+    let sortableDirection;
+    if (!this.isActive(sortable.id)) {
+      sortableDirection = sortable.start ?? this.start;
     } else {
-      this.direction = this.getNextSortDirection(sortable);
+      sortableDirection = this.getNextSortDirection(sortable);
     }
 
-    this.sortChange.emit({active: this.active, direction: this.direction});
+    // avoid keeping multiple sorts if not required.
+    if (!this._sortMultiple) {
+      this.sortState.clear();
+    }
+
+    // Update active and direction to keep backwards compatibility
+    if (this.active != sortable.id) {
+      this.active = sortable.id;
+    }
+    this.direction = sortableDirection;
+
+    const currentSort: Sort = {
+      active: sortable.id,
+      direction: sortableDirection,
+    };
+
+    // When unsorted, remove from state
+    if (sortableDirection !== '') {
+      this.sortState.set(sortable.id, currentSort);
+    } else {
+      this.sortState.delete(sortable.id);
+    }
+
+    this.sortChange.emit(currentSort);
+  }
+
+  /**
+   * Checks whether the provided column is currently active (has been sorted)
+   */
+  isActive(id: string): boolean {
+    return this.sortState.has(id);
+  }
+
+  /**
+   * Returns the current SortDirection of the supplied column id, defaults to unsorted if no state is found.
+   */
+  getCurrentSortDirection(id: string): SortDirection {
+    return this.sortState.get(id)?.direction
+      ?? this.sortables.get(id)?.start
+      ?? this.start;
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
@@ -176,13 +231,14 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
       return '';
     }
 
+    const currentSortableDirection = this.getCurrentSortDirection(sortable.id);
     // Get the sort direction cycle with the potential sortable overrides.
     const disableClear =
       sortable?.disableClear ?? this.disableClear ?? !!this._defaultOptions?.disableClear;
     let sortDirectionCycle = getSortDirectionCycle(sortable.start || this.start, disableClear);
 
     // Get and return the next direction in the cycle
-    let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
+    let nextDirectionIndex = sortDirectionCycle.indexOf(currentSortableDirection) + 1;
     if (nextDirectionIndex >= sortDirectionCycle.length) {
       nextDirectionIndex = 0;
     }
@@ -193,7 +249,24 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
     this._initializedStream.next();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    /* Update sortState with updated active and direction values, otherwise sorting won't work */
+    if (changes['active'] || changes['direction']) {
+      const currentActive = changes['active']?.currentValue ?? this.active;
+      const currentDirection = changes['direction']?.currentValue ?? this.direction ?? this.start;
+
+
+      // Handle sort deactivation
+      if ((!currentActive || currentActive === '') && changes['active']?.previousValue) {
+        this.sortState.delete(changes['active'].previousValue);
+      } else {
+        this.sortState.set(currentActive, {
+          active: currentActive,
+          direction: currentDirection,
+        } as Sort);
+      }
+    }
+
     this._stateChanges.next();
   }
 
