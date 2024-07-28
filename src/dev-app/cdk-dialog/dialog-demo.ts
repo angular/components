@@ -11,7 +11,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -31,6 +30,8 @@ const defaultDialogConfig = new DialogConfig();
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDemo {
+  dialog = inject(Dialog);
+
   dialogRef: DialogRef<string> | null;
   result: string;
   actionsAlignment: 'start' | 'center' | 'end';
@@ -54,8 +55,6 @@ export class DialogDemo {
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
   readonly cdr = inject(ChangeDetectorRef);
-
-  constructor(public dialog: Dialog) {}
 
   openJazz() {
     this.dialogRef = this.dialog.open<string>(JazzDialog, this.config);
@@ -114,12 +113,10 @@ export class DialogDemo {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {
-  private _dimensionToggle = false;
+  dialogRef = inject<DialogRef<string>>(DialogRef);
+  data = inject(DIALOG_DATA);
 
-  constructor(
-    public dialogRef: DialogRef<string>,
-    @Inject(DIALOG_DATA) public data: any,
-  ) {}
+  private _dimensionToggle = false;
 
   togglePosition(): void {
     this._dimensionToggle = !this._dimensionToggle;

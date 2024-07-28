@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {BreakpointObserver, BreakpointState, Breakpoints, LayoutModule} from '@angular/cdk/layout';
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
@@ -28,7 +28,9 @@ export class ScreenTypeDemo {
   isPortrait: Observable<BreakpointState>;
   isLandscape: Observable<BreakpointState>;
 
-  constructor(breakpointObserver: BreakpointObserver) {
+  constructor() {
+    const breakpointObserver = inject(BreakpointObserver);
+
     this.isHandset = breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait,

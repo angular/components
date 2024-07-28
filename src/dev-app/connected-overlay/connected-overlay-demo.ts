@@ -25,6 +25,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -49,6 +50,10 @@ import {MatRadioModule} from '@angular/material/radio';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedOverlayDemo {
+  overlay = inject(Overlay);
+  viewContainerRef = inject(ViewContainerRef);
+  dir = inject(Directionality);
+
   @ViewChild(CdkOverlayOrigin) _overlayOrigin: CdkOverlayOrigin;
   @ViewChild('overlay') overlayTemplate: TemplateRef<any>;
 
@@ -65,12 +70,6 @@ export class ConnectedOverlayDemo {
   itemArray: any[] = [];
   itemText = 'Item with a long name';
   overlayRef: OverlayRef | null;
-
-  constructor(
-    public overlay: Overlay,
-    public viewContainerRef: ViewContainerRef,
-    public dir: Directionality,
-  ) {}
 
   openWithConfig() {
     const positionStrategy = this.overlay

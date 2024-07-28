@@ -7,7 +7,7 @@
  */
 
 import {A11yModule, LiveAnnouncer} from '@angular/cdk/a11y';
-import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -19,10 +19,8 @@ import {MatDialog} from '@angular/material/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LiveAnnouncerDemo {
-  constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    public dialog: MatDialog,
-  ) {}
+  private _liveAnnouncer = inject(LiveAnnouncer);
+  dialog = inject(MatDialog);
 
   announceText(message: string) {
     this._liveAnnouncer.announce(message);
