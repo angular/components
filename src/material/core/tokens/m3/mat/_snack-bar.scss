@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, snack-bar);
@@ -14,5 +14,5 @@ $prefix: (mat, snack-bar);
     button-color: map.get($systems, md-sys-color, inverse-primary),
   );
 
-  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

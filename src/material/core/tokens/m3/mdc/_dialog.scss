@@ -1,4 +1,4 @@
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, dialog);
@@ -9,8 +9,8 @@ $prefix: (mdc, dialog);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC dialog
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: token-definition-utils.get-mdc-tokens('dialog', $systems, $exclude-hardcoded);
-  $tokens: token-definition-utils.rename-map-keys($tokens, (
+  $tokens: token-definition.get-mdc-tokens('dialog', $systems, $exclude-hardcoded);
+  $tokens: token-definition.rename-map-keys($tokens, (
     headline-color: subhead-color,
     headline-font: subhead-font,
     headline-line-height: subhead-line-height,
@@ -19,5 +19,5 @@ $prefix: (mdc, dialog);
     headline-weight: subhead-weight,
   ));
 
-  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

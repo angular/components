@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, tab-indicator);
@@ -11,8 +11,8 @@ $prefix: (mdc, tab-indicator);
 /// @return {Map} A set of tokens for the MDC tab-indicator
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
-    active-indicator-height: token-definition-utils.hardcode(2px, $exclude-hardcoded),
-    active-indicator-shape: token-definition-utils.hardcode(0, $exclude-hardcoded),
+    active-indicator-height: token-definition.hardcode(2px, $exclude-hardcoded),
+    active-indicator-shape: token-definition.hardcode(0, $exclude-hardcoded),
     active-indicator-color: map.get($systems, md-sys-color, primary),
   );
   $variant-tokens: (
@@ -29,6 +29,6 @@ $prefix: (mdc, tab-indicator);
     )
   );
 
-  @return token-definition-utils.namespace-tokens(
+  @return token-definition.namespace-tokens(
       $prefix, ($tokens, $variant-tokens), $token-slots);
 }

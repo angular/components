@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, standard-button-toggle);
@@ -12,13 +12,13 @@ $prefix: (mat, standard-button-toggle);
 /// @return {Map} A set of custom tokens for the mat-button-toggle
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-definition-utils.generate-typography-tokens($systems, label-text, label-large),
+    token-definition.generate-typography-tokens($systems, label-text, label-large),
   (
     shape: map.get($systems, md-sys-shape, corner-full),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     text-color: map.get($systems, md-sys-color, on-surface),
-    background-color: token-definition-utils.hardcode(transparent, $exclude-hardcoded),
+    background-color: token-definition.hardcode(transparent, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, on-surface),
     selected-state-background-color: map.get($systems, md-sys-color, secondary-container),
     selected-state-text-color: map.get($systems, md-sys-color, on-secondary-container),
@@ -27,7 +27,7 @@ $prefix: (mat, standard-button-toggle);
       $alpha: 0.38,
     ),
     disabled-state-background-color:
-        token-definition-utils.hardcode(transparent, $exclude-hardcoded),
+        token-definition.hardcode(transparent, $exclude-hardcoded),
     disabled-selected-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38,
@@ -54,5 +54,5 @@ $prefix: (mat, standard-button-toggle);
     )
   ));
 
-  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

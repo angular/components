@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../../style/elevation';
 @use '../../../style/sass-utils';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, datepicker);
@@ -42,7 +42,7 @@ $prefix: (mat, datepicker);
     calendar-period-button-text-color: map.get($systems, md-sys-color, on-surface-variant),
     calendar-period-button-icon-color: map.get($systems, md-sys-color, on-surface-variant),
     calendar-navigation-button-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    calendar-header-divider-color: token-definition-utils.hardcode(transparent, $exclude-hardcoded),
+    calendar-header-divider-color: token-definition.hardcode(transparent, $exclude-hardcoded),
     calendar-header-text-color: map.get($systems, md-sys-color, on-surface-variant),
     calendar-date-today-outline-color: map.get($systems, md-sys-color, primary),
     calendar-date-today-disabled-state-outline-color: sass-utils.safe-color-change(
@@ -50,7 +50,7 @@ $prefix: (mat, datepicker);
       $alpha: 0.38
     ),
     calendar-date-text-color: map.get($systems, md-sys-color, on-surface),
-    calendar-date-outline-color: token-definition-utils.hardcode(transparent, $exclude-hardcoded),
+    calendar-date-outline-color: token-definition.hardcode(transparent, $exclude-hardcoded),
     calendar-date-disabled-state-text-color: sass-utils.safe-color-change(
       map.get($systems, md-sys-color, on-surface),
       $alpha: 0.38
@@ -68,9 +68,9 @@ $prefix: (mat, datepicker);
     calendar-container-background-color: map.get($systems, md-sys-color, surface-container-high),
     calendar-container-text-color: map.get($systems, md-sys-color, on-surface),
     calendar-container-elevation-shadow:
-        token-definition-utils.hardcode(elevation.get-box-shadow(0), $exclude-hardcoded),
+        token-definition.hardcode(elevation.get-box-shadow(0), $exclude-hardcoded),
     calendar-container-touch-elevation-shadow:
-      token-definition-utils.hardcode(elevation.get-box-shadow(0), $exclude-hardcoded),
+      token-definition.hardcode(elevation.get-box-shadow(0), $exclude-hardcoded),
     calendar-container-shape: map.get($systems, md-sys-shape, corner-large),
     calendar-container-touch-shape: map.get($systems, md-sys-shape, corner-extra-large),
     calendar-text-font: map.get($systems, md-sys-typescale, body-large-font),
@@ -119,5 +119,5 @@ $prefix: (mat, datepicker);
     )
   ));
 
-  @return token-definition-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

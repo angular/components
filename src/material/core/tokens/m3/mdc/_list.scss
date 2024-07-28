@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, list);
@@ -10,9 +10,9 @@ $prefix: (mdc, list);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC list
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-definition-utils.get-mdc-tokens('list', $systems, $exclude-hardcoded);
+  $mdc-tokens: token-definition.get-mdc-tokens('list', $systems, $exclude-hardcoded);
 
-  @return token-definition-utils.namespace-tokens($prefix, _fix-tokens($mdc-tokens), $token-slots);
+  @return token-definition.namespace-tokens($prefix, _fix-tokens($mdc-tokens), $token-slots);
 }
 
 /// Fixes values in the list tokens that are inconsistent with its usage.

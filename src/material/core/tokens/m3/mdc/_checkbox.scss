@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, checkbox);
@@ -11,7 +11,7 @@ $prefix: (mdc, checkbox);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC checkbox
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-definition-utils.get-mdc-tokens('checkbox', $systems, $exclude-hardcoded);
+  $mdc-tokens: token-definition.get-mdc-tokens('checkbox', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed
     secondary: (
@@ -55,11 +55,11 @@ $prefix: (mdc, checkbox);
     )
   );
 
-  @return token-definition-utils.namespace-tokens(
+  @return token-definition.namespace-tokens(
     $prefix,
     (
       _fix-tokens($mdc-tokens),
-      token-definition-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+      token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
     ),
     $token-slots
   );
@@ -75,7 +75,7 @@ $prefix: (mdc, checkbox);
 @function _fix-tokens($tokens) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
   // state.
-  $hardcoded-tokens: token-definition-utils.get-mdc-tokens('checkbox', (), false);
+  $hardcoded-tokens: token-definition.get-mdc-tokens('checkbox', (), false);
 
   $rename-keys: (
     selected-icon-color: selected-checkmark-color,
@@ -94,11 +94,11 @@ $prefix: (mdc, checkbox);
     unselected-pressed-outline-color: unselected-pressed-icon-color
   );
 
-  $remapped-tokens: token-definition-utils.rename-map-keys($tokens, $rename-keys);
+  $remapped-tokens: token-definition.rename-map-keys($tokens, $rename-keys);
   $remapped-hardcoded-tokens:
-      token-definition-utils.rename-map-keys($hardcoded-tokens, $rename-keys);
+      token-definition.rename-map-keys($hardcoded-tokens, $rename-keys);
 
-  @return token-definition-utils.combine-color-tokens(
+  @return token-definition.combine-color-tokens(
       $remapped-tokens, $remapped-hardcoded-tokens, (
     (
       color: disabled-selected-icon-color,

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../token-definition-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, outlined-text-field);
@@ -11,7 +11,7 @@ $prefix: (mdc, outlined-text-field);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC outlined-text-field
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-definition-utils.get-mdc-tokens(
+  $mdc-tokens: token-definition.get-mdc-tokens(
       'outlined-text-field', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed
@@ -32,9 +32,9 @@ $prefix: (mdc, outlined-text-field);
     ),
   );
 
-  @return token-definition-utils.namespace-tokens($prefix, (
+  @return token-definition.namespace-tokens($prefix, (
     _fix-tokens($mdc-tokens),
-    token-definition-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
   ), $token-slots);
 }
 
@@ -47,9 +47,9 @@ $prefix: (mdc, outlined-text-field);
 @function _fix-tokens($initial-tokens) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
   // state.
-  $hardcoded-tokens: token-definition-utils.get-mdc-tokens('outlined-text-field', (), false);
+  $hardcoded-tokens: token-definition.get-mdc-tokens('outlined-text-field', (), false);
 
-  @return token-definition-utils.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+  @return token-definition.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-outline-color,
       opacity: disabled-outline-opacity
