@@ -2,6 +2,7 @@
   <mat-slide-toggle color="primary" [(ngModel)]="firstToggle">Default Slide Toggle</mat-slide-toggle>
   <mat-slide-toggle [(ngModel)]="firstToggle" disabled>Disabled Slide Toggle</mat-slide-toggle>
   <mat-slide-toggle [disabled]="firstToggle">Disable Bound</mat-slide-toggle>
+  <mat-slide-toggle disabled disabledInteractive [(ngModel)]="firstToggle">Disabled Interactive Toggle</mat-slide-toggle>
   <mat-slide-toggle hideIcon [(ngModel)]="firstToggle">No icon</mat-slide-toggle>
 
   <p>With label before the slide toggle.</p>

@@ -379,6 +379,40 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
       expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
     }));
+
+    it('should be able to mark a slide toggle as interactive while it is disabled', fakeAsync(() => {
+      testComponent.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(buttonElement.disabled).toBe(true);
+      expect(buttonElement.hasAttribute('aria-disabled')).toBe(false);
+      expect(buttonElement.getAttribute('tabindex')).toBe('-1');
+      expect(buttonElement.classList).not.toContain('mat-mdc-slide-toggle-disabled-interactive');
+
+      testComponent.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(buttonElement.disabled).toBe(false);
+      expect(buttonElement.getAttribute('aria-disabled')).toBe('true');
+      expect(buttonElement.getAttribute('tabindex')).toBe('0');
+      expect(buttonElement.classList).toContain('mat-mdc-slide-toggle-disabled-interactive');
+    }));
+
+    it('should not change its state when clicked while disabled and interactive', fakeAsync(() => {
+      expect(slideToggle.checked).toBe(false);
+
+      testComponent.isDisabled = testComponent.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      buttonElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(slideToggle.checked).toBe(false);
+    }));
   });
 
   describe('custom template', () => {
@@ -828,33 +862,36 @@ describe('MDC-based MatSlideToggle with forms', () => {
 
 @Component({
   template: `
-    <mat-slide-toggle [dir]="direction" [required]="isRequired"
-                     [disabled]="isDisabled"
-                     [color]="slideColor"
-                     [id]="slideId"
-                     [checked]="slideChecked"
-                     [name]="slideName"
-                     [aria-label]="slideLabel"
-                     [aria-labelledby]="slideLabelledBy"
-                     [aria-describedby]="slideAriaDescribedBy"
-                     [tabIndex]="slideTabindex"
-                     [labelPosition]="labelPosition"
-                     [disableRipple]="disableRipple"
-                     [hideIcon]="hideIcon"
-                     (toggleChange)="onSlideToggleChange()"
-                     (dragChange)="onSlideDragChange()"
-                     (change)="onSlideChange($event)"
-                     (click)="onSlideClick($event)">
+    <mat-slide-toggle
+      [dir]="direction"
+      [required]="isRequired"
+      [disabled]="isDisabled"
+      [color]="slideColor"
+      [id]="slideId"
+      [checked]="slideChecked"
+      [name]="slideName"
+      [aria-label]="slideLabel"
+      [aria-labelledby]="slideLabelledBy"
+      [aria-describedby]="slideAriaDescribedBy"
+      [tabIndex]="slideTabindex"
+      [labelPosition]="labelPosition"
+      [disableRipple]="disableRipple"
+      [hideIcon]="hideIcon"
+      [disabledInteractive]="disabledInteractive"
+      (toggleChange)="onSlideToggleChange()"
+      (dragChange)="onSlideDragChange()"
+      (change)="onSlideChange($event)"
+      (click)="onSlideClick($event)">
       <span>Test Slide Toggle</span>
     </mat-slide-toggle>`,
   standalone: true,
   imports: [MatSlideToggleModule, BidiModule],
 })
 class SlideToggleBasic {
-  isDisabled: boolean = false;
-  isRequired: boolean = false;
-  disableRipple: boolean = false;
-  slideChecked: boolean = false;
+  isDisabled = false;
+  isRequired = false;
+  disableRipple = false;
+  slideChecked = false;
   slideColor: string;
   slideId: string | null;
   slideName: string | null;
@@ -864,10 +901,11 @@ class SlideToggleBasic {
   slideTabindex: number;
   lastEvent: MatSlideToggleChange;
   labelPosition: string;
-  toggleTriggered: number = 0;
-  dragTriggered: number = 0;
+  toggleTriggered = 0;
+  dragTriggered = 0;
   direction: Direction = 'ltr';
   hideIcon = false;
+  disabledInteractive = false;
 
   onSlideClick: (event?: Event) => void = () => {};
   onSlideChange = (event: MatSlideToggleChange) => (this.lastEvent = event);

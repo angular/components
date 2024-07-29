@@ -187,6 +187,9 @@ export class MatSlideToggle
   /** Whether to hide the icon inside of the slide toggle. */
   @Input({transform: booleanAttribute}) hideIcon: boolean;
 
+  /** Whether the slide toggle should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute}) disabledInteractive: boolean;
+
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() readonly change = new EventEmitter<MatSlideToggleChange>();
 
@@ -215,6 +218,7 @@ export class MatSlideToggle
     this._noopAnimations = animationMode === 'NoopAnimations';
     this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;
     this.hideIcon = defaults.hideIcon ?? false;
+    this.disabledInteractive = defaults.disabledInteractive ?? false;
     this._labelId = this._uniqueId + '-label';
   }
 
@@ -295,12 +299,14 @@ export class MatSlideToggle
 
   /** Method being called whenever the underlying button is clicked. */
   _handleClick() {
-    this.toggleChange.emit();
+    if (!this.disabled) {
+      this.toggleChange.emit();
 
-    if (!this.defaults.disableToggleValue) {
-      this.checked = !this.checked;
-      this._onChange(this.checked);
-      this.change.emit(new MatSlideToggleChange(this, this.checked));
+      if (!this.defaults.disableToggleValue) {
+        this.checked = !this.checked;
+        this._onChange(this.checked);
+        this.change.emit(new MatSlideToggleChange(this, this.checked));
+      }
     }
   }
 
