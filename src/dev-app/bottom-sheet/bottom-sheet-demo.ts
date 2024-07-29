@@ -7,7 +7,7 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatBottomSheet,
@@ -47,6 +47,8 @@ const defaultConfig = new MatBottomSheetConfig();
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BottomSheetDemo {
+  private _bottomSheet = inject(MatBottomSheet);
+
   config: MatBottomSheetConfig = {
     hasBackdrop: defaultConfig.hasBackdrop,
     disableClose: defaultConfig.disableClose,
@@ -56,8 +58,6 @@ export class BottomSheetDemo {
   };
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
-
-  constructor(private _bottomSheet: MatBottomSheet) {}
 
   openComponent() {
     this._bottomSheet.open(ExampleBottomSheet, this.config);
@@ -84,7 +84,7 @@ export class BottomSheetDemo {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleBottomSheet {
-  constructor(private _bottomSheet: MatBottomSheetRef) {}
+  private _bottomSheet = inject(MatBottomSheetRef);
 
   handleClick(event: MouseEvent) {
     event.preventDefault();

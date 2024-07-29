@@ -91,6 +91,8 @@ let apiLoadingPromise: Promise<unknown> | null = null;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
+  private readonly _mapDirectionsService = inject(MapDirectionsService);
+
   @ViewChild(MapPolyline) polyline: MapPolyline;
   @ViewChild(MapPolygon) polygon: MapPolygon;
   @ViewChild(MapRectangle) rectangle: MapRectangle;
@@ -167,7 +169,7 @@ export class GoogleMapDemo {
 
   directionsResult?: google.maps.DirectionsResult;
 
-  constructor(private readonly _mapDirectionsService: MapDirectionsService) {
+  constructor() {
     this._loadApi();
   }
 

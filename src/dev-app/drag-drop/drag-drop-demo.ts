@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewEncapsulation, ChangeDetectionStrategy, inject} from '@angular/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
@@ -54,7 +54,10 @@ export class DragAndDropDemo {
   ages = ['Stone age', 'Bronze age', 'Iron age', 'Middle ages'];
   preferredAges = ['Modern period', 'Renaissance'];
 
-  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor() {
+    const iconRegistry = inject(MatIconRegistry);
+    const sanitizer = inject(DomSanitizer);
+
     iconRegistry.addSvgIconLiteral(
       'dnd-move',
       sanitizer.bypassSecurityTrustHtml(
