@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@angular/cdk';
 @use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
@@ -16,14 +17,17 @@ $mat-dialog-button-horizontal-margin: 8px !default;
 // include the `dialog-base`. Eventually we should clean up the usages of this flag.
 $_emit-fallbacks: true;
 
+$_mat-tokens: tokens-mat-dialog.get-token-slots();
+$_mdc-tokens: tokens-mdc-dialog.get-token-slots();
+
 @mixin _use-mat-tokens {
-  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, $_mat-tokens) {
     @content;
   }
 }
 
 @mixin _use-mdc-tokens {
-  @include token-utils.use-tokens(tokens-mdc-dialog.$prefix, tokens-mdc-dialog.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mdc-dialog.$prefix, $_mdc-tokens) {
     @content;
   }
 }
@@ -49,13 +53,13 @@ $_emit-fallbacks: true;
 .cdk-overlay-pane.mat-mdc-dialog-panel {
   @include _use-mat-tokens {
     @include token-utils.create-token-slot(max-width, container-max-width,
-      $_emit-fallbacks);
+      $fallback: map.get($_mat-tokens, container-max-width));
     @include token-utils.create-token-slot(min-width, container-min-width,
-      $_emit-fallbacks);
+      $fallback: map.get($_mat-tokens, container-min-width));
 
     @media (variables.$xsmall) {
       @include token-utils.create-token-slot(max-width, container-small-max-width,
-        $_emit-fallbacks);
+        $fallback: map.get($_mat-tokens, container-small-max-width));
     }
   }
 }
@@ -135,12 +139,14 @@ $_emit-fallbacks: true;
 
   @include _use-mat-tokens {
     @include token-utils.create-token-slot(box-shadow, container-elevation-shadow,
-      $_emit-fallbacks);
+      $fallback: map.get($_mat-tokens, container-elevation-shadow));
   }
 
   @include _use-mdc-tokens {
-    @include token-utils.create-token-slot(border-radius, container-shape, $_emit-fallbacks);
-    @include token-utils.create-token-slot(background-color, container-color, $_emit-fallbacks);
+    @include token-utils.create-token-slot(border-radius, container-shape,
+      $fallback: map.get($_mdc-tokens, container-shape));
+    @include token-utils.create-token-slot(background-color, container-color,
+      $fallback: map.get($_mdc-tokens, container-color));
   }
 }
 
@@ -167,18 +173,25 @@ $_emit-fallbacks: true;
   }
 
   @include _use-mat-tokens {
-    @include token-utils.create-token-slot(padding, headline-padding, $_emit-fallbacks);
+    @include token-utils.create-token-slot(padding, headline-padding,
+      $fallback: map.get($_mat-tokens, headline-padding));
   }
 
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
-      @include token-utils.create-token-slot(color, subhead-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, subhead-font, $_emit-fallbacks);
-      @include token-utils.create-token-slot(line-height, subhead-line-height, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-size, subhead-size, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-weight, subhead-weight, $_emit-fallbacks);
-      @include token-utils.create-token-slot(letter-spacing, subhead-tracking, $_emit-fallbacks);
+      @include token-utils.create-token-slot(color, subhead-color,
+        $fallback: map.get($_mdc-tokens, subhead-color));
+      @include token-utils.create-token-slot(font-family, subhead-font,
+        $fallback: map.get($_mdc-tokens, subhead-font));
+      @include token-utils.create-token-slot(line-height, subhead-line-height,
+        $fallback: map.get($_mdc-tokens, subhead-line-height));
+      @include token-utils.create-token-slot(font-size, subhead-size,
+        $fallback: map.get($_mdc-tokens, subhead-size));
+      @include token-utils.create-token-slot(font-weight, subhead-weight,
+        $fallback: map.get($_mdc-tokens, subhead-weight));
+      @include token-utils.create-token-slot(letter-spacing, subhead-tracking,
+        $fallback: map.get($_mdc-tokens, subhead-tracking));
     }
   }
 }
@@ -202,28 +215,33 @@ $_emit-fallbacks: true;
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
-      @include token-utils.create-token-slot(color, supporting-text-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, supporting-text-font, $_emit-fallbacks);
+      @include token-utils.create-token-slot(color, supporting-text-color,
+        $fallback: map.get($_mdc-tokens, supporting-text-color));
+      @include token-utils.create-token-slot(font-family, supporting-text-font,
+        $fallback: map.get($_mdc-tokens, supporting-text-font));
       @include token-utils.create-token-slot(line-height, supporting-text-line-height,
-        $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-size, supporting-text-size, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-weight, supporting-text-weight, $_emit-fallbacks);
+        $fallback: map.get($_mdc-tokens, supporting-text-line-height));
+      @include token-utils.create-token-slot(font-size, supporting-text-size,
+        $fallback: map.get($_mdc-tokens, supporting-text-size));
+      @include token-utils.create-token-slot(font-weight, supporting-text-weight,
+        $fallback: map.get($_mdc-tokens, supporting-text-weight));
       @include token-utils.create-token-slot(letter-spacing, supporting-text-tracking,
-        $_emit-fallbacks);
+        $fallback: map.get($_mdc-tokens, supporting-text-tracking));
     }
   }
 
   @include _use-mat-tokens {
     // These styles need a bit more specificity.
     .mat-mdc-dialog-container & {
-      @include token-utils.create-token-slot(padding, content-padding, $_emit-fallbacks);
+      @include token-utils.create-token-slot(padding, content-padding,
+        $fallback: map.get($_mat-tokens, content-padding));
     }
 
     // Note: we can achieve this with a `:has` selector, but it results in an
     // increased specificity which breaks a lot of internal clients.
     .mat-mdc-dialog-container-with-actions & {
       @include token-utils.create-token-slot(padding, with-actions-content-padding,
-        $_emit-fallbacks);
+        $fallback: map.get($_mat-tokens, with-actions-content-padding));
     }
   }
 
@@ -252,8 +270,10 @@ $_emit-fallbacks: true;
   // For backwards compatibility, actions align at start by default. MDC usually
   // aligns actions at the end of the container.
   @include _use-mat-tokens {
-    @include token-utils.create-token-slot(padding, actions-padding, $_emit-fallbacks);
-    @include token-utils.create-token-slot(justify-content, actions-alignment, $_emit-fallbacks);
+    @include token-utils.create-token-slot(padding, actions-padding,
+      $fallback: map.get($_mat-tokens, actions-padding));
+    @include token-utils.create-token-slot(justify-content, actions-alignment,
+      $fallback: map.get($_mat-tokens, actions-alignment));
   }
 
   // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"

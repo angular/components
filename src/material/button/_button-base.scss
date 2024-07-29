@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 
@@ -139,14 +140,19 @@
 
 @mixin mat-private-button-horizontal-layout($prefix, $slots, $has-with-icon-padding) {
   @include token-utils.use-tokens($prefix, $slots) {
-    $icon-spacing: token-utils.get-token-variable(icon-spacing, true);
-    $icon-offset: token-utils.get-token-variable(icon-offset, true);
-    $horizontal-padding: token-utils.get-token-variable(horizontal-padding, true);
+    $icon-spacing: token-utils.get-token-variable(icon-spacing,
+        $fallback: map.get($slots, icon-spacing));
+    $icon-offset: token-utils.get-token-variable(icon-offset,
+        $fallback: map.get($slots, icon-offset));
+    $horizontal-padding:
+        token-utils.get-token-variable(horizontal-padding,
+        $fallback: map.get($slots, horizontal-padding));
     padding: 0 $horizontal-padding;
 
     @if ($has-with-icon-padding) {
       $with-icon-horizontal-padding:
-        token-utils.get-token-variable(with-icon-horizontal-padding, true);
+        token-utils.get-token-variable(with-icon-horizontal-padding,
+        $fallback: map.get($slots, with-icon-horizontal-padding));
 
       // stylelint-disable-next-line selector-class-pattern
       &:has(.material-icons, mat-icon, [matButtonIcon]) {
