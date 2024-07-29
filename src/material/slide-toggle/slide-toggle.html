@@ -7,8 +7,9 @@
     [class.mdc-switch--unselected]="!checked"
     [class.mdc-switch--checked]="checked"
     [class.mdc-switch--disabled]="disabled"
-    [tabIndex]="disabled ? -1 : tabIndex"
-    [disabled]="disabled"
+    [class.mat-mdc-slide-toggle-disabled-interactive]="disabledInteractive"
+    [tabIndex]="disabled && !disabledInteractive ? -1 : tabIndex"
+    [disabled]="disabled && !disabledInteractive"
     [attr.id]="buttonId"
     [attr.name]="name"
     [attr.aria-label]="ariaLabel"
@@ -16,6 +17,7 @@
     [attr.aria-describedby]="ariaDescribedby"
     [attr.aria-required]="required || null"
     [attr.aria-checked]="checked"
+    [attr.aria-disabled]="disabledInteractive && disabledInteractive ? 'true' : null"
     (click)="_handleClick()"
     #switch>
     <span class="mdc-switch__track"></span>
