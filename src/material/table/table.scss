@@ -11,8 +11,8 @@
 }
 
 @mixin _cell-border {
-  @include token-utils.create-token-slot(border-bottom-color, row-item-outline-color, true);
-  @include token-utils.create-token-slot(border-bottom-width, row-item-outline-width, true);
+  @include token-utils.create-token-slot(border-bottom-color, row-item-outline-color);
+  @include token-utils.create-token-slot(border-bottom-width, row-item-outline-width);
   border-bottom-style: solid;
 }
 
@@ -52,8 +52,8 @@
   .mat-mdc-header-row {
     @include vendor-prefixes.smooth-font;
     @include token-utils.create-token-slot(height, header-container-height, 56px);
-    @include token-utils.create-token-slot(color, header-headline-color, true);
-    @include token-utils.create-token-slot(font-family, header-headline-font, true);
+    @include token-utils.create-token-slot(color, header-headline-color);
+    @include token-utils.create-token-slot(font-family, header-headline-font);
     @include token-utils.create-token-slot(line-height, header-headline-line-height);
     @include token-utils.create-token-slot(font-size, header-headline-size, 14px);
     @include token-utils.create-token-slot(font-weight, header-headline-weight, 500);
@@ -61,7 +61,7 @@
 
   .mat-mdc-row {
     @include token-utils.create-token-slot(height, row-item-container-height, 52px);
-    @include token-utils.create-token-slot(color, row-item-label-text-color, true);
+    @include token-utils.create-token-slot(color, row-item-label-text-color);
   }
 
   // Note that while it's redundant to apply the typography both to the row
@@ -71,7 +71,7 @@
   .mat-mdc-row,
   .mdc-data-table__content {
     @include vendor-prefixes.smooth-font;
-    @include token-utils.create-token-slot(font-family, row-item-label-text-font, true);
+    @include token-utils.create-token-slot(font-family, row-item-label-text-font);
     @include token-utils.create-token-slot(line-height, row-item-label-text-line-height);
     @include token-utils.create-token-slot(font-size, row-item-label-text-size, 14px);
     @include token-utils.create-token-slot(font-weight, row-item-label-text-weight);
@@ -80,8 +80,8 @@
   .mat-mdc-footer-row {
     @include vendor-prefixes.smooth-font;
     @include token-utils.create-token-slot(height, footer-container-height, 52px);
-    @include token-utils.create-token-slot(color, row-item-label-text-color, true);
-    @include token-utils.create-token-slot(font-family, footer-supporting-text-font, true);
+    @include token-utils.create-token-slot(color, row-item-label-text-color);
+    @include token-utils.create-token-slot(font-family, footer-supporting-text-font);
     @include token-utils.create-token-slot(line-height, footer-supporting-text-line-height);
     @include token-utils.create-token-slot(font-size, footer-supporting-text-size, 14px);
     @include token-utils.create-token-slot(font-weight, footer-supporting-text-weight);

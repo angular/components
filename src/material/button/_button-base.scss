@@ -139,14 +139,24 @@
 
 @mixin mat-private-button-horizontal-layout($prefix, $slots, $has-with-icon-padding) {
   @include token-utils.use-tokens($prefix, $slots) {
+<<<<<<< Updated upstream
     $icon-spacing: token-utils.get-token-variable-reference(icon-spacing, true);
     $icon-offset: token-utils.get-token-variable-reference(icon-offset, true);
     $horizontal-padding: token-utils.get-token-variable-reference(horizontal-padding, true);
+=======
+    $icon-spacing: token-utils.get-token-variable(icon-spacing);
+    $icon-offset: token-utils.get-token-variable(icon-offset);
+    $horizontal-padding: token-utils.get-token-variable(horizontal-padding);
+>>>>>>> Stashed changes
     padding: 0 $horizontal-padding;
 
     @if ($has-with-icon-padding) {
       $with-icon-horizontal-padding:
+<<<<<<< Updated upstream
         token-utils.get-token-variable-reference(with-icon-horizontal-padding, true);
+=======
+        token-utils.get-token-variable(with-icon-horizontal-padding);
+>>>>>>> Stashed changes
 
       // stylelint-disable-next-line selector-class-pattern
       &:has(.material-icons, mat-icon, [matButtonIcon]) {
