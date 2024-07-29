@@ -58,6 +58,8 @@ export class FocusTrapShadowDomDemo {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDemo implements AfterViewInit {
+  dialog = inject(MatDialog);
+
   @ViewChild('newElements')
   private _newElements: ElementRef<HTMLElement>;
 
@@ -67,8 +69,6 @@ export class FocusTrapDemo implements AfterViewInit {
   _supportsShadowDom = _supportsShadowDom();
 
   readonly cdr = inject(ChangeDetectorRef);
-
-  constructor(public dialog: MatDialog) {}
 
   ngAfterViewInit() {
     // We want all the traps to be disabled by default, but doing so while using the value in
@@ -108,8 +108,9 @@ let dialogCount = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDialogDemo {
+  dialog = inject(MatDialog);
+
   id = dialogCount++;
-  constructor(public dialog: MatDialog) {}
 
   openAnotherDialog() {
     this.dialog.open(FocusTrapDialogDemo);

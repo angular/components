@@ -250,7 +250,7 @@ export class AutocompleteDemo {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemoExampleDialog {
-  constructor(public dialogRef: MatDialogRef<AutocompleteDemoExampleDialog>) {}
+  dialogRef = inject<MatDialogRef<AutocompleteDemoExampleDialog>>(MatDialogRef);
 
   currentSize = '';
   sizes = ['S', 'M', 'L'];

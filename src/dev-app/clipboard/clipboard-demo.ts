@@ -7,7 +7,7 @@
  */
 
 import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -19,6 +19,8 @@ import {FormsModule} from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipboardDemo {
+  private _clipboard = inject(Clipboard);
+
   attempts = 3;
 
   value =
@@ -31,8 +33,6 @@ export class ClipboardDemo {
     `thing he was afraid of was losing his power, which eventually, of course, he did. ` +
     `Unfortunately, he taught his apprentice everything he knew, then his apprentice ` +
     `killed him in his sleep. Ironic. He could save others from death, but not himself.`;
-
-  constructor(private _clipboard: Clipboard) {}
 
   copyViaService() {
     this._clipboard.copy(this.value);

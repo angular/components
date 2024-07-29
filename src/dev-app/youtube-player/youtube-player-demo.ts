@@ -14,6 +14,7 @@ import {
   ElementRef,
   OnDestroy,
   ViewChild,
+  inject,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -87,6 +88,7 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   private _selectedVideo?: Video;
   private _playerVars?: YT.PlayerVars;
   private _selectedVideoId?: string;
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   videos = VIDEOS;
   videoWidth: number | undefined;
@@ -95,7 +97,7 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   disablePlaceholder = false;
   placeholderQuality: PlaceholderImageQuality;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  constructor() {
     this.selectedVideo = VIDEOS[0];
   }
 
