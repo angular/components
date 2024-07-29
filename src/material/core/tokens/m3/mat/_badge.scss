@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, badge);
@@ -22,26 +22,26 @@ $prefix: (mat, badge);
     text-font: map.get($systems, md-sys-typescale, label-small-font),
     text-size: map.get($systems, md-sys-typescale, label-small-size),
     text-weight: map.get($systems, md-sys-typescale, label-small-weight),
-    small-size-text-size: token-utils.hardcode(0, $exclude-hardcoded),
+    small-size-text-size: token-definition.hardcode(0, $exclude-hardcoded),
     container-shape: map.get($systems, md-sys-shape, corner-full),
-    container-size: token-utils.hardcode(16px, $exclude-hardcoded),
-    legacy-container-size: token-utils.hardcode(unset, $exclude-hardcoded),
-    legacy-small-size-container-size: token-utils.hardcode(unset, $exclude-hardcoded),
-    small-size-container-size: token-utils.hardcode(6px, $exclude-hardcoded),
-    container-padding: token-utils.hardcode(0 4px, $exclude-hardcoded),
-    small-size-container-padding: token-utils.hardcode(0, $exclude-hardcoded),
-    container-offset: token-utils.hardcode(-12px 0, $exclude-hardcoded),
-    small-size-container-offset: token-utils.hardcode(-6px 0, $exclude-hardcoded),
-    container-overlap-offset: token-utils.hardcode(-12px, $exclude-hardcoded),
-    small-size-container-overlap-offset: token-utils.hardcode(-6px, $exclude-hardcoded),
+    container-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    legacy-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
+    legacy-small-size-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
+    small-size-container-size: token-definition.hardcode(6px, $exclude-hardcoded),
+    container-padding: token-definition.hardcode(0 4px, $exclude-hardcoded),
+    small-size-container-padding: token-definition.hardcode(0, $exclude-hardcoded),
+    container-offset: token-definition.hardcode(-12px 0, $exclude-hardcoded),
+    small-size-container-offset: token-definition.hardcode(-6px 0, $exclude-hardcoded),
+    container-overlap-offset: token-definition.hardcode(-12px, $exclude-hardcoded),
+    small-size-container-overlap-offset: token-definition.hardcode(-6px, $exclude-hardcoded),
 
     // This size isn't in the M3 spec so we emit the same values as for `medium`.
-    large-size-container-size: token-utils.hardcode(16px, $exclude-hardcoded),
-    large-size-container-offset: token-utils.hardcode(-12px 0, $exclude-hardcoded),
-    large-size-container-overlap-offset: token-utils.hardcode(-12px, $exclude-hardcoded),
+    large-size-container-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    large-size-container-offset: token-definition.hardcode(-12px 0, $exclude-hardcoded),
+    large-size-container-overlap-offset: token-definition.hardcode(-12px, $exclude-hardcoded),
     large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
-    large-size-container-padding: token-utils.hardcode(0 4px, $exclude-hardcoded),
-    legacy-large-size-container-size: token-utils.hardcode(unset, $exclude-hardcoded),
+    large-size-container-padding: token-definition.hardcode(0 4px, $exclude-hardcoded),
+    legacy-large-size-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
   ), (
     primary: (
       background-color: map.get($systems, md-sys-color, primary),
@@ -73,5 +73,5 @@ $prefix: (mat, badge);
     error: () // Default, no overrides needed
   ));
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

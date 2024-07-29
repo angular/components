@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
@@ -12,8 +12,8 @@ $prefix: (mat, form-field);
 /// @return {Map} A set of custom tokens for the mat-form-field
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-utils.generate-typography-tokens($systems, container-text, body-large),
-    token-utils.generate-typography-tokens($systems, subscript-text, body-small),
+    token-definition.generate-typography-tokens($systems, container-text, body-large),
+    token-definition.generate-typography-tokens($systems, subscript-text, body-small),
     (
       disabled-input-text-placeholder-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
@@ -26,7 +26,7 @@ $prefix: (mat, form-field);
       disabled-select-arrow-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      focus-state-layer-opacity: token-utils.hardcode(0, $exclude-hardcoded),
+      focus-state-layer-opacity: token-definition.hardcode(0, $exclude-hardcoded),
       focus-select-arrow-color: map.get($systems, md-sys-color, primary),
       outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
 
@@ -55,5 +55,5 @@ $prefix: (mat, form-field);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

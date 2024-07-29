@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, slider);
@@ -17,15 +17,17 @@ $prefix: (mat, slider);
         map.get($systems, md-sys-color, primary), $alpha: 0.05),
     focus-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary), $alpha: 0.2),
-    value-indicator-opacity: token-utils.hardcode(1, $exclude-hardcoded),
-    value-indicator-padding: token-utils.hardcode(0, $exclude-hardcoded),
-    value-indicator-width: token-utils.hardcode(28px, $exclude-hardcoded),
-    value-indicator-height: token-utils.hardcode(28px, $exclude-hardcoded),
-    value-indicator-caret-display: token-utils.hardcode(none, $exclude-hardcoded),
-    value-indicator-border-radius: token-utils.hardcode(50% 50% 50% 0, $exclude-hardcoded),
-    value-indicator-text-transform: token-utils.hardcode(rotate(45deg), $exclude-hardcoded),
+    value-indicator-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    value-indicator-padding: token-definition.hardcode(0, $exclude-hardcoded),
+    value-indicator-width: token-definition.hardcode(28px, $exclude-hardcoded),
+    value-indicator-height: token-definition.hardcode(28px, $exclude-hardcoded),
+    value-indicator-caret-display: token-definition.hardcode(none, $exclude-hardcoded),
+    value-indicator-border-radius:
+        token-definition.hardcode(50% 50% 50% 0, $exclude-hardcoded),
+    value-indicator-text-transform:
+        token-definition.hardcode(rotate(45deg), $exclude-hardcoded),
     value-indicator-container-transform:
-      token-utils.hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
+      token-definition.hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
   ), (
     // Color variants
     primary: (), // Default, no overrides needed
@@ -52,5 +54,5 @@ $prefix: (mat, slider);
     ),
   ));
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

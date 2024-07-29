@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../../style/elevation';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, protected-button);
@@ -13,7 +13,7 @@ $prefix: (mdc, protected-button);
 /// @return {Map} A set of tokens for the MDC protected-button
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   // Note: in M3 the "protected" button is called "elevated".
-  $tokens: token-utils.get-mdc-tokens('elevated-button', $systems, $exclude-hardcoded);
+  $tokens: token-definition.get-mdc-tokens('elevated-button', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed.
     secondary: (
@@ -57,9 +57,9 @@ $prefix: (mdc, protected-button);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, (
+  @return token-definition.namespace-tokens($prefix, (
     _fix-tokens($tokens),
-    token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens)),
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens)),
   ), $token-slots);
 }
 
@@ -70,7 +70,7 @@ $prefix: (mdc, protected-button);
 @function _fix-tokens($initial-tokens) {
   // Need to get the hardcoded values, because they include
   // opacities that are used for the disabled state.
-  $hardcoded-tokens: token-utils.get-mdc-tokens('elevated-button', (), false);
+  $hardcoded-tokens: token-definition.get-mdc-tokens('elevated-button', (), false);
   $tokens: $initial-tokens;
   $elevation-tokens: (
     container-elevation,
@@ -88,7 +88,7 @@ $prefix: (mdc, protected-button);
     }
   }
 
-  @return token-utils.combine-color-tokens($tokens, $hardcoded-tokens, (
+  @return token-definition.combine-color-tokens($tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,

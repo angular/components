@@ -1,4 +1,4 @@
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, secondary-navigation-tab);
@@ -9,7 +9,8 @@ $prefix: (mdc, secondary-navigation-tab);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC tab
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-utils.get-mdc-tokens('secondary-navigation-tab', $systems, $exclude-hardcoded);
+  $mdc-tokens: token-definition.get-mdc-tokens(
+      'secondary-navigation-tab', $systems, $exclude-hardcoded);
 
-  @return token-utils.namespace-tokens($prefix, $mdc-tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $mdc-tokens, $token-slots);
 }

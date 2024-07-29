@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, icon-button);
@@ -11,7 +11,7 @@ $prefix: (mdc, icon-button);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC icon-button
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: token-utils.get-mdc-tokens('icon-button', $systems, $exclude-hardcoded);
+  $tokens: token-definition.get-mdc-tokens('icon-button', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (
       icon-color: map.get($systems, md-sys-color, primary)
@@ -27,9 +27,9 @@ $prefix: (mdc, icon-button);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, (
+  @return token-definition.namespace-tokens($prefix, (
     _fix-tokens($tokens),
-    token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
   ), $token-slots);
 }
 
@@ -40,16 +40,18 @@ $prefix: (mdc, icon-button);
 @function _fix-tokens($tokens) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
   // state.
-  $hardcoded-tokens: token-utils.get-mdc-tokens('icon-button', (), false);
+  $hardcoded-tokens: token-definition.get-mdc-tokens('icon-button', (), false);
 
   $rename-keys: (
     unselected-icon-color: icon-color,
   );
 
-  $remapped-tokens: token-utils.rename-map-keys($tokens, $rename-keys);
-  $remapped-hardcoded-tokens: token-utils.rename-map-keys($hardcoded-tokens, $rename-keys);
+  $remapped-tokens: token-definition.rename-map-keys($tokens, $rename-keys);
+  $remapped-hardcoded-tokens:
+      token-definition.rename-map-keys($hardcoded-tokens, $rename-keys);
 
-  @return token-utils.combine-color-tokens($remapped-tokens, $remapped-hardcoded-tokens, (
+  @return token-definition.combine-color-tokens(
+      $remapped-tokens, $remapped-hardcoded-tokens, (
     (
       color: disabled-icon-color,
       opacity: disabled-icon-opacity,
