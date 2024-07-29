@@ -185,9 +185,9 @@ $_side-padding: 16px;
   // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
   // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
   @include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
-    $selected-token: token-utils.get-token-variable(list-item-selected-container-color);
-    $base-token: token-utils.get-token-variable(list-item-container-color);
-    #{$selected-token}: var(#{$base-token}, transparent);
+    $selected-token: token-utils.get-token-variable-name(list-item-selected-container-color);
+    $base-token: token-utils.get-token-variable(list-item-container-color, $fallback: transparent);
+    #{$selected-token}: $base-token;
   }
 }
 

@@ -40,7 +40,7 @@
     @include token-utils.use-tokens(
       tokens-mat-ripple.$prefix, tokens-mat-ripple.get-token-slots()) {
       // We have to emit a fallback value here, because some internal builds depend on it.
-      background-color: var(#{token-utils.get-token-variable(color)}, rgba(#000, 0.1));
+      background-color: token-utils.get-token-variable(color, $fallback: rgba(#000, 0.1));
     }
 
     // In high contrast mode the ripple is opaque, causing it to obstruct the content.

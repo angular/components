@@ -29,7 +29,7 @@ $_icon-size: 20px;
     will-change: opacity, transform, border-color, color;
 
     @include token-utils.use-tokens($tokens...) {
-      $size-token: var(#{token-utils.get-token-variable(state-layer-size)});
+      $size-token: token-utils.get-token-variable(state-layer-size);
       padding: calc((#{$size-token} - #{$_icon-size}) / 2);
     }
 
@@ -95,10 +95,10 @@ $_icon-size: 20px;
       transition: _exit-transition(opacity), _exit-transition(transform);
 
       @include token-utils.use-tokens($tokens...) {
-        $size-token: var(#{token-utils.get-token-variable(state-layer-size)});
-        $offset: calc(-1 * (#{$size-token} - #{$_icon-size}) / 2);
-        width: $size-token;
-        height: $size-token;
+        $size: token-utils.get-token-variable(state-layer-size);
+        $offset: calc(-1 * (#{$size} - #{$_icon-size}) / 2);
+        width: $size;
+        height: $size;
         top: $offset;
         left: $offset;
       }
