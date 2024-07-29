@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, tab-header);
@@ -12,10 +12,10 @@ $prefix: (mat, tab-header);
 /// @return {Map} A set of custom tokens for the mat-tab-header
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-utils.generate-typography-tokens($systems, label-text, title-small),
+    token-definition.generate-typography-tokens($systems, label-text, title-small),
     (
       divider-color: map.get($systems, md-sys-color, surface-variant),
-      divider-height: token-utils.hardcode(1px, $exclude-hardcoded),
+      divider-height: token-definition.hardcode(1px, $exclude-hardcoded),
       disabled-ripple-color: null, // TODO(mmalerba): Figure out correct value.
       pagination-icon-color: map.get($systems, md-sys-color, on-surface),
       inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
@@ -46,6 +46,6 @@ $prefix: (mat, tab-header);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }
 

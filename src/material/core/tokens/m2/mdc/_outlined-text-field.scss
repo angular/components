@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, outlined-text-field);
@@ -92,11 +92,11 @@ $prefix: (mdc, outlined-text-field);
   // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $on-surface: if($is-dark, #fff, #000);
-  $text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+  $text-color-base: if(token-definition.$private-is-internal-build, $on-surface,
     inspection.get-theme-color($theme, foreground, text, 1));
-  $disabled-text-color-base: if(token-utils.$private-is-internal-build, $on-surface,
+  $disabled-text-color-base: if(token-definition.$private-is-internal-build, $on-surface,
     inspection.get-theme-color($theme, foreground, disabled-text, 1));
-  $divider-base: if(token-utils.$private-is-internal-build, $on-surface,
+  $divider-base: if(token-definition.$private-is-internal-build, $on-surface,
     inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return map.merge($color-tokens, (
@@ -156,8 +156,8 @@ $prefix: (mdc, outlined-text-field);
 @function get-token-slots() {
   @return sass-utils.deep-merge-all(
       get-unthemable-tokens(),
-      get-color-tokens(token-utils.$placeholder-color-config),
-      get-typography-tokens(token-utils.$placeholder-typography-config),
-      get-density-tokens(token-utils.$placeholder-density-config)
+      get-color-tokens(token-definition.$placeholder-color-config),
+      get-typography-tokens(token-definition.$placeholder-typography-config),
+      get-density-tokens(token-definition.$placeholder-density-config)
   );
 }

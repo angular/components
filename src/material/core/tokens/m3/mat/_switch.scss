@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, switch);
@@ -11,33 +11,38 @@ $prefix: (mat, switch);
 /// @return {Map} A set of custom tokens for the mat-slide-toggle
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
-    disabled-selected-handle-opacity: token-utils.hardcode(1, $exclude-hardcoded),
-    disabled-unselected-handle-opacity: token-utils.hardcode(0.38, $exclude-hardcoded),
-    unselected-handle-size: token-utils.hardcode(16px, $exclude-hardcoded),
-    selected-handle-size: token-utils.hardcode(24px, $exclude-hardcoded),
-    with-icon-handle-size: token-utils.hardcode(24px, $exclude-hardcoded),
-    pressed-handle-size: token-utils.hardcode(28px, $exclude-hardcoded),
-    selected-handle-horizontal-margin: token-utils.hardcode(0 24px, $exclude-hardcoded),
-    selected-with-icon-handle-horizontal-margin: token-utils.hardcode(0 24px, $exclude-hardcoded),
-    selected-pressed-handle-horizontal-margin: token-utils.hardcode(0 22px, $exclude-hardcoded),
-    unselected-handle-horizontal-margin: token-utils.hardcode(0 8px, $exclude-hardcoded),
-    unselected-with-icon-handle-horizontal-margin: token-utils.hardcode(0 4px, $exclude-hardcoded),
-    unselected-pressed-handle-horizontal-margin: token-utils.hardcode(0 2px, $exclude-hardcoded),
+    disabled-selected-handle-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    disabled-unselected-handle-opacity: token-definition.hardcode(0.38, $exclude-hardcoded),
+    unselected-handle-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    selected-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+    with-icon-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+    pressed-handle-size: token-definition.hardcode(28px, $exclude-hardcoded),
+    selected-handle-horizontal-margin: token-definition.hardcode(0 24px, $exclude-hardcoded),
+    selected-with-icon-handle-horizontal-margin:
+        token-definition.hardcode(0 24px, $exclude-hardcoded),
+    selected-pressed-handle-horizontal-margin:
+        token-definition.hardcode(0 22px, $exclude-hardcoded),
+    unselected-handle-horizontal-margin: token-definition.hardcode(0 8px, $exclude-hardcoded),
+    unselected-with-icon-handle-horizontal-margin:
+        token-definition.hardcode(0 4px, $exclude-hardcoded),
+    unselected-pressed-handle-horizontal-margin:
+        token-definition.hardcode(0 2px, $exclude-hardcoded),
     // The hidden and visible track represent whichever track is visible or
     // hidden in the ui. This could be the .mdc-switch__track :before or
     // :after depending on whether the switch is selected or unselected.
     //
     // The m2 slide-toggle uses transforms to hide & show the tracks while
     // the m3 slide-toggle uses opacity.
-    visible-track-opacity: token-utils.hardcode(1, $exclude-hardcoded),
-    hidden-track-opacity: token-utils.hardcode(0, $exclude-hardcoded),
-    visible-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
-    hidden-track-transition: token-utils.hardcode(opacity 75ms, $exclude-hardcoded),
-    track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
+    visible-track-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    hidden-track-opacity: token-definition.hardcode(0, $exclude-hardcoded),
+    visible-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
+    hidden-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
+    track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
     track-outline-color: map.get($systems, md-sys-color, outline),
-    selected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
-    selected-track-outline-color: token-utils.hardcode(transparent, $exclude-hardcoded),
-    disabled-unselected-track-outline-width: token-utils.hardcode(2px, $exclude-hardcoded),
+    selected-track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
+    selected-track-outline-color: token-definition.hardcode(transparent, $exclude-hardcoded),
+    disabled-unselected-track-outline-width:
+        token-definition.hardcode(2px, $exclude-hardcoded),
     disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
     label-text-color: map.get($systems, md-sys-color, on-surface),
     label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
@@ -47,5 +52,5 @@ $prefix: (mat, switch);
     label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

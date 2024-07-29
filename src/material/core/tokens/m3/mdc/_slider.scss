@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/elevation';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, slider);
@@ -11,7 +11,7 @@ $prefix: (mdc, slider);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC slider
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: token-utils.get-mdc-tokens('slider', $systems, $exclude-hardcoded);
+  $tokens: token-definition.get-mdc-tokens('slider', $systems, $exclude-hardcoded);
   $handle-elevation: map.get($tokens, 'handle-elevation');
 
   @if ($handle-elevation != null) {
@@ -64,5 +64,6 @@ $prefix: (mdc, slider);
     ),
   );
 
-  @return token-utils.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return token-definition.namespace-tokens(
+      $prefix, ($tokens, $variant-tokens), $token-slots);
 }
