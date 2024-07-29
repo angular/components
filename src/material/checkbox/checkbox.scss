@@ -1,6 +1,4 @@
-@use '@angular/cdk';
 @use '../core/style/layout-common';
-@use '../core/style/vendor-prefixes';
 @use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
 @use '../core/tokens/token-utils';
 @use './checkbox-common';
@@ -16,11 +14,6 @@
   position: relative;
   // Disable the browser's tap highlight since we indicate state with the ripple instead.
   -webkit-tap-highlight-color: transparent;
-
-  .mdc-checkbox__background {
-    // Force browser to show background-color when using the print function
-    @include vendor-prefixes.color-adjust(exact);
-  }
 
   // Clicking the label toggles the checkbox, but MDC does not include any styles that inform the
   // user of this. Therefore we add the pointer cursor on top of MDC's styles.
@@ -67,17 +60,6 @@
   // the label when it is empty.
   label:empty {
     display: none;
-  }
-
-  @include cdk.high-contrast(active, off) {
-    &.mat-mdc-checkbox-disabled {
-      opacity: 0.5;
-    }
-
-    .mdc-checkbox__checkmark {
-      --mdc-checkbox-selected-checkmark-color: CanvasText;
-      --mdc-checkbox-disabled-selected-checkmark-color: CanvasText;
-    }
   }
 
   // Apply base styles to the MDC ripple when not hovered, focused, or pressed.
