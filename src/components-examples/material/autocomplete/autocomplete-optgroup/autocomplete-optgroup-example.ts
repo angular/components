@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -35,6 +35,8 @@ export const _filter = (opt: string[], value: string): string[] => {
   ],
 })
 export class AutocompleteOptgroupExample implements OnInit {
+  private _formBuilder = inject(FormBuilder);
+
   stateForm = this._formBuilder.group({
     stateGroup: '',
   });
@@ -137,8 +139,6 @@ export class AutocompleteOptgroupExample implements OnInit {
   ];
 
   stateGroupOptions: Observable<StateGroup[]>;
-
-  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges.pipe(

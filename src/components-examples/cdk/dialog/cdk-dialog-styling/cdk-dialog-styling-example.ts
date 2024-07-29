@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Dialog, DialogModule, DialogRef} from '@angular/cdk/dialog';
 
 /**
@@ -11,7 +11,7 @@ import {Dialog, DialogModule, DialogRef} from '@angular/cdk/dialog';
   imports: [DialogModule],
 })
 export class CdkDialogStylingExample {
-  constructor(public dialog: Dialog) {}
+  dialog = inject(Dialog);
 
   openDialog(): void {
     this.dialog.open<string>(CdkDialogStylingExampleDialog);
@@ -25,5 +25,5 @@ export class CdkDialogStylingExample {
   standalone: true,
 })
 export class CdkDialogStylingExampleDialog {
-  constructor(public dialogRef: DialogRef) {}
+  dialogRef = inject(DialogRef);
 }

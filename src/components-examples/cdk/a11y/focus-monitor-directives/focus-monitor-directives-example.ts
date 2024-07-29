@@ -1,5 +1,5 @@
+import {ChangeDetectorRef, Component, NgZone, inject} from '@angular/core';
 import {A11yModule, FocusOrigin} from '@angular/cdk/a11y';
-import {ChangeDetectorRef, Component, NgZone} from '@angular/core';
 
 /** @title Monitoring focus with FocusMonitor */
 @Component({
@@ -10,13 +10,11 @@ import {ChangeDetectorRef, Component, NgZone} from '@angular/core';
   imports: [A11yModule],
 })
 export class FocusMonitorDirectivesExample {
+  private _ngZone = inject(NgZone);
+  private _cdr = inject(ChangeDetectorRef);
+
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);
-
-  constructor(
-    private _ngZone: NgZone,
-    private _cdr: ChangeDetectorRef,
-  ) {}
 
   formatOrigin(origin: FocusOrigin): string {
     return origin ? origin + ' focused' : 'blurred';

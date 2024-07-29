@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Dialog, DialogRef, DIALOG_DATA, DialogModule} from '@angular/cdk/dialog';
 import {FormsModule} from '@angular/forms';
 
@@ -17,10 +17,10 @@ export interface DialogData {
   imports: [FormsModule, DialogModule],
 })
 export class CdkDialogOverviewExample {
+  dialog = inject(Dialog);
+
   animal: string | undefined;
   name: string;
-
-  constructor(public dialog: Dialog) {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open<string>(CdkDialogOverviewExampleDialog, {
@@ -43,8 +43,6 @@ export class CdkDialogOverviewExample {
   imports: [FormsModule],
 })
 export class CdkDialogOverviewExampleDialog {
-  constructor(
-    public dialogRef: DialogRef<string>,
-    @Inject(DIALOG_DATA) public data: DialogData,
-  ) {}
+  dialogRef = inject<DialogRef<string>>(DialogRef<string>);
+  data = inject(DIALOG_DATA);
 }
