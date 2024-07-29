@@ -52,12 +52,11 @@ $_standard-tokens: (
 .mat-button-toggle-group-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
     @include token-utils.create-token-slot(border-radius, shape);
-    border: solid 1px var(#{token-utils.get-token-variable(divider-color)});
+    border: solid 1px token-utils.get-token-variable(divider-color);
 
     .mat-pseudo-checkbox {
-      --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(
-        #{token-utils.get-token-variable(selected-state-text-color)}
-      );
+      --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+          token-utils.get-token-variable(selected-state-text-color)};
     }
   }
 
@@ -92,9 +91,8 @@ $_standard-tokens: (
     @include token-utils.create-token-slot(font-weight, label-text-weight);
     @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
 
-    --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(
-      #{token-utils.get-token-variable(selected-state-text-color)}
-    );
+    --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+        token-utils.get-token-variable(selected-state-text-color)};
 
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
@@ -126,9 +124,8 @@ $_standard-tokens: (
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(color, disabled-state-text-color);
     @include token-utils.create-token-slot(background-color, disabled-state-background-color);
-    --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: var(
-      #{token-utils.get-token-variable(disabled-state-text-color)}
-    );
+    --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
+        token-utils.get-token-variable(disabled-state-text-color)};
 
     &.mat-button-toggle-checked {
       @include token-utils.create-token-slot(background-color,
@@ -139,7 +136,7 @@ $_standard-tokens: (
 
 .mat-button-toggle-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
-    $divider-color: var(#{token-utils.get-token-variable(divider-color)});
+    $divider-color: token-utils.get-token-variable(divider-color);
     @include token-utils.create-token-slot(color, text-color);
     @include token-utils.create-token-slot(background-color, background-color);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -173,9 +170,8 @@ $_standard-tokens: (
       @include token-utils.create-token-slot(background-color, disabled-state-background-color);
 
       .mat-pseudo-checkbox {
-        --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: var(
-          #{token-utils.get-token-variable(disabled-selected-state-text-color)}
-        );
+        --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
+            token-utils.get-token-variable(disabled-selected-state-text-color)};
       }
 
       &.mat-button-toggle-checked {

@@ -16,7 +16,7 @@
     .mat-mdc-form-field-infix {
       // We add a minimum height to the infix container to ensure that custom controls have the
       // same default vertical space as text-field inputs (with respect to the vertical padding).
-      min-height: var(#{$height});
+      min-height: #{$height};
 
       @include token-utils.create-token-slot(padding-top,
         filled-with-label-container-padding-top);
@@ -35,12 +35,12 @@
     // form-field because we do not know what type of form-field control is set up. Hence
     // we always use a fixed position for the label. This does not have any implications.
     .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
-      top: calc(var(#{$height}) / 2);
+      top: calc(#{$height} / 2);
     }
 
     // We need to conditionally hide the floating label based on the height of the form field.
     .mdc-text-field--filled .mat-mdc-floating-label {
-      display: var(#{token-utils.get-token-variable(filled-label-display)}, block);
+      display: token-utils.get-token-variable(filled-label-display, $fallback: block);
     }
 
     // For the outline appearance, we re-create the active floating label transform. This is
@@ -50,7 +50,7 @@
     .mdc-floating-label--float-above {
       // Needs to be in a string form to work around an internal check that incorrectly flags this
       // interpolation in `calc` as unnecessary. If we don't have it, Sass won't evaluate it.
-      $offset: 'calc(6.75px + var(#{$height}) / 2)';
+      $offset: 'calc(6.75px + #{$height} / 2)';
       $translate: 'calc(#{$offset} * -1)';
       --mat-mdc-form-field-label-transform: translateY(#{$translate})
         scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));

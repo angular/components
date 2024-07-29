@@ -370,23 +370,19 @@ $_avatar-trailing-padding: 8px;
   $disabled-icon-opacity: null;
   @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
     $disabled-icon-opacity:
-      #{token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity)};
+      token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
   }
 
   // If the trailing icon is a chip-remove button, we have to factor in the trailing action
   // opacity as well as the disabled opacity.
   .mdc-evolution-chip--disabled &.mat-mdc-chip-remove {
     @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
-      opacity: calc(
-        var(#{token-utils.get-token-variable(trailing-action-opacity)}) *
-        var(#{$disabled-icon-opacity})
-      );
+      $action-opacity: token-utils.get-token-variable(trailing-action-opacity);
+      opacity: calc(#{$action-opacity} * #{$disabled-icon-opacity});
 
       &:focus {
-        opacity: calc(
-          var(#{token-utils.get-token-variable(trailing-action-focus-opacity)}) *
-          var(#{$disabled-icon-opacity})
-        );
+        $action-focus-opacity: token-utils.get-token-variable(trailing-action-focus-opacity);
+        opacity: calc(#{$action-focus-opacity} * #{$disabled-icon-opacity});
       }
     }
   }
@@ -458,7 +454,7 @@ $_avatar-trailing-padding: 8px;
     );
 
     @each $selected, $base in $highlighted-remapped-tokens {
-      #{token-utils.get-token-variable($selected)}: var(token-utils.get-token-variable($base));
+      #{token-utils.get-token-variable-name($selected)}: token-utils.get-token-variable($base);
     }
   }
 }

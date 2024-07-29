@@ -55,18 +55,18 @@ $height-mobile-portrait: 56px !default;
 
     @include token-utils.use-tokens(
       tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
-      $color-token: var(#{token-utils.get-token-variable(container-text-color)});
+      $color-token: token-utils.get-token-variable(container-text-color);
     }
 
     @include token-utils.use-tokens(
       tokens-mdc-text-button.$prefix, tokens-mdc-text-button.get-token-slots()) {
-      $token: token-utils.get-token-variable(label-text-color);
+      $token: token-utils.get-token-variable-name(label-text-color);
       #{$token}: #{$color-token};
     }
 
     @include token-utils.use-tokens(
       tokens-mdc-outlined-button.$prefix, tokens-mdc-outlined-button.get-token-slots()) {
-      $token: token-utils.get-token-variable(label-text-color);
+      $token: token-utils.get-token-variable-name(label-text-color);
       #{$token}: #{$color-token};
     }
   }

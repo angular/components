@@ -75,9 +75,9 @@ mat-menu {
       tokens-mat-menu.$prefix,
       tokens-mat-menu.get-token-slots()
     ) {
-      color: var(#{token-utils.get-token-variable(divider-color)});
-      margin-bottom: var(#{token-utils.get-token-variable(divider-bottom-spacing)});
-      margin-top: var(#{token-utils.get-token-variable(divider-top-spacing)});
+      color: token-utils.get-token-variable(divider-color);
+      margin-bottom: token-utils.get-token-variable(divider-bottom-spacing);
+      margin-top: token-utils.get-token-variable(divider-top-spacing);
     }
   }
 }
@@ -92,12 +92,12 @@ mat-menu {
 
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
-    $leading-padding: var(#{token-utils.get-token-variable(item-leading-spacing)});
-    $trailing-padding: var(#{token-utils.get-token-variable(item-trailing-spacing)});
+    $leading-padding: token-utils.get-token-variable(item-leading-spacing);
+    $trailing-padding: token-utils.get-token-variable(item-trailing-spacing);
     $with-icon-leading-padding:
-      var(#{token-utils.get-token-variable(item-with-icon-leading-spacing)});
+      token-utils.get-token-variable(item-with-icon-leading-spacing);
     $with-icon-trailing-padding:
-      var(#{token-utils.get-token-variable(item-with-icon-trailing-spacing)});
+      token-utils.get-token-variable(item-with-icon-trailing-spacing);
 
     padding-left: $leading-padding;
     padding-right: $trailing-padding;
@@ -173,9 +173,9 @@ mat-menu {
   .mat-icon {
     flex-shrink: 0;
     @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
-      margin-right: var(#{token-utils.get-token-variable(item-spacing)});
-      height: var(#{token-utils.get-token-variable(item-icon-size)});
-      width: var(#{token-utils.get-token-variable(item-icon-size)});
+      margin-right: token-utils.get-token-variable(item-spacing);
+      height: token-utils.get-token-variable(item-icon-size);
+      width: token-utils.get-token-variable(item-icon-size);
     }
   }
 
@@ -185,7 +185,7 @@ mat-menu {
     .mat-icon {
       margin-right: 0;
       @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
-        margin-left: var(#{token-utils.get-token-variable(item-spacing)});
+        margin-left: token-utils.get-token-variable(item-spacing);
       }
     }
   }
@@ -216,8 +216,8 @@ mat-menu {
 .mat-mdc-menu-submenu-icon {
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     @include menu-common.item-submenu-icon(
-      var(#{token-utils.get-token-variable(item-spacing)}),
-      var(#{token-utils.get-token-variable(item-icon-size)})
+      token-utils.get-token-variable(item-spacing),
+      token-utils.get-token-variable(item-icon-size)
     );
   }
 }
