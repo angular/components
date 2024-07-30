@@ -1,11 +1,14 @@
 @use 'sass:list';
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:string';
 @use '../style/elevation';
 @use '../style/sass-utils';
+@use './m3-tokens';
 
 $_tokens: null;
 $_component-prefix: null;
+$_system-fallbacks: m3-tokens.create-system-fallbacks();
 
 // Sets the token prefix and map to use when creating token slots.
 @mixin use-tokens($prefix, $tokens) {
@@ -19,8 +22,8 @@ $_component-prefix: null;
 }
 
 // Combines a prefix and a string to generate a CSS variable name for a token.
-@function _get-css-variable($prefix, $name) {
-  @if $prefix == null or $name == null {
+@function _create-var-name($prefix, $token) {
+  @if $prefix == null or $token == null {
     @error 'Must specify both prefix and name when generating token';
   }
 
@@ -31,69 +34,92 @@ $_component-prefix: null;
     $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
   }
 
-  @return string.unquote('--#{$string-prefix}-#{$name}');
+  @return string.unquote('--#{$string-prefix}-#{$token}');
 }
 
-// Emits a slot for the given token, provided that it has a non-null value in the token map passed
-// to `use-tokens`.
-@mixin create-token-slot($property, $token, $emit-fallback: false) {
+// Creates a CSS variable, including the fallback if provided.
+@function _create-var($name, $fallback: null) {
+  @if ($fallback) {
+    @return var($name, $fallback);
+  } @else {
+    @return var($name);
+  }
+}
+
+// Gets the value of the token given the current global context state.
+@function _get-token-value($token, $fallback) {
+  $var-name: _create-var-name($_component-prefix, $token);
+  $fallback: _get-token-fallback($token, $fallback);
+  @return _create-var($var-name, $fallback);
+}
+
+// Assertion mixin that throws an error if the global state has not been set up by wrapping
+// calls with `use-tokens`.
+@function _assert-use-tokens($token) {
   @if $_component-prefix == null or $_tokens == null {
-    @error '`create-token-slot` must be used within `use-tokens`';
+    @error 'Function was not called within a wrapping call of `use-tokens`';
   }
   @if not map.has-key($_tokens, $token) {
     @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
   }
+
+  @return true;
+}
+
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+@mixin create-token-slot($property, $token, $fallback: null) {
+  $_assert: _assert-use-tokens($token);
   @if map.get($_tokens, $token) != null {
-    $fallback: null;
-
-    @if ($emit-fallback == true) {
-      $fallback: map.get($_tokens, $token);
-    }
-    @else if ($emit-fallback) {
-      $fallback: $emit-fallback;
-    }
-
-    $var-name: _get-css-variable($_component-prefix, $token);
-    $var-reference: if($fallback == null, var(#{$var-name}), var(#{$var-name}, #{$fallback}));
-    #{$property}: #{$var-reference};
+    #{$property}: #{_get-token-value($token, $fallback)};
   }
 }
 
 // Returns the name of a token including the current prefix. Intended to be used in calculations
 // involving tokens. `create-token-slot` should be used when outputting tokens.
 @function get-token-variable-name($token) {
-  @if $_component-prefix == null or $_tokens == null {
-    @error '`get-token-variable` must be used within `use-tokens`';
-  }
-  @if not map.has-key($_tokens, $token) {
-    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
-  }
-
-  @return _get-css-variable($_component-prefix, $token);
+  $_assert: _assert-use-tokens($token);
+  @return _create-var-name($_component-prefix, $token);
 }
 
 // Returns a `var()` reference to a specific token. Intended for declarations
 // where the token has to be referenced as a part of a larger expression.
-@function get-token-variable($token, $use-tokens-fallback: false, $fallback: null) {
-  @if $_component-prefix == null or $_tokens == null {
-    @error '`get-token-variable-reference` must be used within `use-tokens`';
-  }
-  @if not map.has-key($_tokens, $token) {
-    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
-  }
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+@function get-token-variable($token, $fallback: null) {
+  $_assert: _assert-use-tokens($token);
+  @return _get-token-value($token, $fallback);
+}
 
-  $var: get-token-variable-name($token);
-
-  @if ($use-tokens-fallback) {
+// Gets the token's fallback value. Prefers adding a system-level fallback if one exists, otherwise
+// use the provided fallback.
+@function _get-token-fallback($token, $fallback: null) {
+  // If the $fallback is `true`, this is the component's signal to use the current token map value
+  @if ($fallback == true) {
     $fallback: map.get($_tokens, $token);
   }
 
-  @if ($fallback != null) {
-    @return var($var, $fallback);
+  // Check whether there's a system-level fallback. If not, return the optional
+  // provided fallback (otherwise null).
+  $sys-fallback: map.get($_system-fallbacks, $_component-prefix, $token);
+  @if (not $sys-fallback) {
+    @return $fallback;
   }
-  @else {
-    @return var($var);
+
+  // If the system-level fallback references a variable name (starts with --), then create
+  // a variable and return it, with the optional provided fallback included.
+  $is-var: meta.type-of($sys-fallback) == string and string.index($sys-fallback, '--') == 1;
+  @if $is-var {
+    @return _create-var($sys-fallback, $fallback);
   }
+
+  // TODO(mat-app-theme): Return the system-level fallback.
+  // Changing this will affect clients that do not properly call theme mixins since the tokens
+  // will be undefined and now default to M3 system values, causing a number of screenshot failures.
+  // @return $sys-fallback;
+  @return $fallback;
 }
 
 // Outputs a map of tokens under a specific prefix.
@@ -101,7 +127,7 @@ $_component-prefix: null;
   @if $tokens != null {
     @each $key, $value in $tokens {
       @if $value != null {
-        #{_get-css-variable($prefix, $key)}: #{$value};
+        #{_create-var-name($prefix, $key)}: #{$value};
       }
     }
   }

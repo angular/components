@@ -2,6 +2,7 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:string';
 @use 'sass:math';
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
@@ -161,6 +162,12 @@ $_system-fallbacks: null;
     $color-key: map.get($pair, color);
     $opacity-key: map.get($pair, opacity);
     $color: map.get($tokens, $color-key);
+
+    // If the color is a CSS variable name, wrap it in a `var()` statement
+    @if (meta.type-of($color) == 'string' and string.index($color, '--') == 1) {
+      $color: var(#{$color});
+    }
+
     $opacity: map.get($opacity-lookup, $opacity-key);
 
     @if(meta.type-of($color) == 'color') {

@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'sass:string';
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
@@ -67,9 +68,18 @@ $use-system-typography-variables: false;
   @if (meta.type-of($color) == 'color') {
     @return color.change($color, $args...);
   }
-  @else if ($color != null and map.get($args, alpha) != null and $use-system-color-variables) {
+  @else if ($color != null and map.get($args, alpha) != null) {
     $opacity: map.get($args, alpha);
-    @return #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
+    @if meta.type-of($opacity) == number {
+      $opacity: ($opacity * 100) + '%';
+    }
+
+    // Wrap the $color as a `var()` if it's the name of a CSS variable
+    @if (meta.type-of($opacity) == string and string.index($color, '--') == 1) {
+      $color: var($color);
+    }
+
+    @return #{color-mix(in srgb, #{$color} #{$opacity}, transparent)};
   }
   @return $color;
 }

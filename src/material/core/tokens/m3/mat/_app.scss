@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '../../../style/elevation';
 @use '../../token-definition';
 
@@ -17,7 +18,9 @@ $prefix: (mat, app);
     text-color: map.get($systems, md-sys-color, on-background),
   );
 
-  @if ($shadow-color) {
+  // If the shadow-color is an actual color, convert it to a box-shadow value. Otherwise
+  // use the token value as itself (e,g. as a CSS var name).
+  @if (meta.type-of($shadow-color) == color) {
     @for $zValue from 0 through 24 {
       $shadow: elevation.get-box-shadow($zValue, $shadow-color);
       $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);

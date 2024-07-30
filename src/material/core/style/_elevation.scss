@@ -143,6 +143,11 @@ $prefix: 'mat-elevation-z';
     @return null;
   }
 
+  // Return the value if it is a CSS variable name
+  @if (meta.type-of($zValue) == string and string.index($zValue, '--') == 1) {
+    @return $zValue;
+  }
+
   @if meta.type-of($zValue) != number or not math.is-unitless($zValue) {
     @error '$zValue must be a unitless number, but received `#{$zValue}`';
   }
