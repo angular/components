@@ -69,6 +69,7 @@ $_system-fallbacks: m3-tokens.create-system-fallbacks();
 // to `use-tokens`.
 // Accepts an optional fallback parameter to include in the CSS variable.
 // If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
 @mixin create-token-slot($property, $token, $fallback: null) {
   $_assert: _assert-use-tokens($token);
   @if map.get($_tokens, $token) != null {
@@ -87,6 +88,7 @@ $_system-fallbacks: m3-tokens.create-system-fallbacks();
 // where the token has to be referenced as a part of a larger expression.
 // Accepts an optional fallback parameter to include in the CSS variable.
 // If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
 @function get-token-variable($token, $fallback: null) {
   $_assert: _assert-use-tokens($token);
   @return _get-token-value($token, $fallback);
