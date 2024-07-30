@@ -3,6 +3,7 @@
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 $_mdc-slots: (tokens-mdc-switch.$prefix, tokens-mdc-switch.get-token-slots());
 $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
@@ -250,16 +251,16 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       @include token-utils.create-token-slot(height, with-icon-handle-size);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(width, pressed-handle-size);
       @include token-utils.create-token-slot(height, pressed-handle-size);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch--selected:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch--selected:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(margin, selected-pressed-handle-horizontal-margin);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch--unselected:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch--unselected:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(margin, unselected-pressed-handle-horizontal-margin);
     }
 
@@ -479,6 +480,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 }
 
 .mat-mdc-slide-toggle {
+  @include vendor-prefixes.user-select(none);
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
 
