@@ -7,6 +7,7 @@
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
 @use '../m2/typography' as m2-typography;
+@use '../style/sass-utils';
 @use './m3/definitions' as m3-token-definitions;
 
 // Indicates whether we're building internally. Used for backwards compatibility.
@@ -163,8 +164,7 @@ $_system-fallbacks: null;
     $opacity-key: map.get($pair, opacity);
     $color: map.get($tokens, $color-key);
 
-    // If the color is a CSS variable name, wrap it in a `var()` statement
-    @if (meta.type-of($color) == 'string' and string.index($color, '--') == 1) {
+    @if (sass-utils.is-css-var-name($color)) {
       $color: var(#{$color});
     }
 

@@ -74,8 +74,7 @@ $use-system-typography-variables: false;
       $opacity: ($opacity * 100) + '%';
     }
 
-    // Wrap the $color as a `var()` if it's the name of a CSS variable
-    @if (meta.type-of($opacity) == string and string.index($color, '--') == 1) {
+    @if (is-css-var-name($color)) {
       $color: var($color);
     }
 
@@ -100,4 +99,10 @@ $use-system-typography-variables: false;
     }
   }
   @return $kwargs;
+}
+
+// Returns whether the $value is a CSS variable name based on whether it's a string prefixed
+// by "--".
+@function is-css-var-name($value) {
+  @return meta.type-of($value) == string and string.index($value, '--') == 1
 }

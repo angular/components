@@ -3,6 +3,7 @@
 @use 'sass:meta';
 @use 'sass:string';
 @use './variables';
+@use './sass-utils';
 
 $_umbra-opacity: 0.2;
 $_penumbra-opacity: 0.14;
@@ -143,8 +144,7 @@ $prefix: 'mat-elevation-z';
     @return null;
   }
 
-  // Return the value if it is a CSS variable name
-  @if (meta.type-of($zValue) == string and string.index($zValue, '--') == 1) {
+  @if (sass-utils.is-css-var-name($zValue)) {
     @return $zValue;
   }
 

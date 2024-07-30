@@ -108,10 +108,7 @@ $_system-fallbacks: m3-tokens.create-system-fallbacks();
     @return $fallback;
   }
 
-  // If the system-level fallback references a variable name (starts with --), then create
-  // a variable and return it, with the optional provided fallback included.
-  $is-var: meta.type-of($sys-fallback) == string and string.index($sys-fallback, '--') == 1;
-  @if $is-var {
+  @if (sass-utils.is-css-var-name($sys-fallback)) {
     @return _create-var($sys-fallback, $fallback);
   }
 
