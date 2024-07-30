@@ -17,3 +17,4 @@ export {CdkDragDropSortingExample} from './cdk-drag-drop-sorting/cdk-drag-drop-s
 export {CdkDragDropSortPredicateExample} from './cdk-drag-drop-sort-predicate/cdk-drag-drop-sort-predicate-example';
 export {CdkDragDropTableExample} from './cdk-drag-drop-table/cdk-drag-drop-table-example';
 export {CdkDragDropMixedSortingExample} from './cdk-drag-drop-mixed-sorting/cdk-drag-drop-mixed-sorting-example';
+export {CdkDragDropTabsExample} from './cdk-drag-drop-tabs/cdk-drag-drop-tabs-example';
