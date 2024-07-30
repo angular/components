@@ -134,8 +134,7 @@ export class MatDialogContainer
       // If no ariaLabelledBy or ariaLabel, create default aria label
       !dialogNameElement && !this._config.ariaLabel
         ? 'Dialog Modal'
-        : // : Otherwise prioritize use of ariaLabel
-          this._config.ariaLabel || dialogNameElement?.innerText || dialogNameElement?.ariaLabel;
+        : dialogNameElement?.innerText || dialogNameElement?.ariaLabel || this._config.ariaLabel;
     return dialogNameInnerText || 'Dialog Modal';
   };
 
