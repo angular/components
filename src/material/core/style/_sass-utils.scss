@@ -104,5 +104,5 @@ $use-system-typography-variables: false;
 // Returns whether the $value is a CSS variable name based on whether it's a string prefixed
 // by "--".
 @function is-css-var-name($value) {
-  @return meta.type-of($value) == string and string.index($value, '--') == 1
+  @return meta.type-of($value) == string and string.index($value, '--') == 1;
 }
