@@ -94,6 +94,7 @@ $_cached-token-slots: null;
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
+/// @param {Boolean} $include-density Whether to include density tokens
 /// @return {Map} A map of namespaced tokens
 @function _generate-tokens($systems, $include-non-systemized: false, $include-density: false) {
   $systems: map.merge((
