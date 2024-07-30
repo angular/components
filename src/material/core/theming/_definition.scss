@@ -55,6 +55,7 @@ $theme-version: 1;
         neutral-variant: map.get($primary, neutral-variant),
         error: map.get($primary, error),
       ),
+      color-system-variables-prefix: $system-variables-prefix,
       color-tokens: m3-tokens.generate-color-tokens(
           $type, $primary, $tertiary, map.get($primary, error), $system-variables-prefix)
     )
@@ -88,6 +89,7 @@ $theme-version: 1;
         medium: $medium,
         regular: $regular,
       ),
+      typography-system-variables-prefix: $system-variables-prefix,
       typography-tokens: m3-tokens.generate-typography-tokens(
           $brand, $plain, $bold, $medium, $regular, $system-variables-prefix)
     )

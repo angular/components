@@ -135,7 +135,8 @@ $_cached-token-slots: null;
   );
 
   $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
-  $system-variables-prefix: map.get($theme, system-variables-prefix) or sys;
+  $system-variables-prefix: map.get($theme, _mat-theming-internals-do-not-access,
+    color-system-variables-prefix) or sys;
   $primary: map.merge(map.get($palettes, primary), $base-palettes);
   $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
   $error: map.get($palettes, error);
@@ -160,7 +161,8 @@ $_cached-token-slots: null;
   $bold: map.get($font-definition, bold);
   $medium: map.get($font-definition, medium);
   $regular: map.get($font-definition, regular);
-  $system-variables-prefix: map.get($theme, system-variables-prefix) or sys;
+  $system-variables-prefix: map.get($theme, _mat-theming-internals-do-not-access,
+    typography-system-variables-prefix) or sys;
   $ref: (
     md-ref-typeface: _generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
   );
