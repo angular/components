@@ -15,6 +15,7 @@ ng_module(
         "//src/cdk/portal",
         "//src/material/icon",
         "//src/material/table",
+        "//src/material/tabs",
     ],
 )
 
