@@ -1,0 +1,27 @@
+<mat-tab-group
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)"
+  cdkDropListElementContainer=".mat-mdc-tab-labels"
+  class="example-drag-tabs"
+  [(selectedIndex)]="selectedTabIndex"
+  animationDuration="0">
+  @for (tab of tabs; track $index) {
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span
+          cdkDrag
+          cdkDragPreviewClass="example-drag-tabs-preview"
+          cdkDragRootElement=".mat-mdc-tab">{{tab}}</span>
+      </ng-template>
+
+      <h3>Content for {{tab}}</h3>
+
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem perspiciatis in delectus
+      reprehenderit, molestias ullam nostrum odit, modi consequatur harum beatae? Sapiente
+      voluptatibus illo natus assumenda hic quasi dolor et laborum veniam! Molestiae architecto
+      nesciunt est quo nisi? Nostrum repellendus quibusdam laudantium? Optio architecto explicabo
+      labore sapiente cum alias nobis!
+    </mat-tab>
+  }
+</mat-tab-group>

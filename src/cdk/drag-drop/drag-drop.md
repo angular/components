@@ -251,10 +251,13 @@ item will be moved into the new index, otherwise it will keep its current positi
 
 <!-- example(cdk-drag-drop-sort-predicate) -->
 
-### Reordering table rows
-Angular Material provides seamless integration of drag-and-drop functionality into tables,
-by adding the `cdkDropList` directive to your mat-table and handling the `(cdkDropListDropped)`
-event, you can enable drag-and-drop interactions within your table. This allows users to reorder
-rows or perform other custom actions with ease.
+### Integrations with Angular Material
+The CDK's drag&drop functionality can be integrated with different parts of Angular Material.
 
+#### Sortable table
+This example shows how you can set up a table which supports re-ordering of tabs.
 <!-- example(cdk-drag-drop-table) -->
+
+#### Sortable tabs
+Example of how to add sorting support to a `mat-tab-group`.
+<!-- example(cdk-drag-drop-tabs) -->
