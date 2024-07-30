@@ -174,7 +174,8 @@ $_emit-fallbacks: true;
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
       @include token-utils.create-token-slot(color, subhead-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, subhead-font, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, subhead-font,
+        if($_emit-fallbacks, inherit, null));
       @include token-utils.create-token-slot(line-height, subhead-line-height, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-size, subhead-size, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-weight, subhead-weight, $_emit-fallbacks);
@@ -203,7 +204,8 @@ $_emit-fallbacks: true;
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
       @include token-utils.create-token-slot(color, supporting-text-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, supporting-text-font, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, supporting-text-font,
+        if($_emit-fallbacks, inherit, null));
       @include token-utils.create-token-slot(line-height, supporting-text-line-height,
         $_emit-fallbacks);
       @include token-utils.create-token-slot(font-size, supporting-text-size, $_emit-fallbacks);
