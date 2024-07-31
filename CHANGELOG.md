@@ -1,3 +1,20 @@
+<a name="18.1.3"></a>
+# 18.1.3 "plastic-beach" (2024-07-31)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c76917779](https://github.com/angular/components/commit/2c7691777915e1fd051fd22458980e63fa15958d) | fix | **coercion:** Return undefined when the fallback value is undefined ([#29491](https://github.com/angular/components/pull/29491)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [caf4b61ead](https://github.com/angular/components/commit/caf4b61eadce6c8c407cc5a66a8b420a6a2d805f) | fix | **chips:** remove tab-index attribute from mat-chip host ([#29436](https://github.com/angular/components/pull/29436)) |
+| [913267c0b1](https://github.com/angular/components/commit/913267c0b18bee9b47bdb860b9c5c584b84a609c) | fix | **core:** custom system-level variable prefix not used in some mixins ([#29513](https://github.com/angular/components/pull/29513)) |
+| [70048ef226](https://github.com/angular/components/commit/70048ef226fab98a60067f87fc2ace6e2003afa8) | fix | **dialog:** invalid font-family declaration ([#29516](https://github.com/angular/components/pull/29516)) |
+| [d7d82e1455](https://github.com/angular/components/commit/d7d82e145501321de195bc26e428a05314878d5f) | fix | **slide-toggle:** don't trigger active state for entire container ([#29514](https://github.com/angular/components/pull/29514)) |
+| [d237e7d2c7](https://github.com/angular/components/commit/d237e7d2c76ab11a4089a35a3b3a77f2515ac713) | fix | **slide-toggle:** remove divs from button ([#29485](https://github.com/angular/components/pull/29485)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.0-next.2"></a>
 # 18.2.0-next.2 "velvet-guitar" (2024-07-24)
 ### material
