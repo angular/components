@@ -113,11 +113,7 @@ $_system-fallbacks: m3-tokens.create-system-fallbacks();
     @return _create-var($sys-fallback, $fallback);
   }
 
-  // TODO(mat-app-theme): Return the system-level fallback.
-  // Changing this will affect clients that do not properly call theme mixins since the tokens
-  // will be undefined and now default to M3 system values, causing a number of screenshot failures.
-  // @return $sys-fallback;
-  @return $fallback;
+  @return $sys-fallback;
 }
 
 // Outputs a map of tokens under a specific prefix.
