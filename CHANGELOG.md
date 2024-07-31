@@ -1,3 +1,27 @@
+<a name="18.2.0-next.3"></a>
+# 18.2.0-next.3 "gold-medal" (2024-07-31)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c9078d1d1a](https://github.com/angular/components/commit/c9078d1d1ada5d35a023e64c34d4f953adeec415) | fix | **coercion:** Return undefined when the fallback value is undefined ([#29491](https://github.com/angular/components/pull/29491)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0af3b61750](https://github.com/angular/components/commit/0af3b617505d5f39f2492ba4b7e3e7fd4b74f990) | feat | **radio:** add the ability to interact with disabled radio buttons ([#29490](https://github.com/angular/components/pull/29490)) |
+| [4292e1b3a0](https://github.com/angular/components/commit/4292e1b3a05492e62413f3a62e082f2b8b012026) | feat | **slide-toggle:** add the ability to interact with disabled toggle ([#29502](https://github.com/angular/components/pull/29502)) |
+| [5403b2b316](https://github.com/angular/components/commit/5403b2b3163fedaf557bbc51a1ca5d34b40f91d2) | fix | **chips:** remove tab-index attribute from mat-chip host ([#29436](https://github.com/angular/components/pull/29436)) |
+| [6d701146cc](https://github.com/angular/components/commit/6d701146cc6618dd002e0a76c2fafa54448cfc87) | fix | **core:** custom system-level variable prefix not used in some mixins ([#29513](https://github.com/angular/components/pull/29513)) |
+| [95d1354cdd](https://github.com/angular/components/commit/95d1354cdd9fb82bb009eba495b91c660c9a797f) | fix | **dialog:** invalid font-family declaration ([#29516](https://github.com/angular/components/pull/29516)) |
+| [fd47a0e60d](https://github.com/angular/components/commit/fd47a0e60dd9ab50d9f923713ca60a7fd21ccc16) | fix | **radio:** avoid error if destroyed quickly ([#29507](https://github.com/angular/components/pull/29507)) |
+| [5892acfde3](https://github.com/angular/components/commit/5892acfde36ac1c12e98f7ea95a2a02bb95eeedd) | fix | **slide-toggle:** don't trigger active state for entire container ([#29514](https://github.com/angular/components/pull/29514)) |
+| [1aa8512ebe](https://github.com/angular/components/commit/1aa8512ebef7fd9bbc849383a2d642dddb69ce16) | fix | **slide-toggle:** remove divs from button ([#29485](https://github.com/angular/components/pull/29485)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [db5b8dc29b](https://github.com/angular/components/commit/db5b8dc29b900470523bb20eea1ba255c2dc1168) | feat | fallback to system level variables ([#29480](https://github.com/angular/components/pull/29480)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.3"></a>
 # 18.1.3 "plastic-beach" (2024-07-31)
 ### cdk
