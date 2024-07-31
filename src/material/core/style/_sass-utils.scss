@@ -65,10 +65,13 @@ $use-system-typography-variables: false;
 /// A version of the Sass `color.change` function that is safe ot use with CSS variables.
 @function safe-color-change($color, $args...) {
   $args: meta.keywords($args);
+  $use-color-mix: $use-system-color-variables or
+      (is-css-var-name($color) and string.index($color, '--mat') == 1);
   @if (meta.type-of($color) == 'color') {
     @return color.change($color, $args...);
   }
-  @else if ($color != null and map.get($args, alpha) != null) {
+  @else if ($color != null and
+      map.get($args, alpha) != null and $use-color-mix) {
     $opacity: map.get($args, alpha);
     @if meta.type-of($opacity) == number {
       $opacity: ($opacity * 100) + '%';
