@@ -90,13 +90,14 @@ describe('MDC-based MatTooltip', () => {
     let buttonElement: HTMLButtonElement;
     let tooltipDirective: MatTooltip;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
+      tick();
       buttonDebugElement = fixture.debugElement.query(By.css('button'))!;
-      buttonElement = <HTMLButtonElement>buttonDebugElement.nativeElement;
+      buttonElement = buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
-    });
+    }));
 
     it('should show and hide the tooltip', fakeAsync(() => {
       assertTooltipInstance(tooltipDirective, false);
@@ -616,7 +617,7 @@ describe('MDC-based MatTooltip', () => {
       expect(overlayContainerElement.textContent).toBe('');
     }));
 
-    it('should have an aria-described element with the tooltip message', fakeAsync(() => {
+    it('should have an aria-describedby element with the tooltip message', fakeAsync(() => {
       const dynamicTooltipsDemoFixture = TestBed.createComponent(DynamicTooltipsDemo);
       const dynamicTooltipsComponent = dynamicTooltipsDemoFixture.componentInstance;
 
@@ -632,18 +633,30 @@ describe('MDC-based MatTooltip', () => {
       expect(document.querySelector(`#${secondButtonAria}`)!.textContent).toBe('Tooltip Two');
     }));
 
-    it(
-      'should not add an ARIA description for elements that have the same text as a' +
-        'data-bound aria-label',
-      fakeAsync(() => {
-        const ariaLabelFixture = TestBed.createComponent(DataBoundAriaLabelTooltip);
-        ariaLabelFixture.detectChanges();
-        tick();
+    it('should not add an ARIA description for elements that have the same text as a data-bound aria-label', fakeAsync(() => {
+      const ariaLabelFixture = TestBed.createComponent(DataBoundAriaLabelTooltip);
+      ariaLabelFixture.detectChanges();
+      tick();
 
-        const button = ariaLabelFixture.nativeElement.querySelector('button');
-        expect(button.getAttribute('aria-describedby')).toBeFalsy();
-      }),
-    );
+      const button = ariaLabelFixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-describedby')).toBeFalsy();
+    }));
+
+    it('should toggle aria-describedby depending on whether the tooltip is disabled', fakeAsync(() => {
+      expect(buttonElement.getAttribute('aria-describedby')).toBeTruthy();
+
+      fixture.componentInstance.tooltipDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick();
+      expect(buttonElement.hasAttribute('aria-describedby')).toBe(false);
+
+      fixture.componentInstance.tooltipDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick();
+      expect(buttonElement.getAttribute('aria-describedby')).toBeTruthy();
+    }));
 
     it('should not try to dispose the tooltip when destroyed and done hiding', fakeAsync(() => {
       tooltipDirective.show();
@@ -1585,17 +1598,19 @@ describe('MDC-based MatTooltip', () => {
       <button #button
         [matTooltip]="message"
         [matTooltipPosition]="position"
-        [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass }"
-        [matTooltipTouchGestures]="touchGestures">Button</button>
+        [matTooltipClass]="{'custom-one': showTooltipClass, 'custom-two': showTooltipClass}"
+        [matTooltipTouchGestures]="touchGestures"
+        [matTooltipDisabled]="tooltipDisabled">Button</button>
     }`,
   standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class BasicTooltipDemo {
-  position: string = 'below';
+  position = 'below';
   message: any = initialTooltipMessage;
-  showButton: boolean = true;
+  showButton = true;
   showTooltipClass = false;
+  tooltipDisabled = false;
   touchGestures: TooltipTouchGestures = 'auto';
   @ViewChild(MatTooltip) tooltip: MatTooltip;
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
