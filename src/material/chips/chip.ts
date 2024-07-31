@@ -13,7 +13,6 @@ import {
   ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -36,7 +35,6 @@ import {
   afterNextRender,
   booleanAttribute,
   inject,
-  numberAttribute,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -85,7 +83,6 @@ export interface MatChipEvent {
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[id]': 'id',
     '[attr.role]': 'role',
-    '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-label]': 'ariaLabel',
     '(keydown)': '_handleKeydown($event)',
   },
@@ -201,12 +198,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   @Input({transform: booleanAttribute})
   disabled: boolean = false;
 
-  /** Tab index of the chip. */
-  @Input({
-    transform: (value: unknown) => (value == null ? undefined : numberAttribute(value)),
-  })
-  tabIndex: number = -1;
-
   /** Emitted when a chip is to be removed. */
   @Output() readonly removed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
 
@@ -258,13 +249,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     @Optional()
     @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
     private _globalRippleOptions?: RippleGlobalOptions,
-    @Attribute('tabindex') tabIndex?: string,
   ) {
     this._document = _document;
     this._animationsDisabled = animationMode === 'NoopAnimations';
-    if (tabIndex != null) {
-      this.tabIndex = parseInt(tabIndex) ?? -1;
-    }
     this._monitorFocus();
 
     this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {
@@ -394,14 +381,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** Handles interactions with the primary action of the chip. */
   _handlePrimaryActionInteraction() {
     // Empty here, but is overwritten in child classes.
-  }
-
-  /** Gets the tabindex of the chip. */
-  _getTabIndex() {
-    if (!this.role) {
-      return null;
-    }
-    return this.disabled ? -1 : this.tabIndex;
   }
 
   /** Starts the focus monitoring process on the chip. */
