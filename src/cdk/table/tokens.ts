@@ -24,6 +24,9 @@ export interface TextColumnOptions<T> {
 
   /** Default data accessor to use if one is not provided. */
   defaultDataAccessor?: (data: T, name: string) => string;
+
+  /** Default footer text transform to use if one is not provided. */
+  defaultFooterTextTransform?: (name: string) => string;
 }
 
 /** Injection token that can be used to specify the text column options. */
