@@ -15,8 +15,6 @@ describe('ScrollDispatcher', () => {
     TestBed.configureTestingModule({
       imports: [ScrollingModule, ScrollingComponent, NestedScrollingComponent],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('Basic usage', () => {

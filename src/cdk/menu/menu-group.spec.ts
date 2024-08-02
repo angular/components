@@ -14,7 +14,7 @@ describe('MenuGroup', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, CheckboxMenu],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(CheckboxMenu);
       fixture.detectChanges();
@@ -41,7 +41,7 @@ describe('MenuGroup', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MenuWithMultipleRadioGroups],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
       fixture.detectChanges();

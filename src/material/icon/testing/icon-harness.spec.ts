@@ -11,10 +11,10 @@ describe('MatIconHarness', () => {
   let fixture: ComponentFixture<IconHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatIconModule, IconHarnessTest],
-    }).compileComponents();
+    });
 
     const registry = TestBed.inject(MatIconRegistry);
     const sanitizer = TestBed.inject(DomSanitizer);

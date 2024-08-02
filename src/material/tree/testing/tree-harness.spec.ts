@@ -15,10 +15,10 @@ describe('MatTreeHarness', () => {
   let fixture: ComponentFixture<TreeHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTreeModule, TreeHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TreeHarnessTest);
     fixture.detectChanges();

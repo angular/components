@@ -24,7 +24,7 @@ describe('LuxonDateAdapter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
     adapter.setLocale('en-US');
@@ -559,7 +559,7 @@ describe('LuxonDateAdapter with MAT_DATE_LOCALE override', () => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -577,7 +577,7 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'fr-FR'}],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -600,7 +600,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
           useValue: {useUtc: true, firstDayOfWeek: 1},
         },
       ],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
   }));
@@ -646,7 +646,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defa
           useValue: {defaultOutputCalendar: calendarExample},
         },
       ],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
   }));

@@ -31,8 +31,6 @@ describe('MDC-based MatSlideToggle without forms', () => {
         SlideToggleWithStaticAriaAttributes,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('basic behavior', () => {
@@ -555,8 +553,6 @@ describe('MDC-based MatSlideToggle with forms', () => {
         SlideToggleWithModelAndChangeEvent,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('using ngModel', () => {

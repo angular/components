@@ -47,7 +47,7 @@ describe('CdkTable', () => {
     TestBed.configureTestingModule({
       imports: [CdkTableModule, BidiModule],
       declarations: [componentType, ...declarations],
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(componentType);
   }

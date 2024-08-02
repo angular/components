@@ -42,8 +42,6 @@ describe('MatDrawer', () => {
         NestedDrawerContainers,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('methods', () => {
@@ -476,7 +474,7 @@ describe('MatDrawer', () => {
             useValue: errorHandler,
           },
         ],
-      }).compileComponents();
+      });
 
       const fixture = TestBed.createComponent(DrawerDynamicPosition);
       fixture.detectChanges();
@@ -520,11 +518,9 @@ describe('MatDrawer', () => {
     }));
 
     it('should not throw when a two-way binding is toggled quickly while animating', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
+      });
 
       const fixture = TestBed.createComponent(DrawerOpenBinding);
       fixture.detectChanges();
@@ -889,8 +885,6 @@ describe('MatDrawerContainer', () => {
         DrawerContainerWithContent,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should be able to open and close all drawers', fakeAsync(() => {
@@ -1003,11 +997,9 @@ describe('MatDrawerContainer', () => {
   }));
 
   it('should not animate when the sidenav is open on load', fakeAsync(() => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
+    });
 
     const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);
 

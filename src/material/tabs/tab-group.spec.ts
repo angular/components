@@ -45,8 +45,6 @@ describe('MDC-based MatTabGroup', () => {
         TabsWithClassesTestApp,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('basic behavior', () => {
@@ -1043,8 +1041,6 @@ describe('nested MatTabGroup with enabled animations', () => {
         TabsWithCustomAnimationDuration,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
@@ -1080,8 +1076,6 @@ describe('MatTabGroup with ink bar fit to content', () => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule, TabGroupWithInkBarFitToContent],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {
@@ -1130,8 +1124,6 @@ describe('MatTabNavBar with a default config', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {

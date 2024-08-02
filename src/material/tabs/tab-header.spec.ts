@@ -48,8 +48,6 @@ describe('MDC-based MatTabHeader', () => {
       providers: [ViewportRuler],
     });
 
-    TestBed.compileComponents();
-
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
   }));

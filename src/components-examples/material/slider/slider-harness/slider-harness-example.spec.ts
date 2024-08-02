@@ -12,7 +12,7 @@ describe('SliderHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatSliderModule, SliderHarnessExample],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(SliderHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

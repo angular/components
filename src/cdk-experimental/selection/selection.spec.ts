@@ -14,7 +14,7 @@ describe('CdkSelection', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, ListWithMultiSelection],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -240,7 +240,7 @@ describe('CdkSelection with multiple = false', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, ListWithSingleSelection],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -305,7 +305,7 @@ describe('cdkSelectionColumn', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, CdkTableModule, MultiSelectTableWithSelectionColumn],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -399,7 +399,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, CdkTableModule, SingleSelectTableWithSelectionColumn],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

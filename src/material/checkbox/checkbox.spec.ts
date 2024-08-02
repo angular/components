@@ -18,7 +18,7 @@ describe('MDC-based MatCheckbox', () => {
   function createComponent<T>(componentType: Type<T>) {
     TestBed.configureTestingModule({
       imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(componentType);
   }
@@ -1096,8 +1096,6 @@ describe('MatCheckboxDefaultOptions', () => {
         imports: [MatCheckboxModule, FormsModule, SingleCheckbox, SingleCheckbox],
         providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: defaults}],
       });
-
-      TestBed.compileComponents();
     }
 
     it('should override default color in component', () => {

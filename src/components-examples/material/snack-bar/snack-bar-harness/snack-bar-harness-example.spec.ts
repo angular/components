@@ -12,7 +12,7 @@ describe('SnackBarHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(SnackBarHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

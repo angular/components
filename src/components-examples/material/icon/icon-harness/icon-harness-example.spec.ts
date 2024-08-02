@@ -13,7 +13,7 @@ describe('IconHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatIconModule],
-    }).compileComponents();
+    });
     const registry = TestBed.inject(MatIconRegistry);
     const sanitizer = TestBed.inject(DomSanitizer);
 

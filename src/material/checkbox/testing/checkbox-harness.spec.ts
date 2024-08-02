@@ -10,10 +10,10 @@ describe('MatCheckboxHarness', () => {
   let fixture: ComponentFixture<CheckboxHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatCheckboxModule, ReactiveFormsModule, CheckboxHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CheckboxHarnessTest);
     fixture.detectChanges();

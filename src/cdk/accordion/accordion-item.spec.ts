@@ -15,7 +15,6 @@ describe('CdkAccordionItem', () => {
         ItemGroupWithAccordion,
       ],
     });
-    TestBed.compileComponents();
   }));
 
   describe('single item', () => {

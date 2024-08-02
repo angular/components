@@ -63,7 +63,7 @@ describe('CdkTree', () => {
         },
       ],
       declarations: declarations,
-    }).compileComponents();
+    });
   }
 
   describe('onDestroy', () => {

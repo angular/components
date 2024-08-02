@@ -302,7 +302,7 @@ describe('Material Popover Edit', () => {
         TestBed.configureTestingModule({
           imports: [MatTableModule, MatPopoverEditModule, CommonModule, FormsModule],
           declarations: [componentClass],
-        }).compileComponents();
+        });
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();

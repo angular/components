@@ -1799,7 +1799,6 @@ function createComponent<T>(
     });
   }
 
-  TestBed.compileComponents();
   return TestBed.createComponent<T>(component);
 }
 

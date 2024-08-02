@@ -14,8 +14,6 @@ describe('MDC-based Chip Remove', () => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule, TestChip],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {

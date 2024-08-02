@@ -9,10 +9,10 @@ describe('MatProgressBarHarness', () => {
   let fixture: ComponentFixture<ProgressBarHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatProgressBarModule, ProgressBarHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ProgressBarHarnessTest);
     fixture.detectChanges();

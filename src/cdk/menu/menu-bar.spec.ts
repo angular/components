@@ -47,7 +47,7 @@ describe('MenuBar', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MenuBarRadioGroup],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(MenuBarRadioGroup);
       fixture.detectChanges();
@@ -107,7 +107,7 @@ describe('MenuBar', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, MultiMenuWithSubmenu],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {
@@ -531,7 +531,7 @@ describe('MenuBar', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, MultiMenuWithSubmenu],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {
@@ -658,7 +658,7 @@ describe('MenuBar', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, MenuWithCheckboxes],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {
@@ -724,7 +724,7 @@ describe('MenuBar', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, MenuWithRadioButtons],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {
@@ -779,7 +779,7 @@ describe('MenuBar', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MenuBarWithMenusAndInlineMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -898,7 +898,7 @@ describe('MenuBar', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MultiMenuWithSubmenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {

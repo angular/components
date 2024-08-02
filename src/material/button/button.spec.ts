@@ -16,8 +16,6 @@ describe('MDC-based MatButton', () => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule, TestApp],
     });
-
-    TestBed.compileComponents();
   }));
 
   // General button tests
@@ -454,8 +452,6 @@ describe('MatFabDefaultOptions', () => {
       imports: [MatButtonModule, TestApp],
       providers: [{provide: MAT_FAB_DEFAULT_OPTIONS, useValue: defaults}],
     });
-
-    TestBed.compileComponents();
   }
 
   it('should override default color in component', () => {

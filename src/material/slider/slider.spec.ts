@@ -40,7 +40,7 @@ describe('MDC-based MatSlider', () => {
       imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
       providers: [...providers],
       declarations: [component],
-    }).compileComponents();
+    });
     platform = TestBed.inject(Platform);
     return TestBed.createComponent<T>(component);
   }

@@ -12,7 +12,7 @@ describe('AriaDescriber', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, TestApp],
       providers: [AriaDescriber, ...providers],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TestApp);
     component = fixture.componentInstance;

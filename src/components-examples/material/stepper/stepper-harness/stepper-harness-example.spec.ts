@@ -12,7 +12,7 @@ describe('StepperHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(StepperHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

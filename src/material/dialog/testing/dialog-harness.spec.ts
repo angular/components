@@ -16,10 +16,10 @@ describe('MatDialogHarness', () => {
   let fixture: ComponentFixture<DialogHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DialogHarnessTest);
     fixture.detectChanges();

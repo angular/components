@@ -20,7 +20,7 @@ describe('MDC-based MatProgressBar', () => {
     TestBed.configureTestingModule({
       imports: [MatProgressBarModule, componentType],
       providers,
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(componentType);
   }

@@ -11,10 +11,10 @@ describe('MatPaginatorHarness', () => {
   let loader: HarnessLoader;
   let instance: PaginatorHarnessTest;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule, PaginatorHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PaginatorHarnessTest);
     fixture.detectChanges();

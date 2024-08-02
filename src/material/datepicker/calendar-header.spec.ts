@@ -21,8 +21,6 @@ describe('MatCalendarHeader', () => {
       ],
       providers: [MatDatepickerIntl, {provide: Directionality, useFactory: () => ({value: 'ltr'})}],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('standard calendar', () => {

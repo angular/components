@@ -40,8 +40,6 @@ describe('MDC-based Row Chips', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatChipRow', () => {

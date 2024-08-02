@@ -9,10 +9,10 @@ describe('MatTableHarness', () => {
   let fixture: ComponentFixture<TableHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTableModule, TableHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TableHarnessTest);
     fixture.detectChanges();

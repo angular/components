@@ -31,8 +31,6 @@ describe('CloseScrollStrategy', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([Overlay], (overlay: Overlay) => {

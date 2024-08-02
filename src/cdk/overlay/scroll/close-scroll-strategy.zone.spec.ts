@@ -36,8 +36,6 @@ describe('CloseScrollStrategy Zone.js integration', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([Overlay], (overlay: Overlay) => {

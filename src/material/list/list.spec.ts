@@ -27,8 +27,6 @@ describe('MDC-based MatList', () => {
         StandaloneListItem,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should apply an additional class to lists without lines', () => {

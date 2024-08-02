@@ -12,7 +12,7 @@ describe('InputHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(InputHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

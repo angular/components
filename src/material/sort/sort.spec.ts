@@ -50,7 +50,7 @@ describe('MatSort', () => {
           MatSortableInvalidDirection,
           MatSortWithArrowPosition,
         ],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -537,7 +537,7 @@ describe('MatSort', () => {
             },
           },
         ],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -577,7 +577,7 @@ describe('MatSort', () => {
             },
           },
         ],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {

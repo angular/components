@@ -19,7 +19,7 @@ describe('MDC-based MatPaginator', () => {
       imports: [MatPaginatorModule, NoopAnimationsModule],
       providers: [MatPaginatorIntl, ...providers],
       declarations: [type],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent(type);
     fixture.detectChanges();

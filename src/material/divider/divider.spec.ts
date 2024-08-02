@@ -11,7 +11,6 @@ describe('MatDivider', () => {
       imports: [MatDividerModule, MatDividerTestComponent],
     });
 
-    TestBed.compileComponents();
     fixture = TestBed.createComponent(MatDividerTestComponent);
   }));
 

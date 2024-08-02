@@ -20,7 +20,7 @@ describe('FocusMouseManger', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MultiElementWithConditionalComponent, MockWrapper],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

@@ -73,8 +73,6 @@ describe('MDC-based MatAutocomplete', () => {
       declarations: [component],
     });
 
-    TestBed.compileComponents();
-
     inject([OverlayContainer], (oc: OverlayContainer) => {
       overlayContainerElement = oc.getContainerElement();
     })();

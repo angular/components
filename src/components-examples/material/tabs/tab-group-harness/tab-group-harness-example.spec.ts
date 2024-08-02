@@ -12,7 +12,7 @@ describe('TabGroupHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(TabGroupHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

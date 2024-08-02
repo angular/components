@@ -26,7 +26,7 @@ describe('Combobox', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule, ComboboxToggle],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -192,7 +192,7 @@ describe('Combobox', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule, ComboboxToggle],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -262,7 +262,7 @@ describe('Combobox', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule, ComboboxToggle],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {

@@ -14,7 +14,7 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
       imports: [MatTreeModule],
       declarations: [SimpleMatTreeApp],
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SimpleMatTreeApp);
     fixture.detectChanges();

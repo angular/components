@@ -54,8 +54,6 @@ describe('MDC-based MatSelectionList without forms', () => {
           SelectionListWithSelectedOptionAndValue,
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -688,8 +686,6 @@ describe('MDC-based MatSelectionList without forms', () => {
       TestBed.configureTestingModule({
         imports: [MatListModule, SelectionListWithSelectedOption],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -726,8 +722,6 @@ describe('MDC-based MatSelectionList without forms', () => {
       TestBed.configureTestingModule({
         imports: [MatListModule, SingleSelectionListWithSelectedOption],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -764,8 +758,6 @@ describe('MDC-based MatSelectionList without forms', () => {
         imports: [MatListModule, SingleSelectionListWithSelectedOption],
         providers: [{provide: MAT_LIST_CONFIG, useValue: matListConfig}],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -798,8 +790,6 @@ describe('MDC-based MatSelectionList without forms', () => {
       TestBed.configureTestingModule({
         imports: [MatListModule, SelectionListWithDisabledOption],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -853,8 +843,6 @@ describe('MDC-based MatSelectionList without forms', () => {
           SelectionListWithOnlyOneOption,
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -954,8 +942,6 @@ describe('MDC-based MatSelectionList without forms', () => {
           SelectionListWithOnlyOneOption,
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -977,7 +963,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule, SelectionListWithAvatar, SelectionListWithIcon],
-      }).compileComponents();
+      });
     }));
 
     function expectCheckboxAtPosition(
@@ -1109,7 +1095,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule, SelectionListWithListOptions],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.componentInstance.multiple = false;
@@ -1235,7 +1221,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule, ListOptionWithTwoWayBinding],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
       fixture.detectChanges();
@@ -1280,8 +1266,6 @@ describe('MDC-based MatSelectionList with forms', () => {
         SelectionListWithCustomComparator,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('and ngModel', () => {

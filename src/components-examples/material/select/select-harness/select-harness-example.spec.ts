@@ -13,7 +13,7 @@ describe('SelectHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatSelectModule, NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(SelectHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

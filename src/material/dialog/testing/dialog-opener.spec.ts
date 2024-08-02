@@ -9,8 +9,6 @@ describe('MDC-based MatTestDialogOpener', () => {
     TestBed.configureTestingModule({
       imports: [MatTestDialogOpenerModule, NoopAnimationsModule, ExampleComponent],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should open a dialog when created', fakeAsync(() => {

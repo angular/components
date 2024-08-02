@@ -13,7 +13,7 @@ describe('AutocompleteHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatAutocompleteModule, NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(AutocompleteHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

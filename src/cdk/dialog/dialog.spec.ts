@@ -69,8 +69,6 @@ describe('Dialog', () => {
       ],
     });
 
-    TestBed.compileComponents();
-
     dialog = TestBed.inject(Dialog);
     mockLocation = TestBed.inject(Location) as SpyLocation;
     overlay = TestBed.inject(Overlay);
@@ -1131,7 +1129,6 @@ describe('Dialog with a parent Dialog', () => {
       ],
     });
 
-    TestBed.compileComponents();
     parentDialog = TestBed.inject(Dialog);
     fixture = TestBed.createComponent(ComponentThatProvidesMatDialog);
     childDialog = fixture.componentInstance.dialog;

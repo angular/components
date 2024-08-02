@@ -12,8 +12,8 @@ describe('MatBadge', () => {
   describe('on an interative host', () => {
     let testComponent: BadgeOnInteractiveElement;
 
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
+    beforeEach(() => {
+      TestBed.configureTestingModule({
         imports: [
           MatBadgeModule,
           BadgeOnInteractiveElement,
@@ -21,7 +21,7 @@ describe('MatBadge', () => {
           NestedBadge,
           BadgeOnTemplate,
         ],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(BadgeOnInteractiveElement);
       testComponent = fixture.debugElement.componentInstance;
@@ -230,10 +230,10 @@ describe('MatBadge', () => {
   describe('on an non-interactive host', () => {
     let testComponent: BadgeOnNonInteractiveElement;
 
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
+    beforeEach(() => {
+      TestBed.configureTestingModule({
         imports: [MatBadgeModule, BadgeOnNonInteractiveElement],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(BadgeOnNonInteractiveElement);
       testComponent = fixture.debugElement.componentInstance;

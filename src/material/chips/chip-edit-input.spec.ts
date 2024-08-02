@@ -15,8 +15,6 @@ describe('MDC-based MatChipEditInput', () => {
       imports: [MatChipsModule, ChipEditInputContainer],
     });
 
-    TestBed.compileComponents();
-
     fixture = TestBed.createComponent(ChipEditInputContainer);
     inputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
     inputInstance = inputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);

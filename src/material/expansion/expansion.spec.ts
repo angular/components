@@ -38,7 +38,6 @@ describe('MatExpansionPanel', () => {
         NestedLazyPanelWithContent,
       ],
     });
-    TestBed.compileComponents();
   }));
 
   it('should expand and collapse the panel', fakeAsync(() => {
@@ -419,21 +418,19 @@ describe('MatExpansionPanel', () => {
   }));
 
   it('should be able to set the default options through the injection token', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatExpansionModule, NoopAnimationsModule],
-        providers: [
-          {
-            provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
-            useValue: {
-              hideToggle: true,
-              expandedHeight: '10px',
-              collapsedHeight: '16px',
-            },
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatExpansionModule, NoopAnimationsModule],
+      providers: [
+        {
+          provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+          useValue: {
+            hideToggle: true,
+            expandedHeight: '10px',
+            collapsedHeight: '16px',
           },
-        ],
-      })
-      .compileComponents();
+        },
+      ],
+    });
 
     const fixture = TestBed.createComponent(PanelWithTwoWayBinding);
     fixture.detectChanges();

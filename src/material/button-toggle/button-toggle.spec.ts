@@ -26,8 +26,6 @@ describe('MatButtonToggle with forms', () => {
         ButtonToggleGroupWithFormControlAndDynamicButtons,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('using FormControl', () => {
@@ -334,8 +332,6 @@ describe('MatButtonToggle without forms', () => {
         ButtonToggleWithStaticAriaAttributes,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('inside of an exclusive selection group', () => {
@@ -942,8 +938,6 @@ describe('MatButtonToggle without forms', () => {
           },
         ],
       });
-
-      TestBed.compileComponents();
     });
 
     it('should hide checkmark indicator for single selection', () => {

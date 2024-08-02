@@ -66,7 +66,7 @@ describe('MDC-based MatMenu', () => {
       providers,
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
-    }).compileComponents();
+    });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     focusMonitor = TestBed.inject(FocusMonitor);
@@ -2725,7 +2725,7 @@ describe('MatMenu default overrides', () => {
         },
       ],
       declarations: [SimpleMenu, FakeIcon],
-    }).compileComponents();
+    });
   }));
 
   it('should allow for the default menu options to be overridden', fakeAsync(() => {

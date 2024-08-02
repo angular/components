@@ -52,8 +52,6 @@ describe('MatMonthView', () => {
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     describe('standard month view', () => {
@@ -834,8 +832,6 @@ describe('MatMonthView', () => {
           },
         ],
       });
-
-      TestBed.compileComponents();
 
       fixture = TestBed.createComponent(StandardMonthView);
       fixture.detectChanges();

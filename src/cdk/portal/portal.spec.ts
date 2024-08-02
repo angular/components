@@ -33,7 +33,7 @@ describe('Portals', () => {
         PizzaMsg,
         SaveParentNodeOnInit,
       ],
-    }).compileComponents();
+    });
   });
 
   describe('CdkPortalOutlet', () => {

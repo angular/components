@@ -10,7 +10,7 @@ describe('NativeDateAdapter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (dateAdapter: NativeDateAdapter) => {
@@ -473,7 +473,7 @@ describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
@@ -493,7 +493,7 @@ describe('NativeDateAdapter with LOCALE_ID override', () => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {

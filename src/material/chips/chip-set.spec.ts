@@ -9,8 +9,6 @@ describe('MDC-based MatChipSet', () => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule, CommonModule, BasicChipSet, IndirectDescendantsChipSet],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('BasicChipSet', () => {

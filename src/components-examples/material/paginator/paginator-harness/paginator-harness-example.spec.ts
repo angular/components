@@ -14,7 +14,7 @@ describe('PaginatorHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(PaginatorHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

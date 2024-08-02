@@ -10,7 +10,7 @@ describe('OverlayContainer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [OverlayTestModule],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {

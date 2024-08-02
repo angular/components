@@ -16,7 +16,7 @@ describe('SidenavHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SidenavHarnessExample);
     fixture.detectChanges();

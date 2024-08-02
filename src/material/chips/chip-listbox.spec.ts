@@ -870,7 +870,7 @@ describe('MDC-based MatChipListbox', () => {
       imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
       providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent<T>(component);
     beforeInitialChangeDetection?.(fixture);
