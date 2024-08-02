@@ -8,12 +8,12 @@
     <div #trackActive class="mdc-slider__track--active_fill"></div>
   </div>
   @if (showTickMarks) {
-    <div class="mdc-slider__tick-marks" #tickMarkContainer>
+    <div class="mdc-slider__tick-marks" #tickMarkContainer [style.width]="_tickMarkTrackWidth+'px'">
       @if (_cachedWidth) {
         @for (tickMark of _tickMarks; track i; let i = $index) {
           <div
             [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
-            [style.transform]="_calcTickMarkTransform(i)"></div>
+            ></div>
         }
       }
     </div>

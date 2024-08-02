@@ -4,10 +4,10 @@
 }
 
 .mat-mdc-slider .mdc-slider__tick-marks {
-  justify-content: start;
   .mdc-slider__tick-mark--active,
   .mdc-slider__tick-mark--inactive {
-    position: absolute;
-    left: 2px;
+    width: 4px;
+    height: 4px;
+    clip-path: circle(20%);
   }
 }
