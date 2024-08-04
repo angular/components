@@ -18,6 +18,7 @@ $prefix: (mdc, chip);
     (
       container-shape-radius: token-definition.hardcode(8px, $exclude-hardcoded),
       with-avatar-avatar-size: token-definition.hardcode(24px, $exclude-hardcoded),
+      with-avatar-avatar-shape-radius: token-definition.hardcode(24px, $exclude-hardcoded),
       label-text-color: map.get($systems, md-sys-color, on-surface-variant),
       disabled-label-text-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface),
@@ -43,6 +44,9 @@ $prefix: (mdc, chip);
       with-avatar-disabled-avatar-opacity:
           token-definition.hardcode(0.38, $exclude-hardcoded),
       elevated-selected-container-color: map.get($systems, md-sys-color, secondary-container),
+      // In the M3 tokens this is a `surface` color, but in the MDC implementation it's
+      // never being emitted. We emit `transparent` so consumers override the color.
+      elevated-container-color: token-definition.hardcode(transparent, $exclude-hardcoded),
       flat-selected-outline-width: token-definition.hardcode(0, $exclude-hardcoded),
       selected-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
       flat-disabled-selected-container-color: sass-utils.safe-color-change(
