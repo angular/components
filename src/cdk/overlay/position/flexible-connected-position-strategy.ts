@@ -147,6 +147,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this._preferredPositions;
   }
 
+  /** Scrollbar width */
+  private _scrollbarWidth = 0;
+
   constructor(
     connectedTo: FlexibleConnectedPositionStrategyOrigin,
     private _viewportRuler: ViewportRuler,
@@ -987,6 +990,26 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     extendStyles(this._pane.style, styles);
   }
 
+  /** Get width scrollbar */
+  private _getScrollbarWidth(): number {
+    if (this._scrollbarWidth > 0) {
+      return this._scrollbarWidth;
+    }
+
+    const div = this._document.createElement('div');
+
+    div.style.overflowY = 'scroll';
+    div.style.width = '50px';
+    div.style.height = '50px';
+
+    this._document.body.append(div);
+    this._scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    div.remove();
+
+    return this._scrollbarWidth;
+  }
+
   /** Gets the exact top/bottom for the overlay when not using flexible sizing or when pushing. */
   private _getExactOverlayY(
     position: ConnectedPosition,
@@ -1007,8 +1030,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (position.overlayY === 'bottom') {
       // When using `bottom`, we adjust the y position such that it is the distance
       // from the bottom of the viewport rather than the top.
-      const documentHeight = this._document.documentElement!.clientHeight;
-      styles.bottom = `${documentHeight - (overlayPoint.y + this._overlayRect.height)}px`;
+      let scrollbarWidth = 0;
+      let documentHeight = this._document.defaultView!.innerHeight;
+
+      if (
+        this._document.documentElement.offsetHeight === this._document.documentElement.scrollHeight
+      ) {
+        scrollbarWidth = this._getScrollbarWidth();
+      }
+
+      styles.bottom = coerceCssPixelValue(
+        documentHeight - scrollbarWidth - (overlayPoint.y + this._overlayRect.height),
+      );
     } else {
       styles.top = coerceCssPixelValue(overlayPoint.y);
     }
