@@ -54,7 +54,7 @@ export class MixedSortStrategy implements DropListSortStrategy {
 
   constructor(
     private _document: Document,
-    private _dragDropRegistry: DragDropRegistry<DragRef, unknown>,
+    private _dragDropRegistry: DragDropRegistry,
   ) {}
 
   /**

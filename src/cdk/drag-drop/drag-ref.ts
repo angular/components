@@ -377,7 +377,7 @@ export class DragRef<T = any> {
     private _document: Document,
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry,
   ) {
     this.withRootElement(element).withParent(_config.parentDragRef || null);
     this._parentPositions = new ParentPositionTracker(_document);
