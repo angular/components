@@ -190,7 +190,7 @@ export class DropListRef<T = any> {
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry,
     _document: any,
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
