@@ -24,6 +24,8 @@ import {
   signal,
 } from '@angular/core';
 import {Observable, Observer, Subject, merge} from 'rxjs';
+import type {DropListRef} from './drop-list-ref';
+import type {DragRef} from './drag-ref';
 
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
@@ -48,28 +50,26 @@ const activeApps = new Set<ApplicationRef>();
 })
 export class _ResetsLoader {}
 
+// TODO(crisbeto): remove generics when making breaking changes.
 /**
  * Service that keeps track of all the drag item and drop container
  * instances, and manages global event listeners on the `document`.
  * @docs-private
  */
-// Note: this class is generic, rather than referencing CdkDrag and CdkDropList directly, in order
-// to avoid circular imports. If we were to reference them here, importing the registry into the
-// classes that are registering themselves will introduce a circular import.
 @Injectable({providedIn: 'root'})
-export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements OnDestroy {
+export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
   private _document: Document;
   private _appRef = inject(ApplicationRef);
   private _environmentInjector = inject(EnvironmentInjector);
 
   /** Registered drop container instances. */
-  private _dropInstances = new Set<C>();
+  private _dropInstances = new Set<DropListRef>();
 
   /** Registered drag item instances. */
-  private _dragInstances = new Set<I>();
+  private _dragInstances = new Set<DragRef>();
 
   /** Drag item instances that are currently being dragged. */
-  private _activeDragInstances: WritableSignal<I[]> = signal([]);
+  private _activeDragInstances: WritableSignal<DragRef[]> = signal([]);
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
   private _globalListeners = new Map<
@@ -84,7 +84,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * Predicate function to check if an item is being dragged.  Moved out into a property,
    * because it'll be called a lot and we don't want to create a new function every time.
    */
-  private _draggingPredicate = (item: I) => item.isDragging();
+  private _draggingPredicate = (item: DragRef) => item.isDragging();
 
   /**
    * Emits the `touchmove` or `mousemove` events that are dispatched
@@ -113,14 +113,14 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   }
 
   /** Adds a drop container to the registry. */
-  registerDropContainer(drop: C) {
+  registerDropContainer(drop: DropListRef) {
     if (!this._dropInstances.has(drop)) {
       this._dropInstances.add(drop);
     }
   }
 
   /** Adds a drag item instance to the registry. */
-  registerDragItem(drag: I) {
+  registerDragItem(drag: DragRef) {
     this._dragInstances.add(drag);
 
     // The `touchmove` event gets bound once, ahead of time, because WebKit
@@ -140,12 +140,12 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   }
 
   /** Removes a drop container from the registry. */
-  removeDropContainer(drop: C) {
+  removeDropContainer(drop: DropListRef) {
     this._dropInstances.delete(drop);
   }
 
   /** Removes a drag item instance from the registry. */
-  removeDragItem(drag: I) {
+  removeDragItem(drag: DragRef) {
     this._dragInstances.delete(drag);
     this.stopDragging(drag);
 
@@ -163,7 +163,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * @param drag Drag instance which is being dragged.
    * @param event Event that initiated the dragging.
    */
-  startDragging(drag: I, event: TouchEvent | MouseEvent) {
+  startDragging(drag: DragRef, event: TouchEvent | MouseEvent) {
     // Do not process the same drag twice to avoid memory leaks and redundant listeners
     if (this._activeDragInstances().indexOf(drag) > -1) {
       return;
@@ -216,7 +216,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   }
 
   /** Stops dragging a drag item instance. */
-  stopDragging(drag: I) {
+  stopDragging(drag: DragRef) {
     this._activeDragInstances.update(instances => {
       const index = instances.indexOf(drag);
       if (index > -1) {
@@ -232,7 +232,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   }
 
   /** Gets whether a drag item instance is currently being dragged. */
-  isDragging(drag: I) {
+  isDragging(drag: DragRef) {
     return this._activeDragInstances().indexOf(drag) > -1;
   }
 

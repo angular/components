@@ -302,7 +302,7 @@ export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
 
 // @public
 export class DragDrop {
-    constructor(_document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>);
+    constructor(_document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry);
     createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement, config?: DragRefConfig): DragRef<T>;
     createDropList<T = any>(element: ElementRef<HTMLElement> | HTMLElement): DropListRef<T>;
     // (undocumented)
@@ -350,24 +350,22 @@ export class DragDropModule {
 }
 
 // @public
-export class DragDropRegistry<I extends {
-    isDragging(): boolean;
-}, C> implements OnDestroy {
+export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     constructor(_ngZone: NgZone, _document: any);
-    isDragging(drag: I): boolean;
+    isDragging(drag: DragRef): boolean;
     // (undocumented)
     ngOnDestroy(): void;
     readonly pointerMove: Subject<TouchEvent | MouseEvent>;
     readonly pointerUp: Subject<TouchEvent | MouseEvent>;
-    registerDragItem(drag: I): void;
-    registerDropContainer(drop: C): void;
-    removeDragItem(drag: I): void;
-    removeDropContainer(drop: C): void;
+    registerDragItem(drag: DragRef): void;
+    registerDropContainer(drop: DropListRef): void;
+    removeDragItem(drag: DragRef): void;
+    removeDropContainer(drop: DropListRef): void;
     // @deprecated
     readonly scroll: Subject<Event>;
     scrolled(shadowRoot?: DocumentOrShadowRoot | null): Observable<Event>;
-    startDragging(drag: I, event: TouchEvent | MouseEvent): void;
-    stopDragging(drag: I): void;
+    startDragging(drag: DragRef, event: TouchEvent | MouseEvent): void;
+    stopDragging(drag: DragRef): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DragDropRegistry<any, any>, never>;
     // (undocumented)
@@ -376,7 +374,7 @@ export class DragDropRegistry<I extends {
 
 // @public
 export class DragRef<T = any> {
-    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>);
+    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry);
     readonly beforeStarted: Subject<void>;
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
     data: T;
@@ -476,7 +474,7 @@ export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';
 
 // @public
 export class DropListRef<T = any> {
-    constructor(element: ElementRef<HTMLElement> | HTMLElement, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, _document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler);
+    constructor(element: ElementRef<HTMLElement> | HTMLElement, _dragDropRegistry: DragDropRegistry, _document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler);
     autoScrollDisabled: boolean;
     autoScrollStep: number;
     readonly beforeStarted: Subject<void>;

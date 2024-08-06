@@ -57,7 +57,7 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Layout direction of the drop list. */
   direction: Direction;
 
-  constructor(private _dragDropRegistry: DragDropRegistry<DragRef, unknown>) {}
+  constructor(private _dragDropRegistry: DragDropRegistry) {}
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as well as what direction

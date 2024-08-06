@@ -28,7 +28,7 @@ export class DragDrop {
     @Inject(DOCUMENT) private _document: any,
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry,
   ) {}
 
   /**
