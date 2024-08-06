@@ -11,10 +11,10 @@ describe('MatMenuHarness', () => {
     let fixture: ComponentFixture<MenuHarnessTest>;
     let loader: HarnessLoader;
 
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
+    beforeEach(() => {
+      TestBed.configureTestingModule({
         imports: [MatMenuModule, NoopAnimationsModule, MenuHarnessTest],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(MenuHarnessTest);
       fixture.detectChanges();
@@ -91,10 +91,10 @@ describe('MatMenuHarness', () => {
     let fixture: ComponentFixture<NestedMenuHarnessTest>;
     let loader: HarnessLoader;
 
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
+    beforeEach(() => {
+      TestBed.configureTestingModule({
         imports: [MatMenuModule, NoopAnimationsModule, NestedMenuHarnessTest],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(NestedMenuHarnessTest);
       fixture.detectChanges();

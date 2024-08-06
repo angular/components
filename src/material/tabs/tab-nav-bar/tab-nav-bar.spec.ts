@@ -38,8 +38,6 @@ describe('MDC-based MatTabNavBar', () => {
       ],
     });
 
-    TestBed.compileComponents();
-
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
   }));
@@ -497,8 +495,6 @@ describe('MatTabNavBar with a default config', () => {
       imports: [MatTabsModule, BrowserAnimationsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {
@@ -520,8 +516,6 @@ describe('MatTabNavBar with enabled animations', () => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule, TabsWithCustomAnimationDuration],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should not throw when setting an animationDuration without units', fakeAsync(() => {

@@ -46,7 +46,6 @@ export function createComponent<T>(
     });
   }
 
-  TestBed.compileComponents();
   return TestBed.createComponent<T>(componentType);
 }
 

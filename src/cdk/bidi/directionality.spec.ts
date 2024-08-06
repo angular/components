@@ -18,7 +18,7 @@ describe('Directionality', () => {
         ElementWithPredefinedUppercaseDir,
       ],
       providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDocument}],
-    }).compileComponents();
+    });
   }));
 
   describe('Service', () => {

@@ -24,7 +24,7 @@ describe('CdkTableScrollContainer', () => {
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(componentType);
   }

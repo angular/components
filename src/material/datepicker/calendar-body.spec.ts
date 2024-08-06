@@ -13,8 +13,6 @@ describe('MatCalendarBody', () => {
     TestBed.configureTestingModule({
       imports: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('standard calendar body', () => {

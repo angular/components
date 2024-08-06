@@ -49,8 +49,6 @@ describe('MDC-based Option Chips', () => {
       ],
       declarations: [SingleChip],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatChipOption', () => {

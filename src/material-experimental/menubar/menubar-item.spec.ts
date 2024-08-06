@@ -11,7 +11,7 @@ describe('MatMenuBarItem', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatMenuBarModule, CdkMenuModule, SimpleMenuBarItem],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

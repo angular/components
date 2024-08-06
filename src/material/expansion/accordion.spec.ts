@@ -31,7 +31,6 @@ describe('MatAccordion', () => {
         NestedAccordions,
       ],
     });
-    TestBed.compileComponents();
 
     inject([FocusMonitor], (fm: FocusMonitor) => {
       focusMonitor = fm;

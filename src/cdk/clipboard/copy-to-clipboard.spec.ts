@@ -31,8 +31,6 @@ describe('CdkCopyToClipboard', () => {
     TestBed.configureTestingModule({
       imports: [ClipboardModule, CopyToClipboardHost],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {

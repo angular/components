@@ -14,10 +14,10 @@ describe('MatBottomSheetHarness', () => {
   let fixture: ComponentFixture<BottomSheetHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatBottomSheetModule, NoopAnimationsModule, BottomSheetHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(BottomSheetHarnessTest);
     fixture.detectChanges();

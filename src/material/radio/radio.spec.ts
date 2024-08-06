@@ -34,8 +34,6 @@ describe('MDC-based MatRadio', () => {
         PreselectedRadioWithStaticValueAndNgIf,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('inside of a group', () => {
@@ -1046,8 +1044,6 @@ describe('MatRadioDefaultOverrides', () => {
           },
         ],
       });
-
-      TestBed.compileComponents();
     }));
     it('should override default color in Component', () => {
       const fixture: ComponentFixture<DefaultRadioButton> =

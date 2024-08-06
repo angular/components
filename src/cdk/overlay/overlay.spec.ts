@@ -59,7 +59,7 @@ describe('Overlay', () => {
           useClass: SpyLocation,
         },
       ],
-    }).compileComponents();
+    });
 
     overlay = TestBed.inject(Overlay);
     overlayContainer = TestBed.inject(OverlayContainer);

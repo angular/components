@@ -16,8 +16,6 @@ describe('MatToolbar', () => {
         ToolbarMultipleIndirectRows,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('with single row', () => {

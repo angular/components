@@ -13,7 +13,7 @@ describe('BottomSheetHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatBottomSheetModule, NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(BottomSheetHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

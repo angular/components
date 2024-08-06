@@ -14,7 +14,7 @@ describe('MatOption component', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatOptionModule, BasicOption],
-    }).compileComponents();
+    });
   }));
 
   it('should complete the `stateChanges` stream on destroy', () => {
@@ -221,7 +221,7 @@ describe('MatOption component', () => {
             useValue: {inertGroups: true},
           },
         ],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(InsideGroup);
       fixture.detectChanges();

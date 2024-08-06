@@ -72,8 +72,6 @@ describe('MDC-based MatTooltip', () => {
       ],
     });
 
-    TestBed.compileComponents();
-
     inject(
       [OverlayContainer, FocusMonitor, Platform],
       (oc: OverlayContainer, fm: FocusMonitor, pl: Platform) => {
@@ -170,17 +168,15 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should be able to override the default show and hide delays', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {showDelay: 1337, hideDelay: 7331},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {showDelay: 1337, hideDelay: 7331},
+          },
+        ],
+      });
 
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
@@ -206,18 +202,16 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should be able to override the default position', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule],
-          declarations: [TooltipDemoWithoutPositionBinding],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {position: 'right'},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatTooltipModule, OverlayModule],
+        declarations: [TooltipDemoWithoutPositionBinding],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {position: 'right'},
+          },
+        ],
+      });
 
       const newFixture = TestBed.createComponent(TooltipDemoWithoutPositionBinding);
       newFixture.detectChanges();
@@ -235,18 +229,16 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should be able to define a default (global) tooltip class', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          declarations: [TooltipDemoWithoutTooltipClassBinding],
-          imports: [MatTooltipModule, OverlayModule],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {tooltipClass: 'my-default-tooltip-class'},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        declarations: [TooltipDemoWithoutTooltipClassBinding],
+        imports: [MatTooltipModule, OverlayModule],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {tooltipClass: 'my-default-tooltip-class'},
+          },
+        ],
+      });
 
       const fixture = TestBed.createComponent(TooltipDemoWithoutTooltipClassBinding);
       fixture.detectChanges();
@@ -264,18 +256,16 @@ describe('MDC-based MatTooltip', () => {
     }));
 
     it('should be able to provide tooltip class over the custom default one', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          declarations: [TooltipDemoWithTooltipClassBinding],
-          imports: [MatTooltipModule, OverlayModule],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {tooltipClass: 'my-default-tooltip-class'},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        declarations: [TooltipDemoWithTooltipClassBinding],
+        imports: [MatTooltipModule, OverlayModule],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {tooltipClass: 'my-default-tooltip-class'},
+          },
+        ],
+      });
 
       const fixture = TestBed.createComponent(TooltipDemoWithTooltipClassBinding);
       fixture.detectChanges();
@@ -299,12 +289,10 @@ describe('MDC-based MatTooltip', () => {
         return;
       }
 
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule],
-          declarations: [WideTooltipDemo],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatTooltipModule, OverlayModule],
+        declarations: [WideTooltipDemo],
+      });
 
       const wideFixture = TestBed.createComponent(WideTooltipDemo);
       wideFixture.detectChanges();
@@ -333,18 +321,16 @@ describe('MDC-based MatTooltip', () => {
         return;
       }
 
-      await TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule],
-          declarations: [WideTooltipDemo],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {positionAtOrigin: true},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatTooltipModule, OverlayModule],
+        declarations: [WideTooltipDemo],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {positionAtOrigin: true},
+          },
+        ],
+      });
 
       const wideFixture = TestBed.createComponent(WideTooltipDemo);
       wideFixture.detectChanges();
@@ -367,18 +353,16 @@ describe('MDC-based MatTooltip', () => {
     });
 
     it('should be able to disable tooltip interactivity', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
-          declarations: [TooltipDemoWithoutPositionBinding],
-          providers: [
-            {
-              provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-              useValue: {disableTooltipInteractivity: true},
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
+        declarations: [TooltipDemoWithoutPositionBinding],
+        providers: [
+          {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {disableTooltipInteractivity: true},
+          },
+        ],
+      });
 
       const newFixture = TestBed.createComponent(TooltipDemoWithoutPositionBinding);
       newFixture.detectChanges();

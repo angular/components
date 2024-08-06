@@ -16,7 +16,7 @@ describe('FocusMonitor observable stream Zone.js integration', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}, provideZoneChangeDetection()],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {

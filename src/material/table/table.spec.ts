@@ -33,7 +33,7 @@ describe('MDC-based MatTable', () => {
         NestedTableApp,
         MatFlexTableApp,
       ],
-    }).compileComponents();
+    });
   }));
 
   describe('with basic data source', () => {

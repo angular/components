@@ -13,8 +13,8 @@ describe('MatDatepickerInputHarness', () => {
   let fixture: ComponentFixture<DatepickerInputHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
         MatNativeDateModule,
@@ -22,7 +22,7 @@ describe('MatDatepickerInputHarness', () => {
         FormsModule,
         DatepickerInputHarnessTest,
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DatepickerInputHarnessTest);
     fixture.detectChanges();

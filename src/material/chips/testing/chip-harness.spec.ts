@@ -11,10 +11,10 @@ describe('MatChipHarness', () => {
   let fixture: ComponentFixture<ChipHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatChipsModule, MatIconModule, ChipHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ChipHarnessTest);
     fixture.detectChanges();

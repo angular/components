@@ -23,7 +23,7 @@ describe('MenuStack', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule, MultiMenuWithSubmenu],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

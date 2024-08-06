@@ -27,8 +27,6 @@ describe('MatCalendar', () => {
         CalendarWithSelectableMinDate,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('standard calendar', () => {

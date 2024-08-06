@@ -19,7 +19,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [TriggerForEmptyMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -114,7 +114,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [MenuBarWithNestedSubMenus],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -334,7 +334,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [componentClass],
-      }).compileComponents();
+      });
 
       const fixture = TestBed.createComponent(componentClass);
       fixture.detectChanges();
@@ -407,7 +407,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [StandaloneTriggerWithInlineMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -490,7 +490,7 @@ describe('MenuTrigger', () => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule],
       declarations: [TriggerWithData],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent(TriggerWithData);
     fixture.componentInstance.menuData = {message: 'Hello!'};
@@ -510,7 +510,7 @@ describe('MenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [TriggerWithNullValue],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -549,7 +549,7 @@ describe('MenuTrigger', () => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule],
       declarations: [TriggersWithSameMenuDifferentMenuBars],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent(TriggersWithSameMenuDifferentMenuBars);
     fixture.detectChanges();

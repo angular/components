@@ -93,8 +93,6 @@ describe('MDC-based MatDialog', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject(
@@ -1912,8 +1910,6 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
         {provide: Location, useClass: SpyLocation},
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {
@@ -2021,8 +2017,6 @@ describe('MDC-based MatDialog with default options', () => {
       ],
       providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog, OverlayContainer], (d: MatDialog, oc: OverlayContainer) => {
@@ -2092,8 +2086,6 @@ describe('MDC-based MatDialog with animations enabled', () => {
         DirectiveWithViewContainer,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {
@@ -2151,8 +2143,6 @@ describe('MatDialog with explicit injector provided', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, BrowserAnimationsModule, ModuleBoundDialogParentComponent],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {

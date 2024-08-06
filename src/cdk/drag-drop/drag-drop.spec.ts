@@ -13,7 +13,6 @@ describe('DragDrop', () => {
       imports: [DragDropModule, TestComponent],
     });
 
-    TestBed.compileComponents();
     service = TestBed.inject(DragDrop);
   }));
 

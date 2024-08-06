@@ -9,10 +9,10 @@ describe('MatButtonToggleHarness', () => {
   let fixture: ComponentFixture<ButtonToggleHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatButtonToggleModule, ButtonToggleHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ButtonToggleHarnessTest);
     fixture.detectChanges();

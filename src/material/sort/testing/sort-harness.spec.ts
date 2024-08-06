@@ -10,10 +10,10 @@ describe('MatSortHarness', () => {
   let fixture: ComponentFixture<SortHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatSortModule, NoopAnimationsModule, SortHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SortHarnessTest);
     fixture.detectChanges();

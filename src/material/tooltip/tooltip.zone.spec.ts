@@ -28,8 +28,6 @@ describe('MDC-based MatTooltip Zone.js integration', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('scrollable usage', () => {

@@ -39,8 +39,6 @@ describe('MDC-based MatAutocomplete Zone.js integration', () => {
       declarations: [component],
     });
 
-    TestBed.compileComponents();
-
     return TestBed.createComponent<T>(component);
   }
 

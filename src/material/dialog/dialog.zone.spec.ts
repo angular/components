@@ -44,8 +44,6 @@ describe('MDC-based MatDialog', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {

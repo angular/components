@@ -23,7 +23,7 @@ describe('DateFnsAdapter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [DateFnsModule],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
     adapter.setLocale(enUS);
@@ -461,7 +461,7 @@ describe('DateFnsAdapter with MAT_DATE_LOCALE override', () => {
     TestBed.configureTestingModule({
       imports: [DateFnsModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: da}],
-    }).compileComponents();
+    });
 
     adapter = TestBed.inject(DateAdapter);
   }));

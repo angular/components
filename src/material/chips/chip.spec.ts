@@ -32,8 +32,6 @@ describe('MDC-based MatChip', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatBasicChip', () => {

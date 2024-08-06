@@ -10,10 +10,10 @@ describe('MatSlideToggleHarness', () => {
   let fixture: ComponentFixture<SlideToggleHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatSlideToggleModule, ReactiveFormsModule, SlideToggleHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SlideToggleHarnessTest);
     fixture.detectChanges();

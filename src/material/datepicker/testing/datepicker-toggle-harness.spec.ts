@@ -12,15 +12,15 @@ describe('MatDatepickerToggleHarness', () => {
   let fixture: ComponentFixture<DatepickerToggleHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
         MatNativeDateModule,
         MatDatepickerModule,
         DatepickerToggleHarnessTest,
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DatepickerToggleHarnessTest);
     fixture.detectChanges();

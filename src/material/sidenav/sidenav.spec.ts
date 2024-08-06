@@ -17,8 +17,6 @@ describe('MatSidenav', () => {
         NestedSidenavContainers,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should be fixed position when in fixed mode', () => {

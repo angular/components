@@ -11,7 +11,6 @@ describe('CdkAccordion', () => {
     TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, CdkAccordionModule, SetOfItems, NestedItems],
     });
-    TestBed.compileComponents();
   }));
 
   it('should ensure only one item is expanded at a time', () => {

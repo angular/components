@@ -62,7 +62,7 @@ describe('MatBottomSheet', () => {
         ShadowDomComponent,
       ],
       providers: [{provide: Location, useClass: SpyLocation}],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject(
@@ -871,7 +871,7 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatBottomSheetModule, NoopAnimationsModule, ComponentThatProvidesMatBottomSheet],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject(
@@ -963,8 +963,6 @@ describe('MatBottomSheet with default options', () => {
       ],
       providers: [{provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject(

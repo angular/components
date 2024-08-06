@@ -14,8 +14,8 @@ describe('MatSelectHarness', () => {
   let loader: HarnessLoader;
   let overlayContainer: OverlayContainer;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         MatSelectModule,
         MatFormFieldModule,
@@ -23,7 +23,7 @@ describe('MatSelectHarness', () => {
         ReactiveFormsModule,
         SelectHarnessTest,
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();

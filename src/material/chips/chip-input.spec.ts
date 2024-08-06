@@ -41,8 +41,6 @@ describe('MDC-based MatChipInput', () => {
       ],
       declarations: [TestChipInput],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {
@@ -195,18 +193,16 @@ describe('MDC-based MatChipInput', () => {
     it('emits (chipEnd) when the separator keys are configured globally', () => {
       fixture.destroy();
 
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
-          declarations: [TestChipInput],
-          providers: [
-            {
-              provide: MAT_CHIPS_DEFAULT_OPTIONS,
-              useValue: {separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions,
-            },
-          ],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
+        declarations: [TestChipInput],
+        providers: [
+          {
+            provide: MAT_CHIPS_DEFAULT_OPTIONS,
+            useValue: {separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions,
+          },
+        ],
+      });
 
       fixture = TestBed.createComponent(TestChipInput);
       testChipInput = fixture.debugElement.componentInstance;

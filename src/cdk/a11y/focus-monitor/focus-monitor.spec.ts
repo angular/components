@@ -59,7 +59,7 @@ describe('FocusMonitor', () => {
           },
         },
       ],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -478,7 +478,7 @@ describe('FocusMonitor with "eventual" detection', () => {
           },
         },
       ],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -515,7 +515,7 @@ describe('cdkMonitorFocus', () => {
         FocusMonitorOnCommentNode,
         ExportedFocusMonitor,
       ],
-    }).compileComponents();
+    });
   });
 
   describe('button with cdkMonitorElementFocus', () => {
@@ -827,7 +827,7 @@ describe('FocusMonitor observable stream', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
@@ -864,7 +864,7 @@ describe('FocusMonitor input label detection', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [A11yModule, CheckboxWithLabel],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {

@@ -11,8 +11,6 @@ describe('ScrollDispatcher Zone.js integration', () => {
       imports: [ScrollingModule, ScrollingComponent],
       providers: [provideZoneChangeDetection()],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('Basic usage', () => {

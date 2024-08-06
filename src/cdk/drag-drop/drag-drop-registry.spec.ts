@@ -18,7 +18,7 @@ describe('DragDropRegistry', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [DragDropModule, BlankComponent],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(BlankComponent);
     fixture.detectChanges();

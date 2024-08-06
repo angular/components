@@ -11,10 +11,10 @@ describe('MatGridListHarness', () => {
   let fixture: ComponentFixture<GridListHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatGridListModule, NoopAnimationsModule, GridListHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(GridListHarnessTest);
     fixture.detectChanges();

@@ -31,8 +31,6 @@ describe('CdkTextareaAutosize', () => {
         AutosizeTextareaWithoutAutosize,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {

@@ -13,10 +13,10 @@ describe('MatButtonHarness', () => {
   let loader: HarnessLoader;
   let platform: Platform;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatButtonModule, MatIconModule, PlatformModule, ButtonHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ButtonHarnessTest);
     fixture.detectChanges();

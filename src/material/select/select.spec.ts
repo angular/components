@@ -111,7 +111,7 @@ describe('MDC-based MatSelect', () => {
         ...providers,
       ],
       declarations: declarations,
-    }).compileComponents();
+    });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
   }

@@ -1056,7 +1056,7 @@ describe('MDC-based MatChipGrid', () => {
       ],
       providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent<T>(component);
     fixture.detectChanges();

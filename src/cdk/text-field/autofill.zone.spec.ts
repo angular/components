@@ -12,7 +12,7 @@ describe('AutofillMonitor Zone.js integration', () => {
     TestBed.configureTestingModule({
       providers: [provideZoneChangeDetection()],
       imports: [TextFieldModule, Inputs],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {

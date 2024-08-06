@@ -59,7 +59,7 @@ describe('CdkTree with TreeControl', () => {
         },
       ],
       declarations: declarations,
-    }).compileComponents();
+    });
   }
 
   it('should clear out the `mostRecentTreeNode` on destroy', () => {

@@ -8,7 +8,7 @@ describe('MDC-based MatCard', () => {
     TestBed.configureTestingModule({
       imports: [MatCardModule, component],
       providers,
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(component);
   }

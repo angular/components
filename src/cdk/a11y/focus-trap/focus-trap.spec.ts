@@ -28,8 +28,6 @@ describe('FocusTrap', () => {
         FocusTrapWithAutoCaptureInShadowDom,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('with default element', () => {

@@ -1625,7 +1625,7 @@ function configureTestingModule(
       },
       ...providers,
     ],
-  }).compileComponents();
+  });
 }
 
 function createComponent<T>(

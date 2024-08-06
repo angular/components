@@ -10,7 +10,7 @@ describe('MatGridList', () => {
     TestBed.configureTestingModule({
       imports: [MatGridListModule],
       declarations: [componentType],
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(componentType);
   }

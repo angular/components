@@ -21,7 +21,7 @@ function setupComponent<T, O = string>(component: Type<T>, imports: any[] = []) 
   TestBed.configureTestingModule({
     imports: [CdkListboxModule, ...imports],
     declarations: [component],
-  }).compileComponents();
+  });
   const fixture = TestBed.createComponent(component);
   fixture.detectChanges();
 

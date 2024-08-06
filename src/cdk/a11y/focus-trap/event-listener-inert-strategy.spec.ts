@@ -64,7 +64,7 @@ function createComponent<T>(
   TestBed.configureTestingModule({
     imports: [A11yModule, componentType],
     providers: providers,
-  }).compileComponents();
+  });
 
   return TestBed.createComponent<T>(componentType);
 }

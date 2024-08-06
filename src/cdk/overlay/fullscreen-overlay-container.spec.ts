@@ -56,7 +56,7 @@ describe('FullscreenOverlayContainer', () => {
           },
         },
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {

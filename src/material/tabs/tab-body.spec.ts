@@ -36,8 +36,6 @@ describe('MDC-based MatTabBody', () => {
       ],
       providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('when initialized as center', () => {
@@ -195,18 +193,16 @@ describe('MDC-based MatTabBody', () => {
   });
 
   it('should mark the tab body content as a scrollable container', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [
-          CommonModule,
-          PortalModule,
-          MatRippleModule,
-          NoopAnimationsModule,
-          ScrollingModule,
-          SimpleTabBodyApp,
-        ],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [
+        CommonModule,
+        PortalModule,
+        MatRippleModule,
+        NoopAnimationsModule,
+        ScrollingModule,
+        SimpleTabBodyApp,
+      ],
+    });
 
     const fixture = TestBed.createComponent(SimpleTabBodyApp);
     const tabBodyContent = fixture.nativeElement.querySelector('.mat-mdc-tab-body-content');
