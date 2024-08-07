@@ -2,6 +2,7 @@
 @use '@angular/cdk';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 $_path-length: 29.7833385;
 $_transition-duration: 90ms;
@@ -64,6 +65,10 @@ $_fallback-size: 40px;
   .mdc-checkbox--disabled {
     cursor: default;
     pointer-events: none;
+
+    @include cdk.high-contrast(active, off) {
+      opacity: 0.5;
+    }
   }
 
   .mdc-checkbox__background {
@@ -81,6 +86,9 @@ $_fallback-size: 40px;
     will-change: background-color, border-color;
     transition: background-color $_transition-duration $_exit-curve,
                 border-color $_transition-duration $_exit-curve;
+
+    // Force browser to show background-color when using the print function
+    @include vendor-prefixes.color-adjust(exact);
 
     @include token-utils.use-tokens($prefix, $slots) {
       $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
@@ -167,6 +175,10 @@ $_fallback-size: 40px;
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       @include token-utils.create-token-slot(color, selected-checkmark-color);
+
+      @include cdk.high-contrast(active, off) {
+        color: CanvasText;
+      }
     }
   }
 
@@ -175,6 +187,10 @@ $_fallback-size: 40px;
       &, &.mat-mdc-checkbox-disabled-interactive {
         .mdc-checkbox__checkmark {
           @include token-utils.create-token-slot(color, disabled-selected-checkmark-color);
+
+          @include cdk.high-contrast(active, off) {
+            color: CanvasText;
+          }
         }
       }
     }
