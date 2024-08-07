@@ -9,6 +9,7 @@
 import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
 import {CdkFixedSizeVirtualScroll} from './fixed-size-virtual-scroll';
+import {CdkMultiColumnsVirtualScroll} from './multi-columns-virtual-scroll';
 import {CdkScrollable} from './scrollable';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
@@ -30,6 +31,7 @@ export class CdkScrollableModule {}
     CdkScrollableModule,
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
+    CdkMultiColumnsVirtualScroll,
     CdkVirtualForOf,
     CdkVirtualScrollableWindow,
     CdkVirtualScrollableElement,
@@ -38,6 +40,7 @@ export class CdkScrollableModule {}
     BidiModule,
     CdkScrollableModule,
     CdkFixedSizeVirtualScroll,
+    CdkMultiColumnsVirtualScroll,
     CdkVirtualForOf,
     CdkVirtualScrollViewport,
     CdkVirtualScrollableWindow,
