@@ -59,6 +59,14 @@ describe('MatButtonToggleHarness', () => {
     expect(await disabledToggle.isDisabled()).toBe(true);
   });
 
+  it('should get the disabled state for an interactive disabled button', async () => {
+    fixture.componentInstance.disabledInteractive = true;
+    fixture.changeDetectorRef.markForCheck();
+
+    const disabledToggle = (await loader.getAllHarnesses(MatButtonToggleHarness))[1];
+    expect(await disabledToggle.isDisabled()).toBe(true);
+  });
+
   it('should get the toggle name', async () => {
     const toggle = await loader.getHarness(MatButtonToggleHarness.with({text: 'First'}));
     expect(await toggle.getName()).toBe('first-name');
@@ -141,6 +149,7 @@ describe('MatButtonToggleHarness', () => {
         checked>First</mat-button-toggle>
       <mat-button-toggle
         [disabled]="disabled"
+        [disabledInteractive]="disabledInteractive"
         aria-labelledby="second-label"
         appearance="legacy">Second</mat-button-toggle>
       <span id="second-label">Second toggle</span>
@@ -150,4 +159,5 @@ describe('MatButtonToggleHarness', () => {
 })
 class ButtonToggleHarnessTest {
   disabled = true;
+  disabledInteractive = false;
 }

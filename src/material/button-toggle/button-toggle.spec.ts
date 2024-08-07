@@ -434,6 +434,25 @@ describe('MatButtonToggle without forms', () => {
       expect(buttons.every(input => input.disabled)).toBe(true);
     });
 
+    it('should be able to keep the button interactive while disabled', () => {
+      const button = buttonToggleNativeElements[0].querySelector('button')!;
+      testComponent.isGroupDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(button.hasAttribute('disabled')).toBe(true);
+      expect(button.hasAttribute('aria-disabled')).toBe(false);
+      expect(button.getAttribute('tabindex')).toBe('-1');
+
+      testComponent.disabledIntearctive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(button.hasAttribute('disabled')).toBe(false);
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      expect(button.getAttribute('tabindex')).toBe('0');
+    });
+
     it('should update the group value when one of the toggles changes', () => {
       expect(groupInstance.value).toBeFalsy();
       buttonToggleLabelElements[0].click();
@@ -1052,9 +1071,11 @@ describe('MatButtonToggle without forms', () => {
 
 @Component({
   template: `
-  <mat-button-toggle-group [disabled]="isGroupDisabled"
-                           [vertical]="isVertical"
-                           [(value)]="groupValue">
+  <mat-button-toggle-group
+    [disabled]="isGroupDisabled"
+    [disabledInteractive]="disabledIntearctive"
+    [vertical]="isVertical"
+    [(value)]="groupValue">
     @if (renderFirstToggle) {
       <mat-button-toggle value="test1">Test1</mat-button-toggle>
     }
@@ -1067,6 +1088,7 @@ describe('MatButtonToggle without forms', () => {
 })
 class ButtonTogglesInsideButtonToggleGroup {
   isGroupDisabled: boolean = false;
+  disabledIntearctive = false;
   isVertical: boolean = false;
   groupValue: string;
   renderFirstToggle = true;

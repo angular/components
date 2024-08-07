@@ -24,6 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
 export class ButtonToggleDemo {
   isVertical = false;
   isDisabled = false;
+  disabledInteractive = false;
   hideSingleSelectionIndicator = false;
   hideMultipleSelectionIndicator = false;
   favoritePie = 'Apple';
