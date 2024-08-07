@@ -5,22 +5,27 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentChecked,
   AfterContentInit,
+  afterRender,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   ContentChild,
+  contentChild,
   ContentChildren,
   ElementRef,
   Inject,
+  inject,
   InjectionToken,
   Injector,
   Input,
@@ -30,14 +35,10 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  afterRender,
-  computed,
-  contentChild,
-  inject,
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
-import {Subject, merge} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
@@ -107,8 +108,6 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDefaultOptions>(
   'MAT_FORM_FIELD_DEFAULT_OPTIONS',
 );
-
-let nextUniqueId = 0;
 
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
@@ -191,6 +190,9 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
 export class MatFormField
   implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
   @ViewChild('textPrefixContainer') _textPrefixContainer: ElementRef<HTMLElement>;
@@ -298,10 +300,10 @@ export class MatFormField
   _hasTextSuffix = false;
 
   // Unique id for the internal form field label.
-  readonly _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
+  readonly _labelId = this._idGenerator.getId('mat-mdc-form-field-label-');
 
   // Unique id for the hint label.
-  readonly _hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
+  readonly _hintLabelId = this._idGenerator.getId('mat-mdc-hint-');
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';

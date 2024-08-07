@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
-
-let nextUniqueId = 0;
+import {IdGenerator} from '@angular/cdk/a11y';
+import {Directive, inject, Input} from '@angular/core';
 
 /** Hint text to be shown underneath the form field control. */
 @Directive({
@@ -23,9 +22,12 @@ let nextUniqueId = 0;
   standalone: true,
 })
 export class MatHint {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Whether to align the hint label at the start or end of the line. */
   @Input() align: 'start' | 'end' = 'start';
 
   /** Unique ID for the hint. Used for the aria-describedby on the form field control. */
-  @Input() id: string = `mat-mdc-hint-${nextUniqueId++}`;
+  @Input() id: string = this._idGenerator.getId('mat-mdc-hint-');
 }

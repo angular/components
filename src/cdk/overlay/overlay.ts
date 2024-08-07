@@ -6,19 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DomPortalOutlet} from '@angular/cdk/portal';
 import {DOCUMENT, Location} from '@angular/common';
 import {
+  ANIMATION_MODULE_TYPE,
   ApplicationRef,
   ComponentFactoryResolver,
+  EnvironmentInjector,
   Inject,
+  inject,
   Injectable,
   Injector,
   NgZone,
-  ANIMATION_MODULE_TYPE,
   Optional,
-  EnvironmentInjector,
 } from '@angular/core';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
@@ -27,9 +29,6 @@ import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
-
-/** Next overlay unique ID. */
-let nextUniqueId = 0;
 
 // Note that Overlay is *not* scoped to the app root because of the ComponentFactoryResolver
 // which needs to be different depending on where OverlayModule is imported.
@@ -44,6 +43,9 @@ let nextUniqueId = 0;
  */
 @Injectable({providedIn: 'root'})
 export class Overlay {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _appRef: ApplicationRef;
 
   constructor(
@@ -106,7 +108,7 @@ export class Overlay {
   private _createPaneElement(host: HTMLElement): HTMLElement {
     const pane = this._document.createElement('div');
 
-    pane.id = `cdk-overlay-${nextUniqueId++}`;
+    pane.id = this._idGenerator.getId('cdk-overlay-');
     pane.classList.add('cdk-overlay-pane');
     host.appendChild(pane);
 

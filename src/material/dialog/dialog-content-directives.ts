@@ -6,9 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IdGenerator} from '@angular/cdk/a11y';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {
   Directive,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -16,13 +19,9 @@ import {
   Optional,
   SimpleChanges,
 } from '@angular/core';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 
 import {MatDialog} from './dialog';
 import {_closeDialogVia, MatDialogRef} from './dialog-ref';
-
-/** Counter used to generate unique IDs for dialog elements. */
-let dialogElementUid = 0;
 
 /**
  * Button that will close the current dialog.
@@ -140,7 +139,10 @@ export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
   },
 })
 export class MatDialogTitle extends MatDialogLayoutSection {
-  @Input() id: string = `mat-mdc-dialog-title-${dialogElementUid++}`;
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
+  @Input() id: string = this._idGenerator.getId('mat-mdc-dialog-title-');
 
   protected _onAdd() {
     // Note: we null check the queue, because there are some internal
