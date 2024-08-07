@@ -1,3 +1,16 @@
+<a name="18.2.0-rc.0"></a>
+# 18.2.0-rc.0 "wicker-whirlwind" (2024-08-07)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ddc307e284](https://github.com/angular/components/commit/ddc307e28449045c484510ff26798fc1a6efa7c1) | feat | **button-toggle:** allow disabled buttons to be interactive ([#29550](https://github.com/angular/components/pull/29550)) |
+| [7370eb92fc](https://github.com/angular/components/commit/7370eb92fc0a4364670914add9b12393c0f84dfe) | fix | **chips:** missing tokens in M3 ([#29531](https://github.com/angular/components/pull/29531)) |
+| [d22a24d667](https://github.com/angular/components/commit/d22a24d667a16c39d4a4ec5f59b248f990fa029e) | fix | **list:** checkmark not visible in high contrast mode ([#29546](https://github.com/angular/components/pull/29546)) |
+| [626164ba5f](https://github.com/angular/components/commit/626164ba5ff1b729d1d3baeef6e9dfd89566f3f4) | fix | **sidenav:** disable focus trap while closed ([#29548](https://github.com/angular/components/pull/29548)) |
+| [fd416a30e8](https://github.com/angular/components/commit/fd416a30e8de0e741ac45f3fb45e695abecf5ded) | fix | **tooltip:** remove aria-describedby when disabled ([#29520](https://github.com/angular/components/pull/29520)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.4"></a>
 # 18.1.4 "pewter-polka" (2024-08-07)
 ### material
