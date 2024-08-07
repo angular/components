@@ -12,7 +12,7 @@
       </mat-icon>
     </button>
     {{node.item}}
-    @if (node.isLoading) {
+    @if (node.isLoading()) {
       <mat-progress-bar
           mode="indeterminate"
           class="example-tree-progress-bar"></mat-progress-bar>
