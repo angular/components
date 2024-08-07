@@ -35,9 +35,6 @@ const DEFAULT_PAGE_SIZE = 50;
 
 /** Object that can used to configure the underlying `MatSelect` inside a `MatPaginator`. */
 export interface MatPaginatorSelectConfig {
-  /** Whether to center the active option over the trigger. */
-  disableOptionCentering?: boolean;
-
   /** Classes to be passed to the select panel. */
   panelClass?: string | string[] | Set<string> | {[key: string]: any};
 }

@@ -123,7 +123,6 @@ export class MatPaginatorModule {
 
 // @public
 export interface MatPaginatorSelectConfig {
-    disableOptionCentering?: boolean;
     panelClass?: string | string[] | Set<string> | {
         [key: string]: any;
     };

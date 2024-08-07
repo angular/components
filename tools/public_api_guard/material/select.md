@@ -104,7 +104,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     protected readonly _destroy: Subject<void>;
     readonly disableAutomaticLabeling = true;
     disabled: boolean;
-    disableOptionCentering: boolean;
     disableRipple: boolean;
     // (undocumented)
     readonly _elementRef: ElementRef;
@@ -129,8 +128,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     set multiple(value: boolean);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disableOptionCentering: unknown;
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
@@ -216,7 +213,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     protected _viewportRuler: ViewportRuler;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disableOptionCentering": { "alias": "disableOptionCentering"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
 }
@@ -238,7 +235,6 @@ export class MatSelectChange {
 
 // @public
 export interface MatSelectConfig {
-    disableOptionCentering?: boolean;
     hideSingleSelectionIndicator?: boolean;
     overlayPanelClass?: string | string[];
     panelWidth?: string | number | null;
