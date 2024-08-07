@@ -121,6 +121,8 @@ $_standard-tokens: (
 }
 
 .mat-button-toggle-disabled {
+  pointer-events: none;
+
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(color, disabled-state-text-color);
     @include token-utils.create-token-slot(background-color, disabled-state-background-color);
@@ -132,6 +134,10 @@ $_standard-tokens: (
         disabled-selected-state-background-color);
     }
   }
+}
+
+.mat-button-toggle-disabled-interactive {
+  pointer-events: auto;
 }
 
 .mat-button-toggle-appearance-standard {
@@ -185,16 +191,15 @@ $_standard-tokens: (
       @include token-utils.create-token-slot(background-color, state-layer-color);
     }
 
-    &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+    &:hover .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
     }
 
     // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
     // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be
-    // always treated as programmatic focus. Note that it needs the extra `:not` in order to have
-    // more specificity than the `:hover` above.
+    // always treated as programmatic focus.
     // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
-    &.cdk-keyboard-focused:not(.mat-button-toggle-disabled) .mat-button-toggle-focus-overlay {
+    &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
     }
   }
@@ -204,7 +209,7 @@ $_standard-tokens: (
   // because we still want to preserve the keyboard focus state for hybrid devices that have
   // a keyboard and a touchscreen.
   @media (hover: none) {
-    &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+    &:hover .mat-button-toggle-focus-overlay {
       display: none;
     }
   }
