@@ -1,3 +1,13 @@
+<a name="18.1.4"></a>
+# 18.1.4 "pewter-polka" (2024-08-07)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2b5ae8c0ed](https://github.com/angular/components/commit/2b5ae8c0edc6e5c435dd729e704c397cfead2896) | fix | **chips:** missing tokens in M3 ([#29531](https://github.com/angular/components/pull/29531)) |
+| [b98432839e](https://github.com/angular/components/commit/b98432839ef879757452a48b149fad0e289e3aae) | fix | **sidenav:** disable focus trap while closed ([#29548](https://github.com/angular/components/pull/29548)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.3"></a>
 # 18.1.3 "plastic-beach" (2024-07-31)
 ### cdk
