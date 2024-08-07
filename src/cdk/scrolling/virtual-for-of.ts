@@ -246,7 +246,7 @@ export class CdkVirtualForOf<T>
     }
 
     // Find the last node by starting from the end and going backwards.
-    for (let i = rangeLen - 1; i > -1; i--) {
+    for (let i = rangeLen; i > -1; i--) {
       const view = this._viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<
         CdkVirtualForOfContext<T>
       > | null;
