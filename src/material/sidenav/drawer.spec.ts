@@ -714,6 +714,29 @@ describe('MatDrawer', () => {
         .withContext('Expected focus trap anchors to be enabled in over mode.')
         .toBe(true);
     }));
+
+    it('should disable the focus trap while closed', fakeAsync(() => {
+      testComponent.mode = 'over';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+
+      const anchors = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-focus-trap-anchor'),
+      );
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual([null, null]);
+
+      drawer.open();
+      fixture.detectChanges();
+      flush();
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual(['0', '0']);
+
+      drawer.close();
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual([null, null]);
+    }));
   });
 
   it('should mark the drawer content as scrollable', () => {
