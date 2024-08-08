@@ -26,7 +26,7 @@ import {Subscription} from 'rxjs';
 let nextId = 0;
 
 /**
- * An basic directive expected to be extended and decorated as a component.  Sets up all
+ * A basic directive expected to be extended and decorated as a component.  Sets up all
  * events and attributes needed to be managed by a CdkAccordion parent.
  */
 @Directive({

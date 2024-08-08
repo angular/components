@@ -24,7 +24,7 @@ $prefix: (mat, standard-button-toggle);
 
   // By default the theme usually has an rgba color for the dividers, which can
   // stack up with the background of a button toggle. This can cause the border
-  // of a selected toggle to look different from an deselected one. We use a solid
+  // of a selected toggle to look different from an unselected one. We use a solid
   // color to ensure that the border always stays the same.
   $divider-color: if(
       meta.type-of($theme-divider-color) == color,
