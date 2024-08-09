@@ -2119,21 +2119,23 @@ class FlatTreeWithThreeNodes {
           *cdkTreeNodeDef="let node"
           [isExpanded]="true"
           [isExpandable]="true">
-        {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+        {{node.name}}
       </cdk-tree-node>
     </cdk-tree>
   `,
 })
 class IsExpandableOrderingTest {
-  getChildren = (node: MinimalTestData) => this.children;
+  getChildren = (node: MinimalTestData) => node.children;
 
   @ViewChild(CdkTree) tree: CdkTree<MinimalTestData>;
 
-  dataSource = [
-    new MinimalTestData('parent'),
-  ];
+  dataSource: MinimalTestData[];
 
-  children = [
-    new MinimalTestData('child'),
-  ]
+  constructor() {
+    const children = [new MinimalTestData('child')];
+    const data = [new MinimalTestData('parent')];
+    data[0].children = children;
+
+    this.dataSource = data;
+  }
 }
