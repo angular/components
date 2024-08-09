@@ -22,6 +22,8 @@
     #tabList
     class="mat-mdc-tab-list"
     role="tablist"
+    [attr.aria-label]="ariaLabel || null"
+    [attr.aria-labelledby]="ariaLabelledby || null"
     (cdkObserveContent)="_onContentChanges()">
     <div class="mat-mdc-tab-labels" #tabListInner>
       <ng-content></ng-content>

@@ -69,6 +69,12 @@ export class MatTabHeader
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
   _inkBar: MatInkBar;
 
+  /** Aria label of the header. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** Sets the `aria-labelledby` of the header. */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
   /** Whether the ripple effect is disabled or not. */
   @Input({transform: booleanAttribute})
   disableRipple: boolean = false;
