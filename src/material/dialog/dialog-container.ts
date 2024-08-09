@@ -18,6 +18,7 @@ import {
   Inject,
   NgZone,
   OnDestroy,
+  OnInit,
   Optional,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
@@ -71,7 +72,10 @@ export const CLOSE_ANIMATION_DURATION = 75;
     '[class.mat-mdc-dialog-container-with-actions]': '_actionSectionCount > 0',
   },
 })
-export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+export class MatDialogContainer
+  extends CdkDialogContainer<MatDialogConfig>
+  implements OnInit, OnDestroy
+{
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
@@ -115,6 +119,35 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       overlayRef,
       focusMonitor,
     );
+  }
+
+  /** Get Dialog name from aria attributes */
+  private _getDialogName = (): string => {
+    // _ariaLabelledByQueue is created if ariaLabelledBy values are applied
+    // to the dialog config
+    const ariaLabelledByRefId = this._ariaLabelledByQueue[0];
+    // Get Element to get name/title from if ariaLabelledBy
+    const dialogNameElement = document.getElementById(ariaLabelledByRefId);
+    const dialogNameInnerText =
+      // If no ariaLabelledBy or ariaLabel, create default aria label
+      !dialogNameElement && !this._config.ariaLabel
+        ? 'Dialog Modal'
+        : dialogNameElement?.innerText || dialogNameElement?.ariaLabel || this._config.ariaLabel;
+    return dialogNameInnerText || 'Dialog Modal';
+  };
+
+  private _setAriaLabel = (): void => {
+    /* Check for platform's operating system & provide
+      aria-labelledby value or default text as dialog
+      name if platform is MAC_OS or IOS. Fixes b/274674581 */
+    if (this._platform.MAC_OS || this._platform.IOS) {
+      this._config.ariaLabel = this._getDialogName();
+    }
+    return;
+  };
+
+  ngOnInit() {
+    this._setAriaLabel();
   }
 
   protected override _contentAttached(): void {

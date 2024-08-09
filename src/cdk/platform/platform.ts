@@ -84,5 +84,9 @@ export class Platform {
   /** Whether the current browser is Safari. */
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 
+  /** Whether the device is a Mac device/OS. */
+  MAC_OS: boolean =
+    !this.isBrowser && /(macintosh|macintel|macppc|mac68k|macos)/i.test(navigator.userAgent);
+
   constructor(@Inject(PLATFORM_ID) private _platformId: Object) {}
 }
