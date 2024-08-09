@@ -485,6 +485,7 @@ export class MatDatepickerInputEvent<D, S = unknown> {
 
 // @public
 export class MatDatepickerIntl {
+    // @deprecated
     calendarLabel: string;
     readonly changes: Subject<void>;
     closeCalendarLabel: string;
