@@ -173,7 +173,7 @@ describe('MDC-based MatAutocomplete', () => {
         .toEqual('');
     }));
 
-    it('should close the panel when the user clicks away via auxilliary button', waitForAsync(async () => {
+    it('should close the panel when the user clicks away via auxiliary button', waitForAsync(async () => {
       dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
       await new Promise(r => setTimeout(r));
@@ -1607,7 +1607,7 @@ describe('MDC-based MatAutocomplete', () => {
         fixture.detectChanges();
 
         expect(event.defaultPrevented)
-          .withContext(`Expected autocompete not to block ${name} key`)
+          .withContext(`Expected autocomplete not to block ${name} key`)
           .toBe(false);
       });
     });
@@ -3438,7 +3438,7 @@ describe('MDC-based MatAutocomplete', () => {
     widthFixture.detectChanges();
 
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    // Firefox, Edge return a decimal value for width, so we need to parse and round it to verify
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
     widthFixture.componentInstance.trigger.closePanel();
@@ -3451,7 +3451,7 @@ describe('MDC-based MatAutocomplete', () => {
     widthFixture.componentInstance.trigger.openPanel();
     widthFixture.detectChanges();
 
-    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    // Firefox, Edge return a decimal value for width, so we need to parse and round it to verify
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
   });
 
@@ -3848,7 +3848,7 @@ describe('MDC-based MatAutocomplete', () => {
       dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
       fixture.detectChanges();
 
-      const selectedOption = document.querySelector('mat-option[aria-selected="true"');
+      const selectedOption = document.querySelector('mat-option[aria-selected="true"]');
       expect(selectedOption).withContext('Expected an option to be selected.').not.toBeNull();
       expect(selectedOption?.querySelector('.mat-pseudo-checkbox.mat-pseudo-checkbox-minimal'))
         .withContext(
@@ -3874,7 +3874,7 @@ describe('MDC-based MatAutocomplete', () => {
       dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
       fixture.detectChanges();
 
-      const selectedOption = document.querySelector('mat-option[aria-selected="true"');
+      const selectedOption = document.querySelector('mat-option[aria-selected="true"]');
       expect(selectedOption).withContext('Expected an option to be selected.').not.toBeNull();
       expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(0);
     });
@@ -4210,7 +4210,7 @@ class AutocompleteWithoutPanel {
 
     <mat-autocomplete #auto="matAutocomplete">
       @for (group of stateGroups; track group) {
-        <mat-optgroup [label]="group.label">
+        <mat-optgroup [label]="group.title">
           @for (state of group.states; track state) {
             <mat-option [value]="state">
               <span>{{ state }}</span>
@@ -4249,7 +4249,7 @@ class AutocompleteWithGroups {
     <mat-autocomplete #auto="matAutocomplete">
       @if (true) {
         @for (group of stateGroups; track group) {
-          <mat-optgroup [label]="group.label">
+          <mat-optgroup [label]="group.title">
             @for (state of group.states; track state) {
               <mat-option [value]="state">
                 <span>{{ state }}</span>
