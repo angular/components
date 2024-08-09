@@ -18,6 +18,9 @@ $prefix: (mat, stepper);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $header-icon-foreground-color: if($is-dark, black, white);
+
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
     container-color: inspection.get-theme-color($theme, background, card),
     line-color: inspection.get-theme-color($theme, foreground, divider),
@@ -29,6 +32,7 @@ $prefix: (mat, stepper);
     header-selected-state-label-text-color: inspection.get-theme-color($theme, foreground, text),
     header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
     header-icon-background-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    header-icon-foreground-color: $header-icon-foreground-color,
     header-error-state-icon-foreground-color: inspection.get-theme-color($theme, warn, text),
     header-error-state-icon-background-color: transparent,
   ));
@@ -71,7 +75,6 @@ $prefix: (mat, stepper);
   $active-state-background: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    header-icon-foreground-color: $active-state-foreground,
     header-selected-state-icon-background-color: $active-state-background,
     header-selected-state-icon-foreground-color: $active-state-foreground,
     header-done-state-icon-background-color: $active-state-background,
