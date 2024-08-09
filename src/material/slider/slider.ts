@@ -578,13 +578,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     trackStyle.transform = styles.transform;
   }
 
-  /** Returns the translateX positioning for a tick mark based on it's index. */
-  _calcTickMarkTransform(index: number): string {
-    // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
-    const translateX = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
-    return `translateX(${translateX}px`;
-  }
-
   // Handlers for updating the slider ui.
 
   _onTranslateXChange(source: _MatSliderThumb): void {
@@ -777,9 +770,10 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     }
 
     const step = this._step && this._step > 0 ? this._step : 1;
-    const maxValue = Math.floor(this.max / step) * step;
+    const numberOfTicks = Math.floor((this.max - this.min) / step);
+    const maxValue = this.min + numberOfTicks * step;
     const percentage = (maxValue - this.min) / (this.max - this.min);
-    this._tickMarkTrackWidth = this._cachedWidth * percentage - 6;
+    this._tickMarkTrackWidth = this._cachedWidth * percentage;
   }
 
   // Track active update conditions
@@ -877,8 +871,9 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   private _updateTickMarkUINonRange(step: number): void {
     const value = this._getValue();
     let numActive = Math.max(Math.round((value - this.min) / step), 0);
-    let numInactive = Math.max(Math.round((this.max - value) / step), 0);
-    this._isRtl ? numActive++ : numInactive++;
+    const numberOfTicks = Math.floor((this.max - this.min) / step);
+    let numInactive = Math.max(numberOfTicks - numActive, 0);
+    numActive += 1;
 
     this._tickMarks = Array(numActive)
       .fill(_MatTickMark.ACTIVE)
@@ -891,7 +886,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
     const numInactiveBeforeStartThumb = Math.max(Math.round((startValue - this.min) / step), 0);
     const numActive = Math.max(Math.round((endValue - startValue) / step) + 1, 0);
-    const numInactiveAfterEndThumb = Math.max(Math.round((this.max - endValue) / step), 0);
+    const numberOfTicksAfterStartThumb = Math.floor((this.max - startValue) / step);
+    const numInactiveAfterEndThumb = Math.max(numberOfTicksAfterStartThumb - numActive + 1, 0);
     this._tickMarks = Array(numInactiveBeforeStartThumb)
       .fill(_MatTickMark.INACTIVE)
       .concat(
