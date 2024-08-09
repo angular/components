@@ -177,8 +177,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** The custom class to add to the overlay pane element. */
   @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
 
-  /** Margin between the overlay and the viewport edges. */
+  /** Margin (both horizontal and vertical) between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
+
+  /** Horizontal margin between the overlay and the viewport edges. */
+  @Input('cdkConnectedOverlayViewportMarginX') viewportMarginX: number = 0;
+
+  /** Vertical margin between the overlay and the viewport edges. */
+  @Input('cdkConnectedOverlayViewportMarginY') viewportMarginY: number = 0;
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
   @Input('cdkConnectedOverlayScrollStrategy') scrollStrategy: ScrollStrategy;
@@ -378,7 +384,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withFlexibleDimensions(this.flexibleDimensions)
       .withPush(this.push)
       .withGrowAfterOpen(this.growAfterOpen)
-      .withViewportMargin(this.viewportMargin)
+      .withViewportMarginX(this.viewportMarginX ?? this.viewportMargin ?? 0)
+      .withViewportMarginY(this.viewportMarginY ?? this.viewportMargin ?? 0)
       .withLockedPosition(this.lockPosition)
       .withTransformOriginOn(this.transformOriginSelector);
   }

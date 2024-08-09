@@ -88,8 +88,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Cached container dimensions */
   private _containerRect: Dimensions;
 
-  /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
-  private _viewportMargin = 0;
+  /** Amount of vertical space that must be maintained between the overlay and the edge of the viewport. */
+  private _viewportMarginX = 0;
+
+  /** Amount of horizontal space that must be maintained between the overlay and the edge of the viewport. */
+  private _viewportMarginY = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
   private _scrollables: CdkScrollable[] = [];
@@ -411,11 +414,20 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Sets a minimum distance the overlay may be positioned to the edge of the viewport.
+   * Sets a minimum horizontal distance the overlay may be positioned to the edge of the viewport.
    * @param margin Required margin between the overlay and the viewport edge in pixels.
    */
-  withViewportMargin(margin: number): this {
-    this._viewportMargin = margin;
+  withViewportMarginX(margin: number): this {
+    this._viewportMarginX = margin;
+    return this;
+  }
+
+  /**
+   * Sets a minimum vertical distance the overlay may be positioned to the edge of the viewport.
+   * @param margin Required vertical margin between the overlay and the viewport edge in pixels.
+   */
+  withViewportMarginY(margin: number): this {
+    this._viewportMarginY = margin;
     return this;
   }
 
@@ -682,13 +694,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (overlay.width <= viewport.width) {
       pushX = overflowLeft || -overflowRight;
     } else {
-      pushX = start.x < this._viewportMargin ? viewport.left - scrollPosition.left - start.x : 0;
+      pushX = start.x < this._viewportMarginX ? viewport.left - scrollPosition.left - start.x : 0;
     }
 
     if (overlay.height <= viewport.height) {
       pushY = overflowTop || -overflowBottom;
     } else {
-      pushY = start.y < this._viewportMargin ? viewport.top - scrollPosition.top - start.y : 0;
+      pushY = start.y < this._viewportMarginY ? viewport.top - scrollPosition.top - start.y : 0;
     }
 
     this._previousPushAmount = {x: pushX, y: pushY};
@@ -777,13 +789,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (position.overlayY === 'top') {
       // Overlay is opening "downward" and thus is bound by the bottom viewport edge.
       top = origin.y;
-      height = viewport.height - top + this._viewportMargin;
+      height = viewport.height - top + this._viewportMarginY;
     } else if (position.overlayY === 'bottom') {
       // Overlay is opening "upward" and thus is bound by the top viewport edge. We need to add
       // the viewport margin back in, because the viewport rect is narrowed down to remove the
       // margin, whereas the `origin` position is calculated based on its `DOMRect`.
-      bottom = viewport.height - origin.y + this._viewportMargin * 2;
-      height = viewport.height - bottom + this._viewportMargin;
+      bottom = viewport.height - origin.y + this._viewportMarginY * 2;
+      height = viewport.height - bottom + this._viewportMarginY;
     } else {
       // If neither top nor bottom, it means that the overlay is vertically centered on the
       // origin point. Note that we want the position relative to the viewport, rather than
@@ -815,8 +827,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     let width: number, left: number, right: number;
 
     if (isBoundedByLeftViewportEdge) {
-      right = viewport.width - origin.x + this._viewportMargin * 2;
-      width = origin.x - this._viewportMargin;
+      right = viewport.width - origin.x + this._viewportMarginX * 2;
+      width = origin.x - this._viewportMarginX;
     } else if (isBoundedByRightViewportEdge) {
       left = origin.x;
       width = viewport.right - origin.x;
@@ -1098,12 +1110,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     return {
-      top: scrollPosition.top + this._viewportMargin,
-      left: scrollPosition.left + this._viewportMargin,
-      right: scrollPosition.left + width - this._viewportMargin,
-      bottom: scrollPosition.top + height - this._viewportMargin,
-      width: width - 2 * this._viewportMargin,
-      height: height - 2 * this._viewportMargin,
+      top: scrollPosition.top + this._viewportMarginY,
+      left: scrollPosition.left + this._viewportMarginX,
+      right: scrollPosition.left + width - this._viewportMarginX,
+      bottom: scrollPosition.top + height - this._viewportMarginY,
+      width: width - 2 * this._viewportMarginX,
+      height: height - 2 * this._viewportMarginY,
     };
   }
 
