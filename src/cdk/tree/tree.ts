@@ -1176,7 +1176,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
   set isExpandable(isExpandable: boolean) {
     this._inputIsExpandable = isExpandable;
-    if (!this.isExpandable) {
+    if ((this.data && !this._isExpandable) || !this._inputIsExpandable) {
       return;
     }
     // If the node is being set to expandable, ensure that the status of the
