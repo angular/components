@@ -30,7 +30,7 @@ export class MatChipRowHarness extends MatChipHarness {
     if (!(await this.isEditable())) {
       throw new Error('Cannot begin editing a chip that is not editable.');
     }
-    return (await this.host()).dispatchEvent('dblclick');
+    return (await this.host()).dispatchEvent('click');
   }
 
   /** Stops editing the chip, if it was in the editing state. */
