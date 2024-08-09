@@ -1,20 +1,21 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
+
 interface Shoes {
   value: string;
   name: string;
 }
 /**
- * @title List with single selection using Reactive Forms
+ * @title List with single selection using Reactive forms
  */
 @Component({
-  selector: 'list-single-selection-example',
-  templateUrl: 'list-single-selection-example.html',
+  selector: 'list-single-selection-reactive-form-example',
+  templateUrl: 'list-single-selection-form-example.html',
   standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
-export class ListSingleSelectionExample {
+export class ListSingleSelectionReactiveFormExample {
   form: FormGroup;
   shoes: Shoes[] = [
     {value: 'boots', name: 'Boots'},
