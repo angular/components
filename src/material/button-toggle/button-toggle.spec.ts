@@ -991,6 +991,21 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
   });
 
+  it('should not throw on init when toggles are repeated and there is an initial value null', () => {
+    const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
+    expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+
+    fixture.componentInstance.possibleValues = [null, 'Five', 'Six'];
+    fixture.componentInstance.value = null;
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.toggleGroup.value).toBe(null);
+    expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
+  });
+
   it('should not throw on init when toggles are repeated and there is an initial value', () => {
     const fixture = TestBed.createComponent(ButtonToggleWithStaticName);
     fixture.detectChanges();
@@ -1243,8 +1258,8 @@ class RepeatedButtonTogglesWithPreselectedValue {
   @ViewChild(MatButtonToggleGroup) toggleGroup: MatButtonToggleGroup;
   @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
 
-  possibleValues = ['One', 'Two', 'Three'];
-  value = 'Two';
+  possibleValues: (string | null)[] = ['One', 'Two', 'Three'];
+  value: string | null = 'Two';
 }
 
 @Component({
