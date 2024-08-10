@@ -13,7 +13,7 @@ import {
 } from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
 
-describe('MDC-based MatPaginator', () => {
+describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatPaginatorModule, NoopAnimationsModule],

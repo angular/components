@@ -12,7 +12,7 @@ import {
   MatCheckboxModule,
 } from './index';
 
-describe('MDC-based MatCheckbox', () => {
+describe('MatCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
   function createComponent<T>(componentType: Type<T>) {

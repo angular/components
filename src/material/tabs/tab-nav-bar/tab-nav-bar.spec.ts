@@ -16,7 +16,7 @@ import {MAT_TABS_CONFIG} from '../index';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
-describe('MDC-based MatTabNavBar', () => {
+describe('MatTabNavBar', () => {
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;

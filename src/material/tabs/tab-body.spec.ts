@@ -18,7 +18,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 
-describe('MDC-based MatTabBody', () => {
+describe('MatTabBody', () => {
   let dir: Direction = 'ltr';
   let dirChange: Subject<Direction> = new Subject<Direction>();
 

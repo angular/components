@@ -54,7 +54,7 @@ import {
   getMatAutocompleteMissingPanelError,
 } from './index';
 
-describe('MDC-based MatAutocomplete', () => {
+describe('MatAutocomplete', () => {
   let overlayContainerElement: HTMLElement;
 
   // Creates a test component fixture.

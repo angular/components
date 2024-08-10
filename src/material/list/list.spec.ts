@@ -4,7 +4,7 @@ import {TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
-describe('MDC-based MatList', () => {
+describe('MatList', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
