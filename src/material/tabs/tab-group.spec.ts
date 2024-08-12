@@ -22,7 +22,7 @@ import {
   MatTabsModule,
 } from './index';
 
-describe('MDC-based MatTabGroup', () => {
+describe('MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [

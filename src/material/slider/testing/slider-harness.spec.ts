@@ -15,7 +15,7 @@ import {MatSliderHarness} from './slider-harness';
 import {MatSliderThumbHarness} from './slider-thumb-harness';
 import {ThumbPosition} from './slider-harness-filters';
 
-describe('MDC-based MatSliderHarness', () => {
+describe('MatSliderHarness', () => {
   let fixture: ComponentFixture<SliderHarnessTest>;
   let loader: HarnessLoader;
 

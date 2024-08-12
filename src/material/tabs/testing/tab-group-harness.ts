@@ -15,7 +15,7 @@ import {
 import {TabGroupHarnessFilters, TabHarnessFilters} from './tab-harness-filters';
 import {MatTabHarness} from './tab-harness';
 
-/** Harness for interacting with an MDC-based mat-tab-group in tests. */
+/** Harness for interacting with a mat-tab-group in tests. */
 export class MatTabGroupHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTabGroup` instance. */
   static hostSelector = '.mat-mdc-tab-group';

@@ -52,7 +52,7 @@ import {
 
 const MENU_PANEL_TOP_PADDING = 8;
 
-describe('MDC-based MatMenu', () => {
+describe('MatMenu', () => {
   let overlayContainerElement: HTMLElement;
   let focusMonitor: FocusMonitor;
   let viewportRuler: ViewportRuler;

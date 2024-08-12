@@ -75,7 +75,7 @@ export class MatSelectionListHarness extends MatListHarnessBase<
   }
 }
 
-/** Harness for interacting with a MDC-based list option. */
+/** Harness for interacting with a list option. */
 export class MatListOptionHarness extends MatListItemHarnessBase {
   /** The selector for the host element of a `MatListOption` instance. */
   static hostSelector = '.mat-mdc-list-option';

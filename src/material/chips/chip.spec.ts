@@ -5,7 +5,7 @@ import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
-describe('MDC-based MatChip', () => {
+describe('MatChip', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;

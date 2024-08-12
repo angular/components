@@ -34,7 +34,7 @@ import {
   MatSelectionListChange,
 } from './index';
 
-describe('MDC-based MatSelectionList without forms', () => {
+describe('MatSelectionList without forms', () => {
   const typeaheadInterval = 200;
 
   describe('with list option', () => {
@@ -1265,7 +1265,7 @@ describe('MDC-based MatSelectionList without forms', () => {
   });
 });
 
-describe('MDC-based MatSelectionList with forms', () => {
+describe('MatSelectionList with forms', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

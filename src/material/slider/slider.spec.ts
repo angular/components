@@ -32,7 +32,7 @@ interface Point {
   y: number;
 }
 
-describe('MDC-based MatSlider', () => {
+describe('MatSlider', () => {
   let platform: Platform;
 
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {

@@ -11,7 +11,7 @@ import {
   MatFabDefaultOptions,
 } from './index';
 
-describe('MDC-based MatButton', () => {
+describe('MatButton', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule, TestApp],

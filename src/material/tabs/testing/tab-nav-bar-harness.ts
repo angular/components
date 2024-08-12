@@ -20,7 +20,7 @@ import {
 import {MatTabLinkHarness} from './tab-link-harness';
 import {MatTabNavPanelHarness} from './tab-nav-panel-harness';
 
-/** Harness for interacting with an MDC-based mat-tab-nav-bar in tests. */
+/** Harness for interacting with a mat-tab-nav-bar in tests. */
 export class MatTabNavBarHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTabNavBar` instance. */
   static hostSelector = '.mat-mdc-tab-nav-bar';

@@ -12,7 +12,7 @@ import {
   MatRadioModule,
 } from './index';
 
-describe('MDC-based MatRadio', () => {
+describe('MatRadio', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

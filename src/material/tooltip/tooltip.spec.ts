@@ -43,7 +43,7 @@ import {
 
 const initialTooltipMessage = 'initial tooltip message';
 
-describe('MDC-based MatTooltip', () => {
+describe('MatTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction; change: Subject<Direction>};
   let platform: Platform;

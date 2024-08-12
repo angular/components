@@ -5,7 +5,7 @@ import {Component, ElementRef, ViewChild, ViewEncapsulation, signal} from '@angu
 import {MatProgressSpinnerModule} from './module';
 import {MatProgressSpinner, MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from './progress-spinner';
 
-describe('MDC-based MatProgressSpinner', () => {
+describe('MatProgressSpinner', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

@@ -41,7 +41,7 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
 
-describe('MDC-based MatChipGrid', () => {
+describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
   let chipGridNativeElement: HTMLElement;
   let chipGridInstance: MatChipGrid;

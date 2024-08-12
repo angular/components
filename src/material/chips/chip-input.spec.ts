@@ -17,7 +17,7 @@ import {
   MatChipsModule,
 } from './index';
 
-describe('MDC-based MatChipInput', () => {
+describe('MatChipInput', () => {
   let fixture: ComponentFixture<any>;
   let testChipInput: TestChipInput;
   let inputDebugElement: DebugElement;
