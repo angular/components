@@ -10,9 +10,10 @@ import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {Schema} from './schema';
 import {
   argbFromHex,
-  themeFromSourceColor,
   hexFromArgb,
   TonalPalette,
+  Hct,
+  SchemeContent,
 } from '@material/material-color-utilities';
 
 // For each color tonal palettes are created using the following hue tones. The
@@ -54,14 +55,20 @@ function getMaterialTonalPalettes(color: string): {
 } {
   try {
     let argbColor = argbFromHex(color);
-    const theme = themeFromSourceColor(argbColor, [
-      {
-        name: 'm3-theme',
-        value: argbColor,
-        blend: true,
-      },
-    ]);
-    return theme.palettes;
+    const scheme = new SchemeContent(
+      Hct.fromInt(argbColor),
+      false, // Tonal palettes are the same for light and dark themes
+      0.0,
+    );
+
+    return {
+      primary: scheme.primaryPalette,
+      secondary: scheme.secondaryPalette,
+      tertiary: scheme.tertiaryPalette,
+      neutral: scheme.neutralPalette,
+      neutralVariant: scheme.neutralVariantPalette,
+      error: scheme.errorPalette,
+    };
   } catch (e) {
     throw new Error(
       'Cannot parse the specified color ' +
