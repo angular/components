@@ -14,7 +14,7 @@ import {
 } from '@angular/cdk/testing';
 import {ProgressBarHarnessFilters} from './progress-bar-harness-filters';
 
-/** Harness for interacting with an MDC-based `mat-progress-bar` in tests. */
+/** Harness for interacting with a `mat-progress-bar` in tests. */
 export class MatProgressBarHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-progress-bar';
 

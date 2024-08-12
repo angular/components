@@ -19,7 +19,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
 
-describe('MDC-based MatChipListbox', () => {
+describe('MatChipListbox', () => {
   let fixture: ComponentFixture<any>;
   let chipListboxDebugElement: DebugElement;
   let chipListboxNativeElement: HTMLElement;

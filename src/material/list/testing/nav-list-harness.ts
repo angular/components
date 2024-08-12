@@ -11,7 +11,7 @@ import {MatListHarnessBase} from './list-harness-base';
 import {NavListHarnessFilters, NavListItemHarnessFilters} from './list-harness-filters';
 import {getListItemPredicate, MatListItemHarnessBase} from './list-item-harness-base';
 
-/** Harness for interacting with a MDC-based mat-nav-list in tests. */
+/** Harness for interacting with a mat-nav-list in tests. */
 export class MatNavListHarness extends MatListHarnessBase<
   typeof MatNavListItemHarness,
   MatNavListItemHarness,
@@ -36,7 +36,7 @@ export class MatNavListHarness extends MatListHarnessBase<
   override _itemHarness = MatNavListItemHarness;
 }
 
-/** Harness for interacting with a MDC-based nav-list item. */
+/** Harness for interacting with a nav-list item. */
 export class MatNavListItemHarness extends MatListItemHarnessBase {
   /** The selector for the host element of a `MatListItem` instance. */
   static hostSelector = `${MatNavListHarness.hostSelector} .mat-mdc-list-item`;

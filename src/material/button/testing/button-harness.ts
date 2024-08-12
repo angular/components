@@ -14,7 +14,7 @@ import {
 } from '@angular/cdk/testing';
 import {ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
 
-/** Harness for interacting with a MDC-based mat-button in tests. */
+/** Harness for interacting with a mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
   // TODO(jelbourn) use a single class, like `.mat-button-base`
   static hostSelector = `[mat-button], [mat-raised-button], [mat-flat-button],

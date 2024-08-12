@@ -17,7 +17,7 @@ import {
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters';
 
-/** Harness for interacting with an MDC-based mat-menu in tests. */
+/** Harness for interacting with a mat-menu in tests. */
 export class MatMenuHarness extends ContentContainerComponentHarness<string> {
   private _documentRootLocator = this.documentRootLocatorFactory();
 

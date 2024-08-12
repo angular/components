@@ -78,7 +78,7 @@ import {
 /** Default debounce interval when typing letters to select an option. */
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
-describe('MDC-based MatSelect', () => {
+describe('MatSelect', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: 'ltr' | 'rtl'; change: Observable<string>};
   let scrolledSubject = new Subject();
