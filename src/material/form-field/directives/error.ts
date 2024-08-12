@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Attribute, Directive, ElementRef, InjectionToken, Input} from '@angular/core';
-
-let nextUniqueId = 0;
+import {IdGenerator} from '@angular/cdk/a11y';
+import {Attribute, Directive, ElementRef, inject, InjectionToken, Input} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatError`. It serves as
@@ -29,7 +28,10 @@ export const MAT_ERROR = new InjectionToken<MatError>('MatError');
   standalone: true,
 })
 export class MatError {
-  @Input() id: string = `mat-mdc-error-${nextUniqueId++}`;
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
+  @Input() id: string = this._idGenerator.getId('mat-mdc-error-');
 
   constructor(@Attribute('aria-live') ariaLive: string, elementRef: ElementRef) {
     // If no aria-live value is set add 'polite' as a default. This is preferred over setting

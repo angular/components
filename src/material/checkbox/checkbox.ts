@@ -6,28 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption, IdGenerator} from '@angular/cdk/a11y';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
+  inject,
   Input,
   NgZone,
+  numberAttribute,
   OnChanges,
   Optional,
   Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -37,7 +38,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {MatRipple, _MatInternalFormField} from '@angular/material/core';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
@@ -77,9 +78,6 @@ export class MatCheckboxChange {
   checked: boolean;
 }
 
-// Increasing integer for generating unique ids for checkbox components.
-let nextUniqueId = 0;
-
 // Default checkbox configuration.
 const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 
@@ -118,6 +116,9 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 export class MatCheckbox
   implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Focuses the checkbox. */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -245,7 +246,7 @@ export class MatCheckbox
     this._options = this._options || defaults;
     this.color = this._options.color || defaults.color;
     this.tabIndex = parseInt(tabIndex) || 0;
-    this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
+    this.id = this._uniqueId = this._idGenerator.getId('mat-mdc-checkbox-');
     this.disabledInteractive = _options?.disabledInteractive ?? false;
   }
 

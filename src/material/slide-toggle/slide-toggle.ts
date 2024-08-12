@@ -6,8 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, IdGenerator} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
+  ANIMATION_MODULE_TYPE,
   Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -17,6 +19,7 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
+  inject,
   Input,
   numberAttribute,
   OnChanges,
@@ -26,7 +29,6 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -36,12 +38,11 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
-import {_MatInternalFormField, MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated Will stop being exported.
@@ -64,7 +65,6 @@ export class MatSlideToggleChange {
 }
 
 // Increasing integer for generating unique ids for slide-toggle components.
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mat-slide-toggle',
@@ -100,6 +100,9 @@ let nextUniqueId = 0;
 export class MatSlideToggle
   implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
 {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _onChange = (_: any) => {};
   private _onTouched = () => {};
   private _validatorOnChange = () => {};
@@ -216,7 +219,7 @@ export class MatSlideToggle
     this.tabIndex = parseInt(tabIndex) || 0;
     this.color = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
-    this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;
+    this.id = this._uniqueId = this._idGenerator.getId('mat-mdc-slide-toggle-');
     this.hideIcon = defaults.hideIcon ?? false;
     this.disabledInteractive = defaults.disabledInteractive ?? false;
     this._labelId = this._uniqueId + '-label';

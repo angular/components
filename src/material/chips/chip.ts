@@ -6,13 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {FocusMonitor, IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {DOCUMENT} from '@angular/common';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentInit,
+  afterNextRender,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -22,6 +24,7 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   Injector,
   Input,
   NgZone,
@@ -32,9 +35,6 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  afterNextRender,
-  booleanAttribute,
-  inject,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -42,12 +42,10 @@ import {
   MatRippleLoader,
   RippleGlobalOptions,
 } from '@angular/material/core';
-import {Subject, Subscription, merge} from 'rxjs';
+import {merge, Subject, Subscription} from 'rxjs';
 import {MatChipAction} from './chip-action';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
-
-let uid = 0;
 
 /** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
@@ -93,6 +91,9 @@ export interface MatChipEvent {
   imports: [MatChipAction],
 })
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   protected _document: Document;
 
   /** Emits when the chip is focused. */
@@ -136,7 +137,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   }
 
   /** A unique id for the chip. If none is supplied, it will be auto-generated. */
-  @Input() id: string = `mat-mdc-chip-${uid++}`;
+  @Input() id: string = this._idGenerator.getId('mat-mdc-chip-');
 
   // TODO(#26104): Consider deprecating and using `_computeAriaAccessibleName` instead.
   // `ariaLabel` may be unnecessary, and `_computeAriaAccessibleName` only supports

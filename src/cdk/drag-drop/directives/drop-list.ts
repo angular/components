@@ -6,35 +6,34 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NumberInput, coerceArray, coerceNumberProperty} from '@angular/cdk/coercion';
+import {IdGenerator} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceArray, coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
+  booleanAttribute,
+  ChangeDetectorRef,
+  Directive,
   ElementRef,
   EventEmitter,
+  Inject,
+  inject,
   Input,
   OnDestroy,
-  Output,
   Optional,
-  Directive,
-  ChangeDetectorRef,
+  Output,
   SkipSelf,
-  Inject,
-  booleanAttribute,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {CDK_DROP_LIST, CdkDrag} from './drag';
-import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
-import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';
-import {DropListRef} from '../drop-list-ref';
-import {DragRef} from '../drag-ref';
-import {DragDrop} from '../drag-drop';
-import {DropListOrientation, DragAxis, DragDropConfig, CDK_DRAG_CONFIG} from './config';
 import {merge, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
+import {DragDrop} from '../drag-drop';
+import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
+import {DragRef} from '../drag-ref';
+import {DropListRef} from '../drop-list-ref';
 import {assertElementNode} from './assertions';
-
-/** Counter used to generate unique ids for drop zones. */
-let _uniqueIdCounter = 0;
+import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
+import {CDK_DROP_LIST, CdkDrag} from './drag';
+import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';
 
 /** Container that wraps a set of draggable items. */
 @Directive({
@@ -55,6 +54,9 @@ let _uniqueIdCounter = 0;
   },
 })
 export class CdkDropList<T = any> implements OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
 
@@ -85,7 +87,7 @@ export class CdkDropList<T = any> implements OnDestroy {
    * Unique ID for the drop zone. Can be used as a reference
    * in the `connectedTo` of another `CdkDropList`.
    */
-  @Input() id: string = `cdk-drop-list-${_uniqueIdCounter++}`;
+  @Input() id: string = this._idGenerator.getId('cdk-drop-list-');
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
   @Input('cdkDropListLockAxis') lockAxis: DragAxis;

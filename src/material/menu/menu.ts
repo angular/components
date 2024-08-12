@@ -6,53 +6,51 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AnimationEvent} from '@angular/animations';
+import {FocusKeyManager, FocusOrigin, IdGenerator} from '@angular/cdk/a11y';
+import {Direction} from '@angular/cdk/bidi';
+import {
+  DOWN_ARROW,
+  ESCAPE,
+  hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  afterNextRender,
+  AfterRenderRef,
+  booleanAttribute,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Output,
-  TemplateRef,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  OnInit,
-  ChangeDetectorRef,
-  booleanAttribute,
-  afterNextRender,
-  AfterRenderRef,
-  inject,
-  Injector,
 } from '@angular/core';
-import {AnimationEvent} from '@angular/animations';
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
-import {
-  ESCAPE,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  DOWN_ARROW,
-  UP_ARROW,
-  hasModifierKey,
-} from '@angular/cdk/keycodes';
 import {merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap} from 'rxjs/operators';
-import {MatMenuItem} from './menu-item';
-import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
-import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
-import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {matMenuAnimations} from './menu-animations';
-
-let menuPanelUid = 0;
+import {MAT_MENU_CONTENT, MatMenuContent} from './menu-content';
+import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
+import {MatMenuItem} from './menu-item';
+import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /** Reason why the menu was closed. */
 export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -114,6 +112,9 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   standalone: true,
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
@@ -270,7 +271,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    */
   @Output() readonly close: EventEmitter<MenuCloseReason> = this.closed;
 
-  readonly panelId = `mat-menu-panel-${menuPanelUid++}`;
+  readonly panelId = this._idGenerator.getId('mat-menu-panel-');
 
   private _injector = inject(Injector);
 

@@ -11,6 +11,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   Directive,
   ElementRef,
+  inject,
   Inject,
   Injectable,
   Input,
@@ -19,17 +20,19 @@ import {
   Optional,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
+import {IdGenerator} from '../id-generator/id-generator';
 import {
   AriaLivePoliteness,
-  LiveAnnouncerDefaultOptions,
-  LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
+  LIVE_ANNOUNCER_ELEMENT_TOKEN,
+  LiveAnnouncerDefaultOptions,
 } from './live-announcer-tokens';
-
-let uniqueIds = 0;
 
 @Injectable({providedIn: 'root'})
 export class LiveAnnouncer implements OnDestroy {
+  /** Generator for assigning unique IDs to DOM elements. */
+  private _idGenerator = inject(IdGenerator);
+
   private _liveElement: HTMLElement;
   private _document: Document;
   private _previousTimeout: number;
@@ -179,7 +182,7 @@ export class LiveAnnouncer implements OnDestroy {
 
     liveEl.setAttribute('aria-atomic', 'true');
     liveEl.setAttribute('aria-live', 'polite');
-    liveEl.id = `cdk-live-announcer-${uniqueIds++}`;
+    liveEl.id = this._idGenerator.getId('cdk-live-announcer-');
 
     this._document.body.appendChild(liveEl);
 
