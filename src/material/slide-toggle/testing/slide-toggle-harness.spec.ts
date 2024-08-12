@@ -160,6 +160,17 @@ describe('MatSlideToggleHarness', () => {
     await disabledToggle.toggle();
     expect(await disabledToggle.isChecked()).toBe(false);
   });
+
+  it('should get disabled state when disabledInteractive is enabled', async () => {
+    fixture.componentInstance.disabled.set(false);
+    fixture.componentInstance.disabledInteractive.set(true);
+
+    const toggle = await loader.getHarness(MatSlideToggleHarness.with({label: 'Second'}));
+    expect(await toggle.isDisabled()).toBe(false);
+
+    fixture.componentInstance.disabled.set(true);
+    expect(await toggle.isDisabled()).toBe(true);
+  });
 });
 
 @Component({
@@ -171,7 +182,10 @@ describe('MatSlideToggleHarness', () => {
           aria-label="First slide-toggle">
         First
       </mat-slide-toggle>
-      <mat-slide-toggle [disabled]="disabled()" aria-labelledby="second-label">
+      <mat-slide-toggle
+        [disabled]="disabled()"
+        [disabledInteractive]="disabledInteractive()"
+        aria-labelledby="second-label">
         Second
       </mat-slide-toggle>
       <span id="second-label">Second slide-toggle</span>
@@ -182,4 +196,5 @@ describe('MatSlideToggleHarness', () => {
 class SlideToggleHarnessTest {
   ctrl = new FormControl(true);
   disabled = signal(true);
+  disabledInteractive = signal(false);
 }

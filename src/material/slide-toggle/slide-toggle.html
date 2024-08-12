@@ -17,7 +17,7 @@
     [attr.aria-describedby]="ariaDescribedby"
     [attr.aria-required]="required || null"
     [attr.aria-checked]="checked"
-    [attr.aria-disabled]="disabledInteractive && disabledInteractive ? 'true' : null"
+    [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
     (click)="_handleClick()"
     #switch>
     <span class="mdc-switch__track"></span>
