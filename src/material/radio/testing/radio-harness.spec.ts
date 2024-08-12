@@ -45,21 +45,17 @@ describe('radio harness', () => {
       expect(await groups[0].getId()).toBe('my-group-1');
     });
 
-    it(
-      'should throw when finding radio-group with specific name that has mismatched ' +
-        'radio-button names',
-      async () => {
-        fixture.componentInstance.thirdGroupButtonName = 'other-name';
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
+    it('should throw when finding radio-group with specific name that has mismatched radio-button names', async () => {
+      fixture.componentInstance.thirdGroupButtonName = 'other-name';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        await expectAsync(
-          loader.getAllHarnesses(MatRadioGroupHarness.with({name: 'third-group-name'})),
-        ).toBeRejectedWithError(
-          /locator found a radio-group with name "third-group-name".*have mismatching names/,
-        );
-      },
-    );
+      await expectAsync(
+        loader.getAllHarnesses(MatRadioGroupHarness.with({name: 'third-group-name'})),
+      ).toBeRejectedWithError(
+        /locator found a radio-group with name "third-group-name".*have mismatching names/,
+      );
+    });
 
     it('should get name of radio-group', async () => {
       const groups = await loader.getAllHarnesses(MatRadioGroupHarness);
@@ -214,6 +210,20 @@ describe('radio harness', () => {
       expect(await firstRadio.isDisabled()).toBe(true);
     });
 
+    it('should get the disabled state with disabledInteractive is enabled', async () => {
+      fixture.componentInstance.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+
+      const [firstRadio] = await loader.getAllHarnesses(MatRadioButtonHarness);
+      expect(await firstRadio.isDisabled()).toBe(false);
+
+      fixture.componentInstance.disableAll = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(await firstRadio.isDisabled()).toBe(true);
+    });
+
     it('should focus radio-button', async () => {
       const radioButton = await loader.getHarness(MatRadioButtonHarness.with({selector: '#opt2'}));
       expect(await radioButton.isFocused()).toBe(false);
@@ -272,6 +282,7 @@ describe('radio harness', () => {
       <mat-radio-button
         [name]="value === 'opt3' ? 'group2' : 'group1'"
         [disabled]="disableAll"
+        [disabledInteractive]="disabledInteractive"
         [checked]="value === 'opt2'"
         [id]="value"
         [required]="value === 'opt2'"
@@ -307,6 +318,7 @@ describe('radio harness', () => {
 class MultipleRadioButtonsHarnessTest {
   values = ['opt1', 'opt2', 'opt3'];
   disableAll = false;
+  disabledInteractive = false;
   secondGroupId = 'my-group-2';
   thirdGroupName: string = 'third-group-name';
   thirdGroupButtonName: string | undefined = undefined;
