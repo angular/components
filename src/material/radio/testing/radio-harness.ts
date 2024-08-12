@@ -205,8 +205,14 @@ export class MatRadioButtonHarness extends ComponentHarness {
 
   /** Whether the radio-button is disabled. */
   async isDisabled(): Promise<boolean> {
-    const disabled = (await this._input()).getAttribute('disabled');
-    return coerceBooleanProperty(await disabled);
+    const input = await this._input();
+    const disabled = await input.getAttribute('disabled');
+
+    if (disabled !== null) {
+      return coerceBooleanProperty(disabled);
+    }
+
+    return (await input.getAttribute('aria-disabled')) === 'true';
   }
 
   /** Whether the radio-button is required. */
