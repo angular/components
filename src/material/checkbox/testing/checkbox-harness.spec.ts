@@ -167,6 +167,17 @@ describe('MatCheckboxHarness', () => {
     await disabledCheckbox.toggle();
     expect(await disabledCheckbox.isChecked()).toBe(false);
   });
+
+  it('should get disabled state for checkbox with disabledInteractive', async () => {
+    fixture.componentInstance.disabled.set(false);
+    fixture.componentInstance.disabledInteractive.set(true);
+
+    const checkbox = await loader.getHarness(MatCheckboxHarness.with({label: 'Second'}));
+    expect(await checkbox.isDisabled()).toBe(false);
+
+    fixture.componentInstance.disabled.set(true);
+    expect(await checkbox.isDisabled()).toBe(true);
+  });
 });
 
 @Component({
@@ -179,7 +190,11 @@ describe('MatCheckboxHarness', () => {
         aria-label="First checkbox">
       First
     </mat-checkbox>
-    <mat-checkbox indeterminate="true" [disabled]="disabled()" aria-labelledby="second-label">
+    <mat-checkbox
+      indeterminate="true"
+      [disabled]="disabled()"
+      aria-labelledby="second-label"
+      [disabledInteractive]="disabledInteractive()">
       Second
     </mat-checkbox>
     <span id="second-label">Second checkbox</span>
@@ -190,4 +205,5 @@ describe('MatCheckboxHarness', () => {
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);
   disabled = signal(true);
+  disabledInteractive = signal(false);
 }
