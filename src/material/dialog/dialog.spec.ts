@@ -57,7 +57,7 @@ import {
   MatDialogTitle,
 } from './index';
 
-describe('MDC-based MatDialog', () => {
+describe('MatDialog', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
   let scrolledSubject = new Subject();
@@ -1890,7 +1890,7 @@ describe('MDC-based MatDialog', () => {
   }));
 });
 
-describe('MDC-based MatDialog with a parent MatDialog', () => {
+describe('MatDialog with a parent MatDialog', () => {
   let parentDialog: MatDialog;
   let childDialog: MatDialog;
   let overlayContainerElement: HTMLElement;
@@ -1988,7 +1988,7 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
   }));
 });
 
-describe('MDC-based MatDialog with default options', () => {
+describe('MatDialog with default options', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
 
@@ -2071,7 +2071,7 @@ describe('MDC-based MatDialog with default options', () => {
   }));
 });
 
-describe('MDC-based MatDialog with animations enabled', () => {
+describe('MatDialog with animations enabled', () => {
   let dialog: MatDialog;
 
   let testViewContainerRef: ViewContainerRef;

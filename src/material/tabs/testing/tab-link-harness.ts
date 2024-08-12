@@ -13,7 +13,7 @@ import {
 } from '@angular/cdk/testing';
 import {TabLinkHarnessFilters} from './tab-harness-filters';
 
-/** Harness for interacting with an MDC-based Angular Material tab link in tests. */
+/** Harness for interacting with a Angular Material tab link in tests. */
 export class MatTabLinkHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTabLink` instance. */
   static hostSelector = '.mat-mdc-tab-link';

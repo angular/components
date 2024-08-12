@@ -14,7 +14,7 @@ import {
 } from '@angular/cdk/testing';
 import {RadioButtonHarnessFilters, RadioGroupHarnessFilters} from './radio-harness-filters';
 
-/** Harness for interacting with an MDC-based mat-radio-group in tests. */
+/** Harness for interacting with a mat-radio-group in tests. */
 export class MatRadioGroupHarness extends ComponentHarness {
   /** The selector for the host element of a `MatRadioGroup` instance. */
   static hostSelector = '.mat-mdc-radio-group';
@@ -166,7 +166,7 @@ export class MatRadioGroupHarness extends ComponentHarness {
   }
 }
 
-/** Harness for interacting with an MDC-based mat-radio-button in tests. */
+/** Harness for interacting with a mat-radio-button in tests. */
 export class MatRadioButtonHarness extends ComponentHarness {
   /** The selector for the host element of a `MatRadioButton` instance. */
   static hostSelector = '.mat-mdc-radio-button';

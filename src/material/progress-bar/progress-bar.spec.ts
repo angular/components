@@ -12,7 +12,7 @@ import {By} from '@angular/platform-browser';
 import {MAT_PROGRESS_BAR_DEFAULT_OPTIONS, MatProgressBarModule} from './index';
 import {MatProgressBar} from './progress-bar';
 
-describe('MDC-based MatProgressBar', () => {
+describe('MatProgressBar', () => {
   function createComponent<T>(
     componentType: Type<T>,
     providers: (Provider | EnvironmentProviders)[] = [],

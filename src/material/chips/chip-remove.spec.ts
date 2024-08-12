@@ -5,7 +5,7 @@ import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angula
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipsModule} from './index';
 
-describe('MDC-based Chip Remove', () => {
+describe('Chip Remove', () => {
   let fixture: ComponentFixture<TestChip>;
   let testChip: TestChip;
   let chipNativeElement: HTMLElement;

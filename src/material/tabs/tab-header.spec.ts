@@ -28,7 +28,7 @@ import {Subject} from 'rxjs';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 
-describe('MDC-based MatTabHeader', () => {
+describe('MatTabHeader', () => {
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
   let resizeEvents: Subject<ResizeObserverEntry[]>;

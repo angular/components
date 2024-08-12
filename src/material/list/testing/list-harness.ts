@@ -11,7 +11,7 @@ import {MatListHarnessBase} from './list-harness-base';
 import {ListHarnessFilters, ListItemHarnessFilters} from './list-harness-filters';
 import {getListItemPredicate, MatListItemHarnessBase} from './list-item-harness-base';
 
-/** Harness for interacting with a MDC-based list in tests. */
+/** Harness for interacting with a list in tests. */
 export class MatListHarness extends MatListHarnessBase<
   typeof MatListItemHarness,
   MatListItemHarness,

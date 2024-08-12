@@ -19,7 +19,7 @@ export interface ErrorHarnessFilters extends BaseHarnessFilters {
   text?: string | RegExp;
 }
 
-/** Harness for interacting with an MDC-based `mat-error` in tests. */
+/** Harness for interacting with a `mat-error` in tests. */
 export class MatErrorHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-form-field-error';
 

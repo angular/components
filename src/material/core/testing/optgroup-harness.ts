@@ -15,7 +15,7 @@ import {OptgroupHarnessFilters} from './optgroup-harness-filters';
 import {MatOptionHarness} from './option-harness';
 import {OptionHarnessFilters} from './option-harness-filters';
 
-/** Harness for interacting with an MDC-based `mat-optgroup` in tests. */
+/** Harness for interacting with a `mat-optgroup` in tests. */
 export class MatOptgroupHarness extends ComponentHarness {
   /** Selector used to locate option group instances. */
   static hostSelector = '.mat-mdc-optgroup';

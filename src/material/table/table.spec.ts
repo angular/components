@@ -14,7 +14,7 @@ import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-describe('MDC-based MatTable', () => {
+describe('MatTable', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
