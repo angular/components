@@ -1176,6 +1176,16 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
   set isExpandable(isExpandable: boolean) {
     this._inputIsExpandable = isExpandable;
+    if ((this.data && !this._isExpandable) || !this._inputIsExpandable) {
+      return;
+    }
+    // If the node is being set to expandable, ensure that the status of the
+    // node is propagated
+    if (this._inputIsExpanded) {
+      this.expand();
+    } else if (this._inputIsExpanded === false) {
+      this.collapse();
+    }
   }
 
   @Input()
@@ -1183,6 +1193,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     return this._tree.isExpanded(this._data);
   }
   set isExpanded(isExpanded: boolean) {
+    this._inputIsExpanded = isExpanded;
     if (isExpanded) {
       this.expand();
     } else {
@@ -1227,6 +1238,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   readonly _dataChanges = new Subject<void>();
 
   private _inputIsExpandable: boolean = false;
+  private _inputIsExpanded: boolean | undefined = undefined;
   /**
    * Flag used to determine whether or not we should be focusing the actual element based on
    * some user interaction (click or focus). On click, we don't forcibly focus the element
