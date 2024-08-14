@@ -72,6 +72,12 @@
       }
     }
 
+    .mdc-text-field--disabled:not(.mdc-text-field--no-label) &.mat-mdc-input-disabled-interactive {
+      @include vendor-prefixes.input-placeholder {
+        opacity: 0;
+      }
+    }
+
     .mdc-text-field--outlined &,
     .mdc-text-field--filled.mdc-text-field--no-label & {
       height: 100%;

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export {MatInput} from './input';
+export {MatInput, MatInputConfig, MAT_INPUT_CONFIG} from './input';
 export {MatInputModule} from './module';
 export * from './input-value-accessor';
 export * from './input-errors';

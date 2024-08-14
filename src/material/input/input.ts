@@ -11,10 +11,13 @@ import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
 import {
   AfterViewInit,
+  booleanAttribute,
   Directive,
   DoCheck,
   ElementRef,
+  inject,
   Inject,
+  InjectionToken,
   Input,
   NgZone,
   OnChanges,
@@ -44,6 +47,15 @@ const MAT_INPUT_INVALID_TYPES = [
 
 let nextUniqueId = 0;
 
+/** Object that can be used to configure the default options for the input. */
+export interface MatInputConfig {
+  /** Whether disabled inputs should be interactive. */
+  disabledInteractive?: boolean;
+}
+
+/** Injection token that can be used to provide the default options for the input. */
+export const MAT_INPUT_CONFIG = new InjectionToken<MatInputConfig>('MAT_INPUT_CONFIG');
+
 @Directive({
   selector: `input[matInput], textarea[matInput], select[matNativeControl],
       input[matNativeControl], textarea[matNativeControl]`,
@@ -56,15 +68,17 @@ let nextUniqueId = 0;
     '[class.mat-input-server]': '_isServer',
     '[class.mat-mdc-form-field-textarea-control]': '_isInFormField && _isTextarea',
     '[class.mat-mdc-form-field-input-control]': '_isInFormField',
+    '[class.mat-mdc-input-disabled-interactive]': 'disabledInteractive',
     '[class.mdc-text-field__input]': '_isInFormField',
     '[class.mat-mdc-native-select-inline]': '_isInlineSelect()',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
-    '[disabled]': 'disabled',
+    '[disabled]': 'disabled && !disabledInteractive',
     '[required]': 'required',
     '[attr.name]': 'name || null',
-    '[attr.readonly]': 'readonly && !_isNativeSelect || null',
+    '[attr.readonly]': '_getReadonlyAttribute()',
+    '[attr.aria-disabled]': 'disabled && disabledInteractive ? "true" : null',
     // Only mark the input as invalid for assistive technology if it has a value since the
     // state usually overlaps with `aria-required` when the input is empty and can be redundant.
     '[attr.aria-invalid]': '(empty && required) ? null : errorState',
@@ -88,6 +102,7 @@ export class MatInput
   private _previousPlaceholder: string | null;
   private _errorStateTracker: _ErrorStateTracker;
   private _webkitBlinkWheelListenerAttached = false;
+  private _config = inject(MAT_INPUT_CONFIG, {optional: true});
 
   /** Whether the component is being rendered on the server. */
   readonly _isServer: boolean;
@@ -243,6 +258,10 @@ export class MatInput
   }
   private _readonly = false;
 
+  /** Whether the input should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute})
+  disabledInteractive: boolean;
+
   /** Whether the input is in an error state. */
   get errorState() {
     return this._errorStateTracker.errorState;
@@ -306,6 +325,7 @@ export class MatInput
     this._isNativeSelect = nodeName === 'select';
     this._isTextarea = nodeName === 'textarea';
     this._isInFormField = !!_formField;
+    this.disabledInteractive = this._config?.disabledInteractive || false;
 
     if (this._isNativeSelect) {
       this.controlType = (element as HTMLSelectElement).multiple
@@ -382,10 +402,27 @@ export class MatInput
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused) {
-      this.focused = isFocused;
-      this.stateChanges.next();
+    if (isFocused === this.focused) {
+      return;
     }
+
+    if (!this._isNativeSelect && isFocused && this.disabled && this.disabledInteractive) {
+      const element = this._elementRef.nativeElement as HTMLInputElement;
+
+      // Focusing an input that has text will cause all the text to be selected. Clear it since
+      // the user won't be able to change it. This is based on the internal implementation.
+      if (element.type === 'number') {
+        // setSelectionRange doesn't work on number inputs so it needs to be set briefly to text.
+        element.type = 'text';
+        element.setSelectionRange(0, 0);
+        element.type = 'number';
+      } else {
+        element.setSelectionRange(0, 0);
+      }
+    }
+
+    this.focused = isFocused;
+    this.stateChanges.next();
   }
 
   _onInput() {
@@ -481,7 +518,7 @@ export class MatInput
         !!(selectElement.selectedIndex > -1 && firstOption && firstOption.label)
       );
     } else {
-      return this.focused || !this.empty;
+      return (this.focused && !this.disabled) || !this.empty;
     }
   }
 
@@ -565,5 +602,18 @@ export class MatInput
       this._elementRef.nativeElement.removeEventListener('wheel', this._webkitBlinkWheelListener);
       this._webkitBlinkWheelListenerAttached = true;
     }
+  }
+
+  /** Gets the value to set on the `readonly` attribute. */
+  protected _getReadonlyAttribute(): string | null {
+    if (this._isNativeSelect) {
+      return null;
+    }
+
+    if (this.readonly || (this.disabled && this.disabledInteractive)) {
+      return 'true';
+    }
+
+    return null;
   }
 }

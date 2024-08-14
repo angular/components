@@ -403,6 +403,65 @@ describe('MatMdcInput without forms', () => {
     expect(inputEl.disabled).toBe(true);
   }));
 
+  it('should be able to set an input as being disabled and interactive', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithDisabled);
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(input.disabled).toBe(true);
+    expect(input.readOnly).toBe(false);
+    expect(input.hasAttribute('aria-disabled')).toBe(false);
+    expect(input.classList).not.toContain('mat-mdc-input-disabled-interactive');
+
+    fixture.componentInstance.disabledInteractive = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(input.disabled).toBe(false);
+    expect(input.readOnly).toBe(true);
+    expect(input.getAttribute('aria-disabled')).toBe('true');
+    expect(input.classList).toContain('mat-mdc-input-disabled-interactive');
+  }));
+
+  it('should not float the label when disabled and disabledInteractive are set', fakeAsync(() => {
+    const fixture = createComponent(MatInputTextTestController);
+    fixture.componentInstance.disabled = fixture.componentInstance.disabledInteractive = true;
+    fixture.detectChanges();
+
+    const label = fixture.nativeElement.querySelector('label');
+    const input = fixture.debugElement
+      .query(By.directive(MatInput))!
+      .injector.get<MatInput>(MatInput);
+
+    expect(label.classList).not.toContain('mdc-floating-label--float-above');
+
+    // Call the focus handler directly to avoid flakyness where
+    // browsers don't focus elements if the window is minimized.
+    input._focusChanged(true);
+    fixture.detectChanges();
+
+    expect(label.classList).not.toContain('mdc-floating-label--float-above');
+  }));
+
+  it('should float the label when disabledInteractive is set and the input has a value', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithDynamicLabel);
+    fixture.componentInstance.shouldFloat = 'auto';
+    fixture.componentInstance.disabled = fixture.componentInstance.disabledInteractive = true;
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('input');
+    const label = fixture.nativeElement.querySelector('label');
+
+    expect(label.classList).not.toContain('mdc-floating-label--float-above');
+
+    input.value = 'Text';
+    dispatchFakeEvent(input, 'input');
+    fixture.detectChanges();
+
+    expect(label.classList).toContain('mdc-floating-label--float-above');
+  }));
+
   it('supports the disabled attribute as binding for select', fakeAsync(() => {
     const fixture = createComponent(MatInputSelect);
     fixture.detectChanges();
@@ -719,16 +778,13 @@ describe('MatMdcInput without forms', () => {
     expect(labelEl.classList).not.toContain('mdc-floating-label--float-above');
   }));
 
-  it(
-    'should not float labels when select has no value, no option label, ' + 'no option innerHtml',
-    fakeAsync(() => {
-      const fixture = createComponent(MatInputSelectWithNoLabelNoValue);
-      fixture.detectChanges();
+  it('should not float labels when select has no value, no option label, no option innerHtml', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelectWithNoLabelNoValue);
+    fixture.detectChanges();
 
-      const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
-      expect(labelEl.classList).not.toContain('mdc-floating-label--float-above');
-    }),
-  );
+    const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
+    expect(labelEl.classList).not.toContain('mdc-floating-label--float-above');
+  }));
 
   it('should floating labels when select has no value but has option label', fakeAsync(() => {
     const fixture = createComponent(MatInputSelectWithLabel);
@@ -1532,6 +1588,7 @@ describe('MatFormField default options', () => {
     ).toBe(true);
   });
 });
+
 describe('MatFormField without label', () => {
   it('should not float the label when no label is defined.', () => {
     let fixture = createComponent(MatInputWithoutDefinedLabel);
@@ -1650,10 +1707,15 @@ class MatInputWithId {
 }
 
 @Component({
-  template: `<mat-form-field><input matInput [disabled]="disabled"></mat-form-field>`,
+  template: `
+    <mat-form-field>
+      <input matInput [disabled]="disabled" [disabledInteractive]="disabledInteractive">
+    </mat-form-field>
+  `,
 })
 class MatInputWithDisabled {
-  disabled: boolean;
+  disabled = false;
+  disabledInteractive = false;
 }
 
 @Component({
@@ -1783,10 +1845,18 @@ class MatInputDateTestController {}
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
-      <input matInput type="text" placeholder="Placeholder">
+      <input
+        matInput
+        type="text"
+        placeholder="Placeholder"
+        [disabled]="disabled"
+        [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
 })
-class MatInputTextTestController {}
+class MatInputTextTestController {
+  disabled = false;
+  disabledInteractive = false;
+}
 
 @Component({
   template: `
@@ -1837,11 +1907,17 @@ class MatInputWithStaticLabel {}
   template: `
     <mat-form-field [floatLabel]="shouldFloat">
       <mat-label>Label</mat-label>
-      <input matInput placeholder="Placeholder">
+      <input
+        matInput
+        placeholder="Placeholder"
+        [disabled]="disabled"
+        [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
 })
 class MatInputWithDynamicLabel {
   shouldFloat: 'always' | 'auto' = 'always';
+  disabled = false;
+  disabledInteractive = false;
 }
 
 @Component({

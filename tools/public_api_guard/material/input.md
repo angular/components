@@ -35,6 +35,9 @@ import { Subject } from 'rxjs';
 export function getMatInputUnsupportedTypeError(type: string): Error;
 
 // @public
+export const MAT_INPUT_CONFIG: InjectionToken<MatInputConfig>;
+
+// @public
 export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any;
 }>;
@@ -55,6 +58,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     set disabled(value: BooleanInput);
     // (undocumented)
     protected _disabled: boolean;
+    disabledInteractive: boolean;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
     get empty(): boolean;
@@ -68,6 +72,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     protected _formField?: MatFormField | undefined;
     protected _getPlaceholder(): string | null;
+    protected _getReadonlyAttribute(): string | null;
     get id(): string;
     set id(value: string);
     // (undocumented)
@@ -82,6 +87,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     name: string;
     // (undocumented)
     protected _neverEmptyInputTypes: string[];
+    // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -121,9 +128,14 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     get value(): string;
     set value(value: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }]>;
+}
+
+// @public
+export interface MatInputConfig {
+    disabledInteractive?: boolean;
 }
 
 // @public (undocumented)
