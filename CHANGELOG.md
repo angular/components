@@ -1,3 +1,52 @@
+<a name="18.2.0"></a>
+# 18.2.0 "technetium-tapas" (2024-08-14)
+## Deprecations
+### material
+- Tree controller deprecated. Use one of levelAccessor or childrenAccessor instead. To be removed in a future version.
+   * BaseTreeControl, TreeControl, FlatTreeControl, and NestedTreeControl deprecated
+   * CdkTree#treeControl deprecated. Provide one of CdkTree#levelAccessor or CdkTree#childrenAccessor instead.
+   * MatTreeFlattener deprecated. Use MatTree#childrenAccessor and MatTreeNode#isExpandable instead.
+   * MatTreeFlatDataSource deprecated. Use one of levelAccessor or childrenAccessor instead of TreeControl.
+  
+  Note when upgrading: isExpandable works differently on Trees using treeControl than trees using childrenAccessor or levelAccessor. Nodes on trees that have a treeControl are expandable by default. Nodes on trees using childrenAccessor or levelAccessor are *not* expandable by default. Provide isExpandable to override default behavior.
+- Setting tabindex of tree nodes deprecated. By default, Tree ignores tabindex passed to tree nodes.
+   * MatTreeNode#tabIndex deprecated. MatTreeNode ignores Input tabIndex and manages its own focus behavior.
+   * MatTreeNode#defaultTabIndex deprecated. MatTreeNode ignores defaultTabIndex and manages its own focus behavior.
+   * MatNestedTreeNode#tabIndex deprecated. MatTreeNode ignores Input defaultTabIndex and manages its own focus behavior.
+   * LegacyTreeKeyManager and LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER deprecated. Inject a TreeKeyManagerFactory to customize keyboard behavior.
+  
+  Note when upgrading: an opt-out is available for keyboard functionality changes. Provide LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER to opt-out of Tree managing its own focus. When provided, Tree does not manage it’s own focus and respects tabindex passed to TreeNode. When provided, have the same focus behavior as before this commit is applied.
+  
+  Add Legacy Keyboard Interface demo, which shows usage of LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER. Add Custom Key Manager, which shows usage of injecting a TreeKeyManagerStrategy
+- disabled renamed to isDisabled.
+   * CdkTreeNode#disabled deprecated and alias to CdkTreeNode#isDisabled
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ddc307e28](https://github.com/angular/components/commit/ddc307e28449045c484510ff26798fc1a6efa7c1) | feat | **button-toggle:** allow disabled buttons to be interactive ([#29550](https://github.com/angular/components/pull/29550)) |
+| [841760101](https://github.com/angular/components/commit/8417601015e7c3a96a8a6801213e764058ee8aba) | feat | **checkbox:** add the ability to interact with disabled checkboxes ([#29474](https://github.com/angular/components/pull/29474)) |
+| [0af3b6175](https://github.com/angular/components/commit/0af3b617505d5f39f2492ba4b7e3e7fd4b74f990) | feat | **radio:** add the ability to interact with disabled radio buttons ([#29490](https://github.com/angular/components/pull/29490)) |
+| [4292e1b3a](https://github.com/angular/components/commit/4292e1b3a05492e62413f3a62e082f2b8b012026) | feat | **slide-toggle:** add the ability to interact with disabled toggle ([#29502](https://github.com/angular/components/pull/29502)) |
+| [a018fb0ee](https://github.com/angular/components/commit/a018fb0ee8ac711e7fba7d0d528fa56f348f6361) | feat | **tooltip:** replicate tooltipClass to default MatTooltipDefaultOptions ([#29467](https://github.com/angular/components/pull/29467)) |
+| [aaf0d5156](https://github.com/angular/components/commit/aaf0d51569c0a5626055ca61663d6dbe9fbd1776) | fix | **checkbox:** account for disabledInteractive in harness |
+| [d22a24d66](https://github.com/angular/components/commit/d22a24d667a16c39d4a4ec5f59b248f990fa029e) | fix | **list:** checkmark not visible in high contrast mode ([#29546](https://github.com/angular/components/pull/29546)) |
+| [a259b016b](https://github.com/angular/components/commit/a259b016b0ef37511c7b6b887da93bacef91f243) | fix | **radio:** account for disabledInteractive in harness |
+| [fd47a0e60](https://github.com/angular/components/commit/fd47a0e60dd9ab50d9f923713ca60a7fd21ccc16) | fix | **radio:** avoid error if destroyed quickly ([#29507](https://github.com/angular/components/pull/29507)) |
+| [08d2e3e69](https://github.com/angular/components/commit/08d2e3e6945a5488171f5211891d0c2a806808b7) | fix | **slide-toggle:** account for disabledInteractive in harness |
+| [fd416a30e](https://github.com/angular/components/commit/fd416a30e8de0e741ac45f3fb45e695abecf5ded) | fix | **tooltip:** remove aria-describedby when disabled ([#29520](https://github.com/angular/components/pull/29520)) |
+| [ff36c80f9](https://github.com/angular/components/commit/ff36c80f9c7a14f0e9f36eafc3e1423d34e7c916) | fix | **tree:** add levelAccessor, childrenAccessor, TreeKeyManager; a11y and docs improvements ([#29062](https://github.com/angular/components/pull/29062)) |
+| [1f992d06c](https://github.com/angular/components/commit/1f992d06c693a6e09332ac83d837c9ff8e1fdf7b) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29273](https://github.com/angular/components/pull/29273)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b2c051d2c](https://github.com/angular/components/commit/b2c051d2c1b67f4c149aee1573a4aceddb496157) | feat | **drag-drop:** add input to specify dragged item scale ([#29392](https://github.com/angular/components/pull/29392)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [db5b8dc29](https://github.com/angular/components/commit/db5b8dc29b900470523bb20eea1ba255c2dc1168) | feat | fallback to system level variables ([#29480](https://github.com/angular/components/pull/29480)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.1.5"></a>
 # 18.1.5 "ruthenium-roulette" (2024-08-14)
 ### material
@@ -9,19 +58,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="18.2.0-rc.0"></a>
-# 18.2.0-rc.0 "wicker-whirlwind" (2024-08-07)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ddc307e284](https://github.com/angular/components/commit/ddc307e28449045c484510ff26798fc1a6efa7c1) | feat | **button-toggle:** allow disabled buttons to be interactive ([#29550](https://github.com/angular/components/pull/29550)) |
-| [7370eb92fc](https://github.com/angular/components/commit/7370eb92fc0a4364670914add9b12393c0f84dfe) | fix | **chips:** missing tokens in M3 ([#29531](https://github.com/angular/components/pull/29531)) |
-| [d22a24d667](https://github.com/angular/components/commit/d22a24d667a16c39d4a4ec5f59b248f990fa029e) | fix | **list:** checkmark not visible in high contrast mode ([#29546](https://github.com/angular/components/pull/29546)) |
-| [626164ba5f](https://github.com/angular/components/commit/626164ba5ff1b729d1d3baeef6e9dfd89566f3f4) | fix | **sidenav:** disable focus trap while closed ([#29548](https://github.com/angular/components/pull/29548)) |
-| [fd416a30e8](https://github.com/angular/components/commit/fd416a30e8de0e741ac45f3fb45e695abecf5ded) | fix | **tooltip:** remove aria-describedby when disabled ([#29520](https://github.com/angular/components/pull/29520)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="18.1.4"></a>
 # 18.1.4 "pewter-polka" (2024-08-07)
 ### material
@@ -29,30 +65,6 @@
 | -- | -- | -- |
 | [2b5ae8c0ed](https://github.com/angular/components/commit/2b5ae8c0edc6e5c435dd729e704c397cfead2896) | fix | **chips:** missing tokens in M3 ([#29531](https://github.com/angular/components/pull/29531)) |
 | [b98432839e](https://github.com/angular/components/commit/b98432839ef879757452a48b149fad0e289e3aae) | fix | **sidenav:** disable focus trap while closed ([#29548](https://github.com/angular/components/pull/29548)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.2.0-next.3"></a>
-# 18.2.0-next.3 "gold-medal" (2024-07-31)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c9078d1d1a](https://github.com/angular/components/commit/c9078d1d1ada5d35a023e64c34d4f953adeec415) | fix | **coercion:** Return undefined when the fallback value is undefined ([#29491](https://github.com/angular/components/pull/29491)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0af3b61750](https://github.com/angular/components/commit/0af3b617505d5f39f2492ba4b7e3e7fd4b74f990) | feat | **radio:** add the ability to interact with disabled radio buttons ([#29490](https://github.com/angular/components/pull/29490)) |
-| [4292e1b3a0](https://github.com/angular/components/commit/4292e1b3a05492e62413f3a62e082f2b8b012026) | feat | **slide-toggle:** add the ability to interact with disabled toggle ([#29502](https://github.com/angular/components/pull/29502)) |
-| [5403b2b316](https://github.com/angular/components/commit/5403b2b3163fedaf557bbc51a1ca5d34b40f91d2) | fix | **chips:** remove tab-index attribute from mat-chip host ([#29436](https://github.com/angular/components/pull/29436)) |
-| [6d701146cc](https://github.com/angular/components/commit/6d701146cc6618dd002e0a76c2fafa54448cfc87) | fix | **core:** custom system-level variable prefix not used in some mixins ([#29513](https://github.com/angular/components/pull/29513)) |
-| [95d1354cdd](https://github.com/angular/components/commit/95d1354cdd9fb82bb009eba495b91c660c9a797f) | fix | **dialog:** invalid font-family declaration ([#29516](https://github.com/angular/components/pull/29516)) |
-| [fd47a0e60d](https://github.com/angular/components/commit/fd47a0e60dd9ab50d9f923713ca60a7fd21ccc16) | fix | **radio:** avoid error if destroyed quickly ([#29507](https://github.com/angular/components/pull/29507)) |
-| [5892acfde3](https://github.com/angular/components/commit/5892acfde36ac1c12e98f7ea95a2a02bb95eeedd) | fix | **slide-toggle:** don't trigger active state for entire container ([#29514](https://github.com/angular/components/pull/29514)) |
-| [1aa8512ebe](https://github.com/angular/components/commit/1aa8512ebef7fd9bbc849383a2d642dddb69ce16) | fix | **slide-toggle:** remove divs from button ([#29485](https://github.com/angular/components/pull/29485)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [db5b8dc29b](https://github.com/angular/components/commit/db5b8dc29b900470523bb20eea1ba255c2dc1168) | feat | fallback to system level variables ([#29480](https://github.com/angular/components/pull/29480)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -70,19 +82,6 @@
 | [70048ef226](https://github.com/angular/components/commit/70048ef226fab98a60067f87fc2ace6e2003afa8) | fix | **dialog:** invalid font-family declaration ([#29516](https://github.com/angular/components/pull/29516)) |
 | [d7d82e1455](https://github.com/angular/components/commit/d7d82e145501321de195bc26e428a05314878d5f) | fix | **slide-toggle:** don't trigger active state for entire container ([#29514](https://github.com/angular/components/pull/29514)) |
 | [d237e7d2c7](https://github.com/angular/components/commit/d237e7d2c76ab11a4089a35a3b3a77f2515ac713) | fix | **slide-toggle:** remove divs from button ([#29485](https://github.com/angular/components/pull/29485)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.2.0-next.2"></a>
-# 18.2.0-next.2 "velvet-guitar" (2024-07-24)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8417601015](https://github.com/angular/components/commit/8417601015e7c3a96a8a6801213e764058ee8aba) | feat | **checkbox:** add the ability to interact with disabled checkboxes ([#29474](https://github.com/angular/components/pull/29474)) |
-| [a018fb0ee8](https://github.com/angular/components/commit/a018fb0ee8ac711e7fba7d0d528fa56f348f6361) | feat | **tooltip:** replicate tooltipClass to default MatTooltipDefaultOptions ([#29467](https://github.com/angular/components/pull/29467)) |
-| [d6aed80446](https://github.com/angular/components/commit/d6aed804460d4b75082d7d04e051f2cae9b4f8f6) | fix | **chips:** remove button is too small ([#29351](https://github.com/angular/components/pull/29351)) |
-| [13aef8cf87](https://github.com/angular/components/commit/13aef8cf87409a706f3634caa75d5b04505a8ec9) | fix | **form-field:** hiding a label after it has been ([#29461](https://github.com/angular/components/pull/29461)) |
-| [10da6c6375](https://github.com/angular/components/commit/10da6c63757200b5848c00e560eabe8642435fe8) | fix | **input:** Number input not changing on wheel interaction ([#29449](https://github.com/angular/components/pull/29449)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -110,56 +109,6 @@
 | [ffe1c35c0](https://github.com/angular/components/commit/ffe1c35c0b2b59acfbc49bfc345e477f680e1f44) | fix | **chips:** fix focus issue ([#29427](https://github.com/angular/components/pull/29427)) |
 | [57cc0b04b](https://github.com/angular/components/commit/57cc0b04b4be19b3cba08ae509e066f7ba40e61d) | fix | **core:** require theme for option typography ([#29416](https://github.com/angular/components/pull/29416)) |
 | [2e5e415ec](https://github.com/angular/components/commit/2e5e415ec573b2fd6593b116429080fbe7b24dc2) | fix | **tabs:** prevent tab header from collapsing when empty inside a drop list ([#29418](https://github.com/angular/components/pull/29418)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.2.0-next.1"></a>
-# 18.2.0-next.1 "osmium-opal" (2024-07-17)
-## Deprecations
-### material
-- Tree controller deprecated. Use one of levelAccessor or childrenAccessor instead. To be removed in a future version.
-   * BaseTreeControl, TreeControl, FlatTreeControl, and NestedTreeControl deprecated
-   * CdkTree#treeControl deprecated. Provide one of CdkTree#levelAccessor or CdkTree#childrenAccessor instead.
-   * MatTreeFlattener deprecated. Use MatTree#childrenAccessor and MatTreeNode#isExpandable instead.
-   * MatTreeFlatDataSource deprecated. Use one of levelAccessor or childrenAccessor instead of TreeControl.
-  
-  Note when upgrading: isExpandable works differently on Trees using treeControl than trees using childrenAccessor or levelAccessor. Nodes on trees that have a treeControl are expandable by default. Nodes on trees using childrenAccessor or levelAccessor are *not* expandable by default. Provide isExpandable to override default behavior.
-- Setting tabindex of tree nodes deprecated. By default, Tree ignores tabindex passed to tree nodes.
-   * MatTreeNode#tabIndex deprecated. MatTreeNode ignores Input tabIndex and manages its own focus behavior.
-   * MatTreeNode#defaultTabIndex deprecated. MatTreeNode ignores defaultTabIndex and manages its own focus behavior.
-   * MatNestedTreeNode#tabIndex deprecated. MatTreeNode ignores Input defaultTabIndex and manages its own focus behavior.
-   * LegacyTreeKeyManager and LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER deprecated. Inject a TreeKeyManagerFactory to customize keyboard behavior.
-  
-  Note when upgrading: an opt-out is available for keyboard functionality changes. Provide LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER to opt-out of Tree managing its own focus. When provided, Tree does not manage it’s own focus and respects tabindex passed to TreeNode. When provided, have the same focus behavior as before this commit is applied.
-  
-  Add Legacy Keyboard Interface demo, which shows usage of LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER. Add Custom Key Manager, which shows usage of injecting a TreeKeyManagerStrategy
-- disabled renamed to isDisabled.
-   * CdkTreeNode#disabled deprecated and alias to CdkTreeNode#isDisabled
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [095947c8c](https://github.com/angular/components/commit/095947c8c3a79fecf4e56fc39ab61b0cc6e03eea) | fix | **button:** support palettes for icon button in M3 ([#29433](https://github.com/angular/components/pull/29433)) |
-| [e69b2b09e](https://github.com/angular/components/commit/e69b2b09efaf577cd5fe92b70808479f975913af) | fix | **chips:** fix focus issue ([#29427](https://github.com/angular/components/pull/29427)) |
-| [b116643a0](https://github.com/angular/components/commit/b116643a062749fa2c964820ae9f9c0e76c40717) | fix | **core:** require theme for option typography ([#29416](https://github.com/angular/components/pull/29416)) |
-| [92ab713a6](https://github.com/angular/components/commit/92ab713a65e2d622f975a6e610f981563a12b592) | fix | **tabs:** prevent tab header from collapsing when empty inside a drop list ([#29418](https://github.com/angular/components/pull/29418)) |
-| [ff36c80f9](https://github.com/angular/components/commit/ff36c80f9c7a14f0e9f36eafc3e1423d34e7c916) | fix | **tree:** add levelAccessor, childrenAccessor, TreeKeyManager; a11y and docs improvements ([#29062](https://github.com/angular/components/pull/29062)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [565566151](https://github.com/angular/components/commit/565566151a7a68ee2956b96a5b8d6b48d4762ef9) | fix | **drag-drop:** remove preview after animate to placeholder animation completes ([#29439](https://github.com/angular/components/pull/29439)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="18.2.0-next.0"></a>
-# 18.2.0-next.0 "pumice-reverie" (2024-07-10)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b2c051d2c1](https://github.com/angular/components/commit/b2c051d2c1b67f4c149aee1573a4aceddb496157) | feat | **drag-drop:** add input to specify dragged item scale ([#29392](https://github.com/angular/components/pull/29392)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1f992d06c6](https://github.com/angular/components/commit/1f992d06c693a6e09332ac83d837c9ff8e1fdf7b) | fix | **tree:** aria-expanded attribute should not appear in the leaf node ([#29273](https://github.com/angular/components/pull/29273)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
