@@ -1,3 +1,12 @@
+<a name="19.0.0-next.0"></a>
+# 19.0.0-next.0 "yttrium-igloo" (2024-08-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bd84c2a67](https://github.com/angular/components/commit/bd84c2a67476b688a0c775de8566a4ff4b3b2ce0) | fix | **tree:** fix issue where `isExpanded` wouldn't be set if placed before `isExpandable` ([#29565](https://github.com/angular/components/pull/29565)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.0"></a>
 # 18.2.0 "technetium-tapas" (2024-08-14)
 ## Deprecations
