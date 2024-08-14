@@ -1,10 +1,10 @@
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "migration-v18": {
-      "version": "18.0.0-0",
-      "description": "Updates Angular Material to v18",
-      "factory": "./ng-update/index_bundled#updateToV18"
+    "migration-v19": {
+      "version": "19.0.0-0",
+      "description": "Updates Angular Material to v19",
+      "factory": "./ng-update/index_bundled#updateToV19"
     }
   }
 }
