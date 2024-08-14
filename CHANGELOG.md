@@ -1,3 +1,14 @@
+<a name="18.1.5"></a>
+# 18.1.5 "ruthenium-roulette" (2024-08-14)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b2e728db9](https://github.com/angular/components/commit/b2e728db9789d970990455617338683a68d34a0c) | fix | **form-field:** update state if control changes ([#29573](https://github.com/angular/components/pull/29573)) |
+| [1c438b312](https://github.com/angular/components/commit/1c438b312ece5ce29b6f0d60c6696b4afb5396af) | fix | **schematics:** Generate more accurate tonal palettes for M3 schematic ([#29536](https://github.com/angular/components/pull/29536)) |
+| [838d1a45a](https://github.com/angular/components/commit/838d1a45a213b41c42a320e16701b25e99fae7ec) | fix | **tabs:** allow for tablist aria-label and aria-labelledby to be set ([#29562](https://github.com/angular/components/pull/29562)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.0-rc.0"></a>
 # 18.2.0-rc.0 "wicker-whirlwind" (2024-08-07)
 ### material
