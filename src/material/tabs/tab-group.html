@@ -2,6 +2,8 @@
                 [selectedIndex]="selectedIndex || 0"
                 [disableRipple]="disableRipple"
                 [disablePagination]="disablePagination"
+                [aria-label]="ariaLabel"
+                [aria-labelledby]="ariaLabelledby"
                 (indexFocused)="_focusChanged($event)"
                 (selectFocusedIndex)="selectedIndex = $event">
 
