@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetVersion, VersionChanges} from '@angular/cdk/schematics';
+import {VersionChanges} from '@angular/cdk/schematics';
 
 export interface MaterialCssTokenData {
   /** The CSS selector to replace. */
@@ -27,36 +27,4 @@ export interface MaterialCssTokenData {
   };
 }
 
-export const cssTokens: VersionChanges<MaterialCssTokenData> = {
-  [TargetVersion.V18]: [
-    {
-      pr: 'https://github.com/angular/components/pull/29026',
-      changes: [
-        {
-          replace: '--mdc-form-field-label-text-color',
-          replaceWith: '--mat-checkbox-label-text-color',
-        },
-        {
-          replace: '--mdc-form-field-label-text-font',
-          replaceWith: '--mat-checkbox-label-text-font',
-        },
-        {
-          replace: '--mdc-form-field-label-text-line-height',
-          replaceWith: '--mat-checkbox-label-text-line-height',
-        },
-        {
-          replace: '--mdc-form-field-label-text-size',
-          replaceWith: '--mat-checkbox-label-text-size',
-        },
-        {
-          replace: '--mdc-form-field-label-text-tracking',
-          replaceWith: '--mat-checkbox-label-text-tracking',
-        },
-        {
-          replace: '--mdc-form-field-label-text-weight',
-          replaceWith: '--mat-checkbox-label-text-weight',
-        },
-      ],
-    },
-  ],
-};
+export const cssTokens: VersionChanges<MaterialCssTokenData> = {};

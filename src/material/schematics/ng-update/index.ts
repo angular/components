@@ -14,14 +14,13 @@ import {
 } from '@angular/cdk/schematics';
 
 import {materialUpgradeData} from './upgrade-data';
-import {M2ThemingMigration} from './migrations/m2-theming-v18';
 
-const materialMigrations: NullableDevkitMigration[] = [M2ThemingMigration];
+const materialMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular Material v18 */
-export function updateToV18(): Rule {
+/** Entry point for the migration schematics with target of Angular Material v19 */
+export function updateToV19(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V18,
+    TargetVersion.V19,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,
