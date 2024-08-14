@@ -712,6 +712,53 @@
 </mat-card>
 
 <mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Disabled interactive inputs</mat-toolbar>
+  <mat-card-content>
+    @for (appearance of appearances; track $index) {
+      <div>
+        <mat-form-field [appearance]="appearance">
+          <mat-label>Label</mat-label>
+          <input
+            matNativeControl
+            disabled
+            disabledInteractive
+            value="Value"
+            matTooltip="I can trigger a tooltip!">
+        </mat-form-field>
+
+        <mat-form-field [appearance]="appearance">
+          <mat-label>Label</mat-label>
+          <input
+            matNativeControl
+            disabled
+            disabledInteractive
+            matTooltip="I can trigger a tooltip!">
+        </mat-form-field>
+
+        <mat-form-field [appearance]="appearance">
+          <mat-label>Label</mat-label>
+          <input
+            matNativeControl
+            disabled
+            disabledInteractive
+            placeholder="Placeholder"
+            matTooltip="I can trigger a tooltip!">
+        </mat-form-field>
+
+        <mat-form-field [appearance]="appearance">
+          <input
+            matNativeControl
+            disabled
+            disabledInteractive
+            matTooltip="I can trigger a tooltip!"
+            placeholder="Placeholder">
+        </mat-form-field>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="demo-card demo-basic">
   <mat-toolbar color="primary">Textarea form-fields</mat-toolbar>
   <mat-card-content>
     <mat-form-field appearance="fill" class="demo-horizontal-spacing">

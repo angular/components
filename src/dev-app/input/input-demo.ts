@@ -100,6 +100,7 @@ export class InputDemo {
   standardAppearance: string;
   fillAppearance: string;
   outlineAppearance: string;
+  appearances: MatFormFieldAppearance[] = ['fill', 'outline'];
 
   hasLabel$ = new BehaviorSubject(true);
 
