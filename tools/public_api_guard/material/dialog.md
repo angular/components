@@ -188,7 +188,7 @@ export class MatDialogConfig<D = any> {
 
 // @public (undocumented)
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
-    constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _animationMode?: string | undefined, focusMonitor?: FocusMonitor);
+    constructor(elementRef: ElementRef, focusTrapFactory: FocusTrapFactory, _document: any, dialogConfig: MatDialogConfig, interactivityChecker: InteractivityChecker, ngZone: NgZone, overlayRef: OverlayRef, _unusedAnimationMode?: string, focusMonitor?: FocusMonitor);
     protected _actionSectionCount: number;
     _animationsEnabled: boolean;
     _animationStateChanged: EventEmitter<LegacyDialogAnimationEvent>;
