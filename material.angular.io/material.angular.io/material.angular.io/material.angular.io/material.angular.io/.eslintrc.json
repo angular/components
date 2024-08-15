@@ -6,8 +6,14 @@
   ],
   "overrides": [
     {
-      "files": ["*.ts"],
-      "plugins": ["ban"],
+      "files": [
+        "*.ts"
+      ],
+      "plugins": [
+        "@stylistic",
+        "@typescript-eslint",
+        "ban"
+      ],
       "parserOptions": {
         "project": [
           "tsconfig.json",
@@ -18,7 +24,8 @@
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
         "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@stylistic/disable-legacy"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": "off",
@@ -37,7 +44,8 @@
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/quotes": [
+        "@typescript-eslint/ban-types": "off",
+        "@stylistic/quotes": [
           "error",
           "single",
           {
@@ -45,7 +53,7 @@
             "allowTemplateLiterals": true
           }
         ],
-        "@typescript-eslint/semi": [
+        "@stylistic/semi": [
           "error"
         ],
         "arrow-parens": [
@@ -69,11 +77,25 @@
         ],
         "ban/ban": [
           "error",
-          {"name": "fit"},
-          {"name": "fdescribe"},
-          {"name": "xit"},
-          {"name": "xdescribe"},
-          {"name": ["Object", "assign"], "message": "Use the spread operator instead."}
+          {
+            "name": "fit"
+          },
+          {
+            "name": "fdescribe"
+          },
+          {
+            "name": "xit"
+          },
+          {
+            "name": "xdescribe"
+          },
+          {
+            "name": [
+              "Object",
+              "assign"
+            ],
+            "message": "Use the spread operator instead."
+          }
         ],
         "no-duplicate-imports": "error",
         "no-redeclare": "error",
