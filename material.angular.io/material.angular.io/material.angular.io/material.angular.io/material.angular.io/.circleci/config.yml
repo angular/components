@@ -1,119 +1,16 @@
-# Note: YAML anchors allow an object to be re-used, reducing duplication.
-# The ampersand declares an alias for an object, then later the `<<: *name`
-# syntax dereferences it.
-# See https://blog.daemonl.com/2016/02/yaml.html
-# To validate changes, use an online parser, eg.
-# https://yaml-online-parser.appspot.com/
+# This config is remaining in place to prevent pull requests failing because of CircleCI config missing.
 
-# CircleCI configuration version
-# Version 2.1 allows for extra config reuse features
-# https://circleci.com/docs/2.0/reusing-config/#getting-started-with-config-reuse
 version: 2.1
 
-orbs:
-  browser-tools: circleci/browser-tools@1.4.8
-  devinfra: angular/dev-infra@1.0.9
-
-# Cache key for CircleCI. We want to invalidate the cache whenever the Yarn lock file changes.
-var_1: &cache_key material-angular-io-{{ .Branch }}-{{ checksum "yarn.lock" }}
-var_2: &default_docker_image cimg/node:20.11.1-browsers
-
-# Settings common to each job
-var_3: &job_defaults
-  working_directory: ~/material-angular-io
-  docker:
-    - image: *default_docker_image
-
-var_4: &save_cache
-  save_cache:
-    key: *cache_key
-    paths:
-      - 'node_modules'
-
-var_5: &yarn_install
-  run:
-    name: 'Installing project dependencies'
-    command: yarn install --immutable
-    no_output_timeout: 20m
-
-# https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
-# https://circleci.com/blog/deep-diving-into-circleci-workspaces/
-var_6: &workspace_location ~/
-
-commands:
-  store_build_output:
-    description: 'Stores build artifacts'
-    steps:
-      - run:
-          name: Move compiled apps to workspace
-          command: |
-            set -exu
-            mkdir -p ~/dist
-            mv dist/* ~/dist/
-      - persist_to_workspace:
-          root: *workspace_location
-          paths:
-            - dist
-
 jobs:
-  lint:
-    <<: *job_defaults
+  pass:
+    docker:
+      - image: cimg/base:2022.05
     steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run: yarn lint
-      - *save_cache
-
-  build:
-    <<: *job_defaults
-    # We generate a lot of chunks with our build. To improve stability and to reduce
-    # the amount it takes to run, we use a higher resource class with better VM specs.
-    # https://circleci.com/docs/2.0/configuration-reference/#resource_class
-    resource_class: large
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run: yarn prod-build
-      - *save_cache
-      - store_build_output
-
-  test:
-    <<: *job_defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - browser-tools/install-browser-tools
-      - run: yarn test --watch false --progress=false
-
-  lighthouse_audits:
-    <<: *job_defaults
-    steps:
-      - attach_workspace:
-          at: *workspace_location
-      - checkout
-      - browser-tools/install-chrome
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - browser-tools/install-browser-tools
-      - run:
-          command: yarn test:audit:ci
-          environment:
-            CHROMIUM_BIN: '/usr/bin/google-chrome'
+      - run: echo "This too shall pass (always)"
 
 workflows:
   version: 2
   default_workflow:
     jobs:
-      - lint
-      - build
-      - test
-      - lighthouse_audits:
-          requires:
-            - build
+      - pass
