@@ -1297,10 +1297,10 @@ describe('MatSelect', () => {
             .toBe(true);
         }));
 
-        it('should omit the tabindex attribute on each option', fakeAsync(() => {
-          expect(options[0].hasAttribute('tabindex')).toBeFalse();
-          expect(options[1].hasAttribute('tabindex')).toBeFalse();
-          expect(options[2].hasAttribute('tabindex')).toBeFalse();
+        it('should not omit the tabindex attribute on each option', fakeAsync(() => {
+          expect(options[0].hasAttribute('tabindex')).toBeTrue();
+          expect(options[1].hasAttribute('tabindex')).toBeTrue();
+          expect(options[2].hasAttribute('tabindex')).toBeTrue();
         }));
 
         it('should set aria-disabled for disabled options', fakeAsync(() => {
