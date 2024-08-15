@@ -107,70 +107,6 @@ jobs:
           environment:
             CHROMIUM_BIN: '/usr/bin/google-chrome'
 
-  bazel-build:
-    <<: *job_defaults
-    resource_class: large
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run:
-          command: yarn bazel build //...
-          environment:
-            # TODO: Remove when pnpm is exclusively used.
-            ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
-      - *save_cache
-
-  bazel-test:
-    <<: *job_defaults
-    resource_class: large
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run:
-          command: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
-          environment:
-            # TODO: Remove when pnpm is exclusively used.
-            ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
-      - *save_cache
-      - store_artifacts:
-          path: bazel-testlogs/
-      - store_artifacts:
-          path: bazel-testlogs/scenes/
-
-  bazel-lint:
-    <<: *job_defaults
-    resource_class: large
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run: yarn bazel test --test_tag_filters=+lint //...
-      - *save_cache
-      - store_artifacts:
-          path: bazel-testlogs/
-      - store_artifacts:
-          path: bazel-testlogs/scenes/
-
-  bazel-lighthouse_audits:
-    <<: *job_defaults
-    resource_class: xlarge
-    steps:
-      - checkout
-      - restore_cache:
-          key: *cache_key
-      - *yarn_install
-      - run: yarn bazel test --test_tag_filters=+audit //...
-      - *save_cache
-      - store_artifacts:
-          path: bazel-testlogs/
-      - store_artifacts:
-          path: bazel-testlogs/scenes/
-
 workflows:
   version: 2
   default_workflow:
@@ -181,7 +117,3 @@ workflows:
       - lighthouse_audits:
           requires:
             - build
-      - bazel-build
-      - bazel-test
-      - bazel-lighthouse_audits
-      - bazel-lint
