@@ -209,6 +209,14 @@ devDependencies:
     specifier: ~5.5.2
     version: 5.5.4
 
+dependenciesMeta:
+  esbuild:
+    built: true
+  puppeteer:
+    built: true
+  re2:
+    built: true
+
 packages:
 
   /@ampproject/remapping@2.3.0:

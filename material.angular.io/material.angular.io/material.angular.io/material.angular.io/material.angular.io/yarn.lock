@@ -12129,6 +12129,13 @@ __metadata:
     tslib: "npm:^2.3.0"
     typescript: "npm:~5.5.2"
     zone.js: "npm:~0.14.10"
+  dependenciesMeta:
+    esbuild:
+      built: true
+    puppeteer:
+      built: true
+    re2:
+      built: true
   languageName: unknown
   linkType: soft
 
