@@ -55,6 +55,7 @@ export class MatOptionSelectionChange<T = any> {
   exportAs: 'matOption',
   host: {
     'role': 'option',
+    'tabindex': '-1',
     '[class.mdc-list-item--selected]': 'selected',
     '[class.mat-mdc-option-multiple]': 'multiple',
     '[class.mat-mdc-option-active]': 'active',
