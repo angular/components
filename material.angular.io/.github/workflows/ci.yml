@@ -1,8 +1,10 @@
-name: Pull Request
+name: CI
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+      - "[0-9]+.[0-9]+.x"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
