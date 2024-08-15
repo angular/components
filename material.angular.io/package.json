@@ -102,5 +102,16 @@
     "ts-node": "^8.10.2",
     "typescript": "~5.5.2"
   },
-  "packageManager": "yarn@4.4.0"
+  "packageManager": "yarn@4.4.0",
+  "dependenciesMeta": {
+    "esbuild": {
+      "built": true
+    },
+    "puppeteer": {
+      "built": true
+    },
+    "re2": {
+      "built": true
+    }
+  }
 }
