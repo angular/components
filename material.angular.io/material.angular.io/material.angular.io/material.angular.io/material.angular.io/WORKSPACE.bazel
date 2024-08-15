@@ -2,9 +2,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "aspect_bazel_lib",
-    sha256 = "979667bb7276ee8fcf2c114c9be9932b9a3052a64a647e0dcaacfb9c0016f0a3",
-    strip_prefix = "bazel-lib-2.4.1",
-    url = "https://github.com/aspect-build/bazel-lib/releases/download/v2.4.1/bazel-lib-v2.4.1.tar.gz",
+    sha256 = "cea19e6d8322fb212f155acb58d1590f632e53abde7f1be5f0a086a93cf4c9f4",
+    strip_prefix = "bazel-lib-2.8.0",
+    url = "https://github.com/aspect-build/bazel-lib/releases/download/v2.8.0/bazel-lib-v2.8.0.tar.gz",
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "aspect_bazel_lib_register_toolchains")
@@ -14,30 +14,20 @@ aspect_bazel_lib_register_toolchains()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "630a71aba66c4023a5b16ab3efafaeed8b1a2865ccd168a34611eb73876b3fc4",
-    strip_prefix = "rules_js-1.37.1",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v1.37.1/rules_js-v1.37.1.tar.gz",
+    sha256 = "6b7e73c35b97615a09281090da3645d9f03b2a09e8caa791377ad9022c88e2e6",
+    strip_prefix = "rules_js-2.0.0",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.0.0/rules_js-v2.0.0.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+load("@aspect_rules_js//js:toolchains.bzl", "rules_js_register_toolchains")
 
-nodejs_register_toolchains(
+rules_js_register_toolchains(
     name = "nodejs",
-    # The below can be removed once @rules_nodejs/nodejs is updated to latest which contains https://github.com/bazelbuild/rules_nodejs/pull/3701
-    node_repositories = {
-        "20.11.0-darwin_arm64": ("node-v20.11.0-darwin-arm64.tar.gz", "node-v20.11.0-darwin-arm64", "94e443d007e2882f8e5aecc85d978f7591520dc3b642adc7583b3cb0b3fc37d7"),
-        "20.11.0-darwin_amd64": ("node-v20.11.0-darwin-x64.tar.gz", "node-v20.11.0-darwin-x64", "c0ba02c905814258bd99a362027f8d4d2cc738218a9cf1dce2620e8735e3a80e"),
-        "20.11.0-linux_arm64": ("node-v20.11.0-linux-arm64.tar.xz", "node-v20.11.0-linux-arm64", "f6df68c6793244071f69023a9b43a0cf0b13d65cbe86d55925c28e4134d9aafb"),
-        "20.11.0-linux_ppc64le": ("node-v20.11.0-linux-ppc64le.tar.xz", "node-v20.11.0-linux-ppc64le", "6a0e1fa23d7bc707711bbc36159b4220eca123e13435d266d690c6b6c443dc67"),
-        "20.11.0-linux_s390x": ("node-v20.11.0-linux-s390x.tar.xz", "node-v20.11.0-linux-s390x", "cc92efa3fa101d613539451b1cf323ea9ac6198b4a68a7d3bf3b1090c6a7b5da"),
-        "20.11.0-linux_amd64": ("node-v20.11.0-linux-x64.tar.xz", "node-v20.11.0-linux-x64", "822780369d0ea309e7d218e41debbd1a03f8cdf354ebf8a4420e89f39cc2e612"),
-        "20.11.0-windows_amd64": ("node-v20.11.0-win-x64.zip", "node-v20.11.0-win-x64", "893115cd92ad27bf178802f15247115e93c0ef0c753b93dca96439240d64feb5"),
-    },
-    node_version = "20.11.0",
+    node_version = "20.14.0",
 )
 
 # Add a patch fix for rules_webtesting v0.3.5 required for enabling runfiles on Windows.
@@ -69,7 +59,7 @@ load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories"
 
 web_test_repositories()
 
-load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
     name = "npm",
