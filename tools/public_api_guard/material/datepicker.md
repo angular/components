@@ -292,6 +292,8 @@ export class MatCalendarHeader<D> {
     // (undocumented)
     calendar: MatCalendar<D>;
     currentPeriodClicked(): void;
+    // (undocumented)
+    _customPeriodButtonIcon: MatCalendarHeaderPeriodButtonIcon;
     get nextButtonLabel(): string;
     nextClicked(): void;
     nextEnabled(): boolean;
@@ -304,9 +306,20 @@ export class MatCalendarHeader<D> {
     previousClicked(): void;
     previousEnabled(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarHeader<any>, "mat-calendar-header", ["matCalendarHeader"], {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatCalendarHeader<any>, "mat-calendar-header", ["matCalendarHeader"], {}, {}, ["_customPeriodButtonIcon"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatCalendarHeader<any>, [null, null, { optional: true; }, { optional: true; }, null]>;
+}
+
+// @public (undocumented)
+export class MatCalendarHeaderPeriodButtonIcon {
+    constructor(templateRef: TemplateRef<any>);
+    // (undocumented)
+    templateRef: TemplateRef<any>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatCalendarHeaderPeriodButtonIcon, "[periodButtonIcon]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCalendarHeaderPeriodButtonIcon, never>;
 }
 
 // @public
@@ -516,7 +529,7 @@ export class MatDatepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDatepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, never, [typeof i1.CommonModule, typeof i2.MatButtonModule, typeof i3.OverlayModule, typeof i4.A11yModule, typeof i5.PortalModule, typeof i6.MatCommonModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply], [typeof i20.CdkScrollableModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, never, [typeof i1.CommonModule, typeof i2.MatButtonModule, typeof i3.OverlayModule, typeof i4.A11yModule, typeof i5.PortalModule, typeof i6.MatCommonModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i7.MatCalendarHeaderPeriodButtonIcon, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply], [typeof i20.CdkScrollableModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i7.MatCalendarHeaderPeriodButtonIcon, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply]>;
 }
 
 // @public

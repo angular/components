@@ -151,10 +151,15 @@ export class CustomHeader<D> implements OnDestroy {
   template: `
       <mat-calendar-header #header>
         <button mat-button type="button" (click)="todayClicked()">TODAY</button>
+        <ng-template periodButtonIcon let-invert>
+          <mat-icon
+            [inline]="true" class="mat-calendar-arrow"
+            [class.mat-calendar-invert]="invert">arrow_drop_down</mat-icon>
+        </ng-template>
       </mat-calendar-header>
     `,
   standalone: true,
-  imports: [MatDatepickerModule],
+  imports: [MatDatepickerModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomHeaderNgContent<D> {
