@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** Indicates the width of a column. */
@@ -55,10 +55,10 @@ export class ColumnResizeNotifierSource {
 /** Service for triggering column resizes imperatively or being notified of them. */
 @Injectable()
 export class ColumnResizeNotifier {
+  private readonly _source = inject(ColumnResizeNotifierSource);
+
   /** Emits whenever a column is resized. */
   readonly resizeCompleted: Observable<ColumnSize> = this._source.resizeCompleted;
-
-  constructor(private readonly _source: ColumnResizeNotifierSource) {}
 
   /** Instantly resizes the specified column. */
   resize(columnId: string, size: number): void {

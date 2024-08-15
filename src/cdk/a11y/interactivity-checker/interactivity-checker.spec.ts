@@ -1,6 +1,5 @@
 import {Platform} from '@angular/cdk/platform';
-import {PLATFORM_ID} from '@angular/core';
-import {inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {InteractivityChecker, IsFocusableConfig} from './interactivity-checker';
 
 describe('InteractivityChecker', () => {
@@ -8,12 +7,12 @@ describe('InteractivityChecker', () => {
   let testContainerElement: HTMLElement;
   let checker: InteractivityChecker;
 
-  beforeEach(inject([PLATFORM_ID], (platformId: Object) => {
+  beforeEach(() => {
     testContainerElement = document.createElement('div');
     document.body.appendChild(testContainerElement);
-    platform = new Platform(platformId);
-    checker = new InteractivityChecker(platform);
-  }));
+    platform = TestBed.inject(Platform);
+    checker = TestBed.inject(InteractivityChecker);
+  });
 
   afterEach(() => {
     testContainerElement.remove();

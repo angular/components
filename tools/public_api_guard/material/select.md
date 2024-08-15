@@ -87,7 +87,7 @@ export { MatPrefix }
 // @public (undocumented)
 export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any> {
     constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef,
-    _unusedNgZone: NgZone, defaultErrorStateMatcher: ErrorStateMatcher, _elementRef: ElementRef, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
+    _unusedNgZone: NgZone, defaultErrorStateMatcher: ErrorStateMatcher, _elementRef: ElementRef, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _unusedDefaultOptions?: unknown);
     ariaLabel: string;
     ariaLabelledby: string;
     protected _canOpen(): boolean;
@@ -100,7 +100,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     controlType: string;
     customTrigger: MatSelectTrigger;
     // (undocumented)
-    protected _defaultOptions?: MatSelectConfig | undefined;
+    protected _defaultOptions: MatSelectConfig | null;
     protected readonly _destroy: Subject<void>;
     readonly disableAutomaticLabeling = true;
     disabled: boolean;

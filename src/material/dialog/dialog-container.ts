@@ -21,6 +21,7 @@ import {
   Optional,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
@@ -72,6 +73,8 @@ export const CLOSE_ANIMATION_DURATION = 75;
   },
 })
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
@@ -102,7 +105,7 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     interactivityChecker: InteractivityChecker,
     ngZone: NgZone,
     overlayRef: OverlayRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) _unusedAnimationMode?: string,
     focusMonitor?: FocusMonitor,
   ) {
     super(

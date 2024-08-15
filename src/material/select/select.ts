@@ -217,6 +217,8 @@ export class MatSelect
     ControlValueAccessor,
     MatFormFieldControl<any>
 {
+  protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
+
   /** All of the defined select options. */
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
 
@@ -607,7 +609,7 @@ export class MatSelect
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
     private _liveAnnouncer: LiveAnnouncer,
-    @Optional() @Inject(MAT_SELECT_CONFIG) protected _defaultOptions?: MatSelectConfig,
+    @Optional() @Inject(MAT_SELECT_CONFIG) _unusedDefaultOptions?: unknown,
   ) {
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
@@ -617,8 +619,8 @@ export class MatSelect
 
     // Note that we only want to set this when the defaults pass it in, otherwise it should
     // stay as `undefined` so that it falls back to the default in the key manager.
-    if (_defaultOptions?.typeaheadDebounceInterval != null) {
-      this.typeaheadDebounceInterval = _defaultOptions.typeaheadDebounceInterval;
+    if (this._defaultOptions?.typeaheadDebounceInterval != null) {
+      this.typeaheadDebounceInterval = this._defaultOptions.typeaheadDebounceInterval;
     }
 
     this._errorStateTracker = new _ErrorStateTracker(

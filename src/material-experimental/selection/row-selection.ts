@@ -28,5 +28,5 @@ import {Input, Directive} from '@angular/core';
 })
 export class MatRowSelection<T> extends CdkRowSelection<T> {
   /** The value that is associated with the row */
-  @Input('matRowSelectionValue') override value: T;
+  @Input('matRowSelectionValue') override value: T = undefined!;
 }
