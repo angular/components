@@ -32,6 +32,15 @@ test --incompatible_exclusive_test_sandboxed
 # Fixes use of npm paths with spaces such as some within the puppeteer module
 build --experimental_inprocess_symlink_creation
 
+# Warn if test timeout is much longer than execution time
+test --test_verbose_timeout_warnings
+
+# Prevent large amounbt of `dependency checking of directories is unsound` warnings
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
+
+# Disable bazel modules for now
+common --noenable_bzlmod
+
 ####################################################
 # User bazel configuration
 # NOTE: This needs to be the *last* entry in the config.
