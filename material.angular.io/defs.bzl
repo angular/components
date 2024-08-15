@@ -50,9 +50,6 @@ NG_COMMON_DEPS = [
 APPLICATION_CONFIG = COMMON_CONFIG + [
     ":ng-app-config",
 ]
-APPLICATION_DEPS = [
-    "//:node_modules/@material/tokens",
-]
 
 # Common dependencies of Angular CLI test suites
 TEST_CONFIG = COMMON_CONFIG + [
@@ -69,7 +66,6 @@ TEST_CONFIG = COMMON_CONFIG + [
     "//:node_modules/karma-coverage-istanbul-reporter",
 ]
 TEST_DEPS = [
-    "//:node_modules/@material/tokens",
     "//:node_modules/@types/jasmine",
     "//:node_modules/@types/node",
     "//:node_modules/@angular/compiler",
@@ -85,7 +81,7 @@ E2E_CONFIG = COMMON_CONFIG + [
     ":ng-e2e-config",
     "//:node_modules/jasmine-spec-reporter",
 ]
-E2E_DEPS = APPLICATION_DEPS + [
+E2E_DEPS = [
     "//:node_modules/@types/jasmine",
     "//:node_modules/@types/node",
     "//:node_modules/protractor",
@@ -107,8 +103,9 @@ LINT_CONFIG = COMMON_CONFIG + [
   "//:node_modules/eslint-plugin-prefer-arrow",
   "//:node_modules/@typescript-eslint/eslint-plugin",
   "//:node_modules/@typescript-eslint/parser",
+  "//:node_modules/@stylistic/eslint-plugin",
 ]
-LINT_DEPS = APPLICATION_DEPS + [
+LINT_DEPS = [
   # TODO(bazel): this should be included as a transitive of @angular-devkit/architect-cli!?
   "//:node_modules/@angular-devkit/architect",
 ]
@@ -188,13 +185,13 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
 
     _architect_build(
         project_name,
-        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_DEPS + APPLICATION_CONFIG,
+        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_CONFIG,
         tags = tags + ["manual"],
         **kwargs
     )
     _architect_build(
         project_name,
-        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_DEPS + APPLICATION_CONFIG,
+        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_CONFIG,
         configuration = "production",
         tags = tags,
         **kwargs
@@ -203,7 +200,7 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
     _architect_binary(
         project_name,
         "serve",
-        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_DEPS + APPLICATION_CONFIG,
+        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_CONFIG,
         tags = tags + ["manual"],
         **kwargs
     )
@@ -211,7 +208,7 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
         project_name,
         "serve",
         configuration = "production",
-        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_DEPS + APPLICATION_CONFIG,
+        srcs = srcs + deps + NG_COMMON_DEPS + APPLICATION_CONFIG,
         tags = tags + ["manual"],
         **kwargs
     )
