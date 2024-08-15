@@ -14,8 +14,8 @@ exports_files([
 
 nodejs_binary(
     name = "yarn_vendored",
-    data = [".yarn/releases/yarn-1.22.17.cjs"],
-    entry_point = ".yarn/releases/yarn-1.22.17.cjs",
+    data = [".yarn/releases/yarn-1.22.19.cjs"],
+    entry_point = ".yarn/releases/yarn-1.22.19.cjs",
     visibility = ["//integration:__subpackages__"],
 )
 

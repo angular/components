@@ -3,4 +3,4 @@
 . "$(dirname $0)/_/husky.sh"
 
 # When a commit is started, restore the previous commit message draft if it exists.
-yarn -s ng-dev commit-message restore-commit-message-draft $1 $2;
+yarn ng-dev commit-message restore-commit-message-draft $1 $2;

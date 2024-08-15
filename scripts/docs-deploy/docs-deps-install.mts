@@ -13,7 +13,7 @@ export async function installDepsForDocsSite(
   const additionalArgs = [];
 
   if (options.frozenLockfile) {
-    additionalArgs.push('--frozen-lockfile');
+    additionalArgs.push('--immutable');
   }
 
   await $`yarn --cwd ${repoDirPath} install ${additionalArgs}`;
