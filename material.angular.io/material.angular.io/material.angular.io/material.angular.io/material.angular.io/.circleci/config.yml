@@ -33,7 +33,7 @@ var_4: &save_cache
 var_5: &yarn_install
   run:
     name: 'Installing project dependencies'
-    command: yarn install --frozen-lockfile --non-interactive
+    command: yarn install --immutable
     no_output_timeout: 20m
 
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs

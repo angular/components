@@ -25,7 +25,7 @@ jobs:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
       - name: Install node modules
-        run: yarn install
+        run: yarn install --immutable
       - name: Execute Linting
         run: yarn bazel test --test_tag_filters=lint //...
 
@@ -35,7 +35,7 @@ jobs:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
       - name: Install node modules
-        run: yarn install
+        run: yarn install --immutable
       - name: Execute Build
         run: yarn bazel build //...
 
@@ -45,7 +45,7 @@ jobs:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
       - name: Install node modules
-        run: yarn install
+        run: yarn install --immutable
       - name: Execute Tests
         run: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
       - name: Store Test Logs
@@ -61,7 +61,7 @@ jobs:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
       - name: Install node modules
-        run: yarn install
+        run: yarn install --immutable
       - name: Execute Lighthouse Audit
         run: yarn bazel test --test_tag_filters=audit //...
       - name: Store Audit Logs
