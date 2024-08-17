@@ -4,21 +4,25 @@
   into a template since we use it in multiple places.
 -->
 <ng-template #icons>
-  <ng-content select="[matListItemAvatar],[matListItemIcon]">
-  </ng-content>
+  <ng-content select="[matListItemAvatar],[matListItemIcon]"> </ng-content>
 </ng-template>
 
 <ng-template #checkbox>
   <div class="mdc-checkbox" [class.mdc-checkbox--disabled]="disabled">
-    <input type="checkbox" class="mdc-checkbox__native-control"
-           [checked]="selected" [disabled]="disabled"/>
+    <input
+      type="checkbox"
+      class="mdc-checkbox__native-control"
+      [checked]="selected"
+      [disabled]="disabled"
+      [attr.aria-labelledby]="labelId"
+    />
     <div class="mdc-checkbox__background">
-      <svg class="mdc-checkbox__checkmark"
-           viewBox="0 0 24 24"
-           aria-hidden="true">
-        <path class="mdc-checkbox__checkmark-path"
-              fill="none"
-              d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          class="mdc-checkbox__checkmark-path"
+          fill="none"
+          d="M1.73,12.91 8.1,19.28 22.79,4.59"
+        />
       </svg>
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
@@ -27,8 +31,13 @@
 
 <ng-template #radio>
   <div class="mdc-radio" [class.mdc-radio--disabled]="disabled">
-    <input type="radio" class="mdc-radio__native-control"
-           [checked]="selected" [disabled]="disabled"/>
+    <input
+      type="radio"
+      class="mdc-radio__native-control"
+      [checked]="selected"
+      [disabled]="disabled"
+      [attr.aria-labelledby]="labelId"
+    />
     <div class="mdc-radio__background">
       <div class="mdc-radio__outer-circle"></div>
       <div class="mdc-radio__inner-circle"></div>
@@ -53,11 +62,14 @@
 }
 
 <!-- Text -->
-<span class="mdc-list-item__content">
+<span class="mdc-list-item__content" [id]="labelId">
   <ng-content select="[matListItemTitle]"></ng-content>
   <ng-content select="[matListItemLine]"></ng-content>
-  <span #unscopedContent class="mat-mdc-list-item-unscoped-content"
-        (cdkObserveContent)="_updateItemLines(true)">
+  <span
+    #unscopedContent
+    class="mat-mdc-list-item-unscoped-content"
+    (cdkObserveContent)="_updateItemLines(true)"
+  >
     <ng-content></ng-content>
   </span>
 </span>

@@ -187,6 +187,14 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
    */
   private _inputsInitialized = false;
 
+  /**
+   * The `labelId` input is used to associate the label with the input field by assigning the same unique identifier
+   * to both the label's `attr.id` attribute and the input's `aria-labelledby` attribute. This ensures that
+   * screen readers and assistive technologies can correctly identify and link the label with the corresponding
+   * input field, improving accessibility.
+   */
+  @Input() labelId: string | null = null;
+
   constructor(
     elementRef: ElementRef<HTMLElement>,
     ngZone: NgZone,

@@ -1,11 +1,9 @@
-
 <h1>mat-list demo</h1>
 
 <button mat-raised-button (click)="thirdLine = !thirdLine">Show third line</button>
 <button mat-raised-button (click)="showBoxes = !showBoxes">Show item boxes</button>
 
 <div class="demo-list" [class.demo-show-boxes]="showBoxes">
-
   <div>
     <h2>Normal lists</h2>
 
@@ -32,7 +30,7 @@
       <div mat-subheader>Today</div>
       @for (message of messages; track message) {
         <mat-list-item>
-          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
+          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}" />
           <div matListItemTitle>{{message.from}}</div>
           <div matListItemLine>
             <span>{{message.subject}} -- </span>
@@ -87,7 +85,7 @@
       <div mat-subheader>Today</div>
       @for (message of messages; track message) {
         <mat-list-item>
-          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}">
+          <img matListItemAvatar [src]="message.image" alt="Image of {{message.from}}" />
           <div matListItemTitle>{{message.from}}</div>
           <div matListItemLine>{{message.subject}}</div>
           <div matListItemLine>{{message.message}}</div>
@@ -140,31 +138,40 @@
   <div>
     <h2>Selection list</h2>
 
-    <mat-selection-list #groceries [ngModel]="selectedOptions"
-                        (ngModelChange)="onSelectedOptionsChange($event)"
-                        (selectionChange)="changeEventCount = changeEventCount + 1"
-                        [disabled]="selectionListDisabled"
-                        [disableRipple]="selectionListRippleDisabled"
-                        [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
-                        color="primary">
+    <mat-selection-list
+      #groceries
+      [ngModel]="selectedOptions"
+      (ngModelChange)="onSelectedOptionsChange($event)"
+      (selectionChange)="changeEventCount = changeEventCount + 1"
+      [disabled]="selectionListDisabled"
+      [disableRipple]="selectionListRippleDisabled"
+      [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
+      color="primary"
+    >
       <div mat-subheader>Groceries</div>
 
-      <mat-list-option value="bananas" togglePosition="before">Bananas</mat-list-option>
-      <mat-list-option selected value="oranges" color="accent">Oranges</mat-list-option>
-      <mat-list-option value="apples" color="warn">Apples</mat-list-option>
-      <mat-list-option value="strawberries" disabled>Strawberries</mat-list-option>
+      <mat-list-option value="bananas" togglePosition="before" [labelId]="'bananas'"
+        >Bananas</mat-list-option
+      >
+      <mat-list-option selected value="oranges" color="accent" [labelId]="'oranges'"
+        >Oranges</mat-list-option
+      >
+      <mat-list-option value="apples" color="warn" [labelId]="'apples'">Apples</mat-list-option>
+      <mat-list-option value="strawberries" disabled [labelId]="'strawberries'"
+        >Strawberries</mat-list-option
+      >
     </mat-selection-list>
 
     <mat-selection-list [disableRipple]="selectionListRippleDisabled">
       <div mat-subheader>Dogs</div>
 
-      <mat-list-option togglePosition="before">
-        <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg">
+      <mat-list-option togglePosition="before" [labelId]="'shiba-inu'">
+        <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" />
         <span matListItemTitle>Shiba Inu</span>
       </mat-list-option>
 
-      <mat-list-option togglePosition="after">
-        <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg">
+      <mat-list-option togglePosition="after" [labelId]="'other-shiba-inu'">
+        <img matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg" />
         <span matListItemTitle>Other Shiba Inu</span>
       </mat-list-option>
     </mat-selection-list>
@@ -175,19 +182,19 @@
     <p>
       <label>
         Disable selection list
-        <input type="checkbox" [(ngModel)]="selectionListDisabled">
+        <input type="checkbox" [(ngModel)]="selectionListDisabled" />
       </label>
     </p>
     <p>
       <label>
         Disable Selection List ripples
-        <input type="checkbox" [(ngModel)]="selectionListRippleDisabled">
+        <input type="checkbox" [(ngModel)]="selectionListRippleDisabled" />
       </label>
     </p>
     <p>
       <label>
         Hide Single-Selection indicators
-        <input type="checkbox" [(ngModel)]="selectionListSingleSelectionIndicatorHidden">
+        <input type="checkbox" [(ngModel)]="selectionListSingleSelectionIndicatorHidden" />
       </label>
     </p>
     <p>
@@ -199,17 +206,23 @@
   <div>
     <h2>Single Selection list</h2>
 
-    <mat-selection-list #favorite
-                        [(ngModel)]="favoriteOptions"
-                        [multiple]="false"
-                        [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
-                        color="primary">
+    <mat-selection-list
+      #favorite
+      [(ngModel)]="favoriteOptions"
+      [multiple]="false"
+      [hideSingleSelectionIndicator]="selectionListSingleSelectionIndicatorHidden"
+      color="primary"
+    >
       <div mat-subheader>Favorite Grocery</div>
 
-      <mat-list-option value="bananas">Bananas</mat-list-option>
-      <mat-list-option selected value="oranges" color="accent">Oranges</mat-list-option>
-      <mat-list-option value="apples" color="warn">Apples</mat-list-option>
-      <mat-list-option value="strawberries" disabled>Strawberries</mat-list-option>
+      <mat-list-option value="bananas" [labelId]="'bananas'">Bananas</mat-list-option>
+      <mat-list-option selected value="oranges" color="accent" [labelId]="'oranges'"
+        >Oranges</mat-list-option
+      >
+      <mat-list-option value="apples" color="warn" [labelId]="'apples'">Apples</mat-list-option>
+      <mat-list-option value="strawberries" disabled [labelId]="'strawberries'"
+        >Strawberries</mat-list-option
+      >
     </mat-selection-list>
 
     <p>Selected: {{favoriteOptions | json}}</p>
@@ -219,12 +232,14 @@
     <form [formGroup]="form">
       <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
         @for (shoe of shoes; track shoe) {
-          <mat-list-option [value]="shoe.value">{{shoe.name}}</mat-list-option>
+          <mat-list-option
+            [value]="shoe.value"
+            [labelId]="shoe.value"
+            >{{shoe.name}}</mat-list-option
+          >
         }
       </mat-selection-list>
-      <p>
-         Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
-      </p>
+      <p>Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}}</p>
     </form>
   </div>
 
@@ -235,19 +250,25 @@
       <mat-list-item>Title</mat-list-item>
       <mat-list-item lines="2">
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to not wrap. The list has only
-        acquired two lines and therefore there is no space for wrapping.</span>
+        <span
+          >This is unscoped text content that is supposed to not wrap. The list has only acquired
+          two lines and therefore there is no space for wrapping.</span
+        >
       </mat-list-item>
       <mat-list-item lines="3">
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to wrap to the third line.
-          The list item acquire spaces for three lines and text should have an ellipsis in the
-          third line upon text overflow.</span>
+        <span
+          >This is unscoped text content that is supposed to wrap to the third line. The list item
+          acquire spaces for three lines and text should have an ellipsis in the third line upon
+          text overflow.</span
+        >
       </mat-list-item>
       <mat-list-item>
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to not wrap. The list has only
-        acquired two lines (automatically) and therefore there is no space for wrapping.</span>
+        <span
+          >This is unscoped text content that is supposed to not wrap. The list has only acquired
+          two lines (automatically) and therefore there is no space for wrapping.</span
+        >
       </mat-list-item>
       <mat-list-item>
         <span matListItemTitle>Title</span>
@@ -257,24 +278,30 @@
     </mat-list>
 
     <mat-selection-list>
-      <mat-list-option>Title</mat-list-option>
-      <mat-list-option lines="2">
+      <mat-list-option [labelId]="'title1'">Title</mat-list-option>
+      <mat-list-option lines="2" [labelId]="'title2'">
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to not wrap. The list has only
-        acquired two lines and therefore there is no space for wrapping.</span>
+        <span
+          >This is unscoped text content that is supposed to not wrap. The list has only acquired
+          two lines and therefore there is no space for wrapping.</span
+        >
       </mat-list-option>
-      <mat-list-option lines="3">
+      <mat-list-option lines="3" [labelId]="'title3'">
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to wrap to the third line.
-          The list item acquire spaces for three lines and text should have an ellipsis in the
-          third line upon text overflow.</span>
+        <span
+          >This is unscoped text content that is supposed to wrap to the third line. The list item
+          acquire spaces for three lines and text should have an ellipsis in the third line upon
+          text overflow.</span
+        >
       </mat-list-option>
-      <mat-list-option>
+      <mat-list-option [labelId]="'title4'">
         <span matListItemTitle>Title</span>
-        <span>This is unscoped text content that is supposed to not wrap. The list has only
-        acquired two lines (automatically) and therefore there is no space for wrapping.</span>
+        <span
+          >This is unscoped text content that is supposed to not wrap. The list has only acquired
+          two lines (automatically) and therefore there is no space for wrapping.</span
+        >
       </mat-list-option>
-      <mat-list-option>
+      <mat-list-option [labelId]="'title5'">
         <span matListItemTitle>Title</span>
         <span matListItemLine>Secondary line</span>
         <span matListItemLine>Tertiary line</span>
@@ -297,8 +324,8 @@
     </mat-list>
 
     <mat-selection-list>
-      <mat-list-option value="first">First</mat-list-option>
-      <mat-list-option value="second">
+      <mat-list-option value="first" [labelId]="'first'">First</mat-list-option>
+      <mat-list-option value="second" [labelId]="'second'">
         <span matListItemTitle>Second</span>
         <span>Unscoped content</span>
       </mat-list-option>
@@ -309,26 +336,24 @@
     <h2>Icon alignment in selection list</h2>
 
     <mat-selection-list>
-      <mat-list-option value="bananas" [togglePosition]="togglePosition">
+      <mat-list-option value="bananas" [togglePosition]="togglePosition" [labelId]="'bananas'">
         <mat-icon matListItemIcon>info</mat-icon>
         Bananas
       </mat-list-option>
-      <mat-list-option value="oranges" [togglePosition]="togglePosition">
+      <mat-list-option value="oranges" [togglePosition]="togglePosition" [labelId]="'oranges'">
         <mat-icon matListItemIcon #ok>info</mat-icon>
         Oranges
       </mat-list-option>
-      <mat-list-option value="cake" [togglePosition]="togglePosition">
+      <mat-list-option value="cake" [togglePosition]="togglePosition" [labelId]="'cake'">
         <mat-icon matListItemIcon>info</mat-icon>
         Cake
       </mat-list-option>
-      <mat-list-option value="fries" [togglePosition]="togglePosition">
+      <mat-list-option value="fries" [togglePosition]="togglePosition" [labelId]="'fries'">
         <mat-icon matListItemIcon>info</mat-icon>
         Fries
       </mat-list-option>
     </mat-selection-list>
 
-    <button mat-raised-button (click)="toggleCheckboxPosition()">
-      Toggle checkbox position
-    </button>
+    <button mat-raised-button (click)="toggleCheckboxPosition()">Toggle checkbox position</button>
   </div>
 </div>

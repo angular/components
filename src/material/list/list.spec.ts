@@ -416,6 +416,23 @@ describe('MatList', () => {
 
     expect(buttonItem.hasAttribute('disabled')).toBe(false);
   });
+
+  it('should allow setting a label id for each list item', () => {
+    const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.listItems;
+    expect(items.length).toBeGreaterThan(0);
+
+    // Ripples should be enabled by default, and can be disabled with a binding.
+    items.forEach(item => expect(item.rippleDisabled).toBe(false));
+
+    fixture.componentInstance.disableListRipple = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    items.forEach(item => expect(item.rippleDisabled).toBe(true));
+  });
 });
 
 class BaseTestList {

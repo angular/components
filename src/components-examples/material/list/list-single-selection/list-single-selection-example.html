@@ -1,10 +1,8 @@
 <form [formGroup]="form">
   <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
     @for (shoe of shoes; track shoe) {
-      <mat-list-option [value]="shoe.value">{{shoe.name}}</mat-list-option>
+      <mat-list-option [value]="shoe.value" [labelId]="shoe.value">{{shoe.name}}</mat-list-option>
     }
   </mat-selection-list>
-  <p>
-     Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
-  </p>
+  <p>Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}}</p>
 </form>
