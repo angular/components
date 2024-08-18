@@ -74,6 +74,7 @@ $icon-margin: 16px !default;
     // Invert the arrow direction.
     polygon {
       transform: scaleX(-1);
+      transform-origin: center;
     }
   }
 
