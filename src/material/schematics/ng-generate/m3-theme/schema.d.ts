@@ -31,6 +31,16 @@ export interface Schema {
    * Whether to use system-level variables in the theme.
    */
   useSystemVariables?: boolean;
+  /**
+   * Prefix for system-level variables in the theme.
+   *
+   * If not set, the system variable will follow the default 'sys' prefix.
+   */
+  systemVariablePrefix?: string;
+  /**
+   * Whether to create high contrast override mixins of colors for theme.
+   */
+  generateHighContrastOverrideMixins?: boolean;
   /*
    * Workspace-relative path to a directory where the file with the custom M3
    * theme will be generated.

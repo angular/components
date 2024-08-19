@@ -33,9 +33,15 @@ describe('material-m3-theme-schematic', () => {
         html {
           @if variable-exists(light-theme) {
             @include _theme($light-theme);
+            @if mixin-exists(high-contrast-light-theme-overrides) {
+              @include high-contrast-light-theme-overrides();
+            }
           }
           @if variable-exists(dark-theme) {
             @include _theme($dark-theme);
+            @if mixin-exists(high-contrast-dark-theme-overrides) {
+              @include high-contrast-dark-theme-overrides();
+            }
           }
         }
         `,
@@ -109,7 +115,7 @@ describe('material-m3-theme-schematic', () => {
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      'light',
+      ['light'],
       'Color palettes are generated from primary: #984061',
       false,
     );
@@ -126,7 +132,7 @@ describe('material-m3-theme-schematic', () => {
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      'dark',
+      ['dark'],
       'Color palettes are generated from primary: #984061',
       false,
     );
@@ -144,7 +150,7 @@ describe('material-m3-theme-schematic', () => {
     const generatedSCSS = tree.readText('m3-theme.scss');
     const testSCSS = generateSCSSTheme(
       testM3ThemePalette,
-      'both',
+      ['light', 'dark'],
       'Color palettes are generated from primary: #984061',
       false,
     );
@@ -169,7 +175,7 @@ describe('material-m3-theme-schematic', () => {
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      'both',
+      ['light', 'dark'],
       'Color palettes are generated from primary: #984061, secondary: #984061',
       false,
     );
@@ -196,7 +202,7 @@ describe('material-m3-theme-schematic', () => {
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      'both',
+      ['light', 'dark'],
       'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061',
       false,
     );
@@ -221,11 +227,24 @@ describe('material-m3-theme-schematic', () => {
     let testPalette = testM3ThemePalette;
     testPalette.set('secondary', testM3ThemePalette.get('primary')!);
     testPalette.set('tertiary', testM3ThemePalette.get('primary')!);
-    testPalette.set('neutral', testM3ThemePalette.get('primary')!);
+
+    // Neutral's tonal palette has additional tones as opposed to the other color palettes.
+    let neutralPalette = new Map(testM3ThemePalette.get('primary')!);
+    neutralPalette.set(4, '#26000f');
+    neutralPalette.set(6, '#2f0015');
+    neutralPalette.set(12, '#460022');
+    neutralPalette.set(17, '#55082c');
+    neutralPalette.set(22, '#631637');
+    neutralPalette.set(24, '#691a3c');
+    neutralPalette.set(87, '#ffcdda');
+    neutralPalette.set(92, '#ffe1e8');
+    neutralPalette.set(94, '#ffe8ed');
+    neutralPalette.set(96, '#fff0f2');
+    testPalette.set('neutral', neutralPalette);
 
     const testSCSS = generateSCSSTheme(
       testPalette,
-      'both',
+      ['light', 'dark'],
       'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061, neutral: #984061',
       false,
     );
@@ -263,47 +282,150 @@ describe('material-m3-theme-schematic', () => {
     expect(generatedCSS).toContain('var(--sys-primary)');
   });
 
-  it('should estimate missing neutral hues', async () => {
+  it('should be able to generate high contrast mixins for light and dark themes', async () => {
     const tree = await runM3ThemeSchematic(runner, {
-      primaryColor: '#232e62',
-      secondaryColor: '#cc862a',
-      tertiaryColor: '#44263e',
-      neutralColor: '#929093',
-      themeTypes: 'light',
+      primaryColor: '#984061',
+      themeTypes: 'both',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
     });
 
-    expect(tree.readContent('m3-theme.scss')).toContain(
-      [
-        `  neutral: (`,
-        `    0: #000000,`,
-        `    4: #0b0b0c,`,
-        `    6: #111012,`,
-        `    10: #1c1b1e,`,
-        `    12: #201f22,`,
-        `    17: #2b2a2d,`,
-        `    20: #313033,`,
-        `    22: #353437,`,
-        `    24: #3a393c,`,
-        `    25: #3c3b3e,`,
-        `    30: #474649,`,
-        `    35: #535255,`,
-        `    40: #5f5e61,`,
-        `    50: #787679,`,
-        `    60: #929093,`,
-        `    70: #adaaad,`,
-        `    80: #c8c5c9,`,
-        `    87: #dcd9dd,`,
-        `    90: #e5e1e5,`,
-        `    92: #ebe7eb,`,
-        `    94: #f0edf0,`,
-        `    95: #f3f0f3,`,
-        `    96: #f6f3f6,`,
-        `    98: #fcf8fb,`,
-        `    99: #fffbfe,`,
-        `    100: #ffffff,`,
-        `  ),`,
-      ].join('\n'),
-    );
+    const generatedSCSS = tree.readText('m3-theme.scss');
+
+    expect(generatedSCSS).toContain(`@mixin high-contrast-light-theme-overrides`);
+    expect(generatedSCSS).toContain(`@mixin high-contrast-dark-theme-overrides`);
+  });
+
+  it('should be able to generate high contrast light theme overrides when provided a primary color', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      themeTypes: 'light',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+
+    // Check a system variable from each color palette for their high contrast equivalent value
+    expect(generatedCSS).toContain(`--sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-secondary: #45212d`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #4d1f00`);
+    expect(generatedCSS).toContain(`--sys-error: #600004`);
+    expect(generatedCSS).toContain(`--sys-surface: #fff8f8`);
+    expect(generatedCSS).toContain(`--sys-outline: #37282c`);
+  });
+
+  it('should be able to generate high contrast dark theme overrides when provided a primary color', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      themeTypes: 'dark',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+
+    // Check a system variable from each color palette for their high contrast equivalent value
+    expect(generatedCSS).toContain(`--sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #ffece4`);
+    expect(generatedCSS).toContain(`--sys-error: #ffece9`);
+    expect(generatedCSS).toContain(`--sys-surface: #191113`);
+    expect(generatedCSS).toContain(`--sys-outline: #ffebef`);
+  });
+
+  it('should be able to generate high contrast light theme overrides if useSystemVariables is not specified', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      themeTypes: 'light',
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+    expect(generatedCSS).toContain(`--sys-primary: #580b2f`);
+  });
+
+  it('should be able to generate high contrast themes overrides when provided a primary and secondary color', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      secondaryColor: '#984061',
+      themeTypes: 'both',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+    console.log(tree.readText('m3-theme.scss'));
+
+    // Check a system variable from each color palette for their high contrast light theme value
+    expect(generatedCSS).toContain(`--sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-secondary: #580b2f`);
+
+    // Check a system variable from each color palette for their high contrast dark theme value
+    expect(generatedCSS).toContain(`--sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-secondary: #ffebef`);
+  });
+
+  it('should be able to generate high contrast themes overrides when provided primary, secondary, and tertiary color', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      secondaryColor: '#984061',
+      tertiaryColor: '#984061',
+      themeTypes: 'both',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+
+    // Check a system variable from each color palette for their high contrast light theme value
+    expect(generatedCSS).toContain(`--sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-secondary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #580b2f`);
+
+    // Check a system variable from each color palette for their high contrast dark theme value
+    expect(generatedCSS).toContain(`--sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #ffebef`);
+  });
+
+  it('should be able to generate high contrast themes overrides when provided primary, secondary, tertiary, and neutral color', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      secondaryColor: '#984061',
+      tertiaryColor: '#984061',
+      neutralColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+      themeTypes: 'both',
+      useSystemVariables: true,
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+
+    // Check a system variable from each color palette for their high contrast light theme value
+    expect(generatedCSS).toContain(`--sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-secondary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #580b2f`);
+    expect(generatedCSS).toContain(`--sys-surface-bright: #f9f9f9`);
+
+    // Check a system variable from each color palette for their high contrast dark theme value
+    expect(generatedCSS).toContain(`--sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-tertiary: #ffebef`);
+    expect(generatedCSS).toContain(`--sys-surface-bright: #4f5051`);
+  });
+
+  it('should be able to generate high contrast themes with custom system variable prefix', async () => {
+    const tree = await runM3ThemeSchematic(runner, {
+      primaryColor: '#984061',
+      themeTypes: 'light',
+      useSystemVariables: true,
+      systemVariablePrefix: 'my-app',
+      generateHighContrastOverrideMixins: true,
+    });
+
+    const generatedCSS = transpileTheme(tree.readText('m3-theme.scss'));
+    expect(generatedCSS).toContain(`--my-app-primary: #580b2f`);
   });
 });
 

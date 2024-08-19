@@ -23,9 +23,12 @@ If you're using the system variables option, you should remember to either provi
 system variables (all prefixed with `--sys-`), or to include the `system-level-colors` and
 `system-level-typography` mixins which will generate the values based on your theme.
 
-The default prefix for system variables is `--sys-`. This prefix can be customized. For
-example, to change the prefix to `--md-sys-`, use the following configuration at the color or typography level:
-`system-prefix: md-sys`.
+The default prefix for system variables is `--sys-`. This prefix can be customized if specified.
+
+When using system variables you can also generate high contrast override mixins. The mixin overrides
+the system level variables with high contrast equivalent values from your theme. This is helpful for
+users who prefer more contrastful colors for either preference or accessibility reasons.
+
 
 ```scss
 @use '@angular/material' as mat;
@@ -42,6 +45,12 @@ html {
   // or uncomment the lines below to generate them from the theme.
   // @include mat.system-level-colors(my-theme.$light-theme);
   // @include mat.system-level-typography(my-theme.$light-theme);
+
+  // When generating high contrast override mixins, uncomment the lines below to override
+  // the system variables only when users specify.
+  // @media (prefers-contrast: more) {
+  //   @include my-theme.high-contrast-light-theme-overrides();
+  // }
 }
 ```
 
@@ -66,3 +75,7 @@ generated theme file should be created in. Defaults to the project root.
 * `themeTypes` - Theme types ('light', 'dark', or 'both') to generate themes for. Defaults to both.
 * `useSystemVariables` - Whether to generate a theme that uses system-level variables for easier
 dynamic theming. Defaults to false.
+* `systemVariablePrefix` - Prefix for system-level variables. Defaults to 'sys'.
+* `generateHighContrastOverrideMixins` - Whether to add high contrast override mixins to generated
+theme file. Developers can call the mixin when they want to show a high contrast version of their
+theme.
