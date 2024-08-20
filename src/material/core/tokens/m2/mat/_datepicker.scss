@@ -106,7 +106,7 @@ $private-default-overlap-color: #a8dab5;
     // that were set in the previous theming API to reduce the amount of subtle screenshot
     // differences. We should look into introducing the other tokens in a follow-up.
     calendar-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    calendar-text-size: 13px, // TODO(crisbeto): this doesn't appear to affect anything
+    calendar-text-size: 13px,
 
     calendar-body-label-text-size: inspection.get-theme-typography($theme, button, font-size),
     calendar-body-label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
