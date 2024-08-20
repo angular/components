@@ -64,7 +64,7 @@ export class PreviewRef {
 
     // The null check is necessary for browsers that don't support the popover API.
     // Note that we use a string access for compatibility with Closure.
-    if ('showPopover' in this._preview) {
+    if (supportsPopover(this._preview)) {
       this._preview['showPopover']();
     }
   }
@@ -139,8 +139,12 @@ export class PreviewRef {
         // It's important that we disable the pointer events on the preview, because
         // it can throw off the `document.elementFromPoint` calls in the `CdkDropList`.
         'pointer-events': 'none',
-        // We have to reset the margin, because it can throw off positioning relative to the viewport.
-        'margin': '0',
+        // If the preview has a margin, it can throw off our positioning so we reset it. The reset
+        // value for `margin-right` needs to be `auto` when opened as a popover, because our
+        // positioning is always top/left based, but native popover seems to position itself
+        // to the top/right if `<html>` or `<body>` have `dir="rtl"` (see #29604). Setting it
+        // to `auto` pushed it to the top/left corner in RTL and is a noop in LTR.
+        'margin': supportsPopover(preview) ? '0 auto 0 0' : '0',
         'position': 'fixed',
         'top': '0',
         'left': '0',
@@ -164,4 +168,9 @@ export class PreviewRef {
 
     return preview;
   }
+}
+
+/** Checks whether a specific element supports the popover API. */
+function supportsPopover(element: HTMLElement): boolean {
+  return 'showPopover' in element;
 }

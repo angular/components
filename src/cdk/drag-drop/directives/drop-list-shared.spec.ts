@@ -834,7 +834,6 @@ export function defineCommonDropListTests(config: {
 
       const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
       const previewRect = preview.getBoundingClientRect();
-      const zeroPxRegex = /^0(px)?$/;
 
       expect(item.parentNode)
         .withContext('Expected element to be moved out into the body')
@@ -846,10 +845,9 @@ export function defineCommonDropListTests(config: {
         .withContext('Expect element position to be !important')
         .toBe('important');
       // Use a regex here since some browsers normalize 0 to 0px, but others don't.
-      // Use a regex here since some browsers normalize 0 to 0px, but others don't.
       expect(item.style.top)
         .withContext('Expected element to be removed from layout')
-        .toMatch(zeroPxRegex);
+        .toMatch(/^0(px)?$/);
       expect(item.style.left)
         .withContext('Expected element to be removed from layout')
         .toBe('-999em');
@@ -860,7 +858,7 @@ export function defineCommonDropListTests(config: {
         .toBe('manual');
       expect(preview.style.margin)
         .withContext('Expected preview to reset the margin')
-        .toMatch(zeroPxRegex);
+        .toMatch(/^(0(px)? auto 0(px)? 0(px)?)|(0(px)?)$/);
       expect(preview.textContent!.trim())
         .withContext('Expected preview content to match element')
         .toContain('One');
@@ -880,10 +878,9 @@ export function defineCommonDropListTests(config: {
         .withContext('Expected preview to have a high default zIndex.')
         .toBe('1000');
       // Use a regex here since some browsers normalize 0 to 0px, but others don't.
-      // Use a regex here since some browsers normalize 0 to 0px, but others don't.
       expect(preview.style.margin)
         .withContext('Expected the preview margin to be reset.')
-        .toMatch(zeroPxRegex);
+        .toMatch(/^(0(px)? auto 0(px)? 0(px)?)|(0(px)?)$/);
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
