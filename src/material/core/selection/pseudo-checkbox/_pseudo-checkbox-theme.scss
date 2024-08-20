@@ -56,16 +56,17 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   }
   @else {
-    .mat-primary {
-      @include _palette-styles($theme, primary);
-    }
-
     // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
     // theme from their parent, rather than implementing their own theming, which is why we
     // don't attach to the `mat-*` classes. Also note that this needs to be below `.mat-primary`
     // in order to allow for the color to be overwritten if the checkbox is inside a parent that
     // has `mat-accent` and is placed inside another parent that has `mat-primary`.
     @include _palette-styles($theme, accent);
+
+    .mat-primary {
+      @include _palette-styles($theme, primary);
+    }
+
     .mat-accent {
       @include _palette-styles($theme, accent);
     }

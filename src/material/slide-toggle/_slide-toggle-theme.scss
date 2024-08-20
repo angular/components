@@ -42,12 +42,14 @@
       @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
         tokens-mdc-switch.get-color-tokens($theme));
 
-      // TODO(wagnermaciel): Use our token system to define this css variable.
-      --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
-          $theme,
-          foreground,
-          disabled-text
-        )};
+      & {
+        // TODO(wagnermaciel): Use our token system to define this css variable.
+        --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+            $theme,
+            foreground,
+            disabled-text
+          )};
+      }
 
       .mat-mdc-slide-toggle {
         @include token-utils.create-token-values(tokens-mat-switch.$prefix,

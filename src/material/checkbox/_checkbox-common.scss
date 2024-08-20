@@ -175,10 +175,10 @@ $_fallback-size: 40px;
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       @include token-utils.create-token-slot(color, selected-checkmark-color);
+    }
 
-      @include cdk.high-contrast(active, off) {
-        color: CanvasText;
-      }
+    @include cdk.high-contrast(active, off) {
+      color: CanvasText;
     }
   }
 
@@ -214,14 +214,14 @@ $_fallback-size: 40px;
     transition: opacity $_transition-duration $_exit-curve,
                 transform $_transition-duration $_exit-curve;
 
-    @include cdk.high-contrast(active, off) {
-      margin: 0 1px;
-    }
-
     @include token-utils.use-tokens($prefix, $slots) {
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       @include token-utils.create-token-slot(border-color, selected-checkmark-color);
+    }
+
+    @include cdk.high-contrast(active, off) {
+      margin: 0 1px;
     }
   }
 

@@ -63,11 +63,6 @@ $large-size: $default-size + 6;
   box-sizing: border-box;
   pointer-events: none;
 
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-    border-radius: 0;
-  }
-
   @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
     @include token-utils.create-token-slot(background-color, background-color);
     @include token-utils.create-token-slot(color, text-color);
@@ -100,6 +95,11 @@ $large-size: $default-size + 6;
       left: auto;
       right: 100%;
     }
+  }
+
+  @include cdk.high-contrast(active, off) {
+    outline: solid 1px;
+    border-radius: 0;
   }
 }
 

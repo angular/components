@@ -22,6 +22,10 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   padding: 0;
   position: relative;
 
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, track-width);
+  }
+
   &.mdc-switch--disabled {
     cursor: default;
     pointer-events: none;
@@ -29,10 +33,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
 
   &.mat-mdc-slide-toggle-disabled-interactive {
     pointer-events: auto;
-  }
-
-  @include token-utils.use-tokens($_mdc-slots...) {
-    @include token-utils.create-token-slot(width, track-width);
   }
 }
 
@@ -61,10 +61,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     position: absolute;
     width: 100%;
 
-    @include cdk.high-contrast(active, off) {
-      border-color: currentColor;
-    }
-
     @include token-utils.use-tokens($_mat-slots...) {
       @include token-utils.create-token-slot(border-width, track-outline-width);
       @include token-utils.create-token-slot(border-color, track-outline-color);
@@ -83,9 +79,17 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     }
   }
 
+  @include cdk.high-contrast(active, off) {
+    border-color: currentColor;
+  }
+
   &::before {
     transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
     transform: translateX(0);
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, unselected-track-color);
+    }
 
     .mdc-switch--selected & {
       transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
@@ -109,8 +113,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     }
 
     @include token-utils.use-tokens($_mdc-slots...) {
-      @include token-utils.create-token-slot(background, unselected-track-color);
-
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, unselected-hover-track-color);
       }
@@ -135,6 +137,10 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   &::after {
     transform: translateX(-100%);
 
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, selected-track-color);
+    }
+
     [dir='rtl'] & {
       transform: translateX(100%);
     }
@@ -156,8 +162,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     }
 
     @include token-utils.use-tokens($_mdc-slots...) {
-      @include token-utils.create-token-slot(background, selected-track-color);
-
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, selected-hover-track-color);
       }
@@ -190,6 +194,10 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   right: auto;
   transform: translateX(0);
 
+  @include token-utils.use-tokens($_mdc-slots...) {
+    width: calc(100% - #{token-utils.get-token-variable(handle-width)});
+  }
+
   [dir='rtl'] & {
     left: auto;
     right: 0;
@@ -201,10 +209,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     [dir='rtl'] & {
       transform: translateX(-100%);
     }
-  }
-
-  @include token-utils.use-tokens($_mdc-slots...) {
-    width: calc(100% - #{token-utils.get-token-variable(handle-width)});
   }
 }
 
@@ -224,15 +228,15 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     height 75ms cubic-bezier(0.4, 0, 0.2, 1),
     margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  [dir='rtl'] & {
-    left: auto;
-    right: 0;
-  }
-
   @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(width, handle-width);
     @include token-utils.create-token-slot(height, handle-height);
     @include token-utils.create-token-slot(border-radius, handle-shape);
+  }
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
   }
 
   @include token-utils.use-tokens($_mat-slots...) {

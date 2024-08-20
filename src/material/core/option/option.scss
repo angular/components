@@ -71,6 +71,10 @@ $_side-padding: 16px;
     // we can't use directly, because it comes with some selectors.
     cursor: default;
 
+    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
+    // keyboard, but not with mouse.
+    pointer-events: none;
+
     // Give the visual content of this list item a lower opacity. This creates the "gray" appearance
     // for disabled state. Set the opacity on the pseudo checkbox and projected content. Set
     // opacity only on the visual content rather than the entire list-item so we don't affect the
@@ -81,11 +85,6 @@ $_side-padding: 16px;
     .mat-mdc-option-pseudo-checkbox, .mdc-list-item__primary-text, > mat-icon {
       opacity: 0.38;
     }
-
-    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
-    // keyboard, but not with mouse.
-    pointer-events: none;
-
   }
 
   // Note that we bump the padding here, rather than padding inside the
@@ -146,7 +145,6 @@ $_side-padding: 16px;
     font-family: inherit;
     text-decoration: inherit;
     text-transform: inherit;
-
     margin-right: auto;
 
     [dir='rtl'] & {

@@ -141,8 +141,6 @@
   @include token-utils.use-tokens($prefix, $slots) {
     $icon-spacing: token-utils.get-token-variable(icon-spacing, true);
     $icon-offset: token-utils.get-token-variable(icon-offset, true);
-    $horizontal-padding: token-utils.get-token-variable(horizontal-padding, true);
-    padding: 0 $horizontal-padding;
 
     @if ($has-with-icon-padding) {
       $with-icon-horizontal-padding:

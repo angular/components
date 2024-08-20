@@ -80,7 +80,6 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 }
 
 .mat-calendar-body-cell {
-  @include button-common.reset();
   position: absolute;
   top: 0;
   left: 0;
@@ -91,6 +90,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   outline: none;
   font-family: inherit;
   margin: 0;
+  @include button-common.reset();
 }
 
 // We use ::before to apply a background to the body cell, because we need to apply a border
