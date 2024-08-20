@@ -118,7 +118,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addHeaders(sectionName: string, docViewerContent: HTMLElement, sectionIndex = 0) {
-    const links = Array.from(docViewerContent.querySelectorAll('h3, h4'), header => {
+    const links = Array.from(docViewerContent.querySelectorAll('h2, h3, h4'), header => {
       // remove the 'link' icon name from the inner text
       const name = (header as HTMLElement).innerText.trim().replace(/^link/, '');
       const {top} = header.getBoundingClientRect();
