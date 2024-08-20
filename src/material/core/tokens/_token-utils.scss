@@ -123,9 +123,14 @@ $_system-fallbacks: m3-tokens.create-system-fallbacks();
 // Outputs a map of tokens under a specific prefix.
 @mixin create-token-values($prefix, $tokens) {
   @if $tokens != null {
-    @each $key, $value in $tokens {
-      @if $value != null {
-        #{_create-var-name($prefix, $key)}: #{$value};
+    // TODO: The `&` adds to the file size of theme, but it's necessary for compatibility
+    // with https://sass-lang.com/documentation/breaking-changes/mixed-decls/. We should
+    // figure out a better way to do this or move all the concrete styles out of the theme.
+    & {
+      @each $key, $value in $tokens {
+        @if $value != null {
+          #{_create-var-name($prefix, $key)}: #{$value};
+        }
       }
     }
   }

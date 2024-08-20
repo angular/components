@@ -52,11 +52,11 @@ describe('M3 theme', () => {
       }
     `),
     );
-    const selectors: string[] = [];
+    const selectors = new Set<string>();
     root.walkRules(rule => {
-      selectors.push(rule.selector);
+      selectors.add(rule.selector);
     });
-    expect(selectors).toEqual(['html', '.mat-theme-loaded-marker']);
+    expect(Array.from(selectors)).toEqual(['html', '.mat-theme-loaded-marker']);
   });
 
   it('should only emit CSS variables', () => {

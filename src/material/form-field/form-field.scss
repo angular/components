@@ -45,10 +45,6 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  [dir='rtl'] & {
-    text-align: right;
-  }
-
   @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
     tokens-mat-form-field.get-token-slots()) {
     @include vendor-prefixes.smooth-font();
@@ -71,6 +67,10 @@ $_icon-prefix-infix-padding: 4px;
         font-size: $token-value;
       }
     }
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
   }
 }
 

@@ -6,14 +6,14 @@
 @include checkbox-common.checkbox-structure(true);
 
 .mat-mdc-checkbox {
-  @include checkbox-common.checkbox-noop-animations;
-
   // The host node defaults to `display: inline`, we have to change it in order for margins to work.
   display: inline-block;
   // Avoids issues in some CSS grid layouts (see #25153).
   position: relative;
   // Disable the browser's tap highlight since we indicate state with the ripple instead.
   -webkit-tap-highlight-color: transparent;
+
+  @include checkbox-common.checkbox-noop-animations;
 
   // Clicking the label toggles the checkbox, but MDC does not include any styles that inform the
   // user of this. Therefore we add the pointer cursor on top of MDC's styles.

@@ -642,6 +642,11 @@ $_avatar-trailing-padding: 8px;
   // MDC centers the text, but we have a lot of internal customers who have it at the start.
   text-align: left;
 
+  // Give the text label a higher z-index than the focus overlay to ensure that the focus overlay
+  // does not affect the color of the text. Material spec requires state layer to not interfere with
+  // text color.
+  z-index: 1;
+
   [dir='rtl'] & {
     text-align: right;
   }
@@ -671,11 +676,6 @@ $_avatar-trailing-padding: 8px;
     $offset: calc(#{$border-width} + 2px);
     margin: calc(#{$offset} * -1);
   }
-
-  // Give the text label a higher z-index than the focus overlay to ensure that the focus overlay
-  // does not affect the color of the text. Material spec requires state layer to not interfere with
-  // text color.
-  z-index: 1;
 }
 
 .mat-mdc-chip-remove {

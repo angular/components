@@ -33,13 +33,13 @@
 
 // This mixin provides base styles for the wrapper around mat-line elements in a list.
 @mixin wrapper-base() {
-  @include normalize-text();
-
   display: flex;
   flex-direction: column;
   flex: auto;
   box-sizing: border-box;
   overflow: hidden;
+
+  @include normalize-text();
 
   // Must remove wrapper when lines are empty or it takes up horizontal
   // space and pushes other elements to the right.

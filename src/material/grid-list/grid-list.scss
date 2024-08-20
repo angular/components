@@ -24,8 +24,6 @@ $text-padding: 16px;
   // Headers & footers
   .mat-grid-tile-header,
   .mat-grid-tile-footer {
-    @include list-common.normalize-text();
-
     display: flex;
     align-items: center;
     height: $one-line-height;
@@ -38,6 +36,8 @@ $text-padding: 16px;
     position: absolute;
     left: 0;
     right: 0;
+
+    @include list-common.normalize-text();
 
     &.mat-2-line {
       height: $two-line-height;
@@ -74,8 +74,8 @@ $text-padding: 16px;
   @include token-utils.use-tokens(
     tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
     $secondary-token-name: token-utils.get-token-variable(tile-header-secondary-text-size);
-    @include list-common.base(#{$secondary-token-name});
     @include token-utils.create-token-slot(font-size, tile-header-primary-text-size);
+    @include list-common.base(#{$secondary-token-name});
   }
 }
 
@@ -83,8 +83,8 @@ $text-padding: 16px;
   @include token-utils.use-tokens(
     tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
     $secondary-token-name: token-utils.get-token-variable(tile-footer-secondary-text-size);
-    @include list-common.base(#{$secondary-token-name});
     @include token-utils.create-token-slot(font-size, tile-footer-primary-text-size);
+    @include list-common.base(#{$secondary-token-name});
   }
 }
 

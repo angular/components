@@ -208,8 +208,10 @@ $_cached-token-slots: null;
     m3-token-definitions.md-sys-color-values-dark($ref),
     m3-token-definitions.md-sys-color-values-light($ref));
 
-  @each $name, $value in $sys-colors {
-    --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+  & {
+    @each $name, $value in $sys-colors {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
   }
 }
 
@@ -229,8 +231,10 @@ $_cached-token-slots: null;
         typography-system-variables-prefix) or $_system-level-prefix;
   }
 
-  @each $name, $value in m3-token-definitions.md-sys-typescale-values($ref) {
-    --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+  & {
+    @each $name, $value in m3-token-definitions.md-sys-typescale-values($ref) {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
   }
 }
 
@@ -259,20 +263,26 @@ $_cached-token-slots: null;
 }
 
 @mixin system-level-shape($theme, $overrides: (), $prefix: $_system-level-prefix) {
-  @each $name, $value in m3-token-definitions.md-sys-shape-values() {
-    --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+  & {
+    @each $name, $value in m3-token-definitions.md-sys-shape-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
   }
 }
 
 @mixin system-level-state($theme, $overrides: (), $prefix: $_system-level-prefix) {
-  @each $name, $value in m3-token-definitions.md-sys-state-values() {
-    --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+  & {
+    @each $name, $value in m3-token-definitions.md-sys-state-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
   }
 }
 
 @mixin system-level-motion($theme, $overrides: (), $prefix: $_system-level-prefix) {
-  @each $name, $value in m3-token-definitions.md-sys-motion-values() {
-    --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+  & {
+    @each $name, $value in m3-token-definitions.md-sys-motion-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
   }
 }
 

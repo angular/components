@@ -4,9 +4,10 @@
 @use './radio-common';
 
 .mat-mdc-radio-button {
+  -webkit-tap-highlight-color: transparent;
+
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
-  -webkit-tap-highlight-color: transparent;
 
   @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
     .mdc-radio__background::before {
@@ -90,13 +91,13 @@
   width: 48px;
   transform: translate(-50%, -50%);
 
+  @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
+    @include token-utils.create-token-slot(display, touch-target-display);
+  }
+
   [dir='rtl'] & {
     left: auto;
     right: 50%;
     transform: translate(50%, -50%);
-  }
-
-  @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
-    @include token-utils.create-token-slot(display, touch-target-display);
   }
 }

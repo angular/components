@@ -28,7 +28,6 @@ $_standard-tokens: (
 
 .mat-button-toggle-standalone,
 .mat-button-toggle-group {
-  @include elevation.overridable-elevation(2);
   position: relative;
   display: inline-flex;
   flex-direction: row;
@@ -42,6 +41,8 @@ $_standard-tokens: (
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(border-radius, shape);
   }
+
+  @include elevation.overridable-elevation(2);
 
   @include cdk.high-contrast(active, off) {
     outline: solid 1px;

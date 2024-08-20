@@ -10,8 +10,6 @@
 @use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
 
 .mat-mdc-fab-base {
-  @include button-base.mat-private-button-interactive();
-  @include style-private.private-animation-noop();
   @include vendor-prefixes.user-select(none);
   position: relative;
   display: inline-flex;
@@ -31,6 +29,9 @@
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms,
     transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
+
+  @include button-base.mat-private-button-interactive();
+  @include style-private.private-animation-noop();
 
   &::before {
     position: absolute;
@@ -114,9 +115,6 @@
 }
 
 @mixin _fab-structure($mdc-tokens, $mat-tokens) {
-  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
-  @include button-base.mat-private-button-ripple($mat-tokens...);
-
   @include token-utils.use-tokens($mdc-tokens...) {
     @include token-utils.create-token-slot(background-color, container-color);
     @include token-utils.create-token-slot(border-radius, container-shape);
@@ -134,6 +132,9 @@
       @include token-utils.create-token-slot(background-color, disabled-state-container-color);
     }
   }
+
+  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
+  @include button-base.mat-private-button-ripple($mat-tokens...);
 }
 
 .mat-mdc-fab {
@@ -167,15 +168,6 @@
   max-width: 100%;
   line-height: normal;
 
-  @include _fab-elevation($mdc-tokens);
-
-  @include button-base.mat-private-button-disabled {
-    // Necessary for interactive disabled buttons.
-    &, &:focus {
-      box-shadow: none;
-    }
-  }
-
   @include token-utils.use-tokens($mdc-tokens...) {
     @include token-utils.create-token-slot(height, container-height);
     @include token-utils.create-token-slot(border-radius, container-shape);
@@ -183,6 +175,15 @@
     @include token-utils.create-token-slot(font-size, label-text-size);
     @include token-utils.create-token-slot(font-weight, label-text-weight);
     @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+  }
+
+  @include _fab-elevation($mdc-tokens);
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
   }
 
   // stylelint-disable selector-class-pattern

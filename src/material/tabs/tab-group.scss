@@ -14,12 +14,13 @@
 }
 
 .mat-mdc-tab-group {
-  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-header', '.mat-mdc-tab');
   display: flex;
   flex-direction: column;
 
   // Fixes pagination issues inside flex containers (see #23157).
   max-width: 100%;
+
+  @include tabs-common.paginated-tab-header-with-background('.mat-mdc-tab-header', '.mat-mdc-tab');
 
   &.mat-mdc-tab-group-inverted-header {
     flex-direction: column-reverse;
@@ -32,9 +33,10 @@
 
 // The bottom section of the view; contains the tab bodies
 .mat-mdc-tab-body-wrapper {
-  @include private.private-animation-noop();
   position: relative;
   overflow: hidden;
   display: flex;
   transition: height tabs-common.$mat-tab-animation-duration variables.$ease-in-out-curve-function;
+
+  @include private.private-animation-noop();
 }
