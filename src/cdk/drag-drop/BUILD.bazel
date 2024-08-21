@@ -24,6 +24,7 @@ ng_module(
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/platform",
+        "//src/cdk/private",
         "//src/cdk/scrolling",
         "@npm//@angular/common",
         "@npm//@angular/core",
