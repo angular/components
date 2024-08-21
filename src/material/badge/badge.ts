@@ -9,14 +9,11 @@
 import {AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {
-  ApplicationRef,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  createComponent,
   Directive,
   ElementRef,
-  EnvironmentInjector,
   inject,
   Inject,
   Input,
@@ -29,6 +26,7 @@ import {
   ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 let nextId = 0;
 
@@ -47,9 +45,6 @@ export type MatBadgePosition =
 export type MatBadgeSize = 'small' | 'medium' | 'large';
 
 const BADGE_CONTENT_CLASS = 'mat-badge-content';
-
-/** Keeps track of the apps currently containing badges. */
-const badgeApps = new Set<ApplicationRef>();
 
 /**
  * Component used to load the structural styles of the badge.
@@ -162,22 +157,8 @@ export class MatBadge implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
   ) {
-    const appRef = inject(ApplicationRef);
-
-    if (!badgeApps.has(appRef)) {
-      badgeApps.add(appRef);
-
-      const componentRef = createComponent(_MatBadgeStyleLoader, {
-        environmentInjector: inject(EnvironmentInjector),
-      });
-
-      appRef.onDestroy(() => {
-        badgeApps.delete(appRef);
-        if (badgeApps.size === 0) {
-          componentRef.destroy();
-        }
-      });
-    }
+    const styleLoader = inject(_CdkPrivateStyleLoader);
+    styleLoader.load(_MatBadgeStyleLoader);
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = _elementRef.nativeElement;
@@ -185,13 +166,11 @@ export class MatBadge implements OnInit, OnDestroy {
         throw Error('matBadge must be attached to an element node.');
       }
 
-      const matIconTagName: string = 'mat-icon';
-
       // Heads-up for developers to avoid putting matBadge on <mat-icon>
       // as it is aria-hidden by default docs mention this at:
       // https://material.angular.io/components/badge/overview#accessibility
       if (
-        nativeElement.tagName.toLowerCase() === matIconTagName &&
+        nativeElement.tagName.toLowerCase() === 'mat-icon' &&
         nativeElement.getAttribute('aria-hidden') === 'true'
       ) {
         console.warn(
