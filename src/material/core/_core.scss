@@ -7,6 +7,14 @@
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
+  // TODO: Move ripple styles to be dynamically loaded instead of in core.
+  // This variable is used as a fallback for the ripple element's
+  // background color. However, if it isn't defined anywhere, then MSS
+  // complains in its verification stage.
+  html {
+    --mat-app-on-surface: initial;
+  }
+
   @include ripple.ripple();
   @include cdk.a11y-visually-hidden();
   @include cdk.overlay();
