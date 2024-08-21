@@ -31,6 +31,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk/overlay',
     'cdk/platform',
     'cdk/portal',
+    'cdk/private',
     'cdk/schematics',
     'cdk/scrolling',
     'cdk/stepper',
