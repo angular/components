@@ -6,23 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {DOCUMENT} from '@angular/common';
 import {
-  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
-  EnvironmentInjector,
   Inject,
   Injectable,
   NgZone,
   OnDestroy,
   ViewEncapsulation,
   WritableSignal,
-  createComponent,
   inject,
   signal,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
 import type {DragRef} from './drag-ref';
@@ -32,9 +30,6 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
   capture: true,
 });
-
-/** Keeps track of the apps currently containing drag items. */
-const activeApps = new Set<ApplicationRef>();
 
 /**
  * Component used to load the drag&drop reset styles.
@@ -59,8 +54,7 @@ export class _ResetsLoader {}
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
   private _document: Document;
-  private _appRef = inject(ApplicationRef);
-  private _environmentInjector = inject(EnvironmentInjector);
+  private _styleLoader = inject(_CdkPrivateStyleLoader);
 
   /** Registered drop container instances. */
   private _dropInstances = new Set<DropListRef>();
@@ -169,7 +163,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       return;
     }
 
-    this._loadResets();
+    this._styleLoader.load(_ResetsLoader);
     this._activeDragInstances.update(instances => [...instances, drag]);
 
     if (this._activeDragInstances().length === 1) {
@@ -312,24 +306,5 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     });
 
     this._globalListeners.clear();
-  }
-
-  // TODO(crisbeto): abstract this away into something reusable.
-  /** Loads the CSS resets needed for the module to work correctly. */
-  private _loadResets() {
-    if (!activeApps.has(this._appRef)) {
-      activeApps.add(this._appRef);
-
-      const componentRef = createComponent(_ResetsLoader, {
-        environmentInjector: this._environmentInjector,
-      });
-
-      this._appRef.onDestroy(() => {
-        activeApps.delete(this._appRef);
-        if (activeApps.size === 0) {
-          componentRef.destroy();
-        }
-      });
-    }
   }
 }
