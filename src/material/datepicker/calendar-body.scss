@@ -91,6 +91,12 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   outline: none;
   font-family: inherit;
   margin: 0;
+
+  // Needs to be repeated here in order to override the user agent styles.
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-family, calendar-text-font);
+    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  }
 }
 
 // We use ::before to apply a background to the body cell, because we need to apply a border
