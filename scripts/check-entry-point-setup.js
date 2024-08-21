@@ -23,6 +23,7 @@ const packagesDir = join(__dirname, '../src');
  */
 const excludeGlobs = [
   'cdk/testing/private',
+  'cdk/private',
   '*/schematics/**',
   // The protractor testing entry-point is no longer publicly available,
   // but exists in the repository until it can be removed in g3.
