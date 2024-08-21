@@ -731,3 +731,16 @@ $_avatar-trailing-padding: 8px;
 .mat-mdc-chip-action:focus .mat-mdc-focus-indicator::before {
   content: '';
 }
+
+//Sets the touch target for the chip trailing icons to 48px * 48px
+.mat-mdc-chip-touch-target {
+  >::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    bottom: -15px; 
+    left: -7px;
+    right: -7px;
+    z-index: -1;
+  }
+}
