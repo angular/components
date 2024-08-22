@@ -4,6 +4,7 @@
 
 ```ts
 
+import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -303,10 +304,13 @@ export class OverlayContainer implements OnDestroy {
     // (undocumented)
     protected _document: Document;
     getContainerElement(): HTMLElement;
+    protected _loadStyles(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     protected _platform: Platform;
+    // (undocumented)
+    protected _styleLoader: _CdkPrivateStyleLoader;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayContainer, never>;
     // (undocumented)

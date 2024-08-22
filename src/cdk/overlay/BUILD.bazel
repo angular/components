@@ -18,6 +18,9 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = [
+        ":overlay-prebuilt.css",
+    ],
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/bidi",
@@ -25,6 +28,7 @@ ng_module(
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/portal",
+        "//src/cdk/private",
         "//src/cdk/scrolling",
         "@npm//@angular/common",
         "@npm//@angular/core",

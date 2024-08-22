@@ -7,14 +7,34 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {
+  Inject,
+  Injectable,
+  OnDestroy,
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Platform, _isTestEnvironment} from '@angular/cdk/platform';
+
+@Component({
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  styleUrl: 'overlay-prebuilt.css',
+  host: {'cdk-overlay-style-loader': ''},
+})
+export class _CdkOverlayStyleLoader {}
 
 /** Container inside which all overlays will render. */
 @Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
   protected _containerElement: HTMLElement;
   protected _document: Document;
+  protected _styleLoader = inject(_CdkPrivateStyleLoader);
 
   constructor(
     @Inject(DOCUMENT) document: any,
@@ -34,6 +54,8 @@ export class OverlayContainer implements OnDestroy {
    * @returns the container element
    */
   getContainerElement(): HTMLElement {
+    this._loadStyles();
+
     if (!this._containerElement) {
       this._createContainer();
     }
@@ -83,5 +105,10 @@ export class OverlayContainer implements OnDestroy {
 
     this._document.body.appendChild(container);
     this._containerElement = container;
+  }
+
+  /** Loads the structural styles necessary for the overlay to work. */
+  protected _loadStyles(): void {
+    this._styleLoader.load(_CdkOverlayStyleLoader);
   }
 }

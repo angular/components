@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {Overlay} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 @Component({
@@ -11,4 +11,9 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 })
 export class BlockScrollStrategyE2E {
   scrollStrategy = inject(Overlay).scrollStrategies.block();
+
+  constructor() {
+    // This loads the structural styles for the test.
+    inject(OverlayContainer).getContainerElement();
+  }
 }

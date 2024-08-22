@@ -26,6 +26,7 @@ describe('FullscreenOverlayContainer', () => {
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
             fakeDocument = {
               body: document.body,
+              head: document.head,
               fullscreenElement: document.createElement('div'),
               fullscreenEnabled: true,
               addEventListener: (eventName: string, listener: EventListener) => {
