@@ -16,9 +16,13 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = [
+        ":text-field-prebuilt.css",
+    ],
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/platform",
+        "//src/cdk/private",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],

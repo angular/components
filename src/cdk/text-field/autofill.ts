@@ -11,14 +11,17 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  inject,
   Injectable,
   NgZone,
   OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {coerceElement} from '@angular/cdk/coercion';
 import {EMPTY, Observable, Subject} from 'rxjs';
+import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** An event that is emitted when the autofill state of an input changes. */
 export type AutofillEvent = {
@@ -44,6 +47,7 @@ const listenerOptions = normalizePassiveListenerOptions({passive: true});
  */
 @Injectable({providedIn: 'root'})
 export class AutofillMonitor implements OnDestroy {
+  private _styleLoader = inject(_CdkPrivateStyleLoader);
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
   constructor(
@@ -69,6 +73,8 @@ export class AutofillMonitor implements OnDestroy {
     if (!this._platform.isBrowser) {
       return EMPTY;
     }
+
+    this._styleLoader.load(_CdkTextFieldStyleLoader);
 
     const element = coerceElement(elementOrRef);
     const info = this._monitoredElements.get(element);
