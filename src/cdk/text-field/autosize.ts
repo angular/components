@@ -18,11 +18,14 @@ import {
   Optional,
   Inject,
   booleanAttribute,
+  inject,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {auditTime, takeUntil} from 'rxjs/operators';
 import {fromEvent, Subject} from 'rxjs';
-import {DOCUMENT} from '@angular/common';
+import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** Directive to automatically resize a textarea to fit its content. */
 @Directive({
@@ -124,8 +127,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     /** @breaking-change 11.0.0 make document required */
     @Optional() @Inject(DOCUMENT) document?: any,
   ) {
+    const styleLoader = inject(_CdkPrivateStyleLoader);
+    styleLoader.load(_CdkTextFieldStyleLoader);
     this._document = document;
-
     this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
   }
 

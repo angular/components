@@ -15,8 +15,6 @@
   }
 
   @include cdk.a11y-visually-hidden();
-  @include cdk.text-field-autosize();
-  @include cdk.text-field-autofill();
   @include private.structural-styling('mat');
   @include private.structural-styling('mat-mdc');
 
