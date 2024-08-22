@@ -18,7 +18,9 @@ import {
   OnInit,
   Optional,
   ANIMATION_MODULE_TYPE,
+  Injector,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
 
@@ -136,9 +138,12 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     platform: Platform,
     @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
+    injector?: Injector,
   ) {
+    // Note: cannot use `inject()` here, because this class
+    // gets instantiated manually in the ripple loader.
     this._globalOptions = globalOptions || {};
-    this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform);
+    this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform, injector);
   }
 
   ngOnInit() {

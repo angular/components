@@ -15,6 +15,7 @@ import {
   defaultRippleAnimationConfig,
 } from '../ripple';
 import {Platform, _getEventTarget} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** The options for the MatRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
