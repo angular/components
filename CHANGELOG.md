@@ -1,3 +1,19 @@
+<a name="18.2.1"></a>
+# 18.2.1 "plastic-panda" (2024-08-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3a2d13e2e4](https://github.com/angular/components/commit/3a2d13e2e4740acb32a09ed008dfc3f927b25423) | fix | **drag-drop:** preview positioned incorrectly when RTL is set on the body ([#29606](https://github.com/angular/components/pull/29606)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bad94fda58](https://github.com/angular/components/commit/bad94fda58c38940366e13201bca0dcb92f4ded2) | fix | **datepicker:** calendar font tokens not being picked up ([#29610](https://github.com/angular/components/pull/29610)) ([#29615](https://github.com/angular/components/pull/29615)) |
+| [c4c62b8549](https://github.com/angular/components/commit/c4c62b854915a1195d723d6c47eef40c4c28805a) | fix | **icon:** update error message for missing HttpClient ([#29589](https://github.com/angular/components/pull/29589)) |
+| [b2a32e9898](https://github.com/angular/components/commit/b2a32e9898de1c625a4398c83842666e9ff7f91b) | fix | **menu:** inconsistent layout of submenu icon ([#29603](https://github.com/angular/components/pull/29603)) |
+| [5f0c89030e](https://github.com/angular/components/commit/5f0c89030ea355a080a4486c6dbdabf7f3bd8908) | fix | **tabs:** switch pagination to not use native buttons ([#29605](https://github.com/angular/components/pull/29605)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.0"></a>
 # 18.2.0 "technetium-tapas" (2024-08-14)
 ## Deprecations
