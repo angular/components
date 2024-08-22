@@ -19,11 +19,13 @@ import {
   ANIMATION_MODULE_TYPE,
   Optional,
   EnvironmentInjector,
+  inject,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {OverlayContainer} from './overlay-container';
+import {_CdkOverlayStyleLoader, OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
@@ -45,6 +47,7 @@ let nextUniqueId = 0;
 @Injectable({providedIn: 'root'})
 export class Overlay {
   private _appRef: ApplicationRef;
+  private _styleLoader = inject(_CdkPrivateStyleLoader);
 
   constructor(
     /** Scrolling strategies that can be used when creating an overlay. */
@@ -68,6 +71,10 @@ export class Overlay {
    * @returns Reference to the created overlay.
    */
   create(config?: OverlayConfig): OverlayRef {
+    // This is done in the overlay container as well, but we have it here
+    // since it's common to mock out the overlay container in tests.
+    this._styleLoader.load(_CdkOverlayStyleLoader);
+
     const host = this._createHostElement();
     const pane = this._createPaneElement(host);
     const portalOutlet = this._createPortalOutlet(pane);
