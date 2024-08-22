@@ -22,8 +22,6 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatRipple } from '@angular/material/core';
-import { MatRippleLoader } from '@angular/material/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -116,10 +114,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     remove(): void;
     readonly removed: EventEmitter<MatChipEvent>;
     removeIcon: MatChipRemove;
-    // @deprecated
-    get ripple(): MatRipple;
-    set ripple(v: MatRipple);
-    _rippleLoader: MatRippleLoader;
     role: string | null;
     trailingIcon: MatChipTrailingIcon;
     get value(): any;

@@ -15,7 +15,6 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { MatRipple } from '@angular/material/core';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -114,8 +113,6 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     // (undocumented)
     registerOnValidatorChange(fn: () => void): void;
     required: boolean;
-    // @deprecated
-    ripple: MatRipple;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     tabIndex: number;

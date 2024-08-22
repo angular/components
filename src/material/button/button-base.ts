@@ -21,7 +21,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {MatRipple, MatRippleLoader, ThemePalette} from '@angular/material/core';
+import {MatRippleLoader, ThemePalette} from '@angular/material/core';
 
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
@@ -93,22 +93,10 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
    * Handles the lazy creation of the MatButton ripple.
    * Used to improve initial load time of large applications.
    */
-  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
+  protected _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   /** Whether this button is a FAB. Used to apply the correct class on the ripple. */
-  _isFab = false;
-
-  /**
-   * Reference to the MatRipple instance of the button.
-   * @deprecated Considered an implementation detail. To be removed.
-   * @breaking-change 17.0.0
-   */
-  get ripple(): MatRipple {
-    return this._rippleLoader?.getRipple(this._elementRef.nativeElement)!;
-  }
-  set ripple(v: MatRipple) {
-    this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
-  }
+  protected _isFab = false;
 
   /**
    * Theme color of the button. This API is supported in M2 themes only, it has

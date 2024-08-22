@@ -411,7 +411,6 @@ export class MatRippleLoader implements OnDestroy {
     }): void;
     // (undocumented)
     destroyRipple(host: HTMLElement): void;
-    getRipple(host: HTMLElement): MatRipple | undefined;
     // (undocumented)
     ngOnDestroy(): void;
     setDisabled(host: HTMLElement, disabled: boolean): void;

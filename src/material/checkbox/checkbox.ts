@@ -217,13 +217,6 @@ export class MatCheckbox
   disabledInteractive: boolean;
 
   /**
-   * Reference to the MatRipple instance of the checkbox.
-   * @deprecated Considered an implementation detail. To be removed.
-   * @breaking-change 17.0.0
-   */
-  @ViewChild(MatRipple) ripple: MatRipple;
-
-  /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
    * @docs-private
    */

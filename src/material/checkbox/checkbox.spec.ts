@@ -67,10 +67,6 @@ describe('MatCheckbox', () => {
       expect(inputElement.checked).toBe(false);
     }));
 
-    it('should expose the ripple instance', () => {
-      expect(checkboxInstance.ripple).toBeTruthy();
-    });
-
     it('should hide the internal SVG', () => {
       const svg = checkboxNativeElement.querySelector('svg')!;
       expect(svg.getAttribute('aria-hidden')).toBe('true');
