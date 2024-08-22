@@ -1,0 +1,155 @@
+@use '../style/elevation';
+@use '../style/sass-utils';
+@use './m3-tokens';
+@use './m3/definitions';
+@use 'sass:map';
+
+// Prefix used for component token fallback variables, e.g.
+// `color: var(--mdc-text-button-label-text-color, var(--mat-app-primary));`
+$_system-fallback-prefix: mat-app;
+
+// Default system level prefix to use when directly calling the `system-level-*` mixins
+$_system-level-prefix: sys;
+
+// Emits CSS variables for Material's system level values. Uses the
+// namespace prefix in $_system-fallback-prefix.
+// e.g. --mat-app-surface: #E5E5E5
+@mixin theme($theme, $overrides: ()) {
+  @include system-level-colors($theme, $overrides, $_system-fallback-prefix);
+  @include system-level-typography($theme, $overrides, $_system-fallback-prefix);
+  @include system-level-elevation($theme, $overrides, $_system-fallback-prefix);
+  @include system-level-shape($theme, $overrides, $_system-fallback-prefix);
+  @include system-level-motion($theme, $overrides, $_system-fallback-prefix);
+  @include system-level-state($theme, $overrides, $_system-fallback-prefix);
+}
+
+@mixin system-level-colors($theme, $overrides: (), $prefix: null) {
+  $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
+  $base-palettes: (
+    neutral: map.get($palettes, neutral),
+    neutral-variant: map.get($palettes, neutral-variant),
+    secondary: map.get($palettes, secondary),
+    error: map.get($palettes, error),
+  );
+
+  $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
+  $primary: map.merge(map.get($palettes, primary), $base-palettes);
+  $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
+  $error: map.get($palettes, error);
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, _mat-theming-internals-do-not-access,
+        color-system-variables-prefix) or $_system-level-prefix;
+  }
+
+  $ref: (
+    md-ref-palette: m3-tokens.generate-ref-palette-tokens($primary, $tertiary, $error)
+  );
+
+  $sys-colors: if($type == dark,
+    definitions.md-sys-color-values-dark($ref),
+    definitions.md-sys-color-values-light($ref));
+
+  & {
+    @each $name, $value in $sys-colors {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-typography($theme, $overrides: (), $prefix: null) {
+  $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
+  $brand: map.get($font-definition, brand);
+  $plain: map.get($font-definition, plain);
+  $bold: map.get($font-definition, bold);
+  $medium: map.get($font-definition, medium);
+  $regular: map.get($font-definition, regular);
+  $ref: (md-ref-typeface:
+      m3-tokens.generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, _mat-theming-internals-do-not-access,
+        typography-system-variables-prefix) or $_system-level-prefix;
+  }
+
+  & {
+    @each $name, $value in definitions.md-sys-typescale-values($ref) {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-elevation($theme, $overrides: (), $prefix: $_system-level-prefix) {
+  $shadow-color: map.get(
+      $theme, _mat-theming-internals-do-not-access, color-tokens, (mdc, theme), shadow);
+
+  @for $level from 0 through 24 {
+    $value: elevation.get-box-shadow($level, $shadow-color);
+    --#{$prefix}-elevation-shadow-level-#{$level}: #{$value};
+  }
+
+  @each $name, $value in definitions.md-sys-elevation-values() {
+    $level: map.get($overrides, $name) or $value;
+    $value: elevation.get-box-shadow($level, $shadow-color);
+    --#{$prefix}-#{$name}: #{$value};
+  }
+}
+
+@mixin system-level-shape($theme, $overrides: (), $prefix: $_system-level-prefix) {
+  & {
+    @each $name, $value in definitions.md-sys-shape-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-state($theme, $overrides: (), $prefix: $_system-level-prefix) {
+  & {
+    @each $name, $value in definitions.md-sys-state-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-motion($theme, $overrides: (), $prefix: $_system-level-prefix) {
+  & {
+    @each $name, $value in definitions.md-sys-motion-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+// Return a new map where the values are the same as the provided map's
+// keys, prefixed with "--mat-app-". For example:
+// (key1: '', key2: '') --> (key1: --mat-app-key1, key2: --mat-app-key2)
+@function _create-system-app-vars-map($map) {
+  $new-map: ();
+  @each $key, $value in $map {
+    $new-map: map.set($new-map, $key, --#{$_system-fallback-prefix}-#{$key});
+  }
+  @return $new-map;
+}
+
+// Create a components tokens map where values are based on
+// system fallback variables referencing Material's system keys.
+// Includes density token fallbacks where density is 0.
+@function create-system-fallbacks() {
+  $app-vars: (
+    'md-sys-color':
+        _create-system-app-vars-map(definitions.md-sys-color-values-light()),
+    'md-sys-typescale':
+        _create-system-app-vars-map(definitions.md-sys-typescale-values()),
+    'md-sys-elevation':
+        _create-system-app-vars-map(definitions.md-sys-elevation-values()),
+    'md-sys-state':
+        _create-system-app-vars-map(definitions.md-sys-state-values()),
+    'md-sys-shape':
+        _create-system-app-vars-map(definitions.md-sys-shape-values()),
+  );
+
+  @return sass-utils.deep-merge-all(
+      m3-tokens.generate-tokens($app-vars, true, true),
+      m3-tokens.generate-density-tokens(0)
+  );
+}
