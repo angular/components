@@ -1,13 +1,13 @@
+@use '../style/elevation';
+@use '../style/sass-utils';
+@use './m3-system';
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:string';
-@use '../style/elevation';
-@use '../style/sass-utils';
-@use './m3-tokens';
 
 $_tokens: null;
 $_component-prefix: null;
-$_system-fallbacks: m3-tokens.create-system-fallbacks();
+$_system-fallbacks: m3-system.create-system-fallbacks();
 
 // Sets the token prefix and map to use when creating token slots.
 @mixin use-tokens($prefix, $tokens) {
