@@ -5,10 +5,18 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ElementRef, NgZone} from '@angular/core';
+import {
+  ElementRef,
+  NgZone,
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  Injector,
+} from '@angular/core';
 import {Platform, normalizePassiveListenerOptions, _getEventTarget} from '@angular/cdk/platform';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {coerceElement} from '@angular/cdk/coercion';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {RippleRef, RippleState, RippleConfig} from './ripple-ref';
 import {RippleEventManager} from './ripple-event-manager';
 
@@ -58,6 +66,16 @@ const pointerDownEvents = ['mousedown', 'touchstart'];
 /** Events that signal that the pointer is up. */
 const pointerUpEvents = ['mouseup', 'mouseleave', 'touchend', 'touchcancel'];
 
+@Component({
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  styleUrl: 'ripple-structure.css',
+  host: {'mat-ripple-style-loader': ''},
+})
+export class _MatRippleStylesLoader {}
+
 /**
  * Helper service that performs DOM manipulations. Not intended to be used outside this module.
  * The constructor takes a reference to the ripple directive's host element and a map of DOM
@@ -105,10 +123,15 @@ export class RippleRenderer implements EventListenerObject {
     private _ngZone: NgZone,
     elementOrElementRef: HTMLElement | ElementRef<HTMLElement>,
     private _platform: Platform,
+    injector?: Injector,
   ) {
     // Only do anything if we're on the browser.
     if (_platform.isBrowser) {
       this._containerElement = coerceElement(elementOrElementRef);
+    }
+
+    if (injector) {
+      injector.get(_CdkPrivateStyleLoader).load(_MatRippleStylesLoader);
     }
   }
 

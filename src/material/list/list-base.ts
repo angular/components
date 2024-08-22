@@ -21,6 +21,7 @@ import {
   Optional,
   QueryList,
   ANIMATION_MODULE_TYPE,
+  Injector,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -29,6 +30,7 @@ import {
   RippleRenderer,
   RippleTarget,
 } from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Subscription, merge} from 'rxjs';
 import {
   MatListItemLine,
@@ -223,6 +225,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
       this._ngZone,
       this._hostElement,
       this._platform,
+      inject(Injector),
     );
     this._rippleRenderer.setupTriggerEvents(this._hostElement);
   }

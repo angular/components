@@ -27,6 +27,7 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/observers",
+        "//src/cdk/private",
         "//src/material/core",
         "//src/material/divider",
         "@npm//@angular/core",

@@ -1,7 +1,6 @@
 @use '@angular/cdk';
 @use './tokens/m2/mat/app' as tokens-mat-app;
 @use './tokens/token-utils';
-@use './ripple/ripple';
 @use './style/elevation';
 @use './focus-indicators/private';
 
@@ -15,7 +14,6 @@
     --mat-app-on-surface: initial;
   }
 
-  @include ripple.ripple();
   @include cdk.a11y-visually-hidden();
   @include cdk.overlay();
   @include cdk.text-field-autosize();
