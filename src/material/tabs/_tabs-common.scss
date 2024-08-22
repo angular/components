@@ -480,7 +480,7 @@ $mat-tab-animation-duration: 500ms !default;
 
       > #{$header-selector}, > .mat-mdc-tab-header-pagination {
         .mat-mdc-tab-header-pagination-chevron,
-        .mat-mdc-focus-indicator::before {
+        .mat-focus-indicator::before {
           @include token-utils.create-token-slot(border-color, foreground-color);
         }
 

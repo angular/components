@@ -534,7 +534,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   // Needs a little more specificity so the :hover styles don't override it.
   // For slide-toggles render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
-  &.mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before {
+  &.mat-mdc-slide-toggle-focused .mat-focus-indicator::before {
     content: '';
   }
 
@@ -555,7 +555,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
 
   // Slide-toggle components have to set `border-radius: 50%` in order to support density scaling
   // which will clip a square focus indicator so we have to turn it into a circle.
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     border-radius: 50%;
   }
 

@@ -37,8 +37,8 @@
 // Structural
 @forward './core/core' show core;
 @forward './core/ripple/ripple' show ripple;
-@forward './core/focus-indicators/focus-indicators' show strong-focus-indicators;
-@forward './core/focus-indicators/private' as private-strong-focus-indicators-*;
+@forward './core/focus-indicators/private' show strong-focus-indicators,
+  strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './core/style/elevation' show elevation, overridable-elevation, elevation-transition;
 
 // Theme bundles
@@ -60,8 +60,6 @@
   pseudo-checkbox-base, pseudo-checkbox-overrides;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-common' as pseudo-checkbox-* show
   pseudo-checkbox-legacy-size;
-@forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
-  strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './autocomplete/autocomplete-theme' as autocomplete-* show autocomplete-theme,
   autocomplete-color, autocomplete-typography, autocomplete-density, autocomplete-base,
   autocomplete-overrides;

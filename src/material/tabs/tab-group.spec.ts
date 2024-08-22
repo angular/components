@@ -331,9 +331,9 @@ describe('MatTabGroup', () => {
         ...fixture.debugElement.nativeElement.querySelectorAll('.mat-mdc-tab'),
       ];
 
-      expect(
-        tabLabelNativeElements.every(el => el.classList.contains('mat-mdc-focus-indicator')),
-      ).toBe(true);
+      expect(tabLabelNativeElements.every(el => el.classList.contains('mat-focus-indicator'))).toBe(
+        true,
+      );
     });
 
     it('should emit focusChange when a tab receives focus', fakeAsync(() => {

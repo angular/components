@@ -48,11 +48,11 @@
   }
 
   // The focus indicator should match the bounds of the entire button.
-  .mat-mdc-focus-indicator {
+  .mat-focus-indicator {
     @include layout-common.fill();
   }
 
-  &:focus .mat-mdc-focus-indicator::before {
+  &:focus .mat-focus-indicator::before {
     content: '';
   }
 }
