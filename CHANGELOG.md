@@ -1,3 +1,28 @@
+<a name="19.0.0-next.1"></a>
+# 19.0.0-next.1 "plastic-moose" (2024-08-22)
+## Breaking Changes
+### multiple
+- * In order for Material to be compatible with [recent changes in Sass](https://sass-lang.com/documentation/breaking-changes/mixed-decls/) and upcoming changes in the CSS standard, tokens are now emitted in-place, rather the being hoisted to the top of the selector. As a result, some token overrides might not apply anymore. This is relevant primarily for the cases like `@include mat.button-theme($theme); --mat-button-color: red;`. It can be resolved by wrapping the overrides with `& {}`, for example `@include mat.button-theme($theme); & { --mat-button-color: red; }`.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1abb484aa7](https://github.com/angular/components/commit/1abb484aa72177a748eecdf9b850cc1c07d1a42b) | feat | **input:** add the ability to interact with disabled inputs ([#29574](https://github.com/angular/components/pull/29574)) |
+| [7cf8c6c464](https://github.com/angular/components/commit/7cf8c6c464732af4283c5e3c3c724dd90acc4136) | fix | **datepicker:** calendar font tokens not being picked up ([#29610](https://github.com/angular/components/pull/29610)) |
+| [4f2bc4da78](https://github.com/angular/components/commit/4f2bc4da78ff85c6a9d5a2323908c82e6af85e11) | fix | **icon:** update error message for missing HttpClient ([#29589](https://github.com/angular/components/pull/29589)) |
+| [adf413670f](https://github.com/angular/components/commit/adf413670fe10bcfbfff1ec424fcfe2b76d66bdb) | fix | **menu:** inconsistent layout of submenu icon ([#29603](https://github.com/angular/components/pull/29603)) |
+| [357f6f27a5](https://github.com/angular/components/commit/357f6f27a5feb7f0b0aa6e626352a386e6725202) | fix | **tabs:** switch pagination to not use native buttons ([#29605](https://github.com/angular/components/pull/29605)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [04ce4d2648](https://github.com/angular/components/commit/04ce4d2648004e970bc864962e6ec12e92f27698) | fix | **drag-drop:** preview positioned incorrectly when RTL is set on the body ([#29606](https://github.com/angular/components/pull/29606)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [01711b1804](https://github.com/angular/components/commit/01711b180404ad029bef54e81bdc90fb158dc506) | fix | account for mixed declarations in latest Sass version ([#29596](https://github.com/angular/components/pull/29596)) |
+| [cb1450fc76](https://github.com/angular/components/commit/cb1450fc76998426111e150a983deb31ecbe42ce) | fix | change fallbacks to use m3 ([#29528](https://github.com/angular/components/pull/29528)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.1"></a>
 # 18.2.1 "plastic-panda" (2024-08-22)
 ### cdk
