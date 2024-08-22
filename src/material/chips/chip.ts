@@ -38,7 +38,6 @@ import {
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
-  MatRipple,
   MatRippleLoader,
   RippleGlobalOptions,
 } from '@angular/material/core';
@@ -216,18 +215,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** The chip's trailing remove icon. */
   @ContentChild(MAT_CHIP_REMOVE) removeIcon: MatChipRemove;
 
-  /**
-   * Reference to the MatRipple instance of the chip.
-   * @deprecated Considered an implementation detail. To be removed.
-   * @breaking-change 17.0.0
-   */
-  get ripple(): MatRipple {
-    return this._rippleLoader?.getRipple(this._elementRef.nativeElement)!;
-  }
-  set ripple(v: MatRipple) {
-    this._rippleLoader?.attachRipple(this._elementRef.nativeElement, v);
-  }
-
   /** Action receiving the primary set of user interactions. */
   @ViewChild(MatChipAction) primaryAction: MatChipAction;
 
@@ -235,7 +222,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    * Handles the lazy creation of the MatChip ripple.
    * Used to improve initial load time of large applications.
    */
-  _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
+  private _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   protected _injector = inject(Injector);
 
