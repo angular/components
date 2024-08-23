@@ -20,7 +20,6 @@ $prefix: (mat, sidenav);
     container-text-color: map.get($systems, md-sys-color, on-surface-variant),
     content-background-color: map.get($systems, md-sys-color, background),
     content-text-color: map.get($systems, md-sys-color, on-background),
-    // TODO: This should be `md-sys-color` `scrim` but causes changes in clients.
     scrim-color: sass-utils.safe-color-change(
         map.get($systems, md-ref-palette, neutral-variant20), $alpha: 0.4),
   );
