@@ -7,15 +7,13 @@
  */
 
 import {DOCUMENT} from '@angular/common';
+import {ANIMATION_MODULE_TYPE, Injectable, NgZone, OnDestroy, inject} from '@angular/core';
 import {
-  ANIMATION_MODULE_TYPE,
-  ElementRef,
-  Injectable,
-  NgZone,
-  OnDestroy,
-  inject,
-} from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, MatRipple} from '../ripple';
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleRenderer,
+  RippleTarget,
+  defaultRippleAnimationConfig,
+} from '../ripple';
 import {Platform, _getEventTarget} from '@angular/cdk/platform';
 
 /** The options for the MatRippleLoader's event listeners. */
@@ -55,7 +53,10 @@ export class MatRippleLoader implements OnDestroy {
   private _globalRippleOptions = inject(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
-  private _hosts = new Map<HTMLElement, MatRipple>();
+  private _hosts = new Map<
+    HTMLElement,
+    {renderer: RippleRenderer; target: RippleTarget; hasSetUpEvents: boolean}
+  >();
 
   constructor() {
     this._ngZone.runOutsideAngular(() => {
@@ -65,7 +66,7 @@ export class MatRippleLoader implements OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     const hosts = this._hosts.keys();
 
     for (const host of hosts) {
@@ -115,13 +116,15 @@ export class MatRippleLoader implements OnDestroy {
 
     // If the ripple has already been instantiated, just disable it.
     if (ripple) {
-      ripple.disabled = disabled;
-      return;
-    }
+      ripple.target.rippleDisabled = disabled;
 
-    // Otherwise, set an attribute so we know what the
-    // disabled state should be when the ripple is initialized.
-    if (disabled) {
+      if (!disabled && !ripple.hasSetUpEvents) {
+        ripple.hasSetUpEvents = true;
+        ripple.renderer.setupTriggerEvents(host);
+      }
+    } else if (disabled) {
+      // Otherwise, set an attribute so we know what the
+      // disabled state should be when the ripple is initialized.
       host.setAttribute(matRippleDisabled, '');
     } else {
       host.removeAttribute(matRippleDisabled);
@@ -148,14 +151,9 @@ export class MatRippleLoader implements OnDestroy {
   };
 
   /** Creates a MatRipple and appends it to the given element. */
-  private _createRipple(host: HTMLElement): MatRipple | undefined {
-    if (!this._document) {
+  private _createRipple(host: HTMLElement): void {
+    if (!this._document || this._hosts.has(host)) {
       return;
-    }
-
-    const existingRipple = this._hosts.get(host);
-    if (existingRipple) {
-      return existingRipple;
     }
 
     // Create the ripple element.
@@ -164,34 +162,48 @@ export class MatRippleLoader implements OnDestroy {
     rippleEl.classList.add('mat-ripple', host.getAttribute(matRippleClassName)!);
     host.append(rippleEl);
 
-    // Create the MatRipple.
-    const ripple = new MatRipple(
-      new ElementRef(rippleEl),
-      this._ngZone,
-      this._platform,
-      this._globalRippleOptions ? this._globalRippleOptions : undefined,
-      this._animationMode ? this._animationMode : undefined,
-    );
-    ripple._isInitialized = true;
-    ripple.trigger = host;
-    ripple.centered = host.hasAttribute(matRippleCentered);
-    ripple.disabled = host.hasAttribute(matRippleDisabled);
-    this.attachRipple(host, ripple);
-    return ripple;
-  }
+    const isNoopAnimations = this._animationMode === 'NoopAnimations';
+    const globalOptions = this._globalRippleOptions;
+    const enterDuration = isNoopAnimations
+      ? 0
+      : globalOptions?.animation?.enterDuration ?? defaultRippleAnimationConfig.enterDuration;
+    const exitDuration = isNoopAnimations
+      ? 0
+      : globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration;
+    const target: RippleTarget = {
+      rippleDisabled:
+        isNoopAnimations || globalOptions?.disabled || host.hasAttribute(matRippleDisabled),
+      rippleConfig: {
+        centered: host.hasAttribute(matRippleCentered),
+        terminateOnPointerUp: globalOptions?.terminateOnPointerUp,
+        animation: {
+          enterDuration,
+          exitDuration,
+        },
+      },
+    };
 
-  attachRipple(host: HTMLElement, ripple: MatRipple): void {
+    const renderer = new RippleRenderer(target, this._ngZone, rippleEl, this._platform);
+    const hasSetUpEvents = !target.rippleDisabled;
+
+    if (hasSetUpEvents) {
+      renderer.setupTriggerEvents(host);
+    }
+
+    this._hosts.set(host, {
+      target,
+      renderer,
+      hasSetUpEvents,
+    });
+
     host.removeAttribute(matRippleUninitialized);
-    this._hosts.set(host, ripple);
   }
 
-  destroyRipple(host: HTMLElement) {
+  destroyRipple(host: HTMLElement): void {
     const ripple = this._hosts.get(host);
 
     if (ripple) {
-      // Since this directive is created manually, it needs to be destroyed manually too.
-      // tslint:disable-next-line:no-lifecycle-invocation
-      ripple.ngOnDestroy();
+      ripple.renderer._removeTriggerEvents();
       this._hosts.delete(host);
     }
   }
