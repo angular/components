@@ -402,8 +402,6 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 // @public
 export class MatRippleLoader implements OnDestroy {
     constructor();
-    // (undocumented)
-    attachRipple(host: HTMLElement, ripple: MatRipple): void;
     configureRipple(host: HTMLElement, config: {
         className?: string;
         centered?: boolean;
