@@ -153,8 +153,8 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     if (_isNumberValue(value)) {
       const numberValue = Number(value);
 
-      // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we
-      // leave them as strings. For more info: https://goo.gl/y5vbSg
+      // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we leave them as strings.
+      // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
       return numberValue < MAX_SAFE_INTEGER ? numberValue : value;
     }
 
