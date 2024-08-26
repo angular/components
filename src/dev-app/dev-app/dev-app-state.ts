@@ -16,6 +16,7 @@ export interface DevAppState {
   animations: boolean;
   zoneless: boolean;
   darkTheme: boolean;
+  systemTheme: boolean;
   rippleDisabled: boolean;
   strongFocusEnabled: boolean;
   m3Enabled: boolean;
@@ -42,6 +43,7 @@ export function getAppState(): DevAppState {
       animations: true,
       zoneless: false,
       darkTheme: false,
+      systemTheme: false,
       rippleDisabled: false,
       strongFocusEnabled: false,
       m3Enabled: false,

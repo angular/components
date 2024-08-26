@@ -222,6 +222,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./tabs/tabs-demo').then(m => m.TabsDemo),
   },
   {
+    path: 'theme',
+    loadComponent: () => import('./theme/theme-demo').then(m => m.ThemeDemo),
+  },
+  {
     path: 'toolbar',
     loadComponent: () => import('./toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },

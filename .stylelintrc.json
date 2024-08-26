@@ -81,7 +81,7 @@
 
     "unit-case": "lower",
     "unit-no-unknown": true,
-    "unit-allowed-list": ["px", "%", "deg", "s", "ms", "em", "rem", "vh", "vw", "vmin"],
+    "unit-allowed-list": ["px", "%", "deg", "s", "ms", "em", "rem", "vh", "vw", "vmin", "fr"],
 
     "value-list-comma-space-after": "always-single-line",
     "value-list-comma-space-before": "never",

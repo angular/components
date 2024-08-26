@@ -5,13 +5,16 @@
 // Disable legacy API compatibility, since dev-app is fully migrated to theme inspection API.
 mat.$theme-legacy-inspection-api-compatibility: false;
 
+$primary: mat.$azure-palette;
+$tertiary: mat.$blue-palette;
+
 // Create a theme with the specified color type and density.
 @function create-theme($type: light, $density: 0) {
   @return mat.define-theme((
     color: (
       theme-type: $type,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      primary: $primary,
+      tertiary: $tertiary,
       use-system-variables: true,
     ),
     typography: (use-system-variables: true),
@@ -34,12 +37,26 @@ $dark-theme: create-theme($type: dark);
 
 // Include the default theme styles.
 html {
-  @include mat.all-component-themes($light-theme);
-  @include mat.system-level-colors($light-theme);
-  @include mat.system-level-typography($light-theme);
-  // TODO(mmalerba): Support M3 for experimental components.
-  // @include matx.column-resize-theme($light-theme);
-  // @include matx.popover-edit-theme($light-theme);
+  body:not(.demo-experimental-theme) {
+    @include mat.all-component-themes($light-theme);
+    @include mat.system-level-colors($light-theme);
+    @include mat.system-level-typography($light-theme);
+    // TODO(mmalerba): Support M3 for experimental components.
+    // @include matx.column-resize-theme($light-theme);
+    // @include matx.popover-edit-theme($light-theme);
+  }
+
+  body.demo-experimental-theme {
+    @include mat.private-experimental-theme((
+      color: (
+        theme-type: light,
+        primary: $primary,
+        tertiary: $tertiary,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+  }
 }
 
 @include mat.typography-hierarchy($light-theme);
@@ -55,13 +72,25 @@ html {
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
 // default theme.
-.demo-unicorn-dark-theme {
-  // Include the dark theme color styles.
-  @include mat.all-component-colors($dark-theme);
-  @include mat.system-level-colors($dark-theme);
-  // TODO(mmalerba): Support M3 for experimental components.
-  // @include matx.column-resize-color($dark-theme);
-  // @include matx.popover-edit-color($dark-theme);
+body.demo-unicorn-dark-theme {
+  &:not(.demo-experimental-theme) {
+    // Include the dark theme color styles.
+    @include mat.all-component-colors($dark-theme);
+    @include mat.system-level-colors($dark-theme);
+    // TODO(mmalerba): Support M3 for experimental components.
+    // @include matx.column-resize-color($dark-theme);
+    // @include matx.popover-edit-color($dark-theme);
+  }
+
+  &.demo-experimental-theme {
+    @include mat.private-experimental-theme((
+      color: (
+        theme-type: dark,
+        primary: $primary,
+        tertiary: $tertiary,
+      ),
+    ));
+  }
 
   // Include the dark theme colors for focus indicators.
   &.demo-strong-focus {
@@ -75,8 +104,14 @@ html {
 $density-scales: (-1, -2, -3, -4, minimum, maximum);
 @each $scale in $density-scales {
   .demo-density-#{$scale} {
-    $density-theme: create-theme($density: $scale);
-    @include mat.all-component-densities($density-theme);
+    body:not(.demo-experimental-theme) & {
+      $density-theme: create-theme($density: $scale);
+      @include mat.all-component-densities($density-theme);
+    }
+
+    body.demo-experimental-theme & {
+      @include mat.private-experimental-theme((density: $scale));
+    }
   }
 }
 
