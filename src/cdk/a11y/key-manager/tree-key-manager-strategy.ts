@@ -44,6 +44,11 @@ export interface TreeKeyManagerItem {
    * Unfocus the item. This should remove the focus state.
    */
   unfocus(): void;
+
+  /**
+   * Sets the item to be focusable without actually focusing it.
+   */
+  makeFocusable?(): void;
 }
 
 /**

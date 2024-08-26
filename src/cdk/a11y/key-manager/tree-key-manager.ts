@@ -57,24 +57,34 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 
   private _hasInitialFocused = false;
 
-  private _initialFocus() {
-    if (this._hasInitialFocused) {
+  private _initializeFocus(): void {
+    if (this._hasInitialFocused || this._items.length === 0) {
       return;
     }
 
-    if (!this._items.length) {
-      return;
-    }
-
-    let focusIndex = 0;
+    let activeIndex = 0;
     for (let i = 0; i < this._items.length; i++) {
       if (!this._skipPredicateFn(this._items[i]) && !this._isItemDisabled(this._items[i])) {
-        focusIndex = i;
+        activeIndex = i;
         break;
       }
     }
 
-    this.focusItem(focusIndex);
+    const activeItem = this._items[activeIndex];
+
+    // Use `makeFocusable` here, because we want the item to just be focusable, not actually
+    // capture the focus since the user isn't interacting with it. See #29628.
+    if (activeItem.makeFocusable) {
+      this._activeItem?.unfocus();
+      this._activeItemIndex = activeIndex;
+      this._activeItem = activeItem;
+      this._typeahead?.setCurrentSelectedItemIndex(activeIndex);
+      activeItem.makeFocusable();
+    } else {
+      // Backwards compatibility for items that don't implement `makeFocusable`.
+      this.focusItem(activeIndex);
+    }
+
     this._hasInitialFocused = true;
   }
 
@@ -96,18 +106,18 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
         this._items = newItems.toArray();
         this._typeahead?.setItems(this._items);
         this._updateActiveItemIndex(this._items);
-        this._initialFocus();
+        this._initializeFocus();
       });
     } else if (isObservable(items)) {
       items.subscribe(newItems => {
         this._items = newItems;
         this._typeahead?.setItems(newItems);
         this._updateActiveItemIndex(newItems);
-        this._initialFocus();
+        this._initializeFocus();
       });
     } else {
       this._items = items;
-      this._initialFocus();
+      this._initializeFocus();
     }
 
     if (typeof config.shouldActivationFollowFocus === 'boolean') {
