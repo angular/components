@@ -98,6 +98,17 @@
             }
           </button>
           <button
+              mat-icon-button
+              (click)="toggleSystemTheme()"
+              [matTooltip]="state.systemTheme ? 'Switch to standard theme' : 'Switch to system theme'"
+          >
+            @if (state.systemTheme) {
+              <mat-icon>public_off</mat-icon>
+            } @else {
+              <mat-icon>public</mat-icon>
+            }
+          </button>
+          <button
             mat-icon-button
             (click)="toggleRippleDisabled()"
             [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'"

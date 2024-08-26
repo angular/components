@@ -110,6 +110,7 @@ export class DevAppLayout {
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
+    {name: 'Theme', route: '/theme'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
@@ -127,6 +128,7 @@ export class DevAppLayout {
 
   constructor() {
     this.toggleTheme(this.state.darkTheme);
+    this.toggleSystemTheme(this.state.systemTheme);
     this.toggleStrongFocus(this.state.strongFocusEnabled);
     this.toggleDensity(Math.max(this._densityScales.indexOf(this.state.density), 0));
     this.toggleRippleDisabled(this.state.rippleDisabled);
@@ -138,6 +140,12 @@ export class DevAppLayout {
   toggleTheme(value = !this.state.darkTheme) {
     this.state.darkTheme = value;
     this._document.body.classList.toggle('demo-unicorn-dark-theme', value);
+    setAppState(this.state);
+  }
+
+  toggleSystemTheme(value = !this.state.systemTheme) {
+    this.state.systemTheme = value;
+    this._document.body.classList.toggle('demo-experimental-theme', value);
     setAppState(this.state);
   }
 
