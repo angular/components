@@ -1402,6 +1402,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     }
   }
 
+  /** Makes the node focusable. Implemented for TreeKeyManagerItem. */
+  makeFocusable(): void {
+    this._tabindex = 0;
+    this._changeDetectorRef.markForCheck();
+  }
+
   _focusItem() {
     if (this.isDisabled) {
       return;

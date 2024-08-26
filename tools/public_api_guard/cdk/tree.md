@@ -188,6 +188,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     get isLeafNode(): boolean;
     // (undocumented)
     get level(): number;
+    makeFocusable(): void;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     // (undocumented)
     static ngAcceptInputType_isDisabled: unknown;
