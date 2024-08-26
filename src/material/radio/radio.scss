@@ -68,7 +68,7 @@
 
   // For radios render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
-  &.cdk-focused .mat-mdc-focus-indicator::before {
+  &.cdk-focused .mat-focus-indicator::before {
     content: '';
   }
 }

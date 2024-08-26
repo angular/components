@@ -33,7 +33,7 @@ import {MatRipple} from '@angular/material/core';
   exportAs: 'matMenuItem',
   host: {
     '[attr.role]': 'role',
-    'class': 'mat-mdc-menu-item mat-mdc-focus-indicator',
+    'class': 'mat-mdc-menu-item mat-focus-indicator',
     '[class.mat-mdc-menu-item-highlighted]': '_highlighted',
     '[class.mat-mdc-menu-item-submenu-trigger]': '_triggersSubmenu',
     '[attr.tabindex]': '_getTabIndex()',

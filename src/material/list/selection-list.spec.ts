@@ -664,7 +664,7 @@ describe('MatSelectionList without forms', () => {
 
       expect(
         optionNativeElements.every(
-          element => element.querySelector('.mat-mdc-focus-indicator') !== null,
+          element => element.querySelector('.mat-focus-indicator') !== null,
         ),
       ).toBe(true);
     });

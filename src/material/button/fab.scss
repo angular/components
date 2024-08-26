@@ -81,9 +81,9 @@
     will-change: transform;
   }
 
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     $default-border-width: focus-indicators-private.$default-border-width;
-    $border-width: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
     $offset: calc(#{$border-width} + 2px);
     margin: calc(#{$offset} * -1);
   }

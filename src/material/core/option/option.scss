@@ -78,7 +78,7 @@ $_side-padding: 16px;
     // Give the visual content of this list item a lower opacity. This creates the "gray" appearance
     // for disabled state. Set the opacity on the pseudo checkbox and projected content. Set
     // opacity only on the visual content rather than the entire list-item so we don't affect the
-    // focus ring from `.mat-mdc-focus-indicator`.
+    // focus ring from `.mat-focus-indicator`.
     //
     // MatOption uses a child `<div>` element for its focus state to align with how ListItem does
     // its focus state.
@@ -190,6 +190,6 @@ $_side-padding: 16px;
 }
 
 // For options, render the focus indicator when the class .mat-mdc-option-active is present.
-.mat-mdc-option-active .mat-mdc-focus-indicator::before {
+.mat-mdc-option-active .mat-focus-indicator::before {
   content: '';
 }

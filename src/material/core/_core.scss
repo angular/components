@@ -15,8 +15,7 @@
   }
 
   @include cdk.a11y-visually-hidden();
-  @include private.structural-styling('mat');
-  @include private.structural-styling('mat-mdc');
+  @include private.structural-styling();
 
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.

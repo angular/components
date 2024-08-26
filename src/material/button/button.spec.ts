@@ -285,7 +285,7 @@ describe('MatButton', () => {
     ];
 
     expect(
-      buttonNativeElements.every(element => !!element.querySelector('.mat-mdc-focus-indicator')),
+      buttonNativeElements.every(element => !!element.querySelector('.mat-focus-indicator')),
     ).toBe(true);
   });
 

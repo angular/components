@@ -114,6 +114,6 @@
 
 // For checkboxes render the focus indicator when we know
 // the hidden input is focused (slightly different for each control).
-.mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before {
+.mdc-checkbox__native-control:focus ~ .mat-focus-indicator::before {
   content: '';
 }

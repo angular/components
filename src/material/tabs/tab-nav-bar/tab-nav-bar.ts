@@ -251,7 +251,7 @@ export class MatTabNav
   templateUrl: 'tab-link.html',
   styleUrl: 'tab-link.css',
   host: {
-    'class': 'mdc-tab mat-mdc-tab-link mat-mdc-focus-indicator',
+    'class': 'mdc-tab mat-mdc-tab-link mat-focus-indicator',
     '[attr.aria-controls]': '_getAriaControls()',
     '[attr.aria-current]': '_getAriaCurrent()',
     '[attr.aria-disabled]': 'disabled',
