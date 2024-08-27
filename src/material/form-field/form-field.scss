@@ -229,6 +229,13 @@ $_icon-prefix-infix-padding: 4px;
   box-sizing: border-box;
 }
 
+.mat-mdc-form-field-infix textarea {
+  width: 100%;      
+  overflow: hidden; 
+  min-height: 50px; 
+  flex-grow: 1;   
+}
+
 // In the form-field theme, we add a 1px left margin to the notch to fix a rendering bug in Chrome.
 // Here we apply negative margin to offset the effect on the layout and a clip-path to ensure the
 // left border is completely hidden. (Though the border is transparent, it still creates a triangle
