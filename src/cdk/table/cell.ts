@@ -189,6 +189,7 @@ export class BaseCdkCell {
   host: {
     'class': 'cdk-header-cell',
     'role': 'columnheader',
+    'scope': 'col',
   },
   standalone: true,
 })
