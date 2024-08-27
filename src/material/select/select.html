@@ -45,6 +45,8 @@
   <div
     #panel
     role="listbox"
+    cdkFocusTrap
+    cdkTrapFocusAutoCapture
     tabindex="-1"
     class="mat-mdc-select-panel mdc-menu-surface mdc-menu-surface--open {{ _getPanelTheme() }}"
     [attr.id]="id + '-panel'"
