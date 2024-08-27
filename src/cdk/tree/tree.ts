@@ -125,6 +125,8 @@ export class CdkTree<T, K = T>
     OnDestroy,
     OnInit
 {
+  private _dir = inject(Directionality);
+
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
@@ -265,7 +267,6 @@ export class CdkTree<T, K = T>
   constructor(
     private _differs: IterableDiffers,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _dir: Directionality,
   ) {}
 
   ngAfterContentInit() {

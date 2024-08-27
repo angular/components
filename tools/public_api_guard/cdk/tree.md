@@ -78,7 +78,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 
 // @public
 export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, AfterViewInit, CollectionViewer, OnDestroy, OnInit {
-    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality);
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef);
     childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     collapse(dataNode: T): void;
     collapseAll(): void;
