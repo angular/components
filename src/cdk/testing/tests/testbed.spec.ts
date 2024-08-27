@@ -6,7 +6,7 @@ import {
   waitForZoneInHarnesses,
 } from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {provideZoneChangeDetection} from '@angular/core';
+import {provideExperimentalZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
@@ -23,7 +23,7 @@ describe('TestbedHarnessEnvironment', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
+      providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(TestMainComponent);
   });
@@ -144,6 +144,14 @@ describe('TestbedHarnessEnvironment', () => {
         await brokenHarness.increaseCounter(3);
         expect(await asyncCounter.text()).toBe('0');
       });
+
+      fit('should wait for async operation to complete in fake async test', fakeAsync(async () => {
+        await harness.untilInitialized();
+        const asyncCounter = await harness.asyncCounter();
+        expect(await asyncCounter.text()).toBe('5');
+        await harness.increaseCounter(3);
+        expect(await asyncCounter.text()).toBe('8');
+      }));
     });
 
     describe('change detection behavior', () => {
