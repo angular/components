@@ -1,3 +1,20 @@
+<a name="18.2.2"></a>
+# 18.2.2 "steel-sword" (2024-08-28)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [39d3d01340](https://github.com/angular/components/commit/39d3d0134050830294f7185a4ac9849f043e480c) | fix | **drag-drop:** error if ngDevMode is undefined ([#29634](https://github.com/angular/components/pull/29634)) |
+| [b1c5ed7260](https://github.com/angular/components/commit/b1c5ed7260a1acad451899573c4d4a3fe6398a82) | fix | **tree:** avoid breaking change in constructor ([#29648](https://github.com/angular/components/pull/29648)) |
+| [ff95692125](https://github.com/angular/components/commit/ff95692125ff79fccaff8fab85479dd7c5633675) | fix | **tree:** capturing focus on load ([#29641](https://github.com/angular/components/pull/29641)) |
+| [f888b3d95a](https://github.com/angular/components/commit/f888b3d95ab94ceb779c05860c6e65d82a11eff8) | fix | **tree:** fix issue where `isExpanded` wouldn't be set if placed before `isExpandable` ([#29565](https://github.com/angular/components/pull/29565)) ([#29647](https://github.com/angular/components/pull/29647)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3ce4e9fc2a](https://github.com/angular/components/commit/3ce4e9fc2adae1761531da18c3afe046fb68c5b0) | fix | **schematics:** Add the missing neutral tones for the M3 color palettes ([#29644](https://github.com/angular/components/pull/29644)) |
+| [f93d0f4095](https://github.com/angular/components/commit/f93d0f40957e779ed8888433dddd658b1ed4018e) | perf | **tooltip:** Avoid unneeded calls to clearTimeout ([#29643](https://github.com/angular/components/pull/29643)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.1"></a>
 # 19.0.0-next.1 "plastic-moose" (2024-08-22)
 ## Breaking Changes
