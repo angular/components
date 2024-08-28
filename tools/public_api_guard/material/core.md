@@ -30,9 +30,6 @@ import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
 
 // @public
-export type _AbstractConstructor<T = object> = abstract new (...args: any[]) => T;
-
-// @public
 export class AnimationCurves {
     // (undocumented)
     static ACCELERATION_CURVE: string;
@@ -53,32 +50,6 @@ export class AnimationDurations {
     // (undocumented)
     static EXITING: string;
 }
-
-// @public @deprecated
-export interface CanColor {
-    color: ThemePalette;
-    defaultColor: ThemePalette | undefined;
-}
-
-// @public @deprecated
-export interface CanDisable {
-    disabled: boolean;
-}
-
-// @public @deprecated
-export interface CanDisableRipple {
-    disableRipple: boolean;
-}
-
-// @public @deprecated
-export interface CanUpdateErrorState {
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher_2;
-    updateErrorState(): void;
-}
-
-// @public
-export type _Constructor<T> = new (...args: any[]) => T;
 
 // @public
 export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>, optionGroups: QueryList<MatOptgroup>): number;
@@ -156,18 +127,6 @@ export interface GranularSanityChecks {
     theme: boolean;
     // (undocumented)
     version: boolean;
-}
-
-// @public @deprecated
-export interface HasInitialized {
-    initialized: Observable<void>;
-    _markInitialized: () => void;
-}
-
-// @public @deprecated
-export interface HasTabIndex {
-    defaultTabIndex: number;
-    tabIndex: number;
 }
 
 // @public (undocumented)
@@ -428,24 +387,6 @@ export class MatRippleModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof i1_2.MatCommonModule, typeof i2.MatRipple], [typeof i2.MatRipple, typeof i1_2.MatCommonModule]>;
 }
-
-// @public @deprecated
-export function mixinColor<T extends _AbstractConstructor<HasElementRef>>(base: T, defaultColor?: ThemePalette): CanColorCtor & T;
-
-// @public @deprecated
-export function mixinDisabled<T extends _AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// @public @deprecated
-export function mixinDisableRipple<T extends _AbstractConstructor<{}>>(base: T): CanDisableRippleCtor & T;
-
-// @public @deprecated
-export function mixinErrorState<T extends _AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
-
-// @public @deprecated
-export function mixinInitialized<T extends _Constructor<{}>>(base: T): HasInitializedCtor & T;
-
-// @public @deprecated
-export function mixinTabIndex<T extends _AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
