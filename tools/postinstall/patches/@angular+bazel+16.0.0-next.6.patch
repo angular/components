@@ -60,20 +60,33 @@ index 99d7f6d..3ea60ea 100755
          ))
 
      return ts_providers_dict_to_struct(ts_providers)
+diff --git a/node_modules/@angular/bazel/src/ng_package/packager.mjs b/node_modules/@angular/bazel/src/ng_package/packager.mjs
+index 12d5f0c..8868e27 100755
+--- a/node_modules/@angular/bazel/src/ng_package/packager.mjs
++++ b/node_modules/@angular/bazel/src/ng_package/packager.mjs
+@@ -7,7 +7,7 @@
+  */
+ import * as fs from 'fs';
+ import * as path from 'path';
+-import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports';
++import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports.mjs';
+ /**
+  * List of known `package.json` fields which provide information about
+  * supported package formats and their associated entry paths.
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
-index 8681a4c..e3b497a 100755
+index 09deff8..00d24be 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
-@@ -13,7 +13,7 @@ import * as fs from 'fs';
+@@ -12,7 +12,7 @@ import tscw from '@bazel/concatjs/internal/tsc_wrapped/index.js';
+ import * as fs from 'fs';
  import * as path from 'path';
- import * as tsickle from 'tsickle';
  import ts from 'typescript';
 -import { EXT, patchNgHostWithFileNameToModuleName as patchNgHost, relativeToRootDirs } from './utils';
 +import { EXT, patchNgHostWithFileNameToModuleName as patchNgHost, relativeToRootDirs } from './utils.mjs';
  // FIXME: we should be able to add the assets to the tsconfig so FileLoader
  // knows about them
  const NGC_ASSETS = /\.(css|html)$/;
-@@ -351,6 +351,12 @@ function gatherDiagnosticsForInputsOnly(options, bazelOpts, ngProgram) {
+@@ -348,6 +348,12 @@ function gatherDiagnosticsForInputsOnly(options, bazelOpts, ngProgram) {
      }
      return diagnostics;
  }
@@ -87,7 +100,7 @@ index 8681a4c..e3b497a 100755
   * @deprecated
   * Kept here just for compatibility with 1P tools. To be removed soon after 1P update.
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
-index 3649c11..0f4af3c 100755
+index ccf82d2..daaa783 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 @@ -5,7 +5,7 @@
@@ -96,6 +109,6 @@ index 3649c11..0f4af3c 100755
   */
 -import { main } from './index';
 +import { main } from './index.mjs';
- main(process.argv.slice(2)).then(exitCode => process.exitCode = exitCode).catch(e => {
-     console.error(e);
-     process.exitCode = 1;
+ main(process.argv.slice(2))
+     .then((exitCode) => (process.exitCode = exitCode))
+     .catch((e) => {
