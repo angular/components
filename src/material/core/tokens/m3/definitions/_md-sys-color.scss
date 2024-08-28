@@ -13,7 +13,7 @@ $_default-dark: (
 
 @function values-dark($deps: $_default-dark) {
   @return (
-    'background': map.get($deps, 'md-ref-palette', 'neutral10'),
+    'background': map.get($deps, 'md-ref-palette', 'neutral6'),
     'error': map.get($deps, 'md-ref-palette', 'error80'),
     'error-container': map.get($deps, 'md-ref-palette', 'error30'),
     'inverse-on-surface': map.get($deps, 'md-ref-palette', 'neutral20'),
@@ -32,7 +32,7 @@ $_default-dark: (
     'on-secondary-fixed-variant':
       map.get($deps, 'md-ref-palette', 'secondary30'),
     'on-surface': map.get($deps, 'md-ref-palette', 'neutral90'),
-    'on-surface-variant': map.get($deps, 'md-ref-palette', 'neutral-variant80'),
+    'on-surface-variant': map.get($deps, 'md-ref-palette', 'neutral-variant90'),
     'on-tertiary': map.get($deps, 'md-ref-palette', 'tertiary20'),
     'on-tertiary-container': map.get($deps, 'md-ref-palette', 'tertiary90'),
     'on-tertiary-fixed': map.get($deps, 'md-ref-palette', 'tertiary10'),
@@ -49,11 +49,11 @@ $_default-dark: (
     'secondary-fixed': map.get($deps, 'md-ref-palette', 'secondary90'),
     'secondary-fixed-dim': map.get($deps, 'md-ref-palette', 'secondary80'),
     'shadow': map.get($deps, 'md-ref-palette', 'neutral0'),
-    'surface': map.get($deps, 'md-ref-palette', 'neutral10'),
+    'surface': map.get($deps, 'md-ref-palette', 'neutral6'),
     'surface-bright': map.get($deps, 'md-ref-palette', 'neutral24'),
     'surface-container': map.get($deps, 'md-ref-palette', 'neutral12'),
     'surface-container-high': map.get($deps, 'md-ref-palette', 'neutral17'),
-    'surface-container-highest': map.get($deps, 'md-ref-palette', 'neutral22'),
+    'surface-container-highest': map.get($deps, 'md-ref-palette', 'neutral24'),
     'surface-container-low': map.get($deps, 'md-ref-palette', 'neutral10'),
     'surface-container-lowest': map.get($deps, 'md-ref-palette', 'neutral4'),
     'surface-dim': map.get($deps, 'md-ref-palette', 'neutral6'),
@@ -72,7 +72,7 @@ $_default-light: (
 
 @function values-light($deps: $_default-light) {
   @return (
-    'background': map.get($deps, 'md-ref-palette', 'neutral99'),
+    'background': map.get($deps, 'md-ref-palette', 'neutral98'),
     'error': map.get($deps, 'md-ref-palette', 'error40'),
     'error-container': map.get($deps, 'md-ref-palette', 'error90'),
     'inverse-on-surface': map.get($deps, 'md-ref-palette', 'neutral95'),
@@ -108,7 +108,7 @@ $_default-light: (
     'secondary-fixed': map.get($deps, 'md-ref-palette', 'secondary90'),
     'secondary-fixed-dim': map.get($deps, 'md-ref-palette', 'secondary80'),
     'shadow': map.get($deps, 'md-ref-palette', 'neutral0'),
-    'surface': map.get($deps, 'md-ref-palette', 'neutral99'),
+    'surface': map.get($deps, 'md-ref-palette', 'neutral98'),
     'surface-bright': map.get($deps, 'md-ref-palette', 'neutral98'),
     'surface-container': map.get($deps, 'md-ref-palette', 'neutral94'),
     'surface-container-high': map.get($deps, 'md-ref-palette', 'neutral92'),

@@ -122,7 +122,7 @@ describe('theming definition api', () => {
         }
       `);
       const vars = getRootVars(css);
-      expect(vars['token-surface']).toBe('#1c1c17');
+      expect(vars['token-surface']).toBe('#14140f');
       expect(vars['token-primary']).toBe('#cdcd00');
       expect(vars['token-secondary']).toBe('#cac8a5');
       expect(vars['token-tertiary']).toBe('#ffb4a8');
