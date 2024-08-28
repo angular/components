@@ -23,7 +23,7 @@ jobs:
         with:
           cache-node-modules: true
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Checking package externals
         run: |
           bazel build //:package_externals
@@ -41,7 +41,7 @@ jobs:
       - name: Check code lint
         run: yarn tslint
       - name: Check for circular dependencies
-        run: yarn -s ts-circular-deps:check
+        run: yarn ts-circular-deps:check
       - name: Check code format
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
       # Commit message check is last intentionally, because the caretaker can fix it
@@ -61,7 +61,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
 
@@ -77,7 +77,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run e2e tests
         run: yarn e2e --flaky_test_attempts=2
 
@@ -93,7 +93,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run integration tests
         run: yarn integration-tests
       - name: Running size integration tests
@@ -112,7 +112,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run linker AOT tests
         run: yarn test-linker-aot
 
@@ -128,7 +128,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run linker JIT tests
         run: yarn test-linker-jit
 
@@ -144,7 +144,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
 
@@ -160,7 +160,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Run tests
         run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
 
@@ -176,7 +176,7 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Build and Verify Release Output
         run: yarn build-and-check-release-output
       - name: Verify tooling setup
@@ -204,7 +204,7 @@ jobs:
           # Checking out the pull request commit is intended here as we need to run the changed code tests.
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Setup Saucelabs Variables
@@ -226,7 +226,7 @@ jobs:
           # Checking out the pull request commit is intended here as we need to run the changed code tests.
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
       - name: Setup Saucelabs Variables

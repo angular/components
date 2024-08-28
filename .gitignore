@@ -23,6 +23,13 @@ node_modules
 /src/packages
 /src/pubspec.lock
 
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # IDEs
 /.idea

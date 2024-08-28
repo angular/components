@@ -75,7 +75,7 @@ jobs:
         with:
           cache-node-modules: true
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Check Docs Site
         run: yarn ci-docs-monitor-test
       - uses: ./.github/actions/slack

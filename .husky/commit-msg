@@ -3,4 +3,4 @@
 . "$(dirname $0)/_/husky.sh"
 
 # Ahead of creating the commit, validate the commit message.
-yarn -s ng-dev commit-message pre-commit-validate --file $1;
+yarn ng-dev commit-message pre-commit-validate --file $1;

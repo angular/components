@@ -80,8 +80,8 @@ yarn_install(
     # We add the postinstall patches file here so that Yarn will rerun whenever
     # the file is modified.
     data = [
-        "//:.yarn/releases/yarn-1.22.17.cjs",
-        "//:.yarnrc",
+        "//:.yarn/releases/yarn-4.4.0.cjs",
+        "//:.yarnrc.yml",
         "//:tools/postinstall/apply-patches.js",
         "//:tools/postinstall/patches/@angular+bazel+16.0.0-next.6.patch",
         "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
@@ -97,7 +97,7 @@ yarn_install(
     # We prefer to symlink the `node_modules` to only maintain a single install.
     # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
     symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
+    yarn = "//:.yarn/releases/yarn-4.4.0.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
@@ -115,7 +115,7 @@ web_test_repositories()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
 sass_repositories(
-    yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
+    yarn_script = "//:.yarn/releases/yarn-4.4.0.cjs",
 )
 
 # Setup repositories for browsers provided by the shared dev-infra package.

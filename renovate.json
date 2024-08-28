@@ -18,6 +18,7 @@
   "semanticCommitType": "build",
   "separateMajorMinor": false,
   "ignorePaths": ["integration/**"],
+  "ignoreDeps": ["yarn"],
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
