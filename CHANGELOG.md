@@ -1,3 +1,39 @@
+<a name="19.0.0-next.2"></a>
+# 19.0.0-next.2 "bronze-book" (2024-08-28)
+## Breaking Changes
+### cdk
+- * The overlay stays are now loaded slightly later than before which can change their specificity. You may have to update any overlay style overrides.
+### material
+- * The ripples styles are now loaded slightly later than before which can change their specificity. You may have to update any ripple style overrides.
+### multiple
+- * `MatButton.ripple` is no longer available.
+  * `MatCheckbox.ripple` is no longer available.
+  * `MatChip.ripple` is no longer available.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [64ed7ca715](https://github.com/angular/components/commit/64ed7ca7157b519703d152bb86a84a233f310f71) | feat | **core:** add experimental theme demo ([#29636](https://github.com/angular/components/pull/29636)) |
+| [fcb76d3ed1](https://github.com/angular/components/commit/fcb76d3ed1ed4f6d5634496f47473efeda3bd1aa) | fix | **core:** add missing system variables ([#29624](https://github.com/angular/components/pull/29624)) |
+| [855ed49482](https://github.com/angular/components/commit/855ed49482b1e215f43e1e9b96f1b28eded94640) | fix | **core:** avoid having to manually load ripple styles |
+| [d0e178b75e](https://github.com/angular/components/commit/d0e178b75eb8e8e4d158ebff146cfb2ecadef686) | fix | **core:** stop manually instantiating MatRipple directive ([#29630](https://github.com/angular/components/pull/29630)) |
+| [3bf0e31f77](https://github.com/angular/components/commit/3bf0e31f771c0a6886aa0e88dec19f85e523d791) | fix | **schematics:** Add the missing neutral tones for the M3 color palettes ([#29644](https://github.com/angular/components/pull/29644)) |
+| [64cf19ccdb](https://github.com/angular/components/commit/64cf19ccdba5f584f3e508de97d58283654d9fb8) | perf | **tooltip:** Avoid unneeded calls to clearTimeout ([#29643](https://github.com/angular/components/pull/29643)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2f1fe03ae9](https://github.com/angular/components/commit/2f1fe03ae990266ff05c298a93c7fd74bc13e87b) | fix | **drag-drop:** error if ngDevMode is undefined ([#29634](https://github.com/angular/components/pull/29634)) |
+| [df21d2b091](https://github.com/angular/components/commit/df21d2b0915ee54fbf04b93ccba512a9161f5008) | fix | **overlay:** avoid having to manually load structural styles |
+| [ad18e6d74e](https://github.com/angular/components/commit/ad18e6d74e57e4980a411f0ac9d0b502d5fc577f) | fix | **text-field:** avoid having to manually load text field styles |
+| [a6835ef6a7](https://github.com/angular/components/commit/a6835ef6a700dcded10e1a83d936dc553774f021) | fix | **tree:** avoid breaking change in constructor ([#29648](https://github.com/angular/components/pull/29648)) |
+| [8b34fb7e8d](https://github.com/angular/components/commit/8b34fb7e8d6276de269a9c1dc2507458eaf7d594) | fix | **tree:** capturing focus on load ([#29641](https://github.com/angular/components/pull/29641)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a9da72ed15](https://github.com/angular/components/commit/a9da72ed1551601b22b1a509f2e50227ac23f432) | fix | consolidate strong focus indicators ([#29623](https://github.com/angular/components/pull/29623)) |
+| [485bd9923b](https://github.com/angular/components/commit/485bd9923b732390fbc3533f94815da97bd34c13) | fix | stop exposing internal ripple implementation ([#29622](https://github.com/angular/components/pull/29622)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.2"></a>
 # 18.2.2 "steel-sword" (2024-08-28)
 ### cdk
