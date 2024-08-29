@@ -585,6 +585,7 @@ describe('MatTabGroup', () => {
       tick();
 
       fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -605,6 +606,7 @@ describe('MatTabGroup', () => {
 
       // Remove last tab while last tab is selected, expect next tab over to be selected
       fixture.componentInstance.tabs.pop();
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -761,6 +763,7 @@ describe('MatTabGroup', () => {
       expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
       tabGroup.selectedIndex = 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -785,6 +788,7 @@ describe('MatTabGroup', () => {
       expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
 
       tabGroup.selectedIndex = 3;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -798,6 +802,7 @@ describe('MatTabGroup', () => {
       expect(tabGroupNode.classList).not.toContain('mat-mdc-tab-group-inverted-header');
 
       tabGroup.headerPosition = 'below';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tabGroupNode.classList).toContain('mat-mdc-tab-group-inverted-header');
@@ -833,6 +838,7 @@ describe('MatTabGroup', () => {
       ]);
 
       tabGroup.selectedIndex = 2;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -844,6 +850,7 @@ describe('MatTabGroup', () => {
       ]);
 
       tabGroup.selectedIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 

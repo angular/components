@@ -133,7 +133,7 @@ describe('MatBottomSheet', () => {
     // callback should not be called before animation is complete
     expect(spy).not.toHaveBeenCalled();
 
-    flushMicrotasks();
+    flush();
     expect(spy).toHaveBeenCalled();
   }));
 
@@ -242,6 +242,7 @@ describe('MatBottomSheet', () => {
 
     bottomSheetRef.keydownEvents().subscribe(spy);
     viewContainerFixture.detectChanges();
+    flush();
 
     const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
     const container = overlayContainerElement.querySelector(
@@ -459,7 +460,7 @@ describe('MatBottomSheet', () => {
     expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
   }));
 
-  it('should be able to attach a custom scroll strategy', fakeAsync(() => {
+  it('should be able to attach a custom scroll strategy', () => {
     const scrollStrategy: ScrollStrategy = {
       attach: () => {},
       enable: jasmine.createSpy('scroll strategy enable spy'),
@@ -468,7 +469,7 @@ describe('MatBottomSheet', () => {
 
     bottomSheet.open(PizzaMsg, {scrollStrategy});
     expect(scrollStrategy.enable).toHaveBeenCalled();
-  }));
+  });
 
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
@@ -624,7 +625,7 @@ describe('MatBottomSheet', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       const focusTrapAnchors = overlayContainerElement.querySelectorAll('.cdk-focus-trap-anchor');
 

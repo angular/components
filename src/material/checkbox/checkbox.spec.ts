@@ -264,14 +264,14 @@ describe('MatCheckbox', () => {
       expect(inputElement.disabled).toBe(false);
     }));
 
-    it('should not toggle `checked` state upon interation while disabled', fakeAsync(() => {
+    it('should not toggle `checked` state upon interation while disabled', () => {
       testComponent.isDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       checkboxNativeElement.click();
       expect(checkboxInstance.checked).toBe(false);
-    }));
+    });
 
     it('should overwrite indeterminate state when clicked', fakeAsync(() => {
       testComponent.isIndeterminate = true;
@@ -926,7 +926,7 @@ describe('MatCheckbox', () => {
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(ngModel.pristine).toBe(false);
       expect(ngModel.touched).toBe(true);
@@ -968,7 +968,7 @@ describe('MatCheckbox', () => {
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
-        flushMicrotasks();
+        flush();
       }).not.toThrow();
     }));
 

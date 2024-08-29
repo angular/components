@@ -308,11 +308,12 @@ describe('cdkSelectionColumn', () => {
     });
   }));
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(MultiSelectTableWithSelectionColumn);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    flush();
+  }));
 
   it('should show check boxes', () => {
     const checkboxes =
@@ -585,6 +586,7 @@ class MultiSelectTableWithSelectionColumn {
     this.getSelectAll().click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   clickSelectionToggle(index: number) {
@@ -596,6 +598,7 @@ class MultiSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   constructor(
@@ -648,6 +651,7 @@ class SingleSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   constructor(

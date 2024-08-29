@@ -18,6 +18,7 @@ import {
   TestBed,
   discardPeriodicTasks,
   fakeAsync,
+  flush,
   flushMicrotasks,
   tick,
   waitForAsync,
@@ -570,6 +571,7 @@ describe('MatTabHeader', () => {
           .toBeGreaterThan(previousDistance);
 
         dispatchFakeEvent(nextButton, endEventName);
+        flush();
       }
 
       /**
@@ -608,6 +610,7 @@ describe('MatTabHeader', () => {
           .toBeLessThan(currentScroll);
 
         dispatchFakeEvent(nextButton, endEventName);
+        flush();
       }
     });
 

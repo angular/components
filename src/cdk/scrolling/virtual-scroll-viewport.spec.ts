@@ -83,6 +83,7 @@ describe('CdkVirtualScrollViewport', () => {
       flush();
       viewport.checkViewportSize();
       expect(viewport.getViewportSize()).toBe(500);
+      flush();
     }));
 
     it('should update the viewport size when the page viewport changes', fakeAsync(() => {
@@ -112,12 +113,14 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.componentInstance.items = [0, 1];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      flush();
 
       expect(viewport.getRenderedRange()).toEqual({start: 0, end: 2});
 
       fixture.componentInstance.items = [];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      flush();
 
       expect(viewport.getRenderedRange()).toEqual({start: 0, end: 0});
     }));

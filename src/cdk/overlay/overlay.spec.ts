@@ -528,6 +528,7 @@ describe('Overlay', () => {
       tick();
 
       overlayRef.attach(componentPortal);
+      tick();
 
       expect(overlayPresentInDom)
         .withContext('Expected host element to be attached to the DOM.')

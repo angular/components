@@ -1366,6 +1366,7 @@ describe('MatDatepicker', () => {
 
         fixture.componentInstance.datepicker.close();
         fixture.detectChanges();
+        flush();
 
         expect(document.activeElement)
           .not.withContext('Expected focus not to be restored to toggle.')
@@ -1582,6 +1583,7 @@ describe('MatDatepicker', () => {
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithMinAndMaxValidation, [MatNativeDateModule]);
         fixture.detectChanges();
+        flush();
 
         testComponent = fixture.componentInstance;
       }));
@@ -1744,12 +1746,12 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithFilterAndValidation>;
       let testComponent: DatepickerWithFilterAndValidation;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(() => {
         fixture = createComponent(DatepickerWithFilterAndValidation, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
-      }));
+      });
 
       afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
@@ -1966,6 +1968,7 @@ describe('MatDatepicker', () => {
 
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithISOStrings, [MatNativeDateModule]);
+        flush();
         testComponent = fixture.componentInstance;
       }));
 
@@ -1993,6 +1996,7 @@ describe('MatDatepicker', () => {
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithEvents, [MatNativeDateModule]);
         fixture.detectChanges();
+        flush();
         testComponent = fixture.componentInstance;
       }));
 
@@ -2318,7 +2322,7 @@ describe('MatDatepicker', () => {
     let testComponent: DatepickerWithi18n;
     let input: HTMLInputElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(
         DatepickerWithi18n,
         [MatNativeDateModule, NativeDateModule],
@@ -2327,7 +2331,7 @@ describe('MatDatepicker', () => {
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-    }));
+    });
 
     it('should have the correct input value even when inverted date format', fakeAsync(() => {
       if (typeof Intl === 'undefined') {

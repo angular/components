@@ -1243,7 +1243,7 @@ describe('MatDialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(
         overlayContainerElement.querySelectorAll('.cdk-focus-trap-anchor').length,
