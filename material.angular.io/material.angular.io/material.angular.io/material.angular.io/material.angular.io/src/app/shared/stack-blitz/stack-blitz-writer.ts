@@ -36,7 +36,7 @@ export const TEMPLATE_FILES = [
   'angular.json',
   'karma.conf.js',
   'package.json',
-  'yarn.lock',
+  'package-lock.json',
   'tsconfig.app.json',
   'tsconfig.json',
   'tsconfig.spec.json',
@@ -202,7 +202,8 @@ export class StackBlitzWriter {
         .replace(/material-docs-example/g, data.selectorName)
         .replace(/\${title}/g, data.description);
     } else if (fileName === '.stackblitzrc') {
-      fileContent = fileContent.replace(/\${startCommand}/, isTest ? 'yarn test' : 'yarn start');
+      fileContent = fileContent.replace(/\${startCommand}/,
+        isTest ? 'npm run test' : 'npm run start');
     } else if (fileName === 'src/main.ts') {
       const mainComponentName = data.componentNames[0];
 

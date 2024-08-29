@@ -9,11 +9,12 @@ $theme: mat.define-theme((
 ));
 
 body {
-  @include mat.all-component-themes($theme);
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
   padding: 30px;
   height: 100%;
+
+  @include mat.all-component-themes($theme);
 }
 
 html {
