@@ -89,7 +89,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     expandAll(): void;
     expandDescendants(dataNode: T): void;
     expansionKey?: (dataNode: T) => K;
-    _getChildrenAccessor(): ((dataNode: T) => Observable<T[]> | T[] | undefined | null) | undefined;
+    _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
     _getDirectChildren(dataNode: T): Observable<T[]>;
     // (undocumented)
     _getExpansionModel(): SelectionModel<K>;
@@ -229,9 +229,9 @@ export class CdkTreeNodeDef<T> {
 
 // @public
 export class CdkTreeNodeOutlet {
-    constructor(viewContainer: ViewContainerRef, _node?: any | undefined);
+    constructor(viewContainer: ViewContainerRef, _node?: any);
     // (undocumented)
-    _node?: any | undefined;
+    _node?: any;
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
