@@ -160,6 +160,17 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   // Part of LocatorFactory interface, subclasses will implement.
   abstract waitForTasksOutsideAngular(): Promise<void>;
 
+  // Part of LocatorFactory interface, subclasses will implement.
+  abstract sleep(ms: number): Promise<void>;
+
+  async until(log: string, condition: () => boolean | Promise<boolean>) {
+    console.log(`Waiting for condition: ${log} (PENDING...)`);
+    while (!(await condition())) {
+      await this.sleep(1);
+    }
+    console.log(`Waiting for condition: ${log} (COMPLETE!)`);
+  }
+
   /** Gets the root element for the document. */
   protected abstract getDocumentRoot(): E;
 
