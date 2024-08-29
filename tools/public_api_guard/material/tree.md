@@ -153,9 +153,9 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 
 // @public
 export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
-    constructor(viewContainer: ViewContainerRef, _node?: any | undefined);
+    constructor(viewContainer: ViewContainerRef, _node?: any);
     // (undocumented)
-    _node?: any | undefined;
+    _node?: any;
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)

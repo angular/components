@@ -25,7 +25,7 @@
     "@angular/router": "file:../../node_modules/@angular/router",
     "rxjs": "^7.5.5",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.0"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "file:../../node_modules/@angular-devkit/build-angular",
@@ -44,7 +44,7 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "selenium-webdriver": "3.6.0",
     "ts-node": "~10.9.1",
-    "typescript": "~5.5.2",
+    "typescript": "5.6.1-rc",
     "wait-on": "^6.0.0"
   },
   "resolutions": {

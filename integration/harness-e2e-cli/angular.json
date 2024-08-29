@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "harness-e2e-cli:build:production"
+              "buildTarget": "harness-e2e-cli:build:production"
             },
             "development": {
-              "browserTarget": "harness-e2e-cli:build:development"
+              "buildTarget": "harness-e2e-cli:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "harness-e2e-cli:build"
+            "buildTarget": "harness-e2e-cli:build"
           }
         },
         "test": {
