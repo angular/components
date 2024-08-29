@@ -77,6 +77,10 @@ $use-system-typography-variables: false;
       $opacity: ($opacity * 100) + '%';
     }
 
+    @if (is-css-var-name($opacity)) {
+      $opacity: calc(var($opacity) * 100%);
+    }
+
     @if (is-css-var-name($color)) {
       $color: var($color);
     }
