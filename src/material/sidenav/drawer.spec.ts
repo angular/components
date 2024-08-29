@@ -1090,7 +1090,7 @@ describe('MatDrawerContainer', () => {
     discardPeriodicTasks();
   }));
 
-  it('should be able to toggle whether the container has a backdrop', fakeAsync(() => {
+  it('should be able to toggle whether the container has a backdrop', () => {
     const fixture = TestBed.createComponent(BasicTestApp);
     fixture.detectChanges();
 
@@ -1101,7 +1101,7 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.mat-drawer-backdrop')).toBeFalsy();
-  }));
+  });
 
   it('should be able to explicitly enable the backdrop in `side` mode', fakeAsync(() => {
     const fixture = TestBed.createComponent(BasicTestApp);
@@ -1135,7 +1135,7 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawer.opened).toBe(false);
   }));
 
-  it('should expose a scrollable when the consumer has not specified drawer content', fakeAsync(() => {
+  it('should expose a scrollable when the consumer has not specified drawer content', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
 
     fixture.detectChanges();
@@ -1143,9 +1143,9 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawerContainer.scrollable instanceof CdkScrollable).toBe(
       true,
     );
-  }));
+  });
 
-  it('should expose a scrollable when the consumer has specified drawer content', fakeAsync(() => {
+  it('should expose a scrollable when the consumer has specified drawer content', () => {
     const fixture = TestBed.createComponent(DrawerContainerWithContent);
 
     fixture.detectChanges();
@@ -1153,9 +1153,9 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawerContainer.scrollable instanceof CdkScrollable).toBe(
       true,
     );
-  }));
+  });
 
-  it('should clean up the drawers stream on destroy', fakeAsync(() => {
+  it('should clean up the drawers stream on destroy', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
     fixture.detectChanges();
 
@@ -1168,9 +1168,9 @@ describe('MatDrawerContainer', () => {
 
     expect(spy).toHaveBeenCalled();
     subscription.unsubscribe();
-  }));
+  });
 
-  it('should position the drawers before/after the content in the DOM based on their position', fakeAsync(() => {
+  it('should position the drawers before/after the content in the DOM based on their position', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
     fixture.detectChanges();
 
@@ -1203,7 +1203,7 @@ describe('MatDrawerContainer', () => {
     expect(endIndex)
       .withContext('Expected end drawer to be after content')
       .toBeGreaterThan(contentIndex);
-  }));
+  });
 });
 
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */

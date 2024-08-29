@@ -17,7 +17,7 @@ import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './inde
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 
 describe('MatSlideToggle without forms', () => {
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         MatSlideToggleModule,
@@ -31,7 +31,7 @@ describe('MatSlideToggle without forms', () => {
         SlideToggleWithStaticAriaAttributes,
       ],
     });
-  }));
+  });
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<any>;
@@ -42,7 +42,7 @@ describe('MatSlideToggle without forms', () => {
     let labelElement: HTMLLabelElement;
     let buttonElement: HTMLButtonElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(SlideToggleBasic);
 
       // Enable jasmine spies on event functions, which may trigger at initialization
@@ -60,9 +60,9 @@ describe('MatSlideToggle without forms', () => {
       slideToggleElement = slideToggleDebug.nativeElement;
       buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
-    }));
+    });
 
-    it('should apply class based on color attribute', fakeAsync(() => {
+    it('should apply class based on color attribute', () => {
       testComponent.slideColor = 'primary';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -74,9 +74,9 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(slideToggleElement.classList).toContain('mat-accent');
-    }));
+    });
 
-    it('should correctly update the disabled property', fakeAsync(() => {
+    it('should correctly update the disabled property', () => {
       expect(buttonElement.disabled).toBeFalsy();
 
       testComponent.isDisabled = true;
@@ -84,9 +84,9 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.disabled).toBeTruthy();
-    }));
+    });
 
-    it('should correctly update the checked property', fakeAsync(() => {
+    it('should correctly update the checked property', () => {
       expect(slideToggle.checked).toBeFalsy();
       expect(buttonElement.getAttribute('aria-checked')).toBe('false');
 
@@ -95,7 +95,7 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.getAttribute('aria-checked')).toBe('true');
-    }));
+    });
 
     it('should set the toggle to checked on click', fakeAsync(() => {
       expect(slideToggle.checked).toBe(false);
@@ -153,7 +153,7 @@ describe('MatSlideToggle without forms', () => {
       expect(testComponent.onSlideChange).not.toHaveBeenCalled();
     }));
 
-    it('should add a suffix to the element id', fakeAsync(() => {
+    it('should add a suffix to the element id', () => {
       testComponent.slideId = 'myId';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -174,9 +174,9 @@ describe('MatSlideToggle without forms', () => {
 
       // Once the id binding is set to null, the id property should auto-generate a unique id.
       expect(buttonElement.id).toMatch(/mat-mdc-slide-toggle-\d+-button/);
-    }));
+    });
 
-    it('should forward the tabIndex to the underlying element', fakeAsync(() => {
+    it('should forward the tabIndex to the underlying element', () => {
       fixture.detectChanges();
 
       expect(buttonElement.tabIndex).toBe(0);
@@ -186,9 +186,9 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.tabIndex).toBe(4);
-    }));
+    });
 
-    it('should forward the specified name to the element', fakeAsync(() => {
+    it('should forward the specified name to the element', () => {
       testComponent.slideName = 'myName';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -206,9 +206,9 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.name).toBe('');
-    }));
+    });
 
-    it('should forward the aria-label attribute to the element', fakeAsync(() => {
+    it('should forward the aria-label attribute to the element', () => {
       testComponent.slideLabel = 'ariaLabel';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -220,9 +220,9 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.hasAttribute('aria-label')).toBeFalsy();
-    }));
+    });
 
-    it('should forward the aria-labelledby attribute to the element', fakeAsync(() => {
+    it('should forward the aria-labelledby attribute to the element', () => {
       testComponent.slideLabelledBy = 'ariaLabelledBy';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -237,9 +237,9 @@ describe('MatSlideToggle without forms', () => {
       expect(buttonElement.getAttribute('aria-labelledby')).toMatch(
         /mat-mdc-slide-toggle-\d+-label/,
       );
-    }));
+    });
 
-    it('should forward the aria-describedby attribute to the element', fakeAsync(() => {
+    it('should forward the aria-describedby attribute to the element', () => {
       testComponent.slideAriaDescribedBy = 'some-element';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -251,13 +251,13 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(buttonElement.hasAttribute('aria-describedby')).toBe(false);
-    }));
+    });
 
-    it('should set the `for` attribute to the id of the element', fakeAsync(() => {
+    it('should set the `for` attribute to the id of the element', () => {
       expect(labelElement.getAttribute('for')).toBeTruthy();
       expect(buttonElement.getAttribute('id')).toBeTruthy();
       expect(labelElement.getAttribute('for')).toBe(buttonElement.getAttribute('id'));
-    }));
+    });
 
     it('should emit the new values properly', fakeAsync(() => {
       labelElement.click();
@@ -519,7 +519,7 @@ describe('MatSlideToggle without forms', () => {
     }),
   );
 
-  it('should be able to change the default color', fakeAsync(() => {
+  it('should be able to change the default color', () => {
     TestBed.resetTestingModule().configureTestingModule({
       imports: [MatSlideToggleModule, SlideToggleWithForm],
       providers: [{provide: MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS, useValue: {color: 'warn'}}],
@@ -528,20 +528,20 @@ describe('MatSlideToggle without forms', () => {
     fixture.detectChanges();
     const slideToggle = fixture.nativeElement.querySelector('.mat-mdc-slide-toggle');
     expect(slideToggle.classList).toContain('mat-warn');
-  }));
+  });
 
-  it('should clear static aria attributes from the host node', fakeAsync(() => {
+  it('should clear static aria attributes from the host node', () => {
     const fixture = TestBed.createComponent(SlideToggleWithStaticAriaAttributes);
     fixture.detectChanges();
 
     const host: HTMLElement = fixture.nativeElement.querySelector('mat-slide-toggle');
     expect(host.hasAttribute('aria-label')).toBe(false);
     expect(host.hasAttribute('aria-labelledby')).toBe(false);
-  }));
+  });
 });
 
 describe('MatSlideToggle with forms', () => {
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         MatSlideToggleModule,
@@ -553,7 +553,7 @@ describe('MatSlideToggle with forms', () => {
         SlideToggleWithModelAndChangeEvent,
       ],
     });
-  }));
+  });
 
   describe('using ngModel', () => {
     let fixture: ComponentFixture<SlideToggleWithModel>;
@@ -566,7 +566,7 @@ describe('MatSlideToggle with forms', () => {
     let labelElement: HTMLLabelElement;
 
     // This initialization is async() because it needs to wait for ngModel to set the initial value.
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(SlideToggleWithModel);
       fixture.detectChanges();
 
@@ -578,12 +578,12 @@ describe('MatSlideToggle with forms', () => {
       slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
-    }));
+    });
 
-    it('should be initially set to ng-pristine', fakeAsync(() => {
+    it('should be initially set to ng-pristine', () => {
       expect(slideToggleElement.classList).toContain('ng-pristine');
       expect(slideToggleElement.classList).not.toContain('ng-dirty');
-    }));
+    });
 
     it('should update the model programmatically', fakeAsync(() => {
       expect(slideToggleElement.classList).not.toContain('mat-mdc-slide-toggle-checked');
@@ -621,7 +621,7 @@ describe('MatSlideToggle with forms', () => {
       // also turn touched.
       dispatchFakeEvent(buttonElement, 'blur');
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(slideToggleModel.valid).toBe(true);
       expect(slideToggleModel.pristine).toBe(false);
@@ -639,7 +639,7 @@ describe('MatSlideToggle with forms', () => {
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
-        flushMicrotasks();
+        flush();
       }).not.toThrow();
     }));
 
@@ -658,7 +658,7 @@ describe('MatSlideToggle with forms', () => {
       // also turn touched.
       dispatchFakeEvent(buttonElement, 'blur');
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(slideToggleModel.touched).toBe(true);
       expect(slideToggleElement.classList).toContain('mat-mdc-slide-toggle-checked');
@@ -719,6 +719,7 @@ describe('MatSlideToggle with forms', () => {
       fixture.componentInstance.modelValue = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      flush();
 
       const debugElement = fixture.debugElement.query(By.directive(MatSlideToggle))!;
       const modelInstance = debugElement.injector.get<NgModel>(NgModel);
@@ -748,16 +749,16 @@ describe('MatSlideToggle with forms', () => {
     let slideToggle: MatSlideToggle;
     let buttonElement: HTMLButtonElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(SlideToggleWithFormControl);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
       slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.componentInstance;
       buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
-    }));
+    });
 
-    it('should toggle the disabled state', fakeAsync(() => {
+    it('should toggle the disabled state', () => {
       expect(slideToggle.disabled).toBe(false);
       expect(buttonElement.disabled).toBe(false);
 
@@ -772,7 +773,7 @@ describe('MatSlideToggle with forms', () => {
 
       expect(slideToggle.disabled).toBe(false);
       expect(buttonElement.disabled).toBe(false);
-    }));
+    });
   });
 
   describe('with form element', () => {
@@ -784,6 +785,7 @@ describe('MatSlideToggle with forms', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(SlideToggleWithForm);
       fixture.detectChanges();
+      flush();
 
       testComponent = fixture.debugElement.componentInstance;
       buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
@@ -803,6 +805,7 @@ describe('MatSlideToggle with forms', () => {
       testComponent.isRequired = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      flushMicrotasks();
 
       const slideToggleEl = fixture.nativeElement.querySelector('.mat-mdc-slide-toggle');
 

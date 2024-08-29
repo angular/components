@@ -84,7 +84,7 @@ describe('MatButtonToggle with forms', () => {
     let groupNgModel: NgModel;
     let innerButtons: HTMLElement[];
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(ButtonToggleGroupWithNgModel);
       fixture.detectChanges();
       testComponent = fixture.debugElement.componentInstance;
@@ -100,7 +100,7 @@ describe('MatButtonToggle with forms', () => {
       );
 
       fixture.detectChanges();
-    }));
+    });
 
     it('should update the model before firing change event', fakeAsync(() => {
       expect(testComponent.modelValue).toBeUndefined();
@@ -134,6 +134,7 @@ describe('MatButtonToggle with forms', () => {
         .toBe(true);
 
       fixture.componentInstance.groupName = 'changed-name';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupInstance.name).toBe('changed-name');
@@ -147,6 +148,7 @@ describe('MatButtonToggle with forms', () => {
       expect(firstButton.getAttribute('name')).toBe(fixture.componentInstance.groupName);
 
       fixture.componentInstance.options[0].name = 'changed-name';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(firstButton.getAttribute('name')).toBe(fixture.componentInstance.groupName);
     });
@@ -213,6 +215,7 @@ describe('MatButtonToggle with forms', () => {
       const groupElement = groupDebugElement.nativeElement;
 
       testComponent.disableRipple = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);

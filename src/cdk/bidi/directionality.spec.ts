@@ -1,4 +1,4 @@
-import {waitForAsync, fakeAsync, TestBed} from '@angular/core/testing';
+import {waitForAsync, fakeAsync, TestBed, flush} from '@angular/core/testing';
 import {Component, ViewChild, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
@@ -121,6 +121,7 @@ describe('Directionality', () => {
       fixture.destroy();
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
+      flush();
     }));
 
     it('should default to ltr if an invalid value is passed in', () => {

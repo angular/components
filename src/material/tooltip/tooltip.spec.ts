@@ -131,6 +131,7 @@ describe('MatTooltip', () => {
       // On animation complete, should expect that the tooltip has been detached.
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       assertTooltipInstance(tooltipDirective, false);
+      flush();
     }));
 
     it('should be able to re-open a tooltip if it was closed by detaching the overlay', fakeAsync(() => {
@@ -150,6 +151,7 @@ describe('MatTooltip', () => {
       tick(0);
       finishCurrentTooltipAnimation(overlayContainerElement, true);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      flush();
     }));
 
     it('should show with delay', fakeAsync(() => {
@@ -199,6 +201,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       tick(7331);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
+      flush();
     }));
 
     it('should be able to override the default position', fakeAsync(() => {
@@ -432,6 +435,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.componentInstance.message = '';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
@@ -501,8 +505,8 @@ describe('MatTooltip', () => {
 
       assertTooltipInstance(tooltipDirective, true);
 
-      tooltipDirective.position = 'above';
       spyOn(tooltipDirective._overlayRef!, 'updatePosition').and.callThrough();
+      tooltipDirective.position = 'above';
       fixture.detectChanges();
       tick();
 
@@ -599,6 +603,7 @@ describe('MatTooltip', () => {
       fixture.destroy();
       expect(overlayContainerElement.childNodes.length).toBe(0);
       expect(overlayContainerElement.textContent).toBe('');
+      flush();
     }));
 
     it('should have an aria-describedby element with the tooltip message', fakeAsync(() => {
@@ -652,6 +657,7 @@ describe('MatTooltip', () => {
       tick(tooltipDelay); // Change the tooltip state to hidden and trigger animation start
 
       fixture.componentInstance.showButton = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
     }));
 
@@ -770,6 +776,7 @@ describe('MatTooltip', () => {
       expect(tooltipWrapper.getAttribute('dir'))
         .withContext('Expected tooltip to be in LTR.')
         .toBe('ltr');
+      flush();
     }));
 
     it('should be able to set the tooltip message as a number', fakeAsync(() => {
@@ -829,6 +836,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
+      flush();
     }));
 
     it('should hide when pressing escape', fakeAsync(() => {
@@ -849,6 +857,7 @@ describe('MatTooltip', () => {
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       expect(overlayContainerElement.textContent).toBe('');
+      flush();
     }));
 
     it('should not throw when pressing ESCAPE', fakeAsync(() => {
@@ -940,6 +949,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       expect(overlayRef.detach).not.toHaveBeenCalled();
+      flush();
     }));
 
     it('should set a class on the overlay panel that reflects the position', fakeAsync(() => {
@@ -1028,6 +1038,7 @@ describe('MatTooltip', () => {
       // Note that we aren't asserting anything, but `fakeAsync` will
       // throw if we have any timers by the end of the test.
       fixture.destroy();
+      flush();
     }));
 
     it('should clear the hide timeout on destroy', fakeAsync(() => {
@@ -1044,6 +1055,7 @@ describe('MatTooltip', () => {
       // Note that we aren't asserting anything, but `fakeAsync` will
       // throw if we have any timers by the end of the test.
       fixture.destroy();
+      flush();
     }));
 
     it('should set the multiline class on tooltips with messages that overflow', fakeAsync(() => {
@@ -1287,6 +1299,7 @@ describe('MatTooltip', () => {
       // On animation complete, should expect that the tooltip has been detached.
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       assertTooltipInstance(tooltipDirective, false);
+      flush();
     }));
 
     it('should have rendered the tooltip text on init', fakeAsync(() => {
@@ -1327,6 +1340,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
+      flush();
     }));
 
     it('should be able to disable opening on touch', fakeAsync(() => {
@@ -1376,6 +1390,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
+      flush();
     }));
 
     it('should close on touchcancel with a delay', fakeAsync(() => {
@@ -1400,6 +1415,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
+      flush();
     }));
 
     it('should disable native touch interactions', () => {
@@ -1537,6 +1553,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
+      flush();
     }));
 
     it('should not close if the cursor is over the trigger after a wheel event', fakeAsync(() => {
@@ -1571,6 +1588,7 @@ describe('MatTooltip', () => {
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
+      flush();
     }));
   });
 });

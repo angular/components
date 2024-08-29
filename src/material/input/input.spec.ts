@@ -1099,6 +1099,7 @@ describe('MatMdcInput with forms', () => {
 
       dispatchFakeEvent(inputEl, 'focus');
       dispatchFakeEvent(inputEl, 'blur');
+      flush();
       expect(wrapperEl.classList).toContain('mdc-text-field--invalid');
     }));
 
@@ -1369,7 +1370,7 @@ describe('MatMdcInput with forms', () => {
     }));
   });
 
-  it('should update the value when using FormControl.setValue', fakeAsync(() => {
+  it('should update the value when using FormControl.setValue', () => {
     let fixture = createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
@@ -1382,7 +1383,7 @@ describe('MatMdcInput with forms', () => {
     fixture.componentInstance.formControl.setValue('something');
 
     expect(input.value).toBe('something');
-  }));
+  });
 
   it('should display disabled styles when using FormControl.disable()', fakeAsync(() => {
     const fixture = createComponent(MatInputWithFormControl);
