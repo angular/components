@@ -21,6 +21,7 @@ import {
 } from '@angular/core';
 import {fromEvent, fromEventPattern, merge, Subject} from 'rxjs';
 import {
+  debounceTime,
   filter,
   map,
   mapTo,
@@ -136,6 +137,8 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
       // or below the table.
       this._rendered
         .pipe(
+          // Avoid some timing inconsistencies since Angular v19.
+          debounceTime(0),
           // Optimization: ignore dom changes while focus is within the table as we already
           // ensure that rows above and below the focused/active row are tabbable.
           withLatestFrom(this.editEventDispatcher.editingOrFocused),
