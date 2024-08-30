@@ -194,6 +194,8 @@ export class MatFormField
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
   @ViewChild('textPrefixContainer') _textPrefixContainer: ElementRef<HTMLElement>;
+  @ViewChild('iconSuffixContainer') _iconSuffixContainer: ElementRef<HTMLElement>;
+  @ViewChild('textSuffixContainer') _textSuffixContainer: ElementRef<HTMLElement>;
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel | undefined;
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline | undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple | undefined;
@@ -708,8 +710,12 @@ export class MatFormField
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
     const textPrefixContainer = this._textPrefixContainer?.nativeElement;
+    const iconSuffixContainer = this._iconSuffixContainer?.nativeElement;
+    const textSuffixContainer = this._textSuffixContainer?.nativeElement;
     const iconPrefixContainerWidth = iconPrefixContainer?.getBoundingClientRect().width ?? 0;
     const textPrefixContainerWidth = textPrefixContainer?.getBoundingClientRect().width ?? 0;
+    const iconSuffixContainerWidth = iconSuffixContainer?.getBoundingClientRect().width ?? 0;
+    const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
     const negate = this._dir.value === 'rtl' ? '-1' : '1';
@@ -724,6 +730,17 @@ export class MatFormField
         --mat-mdc-form-field-label-transform,
         ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
     )`;
+
+    // Prevent the label from overlapping the suffix when in resting position.
+    const prefixAndSuffixWidth =
+      iconPrefixContainerWidth +
+      textPrefixContainerWidth +
+      iconSuffixContainerWidth +
+      textSuffixContainerWidth;
+    this._elementRef.nativeElement.style.setProperty(
+      '--mat-form-field-notch-max-width',
+      `calc(100% - ${prefixAndSuffixWidth}px)`,
+    );
   }
 
   /** Checks whether the form field is attached to the DOM. */

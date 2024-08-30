@@ -116,6 +116,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _iconPrefixContainer: ElementRef<HTMLElement>;
     // (undocumented)
+    _iconSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
     readonly _labelId: string;
     // (undocumented)
     _lineRipple: MatFormFieldLineRipple | undefined;
@@ -145,6 +147,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _textField: ElementRef<HTMLElement>;
     // (undocumented)
     _textPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _textSuffixContainer: ElementRef<HTMLElement>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)
