@@ -64,3 +64,15 @@ cdk-virtual-scroll-window-scrolling-example {
   display: block;
   width: 500px;
 }
+
+.demo-wrapper {
+  padding: 1rem;
+  background: gainsboro;
+  border: 1px solid lightgrey;
+  width: 500px;
+}
+
+.demo-item-dynamic {
+  min-height: 60px;
+  padding: 5px;
+}

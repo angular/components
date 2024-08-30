@@ -6,20 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
-import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {BehaviorSubject} from 'rxjs';
 import {
   CdkVirtualScrollParentScrollingExample,
   CdkVirtualScrollWindowScrollingExample,
 } from '@angular/components-examples/cdk/scrolling';
+import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {BehaviorSubject} from 'rxjs';
 
 type State = {
   name: string;
@@ -41,6 +42,7 @@ type State = {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatExpansionModule,
     ScrollingModule,
     CdkVirtualScrollParentScrollingExample,
     CdkVirtualScrollWindowScrollingExample,
@@ -62,6 +64,12 @@ export class VirtualScrollDemo implements OnDestroy {
     .fill(0)
     .map(() => Math.round(Math.random() * 100));
   readonly observableData = new BehaviorSubject<number[]>([]);
+  shortData = Array.from({length: 20}).map((_, i) => `Item #${i}`);
+  placeholderText = [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit,',
+    'sed do eiusmod tempor incididunt',
+    'ut labore et dolore magna aliqua.',
+  ];
   states = [
     {name: 'Alabama', capital: 'Montgomery'},
     {name: 'Alaska', capital: 'Juneau'},

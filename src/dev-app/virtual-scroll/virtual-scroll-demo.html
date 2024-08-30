@@ -1,5 +1,20 @@
 <h2>Autosize</h2>
 
+<h3>Dynamic size + window scroll</h3>
+<div class="demo-wrapper">
+  <mat-accordion multi="true">
+    <!-- append only is a workaround for https://github.com/angular/components/issues/13697 -->
+    <cdk-virtual-scroll-viewport autosize scrollWindow appendOnly>
+      <div class="demo-item-dynamic" *cdkVirtualFor="let item of shortData">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>{{ item }}</mat-expansion-panel-header>
+          <p *ngFor="let text of placeholderText">{{ text }}</p>
+        </mat-expansion-panel>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </mat-accordion>
+</div>
+
 <h3>Uniform size</h3>
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
   <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"

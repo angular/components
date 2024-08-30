@@ -14,7 +14,7 @@ import {
   VirtualScrollStrategy,
 } from '@angular/cdk/scrolling';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
-import {Observable} from 'rxjs';
+import {fromEventPattern, Observable, Subscription} from 'rxjs';
 
 /**
  * A class that tracks the size of items that have been seen and uses it to estimate the average
@@ -99,6 +99,9 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** The last measured size of the rendered content in the viewport. */
   private _lastRenderedContentOffset: number;
 
+  /** @docs-private Subscription for size of content wrapper that updates viewport size. */
+  private _contentWrapperSizeSubscription: Subscription;
+
   /**
    * The number of consecutive cycles where removing extra items has failed. Failure here means that
    * we estimated how many items we could safely remove, but our estimate turned out to be too much
@@ -128,11 +131,27 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._averager.reset();
     this._viewport = viewport;
     this._renderContentForCurrentOffset();
+
+    // Create a resize observer for the viewport's content wrapper.
+    // This is needed to update the size of the viewport if any items change size without a scroll event occuring.
+    this._contentWrapperSizeSubscription = fromEventPattern<ResizeObserverEntry>(
+      handler => {
+        const resizeObserver = new ResizeObserver(entries =>
+          entries.forEach(entry => handler(entry)),
+        );
+        resizeObserver.observe(viewport._contentWrapper.nativeElement);
+        return resizeObserver;
+      },
+      (handler, resizeObserver) => resizeObserver.disconnect(),
+    ).subscribe(({contentRect: {width, height}}) => {
+      this._updateTotalContentSize(viewport.orientation === 'horizontal' ? width : height);
+    });
   }
 
   /** Detaches this scroll strategy from the currently attached viewport. */
   detach() {
     this._viewport = null;
+    this._contentWrapperSizeSubscription.unsubscribe();
   }
 
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
