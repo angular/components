@@ -173,9 +173,7 @@ export class MatBadge implements OnInit, OnDestroy {
 
       appRef.onDestroy(() => {
         badgeApps.delete(appRef);
-        if (badgeApps.size === 0) {
-          componentRef.destroy();
-        }
+        componentRef.destroy();
       });
     }
 
