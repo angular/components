@@ -18,6 +18,7 @@ import {
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
 import {fromEvent, fromEventPattern, merge, Subject} from 'rxjs';
 import {
@@ -68,16 +69,17 @@ const MOUSE_MOVE_THROTTLE_TIME_MS = 10;
   standalone: true,
 })
 export class CdkEditable implements AfterViewInit, OnDestroy {
+  protected readonly elementRef = inject(ElementRef);
+  protected readonly editEventDispatcher =
+    inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);
+  protected readonly focusDispatcher = inject(FocusDispatcher);
+  protected readonly ngZone = inject(NgZone);
+
   protected readonly destroyed = new Subject<void>();
 
   private _rendered = new Subject();
 
-  constructor(
-    protected readonly elementRef: ElementRef,
-    protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
-    protected readonly focusDispatcher: FocusDispatcher,
-    protected readonly ngZone: NgZone,
-  ) {
+  constructor() {
     afterRender(() => {
       this._rendered.next();
     });
@@ -191,6 +193,10 @@ const POPOVER_EDIT_INPUTS = [
   standalone: true,
 })
 export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
+  protected readonly services = inject(EditServices);
+  protected readonly elementRef = inject(ElementRef);
+  protected readonly viewContainerRef = inject(ViewContainerRef);
+
   /** The edit lens template shown over the cell on edit. */
   template: TemplateRef<any> | null = null;
 
@@ -243,12 +249,6 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   protected focusTrap?: FocusTrap;
   protected overlayRef?: OverlayRef;
   protected readonly destroyed = new Subject<void>();
-
-  constructor(
-    protected readonly services: EditServices,
-    protected readonly elementRef: ElementRef,
-    protected readonly viewContainerRef: ViewContainerRef,
-  ) {}
 
   ngAfterViewInit(): void {
     this._startListeningToEditEvents();
@@ -418,16 +418,9 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   standalone: true,
 })
 export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
-  protected override focusTrap?: FocusEscapeNotifier = undefined;
+  protected readonly focusEscapeNotifierFactory = inject(FocusEscapeNotifierFactory);
 
-  constructor(
-    elementRef: ElementRef,
-    viewContainerRef: ViewContainerRef,
-    services: EditServices,
-    protected readonly focusEscapeNotifierFactory: FocusEscapeNotifierFactory,
-  ) {
-    super(services, elementRef, viewContainerRef);
-  }
+  protected override focusTrap?: FocusEscapeNotifier = undefined;
 
   protected override initFocusTrap(): void {
     this.focusTrap = this.focusEscapeNotifierFactory.create(this.overlayRef!.overlayElement);
@@ -456,17 +449,15 @@ export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
   standalone: true,
 })
 export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
+  protected readonly services = inject(EditServices);
+  protected readonly elementRef = inject(ElementRef);
+  protected readonly templateRef = inject<TemplateRef<any>>(TemplateRef);
+  protected readonly viewContainerRef = inject(ViewContainerRef);
+
   protected readonly destroyed = new Subject<void>();
   protected viewRef: EmbeddedViewRef<any> | null = null;
 
   private _row?: Element;
-
-  constructor(
-    protected readonly services: EditServices,
-    protected readonly elementRef: ElementRef,
-    protected readonly templateRef: TemplateRef<any>,
-    protected readonly viewContainerRef: ViewContainerRef,
-  ) {}
 
   ngAfterViewInit(): void {
     this._row = closest(this.elementRef.nativeElement!, ROW_SELECTOR)!;
@@ -553,10 +544,13 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
   standalone: true,
 })
 export class CdkEditOpen {
-  constructor(
-    protected readonly elementRef: ElementRef<HTMLElement>,
-    protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
-  ) {
+  protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly editEventDispatcher =
+    inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);
+
+  constructor() {
+    const elementRef = this.elementRef;
+
     const nativeElement = elementRef.nativeElement;
 
     // Prevent accidental form submits.

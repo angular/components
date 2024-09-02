@@ -7,7 +7,7 @@
  */
 
 import {Subject} from 'rxjs';
-import {Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Input} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Input, inject} from '@angular/core';
 import {hasModifierKey} from '@angular/cdk/keycodes';
 import {EDIT_PANE_SELECTOR} from './constants';
 import {closest} from './polyfill';
@@ -39,6 +39,9 @@ export type PopoverEditClickOutBehavior = 'close' | 'submit' | 'noop';
   standalone: true,
 })
 export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
+  protected readonly elementRef = inject(ElementRef);
+  readonly editRef = inject<EditRef<FormValue>>(EditRef);
+
   protected readonly destroyed = new Subject<void>();
 
   /**
@@ -60,11 +63,6 @@ export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
    * state. By default the lens will remain open.
    */
   ignoreSubmitUnlessValid = true;
-
-  constructor(
-    protected readonly elementRef: ElementRef,
-    readonly editRef: EditRef<FormValue>,
-  ) {}
 
   ngOnInit(): void {
     this.editRef.init(this.preservedFormValue);
@@ -150,10 +148,10 @@ export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
   standalone: true,
 })
 export class CdkEditRevert<FormValue> {
+  protected readonly editRef = inject<EditRef<FormValue>>(EditRef);
+
   /** Type of the button. Defaults to `button` to avoid accident form submits. */
   @Input() type: string = 'button';
-
-  constructor(protected readonly editRef: EditRef<FormValue>) {}
 
   revertEdit(): void {
     this.editRef.reset();
@@ -171,11 +169,11 @@ export class CdkEditRevert<FormValue> {
   standalone: true,
 })
 export class CdkEditClose<FormValue> {
-  constructor(
-    protected readonly elementRef: ElementRef<HTMLElement>,
-    protected readonly editRef: EditRef<FormValue>,
-  ) {
-    const nativeElement = elementRef.nativeElement;
+  protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly editRef = inject<EditRef<FormValue>>(EditRef);
+
+  constructor() {
+    const nativeElement = this.elementRef.nativeElement;
 
     // Prevent accidental form submits.
     if (nativeElement.nodeName === 'BUTTON' && !nativeElement.getAttribute('type')) {

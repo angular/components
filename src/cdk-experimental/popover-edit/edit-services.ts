@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay} from '@angular/cdk/overlay';
@@ -24,14 +24,12 @@ import {EditRef} from './edit-ref';
  */
 @Injectable()
 export class EditServices {
-  constructor(
-    readonly directionality: Directionality,
-    readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
-    readonly focusDispatcher: FocusDispatcher,
-    readonly focusTrapFactory: FocusTrapFactory,
-    readonly ngZone: NgZone,
-    readonly overlay: Overlay,
-    readonly scrollDispatcher: ScrollDispatcher,
-    readonly viewportRuler: ViewportRuler,
-  ) {}
+  readonly directionality = inject(Directionality);
+  readonly editEventDispatcher = inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);
+  readonly focusDispatcher = inject(FocusDispatcher);
+  readonly focusTrapFactory = inject(FocusTrapFactory);
+  readonly ngZone = inject(NgZone);
+  readonly overlay = inject(Overlay);
+  readonly scrollDispatcher = inject(ScrollDispatcher);
+  readonly viewportRuler = inject(ViewportRuler);
 }

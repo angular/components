@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, OnDestroy, Provider, CSP_NONCE, Optional} from '@angular/core';
+import {Injectable, OnDestroy, Provider, CSP_NONCE, inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {CdkTable, _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
@@ -77,14 +77,9 @@ export abstract class ResizeStrategy {
  */
 @Injectable()
 export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
-  constructor(
-    protected readonly columnResize: ColumnResize,
-    @Inject(_COALESCED_STYLE_SCHEDULER)
-    protected readonly styleScheduler: _CoalescedStyleScheduler,
-    protected readonly table: CdkTable<unknown>,
-  ) {
-    super();
-  }
+  protected readonly columnResize = inject(ColumnResize);
+  protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
+  protected readonly table = inject<CdkTable<unknown>>(CdkTable);
 
   applyColumnSize(
     _: string,
@@ -128,7 +123,12 @@ export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
  */
 @Injectable()
 export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDestroy {
-  private readonly _document: Document;
+  protected readonly columnResize = inject(ColumnResize);
+  protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
+  protected readonly table = inject<CdkTable<unknown>>(CdkTable);
+  private readonly _nonce = inject(CSP_NONCE, {optional: true});
+
+  private readonly _document = inject(DOCUMENT);
   private readonly _columnIndexes = new Map<string, number>();
   private readonly _columnProperties = new Map<string, Map<string, string>>();
 
@@ -137,18 +137,6 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
 
   protected readonly defaultMinSize = 0;
   protected readonly defaultMaxSize = Number.MAX_SAFE_INTEGER;
-
-  constructor(
-    protected readonly columnResize: ColumnResize,
-    @Inject(_COALESCED_STYLE_SCHEDULER)
-    protected readonly styleScheduler: _CoalescedStyleScheduler,
-    protected readonly table: CdkTable<unknown>,
-    @Inject(DOCUMENT) document: any,
-    @Inject(CSP_NONCE) @Optional() private readonly _nonce?: string | null,
-  ) {
-    super();
-    this._document = document;
-  }
 
   applyColumnSize(
     cssFriendlyColumnName: string,

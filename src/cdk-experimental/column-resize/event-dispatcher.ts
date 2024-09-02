@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators';
 
@@ -17,6 +17,8 @@ import {HEADER_ROW_SELECTOR} from './selectors';
 /** Coordinates events between the column resize directives. */
 @Injectable()
 export class HeaderRowEventDispatcher {
+  private readonly _ngZone = inject(NgZone);
+
   /**
    * Emits the currently hovered header cell or null when no header cells are hovered.
    * Exposed publicly for events to feed in, but subscribers should use headerCellHoveredDistinct,
@@ -29,8 +31,6 @@ export class HeaderRowEventDispatcher {
    * when no resize is in progress.
    */
   readonly overlayHandleActiveForCell = new Subject<Element | null>();
-
-  constructor(private readonly _ngZone: NgZone) {}
 
   /** Distinct and shared version of headerCellHovered. */
   readonly headerCellHoveredDistinct = this.headerCellHovered.pipe(distinctUntilChanged(), share());

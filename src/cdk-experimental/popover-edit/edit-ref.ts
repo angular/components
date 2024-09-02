@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, OnDestroy, Self, afterNextRender, inject, Injector} from '@angular/core';
+import {Injectable, OnDestroy, afterNextRender, inject, Injector} from '@angular/core';
 import {ControlContainer} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 
@@ -18,6 +18,10 @@ import {EditEventDispatcher} from './edit-event-dispatcher';
  */
 @Injectable()
 export class EditRef<FormValue> implements OnDestroy {
+  private readonly _form = inject(ControlContainer, {self: true});
+  private readonly _editEventDispatcher =
+    inject<EditEventDispatcher<EditRef<FormValue>>>(EditEventDispatcher);
+
   /** Emits the final value of this edit instance before closing. */
   private readonly _finalValueSubject = new Subject<FormValue>();
   readonly finalValue: Observable<FormValue> = this._finalValueSubject;
@@ -31,10 +35,7 @@ export class EditRef<FormValue> implements OnDestroy {
 
   private _injector = inject(Injector);
 
-  constructor(
-    @Self() private readonly _form: ControlContainer,
-    private readonly _editEventDispatcher: EditEventDispatcher<EditRef<FormValue>>,
-  ) {
+  constructor() {
     this._editEventDispatcher.setActiveEditRef(this);
   }
 
