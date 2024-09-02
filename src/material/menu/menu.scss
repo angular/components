@@ -65,7 +65,7 @@ mat-menu {
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 
@@ -201,7 +201,7 @@ mat-menu {
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     $outline-width: 1px;
 
     // We need to move the item 1px down, because Firefox seems to have

@@ -351,7 +351,7 @@ $_avatar-trailing-padding: 8px;
     stroke-dashoffset: 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // SVG colors won't be changed in high contrast mode and since the checkmark is white
     // by default, it'll blend in with the background in black-on-white mode. Override the
     // color to ensure that it's visible. We need !important, because the theme styles are
@@ -411,7 +411,7 @@ $_avatar-trailing-padding: 8px;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 }
@@ -721,7 +721,7 @@ $_avatar-trailing-padding: 8px;
 // Single-selection chips show their selected state using a background color which won't be visible
 // in high contrast mode. This isn't necessary in multi-selection since there's a checkmark.
 .mat-mdc-chip-selected:not(.mat-mdc-chip-multiple) {
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline-width: 3px;
   }
 }

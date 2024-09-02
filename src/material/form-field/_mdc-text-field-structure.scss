@@ -101,7 +101,7 @@
       @include _input-tokens('.mdc-text-field--outlined');
     }
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       .mdc-text-field--disabled & {
         background-color: Window;
       }
@@ -201,7 +201,7 @@
     .mdc-text-field--disabled & {
       cursor: default;
 
-      @include cdk.high-contrast(active, off) {
+      @include cdk.high-contrast {
         z-index: 1;
       }
     }

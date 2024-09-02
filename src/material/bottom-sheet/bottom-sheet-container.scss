@@ -32,7 +32,7 @@ $container-horizontal-padding: 16px !default;
     @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: 1px solid;
   }
 }

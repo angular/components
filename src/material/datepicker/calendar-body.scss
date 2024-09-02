@@ -237,7 +237,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   // Fade out the disabled cells so that they can be distinguished from the enabled ones. Note that
   // ideally we'd use `color: GreyText` here which is what the browser uses for disabled buttons,
   // but we can't because Firefox doesn't recognize it.
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     opacity: 0.5;
   }
 }
@@ -276,7 +276,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
     position: absolute;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     border: none;
   }
 }
@@ -361,7 +361,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@include cdk.high-contrast {
   $main-range-border: solid 1px;
   $comparison-range-border: dashed 1px;
 

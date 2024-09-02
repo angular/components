@@ -20,7 +20,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@include cdk.high-contrast {
   .mat-datepicker-toggle-default-icon {
     // On Chromium-based browsers the icon doesn't appear to inherit the text color in high
     // contrast mode so we have to set it explicitly. This is a no-op on IE and Firefox.

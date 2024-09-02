@@ -83,7 +83,7 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
     margin: 0 $calendar-arrow-size 0 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // Setting the fill to `currentColor` doesn't work on Chromium browsers.
     fill: CanvasText;
   }

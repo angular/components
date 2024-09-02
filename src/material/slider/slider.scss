@@ -93,7 +93,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     content: '';
     pointer-events: none;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: CanvasText;
     }
   }
@@ -181,7 +181,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     content: '';
     pointer-events: none;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: CanvasText;
     }
   }

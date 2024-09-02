@@ -153,7 +153,7 @@ $_side-padding: 16px;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // In single selection mode, the selected option is indicated by changing its
     // background color, but that doesn't work in high contrast mode. We add an
     // alternate indication by rendering out a circle.

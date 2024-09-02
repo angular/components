@@ -254,7 +254,7 @@ $_emit-fallbacks: true;
     @include token-utils.create-token-slot(justify-content, actions-alignment, $_emit-fallbacks);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     border-top-color: CanvasText;
   }
 

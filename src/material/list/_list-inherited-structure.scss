@@ -108,7 +108,7 @@
       content: '';
       pointer-events: none;
 
-      @include cdk.high-contrast(active, off) {
+      @include cdk.high-contrast {
         border-color: CanvasText;
       }
     }

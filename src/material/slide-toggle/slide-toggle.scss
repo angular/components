@@ -79,7 +79,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     border-color: currentColor;
   }
 
@@ -303,7 +303,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
       border-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
     z-index: -1;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: currentColor;
     }
   }
