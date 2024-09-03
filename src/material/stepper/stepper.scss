@@ -199,7 +199,7 @@
   overflow: hidden;
   padding: 0 stepper-variables.$side-gap stepper-variables.$side-gap stepper-variables.$side-gap;
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 
@@ -213,7 +213,7 @@
   border: 0;
   position: relative;
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 

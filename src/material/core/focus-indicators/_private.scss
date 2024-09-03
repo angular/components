@@ -35,7 +35,7 @@ $default-border-radius: 4px;
   }
 
   // Enable the indicator in high contrast mode.
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     @include _customize-focus-indicators((display: block));
   }
 }

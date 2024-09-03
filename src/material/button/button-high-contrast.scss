@@ -6,8 +6,8 @@
 .mat-mdc-unelevated-button:not(.mdc-button--outlined),
 .mat-mdc-raised-button:not(.mdc-button--outlined),
 .mat-mdc-outlined-button:not(.mdc-button--outlined),
-.mat-mdc-icon-button {
-  @include cdk.high-contrast(active, off) {
+.mat-mdc-icon-button.mat-mdc-icon-button {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 }

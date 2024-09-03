@@ -97,7 +97,7 @@ $large-size: $default-size + 6;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
     border-radius: 0;
   }

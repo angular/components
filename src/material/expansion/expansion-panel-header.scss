@@ -178,7 +178,7 @@
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@include cdk.high-contrast {
   .mat-expansion-panel-content {
     border-top: 1px solid;
     border-top-left-radius: 0;

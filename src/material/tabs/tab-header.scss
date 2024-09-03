@@ -18,7 +18,7 @@
     margin: 5px;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // When a tab is disabled in high contrast mode, set the text color to the disabled
     // color, which is (unintuitively) named "GrayText".
     &[aria-disabled='true'] {

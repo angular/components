@@ -44,7 +44,7 @@
     }
 
     // In high contrast mode the ripple is opaque, causing it to obstruct the content.
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       display: none;
     }
 

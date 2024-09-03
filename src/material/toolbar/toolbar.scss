@@ -27,7 +27,7 @@ $height-mobile-portrait: 56px !default;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 

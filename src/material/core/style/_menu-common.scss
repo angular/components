@@ -79,7 +79,7 @@ $icon-margin: 16px !default;
   }
 
   // Fix for Chromium-based browsers blending in the `currentColor` with the background.
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     fill: CanvasText;
   }
 }

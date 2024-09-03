@@ -50,7 +50,7 @@
     height: max(#{$track-variable}, #{$indicator-height-variable});
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline-color: CanvasText;
   }
 }
@@ -135,7 +135,7 @@
     @include token-utils.create-token-slot(background-color, track-color);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     background-color: ButtonBorder;
   }
 

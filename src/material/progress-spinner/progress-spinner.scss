@@ -44,7 +44,7 @@
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     .mdc-circular-progress__indeterminate-circle-graphic,
     .mdc-circular-progress__determinate-circle {
       // SVG colors aren't inverted automatically in high contrast mode. Set the
@@ -100,7 +100,7 @@
     @include token-utils.create-token-slot(stroke, active-indicator-color);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     stroke: CanvasText;
   }
 }

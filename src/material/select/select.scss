@@ -113,7 +113,7 @@ $scale: 0.75 !default;
     left: 50%;
     transform: translate(-50%, -50%);
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       // On Chromium browsers the `currentColor` blends in with the
       // background for SVGs so we have to fall back to `CanvasText`.
       fill: CanvasText;
@@ -145,7 +145,7 @@ div.mat-mdc-select-panel {
     @include token-utils.create-token-slot(background-color, panel-background-color);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 
