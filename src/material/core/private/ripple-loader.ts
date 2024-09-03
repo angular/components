@@ -7,7 +7,14 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {ANIMATION_MODULE_TYPE, Injectable, NgZone, OnDestroy, inject} from '@angular/core';
+import {
+  ANIMATION_MODULE_TYPE,
+  Injectable,
+  Injector,
+  NgZone,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleRenderer,
@@ -54,6 +61,7 @@ export class MatRippleLoader implements OnDestroy {
   private _globalRippleOptions = inject(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
+  private _injector = inject(Injector);
   private _hosts = new Map<
     HTMLElement,
     {renderer: RippleRenderer; target: RippleTarget; hasSetUpEvents: boolean}
@@ -184,7 +192,13 @@ export class MatRippleLoader implements OnDestroy {
       },
     };
 
-    const renderer = new RippleRenderer(target, this._ngZone, rippleEl, this._platform);
+    const renderer = new RippleRenderer(
+      target,
+      this._ngZone,
+      rippleEl,
+      this._platform,
+      this._injector,
+    );
     const hasSetUpEvents = !target.rippleDisabled;
 
     if (hasSetUpEvents) {
