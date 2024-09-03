@@ -10,10 +10,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
   NgZone,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -44,26 +44,18 @@ import {AbstractMatColumnResize} from './column-resize-directives/common';
   standalone: true,
 })
 export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
-  protected readonly document: Document;
+  protected readonly columnDef = inject(CdkColumnDef);
+  protected readonly columnResize = inject(ColumnResize);
+  protected readonly directionality = inject(Directionality);
+  protected readonly elementRef = inject(ElementRef);
+  protected readonly eventDispatcher = inject(HeaderRowEventDispatcher);
+  protected readonly ngZone = inject(NgZone);
+  protected readonly resizeNotifier = inject(ColumnResizeNotifierSource);
+  protected readonly resizeRef = inject(ResizeRef);
+  protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
+  protected readonly document = inject(DOCUMENT);
 
   @ViewChild('top', {static: true}) topElement: ElementRef<HTMLElement>;
-
-  constructor(
-    protected readonly columnDef: CdkColumnDef,
-    protected readonly columnResize: ColumnResize,
-    protected readonly directionality: Directionality,
-    protected readonly elementRef: ElementRef,
-    protected readonly eventDispatcher: HeaderRowEventDispatcher,
-    protected readonly ngZone: NgZone,
-    protected readonly resizeNotifier: ColumnResizeNotifierSource,
-    protected readonly resizeRef: ResizeRef,
-    @Inject(_COALESCED_STYLE_SCHEDULER)
-    protected readonly styleScheduler: _CoalescedStyleScheduler,
-    @Inject(DOCUMENT) document: any,
-  ) {
-    super();
-    this.document = document;
-  }
 
   protected override updateResizeActive(active: boolean): void {
     super.updateResizeActive(active);

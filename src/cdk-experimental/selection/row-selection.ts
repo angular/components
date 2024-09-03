@@ -7,7 +7,7 @@
  */
 
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {Directive, Input} from '@angular/core';
+import {Directive, Input, inject} from '@angular/core';
 
 import {CdkSelection} from './selection';
 
@@ -27,6 +27,8 @@ import {CdkSelection} from './selection';
   standalone: true,
 })
 export class CdkRowSelection<T> {
+  readonly _selection = inject<CdkSelection<T>>(CdkSelection);
+
   // We need an initializer here to avoid a TS error.
   @Input('cdkRowSelectionValue') value: T = undefined!;
 
@@ -38,6 +40,4 @@ export class CdkRowSelection<T> {
     this._index = coerceNumberProperty(index);
   }
   protected _index?: number;
-
-  constructor(readonly _selection: CdkSelection<T>) {}
 }

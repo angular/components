@@ -23,12 +23,10 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Injector,
   Input,
   OnDestroy,
-  Optional,
   Output,
   TemplateRef,
   ViewContainerRef,
@@ -63,6 +61,16 @@ export const CDK_COMBOBOX = new InjectionToken<CdkCombobox>('CDK_COMBOBOX');
   standalone: true,
 })
 export class CdkCombobox<T = unknown> implements OnDestroy {
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _overlay = inject(Overlay);
+  protected readonly _viewContainerRef = inject(ViewContainerRef);
+  private readonly _injector = inject(Injector);
+  private readonly _doc = inject(DOCUMENT);
+  private readonly _directionality = inject(Directionality, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _overlayRef: OverlayRef;
+  private _panelPortal: TemplatePortal;
+
   @Input('cdkComboboxTriggerFor')
   _panelTemplateRef: TemplateRef<unknown>;
 
@@ -103,22 +111,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
     T[]
   >();
 
-  private _overlayRef: OverlayRef;
-  private _panelPortal: TemplatePortal;
-
   contentId: string = '';
   contentType: AriaHasPopupValue;
-
-  private _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(
-    private readonly _elementRef: ElementRef<HTMLElement>,
-    private readonly _overlay: Overlay,
-    protected readonly _viewContainerRef: ViewContainerRef,
-    private readonly _injector: Injector,
-    @Inject(DOCUMENT) private readonly _doc: any,
-    @Optional() private readonly _directionality?: Directionality,
-  ) {}
 
   ngOnDestroy() {
     if (this._overlayRef) {
@@ -260,7 +254,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._getOverlayPositionStrategy(),
       scrollStrategy: this._overlay.scrollStrategies.block(),
-      direction: this._directionality,
+      direction: this._directionality || undefined,
     });
   }
 

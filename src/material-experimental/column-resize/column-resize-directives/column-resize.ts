@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, NgZone} from '@angular/core';
+import {Directive, ElementRef, NgZone, inject} from '@angular/core';
 import {
   ColumnResize,
   ColumnResizeNotifier,
@@ -27,13 +27,9 @@ import {AbstractMatColumnResize, TABLE_HOST_BINDINGS, TABLE_PROVIDERS} from './c
   standalone: true,
 })
 export class MatColumnResize extends AbstractMatColumnResize {
-  constructor(
-    readonly columnResizeNotifier: ColumnResizeNotifier,
-    readonly elementRef: ElementRef<HTMLElement>,
-    protected readonly eventDispatcher: HeaderRowEventDispatcher,
-    protected readonly ngZone: NgZone,
-    protected readonly notifier: ColumnResizeNotifierSource,
-  ) {
-    super();
-  }
+  readonly columnResizeNotifier = inject(ColumnResizeNotifier);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly eventDispatcher = inject(HeaderRowEventDispatcher);
+  protected readonly ngZone = inject(NgZone);
+  protected readonly notifier = inject(ColumnResizeNotifierSource);
 }
