@@ -149,7 +149,7 @@ jobs:
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
 
   build:
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest-16core
     steps:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
