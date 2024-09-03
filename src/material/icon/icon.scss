@@ -28,6 +28,7 @@ mat-icon {
   fill: currentColor;
   height: $size;
   width: $size;
+  vertical-align: middle;
 
   // In some cases the icon elements may extend beyond the container. Clip these cases
   // in order to avoid weird overflows and click areas. See #11826.
