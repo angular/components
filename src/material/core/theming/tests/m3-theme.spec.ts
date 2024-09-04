@@ -56,18 +56,14 @@ describe('M3 theme', () => {
     root.walkRules(rule => {
       selectors.add(rule.selector);
     });
-    expect(Array.from(selectors)).toEqual(['html', '.mat-theme-loaded-marker']);
+    expect(Array.from(selectors)).toEqual(['html']);
   });
 
   it('should only emit CSS variables', () => {
     const root = parse(transpile(`html { @include mat.all-component-themes($theme); }`));
     const nonVarProps: string[] = [];
     root.walkDecls(decl => {
-      if (
-        !decl.prop.startsWith('--') &&
-        // Skip the theme loaded marker since it can't be a variable.
-        (decl.parent as Rule).selector !== '.mat-theme-loaded-marker'
-      ) {
+      if (!decl.prop.startsWith('--')) {
         nonVarProps.push(decl.prop);
       }
     });
