@@ -51,14 +51,6 @@ mat-icon {
   transform: scale(-1, 1);
 }
 
-// Makes button icon overflow visible to fix b/250063405
-.mat-mdc-icon-button .mat-icon,
-.mdc-button .mat-icon,
-.mat-mdc-fab-base .mat-icon {
-  overflow: visible;
-  line-height: 1 !important;
-}
-
 .mat-form-field:not(.mat-form-field-appearance-legacy) {
   .mat-form-field-prefix,
   .mat-form-field-suffix {
@@ -71,4 +63,11 @@ mat-icon {
       overflow: visible;
     }
   }
+}
+
+// Makes button icon overflow visible to fix b/250063405
+.mat-mdc-icon-button .mat-icon,
+.mdc-button .mat-icon,
+.mat-mdc-fab-base .mat-icon {
+  overflow: visible;
 }
