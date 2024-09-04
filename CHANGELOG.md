@@ -1,3 +1,38 @@
+<a name="19.0.0-next.3"></a>
+# 19.0.0-next.3 "quicksilver-quintessence" (2024-09-04)
+## Breaking Changes
+### cdk
+- * Since `cdk.high-contrast` targets a media query instead of a class, the specificity of the styles it emits is lower than before.
+- * Virtual scrolling lists now have proper type checking which can reveal some previously-hidden compilation errors.
+  
+  * fix(cdk/scrolling): adds ngTemplateContextGuard
+  
+  implements ngTemplateContextGuard for CdkVirtualForOf directive
+### material
+- * `mixinColor` and `CanColor` have been removed. Use a host binding instead.
+  * `mixinDisableRipple` and `CanDisableRipple` have been removed. Use input transforms instead.
+  * `mixinDisabled` and `CanDisable` have been removed. Use input transforms instead.
+  * `mixinInitialized` and `HasInitialized` have been removed. Use a `Subject` that emits in `ngOnInit` instead.
+  * `mixinTabIndex` and `HasTabIndex` have been removed. Use input transforms instead.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [90eea1bf70](https://github.com/angular/components/commit/90eea1bf7084ea7098676ca9988624802f27884c) | fix | **core:** Allow system variables to be formatted for opacity ([#29665](https://github.com/angular/components/pull/29665)) |
+| [edce90652a](https://github.com/angular/components/commit/edce90652ade6715b4404db284f684b1b511fae4) | fix | **core:** delete deprecated APIs ([#29651](https://github.com/angular/components/pull/29651)) |
+| [4771931c2f](https://github.com/angular/components/commit/4771931c2f334be1edc2b7764921d6539808317e) | fix | **core:** Fix incorrect color role mappings ([#29655](https://github.com/angular/components/pull/29655)) |
+| [9333de0537](https://github.com/angular/components/commit/9333de0537e7b905407999820bf283f4943c986b) | fix | **tooltip:** remove old IE workaround ([#29674](https://github.com/angular/components/pull/29674)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f4a02adb77](https://github.com/angular/components/commit/f4a02adb779968ab1e696aa93dc69b62e7a18929) | feat | **a11y:** use native media query for high contrast detection ([#29678](https://github.com/angular/components/pull/29678)) |
+| [5439460d1f](https://github.com/angular/components/commit/5439460d1fe166f8ec34ab7d48f05e0dd7f6a946) | fix | **scrolling:** adds ngTemplateContextGuard ([#27276](https://github.com/angular/components/pull/27276)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b3a9062edf](https://github.com/angular/components/commit/b3a9062edf8863250ddd462e5abe009fbc46243b) | fix | ripples not showing up in some cases ([#29672](https://github.com/angular/components/pull/29672)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.3"></a>
 # 18.2.3 "parchment-deluge" (2024-09-04)
 ### material
