@@ -1,3 +1,15 @@
+<a name="18.2.3"></a>
+# 18.2.3 "parchment-deluge" (2024-09-04)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0f07b25d12](https://github.com/angular/components/commit/0f07b25d12fae6495080c614dd453bc9e193d7c4) | fix | **badge:** resolve memory leak ([#29676](https://github.com/angular/components/pull/29676)) |
+| [fe3f30ff2f](https://github.com/angular/components/commit/fe3f30ff2f5110996681bc02ec3b732591846f03) | fix | **core:** Allow system variables to be formatted for opacity ([#29665](https://github.com/angular/components/pull/29665)) |
+| [5d93395442](https://github.com/angular/components/commit/5d93395442153fd04ad1f427053be9913c73f487) | fix | **core:** Fix incorrect color role mappings ([#29655](https://github.com/angular/components/pull/29655)) |
+| [4a79052ae0](https://github.com/angular/components/commit/4a79052ae077c632afd1f8fd001a96bb3406b0c0) | fix | **tooltip:** remove old IE workaround ([#29674](https://github.com/angular/components/pull/29674)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.2"></a>
 # 18.2.2 "steel-sword" (2024-08-28)
 ### cdk
