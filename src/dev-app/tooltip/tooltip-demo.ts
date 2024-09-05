@@ -10,7 +10,6 @@ import {
   TooltipCustomClassExample,
   TooltipDelayExample,
   TooltipDisabledExample,
-  TooltipHarnessExample,
   TooltipManualExample,
   TooltipMessageExample,
   TooltipModifiedDefaultsExample,
@@ -35,7 +34,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TooltipOverviewExample,
     TooltipPositionExample,
     TooltipPositionAtOriginExample,
-    TooltipHarnessExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

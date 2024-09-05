@@ -29,7 +29,7 @@ export class ScienceJoke {}
   templateUrl: 'portal-demo.html',
   styleUrl: 'portal-demo.css',
   standalone: true,
-  imports: [PortalModule, ScienceJoke],
+  imports: [PortalModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortalDemo {
