@@ -20,7 +20,6 @@ import {
 import {
   TreeDynamicExample,
   TreeFlatOverviewExample,
-  TreeHarnessExample,
   TreeLegacyKeyboardInterfaceExample,
   TreeLoadmoreExample,
   TreeNestedOverviewExample,
@@ -55,7 +54,6 @@ import {MatTreeModule} from '@angular/material/tree';
     FormsModule,
     TreeDynamicExample,
     TreeFlatOverviewExample,
-    TreeHarnessExample,
     TreeLegacyKeyboardInterfaceExample,
     TreeLoadmoreExample,
     TreeNestedOverviewExample,

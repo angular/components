@@ -189,8 +189,6 @@ export class CustomHeaderNgContent<D> {
     MatInputModule,
     MatSelectModule,
     ReactiveFormsModule,
-    CustomHeader,
-    CustomHeaderNgContent,
     CustomRangeStrategy,
   ],
 })
