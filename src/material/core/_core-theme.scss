@@ -15,22 +15,6 @@
 @use './tokens/m2/mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
 @use './tokens/m2/mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
 
-$_has-inserted-loaded-marker: false;
-
-@mixin _theme-loaded-marker {
-  @if not $_has-inserted-loaded-marker {
-    $_has-inserted-loaded-marker: true !global;
-
-    // Marker that is used to determine whether the user has added a theme to their page.
-    // Needs to be generated at the root, because themes may be nested inside classes.
-    @at-root {
-      .mat-theme-loaded-marker {
-        display: none;
-      }
-    }
-  }
-}
-
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
@@ -45,9 +29,6 @@ $_has-inserted-loaded-marker: false;
         tokens-mat-app.get-unthemable-tokens());
     }
   }
-
-  // The marker is a concrete style no matter which Material version we're targeting.
-  @include _theme-loaded-marker;
 }
 
 @mixin color($theme) {
@@ -129,9 +110,6 @@ $_has-inserted-loaded-marker: false;
       }
     }
   }
-
-  // The marker is a concrete style no matter which Material version we're targeting.
-  @include _theme-loaded-marker;
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {

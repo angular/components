@@ -12,7 +12,6 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
-import { HighContrastModeDetector } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
@@ -119,7 +118,7 @@ export class _ErrorStateTracker {
 // @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
-// @public
+// @public @deprecated
 export interface GranularSanityChecks {
     // (undocumented)
     doctype: boolean;
@@ -150,11 +149,11 @@ export const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponen
 // @public
 export const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
-// @public
+// @public @deprecated
 export class MatCommonModule {
-    constructor(highContrastModeDetector: HighContrastModeDetector, _sanityChecks: SanityChecks, _document: Document);
+    constructor(...args: any[]);
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, [null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCommonModule>;
     // (undocumented)
@@ -175,7 +174,7 @@ export type MatDateFormats = {
     };
 };
 
-// @public
+// @public @deprecated
 export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 // @public
@@ -527,7 +526,7 @@ export interface RippleTarget {
     rippleDisabled: boolean;
 }
 
-// @public
+// @public @deprecated
 export type SanityChecks = boolean | GranularSanityChecks;
 
 // @public
