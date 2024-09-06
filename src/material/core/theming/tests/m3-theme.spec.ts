@@ -1,4 +1,4 @@
-import {parse, Rule} from 'postcss';
+import {parse} from 'postcss';
 import {compileString} from 'sass';
 import {runfiles} from '@bazel/runfiles';
 import * as path from 'path';
