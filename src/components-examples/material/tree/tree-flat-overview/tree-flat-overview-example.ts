@@ -1,44 +1,33 @@
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {MatTree, MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {ArrayDataSource} from '@angular/cdk/collections';
 
 /**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
+ * Food data with a flat structure.
+ * Each node has a name and the level it should display. The order
+ * is used such that an item is a child of the previous item if the
+ * level is increased.
  */
 interface FoodNode {
   name: string;
-  children?: FoodNode[];
+  level: number;
 }
 
 const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
-  },
-  {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [{name: 'Broccoli'}, {name: 'Brussels sprouts'}],
-      },
-      {
-        name: 'Orange',
-        children: [{name: 'Pumpkins'}, {name: 'Carrots'}],
-      },
-    ],
-  },
+  {name: 'Fruit', level: 0},
+  {name: 'Apple', level: 1},
+  {name: 'Banana', level: 1},
+  {name: 'Fruit loops', level: 1},
+  {name: 'Vegetables', level: 0},
+  {name: 'Green', level: 1},
+  {name: 'Broccoli', level: 2},
+  {name: 'Brussels spouts', level: 2},
+  {name: 'Orange', level: 1},
+  {name: 'Pumpkins', level: 2},
+  {name: 'Carrots', level: 2},
 ];
-
-/** Flat node with expandable and level information */
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
 
 /**
  * @title Tree with flat nodes
@@ -51,31 +40,33 @@ interface ExampleFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeFlatOverviewExample {
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
+  @ViewChild(MatTree) tree: MatTree<FoodNode>;
+
+  dataSource = new ArrayDataSource(TREE_DATA);
+
+  levelAccessor = (dataNode: FoodNode) => dataNode.level;
+
+  hasChild = (index: number, node: FoodNode) => {
+    return node.level < TREE_DATA[index + 1]?.level;
   };
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  constructor() {
-    this.dataSource.data = TREE_DATA;
+  shouldRender(node: FoodNode): boolean {
+    // This node should render if it is a root node or if all of its ancestors are expanded.
+    const parent = this._getParentNode(node);
+    return !parent || (!!this.tree?.isExpanded(parent) && this.shouldRender(parent));
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  private _getParentNode(node: FoodNode) {
+    const nodeIndex = TREE_DATA.indexOf(node);
+
+    // Determine the node's parent by finding the first preceding node that's
+    // one level shallower.
+    for (let i = nodeIndex - 1; i >= 0; i--) {
+      if (TREE_DATA[i].level === node.level - 1) {
+        return TREE_DATA[i];
+      }
+    }
+
+    return null;
+  }
 }

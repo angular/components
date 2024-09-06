@@ -1,6 +1,5 @@
-import {FlatTreeControl} from '@angular/cdk/tree';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {MatTreeModule, MatTreeNestedDataSource} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -9,7 +8,7 @@ interface Node {
   children?: Node[];
 }
 
-const FLAT_TREE_DATA: Node[] = [
+const TREE_DATA: Node[] = [
   {
     name: 'Flat Group 1',
     children: [{name: 'Flat Leaf 1.1'}, {name: 'Flat Leaf 1.2'}, {name: 'Flat Leaf 1.3'}],
@@ -25,12 +24,6 @@ const FLAT_TREE_DATA: Node[] = [
   },
 ];
 
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
-
 /**
  * @title Testing with MatTreeHarness
  */
@@ -42,31 +35,13 @@ interface ExampleFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeHarnessExample {
-  private _transformer = (node: Node, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  };
-
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  dataSource = new MatTreeNestedDataSource<Node>();
 
   constructor() {
-    this.dataSource.data = FLAT_TREE_DATA;
+    this.dataSource.data = TREE_DATA;
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  childrenAccessor = (node: Node) => node.children || [];
+
+  hasChild = (_: number, node: Node) => !!node.children && node.children.length > 0;
 }

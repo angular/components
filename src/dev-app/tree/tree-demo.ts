@@ -18,10 +18,7 @@ import {
   CdkTreeCustomKeyManagerExample,
 } from '@angular/components-examples/cdk/tree';
 import {
-  TreeDynamicExample,
   TreeFlatOverviewExample,
-  TreeLegacyKeyboardInterfaceExample,
-  TreeLoadmoreExample,
   TreeNestedOverviewExample,
 } from '@angular/components-examples/material/tree';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
@@ -52,10 +49,7 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeComplexExample,
     CommonModule,
     FormsModule,
-    TreeDynamicExample,
     TreeFlatOverviewExample,
-    TreeLegacyKeyboardInterfaceExample,
-    TreeLoadmoreExample,
     TreeNestedOverviewExample,
     MatButtonModule,
     MatExpansionModule,
