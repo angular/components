@@ -10,15 +10,19 @@ interface Node {
 
 const TREE_DATA: Node[] = [
   {
-    name: 'Flat Group 1',
-    children: [{name: 'Flat Leaf 1.1'}, {name: 'Flat Leaf 1.2'}, {name: 'Flat Leaf 1.3'}],
+    name: 'Example Group 1',
+    children: [{name: 'Example Leaf 1.1'}, {name: 'Example Leaf 1.2'}, {name: 'Example Leaf 1.3'}],
   },
   {
-    name: 'Flat Group 2',
+    name: 'Example Group 2',
     children: [
       {
-        name: 'Flat Group 2.1',
-        children: [{name: 'Flat Leaf 2.1.1'}, {name: 'Flat Leaf 2.1.2'}, {name: 'Flat Leaf 2.1.3'}],
+        name: 'Example Group 2.1',
+        children: [
+          {name: 'Example Leaf 2.1.1'},
+          {name: 'Example Leaf 2.1.2'},
+          {name: 'Example Leaf 2.1.3'},
+        ],
       },
     ],
   },
