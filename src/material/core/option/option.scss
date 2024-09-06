@@ -157,7 +157,7 @@ $_side-padding: 16px;
     // In single selection mode, the selected option is indicated by changing its
     // background color, but that doesn't work in high contrast mode. We add an
     // alternate indication by rendering out a circle.
-    &.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+    &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
       $size: 10px;
       content: '';
       position: absolute;
@@ -170,7 +170,7 @@ $_side-padding: 16px;
       border-radius: $size;
     }
 
-    [dir='rtl'] &.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+    [dir='rtl'] &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
       right: auto;
       left: $_side-padding;
     }
