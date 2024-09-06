@@ -19,7 +19,7 @@ In "indeterminate" mode, the `value` property is ignored.
 
 ### Accessibility
 
-`MatLegacyProgressSpinner` implements the ARIA `role="progressbar"` pattern. By default, the spinner
+`MatProgressSpinner` implements the ARIA `role="progressbar"` pattern. By default, the spinner
 sets `aria-valuemin` to `0` and `aria-valuemax` to `100`. Avoid changing these values, as this may
 cause incompatibility with some assistive technology.
 
