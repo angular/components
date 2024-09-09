@@ -116,6 +116,9 @@ a.mdc-list-item--activated {
   content: '';
   opacity: 0;
   pointer-events: none;
+
+  // This comes up in some internal implementations.
+  border-radius: inherit;
 }
 
 // The MDC-based list items already use the `::before` pseudo element for the standard
