@@ -25,6 +25,7 @@ export {
   DatepickerDropdownPositionY,
   MatDatepickerControl,
   MatDatepickerPanel,
+  MatDatepickerBase
 } from './datepicker-base';
 export {MatDatepickerInputEvent, DateFilterFn} from './datepicker-input-base';
 export {
