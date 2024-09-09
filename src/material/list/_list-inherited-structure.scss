@@ -1,4 +1,3 @@
-@use '@angular/cdk';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/tokens/token-utils';
@@ -92,31 +91,6 @@
         align-self: flex-start;
         margin-top: 16px;
       }
-    }
-
-    &.mdc-list-item--selected::before,
-    &.mdc-list-item--selected:focus::before,
-    &:not(.mdc-list-item--selected):focus::before {
-      position: absolute;
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      border: 1px solid transparent;
-      border-radius: inherit;
-      content: '';
-      pointer-events: none;
-
-      @include cdk.high-contrast {
-        border-color: CanvasText;
-      }
-    }
-
-    &.mdc-list-item--selected:focus::before,
-    &.mdc-list-item--selected::before {
-      border-width: 3px;
-      border-style: double;
     }
   }
 
