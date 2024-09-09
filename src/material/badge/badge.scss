@@ -26,8 +26,7 @@ $large-size: $default-size + 6;
       height: token-utils.get-token-variable($legacy-size-var-name, $fallback: unset);
       min-width: token-utils.get-token-variable($size-var-name, $fallback: unset);
       min-height: token-utils.get-token-variable($size-var-name, $fallback: unset);
-      line-height: token-utils.get-token-variable(
-          $legacy-size-var-name, $fallback: token-utils.get-token-variable($size-var-name));
+      line-height: token-utils.get-token-variable($legacy-size-var-name);
       @include token-utils.create-token-slot(padding, '#{$prefix}container-padding');
       @include token-utils.create-token-slot(font-size, '#{$prefix}text-size');
       @include token-utils.create-token-slot(margin, '#{$prefix}container-offset');
