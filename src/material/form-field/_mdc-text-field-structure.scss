@@ -6,10 +6,14 @@
 
 // Includes the structural styles for the form field inherited from MDC.
 @mixin private-text-field-structure {
-  $filled-slots: (tokens-mdc-filled-text-field.$prefix,
-    tokens-mdc-filled-text-field.get-token-slots());
-  $outlined-slots: (tokens-mdc-outlined-text-field.$prefix,
-    tokens-mdc-outlined-text-field.get-token-slots());
+  $filled-slots: (
+    tokens-mdc-filled-text-field.$prefix,
+    tokens-mdc-filled-text-field.get-token-slots()
+  );
+  $outlined-slots: (
+    tokens-mdc-outlined-text-field.$prefix,
+    tokens-mdc-outlined-text-field.get-token-slots()
+  );
 
   .mdc-text-field {
     display: inline-flex;
@@ -124,19 +128,15 @@
   .mdc-text-field--outlined {
     height: 56px;
     overflow: visible;
-    padding-left: 16px;
-    padding-right: 16px;
 
-    @include _supports-max {
-      @include token-utils.use-tokens($outlined-slots...) {
-        $shape-var: token-utils.get-token-variable(container-shape);
-        padding-right: max(16px, #{$shape-var});
-        padding-left: max(16px, calc(#{$shape-var} + 4px));
+    @include token-utils.use-tokens($outlined-slots...) {
+      $shape-var: token-utils.get-token-variable(container-shape);
+      padding-right: max(16px, #{$shape-var});
+      padding-left: max(16px, calc(#{$shape-var} + 4px));
 
-        [dir='rtl'] & {
-          padding-right: max(16px, calc(#{$shape-var} + 4px));
-          padding-left: max(16px, #{$shape-var});
-        }
+      [dir='rtl'] & {
+        padding-right: max(16px, calc(#{$shape-var} + 4px));
+        padding-left: max(16px, #{$shape-var});
       }
     }
   }
@@ -336,17 +336,14 @@
     border-right: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    width: 12px;
 
     @include token-utils.use-tokens($outlined-slots...) {
       @include token-utils.create-token-slot(border-top-left-radius, container-shape);
       @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
 
-      @include _supports-max {
-        .mdc-text-field--outlined .mdc-notched-outline & {
-          $shape-var: token-utils.get-token-variable(container-shape);
-          width: max(12px, #{$shape-var});
-        }
+      .mdc-text-field--outlined .mdc-notched-outline & {
+        $shape-var: token-utils.get-token-variable(container-shape);
+        width: max(12px, #{$shape-var});
       }
     }
 
@@ -391,14 +388,14 @@
   .mdc-notched-outline__notch {
     flex: 0 0 auto;
     width: auto;
-    max-width: calc(100% - 24px);
 
     @include token-utils.use-tokens($outlined-slots...) {
-      @include _supports-max {
-        .mdc-text-field--outlined .mdc-notched-outline & {
-          $shape-var: token-utils.get-token-variable(container-shape);
-          max-width: calc(100% - max(12px, #{$shape-var}) * 2);
-        }
+      .mdc-text-field--outlined .mdc-notched-outline & {
+        $shape-var: token-utils.get-token-variable(container-shape);
+        max-width: min(
+          var(--mat-form-field-notch-max-width, 100%),
+          calc(100% - max(12px, #{$shape-var}) * 2)
+        );
       }
     }
 
@@ -414,6 +411,7 @@
       padding-left: 0;
       padding-right: 8px;
       border-top: none;
+      --mat-form-field-notch-max-width: 100%;
     }
 
     [dir='rtl'] .mdc-notched-outline--notched & {
@@ -427,7 +425,8 @@
   }
 
   .mdc-line-ripple {
-    &::before, &::after {
+    &::before,
+    &::after {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -453,8 +452,10 @@
         }
 
         .mdc-text-field--filled.mdc-text-field--disabled & {
-          @include token-utils.create-token-slot(border-bottom-color,
-            disabled-active-indicator-color);
+          @include token-utils.create-token-slot(
+            border-bottom-color,
+            disabled-active-indicator-color
+          );
         }
 
         #{$enabled-field}.mdc-text-field--invalid & {
@@ -462,8 +463,10 @@
         }
 
         #{$enabled-field}.mdc-text-field--invalid:not(.mdc-text-field--focused):hover & {
-          @include token-utils.create-token-slot(border-bottom-color,
-            error-hover-active-indicator-color);
+          @include token-utils.create-token-slot(
+            border-bottom-color,
+            error-hover-active-indicator-color
+          );
         }
       }
     }
@@ -475,8 +478,10 @@
 
       @include token-utils.use-tokens($filled-slots...) {
         .mdc-text-field--filled & {
-          @include token-utils.create-token-slot(border-bottom-width,
-            focus-active-indicator-height);
+          @include token-utils.create-token-slot(
+            border-bottom-width,
+            focus-active-indicator-height
+          );
         }
 
         .mdc-text-field--filled:not(.mdc-text-field--disabled) & {
@@ -484,8 +489,10 @@
         }
 
         .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
-          @include token-utils.create-token-slot(border-bottom-color,
-            error-focus-active-indicator-color);
+          @include token-utils.create-token-slot(
+            border-bottom-color,
+            error-focus-active-indicator-color
+          );
         }
       }
     }
@@ -565,21 +572,14 @@
   }
 }
 
-// Wraps the content in a `@supports` query targeting the `max` CSS function.
-@mixin _supports-max {
-  // stylelint-disable material/no-prefixes
-  @supports (top: max(0%)) {
-    @content;
-  }
-  // stylelint-enable
-}
-
 // Includes the animation styles for the form field inherited from MDC.
 @mixin private-text-field-animations {
   $timing-curve: cubic-bezier(0.4, 0, 0.2, 1);
 
   .mdc-floating-label {
-    transition: transform 150ms $timing-curve, color 150ms $timing-curve;
+    transition:
+      transform 150ms $timing-curve,
+      color 150ms $timing-curve;
   }
 
   .mdc-text-field__input {
@@ -605,6 +605,8 @@
   }
 
   .mdc-line-ripple::after {
-    transition: transform 180ms $timing-curve, opacity 180ms $timing-curve;
+    transition:
+      transform 180ms $timing-curve,
+      opacity 180ms $timing-curve;
   }
 }
