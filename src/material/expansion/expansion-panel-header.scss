@@ -139,7 +139,7 @@
 }
 
 // Creates the expansion indicator arrow. Done using ::after
-// rather than havingadditional nodes in the template.
+// rather than having additional nodes in the template.
 .mat-expansion-indicator {
   &::after {
     border-style: solid;
