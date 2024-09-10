@@ -9,6 +9,7 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {
+  AfterRenderRef,
   ComponentRef,
   EmbeddedViewRef,
   EnvironmentInjector,
@@ -16,7 +17,6 @@ import {
   afterNextRender,
   afterRender,
   untracked,
-  AfterRenderRef,
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
@@ -39,7 +39,7 @@ export type ImmutableObject<T> = {
  */
 export class OverlayRef implements PortalOutlet {
   private _backdropElement: HTMLElement | null = null;
-  private _backdropTimeout: number | undefined;
+  private _backdropTimeout: ReturnType<typeof setTimeout> | undefined;
   private readonly _backdropClick = new Subject<MouseEvent>();
   private readonly _attachments = new Subject<void>();
   private readonly _detachments = new Subject<void>();
@@ -66,6 +66,9 @@ export class OverlayRef implements PortalOutlet {
   private _renders = new Subject<void>();
 
   private _afterRenderRef: AfterRenderRef;
+
+  /** Reference to the currently-running `afterNextRender` call. */
+  private _afterNextRenderRef: AfterRenderRef | undefined;
 
   constructor(
     private _portalOutlet: PortalOutlet,
@@ -151,9 +154,14 @@ export class OverlayRef implements PortalOutlet {
       this._scrollStrategy.enable();
     }
 
+    // We need to clean this up ourselves, because we're passing in an
+    // `EnvironmentInjector` below which won't ever be destroyed.
+    // Otherwise it causes some callbacks to be retained (see #29696).
+    this._afterNextRenderRef?.destroy();
+
     // Update the position once the overlay is fully rendered before attempting to position it,
     // as the position may depend on the size of the rendered content.
-    afterNextRender(
+    this._afterNextRenderRef = afterNextRender(
       () => {
         // The overlay could've been detached before the callback executed.
         if (this.hasAttached()) {
@@ -267,6 +275,7 @@ export class OverlayRef implements PortalOutlet {
     this._outsidePointerEvents.complete();
     this._outsideClickDispatcher.remove(this);
     this._host?.remove();
+    this._afterNextRenderRef?.destroy();
 
     this._previousHostParent = this._pane = this._host = null!;
 
