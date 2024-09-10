@@ -52,6 +52,11 @@ $_side-padding: 16px;
         @include token-utils.create-token-slot(background-color, selected-state-layer-color);
       }
     }
+
+    .mat-pseudo-checkbox {
+      --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+          token-utils.get-token-variable(selected-state-label-text-color)};
+    }
   }
 
   &.mdc-list-item {
