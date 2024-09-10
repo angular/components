@@ -16,7 +16,13 @@ describe('CdkTextColumn', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
+      imports: [
+        CdkTableModule,
+        BasicTextColumnApp,
+        MissingTableApp,
+        TextColumnWithoutNameApp,
+        TextColumnWithFooter,
+      ],
     });
   }));
 
@@ -148,12 +154,104 @@ describe('CdkTextColumn', () => {
       ]);
     });
   });
+
+  describe('with footer', () => {
+    const expectedDefaultTableHeaderAndData = [
+      ['PropertyA', 'PropertyB', 'PropertyC', 'PropertyD'],
+      ['Laptop', 'Electronics', 'New', '999.99'],
+      ['Charger', 'Accessories', 'Used', '49.99'],
+    ];
+
+    function createTestComponent(options: TextColumnOptions<any>) {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [CdkTableModule, TextColumnWithFooter],
+        providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}],
+      });
+
+      fixture = TestBed.createComponent(TextColumnWithFooter);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      tableElement = fixture.nativeElement.querySelector('.cdk-table');
+    }
+
+    it('should be able to provide a default footer text transformation (function)', () => {
+      const expectedFooterPropertyA = 'propertyA!';
+      const expectedFooterPropertyB = 'propertyB!';
+      const expectedFooterPropertyC = '';
+      const expectedFooterPropertyD = '';
+      const defaultFooterTextTransform = (name: string) => `${name}!`;
+      createTestComponent({defaultFooterTextTransform});
+
+      expectTableToMatchContent(tableElement, [
+        ...expectedDefaultTableHeaderAndData,
+        [
+          expectedFooterPropertyA,
+          expectedFooterPropertyB,
+          expectedFooterPropertyC,
+          expectedFooterPropertyD,
+        ],
+      ]);
+    });
+
+    it('should be able to provide a footer text transformation (function)', () => {
+      createTestComponent({});
+      const expectedFooterPropertyA = '';
+      const expectedFooterPropertyB = '';
+      const expectedFooterPropertyC = '';
+      const expectedFooterPropertyD = '1049.98';
+      // footer text transformation function
+      component.getTotal = (): string => {
+        const total = component.data
+          .map(t => t.propertyD)
+          .reduce((acc, value) => (acc || 0) + (value || 0), 0);
+        return total ? total.toString() : '';
+      };
+
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expectTableToMatchContent(tableElement, [
+        ...expectedDefaultTableHeaderAndData,
+        [
+          expectedFooterPropertyA,
+          expectedFooterPropertyB,
+          expectedFooterPropertyC,
+          expectedFooterPropertyD,
+        ],
+      ]);
+    });
+
+    it('should be able to provide a plain footer text', () => {
+      createTestComponent({});
+      const expectedFooterPropertyA = '';
+      const expectedFooterPropertyB = '';
+      const expectedFooterPropertyC = 'Total';
+      const expectedFooterPropertyD = '';
+
+      component.footerTextPropertyC = 'Total';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expectTableToMatchContent(tableElement, [
+        ...expectedDefaultTableHeaderAndData,
+        [
+          expectedFooterPropertyA,
+          expectedFooterPropertyB,
+          expectedFooterPropertyC,
+          expectedFooterPropertyD,
+        ],
+      ]);
+    });
+  });
 });
 
 interface TestData {
   propertyA: string;
   propertyB: string;
   propertyC: string;
+  propertyD?: number;
 }
 
 @Component({
@@ -179,8 +277,12 @@ class BasicTextColumnApp {
   ];
 
   headerTextB: string;
+  footerTextPropertyC: string = '';
   dataAccessorA: (data: TestData) => string;
-  justifyC = 'start';
+  justifyC: 'start' | 'end' | 'center' = 'start';
+  getTotal() {
+    return '';
+  }
 }
 
 @Component({
@@ -205,3 +307,27 @@ class MissingTableApp {}
   imports: [CdkTableModule],
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="data">
+      <cdk-text-column name="propertyA"/>
+      <cdk-text-column name="propertyB"/>
+      <cdk-text-column name="propertyC" [footerText]="footerTextPropertyC"/>
+      <cdk-text-column name="propertyD" [footerTextTransform]="getTotal"/>
+
+      <cdk-header-row *cdkHeaderRowDef="displayedColumns"/>
+      <cdk-row *cdkRowDef="let row; columns: displayedColumns"/>
+      <cdk-footer-row *cdkFooterRowDef="displayedColumns"/>
+    </cdk-table>
+  `,
+  standalone: true,
+  imports: [CdkTableModule],
+})
+class TextColumnWithFooter extends BasicTextColumnApp {
+  override displayedColumns = ['propertyA', 'propertyB', 'propertyC', 'propertyD'];
+  override data = [
+    {propertyA: 'Laptop', propertyB: 'Electronics', propertyC: 'New', propertyD: 999.99},
+    {propertyA: 'Charger', propertyB: 'Accessories', propertyC: 'Used', propertyD: 49.99},
+  ];
+}

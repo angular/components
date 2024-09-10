@@ -37,6 +37,7 @@ import {
   TableStickyHeaderExample,
   TableTextColumnAdvancedExample,
   TableTextColumnExample,
+  TableTextColumnWithFooterExample,
   TableWrappedExample,
 } from '@angular/components-examples/material/table';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
@@ -70,6 +71,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TableStickyHeaderExample,
     TableTextColumnAdvancedExample,
     TableTextColumnExample,
+    TableTextColumnWithFooterExample,
     TableWrappedExample,
     TableReorderableExample,
     TableRecycleRowsExample,
