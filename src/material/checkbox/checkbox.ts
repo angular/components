@@ -160,6 +160,19 @@ export class MatCheckbox
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
   @Input('aria-describedby') ariaDescribedby: string;
 
+  /**
+   * Users can specify the `aria-expanded` attribute which will be forwarded to the input element
+   */
+  @Input({alias: 'aria-expanded', transform: booleanAttribute}) ariaExpanded: boolean;
+
+  /**
+   * Users can specify the `aria-controls` attribute which will be forwarded to the input element
+   */
+  @Input('aria-controls') ariaControls: string;
+
+  /** Users can specify the `aria-owns` attribute which will be forwarded to the input element */
+  @Input('aria-owns') ariaOwns: string;
+
   private _uniqueId: string;
 
   /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
