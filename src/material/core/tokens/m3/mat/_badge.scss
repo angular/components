@@ -25,8 +25,8 @@ $prefix: (mat, badge);
     small-size-text-size: token-definition.hardcode(0, $exclude-hardcoded),
     container-shape: map.get($systems, md-sys-shape, corner-full),
     container-size: token-definition.hardcode(16px, $exclude-hardcoded),
-    legacy-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
-    legacy-small-size-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
+    legacy-container-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    legacy-small-size-container-size: token-definition.hardcode(16px, $exclude-hardcoded),
     small-size-container-size: token-definition.hardcode(6px, $exclude-hardcoded),
     container-padding: token-definition.hardcode(0 4px, $exclude-hardcoded),
     small-size-container-padding: token-definition.hardcode(0, $exclude-hardcoded),
@@ -41,7 +41,7 @@ $prefix: (mat, badge);
     large-size-container-overlap-offset: token-definition.hardcode(-12px, $exclude-hardcoded),
     large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
     large-size-container-padding: token-definition.hardcode(0 4px, $exclude-hardcoded),
-    legacy-large-size-container-size: token-definition.hardcode(unset, $exclude-hardcoded),
+    legacy-large-size-container-size: token-definition.hardcode(16px, $exclude-hardcoded),
   ), (
     primary: (
       background-color: map.get($systems, md-sys-color, primary),
