@@ -1,4 +1,5 @@
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 @use './radio-common';
@@ -60,11 +61,14 @@
 
   // We don't inherit the border focus style from MDC since we don't use their ripple.
   // Instead we need to replicate it here.
-  .mdc-radio .mdc-radio__native-control:focus:enabled:not(:checked) {
-    & ~ .mdc-radio__background .mdc-radio__outer-circle {
-      border-color: var(--mdc-radio-unselected-focus-icon-color, black);
+  @include token-utils.use-tokens(tokens-mdc-radio.$prefix, tokens-mdc-radio.get-token-slots()) {
+    .mdc-radio .mdc-radio__native-control:focus:enabled:not(:checked) {
+      & ~ .mdc-radio__background .mdc-radio__outer-circle {
+        @include token-utils.create-token-slot(border-color, unselected-focus-icon-color);
+      }
     }
   }
+
 
   // For radios render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
