@@ -92,6 +92,20 @@
         margin-top: 16px;
       }
     }
+
+    // Not used in Material, but some internal tests seem to depend on it.
+    &.mdc-list-item--selected::before,
+    &.mdc-list-item--selected:focus::before,
+    &:not(.mdc-list-item--selected):focus::before {
+      position: absolute;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      content: '';
+      pointer-events: none;
+    }
   }
 
   a.mdc-list-item {
