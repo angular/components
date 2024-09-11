@@ -1,0 +1,10 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <mat-text-column name="name" [footerText]="nameFooterText"></mat-text-column>
+  <mat-text-column name="price" [footerTextTransform]="getTotal" justify="end"></mat-text-column>
+  <mat-text-column name="insurance" [footerTextTransform]="getTotal" justify="end"></mat-text-column>
+  <mat-text-column name="category"></mat-text-column>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

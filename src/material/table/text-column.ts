@@ -8,16 +8,26 @@
 
 import {CdkTextColumn} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from './cell';
+import {
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatFooterCell,
+  MatFooterCellDef,
+} from './cell';
 
 /**
- * Column that simply shows text content for the header and row cells. Assumes that the table
- * is using the native table implementation (`<table>`).
+ * Column that simply shows text content for the header, row cells, and optionally for the footer.
+ * Assumes that the table is using the native table implementation (`<table>`).
  *
  * By default, the name of this column will be the header text and data property accessor.
  * The header text can be overridden with the `headerText` input. Cell values can be overridden with
- * the `dataAccessor` input. Change the text justification to the start or end using the `justify`
- * input.
+ * the `dataAccessor` input. If the table has a footer definition, the default footer text for this
+ * column will be empty. The footer text can be overridden with the `footerText` or
+ * `footerDataAccessor` input. Change the text justification to the start or end using the
+ * `justify` input.
  */
 @Component({
   selector: 'mat-text-column',
@@ -28,6 +38,9 @@ import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from
       </th>
       <td mat-cell *matCellDef="let data" [style.text-align]="justify">
         {{dataAccessor(data, name)}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef [style.text-align]="justify">
+        {{footerTextTransform(name)}}
       </td>
     </ng-container>
   `,
@@ -40,6 +53,14 @@ import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell],
+  imports: [
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatFooterCell,
+    MatFooterCellDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+  ],
 })
 export class MatTextColumn<T> extends CdkTextColumn<T> {}

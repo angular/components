@@ -412,6 +412,9 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     columnDef: CdkColumnDef;
     _createDefaultHeaderText(): string;
     dataAccessor: (data: T, name: string) => string;
+    footerCell: CdkFooterCellDef;
+    footerText: string;
+    footerTextTransform: (name: string) => string;
     headerCell: CdkHeaderCellDef;
     headerText: string;
     justify: 'start' | 'end' | 'center';
@@ -424,7 +427,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTextColumn<any>, "cdk-text-column", never, { "name": { "alias": "name"; "required": false; }; "headerText": { "alias": "headerText"; "required": false; }; "dataAccessor": { "alias": "dataAccessor"; "required": false; }; "justify": { "alias": "justify"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTextColumn<any>, "cdk-text-column", never, { "name": { "alias": "name"; "required": false; }; "headerText": { "alias": "headerText"; "required": false; }; "dataAccessor": { "alias": "dataAccessor"; "required": false; }; "footerText": { "alias": "footerText"; "required": false; }; "footerTextTransform": { "alias": "footerTextTransform"; "required": false; }; "justify": { "alias": "justify"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTextColumn<any>, [{ optional: true; }, { optional: true; }]>;
 }
@@ -593,6 +596,7 @@ export const TEXT_COLUMN_OPTIONS: InjectionToken<TextColumnOptions<any>>;
 // @public
 export interface TextColumnOptions<T> {
     defaultDataAccessor?: (data: T, name: string) => string;
+    defaultFooterTextTransform?: (name: string) => string;
     defaultHeaderTextTransform?: (name: string) => string;
 }
 
