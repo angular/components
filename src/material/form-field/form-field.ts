@@ -437,6 +437,7 @@ export class MatFormField
     this._stateChanges = control.stateChanges.subscribe(() => {
       this._updateFocusState();
       this._syncDescribedByIds();
+      this._showOrHideSubscript();
       this._changeDetectorRef.markForCheck();
     });
 
@@ -478,17 +479,20 @@ export class MatFormField
     // Re-validate when the number of hints changes.
     this._hintChildren.changes.subscribe(() => {
       this._processHints();
+      this._showOrHideSubscript();
       this._changeDetectorRef.markForCheck();
     });
 
     // Update the aria-described by when the number of errors changes.
     this._errorChildren.changes.subscribe(() => {
       this._syncDescribedByIds();
+      this._showOrHideSubscript();
       this._changeDetectorRef.markForCheck();
     });
 
     // Initial mat-hint validation and subscript describedByIds sync.
     this._validateHints();
+    this._showOrHideSubscript();
     this._syncDescribedByIds();
   }
 
@@ -679,6 +683,45 @@ export class MatFormField
       }
 
       this._control.setDescribedByIds(ids);
+    }
+  }
+
+  /**
+   * Solves https://github.com/angular/components/issues/29616
+   * Issues with certain browser and screen reader pairings not able to announce mat-error
+   * when it's added to the DOM rather than changing the visibility of the hint/error wrappers.
+   * Changing visibility instead of adding the div wrappers works for all browsers and sreen
+   * readers.
+   *
+   * If there is an 'error' or 'hint' message being returned, remove visibility: hidden
+   * style class and show error or hint section of code. If no 'error' or 'hint' messages are
+   * being returned and no error children showing in query list, add visibility: hidden
+   * style class back to error wrapper.
+   */
+  private _showOrHideSubscript() {
+    switch (this._getDisplayedMessages()) {
+      case 'error': {
+        console.log(this._elementRef.nativeElement.children[1].children[0].classList);
+        this._elementRef.nativeElement.children[1].children[0].classList.remove(
+          'mat-mdc-form-field-error-wrapper--hidden',
+        );
+        console.log(this._elementRef.nativeElement.children[1].children[0].classList);
+        break;
+      }
+      case 'hint': {
+        console.log(this._elementRef.nativeElement.children[1].children[1].classList);
+        this._elementRef.nativeElement.children[1].children[1].classList.remove(
+          'mat-mdc-form-field-hint-wrapper--hidden',
+        );
+        console.log(this._elementRef.nativeElement.children[1].children[1].classList);
+        break;
+      }
+    }
+
+    if (!this._errorChildren || this._errorChildren.length === 0 || !this._control.errorState) {
+      this._elementRef.nativeElement.children[1].children[0].classList.add(
+        'mat-mdc-form-field-error-wrapper--hidden',
+      );
     }
   }
 
