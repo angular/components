@@ -24,7 +24,7 @@ import {Platform, _isTestEnvironment} from '@angular/cdk/platform';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  styleUrl: 'overlay-prebuilt.css',
+  styleUrl: 'overlay-structure.css',
   host: {'cdk-overlay-style-loader': ''},
 })
 export class _CdkOverlayStyleLoader {}
