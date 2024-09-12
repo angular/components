@@ -1,3 +1,22 @@
+<a name="19.0.0-next.4"></a>
+# 19.0.0-next.4 "ion-ink" (2024-09-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3a62ab11f](https://github.com/angular/components/commit/3a62ab11fe6e97931ec4d758b03cb660ffdd4fc5) | fix | **overlay:** avoid leaking memory through afterNextRender ([#29709](https://github.com/angular/components/pull/29709)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9122335b2](https://github.com/angular/components/commit/9122335b25b28a5532159ab87c36aab3be9c3716) | feat | **checkbox:** add new aria properties to MatCheckbox ([#29457](https://github.com/angular/components/pull/29457)) |
+| [fead293e9](https://github.com/angular/components/commit/fead293e907f40a37e478779c6b0b3b50992262b) | fix | **badge:** change legacy container size default ([#29713](https://github.com/angular/components/pull/29713)) |
+| [54875a325](https://github.com/angular/components/commit/54875a3258a89a5326d7e224b6550c96e5801cd5) | fix | **core:** drop sanity checks ([#29688](https://github.com/angular/components/pull/29688)) |
+| [ef14c2869](https://github.com/angular/components/commit/ef14c286986f9451addeada26ab7b51402aa143f) | fix | **core:** option showing double selected indicator in high contrast mode |
+| [77051f871](https://github.com/angular/components/commit/77051f871a71b973ab6cbb642b1bdd6fe8a0da28) | fix | **form-field:** Don't allow label to grow larger than input ([#29673](https://github.com/angular/components/pull/29673)) |
+| [9dcb95a72](https://github.com/angular/components/commit/9dcb95a722adc2cf151fc559a3eaf76195aca3f2) | fix | **list:** remove unnecessary high contrast styles |
+| [4d0a3eff7](https://github.com/angular/components/commit/4d0a3eff7c5d5186516fe5c8f1af8c003d02882d) | fix | **select:** Update checkbox color to match the selected label text color ([#29684](https://github.com/angular/components/pull/29684)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.3"></a>
 # 19.0.0-next.3 "quicksilver-quintessence" (2024-09-04)
 ## Breaking Changes
