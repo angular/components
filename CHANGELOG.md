@@ -1,3 +1,18 @@
+<a name="18.2.4"></a>
+# 18.2.4 "aramid-angle" (2024-09-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7cc0d3a6d](https://github.com/angular/components/commit/7cc0d3a6ddff1840ce34f1b132656fa373bc144d) | fix | **overlay:** avoid leaking memory through afterNextRender ([#29709](https://github.com/angular/components/pull/29709)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [651b448e8](https://github.com/angular/components/commit/651b448e819333e64ee706d3cf093b9447ba0145) | fix | **badge:** change legacy container size default ([#29713](https://github.com/angular/components/pull/29713)) |
+| [0e6dee30a](https://github.com/angular/components/commit/0e6dee30a2e77d9b0fa9ff9e55daa8641c030521) | fix | **form-field:** Don't allow label to grow larger than input ([#29673](https://github.com/angular/components/pull/29673)) |
+| [57028df23](https://github.com/angular/components/commit/57028df2313a98ef40d294893b396e74d3488983) | fix | **select:** Update checkbox color to match the selected label text color ([#29684](https://github.com/angular/components/pull/29684)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.3"></a>
 # 18.2.3 "parchment-deluge" (2024-09-04)
 ### material
