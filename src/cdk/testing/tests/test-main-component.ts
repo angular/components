@@ -18,6 +18,7 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {TestShadowBoundary} from './test-shadow-boundary';
 import {TestSubComponent} from './test-sub-component';
@@ -31,6 +32,9 @@ import {TestSubComponent} from './test-sub-component';
   imports: [TestShadowBoundary, TestSubComponent, FormsModule, ReactiveFormsModule],
 })
 export class TestMainComponent implements OnDestroy {
+  private _cdr = inject(ChangeDetectorRef);
+  private _zone = inject(NgZone);
+
   username: string;
   counter: number;
   asyncCounter: number;
@@ -58,10 +62,7 @@ export class TestMainComponent implements OnDestroy {
 
   private _fakeOverlayElement: HTMLElement;
 
-  constructor(
-    private _cdr: ChangeDetectorRef,
-    private _zone: NgZone,
-  ) {
+  constructor() {
     this.username = 'Yi';
     this.counter = 0;
     this.asyncCounter = 0;

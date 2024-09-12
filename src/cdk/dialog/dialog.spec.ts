@@ -14,7 +14,6 @@ import {
   Component,
   ComponentRef,
   Directive,
-  Inject,
   InjectionToken,
   Injector,
   TemplateRef,
@@ -1209,7 +1208,7 @@ describe('Dialog with a parent Dialog', () => {
   standalone: true,
 })
 class DirectiveWithViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -1217,7 +1216,7 @@ class DirectiveWithViewContainer {
   template: 'hello',
 })
 class ComponentWithOnPushViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -1260,11 +1259,9 @@ class ComponentWithTemplateRef {
   imports: [DialogModule],
 })
 class PizzaMsg {
-  constructor(
-    public dialogRef: DialogRef<PizzaMsg>,
-    public dialogInjector: Injector,
-    public directionality: Directionality,
-  ) {}
+  dialogRef = inject<DialogRef<PizzaMsg>>(DialogRef);
+  dialogInjector = inject(Injector);
+  directionality = inject(Directionality);
 }
 
 @Component({
@@ -1285,7 +1282,7 @@ class ContentElementDialog {
   imports: [DialogModule],
 })
 class ComponentThatProvidesMatDialog {
-  constructor(public dialog: Dialog) {}
+  dialog = inject(Dialog);
 }
 
 /** Simple component for testing ComponentPortal. */
@@ -1295,7 +1292,7 @@ class ComponentThatProvidesMatDialog {
   imports: [DialogModule],
 })
 class DialogWithInjectedData {
-  constructor(@Inject(DIALOG_DATA) public data: any) {}
+  data = inject(DIALOG_DATA);
 }
 
 @Component({

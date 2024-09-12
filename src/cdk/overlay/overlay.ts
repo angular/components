@@ -12,12 +12,10 @@ import {DOCUMENT, Location} from '@angular/common';
 import {
   ApplicationRef,
   ComponentFactoryResolver,
-  Inject,
   Injectable,
   Injector,
   NgZone,
   ANIMATION_MODULE_TYPE,
-  Optional,
   EnvironmentInjector,
   inject,
 } from '@angular/core';
@@ -46,24 +44,24 @@ let nextUniqueId = 0;
  */
 @Injectable({providedIn: 'root'})
 export class Overlay {
+  scrollStrategies = inject(ScrollStrategyOptions);
+  private _overlayContainer = inject(OverlayContainer);
+  private _componentFactoryResolver = inject(ComponentFactoryResolver);
+  private _positionBuilder = inject(OverlayPositionBuilder);
+  private _keyboardDispatcher = inject(OverlayKeyboardDispatcher);
+  private _injector = inject(Injector);
+  private _ngZone = inject(NgZone);
+  private _document = inject(DOCUMENT);
+  private _directionality = inject(Directionality);
+  private _location = inject(Location);
+  private _outsideClickDispatcher = inject(OverlayOutsideClickDispatcher);
+  private _animationsModuleType = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   private _appRef: ApplicationRef;
   private _styleLoader = inject(_CdkPrivateStyleLoader);
 
-  constructor(
-    /** Scrolling strategies that can be used when creating an overlay. */
-    public scrollStrategies: ScrollStrategyOptions,
-    private _overlayContainer: OverlayContainer,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _positionBuilder: OverlayPositionBuilder,
-    private _keyboardDispatcher: OverlayKeyboardDispatcher,
-    private _injector: Injector,
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) private _document: any,
-    private _directionality: Directionality,
-    private _location: Location,
-    private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
-    @Inject(ANIMATION_MODULE_TYPE) @Optional() private _animationsModuleType?: string,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Creates an overlay.

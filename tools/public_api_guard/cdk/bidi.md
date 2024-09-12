@@ -44,13 +44,13 @@ export type Direction = 'ltr' | 'rtl';
 
 // @public
 export class Directionality implements OnDestroy {
-    constructor(_document?: any);
+    constructor(...args: unknown[]);
     readonly change: EventEmitter<Direction>;
     // (undocumented)
     ngOnDestroy(): void;
     readonly value: Direction;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<Directionality, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Directionality, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<Directionality>;
 }

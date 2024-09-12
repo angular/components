@@ -1,7 +1,13 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent} from '../../testing/private';
-import {ApplicationRef, Component, ElementRef} from '@angular/core';
+import {
+  ApplicationRef,
+  Component,
+  ElementRef,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -2488,9 +2494,19 @@ describe('FlexibleConnectedPositionStrategy', () => {
           },
         ]);
 
-      strategy.withScrollableContainers([
-        new CdkScrollable(new ElementRef<HTMLElement>(scrollable), null!, null!),
-      ]);
+      const injector = Injector.create({
+        parent: TestBed.inject(Injector),
+        providers: [
+          {
+            provide: ElementRef,
+            useValue: new ElementRef<HTMLElement>(scrollable),
+          },
+        ],
+      });
+
+      runInInjectionContext(injector, () => {
+        strategy.withScrollableContainers([new CdkScrollable()]);
+      });
 
       positionChangeHandler = jasmine.createSpy('positionChange handler');
       onPositionChangeSubscription = strategy.positionChanges

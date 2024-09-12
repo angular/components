@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 
 /**
  * Configuration for the isFocusable method.
@@ -29,7 +29,10 @@ export class IsFocusableConfig {
  */
 @Injectable({providedIn: 'root'})
 export class InteractivityChecker {
-  constructor(private _platform: Platform) {}
+  private _platform = inject(Platform);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Gets whether an element is disabled.

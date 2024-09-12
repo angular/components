@@ -5,14 +5,12 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 
 // @public
 export class BreakpointObserver implements OnDestroy {
-    constructor(_mediaMatcher: MediaMatcher, _zone: NgZone);
+    constructor(...args: unknown[]);
     isMatched(value: string | readonly string[]): boolean;
     ngOnDestroy(): void;
     observe(value: string | readonly string[]): Observable<BreakpointState>;
@@ -60,10 +58,10 @@ export class LayoutModule {
 
 // @public
 export class MediaMatcher {
-    constructor(_platform: Platform, _nonce?: (string | null) | undefined);
+    constructor(...args: unknown[]);
     matchMedia(query: string): MediaQueryList;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<MediaMatcher>;
 }

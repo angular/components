@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
@@ -27,6 +27,8 @@ export interface ViewportScrollPosition {
  */
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
+  private _platform = inject(Platform);
+
   /** Cached viewport dimensions. */
   private _viewportSize: {width: number; height: number} | null;
 
@@ -39,17 +41,15 @@ export class ViewportRuler implements OnDestroy {
   };
 
   /** Used to reference correct document/window */
-  protected _document: Document;
+  protected _document = inject(DOCUMENT, {optional: true})!;
 
-  constructor(
-    private _platform: Platform,
-    ngZone: NgZone,
-    @Optional() @Inject(DOCUMENT) document: any,
-  ) {
-    this._document = document;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
 
     ngZone.runOutsideAngular(() => {
-      if (_platform.isBrowser) {
+      if (this._platform.isBrowser) {
         const window = this._getWindow();
 
         // Note that bind the events ourselves, rather than going through something like RxJS's

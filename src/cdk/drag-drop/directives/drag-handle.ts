@@ -9,13 +9,11 @@
 import {
   Directive,
   ElementRef,
-  Inject,
   InjectionToken,
   Input,
   OnDestroy,
-  Optional,
-  SkipSelf,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import type {CdkDrag} from './drag';
@@ -39,6 +37,10 @@ export const CDK_DRAG_HANDLE = new InjectionToken<CdkDragHandle>('CdkDragHandle'
   providers: [{provide: CDK_DRAG_HANDLE, useExisting: CdkDragHandle}],
 })
 export class CdkDragHandle implements OnDestroy {
+  element = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  private _parentDrag = inject<CdkDrag>(CDK_DRAG_PARENT, {optional: true, skipSelf: true});
+
   /** Emits when the state of the handle has changed. */
   readonly _stateChanges = new Subject<CdkDragHandle>();
 
@@ -53,15 +55,14 @@ export class CdkDragHandle implements OnDestroy {
   }
   private _disabled = false;
 
-  constructor(
-    public element: ElementRef<HTMLElement>,
-    @Inject(CDK_DRAG_PARENT) @Optional() @SkipSelf() private _parentDrag?: CdkDrag,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      assertElementNode(element.nativeElement, 'cdkDragHandle');
+      assertElementNode(this.element.nativeElement, 'cdkDragHandle');
     }
 
-    _parentDrag?._addHandle(this);
+    this._parentDrag?._addHandle(this);
   }
 
   ngOnDestroy() {

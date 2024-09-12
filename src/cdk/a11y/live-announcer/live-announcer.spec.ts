@@ -1,8 +1,8 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {Overlay} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {Component, inject} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
@@ -133,12 +133,9 @@ describe('LiveAnnouncer', () => {
       const extraElement = document.createElement('div');
       extraElement.classList.add('cdk-live-announcer-element');
       document.body.appendChild(extraElement);
-
-      inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-        announcer = la;
-        ariaLiveElement = getLiveElement();
-        fixture = TestBed.createComponent(TestApp);
-      })();
+      announcer = TestBed.inject(LiveAnnouncer);
+      ariaLiveElement = getLiveElement();
+      fixture = TestBed.createComponent(TestApp);
 
       announcer.announce('Hey Google');
       tick(100);
@@ -229,10 +226,10 @@ describe('LiveAnnouncer', () => {
       });
     });
 
-    beforeEach(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
+    beforeEach(() => {
+      announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
-    }));
+    });
 
     it('should allow to use a custom live element', fakeAsync(() => {
       announcer.announce('Custom Element');
@@ -260,10 +257,10 @@ describe('LiveAnnouncer', () => {
       });
     });
 
-    beforeEach(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
+    beforeEach(() => {
+      announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
-    }));
+    });
 
     it('should pick up the default politeness from the injection token', fakeAsync(() => {
       announcer.announce('Hello');
@@ -313,15 +310,13 @@ describe('CdkAriaLive', () => {
     });
   }));
 
-  beforeEach(fakeAsync(
-    inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
-      announcerSpy = spyOn(la, 'announce').and.callThrough();
-      fixture = TestBed.createComponent(DivWithCdkAriaLive);
-      fixture.detectChanges();
-      flush();
-    }),
-  ));
+  beforeEach(fakeAsync(() => {
+    announcer = TestBed.inject(LiveAnnouncer);
+    announcerSpy = spyOn(announcer, 'announce').and.callThrough();
+    fixture = TestBed.createComponent(DivWithCdkAriaLive);
+    fixture.detectChanges();
+    flush();
+  }));
 
   it('should default politeness to polite', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
@@ -401,7 +396,7 @@ function getLiveElement(): Element {
   imports: [A11yModule],
 })
 class TestApp {
-  constructor(public live: LiveAnnouncer) {}
+  live = inject(LiveAnnouncer);
 
   announceText(message: string) {
     this.live.announce(message);

@@ -4890,6 +4890,8 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     imports: [CdkDropList, CdkDrag],
   })
   class DraggableInHorizontalDropZone implements AfterViewInit {
+    readonly _elementRef = inject(ElementRef);
+
     @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
     @ViewChild(CdkDropList) dropInstance: CdkDropList;
     items = [
@@ -4903,7 +4905,9 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
       moveItemInArray(this.items, event.previousIndex, event.currentIndex);
     });
 
-    constructor(readonly _elementRef: ElementRef) {}
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngAfterViewInit() {
       // Firefox preserves the `scrollLeft` value from previous similar containers. This
@@ -4933,8 +4937,8 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     ],
   })
   class DraggableInScrollableHorizontalDropZone extends DraggableInHorizontalDropZone {
-    constructor(elementRef: ElementRef) {
-      super(elementRef);
+    constructor() {
+      super();
 
       for (let i = 0; i < 60; i++) {
         this.items.push({value: `Extra item ${i}`, width: ITEM_WIDTH, margin: 0});
@@ -5019,6 +5023,8 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 export class DraggableInDropZone implements AfterViewInit {
+  protected _elementRef = inject(ElementRef);
+
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   @ViewChild(CdkDropList) dropInstance: CdkDropList;
   @ViewChild('alternatePreviewContainer') alternatePreviewContainer: ElementRef<HTMLElement>;
@@ -5040,8 +5046,6 @@ export class DraggableInDropZone implements AfterViewInit {
   dropDisabled = signal(false);
   dropLockAxis = signal<DragAxis | undefined>(undefined);
   scale = 1;
-
-  constructor(protected _elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     // Firefox preserves the `scrollTop` value from previous similar containers. This
@@ -5088,8 +5092,8 @@ class ConnectedDropListsInOnPush {}
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 export class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
-  constructor(elementRef: ElementRef) {
-    super(elementRef);
+  constructor() {
+    super();
 
     for (let i = 0; i < 60; i++) {
       this.items.push({value: `Extra item ${i}`, height: ITEM_HEIGHT, margin: 0});
@@ -5119,8 +5123,8 @@ export class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
 class DraggableInScrollableParentContainer extends DraggableInDropZone implements AfterViewInit {
   @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
 
-  constructor(elementRef: ElementRef) {
-    super(elementRef);
+  constructor() {
+    super();
 
     for (let i = 0; i < 60; i++) {
       this.items.push({value: `Extra item ${i}`, height: ITEM_HEIGHT, margin: 0});
@@ -5660,10 +5664,6 @@ class ConnectedWrappedDropZones {
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithCanvasInDropZone extends DraggableInDropZone implements AfterViewInit {
-  constructor(elementRef: ElementRef<HTMLElement>) {
-    super(elementRef);
-  }
-
   override ngAfterViewInit() {
     super.ngAfterViewInit();
     const canvases = this._elementRef.nativeElement.querySelectorAll('canvas');

@@ -9,7 +9,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   Injectable,
   NgZone,
   OnDestroy,
@@ -53,7 +52,8 @@ export class _ResetsLoader {}
  */
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
-  private _document: Document;
+  private _ngZone = inject(NgZone);
+  private _document = inject(DOCUMENT);
   private _styleLoader = inject(_CdkPrivateStyleLoader);
 
   /** Registered drop container instances. */
@@ -99,12 +99,8 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
    */
   readonly scroll: Subject<Event> = new Subject<Event>();
 
-  constructor(
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) _document: any,
-  ) {
-    this._document = _document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Adds a drop container to the registry. */
   registerDropContainer(drop: DropListRef) {

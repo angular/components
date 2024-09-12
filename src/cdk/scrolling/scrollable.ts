@@ -12,7 +12,7 @@ import {
   RtlScrollAxisType,
   supportsScrollBehavior,
 } from '@angular/cdk/platform';
-import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Optional} from '@angular/core';
+import {Directive, ElementRef, NgZone, OnDestroy, OnInit, inject} from '@angular/core';
 import {fromEvent, Observable, Subject, Observer} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -46,6 +46,11 @@ export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
   standalone: true,
 })
 export class CdkScrollable implements OnInit, OnDestroy {
+  protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected scrollDispatcher = inject(ScrollDispatcher);
+  protected ngZone = inject(NgZone);
+  protected dir? = inject(Directionality, {optional: true});
+
   protected readonly _destroyed = new Subject<void>();
 
   protected _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
@@ -56,12 +61,8 @@ export class CdkScrollable implements OnInit, OnDestroy {
     ),
   );
 
-  constructor(
-    protected elementRef: ElementRef<HTMLElement>,
-    protected scrollDispatcher: ScrollDispatcher,
-    protected ngZone: NgZone,
-    @Optional() protected dir?: Directionality,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     this.scrollDispatcher.register(this);

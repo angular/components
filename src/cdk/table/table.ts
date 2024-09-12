@@ -25,7 +25,6 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
   AfterContentInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -35,18 +34,14 @@ import {
   ElementRef,
   EmbeddedViewRef,
   EventEmitter,
-  Inject,
   Input,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
-  NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
-  SkipSelf,
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
@@ -55,6 +50,7 @@ import {
   inject,
   afterNextRender,
   Injector,
+  HostAttributeToken,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -117,10 +113,12 @@ export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observab
   standalone: true,
 })
 export class DataRowOutlet implements RowOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    public elementRef: ElementRef,
-  ) {
+  viewContainer = inject(ViewContainerRef);
+  elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._rowOutlet = this;
     table._outletAssigned();
@@ -136,10 +134,12 @@ export class DataRowOutlet implements RowOutlet {
   standalone: true,
 })
 export class HeaderRowOutlet implements RowOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    public elementRef: ElementRef,
-  ) {
+  viewContainer = inject(ViewContainerRef);
+  elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._headerRowOutlet = this;
     table._outletAssigned();
@@ -155,10 +155,12 @@ export class HeaderRowOutlet implements RowOutlet {
   standalone: true,
 })
 export class FooterRowOutlet implements RowOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    public elementRef: ElementRef,
-  ) {
+  viewContainer = inject(ViewContainerRef);
+  elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._footerRowOutlet = this;
     table._outletAssigned();
@@ -175,10 +177,12 @@ export class FooterRowOutlet implements RowOutlet {
   standalone: true,
 })
 export class NoDataRowOutlet implements RowOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    public elementRef: ElementRef,
-  ) {
+  viewContainer = inject(ViewContainerRef);
+  elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._noDataRowOutlet = this;
     table._outletAssigned();
@@ -291,7 +295,23 @@ export interface RenderRow<T> {
 export class CdkTable<T>
   implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit
 {
-  private _document: Document;
+  protected readonly _differs = inject(IterableDiffers);
+  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  protected readonly _elementRef = inject(ElementRef);
+  protected readonly _dir = inject(Directionality, {optional: true});
+  private _platform = inject(Platform);
+  protected readonly _viewRepeater =
+    inject<_ViewRepeater<T, RenderRow<T>, RowContext<T>>>(_VIEW_REPEATER_STRATEGY);
+  protected readonly _coalescedStyleScheduler = inject<_CoalescedStyleScheduler>(
+    _COALESCED_STYLE_SCHEDULER,
+  );
+  private readonly _viewportRuler = inject(ViewportRuler);
+  protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
+    STICKY_POSITIONING_LISTENER,
+    {optional: true, skipSelf: true},
+  )!;
+
+  private _document = inject(DOCUMENT);
 
   /** Latest data provided by the data source. */
   protected _data: readonly T[];
@@ -596,40 +616,17 @@ export class CdkTable<T>
 
   private _injector = inject(Injector);
 
-  constructor(
-    protected readonly _differs: IterableDiffers,
-    protected readonly _changeDetectorRef: ChangeDetectorRef,
-    protected readonly _elementRef: ElementRef,
-    @Attribute('role') role: string,
-    @Optional() protected readonly _dir: Directionality,
-    @Inject(DOCUMENT) _document: any,
-    private _platform: Platform,
-    @Inject(_VIEW_REPEATER_STRATEGY)
-    protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
-    @Inject(_COALESCED_STYLE_SCHEDULER)
-    protected readonly _coalescedStyleScheduler: _CoalescedStyleScheduler,
-    private readonly _viewportRuler: ViewportRuler,
-    /**
-     * @deprecated `_stickyPositioningListener` parameter to become required.
-     * @breaking-change 13.0.0
-     */
-    @Optional()
-    @SkipSelf()
-    @Inject(STICKY_POSITIONING_LISTENER)
-    protected readonly _stickyPositioningListener: StickyPositioningListener,
-    /**
-     * @deprecated `_unusedNgZone` parameter to be removed.
-     * @breaking-change 19.0.0
-     */
-    @Optional() _unusedNgZone?: NgZone,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const role = inject(new HostAttributeToken('role'), {optional: true});
+
     if (!role) {
-      _elementRef.nativeElement.setAttribute('role', 'table');
+      this._elementRef.nativeElement.setAttribute('role', 'table');
     }
 
-    this._document = _document;
-    this._isServer = !_platform.isBrowser;
-    this._isNativeHtmlTable = _elementRef.nativeElement.nodeName === 'TABLE';
+    this._isServer = !this._platform.isBrowser;
+    this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
   }
 
   ngOnInit() {

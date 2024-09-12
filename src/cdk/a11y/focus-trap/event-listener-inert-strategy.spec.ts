@@ -1,4 +1,12 @@
-import {AfterViewInit, Component, ElementRef, Provider, Type, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Provider,
+  Type,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {patchElementFocus} from '../../testing/private';
 import {
@@ -80,6 +88,8 @@ function createComponent<T>(
   standalone: true,
 })
 class SimpleFocusTrap implements AfterViewInit {
+  private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);
+
   @ViewChild('focusTrapElement') focusTrapElement!: ElementRef<HTMLElement>;
   @ViewChild('outsideFocusable') outsideFocusableElement!: ElementRef<HTMLElement>;
   @ViewChild('firstFocusable') firstFocusableElement!: ElementRef<HTMLElement>;
@@ -90,8 +100,6 @@ class SimpleFocusTrap implements AfterViewInit {
   // Since our custom stubbing in `patchElementFocus` won't update
   // the `document.activeElement`, we need to keep track of it here.
   activeElement: Element | null;
-
-  constructor(private _focusTrapFactory: ConfigurableFocusTrapFactory) {}
 
   ngAfterViewInit() {
     // Ensure consistent focus timing across browsers.

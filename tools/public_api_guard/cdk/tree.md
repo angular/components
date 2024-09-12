@@ -8,10 +8,8 @@ import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/collections';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -57,7 +55,7 @@ export const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
 // @public
 export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
-    constructor(elementRef: ElementRef<HTMLElement>, tree: CdkTree<T, K>, _differs: IterableDiffers);
+    constructor(...args: unknown[]);
     protected _children: T[];
     protected _clear(): void;
     // (undocumented)
@@ -78,7 +76,7 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 
 // @public
 export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, AfterViewInit, CollectionViewer, OnDestroy, OnInit {
-    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     collapse(dataNode: T): void;
     collapseAll(): void;
@@ -149,7 +147,7 @@ export class CdkTreeModule {
 
 // @public
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
-    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>);
+    constructor(...args: unknown[]);
     activate(): void;
     readonly activation: EventEmitter<T>;
     collapse(): void;
@@ -217,8 +215,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
 // @public
 export class CdkTreeNodeDef<T> {
-    constructor(template: TemplateRef<any>);
-    // (undocumented)
+    constructor(...args: unknown[]);
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
@@ -229,15 +226,15 @@ export class CdkTreeNodeDef<T> {
 
 // @public
 export class CdkTreeNodeOutlet {
-    constructor(viewContainer: ViewContainerRef, _node?: any);
+    constructor(...args: unknown[]);
     // (undocumented)
-    _node?: any;
+    _node?: {} | null | undefined;
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodeOutlet, "[cdkTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeOutlet, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodeOutlet, never>;
 }
 
 // @public
@@ -251,7 +248,7 @@ export class CdkTreeNodeOutletContext<T> {
 
 // @public
 export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
-    constructor(_treeNode: CdkTreeNode<T, K>, _tree: CdkTree<T, K>, _element: ElementRef<HTMLElement>, _dir: Directionality);
+    constructor(...args: unknown[]);
     get indent(): number | string;
     set indent(indent: number | string);
     // (undocumented)
@@ -273,12 +270,12 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTreeNodePadding<any, any>, "[cdkTreeNodePadding]", never, { "level": { "alias": "cdkTreeNodePadding"; "required": false; }; "indent": { "alias": "cdkTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodePadding<any, any>, [null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTreeNodePadding<any, any>, never>;
 }
 
 // @public
 export class CdkTreeNodeToggle<T, K = T> {
-    constructor(_tree: CdkTree<T, K>, _treeNode: CdkTreeNode<T, K>);
+    constructor(...args: unknown[]);
     // (undocumented)
     static ngAcceptInputType_recursive: unknown;
     recursive: boolean;

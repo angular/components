@@ -10,11 +10,10 @@ import {
   ContentChild,
   Directive,
   ElementRef,
-  Inject,
   Input,
-  Optional,
   TemplateRef,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {CanStick} from './can-stick';
 import {CDK_TABLE} from './tokens';
@@ -33,7 +32,11 @@ export interface CellDef {
   standalone: true,
 })
 export class CdkCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -45,7 +48,11 @@ export class CdkCellDef implements CellDef {
   standalone: true,
 })
 export class CdkHeaderCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -57,7 +64,11 @@ export class CdkHeaderCellDef implements CellDef {
   standalone: true,
 })
 export class CdkFooterCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -70,6 +81,8 @@ export class CdkFooterCellDef implements CellDef {
   standalone: true,
 })
 export class CdkColumnDef implements CanStick {
+  _table? = inject(CDK_TABLE, {optional: true});
+
   private _hasStickyChanged = false;
 
   /** Unique name for this column. */
@@ -134,7 +147,8 @@ export class CdkColumnDef implements CanStick {
    */
   _columnCssClassName: string[];
 
-  constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Whether the sticky state has changed. */
   hasStickyChanged(): boolean {
@@ -193,8 +207,10 @@ export class BaseCdkCell {
   standalone: true,
 })
 export class CdkHeaderCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    super(columnDef, elementRef);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super(inject(CdkColumnDef), inject(ElementRef));
   }
 }
 
@@ -207,8 +223,14 @@ export class CdkHeaderCell extends BaseCdkCell {
   standalone: true,
 })
 export class CdkFooterCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const columnDef = inject(CdkColumnDef);
+    const elementRef = inject(ElementRef);
+
     super(columnDef, elementRef);
+
     const role = columnDef._table?._getCellRole();
     if (role) {
       elementRef.nativeElement.setAttribute('role', role);
@@ -225,8 +247,14 @@ export class CdkFooterCell extends BaseCdkCell {
   standalone: true,
 })
 export class CdkCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const columnDef = inject(CdkColumnDef);
+    const elementRef = inject(ElementRef);
+
     super(columnDef, elementRef);
+
     const role = columnDef._table?._getCellRole();
     if (role) {
       elementRef.nativeElement.setAttribute('role', role);

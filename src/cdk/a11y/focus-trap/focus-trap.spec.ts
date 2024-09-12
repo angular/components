@@ -6,6 +6,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject as inject_1,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -481,8 +482,8 @@ class FocusTrapWithoutFocusableElements {
   imports: [A11yModule, PortalModule],
 })
 class FocusTrapInsidePortal {
+  viewContainerRef = inject_1(ViewContainerRef);
+
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
-
-  constructor(public viewContainerRef: ViewContainerRef) {}
 }

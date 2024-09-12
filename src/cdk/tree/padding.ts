@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {Directive, ElementRef, Input, numberAttribute, OnDestroy, Optional} from '@angular/core';
+import {Directive, ElementRef, Input, numberAttribute, OnDestroy, inject} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {CdkTree, CdkTreeNode} from './tree';
@@ -24,6 +24,11 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
   standalone: true,
 })
 export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
+  private _treeNode = inject<CdkTreeNode<T, K>>(CdkTreeNode);
+  private _tree = inject<CdkTree<T, K>>(CdkTree);
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+
   /** Current padding value applied to the element. Used to avoid unnecessarily hitting the DOM. */
   private _currentPadding: string | null;
 
@@ -56,21 +61,16 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   }
   _indent: number = 40;
 
-  constructor(
-    private _treeNode: CdkTreeNode<T, K>,
-    private _tree: CdkTree<T, K>,
-    private _element: ElementRef<HTMLElement>,
-    @Optional() private _dir: Directionality,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._setPadding();
-    if (_dir) {
-      _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._setPadding(true));
-    }
+    this._dir?.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._setPadding(true));
 
     // In Ivy the indentation binding might be set before the tree node's data has been added,
     // which means that we'll miss the first render. We have to subscribe to changes in the
     // data to ensure that everything is up to date.
-    _treeNode._dataChanges.subscribe(() => this._setPadding());
+    this._treeNode._dataChanges.subscribe(() => this._setPadding());
   }
 
   ngOnDestroy() {

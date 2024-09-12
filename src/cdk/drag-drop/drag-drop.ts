@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Inject, NgZone, ElementRef} from '@angular/core';
+import {Injectable, NgZone, ElementRef, inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DragRef, DragRefConfig} from './drag-ref';
@@ -24,12 +24,13 @@ const DEFAULT_CONFIG = {
  */
 @Injectable({providedIn: 'root'})
 export class DragDrop {
-  constructor(
-    @Inject(DOCUMENT) private _document: any,
-    private _ngZone: NgZone,
-    private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry,
-  ) {}
+  private _document = inject(DOCUMENT);
+  private _ngZone = inject(NgZone);
+  private _viewportRuler = inject(ViewportRuler);
+  private _dragDropRegistry = inject(DragDropRegistry);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Turns an element into a draggable item.

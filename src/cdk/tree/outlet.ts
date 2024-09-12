@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Directive, Inject, InjectionToken, Optional, ViewContainerRef} from '@angular/core';
+import {Directive, InjectionToken, ViewContainerRef, inject} from '@angular/core';
 
 /**
  * Injection token used to provide a `CdkTreeNode` to its outlet.
@@ -23,8 +23,9 @@ export const CDK_TREE_NODE_OUTLET_NODE = new InjectionToken<{}>('CDK_TREE_NODE_O
   standalone: true,
 })
 export class CdkTreeNodeOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    @Inject(CDK_TREE_NODE_OUTLET_NODE) @Optional() public _node?: any,
-  ) {}
+  viewContainer = inject(ViewContainerRef);
+  _node? = inject(CDK_TREE_NODE_OUTLET_NODE, {optional: true});
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

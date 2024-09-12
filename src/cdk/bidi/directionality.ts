@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, Inject, Injectable, Optional, OnDestroy} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, inject} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
 export type Direction = 'ltr' | 'rtl';
@@ -38,7 +38,11 @@ export class Directionality implements OnDestroy {
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
 
-  constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _document = inject(DIR_DOCUMENT, {optional: true});
+
     if (_document) {
       const bodyDir = _document.body ? _document.body.dir : null;
       const htmlDir = _document.documentElement ? _document.documentElement.dir : null;

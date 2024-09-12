@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, booleanAttribute} from '@angular/core';
+import {Directive, Input, booleanAttribute, inject} from '@angular/core';
 
 import {CdkTree, CdkTreeNode} from './tree';
 
@@ -24,14 +24,15 @@ import {CdkTree, CdkTreeNode} from './tree';
   standalone: true,
 })
 export class CdkTreeNodeToggle<T, K = T> {
+  protected _tree = inject<CdkTree<T, K>>(CdkTree);
+  protected _treeNode = inject<CdkTreeNode<T, K>>(CdkTreeNode);
+
   /** Whether expand/collapse the node recursively. */
   @Input({alias: 'cdkTreeNodeToggleRecursive', transform: booleanAttribute})
   recursive: boolean = false;
 
-  constructor(
-    protected _tree: CdkTree<T, K>,
-    protected _treeNode: CdkTreeNode<T, K>,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   // Toggle the expanded or collapsed state of this node.
   //

@@ -19,13 +19,10 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  forwardRef,
-  Inject,
   InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
   TemplateRef,
@@ -34,6 +31,7 @@ import {
   AfterContentInit,
   booleanAttribute,
   numberAttribute,
+  inject,
 } from '@angular/core';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
@@ -109,6 +107,7 @@ export interface StepperOptions {
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
+  _stepper = inject(CdkStepper);
   _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
@@ -179,10 +178,10 @@ export class CdkStep implements OnChanges {
     return this.stepControl && this.stepControl.invalid && this.interacted;
   }
 
-  constructor(
-    @Inject(forwardRef(() => CdkStepper)) public _stepper: CdkStepper,
-    @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const stepperOptions = inject<StepperOptions>(STEPPER_GLOBAL_OPTIONS, {optional: true});
     this._stepperOptions = stepperOptions ? stepperOptions : {};
     this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
   }
@@ -236,6 +235,10 @@ export class CdkStep implements OnChanges {
   standalone: true,
 })
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
+  private _dir = inject(Directionality, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /** Emits when the component is destroyed. */
   protected readonly _destroyed = new Subject<void>();
 
@@ -300,7 +303,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Used to track unique ID for each stepper component. */
-  _groupId: number;
+  _groupId = nextId++;
 
   /** Orientation of the stepper. */
   @Input()
@@ -317,13 +320,8 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   }
   private _orientation: StepperOrientation = 'horizontal';
 
-  constructor(
-    @Optional() private _dir: Directionality,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef<HTMLElement>,
-  ) {
-    this._groupId = nextId++;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     this._steps.changes

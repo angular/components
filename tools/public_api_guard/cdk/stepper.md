@@ -6,8 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -23,7 +21,7 @@ import { TemplateRef } from '@angular/core';
 
 // @public (undocumented)
 export class CdkStep implements OnChanges {
-    constructor(_stepper: CdkStepper, stepperOptions?: StepperOptions);
+    constructor(...args: unknown[]);
     ariaLabel: string;
     ariaLabelledby: string;
     get completed(): boolean;
@@ -64,12 +62,12 @@ export class CdkStep implements OnChanges {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkStep, "cdk-step", ["cdkStep"], { "stepControl": { "alias": "stepControl"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "state": { "alias": "state"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "completed": { "alias": "completed"; "required": false; }; "hasError": { "alias": "hasError"; "required": false; }; }, { "interactedStream": "interacted"; }, ["stepLabel"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkStep, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkStep, never>;
 }
 
 // @public (undocumented)
 export class CdkStepHeader implements FocusableOption {
-    constructor(_elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -81,7 +79,7 @@ export class CdkStepHeader implements FocusableOption {
 
 // @public (undocumented)
 export class CdkStepLabel {
-    constructor(template: TemplateRef<any>);
+    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -92,7 +90,7 @@ export class CdkStepLabel {
 
 // @public (undocumented)
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(_dir: Directionality, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     protected readonly _destroyed: Subject<void>;
     _getAnimationDirection(index: number): StepContentPositionState;
     _getFocusIndex(): number | null;
@@ -131,7 +129,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": { "alias": "linear"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "orientation": { "alias": "orientation"; "required": false; }; }, { "selectionChange": "selectionChange"; "selectedIndexChange": "selectedIndexChange"; }, ["_steps", "_stepHeader"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepper, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepper, never>;
 }
 
 // @public (undocumented)
@@ -146,7 +144,7 @@ export class CdkStepperModule {
 
 // @public
 export class CdkStepperNext {
-    constructor(_stepper: CdkStepper);
+    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;
@@ -158,7 +156,7 @@ export class CdkStepperNext {
 
 // @public
 export class CdkStepperPrevious {
-    constructor(_stepper: CdkStepper);
+    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;

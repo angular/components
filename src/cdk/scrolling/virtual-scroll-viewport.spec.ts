@@ -15,13 +15,13 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
   fakeAsync,
   flush,
-  inject,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
@@ -787,16 +787,15 @@ describe('CdkVirtualScrollViewport', () => {
       );
     }));
 
-    it('should register and degregister with ScrollDispatcher', fakeAsync(
-      inject([ScrollDispatcher], (dispatcher: ScrollDispatcher) => {
-        spyOn(dispatcher, 'register').and.callThrough();
-        spyOn(dispatcher, 'deregister').and.callThrough();
-        finishInit(fixture);
-        expect(dispatcher.register).toHaveBeenCalledWith(testComponent.viewport.scrollable);
-        fixture.destroy();
-        expect(dispatcher.deregister).toHaveBeenCalledWith(testComponent.viewport.scrollable);
-      }),
-    ));
+    it('should register and degregister with ScrollDispatcher', fakeAsync(() => {
+      const dispatcher = TestBed.inject(ScrollDispatcher);
+      spyOn(dispatcher, 'register').and.callThrough();
+      spyOn(dispatcher, 'deregister').and.callThrough();
+      finishInit(fixture);
+      expect(dispatcher.register).toHaveBeenCalledWith(testComponent.viewport.scrollable!);
+      fixture.destroy();
+      expect(dispatcher.deregister).toHaveBeenCalledWith(testComponent.viewport.scrollable!);
+    }));
 
     it('should not throw when disposing of a view that will not fit in the cache', fakeAsync(() => {
       finishInit(fixture);
@@ -819,9 +818,9 @@ describe('CdkVirtualScrollViewport', () => {
     describe('viewChange change detection behavior', () => {
       let appRef: ApplicationRef;
 
-      beforeEach(inject([ApplicationRef], (ar: ApplicationRef) => {
-        appRef = ar;
-      }));
+      beforeEach(() => {
+        appRef = TestBed.inject(ApplicationRef);
+      });
 
       it('should not run change detection if there are no viewChange listeners', fakeAsync(() => {
         finishInit(fixture);
@@ -1207,7 +1206,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   if (offset !== undefined) {
     viewport.scrollToOffset(offset);
   }
-  dispatchFakeEvent(viewport.scrollable.getElementRef().nativeElement, 'scroll');
+  dispatchFakeEvent(viewport.scrollable!.getElementRef().nativeElement, 'scroll');
   tick(16); // flush animation frame
 }
 
@@ -1373,7 +1372,7 @@ class VirtualScrollWithNoStrategy {
   standalone: true,
 })
 class InjectsViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({

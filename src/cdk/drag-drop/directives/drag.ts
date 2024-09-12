@@ -7,23 +7,18 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
 import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
-  SkipSelf,
   ViewContainerRef,
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
-  Self,
   InjectionToken,
   booleanAttribute,
   afterNextRender,
@@ -76,6 +71,15 @@ export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
   providers: [{provide: CDK_DRAG_PARENT, useExisting: CdkDrag}],
 })
 export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
+  element = inject<ElementRef<HTMLElement>>(ElementRef);
+  dropContainer = inject<CdkDropList>(CDK_DROP_LIST, {optional: true, skipSelf: true})!;
+  private _ngZone = inject(NgZone);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _dir = inject(Directionality, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _selfHandle = inject<CdkDragHandle>(CDK_DRAG_HANDLE, {optional: true, self: true});
+  private _parentDrag = inject<CdkDrag>(CDK_DRAG_PARENT, {optional: true, skipSelf: true});
+
   private readonly _destroyed = new Subject<void>();
   private static _dragInstances: CdkDrag[] = [];
   private _handles = new BehaviorSubject<CdkDragHandle[]>([]);
@@ -121,7 +125,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Whether starting to drag this element is disabled. */
   @Input({alias: 'cdkDragDisabled', transform: booleanAttribute})
   get disabled(): boolean {
-    return this._disabled || (this.dropContainer && this.dropContainer.disabled);
+    return this._disabled || !!(this.dropContainer && this.dropContainer.disabled);
   }
   set disabled(value: boolean) {
     this._disabled = value;
@@ -220,26 +224,14 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
   private _injector = inject(Injector);
 
-  constructor(
-    /** Element that the draggable is attached to. */
-    public element: ElementRef<HTMLElement>,
-    /** Droppable container that the draggable is a part of. */
-    @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() public dropContainer: CdkDropList,
-    /**
-     * @deprecated `_document` parameter no longer being used and will be removed.
-     * @breaking-change 12.0.0
-     */
-    @Inject(DOCUMENT) _document: any,
-    private _ngZone: NgZone,
-    private _viewContainerRef: ViewContainerRef,
-    @Optional() @Inject(CDK_DRAG_CONFIG) config: DragDropConfig,
-    @Optional() private _dir: Directionality,
-    dragDrop: DragDrop,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Self() @Inject(CDK_DRAG_HANDLE) private _selfHandle?: CdkDragHandle,
-    @Optional() @SkipSelf() @Inject(CDK_DRAG_PARENT) private _parentDrag?: CdkDrag,
-  ) {
-    this._dragRef = dragDrop.createDrag(element, {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const dropContainer = this.dropContainer;
+    const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
+    const dragDrop = inject(DragDrop);
+
+    this._dragRef = dragDrop.createDrag(this.element, {
       dragStartThreshold:
         config && config.dragStartThreshold != null ? config.dragStartThreshold : 5,
       pointerDirectionChangeThreshold:
