@@ -662,6 +662,7 @@ export class MatFormField
       }
 
       if (this._getDisplayedMessages() === 'hint') {
+        this._showOrHideSubscript();
         const startHint = this._hintChildren
           ? this._hintChildren.find(hint => hint.align === 'start')
           : null;
@@ -705,6 +706,10 @@ export class MatFormField
         this._elementRef.nativeElement.children[1].children[0].classList.remove(
           'mat-mdc-form-field-error-wrapper--hidden',
         );
+        // Can't show error message and hint at same time
+        this._elementRef.nativeElement.children[1].children[0].classList.add(
+          'mat-mdc-form-field-hint-wrapper--hidden',
+        );
         console.log(this._elementRef.nativeElement.children[1].children[0].classList);
         break;
       }
@@ -721,6 +726,12 @@ export class MatFormField
     if (!this._errorChildren || this._errorChildren.length === 0 || !this._control.errorState) {
       this._elementRef.nativeElement.children[1].children[0].classList.add(
         'mat-mdc-form-field-error-wrapper--hidden',
+      );
+    }
+
+    if (!this._hintChildren) {
+      this._elementRef.nativeElement.children[1].children[1].classList.add(
+        'mat-mdc-form-field-hint-wrapper--hidden',
       );
     }
   }

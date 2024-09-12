@@ -3257,9 +3257,9 @@ describe('MatSelect', () => {
     it('should render the error messages when the parent form is submitted', fakeAsync(() => {
       const debugEl = fixture.debugElement.nativeElement;
 
-      expect(debugEl.querySelectorAll('mat-error').length)
+      expect(debugEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
         .withContext('Expected no error messages')
-        .toBe(0);
+        .toBe(1);
 
       dispatchFakeEvent(fixture.debugElement.query(By.css('form'))!.nativeElement, 'submit');
       fixture.detectChanges();
