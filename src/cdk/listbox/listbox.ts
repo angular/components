@@ -194,7 +194,13 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
    * No-op implemented as a part of `Highlightable`.
    * @docs-private
    */
-  setActiveStyles() {}
+  setActiveStyles() {
+    // If the listbox is using `aria-activedescendant` the option won't have focus so the
+    // browser won't scroll them into view automatically so we need to do it ourselves.
+    if (this.listbox.useActiveDescendant) {
+      this.element.scrollIntoView({block: 'nearest', inline: 'nearest'});
+    }
+  }
 
   /**
    * No-op implemented as a part of `Highlightable`.
