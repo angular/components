@@ -12,11 +12,10 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  Optional,
   ChangeDetectorRef,
-  SkipSelf,
-  Inject,
   booleanAttribute,
+  inject,
+  OnInit,
 } from '@angular/core';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CDK_ACCORDION, CdkAccordion} from './accordion';
@@ -39,7 +38,11 @@ let nextId = 0;
   ],
   standalone: true,
 })
-export class CdkAccordionItem implements OnDestroy {
+export class CdkAccordionItem implements OnInit, OnDestroy {
+  accordion = inject<CdkAccordion>(CDK_ACCORDION, {optional: true, skipSelf: true})!;
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  protected _expansionDispatcher = inject(UniqueSelectionDispatcher);
+
   /** Subscription to openAll/closeAll events. */
   private _openCloseAllSubscription = Subscription.EMPTY;
   /** Event emitted every time the AccordionItem is closed. */
@@ -95,12 +98,11 @@ export class CdkAccordionItem implements OnDestroy {
   /** Unregister function for _expansionDispatcher. */
   private _removeUniqueSelectionListener: () => void = () => {};
 
-  constructor(
-    @Optional() @Inject(CDK_ACCORDION) @SkipSelf() public accordion: CdkAccordion,
-    private _changeDetectorRef: ChangeDetectorRef,
-    protected _expansionDispatcher: UniqueSelectionDispatcher,
-  ) {
-    this._removeUniqueSelectionListener = _expansionDispatcher.listen(
+  constructor(...args: unknown[]);
+  constructor() {}
+
+  ngOnInit() {
+    this._removeUniqueSelectionListener = this._expansionDispatcher.listen(
       (id: string, accordionId: string) => {
         if (
           this.accordion &&

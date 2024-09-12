@@ -18,8 +18,8 @@ import {
   Output,
   TemplateRef,
   ViewContainerRef,
-  Inject,
   Input,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} from './portal';
@@ -34,7 +34,12 @@ import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} fr
   standalone: true,
 })
 export class CdkPortal extends TemplatePortal {
-  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const templateRef = inject<TemplateRef<any>>(TemplateRef);
+    const viewContainerRef = inject(ViewContainerRef);
+
     super(templateRef, viewContainerRef);
   }
 }
@@ -74,7 +79,9 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
   standalone: true,
 })
 export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestroy {
-  private _document: Document;
+  private _componentFactoryResolver = inject(ComponentFactoryResolver);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _document = inject(DOCUMENT);
 
   /** Whether the portal component is initialized. */
   private _isInitialized = false;
@@ -82,18 +89,10 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   /** Reference to the currently-attached component/view ref. */
   private _attachedRef: CdkPortalOutletAttachedRef;
 
-  constructor(
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _viewContainerRef: ViewContainerRef,
+  constructor(...args: unknown[]);
 
-    /**
-     * @deprecated `_document` parameter to be made required.
-     * @breaking-change 9.0.0
-     */
-    @Inject(DOCUMENT) _document?: any,
-  ) {
+  constructor() {
     super();
-    this._document = _document;
   }
 
   /** Portal associated with the Portal outlet. */

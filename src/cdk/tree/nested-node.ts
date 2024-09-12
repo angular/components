@@ -9,17 +9,17 @@ import {
   AfterContentInit,
   ContentChildren,
   Directive,
-  ElementRef,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
   OnInit,
   QueryList,
+  inject,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 
 import {CDK_TREE_NODE_OUTLET_NODE, CdkTreeNodeOutlet} from './outlet';
-import {CdkTree, CdkTreeNode} from './tree';
+import {CdkTreeNode} from './tree';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
@@ -43,6 +43,8 @@ export class CdkNestedTreeNode<T, K = T>
   extends CdkTreeNode<T, K>
   implements AfterContentInit, OnDestroy, OnInit
 {
+  protected _differs = inject(IterableDiffers);
+
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
@@ -57,12 +59,10 @@ export class CdkNestedTreeNode<T, K = T>
   })
   nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    tree: CdkTree<T, K>,
-    protected _differs: IterableDiffers,
-  ) {
-    super(elementRef, tree);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
   }
 
   ngAfterContentInit() {

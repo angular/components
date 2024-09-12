@@ -125,6 +125,9 @@ export class CdkTree<T, K = T>
     OnDestroy,
     OnInit
 {
+  private _differs = inject(IterableDiffers);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   private _dir = inject(Directionality);
 
   /** Subject that emits when the component has been destroyed. */
@@ -264,10 +267,8 @@ export class CdkTree<T, K = T>
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
-  constructor(
-    private _differs: IterableDiffers,
-    private _changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     this._initializeKeyManager();
@@ -1148,6 +1149,8 @@ export class CdkTree<T, K = T>
   standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _tree = inject<CdkTree<T, K>>(CdkTree);
   protected _tabindex: number | null = -1;
 
   /**
@@ -1334,10 +1337,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    protected _elementRef: ElementRef<HTMLElement>,
-    protected _tree: CdkTree<T, K>,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
   }
 

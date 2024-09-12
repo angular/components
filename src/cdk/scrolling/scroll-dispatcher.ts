@@ -8,7 +8,7 @@
 
 import {coerceElement} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {ElementRef, Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
+import {ElementRef, Injectable, NgZone, OnDestroy, inject} from '@angular/core';
 import {fromEvent, of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import type {CdkScrollable} from './scrollable';
@@ -23,16 +23,14 @@ export const DEFAULT_SCROLL_TIME = 20;
  */
 @Injectable({providedIn: 'root'})
 export class ScrollDispatcher implements OnDestroy {
-  /** Used to reference correct document/window */
-  protected _document: Document;
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
 
-  constructor(
-    private _ngZone: NgZone,
-    private _platform: Platform,
-    @Optional() @Inject(DOCUMENT) document: any,
-  ) {
-    this._document = document;
-  }
+  /** Used to reference correct document/window */
+  protected _document = inject(DOCUMENT, {optional: true})!;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   private readonly _scrolled = new Subject<CdkScrollable | void>();

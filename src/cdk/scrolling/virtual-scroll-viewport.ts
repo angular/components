@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
 import {ListRange} from '@angular/cdk/collections';
 import {Platform} from '@angular/cdk/platform';
 import {
@@ -20,7 +19,6 @@ import {
   Inject,
   Injector,
   Input,
-  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -37,7 +35,6 @@ import {
   Subscription,
 } from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
-import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
@@ -82,6 +79,13 @@ const SCROLL_SCHEDULER =
   ],
 })
 export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
+  override elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _scrollStrategy = inject<VirtualScrollStrategy>(VIRTUAL_SCROLL_STRATEGY, {
+    optional: true,
+  })!;
+  scrollable = inject<CdkVirtualScrollable>(VIRTUAL_SCROLLABLE, {optional: true})!;
+
   private _platform = inject(Platform);
 
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
@@ -179,21 +183,13 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   private _isDestroyed = false;
 
-  constructor(
-    public override elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    ngZone: NgZone,
-    @Optional()
-    @Inject(VIRTUAL_SCROLL_STRATEGY)
-    private _scrollStrategy: VirtualScrollStrategy,
-    @Optional() dir: Directionality,
-    scrollDispatcher: ScrollDispatcher,
-    viewportRuler: ViewportRuler,
-    @Optional() @Inject(VIRTUAL_SCROLLABLE) public scrollable: CdkVirtualScrollable,
-  ) {
-    super(elementRef, scrollDispatcher, ngZone, dir);
+  constructor(...args: unknown[]);
 
-    if (!_scrollStrategy && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+  constructor() {
+    super();
+    const viewportRuler = inject(ViewportRuler);
+
+    if (!this._scrollStrategy && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }
 

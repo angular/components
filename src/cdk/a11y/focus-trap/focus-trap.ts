@@ -13,7 +13,6 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  Inject,
   Injectable,
   Injector,
   Input,
@@ -372,16 +371,14 @@ export class FocusTrap {
  */
 @Injectable({providedIn: 'root'})
 export class FocusTrapFactory {
-  private _document: Document;
+  private _checker = inject(InteractivityChecker);
+  private _ngZone = inject(NgZone);
+
+  private _document = inject(DOCUMENT);
   private _injector = inject(Injector);
 
-  constructor(
-    private _checker: InteractivityChecker,
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) _document: any,
-  ) {
-    this._document = _document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Creates a focus-trapped region around the given element.
@@ -409,6 +406,9 @@ export class FocusTrapFactory {
   standalone: true,
 })
 export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _focusTrapFactory = inject(FocusTrapFactory);
+
   /** Underlying FocusTrap instance. */
   focusTrap: FocusTrap;
 
@@ -432,15 +432,9 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
    */
   @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute}) autoCapture: boolean;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _focusTrapFactory: FocusTrapFactory,
-    /**
-     * @deprecated No longer being used. To be removed.
-     * @breaking-change 13.0.0
-     */
-    @Inject(DOCUMENT) _document: any,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     const platform = inject(Platform);
 
     if (platform.isBrowser) {

@@ -7,7 +7,7 @@
  */
 
 import {ObserversModule} from '@angular/cdk/observers';
-import {NgModule} from '@angular/core';
+import {NgModule, inject} from '@angular/core';
 import {CdkMonitorFocus} from './focus-monitor/focus-monitor';
 import {CdkTrapFocus} from './focus-trap/focus-trap';
 import {HighContrastModeDetector} from './high-contrast-mode/high-contrast-mode-detector';
@@ -18,7 +18,7 @@ import {CdkAriaLive} from './live-announcer/live-announcer';
   exports: [CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
 })
 export class A11yModule {
-  constructor(highContrastModeDetector: HighContrastModeDetector) {
-    highContrastModeDetector._applyBodyHighContrastModeCssClasses();
+  constructor() {
+    inject(HighContrastModeDetector)._applyBodyHighContrastModeCssClasses();
   }
 }

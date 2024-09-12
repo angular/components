@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, NgZone, Optional} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 
@@ -18,13 +17,7 @@ import type {OverlayRef} from '../overlay-ref';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-  constructor(
-    @Inject(DOCUMENT) document: any,
-    /** @breaking-change 14.0.0 _ngZone will be required. */
-    @Optional() private _ngZone?: NgZone,
-  ) {
-    super(document);
-  }
+  private _ngZone = inject(NgZone, {optional: true});
 
   /** Add a new overlay to the list of attached overlay refs. */
   override add(overlayRef: OverlayRef): void {

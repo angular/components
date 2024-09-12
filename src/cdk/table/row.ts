@@ -19,10 +19,9 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  Inject,
-  Optional,
   Input,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {CanStick} from './can-stick';
 import {CdkCellDef, CdkColumnDef} from './cell';
@@ -40,16 +39,17 @@ export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
  */
 @Directive()
 export abstract class BaseRowDef implements OnChanges {
+  template = inject<TemplateRef<any>>(TemplateRef);
+  protected _differs = inject(IterableDiffers);
+
   /** The columns to be displayed on this row. */
   columns: Iterable<string>;
 
   /** Differ used to check if any changes were made to the columns. */
   protected _columnsDiffer: IterableDiffer<any>;
 
-  constructor(
-    /** @docs-private */ public template: TemplateRef<any>,
-    protected _differs: IterableDiffers,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
@@ -92,6 +92,8 @@ export abstract class BaseRowDef implements OnChanges {
   standalone: true,
 })
 export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
+  _table? = inject(CDK_TABLE, {optional: true});
+
   private _hasStickyChanged = false;
 
   /** Whether the row is sticky. */
@@ -107,12 +109,10 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
   }
   private _sticky = false;
 
-  constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any,
-  ) {
-    super(template, _differs);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
   }
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
@@ -144,6 +144,8 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
   standalone: true,
 })
 export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
+  _table? = inject(CDK_TABLE, {optional: true});
+
   private _hasStickyChanged = false;
 
   /** Whether the row is sticky. */
@@ -159,12 +161,10 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
   }
   private _sticky = false;
 
-  constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any,
-  ) {
-    super(template, _differs);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
   }
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
@@ -200,6 +200,8 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
   standalone: true,
 })
 export class CdkRowDef<T> extends BaseRowDef {
+  _table? = inject(CDK_TABLE, {optional: true});
+
   /**
    * Function that should return true if this row template should be used for the provided index
    * and row data. If left undefined, this row will be considered the default row template to use
@@ -208,14 +210,12 @@ export class CdkRowDef<T> extends BaseRowDef {
    */
   when: (index: number, rowData: T) => boolean;
 
-  // TODO(andrewseguin): Add an input for providing a switch function to determine
-  //   if this template should be used.
-  constructor(
-    template: TemplateRef<any>,
-    _differs: IterableDiffers,
-    @Inject(CDK_TABLE) @Optional() public _table?: any,
-  ) {
-    super(template, _differs);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    // TODO(andrewseguin): Add an input for providing a switch function to determine
+    //   if this template should be used.
+    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
   }
 }
 
@@ -283,6 +283,8 @@ export interface CdkCellOutletMultiRowContext<T> {
   standalone: true,
 })
 export class CdkCellOutlet implements OnDestroy {
+  _viewContainer = inject(ViewContainerRef);
+
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkCellDef[];
 
@@ -298,7 +300,9 @@ export class CdkCellOutlet implements OnDestroy {
    */
   static mostRecentCellOutlet: CdkCellOutlet | null = null;
 
-  constructor(public _viewContainer: ViewContainerRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     CdkCellOutlet.mostRecentCellOutlet = this;
   }
 
@@ -368,6 +372,10 @@ export class CdkRow {}
   standalone: true,
 })
 export class CdkNoDataRow {
+  templateRef = inject<TemplateRef<any>>(TemplateRef);
+
   _contentClassName = 'cdk-no-data-row';
-  constructor(public templateRef: TemplateRef<any>) {}
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

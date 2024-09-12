@@ -7,7 +7,6 @@
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 
 // @public
@@ -15,7 +14,7 @@ export const CDK_COPY_TO_CLIPBOARD_CONFIG: InjectionToken<CdkCopyToClipboardConf
 
 // @public
 export class CdkCopyToClipboard implements OnDestroy {
-    constructor(_clipboard: Clipboard_2, _ngZone: NgZone, config?: CdkCopyToClipboardConfig);
+    constructor(...args: unknown[]);
     attempts: number;
     readonly copied: EventEmitter<boolean>;
     copy(attempts?: number): void;
@@ -25,7 +24,7 @@ export class CdkCopyToClipboard implements OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { "text": { "alias": "cdkCopyToClipboard"; "required": false; }; "attempts": { "alias": "cdkCopyToClipboardAttempts"; "required": false; }; }, { "copied": "cdkCopyToClipboardCopied"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkCopyToClipboard, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkCopyToClipboard, never>;
 }
 
 // @public
@@ -35,7 +34,7 @@ export interface CdkCopyToClipboardConfig {
 
 // @public
 class Clipboard_2 {
-    constructor(document: any);
+    constructor(...args: unknown[]);
     beginCopy(text: string): PendingCopy;
     copy(text: string): boolean;
     // (undocumented)

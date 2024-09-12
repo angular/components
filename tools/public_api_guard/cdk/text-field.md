@@ -9,12 +9,10 @@ import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import { NgZone } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 
 // @public
 export type AutofillEvent = {
@@ -24,7 +22,7 @@ export type AutofillEvent = {
 
 // @public
 export class AutofillMonitor implements OnDestroy {
-    constructor(_platform: Platform, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     monitor(element: Element): Observable<AutofillEvent>;
     monitor(element: ElementRef<Element>): Observable<AutofillEvent>;
     // (undocumented)
@@ -39,7 +37,7 @@ export class AutofillMonitor implements OnDestroy {
 
 // @public
 export class CdkAutofill implements OnDestroy, OnInit {
-    constructor(_elementRef: ElementRef<HTMLElement>, _autofillMonitor: AutofillMonitor);
+    constructor(...args: unknown[]);
     readonly cdkAutofill: EventEmitter<AutofillEvent>;
     // (undocumented)
     ngOnDestroy(): void;
@@ -53,9 +51,8 @@ export class CdkAutofill implements OnDestroy, OnInit {
 
 // @public
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _platform: Platform, _ngZone: NgZone,
-    document?: any);
-    protected _document?: Document;
+    constructor(...args: unknown[]);
+    protected _document?: Document | null | undefined;
     get enabled(): boolean;
     set enabled(value: boolean);
     get maxRows(): number;
@@ -82,7 +79,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkTextareaAutosize, "textarea[cdkTextareaAutosize]", ["cdkTextareaAutosize"], { "minRows": { "alias": "cdkAutosizeMinRows"; "required": false; }; "maxRows": { "alias": "cdkAutosizeMaxRows"; "required": false; }; "enabled": { "alias": "cdkTextareaAutosize"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTextareaAutosize, [null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTextareaAutosize, never>;
 }
 
 // @public (undocumented)

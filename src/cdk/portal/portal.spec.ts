@@ -8,15 +8,15 @@ import {
   Directive,
   ElementRef,
   Injector,
-  Optional,
   QueryList,
   TemplateRef,
   Type,
   ViewChild,
   ViewChildren,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
 import {ComponentPortal, DomPortal, Portal, TemplatePortal} from './portal';
 import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
@@ -43,10 +43,7 @@ describe('Portals', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
-
-      inject([ComponentFactoryResolver], (cfr: ComponentFactoryResolver) => {
-        componentFactoryResolver = cfr;
-      })();
+      componentFactoryResolver = TestBed.inject(ComponentFactoryResolver);
     });
 
     it('should load a component into the portal', () => {
@@ -502,15 +499,11 @@ describe('Portals', () => {
     let host: DomPortalOutlet;
     let injector: Injector;
     let appRef: ApplicationRef;
-    let deps = [ComponentFactoryResolver, Injector, ApplicationRef];
-
-    beforeEach(inject(deps, (cfr: ComponentFactoryResolver, i: Injector, ar: ApplicationRef) => {
-      componentFactoryResolver = cfr;
-      injector = i;
-      appRef = ar;
-    }));
 
     beforeEach(() => {
+      componentFactoryResolver = TestBed.inject(ComponentFactoryResolver);
+      injector = TestBed.inject(Injector);
+      appRef = TestBed.inject(ApplicationRef);
       someDomElement = document.createElement('div');
       host = new DomPortalOutlet(
         someDomElement,
@@ -777,7 +770,7 @@ class ChocolateInjector {
   imports: [PortalModule, CommonModule],
 })
 class PizzaMsg {
-  constructor(@Optional() public snack: Chocolate) {}
+  snack = inject(Chocolate, {optional: true});
 }
 
 /**
@@ -789,9 +782,9 @@ class PizzaMsg {
   standalone: true,
 })
 class SaveParentNodeOnInit implements AfterViewInit {
-  parentOnViewInit: HTMLElement;
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  parentOnViewInit: HTMLElement;
 
   ngAfterViewInit() {
     this.parentOnViewInit = this._elementRef.nativeElement.parentElement!;
@@ -812,13 +805,11 @@ class SaveParentNodeOnInit implements AfterViewInit {
   imports: [SaveParentNodeOnInit],
 })
 class ArbitraryViewContainerRefComponent {
+  viewContainerRef = inject(ViewContainerRef);
+  injector = inject(Injector);
+
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild(SaveParentNodeOnInit) saveParentNodeOnInit: SaveParentNodeOnInit;
-
-  constructor(
-    public viewContainerRef: ViewContainerRef,
-    public injector: Injector,
-  ) {}
 }
 
 /** Test-bed component that contains a portal outlet and a couple of template portals. */
@@ -856,6 +847,9 @@ class ArbitraryViewContainerRefComponent {
   imports: [CdkPortal, CdkPortalOutlet, PizzaMsg],
 })
 class PortalTestApp {
+  viewContainerRef = inject(ViewContainerRef);
+  injector = inject(Injector);
+
   @ViewChildren(CdkPortal) portals: QueryList<CdkPortal>;
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
   @ViewChild('templateRef', {read: TemplateRef}) templateRef: TemplateRef<any>;
@@ -867,11 +861,6 @@ class PortalTestApp {
   fruit: string = 'Banana';
   fruits = ['Apple', 'Pineapple', 'Durian'];
   attachedSpy = jasmine.createSpy('attached spy');
-
-  constructor(
-    public viewContainerRef: ViewContainerRef,
-    public injector: Injector,
-  ) {}
 
   get cakePortal() {
     return this.portals.first;

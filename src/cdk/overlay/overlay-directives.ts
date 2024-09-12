@@ -13,13 +13,11 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -91,10 +89,10 @@ export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY = new InjectionToken<() => Sc
   standalone: true,
 })
 export class CdkOverlayOrigin {
-  constructor(
-    /** Reference to the element on which the directive is applied. */
-    public elementRef: ElementRef,
-  ) {}
+  elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -107,6 +105,9 @@ export class CdkOverlayOrigin {
   standalone: true,
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
+  private _overlay = inject(Overlay);
+  private _dir = inject(Directionality, {optional: true});
+
   private _overlayRef: OverlayRef;
   private _templatePortal: TemplatePortal;
   private _backdropSubscription = Subscription.EMPTY;
@@ -116,7 +117,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetX: number;
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
-  private _scrollStrategyFactory: () => ScrollStrategy;
+  private _scrollStrategyFactory = inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY);
   private _disposeOnNavigation = false;
   private _ngZone = inject(NgZone);
 
@@ -238,17 +239,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Emits when there are mouse outside click events that are targeted at the overlay. */
   @Output() readonly overlayOutsideClick = new EventEmitter<MouseEvent>();
 
+  constructor(...args: unknown[]);
+
   // TODO(jelbourn): inputs for size, scroll behavior, animation, etc.
 
-  constructor(
-    private _overlay: Overlay,
-    templateRef: TemplateRef<any>,
-    viewContainerRef: ViewContainerRef,
-    @Inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY) scrollStrategyFactory: any,
-    @Optional() private _dir: Directionality,
-  ) {
+  constructor() {
+    const templateRef = inject<TemplateRef<any>>(TemplateRef);
+    const viewContainerRef = inject(ViewContainerRef);
+
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
-    this._scrollStrategyFactory = scrollStrategyFactory;
     this.scrollStrategy = this._scrollStrategyFactory();
   }
 
@@ -326,7 +325,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     const positionStrategy = (this._position =
       this.positionStrategy || this._createPositionStrategy());
     const overlayConfig = new OverlayConfig({
-      direction: this._dir,
+      direction: this._dir || 'ltr',
       positionStrategy,
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,

@@ -26,12 +26,16 @@ export const CDK_DRAG_PLACEHOLDER = new InjectionToken<CdkDragPlaceholder>('CdkD
   providers: [{provide: CDK_DRAG_PLACEHOLDER, useExisting: CdkDragPlaceholder}],
 })
 export class CdkDragPlaceholder<T = any> implements OnDestroy {
+  templateRef = inject<TemplateRef<T>>(TemplateRef);
+
   private _drag = inject(CDK_DRAG_PARENT, {optional: true});
 
   /** Context data to be added to the placeholder template instance. */
   @Input() data: T;
 
-  constructor(public templateRef: TemplateRef<T>) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._drag?._setPlaceholderTemplate(this);
   }
 

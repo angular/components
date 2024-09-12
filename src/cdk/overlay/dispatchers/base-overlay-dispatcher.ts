@@ -7,7 +7,7 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy, inject} from '@angular/core';
 import type {OverlayRef} from '../overlay-ref';
 
 /**
@@ -20,12 +20,12 @@ export abstract class BaseOverlayDispatcher implements OnDestroy {
   /** Currently attached overlays in the order they were attached. */
   _attachedOverlays: OverlayRef[] = [];
 
-  protected _document: Document;
+  protected _document = inject(DOCUMENT);
   protected _isAttached: boolean;
 
-  constructor(@Inject(DOCUMENT) document: any) {
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   ngOnDestroy(): void {
     this.detach();

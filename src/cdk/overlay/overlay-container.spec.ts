@@ -1,5 +1,5 @@
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
+import {waitForAsync, TestBed} from '@angular/core/testing';
+import {Component, NgModule, ViewChild, ViewContainerRef, inject} from '@angular/core';
 import {PortalModule, CdkPortal} from '@angular/cdk/portal';
 import {Overlay, OverlayContainer, OverlayModule} from './index';
 
@@ -11,11 +11,9 @@ describe('OverlayContainer', () => {
     TestBed.configureTestingModule({
       imports: [OverlayTestModule],
     });
-  }));
 
-  beforeEach(inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
-    overlay = o;
-    overlayContainer = oc;
+    overlay = TestBed.inject(Overlay);
+    overlayContainer = TestBed.inject(OverlayContainer);
   }));
 
   it('should remove the overlay container element from the DOM on destruction', () => {
@@ -95,9 +93,9 @@ describe('OverlayContainer', () => {
   imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  viewContainerRef = inject(ViewContainerRef);
 
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  @ViewChild(CdkPortal) templatePortal: CdkPortal;
 }
 
 @NgModule({

@@ -13,12 +13,10 @@ import {
   Input,
   OnDestroy,
   Output,
-  Optional,
   Directive,
   ChangeDetectorRef,
-  SkipSelf,
-  Inject,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
@@ -55,6 +53,15 @@ let _uniqueIdCounter = 0;
   },
 })
 export class CdkDropList<T = any> implements OnDestroy {
+  element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _scrollDispatcher = inject(ScrollDispatcher);
+  private _dir = inject(Directionality, {optional: true});
+  private _group = inject<CdkDropListGroup<CdkDropList>>(CDK_DROP_LIST_GROUP, {
+    optional: true,
+    skipSelf: true,
+  });
+
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
 
@@ -173,24 +180,17 @@ export class CdkDropList<T = any> implements OnDestroy {
    */
   private _unsortedItems = new Set<CdkDrag>();
 
-  constructor(
-    /** Element that the drop list is attached to. */
-    public element: ElementRef<HTMLElement>,
-    dragDrop: DragDrop,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _scrollDispatcher: ScrollDispatcher,
-    @Optional() private _dir?: Directionality,
-    @Optional()
-    @Inject(CDK_DROP_LIST_GROUP)
-    @SkipSelf()
-    private _group?: CdkDropListGroup<CdkDropList>,
-    @Optional() @Inject(CDK_DRAG_CONFIG) config?: DragDropConfig,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const dragDrop = inject(DragDrop);
+    const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
+
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      assertElementNode(element.nativeElement, 'cdkDropList');
+      assertElementNode(this.element.nativeElement, 'cdkDropList');
     }
 
-    this._dropListRef = dragDrop.createDropList(element);
+    this._dropListRef = dragDrop.createDropList(this.element);
     this._dropListRef.data = this;
 
     if (config) {
@@ -213,8 +213,8 @@ export class CdkDropList<T = any> implements OnDestroy {
     this._handleEvents(this._dropListRef);
     CdkDropList._dropLists.push(this);
 
-    if (_group) {
-      _group._items.add(this);
+    if (this._group) {
+      this._group._items.add(this);
     }
   }
 

@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Inject, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {OverlayContainer} from './overlay-container';
-import {DOCUMENT} from '@angular/common';
-import {Platform} from '@angular/cdk/platform';
 
 /**
  * Alternative to OverlayContainer that supports correct displaying of overlay elements in
@@ -23,8 +21,10 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   private _fullScreenEventName: string | undefined;
   private _fullScreenListener: () => void;
 
-  constructor(@Inject(DOCUMENT) _document: any, platform: Platform) {
-    super(_document, platform);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
   }
 
   override ngOnDestroy() {

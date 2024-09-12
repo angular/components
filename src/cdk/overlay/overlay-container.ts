@@ -8,7 +8,6 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
-  Inject,
   Injectable,
   OnDestroy,
   Component,
@@ -32,16 +31,14 @@ export class _CdkOverlayStyleLoader {}
 /** Container inside which all overlays will render. */
 @Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
+  protected _platform = inject(Platform);
+
   protected _containerElement: HTMLElement;
-  protected _document: Document;
+  protected _document = inject(DOCUMENT);
   protected _styleLoader = inject(_CdkPrivateStyleLoader);
 
-  constructor(
-    @Inject(DOCUMENT) document: any,
-    protected _platform: Platform,
-  ) {
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnDestroy() {
     this._containerElement?.remove();

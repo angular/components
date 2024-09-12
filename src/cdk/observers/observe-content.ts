@@ -65,6 +65,8 @@ export class MutationObserverFactory {
 /** An injectable service that allows watching elements for changes to their content. */
 @Injectable({providedIn: 'root'})
 export class ContentObserver implements OnDestroy {
+  private _mutationObserverFactory = inject(MutationObserverFactory);
+
   /** Keeps track of the existing MutationObservers so they can be reused. */
   private _observedElements = new Map<
     Element,
@@ -77,7 +79,8 @@ export class ContentObserver implements OnDestroy {
 
   private _ngZone = inject(NgZone);
 
-  constructor(private _mutationObserverFactory: MutationObserverFactory) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnDestroy() {
     this._observedElements.forEach((_, element) => this._cleanupObserver(element));
@@ -178,6 +181,9 @@ export class ContentObserver implements OnDestroy {
   standalone: true,
 })
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
+  private _contentObserver = inject(ContentObserver);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /** Event emitted for each change in the element's content. */
   @Output('cdkObserveContent') readonly event = new EventEmitter<MutationRecord[]>();
 
@@ -208,10 +214,8 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   private _currentSubscription: Subscription | null = null;
 
-  constructor(
-    private _contentObserver: ContentObserver,
-    private _elementRef: ElementRef<HTMLElement>,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     if (!this._currentSubscription && !this.disabled) {

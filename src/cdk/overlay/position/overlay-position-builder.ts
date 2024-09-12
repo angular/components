@@ -9,7 +9,7 @@
 import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {OverlayContainer} from '../overlay-container';
 import {
   FlexibleConnectedPositionStrategy,
@@ -20,12 +20,13 @@ import {GlobalPositionStrategy} from './global-position-strategy';
 /** Builder for overlay position strategy. */
 @Injectable({providedIn: 'root'})
 export class OverlayPositionBuilder {
-  constructor(
-    private _viewportRuler: ViewportRuler,
-    @Inject(DOCUMENT) private _document: any,
-    private _platform: Platform,
-    private _overlayContainer: OverlayContainer,
-  ) {}
+  private _viewportRuler = inject(ViewportRuler);
+  private _document = inject(DOCUMENT);
+  private _platform = inject(Platform);
+  private _overlayContainer = inject(OverlayContainer);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Creates a global position strategy.

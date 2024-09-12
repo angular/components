@@ -6,11 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {Directive, ElementRef, NgZone, Optional} from '@angular/core';
+import {Directive, ElementRef} from '@angular/core';
 import {fromEvent, Observable, Observer} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /**
@@ -29,8 +27,11 @@ export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
       ),
   );
 
-  constructor(scrollDispatcher: ScrollDispatcher, ngZone: NgZone, @Optional() dir: Directionality) {
-    super(new ElementRef(document.documentElement), scrollDispatcher, ngZone, dir);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+    this.elementRef = new ElementRef(document.documentElement);
   }
 
   override measureBoundingClientRectWithScrollOffset(

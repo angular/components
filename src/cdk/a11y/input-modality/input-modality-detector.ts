@@ -7,7 +7,7 @@
  */
 
 import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
-import {Inject, Injectable, InjectionToken, OnDestroy, Optional, NgZone} from '@angular/core';
+import {Injectable, InjectionToken, OnDestroy, NgZone, inject} from '@angular/core';
 import {normalizePassiveListenerOptions, Platform, _getEventTarget} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -90,6 +90,8 @@ const modalityEventListenerOptions = normalizePassiveListenerOptions({
  */
 @Injectable({providedIn: 'root'})
 export class InputModalityDetector implements OnDestroy {
+  private readonly _platform = inject(Platform);
+
   /** Emits whenever an input modality is detected. */
   readonly modalityDetected: Observable<InputModality>;
 
@@ -172,14 +174,13 @@ export class InputModalityDetector implements OnDestroy {
     this._mostRecentTarget = _getEventTarget(event);
   };
 
-  constructor(
-    private readonly _platform: Platform,
-    ngZone: NgZone,
-    @Inject(DOCUMENT) document: Document,
-    @Optional()
-    @Inject(INPUT_MODALITY_DETECTOR_OPTIONS)
-    options?: InputModalityDetectorOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
+    const document = inject<Document>(DOCUMENT);
+    const options = inject(INPUT_MODALITY_DETECTOR_OPTIONS, {optional: true});
+
     this._options = {
       ...INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS,
       ...options,
@@ -191,7 +192,7 @@ export class InputModalityDetector implements OnDestroy {
 
     // If we're not in a browser, this service should do nothing, as there's no relevant input
     // modality to detect.
-    if (_platform.isBrowser) {
+    if (this._platform.isBrowser) {
       ngZone.runOutsideAngular(() => {
         document.addEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
         document.addEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);

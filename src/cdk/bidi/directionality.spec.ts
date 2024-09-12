@@ -1,5 +1,5 @@
 import {waitForAsync, fakeAsync, TestBed, flush} from '@angular/core/testing';
-import {Component, ViewChild, signal} from '@angular/core';
+import {Component, ViewChild, signal, inject} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
 
@@ -166,7 +166,7 @@ describe('Directionality', () => {
   imports: [BidiModule],
 })
 class InjectsDirectionality {
-  constructor(public dir: Directionality) {}
+  dir = inject(Directionality);
 }
 
 @Component({

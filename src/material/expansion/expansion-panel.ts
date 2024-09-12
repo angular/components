@@ -160,6 +160,7 @@ export class MatExpansionPanel
     defaultOptions?: MatExpansionPanelDefaultOptions,
   ) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
+    this._expansionDispatcher = _uniqueSelectionDispatcher;
     this.accordion = accordion;
     this._document = _document;
     this._animationsDisabled = _animationMode === 'NoopAnimations';
