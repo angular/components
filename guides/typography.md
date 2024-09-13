@@ -34,7 +34,7 @@ requests][font-inlining].
 
 [roboto]: https://fonts.google.com/share?selection.family=Roboto:wght@300;400;500
 [fonts-api]: https://developers.google.com/fonts/docs/getting_started
-[font-inlining]: https://angular.io/guide/workspace-config#fonts-optimization-options
+[font-inlining]: https://angular.dev/reference/configs/workspace-config#fonts-optimization-options
 
 ## Configuring Typography
 

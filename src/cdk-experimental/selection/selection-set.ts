@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {TrackByFunction} from '@angular/core';
@@ -48,7 +48,10 @@ export class SelectionSet<T> implements TrackBySelection<T> {
   private _selectionMap = new Map<T | ReturnType<TrackByFunction<T>>, SelectableWithIndex<T>>();
   changed = new Subject<SelectionChange<T>>();
 
-  constructor(private _multiple = false, private _trackByFn?: TrackByFunction<T>) {}
+  constructor(
+    private _multiple = false,
+    private _trackByFn?: TrackByFunction<T>,
+  ) {}
 
   isSelected(value: SelectableWithIndex<T>): boolean {
     return this._selectionMap.has(this._getTrackedByValue(value));

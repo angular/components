@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
@@ -28,7 +28,7 @@ const defaultEnvironmentOptions: ProtractorHarnessEnvironmentOptions = {
 /**
  * A `HarnessEnvironment` implementation for Protractor.
  * @deprecated As of v13.0.0, this environment no longer works, as it is not
- * compatible with the new [Angular Package Format](https://angular.io/guide/angular-package-format).
+ * compatible with the new [Angular Package Format](https://angular.dev/tools/libraries/angular-package-format).
  * @breaking-change 13.0.0
  */
 export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {

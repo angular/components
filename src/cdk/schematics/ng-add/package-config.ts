@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Tree} from '@angular-devkit/schematics';
@@ -19,10 +19,13 @@ interface PackageJson {
 function sortObjectByKeys(obj: Record<string, string>) {
   return Object.keys(obj)
     .sort()
-    .reduce((result, key) => {
-      result[key] = obj[key];
-      return result;
-    }, {} as Record<string, string>);
+    .reduce(
+      (result, key) => {
+        result[key] = obj[key];
+        return result;
+      },
+      {} as Record<string, string>,
+    );
 }
 
 /** Adds a package to the package.json in the given host tree. */

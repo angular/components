@@ -171,7 +171,7 @@ the root nodes of the tree.
 #### `trackBy`
 
 To improve performance, a `trackBy` function can be provided to the tree similar to Angular’s
-[`ngFor` `trackBy`](https://angular.io/api/common/NgForOf#change-propagation). This informs the
+[`ngFor` `trackBy`](https://angular.dev/api/common/NgForOf?tab=usage-notes). This informs the
 tree how to uniquely identify nodes to track how the data changes with each update.
 
 ```html

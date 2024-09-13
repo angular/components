@@ -24,7 +24,7 @@ rest.
 
 #### Creating items in the viewport
 `*cdkVirtualFor` replaces `*ngFor` inside of a `<cdk-virtual-scroll-viewport>`, supporting the exact
-same API as [`*ngFor`](https://angular.io/api/common/NgForOf). The simplest usage just specifies the
+same API as [`*ngFor`](https://angular.dev/api/common/NgForOf). The simplest usage just specifies the
 list of items (note that the `itemSize` property on the viewport must be set):
 
 <!-- example(cdk-virtual-scroll-overview) -->

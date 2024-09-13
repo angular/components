@@ -11,7 +11,7 @@
  * automatically update themselves. This includes recent versions of Safari, Chrome (including
  * Opera), Edge on the desktop, and iOS and Chrome on mobile.
  *
- * Learn more in https://angular.io/guide/browser-support
+ * Learn more in https://angular.dev/reference/versions#browser-support
  */
 
 /***************************************************************************************************
