@@ -28,7 +28,6 @@ mat-icon {
   fill: currentColor;
   height: $size;
   width: $size;
-  vertical-align: middle;
 
   // In some cases the icon elements may extend beyond the container. Clip these cases
   // in order to avoid weird overflows and click areas. See #11826.
@@ -68,6 +67,13 @@ mat-icon {
 // Makes button icon overflow visible to fix b/250063405
 .mat-mdc-icon-button .mat-icon,
 .mdc-button .mat-icon,
-.mat-mdc-fab-base .mat-icon {
+.mat-mdc-fab-base .mat-icon,
+.mat-toolbar .mat-icon,
+.mat-mdc-tooltip-trigger .mat-icon,
+.mat-mdc-tab .mat-icon,
+.mat-mdc-form-field .mat-icon,
+.mat-grid-tile .mat-icon,
+.mat-mdc-list-item .mat-icon,
+.mat-mdc-list-option .mat-icon {
   overflow: visible;
 }
