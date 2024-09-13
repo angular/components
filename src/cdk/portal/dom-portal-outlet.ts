@@ -8,10 +8,11 @@
 
 import {
   ApplicationRef,
-  ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
   Injector,
+  NgModuleRef,
+  createComponent,
 } from '@angular/core';
 import {BasePortalOutlet, ComponentPortal, DomPortal, TemplatePortal} from './portal';
 
@@ -36,7 +37,11 @@ export class DomPortalOutlet extends BasePortalOutlet {
   constructor(
     /** Element into which the content is projected. */
     public outletElement: Element,
-    private _componentFactoryResolver?: ComponentFactoryResolver,
+    /**
+     * @deprecated No longer in use. To be removed.
+     * @breaking-change 18.0.0
+     */
+    _componentFactoryResolver?: any,
     private _appRef?: ApplicationRef,
     private _defaultInjector?: Injector,
 
@@ -51,18 +56,11 @@ export class DomPortalOutlet extends BasePortalOutlet {
   }
 
   /**
-   * Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver.
+   * Attach the given ComponentPortal to DOM element.
    * @param portal Portal to be attached
    * @returns Reference to the created component.
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    const resolver = (portal.componentFactoryResolver || this._componentFactoryResolver)!;
-
-    if ((typeof ngDevMode === 'undefined' || ngDevMode) && !resolver) {
-      throw Error('Cannot attach component portal to outlet without a ComponentFactoryResolver.');
-    }
-
-    const componentFactory = resolver.resolveComponentFactory(portal.component);
     let componentRef: ComponentRef<T>;
 
     // If the portal specifies a ViewContainerRef, we will use that as the attachment point
@@ -70,12 +68,15 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // When the ViewContainerRef is missing, we use the factory to create the component directly
     // and then manually attach the view to the application.
     if (portal.viewContainerRef) {
-      componentRef = portal.viewContainerRef.createComponent(
-        componentFactory,
-        portal.viewContainerRef.length,
-        portal.injector || portal.viewContainerRef.injector,
-        portal.projectableNodes || undefined,
-      );
+      const injector = portal.injector || portal.viewContainerRef.injector;
+      const ngModuleRef = injector.get(NgModuleRef, null, {optional: true}) || undefined;
+
+      componentRef = portal.viewContainerRef.createComponent(portal.component, {
+        index: portal.viewContainerRef.length,
+        injector,
+        ngModuleRef,
+        projectableNodes: portal.projectableNodes || undefined,
+      });
 
       this.setDisposeFn(() => componentRef.destroy());
     } else {
@@ -83,9 +84,12 @@ export class DomPortalOutlet extends BasePortalOutlet {
         throw Error('Cannot attach component portal to outlet without an ApplicationRef.');
       }
 
-      componentRef = componentFactory.create(
-        portal.injector || this._defaultInjector || Injector.NULL,
-      );
+      componentRef = createComponent(portal.component, {
+        elementInjector: portal.injector || this._defaultInjector || Injector.NULL,
+        environmentInjector: this._appRef!.injector,
+        projectableNodes: portal.projectableNodes || undefined,
+      });
+
       this._appRef!.attachView(componentRef.hostView);
       this.setDisposeFn(() => {
         // Verify that the ApplicationRef has registered views before trying to detach a host view.

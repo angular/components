@@ -5,7 +5,6 @@
 ```ts
 
 import { ApplicationRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -77,9 +76,11 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 
 // @public
 export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
-    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, componentFactoryResolver?: ComponentFactoryResolver | null, projectableNodes?: Node[][] | null);
+    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null,
+    _componentFactoryResolver?: any, projectableNodes?: Node[][] | null);
     component: ComponentType<T>;
-    componentFactoryResolver?: ComponentFactoryResolver | null;
+    // @deprecated (undocumented)
+    componentFactoryResolver?: any;
     injector?: Injector | null;
     projectableNodes?: Node[][] | null;
     viewContainerRef?: ViewContainerRef | null;
@@ -104,7 +105,8 @@ export class DomPortalHost extends DomPortalOutlet {
 // @public
 export class DomPortalOutlet extends BasePortalOutlet {
     constructor(
-    outletElement: Element, _componentFactoryResolver?: ComponentFactoryResolver | undefined, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined,
+    outletElement: Element,
+    _componentFactoryResolver?: any, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined,
     _document?: any);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
