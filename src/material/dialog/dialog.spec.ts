@@ -16,8 +16,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
   Component,
-  ComponentFactoryResolver,
-  ComponentRef,
+  createNgModuleRef,
   Directive,
   Inject,
   Injectable,
@@ -27,7 +26,6 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  createNgModuleRef,
   forwardRef,
   signal,
 } from '@angular/core';
@@ -119,7 +117,6 @@ describe('MatDialog', () => {
 
     expect(overlayContainerElement.textContent).toContain('Pizza');
     expect(dialogRef.componentInstance instanceof PizzaMsg).toBe(true);
-    expect(dialogRef.componentRef instanceof ComponentRef).toBe(true);
     expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
 
     viewContainerFixture.detectChanges();
@@ -745,21 +742,6 @@ describe('MatDialog', () => {
     flush();
     expect(scrollStrategy.enable).toHaveBeenCalled();
   }));
-
-  it('should be able to pass in an alternate ComponentFactoryResolver', inject(
-    [ComponentFactoryResolver],
-    (resolver: ComponentFactoryResolver) => {
-      spyOn(resolver, 'resolveComponentFactory').and.callThrough();
-
-      dialog.open(PizzaMsg, {
-        viewContainerRef: testViewContainerRef,
-        componentFactoryResolver: resolver,
-      });
-      viewContainerFixture.detectChanges();
-
-      expect(resolver.resolveComponentFactory).toHaveBeenCalled();
-    },
-  ));
 
   describe('passing in data', () => {
     it('should be able to pass in data', () => {

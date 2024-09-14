@@ -13,7 +13,6 @@ import {
   ComponentRef,
   EmbeddedViewRef,
   Injector,
-  ComponentFactoryResolver,
 } from '@angular/core';
 import {
   throwNullPortalOutletError,
@@ -96,10 +95,10 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   injector?: Injector | null;
 
   /**
-   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
-   * Defaults to using the resolver from the outlet that the portal is attached to.
+   * @deprecated No longer in use. To be removed.
+   * @breaking-change 18.0.0
    */
-  componentFactoryResolver?: ComponentFactoryResolver | null;
+  componentFactoryResolver?: any;
 
   /**
    * List of DOM nodes that should be projected through `<ng-content>` of the attached component.
@@ -110,14 +109,17 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
-    componentFactoryResolver?: ComponentFactoryResolver | null,
+    /**
+     * @deprecated No longer in use. To be removed.
+     * @breaking-change 18.0.0
+     */
+    _componentFactoryResolver?: any,
     projectableNodes?: Node[][] | null,
   ) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
     this.injector = injector;
-    this.componentFactoryResolver = componentFactoryResolver;
     this.projectableNodes = projectableNodes;
   }
 }
