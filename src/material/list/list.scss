@@ -116,20 +116,23 @@ a.mdc-list-item--activated {
   content: '';
   opacity: 0;
   pointer-events: none;
+
+  // This comes up in some internal implementations.
+  border-radius: inherit;
 }
 
 // The MDC-based list items already use the `::before` pseudo element for the standard
 // focus/selected/hover state. Hence, we need to have a separate list-item spanning
 // element that can be used for strong focus indicators.
 .mat-mdc-list-item {
-  > .mat-mdc-focus-indicator {
+  > .mat-focus-indicator {
     @include layout-common.fill();
     pointer-events: none;
   }
 
   // For list items, render the focus indicator when the parent
   // listem item is focused.
-  &:focus > .mat-mdc-focus-indicator::before {
+  &:focus > .mat-focus-indicator::before {
     content: '';
   }
 }
@@ -177,7 +180,7 @@ mat-action-list button {
   .mat-mdc-nav-list .mat-mdc-list-item {
     @include token-utils.create-token-slot(border-radius, active-indicator-shape);
     @include token-utils.create-token-slot(
-      --mat-mdc-focus-indicator-border-radius,
+      --mat-focus-indicator-border-radius,
       active-indicator-shape
     );
 

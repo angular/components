@@ -12,7 +12,7 @@ import {MatRipple} from './ripple';
 
 export * from './ripple';
 export * from './ripple-ref';
-export * from './ripple-renderer';
+export {RippleRenderer, RippleTarget, defaultRippleAnimationConfig} from './ripple-renderer';
 
 @NgModule({
   imports: [MatCommonModule, MatRipple],

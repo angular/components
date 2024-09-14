@@ -196,7 +196,7 @@ Example:
 fix(material/button): unable to disable button through binding
 
 Fixes a bug in the Angular Material `button` component where buttons
-cannot be disabled through an binding. This is because the `disabled`
+cannot be disabled through a binding. This is because the `disabled`
 input did not set the `.mat-button-disabled` class on the host element.
 
 Fixes #1234

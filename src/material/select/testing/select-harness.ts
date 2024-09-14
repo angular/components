@@ -16,7 +16,7 @@ import {
 import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {SelectHarnessFilters} from './select-harness-filters';
 
-/** Harness for interacting with an MDC-based mat-select in tests. */
+/** Harness for interacting with a mat-select in tests. */
 export class MatSelectHarness extends MatFormFieldControlHarness {
   static hostSelector = '.mat-mdc-select';
   private _prefix = 'mat-mdc';

@@ -4,8 +4,8 @@
 
 ```ts
 
+import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -20,7 +20,6 @@ import * as i1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/portal';
 import * as i3 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
-import { Injector } from '@angular/core';
 import { Location as Location_2 } from '@angular/common';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -32,8 +31,6 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
@@ -46,7 +43,7 @@ export class BlockScrollStrategy implements ScrollStrategy {
 
 // @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-    constructor(_overlay: Overlay, templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef, scrollStrategyFactory: any, _dir: Directionality);
+    constructor(...args: unknown[]);
     readonly attach: EventEmitter<void>;
     backdropClass: string | string[];
     readonly backdropClick: EventEmitter<MouseEvent>;
@@ -99,14 +96,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<CdkConnectedOverlay, [null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkConnectedOverlay, never>;
 }
 
 // @public
 export class CdkOverlayOrigin {
-    constructor(
-    elementRef: ElementRef);
-    elementRef: ElementRef;
+    constructor(...args: unknown[]);
+    // (undocumented)
+    elementRef: ElementRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkOverlayOrigin, "[cdk-overlay-origin], [overlay-origin], [cdkOverlayOrigin]", ["cdkOverlayOrigin"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -205,7 +202,7 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | (Po
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
-    constructor(_document: any, platform: Platform);
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _createContainer(): void;
     getFullscreenElement(): Element;
@@ -257,13 +254,13 @@ export interface OriginConnectionPosition {
 
 // @public
 export class Overlay {
-    constructor(
-    scrollStrategies: ScrollStrategyOptions, _overlayContainer: OverlayContainer, _componentFactoryResolver: ComponentFactoryResolver, _positionBuilder: OverlayPositionBuilder, _keyboardDispatcher: OverlayKeyboardDispatcher, _injector: Injector, _ngZone: NgZone, _document: any, _directionality: Directionality, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsModuleType?: string | undefined);
+    constructor(...args: unknown[]);
     create(config?: OverlayConfig): OverlayRef;
     position(): OverlayPositionBuilder;
+    // (undocumented)
     scrollStrategies: ScrollStrategyOptions;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<Overlay, [null, null, null, null, null, null, null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Overlay, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<Overlay>;
 }
@@ -296,17 +293,20 @@ export interface OverlayConnectionPosition {
 
 // @public
 export class OverlayContainer implements OnDestroy {
-    constructor(document: any, _platform: Platform);
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _containerElement: HTMLElement;
     protected _createContainer(): void;
     // (undocumented)
     protected _document: Document;
     getContainerElement(): HTMLElement;
+    protected _loadStyles(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     protected _platform: Platform;
+    // (undocumented)
+    protected _styleLoader: _CdkPrivateStyleLoader;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayContainer, never>;
     // (undocumented)
@@ -315,12 +315,10 @@ export class OverlayContainer implements OnDestroy {
 
 // @public
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-    constructor(document: any,
-    _ngZone?: NgZone | undefined);
     add(overlayRef: OverlayRef): void;
     protected detach(): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayKeyboardDispatcher, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayKeyboardDispatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayKeyboardDispatcher>;
 }
@@ -337,19 +335,17 @@ export class OverlayModule {
 
 // @public
 export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
-    constructor(document: any, _platform: Platform,
-    _ngZone?: NgZone | undefined);
     add(overlayRef: OverlayRef): void;
     protected detach(): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayOutsideClickDispatcher, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<OverlayOutsideClickDispatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayOutsideClickDispatcher>;
 }
 
 // @public
 export class OverlayPositionBuilder {
-    constructor(_viewportRuler: ViewportRuler, _document: any, _platform: Platform, _overlayContainer: OverlayContainer);
+    constructor(...args: unknown[]);
     flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
     global(): GlobalPositionStrategy;
     // (undocumented)
@@ -360,7 +356,7 @@ export class OverlayPositionBuilder {
 
 // @public
 export class OverlayRef implements PortalOutlet {
-    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsDisabled: boolean, _injector: EnvironmentInjector);
+    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsDisabled: boolean | undefined, _injector: EnvironmentInjector);
     addPanelClass(classes: string | string[]): void;
     // (undocumented)
     attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
@@ -456,7 +452,7 @@ export interface ScrollStrategy {
 
 // @public
 export class ScrollStrategyOptions {
-    constructor(_scrollDispatcher: ScrollDispatcher, _viewportRuler: ViewportRuler, _ngZone: NgZone, document: any);
+    constructor(...args: unknown[]);
     block: () => BlockScrollStrategy;
     close: (config?: CloseScrollStrategyConfig) => CloseScrollStrategy;
     noop: () => NoopScrollStrategy;

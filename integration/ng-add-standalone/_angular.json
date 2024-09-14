@@ -62,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ng-add-standalone:build:production"
+              "buildTarget": "ng-add-standalone:build:production"
             },
             "development": {
-              "browserTarget": "ng-add-standalone:build:development"
+              "buildTarget": "ng-add-standalone:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ng-add-standalone:build"
+            "buildTarget": "ng-add-standalone:build"
           }
         },
         "test": {

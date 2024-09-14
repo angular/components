@@ -16,14 +16,13 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   Injectable,
   InjectionToken,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -85,6 +84,10 @@ const captureEventListenerOptions = normalizePassiveListenerOptions({
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable({providedIn: 'root'})
 export class FocusMonitor implements OnDestroy {
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
+  private readonly _inputModalityDetector = inject(InputModalityDetector);
+
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
@@ -138,20 +141,18 @@ export class FocusMonitor implements OnDestroy {
   };
 
   /** Used to reference correct document/window */
-  protected _document?: Document;
+  protected _document? = inject(DOCUMENT, {optional: true});
 
   /** Subject for stopping our InputModalityDetector subscription. */
   private readonly _stopInputModalityDetector = new Subject<void>();
 
-  constructor(
-    private _ngZone: NgZone,
-    private _platform: Platform,
-    private readonly _inputModalityDetector: InputModalityDetector,
-    /** @breaking-change 11.0.0 make document required */
-    @Optional() @Inject(DOCUMENT) document: any | null,
-    @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options: FocusMonitorOptions | null,
-  ) {
-    this._document = document;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const options = inject<FocusMonitorOptions | null>(FOCUS_MONITOR_DEFAULT_OPTIONS, {
+      optional: true,
+    });
+
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
   /**
@@ -619,15 +620,16 @@ export class FocusMonitor implements OnDestroy {
   standalone: true,
 })
 export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _focusMonitor = inject(FocusMonitor);
+
   private _monitorSubscription: Subscription;
   private _focusOrigin: FocusOrigin = null;
 
   @Output() readonly cdkFocusChange = new EventEmitter<FocusOrigin>();
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _focusMonitor: FocusMonitor,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   get focusOrigin(): FocusOrigin {
     return this._focusOrigin;

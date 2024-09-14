@@ -1,4 +1,4 @@
-import {TestBed, inject, fakeAsync} from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 import {ApplicationRef, Component, afterRender} from '@angular/core';
 import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
 import {OverlayModule, Overlay} from '../index';
@@ -305,39 +305,35 @@ describe('OverlayOutsideClickDispatcher', () => {
     overlayRef.dispose();
   });
 
-  it(
-    'should not throw an error when closing out related components via the ' +
-      'outsidePointerEvents emitter on background click',
-    fakeAsync(() => {
-      const firstOverlayRef = overlay.create();
-      firstOverlayRef.attach(new ComponentPortal(TestComponent));
-      const secondOverlayRef = overlay.create();
-      secondOverlayRef.attach(new ComponentPortal(TestComponent));
-      const thirdOverlayRef = overlay.create();
-      thirdOverlayRef.attach(new ComponentPortal(TestComponent));
+  it('should not throw an error when closing out related components via the outsidePointerEvents emitter on background click', () => {
+    const firstOverlayRef = overlay.create();
+    firstOverlayRef.attach(new ComponentPortal(TestComponent));
+    const secondOverlayRef = overlay.create();
+    secondOverlayRef.attach(new ComponentPortal(TestComponent));
+    const thirdOverlayRef = overlay.create();
+    thirdOverlayRef.attach(new ComponentPortal(TestComponent));
 
-      const spy = jasmine.createSpy('background click handler spy').and.callFake(() => {
-        // we close out both overlays from a single outside click event
-        firstOverlayRef.detach();
-        thirdOverlayRef.detach();
-      });
-      firstOverlayRef.outsidePointerEvents().subscribe(spy);
-      secondOverlayRef.outsidePointerEvents().subscribe(spy);
-      thirdOverlayRef.outsidePointerEvents().subscribe(spy);
+    const spy = jasmine.createSpy('background click handler spy').and.callFake(() => {
+      // we close out both overlays from a single outside click event
+      firstOverlayRef.detach();
+      thirdOverlayRef.detach();
+    });
+    firstOverlayRef.outsidePointerEvents().subscribe(spy);
+    secondOverlayRef.outsidePointerEvents().subscribe(spy);
+    thirdOverlayRef.outsidePointerEvents().subscribe(spy);
 
-      const backgroundElement = document.createElement('div');
-      document.body.appendChild(backgroundElement);
+    const backgroundElement = document.createElement('div');
+    document.body.appendChild(backgroundElement);
 
-      expect(() => backgroundElement.click()).not.toThrowError();
+    expect(() => backgroundElement.click()).not.toThrowError();
 
-      expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
 
-      backgroundElement.remove();
-      firstOverlayRef.dispose();
-      secondOverlayRef.dispose();
-      thirdOverlayRef.dispose();
-    }),
-  );
+    backgroundElement.remove();
+    firstOverlayRef.dispose();
+    secondOverlayRef.dispose();
+    thirdOverlayRef.dispose();
+  });
 
   describe('change detection behavior', () => {
     it('should not run change detection if there is no portal attached to the overlay', () => {

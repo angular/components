@@ -15,14 +15,15 @@ import {
   DoCheck,
   OnDestroy,
   NgZone,
-  Optional,
-  Inject,
   booleanAttribute,
+  inject,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {auditTime, takeUntil} from 'rxjs/operators';
 import {fromEvent, Subject} from 'rxjs';
-import {DOCUMENT} from '@angular/common';
+import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** Directive to automatically resize a textarea to fit its content. */
 @Directive({
@@ -38,6 +39,10 @@ import {DOCUMENT} from '@angular/common';
   standalone: true,
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _platform = inject(Platform);
+  private _ngZone = inject(NgZone);
+
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue?: string;
   private _initialHeight: string | undefined;
@@ -111,21 +116,17 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _cachedPlaceholderHeight?: number;
 
   /** Used to reference correct document/window */
-  protected _document?: Document;
+  protected _document? = inject(DOCUMENT, {optional: true});
 
   private _hasFocus: boolean;
 
   private _isViewInited = false;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _platform: Platform,
-    private _ngZone: NgZone,
-    /** @breaking-change 11.0.0 make document required */
-    @Optional() @Inject(DOCUMENT) document?: any,
-  ) {
-    this._document = document;
+  constructor(...args: unknown[]);
 
+  constructor() {
+    const styleLoader = inject(_CdkPrivateStyleLoader);
+    styleLoader.load(_CdkTextFieldStyleLoader);
     this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
   }
 

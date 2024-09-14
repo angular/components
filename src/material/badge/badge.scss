@@ -10,8 +10,8 @@ $large-size: $default-size + 6;
 @mixin _badge-size($size) {
   @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
     $prefix: if($size == 'medium', '', $size + '-size-');
-    $legacy-size-var: token-utils.get-token-variable('legacy-#{$prefix}container-size');
-    $size-var: token-utils.get-token-variable('#{$prefix}container-size');
+    $legacy-size-var-name: 'legacy-#{$prefix}container-size';
+    $size-var-name: '#{$prefix}container-size';
 
     .mat-badge-content {
       // The M2 badge is implemented incorrectly because it uses `width` and `height` for its
@@ -22,11 +22,11 @@ $large-size: $default-size + 6;
       // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
       // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
       // grow with the content.
-      width: var(#{$legacy-size-var}, unset);
-      height: var(#{$legacy-size-var}, unset);
-      min-width: var(#{$size-var}, unset);
-      min-height: var(#{$size-var}, unset);
-      line-height: var($legacy-size-var, var(#{$size-var}));
+      width: token-utils.get-token-variable($legacy-size-var-name, $fallback: unset);
+      height: token-utils.get-token-variable($legacy-size-var-name, $fallback: unset);
+      min-width: token-utils.get-token-variable($size-var-name, $fallback: unset);
+      min-height: token-utils.get-token-variable($size-var-name, $fallback: unset);
+      line-height: token-utils.get-token-variable($legacy-size-var-name);
       @include token-utils.create-token-slot(padding, '#{$prefix}container-padding');
       @include token-utils.create-token-slot(font-size, '#{$prefix}text-size');
       @include token-utils.create-token-slot(margin, '#{$prefix}container-offset');
@@ -62,11 +62,6 @@ $large-size: $default-size + 6;
   box-sizing: border-box;
   pointer-events: none;
 
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-    border-radius: 0;
-  }
-
   @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
     @include token-utils.create-token-slot(background-color, background-color);
     @include token-utils.create-token-slot(color, text-color);
@@ -99,6 +94,11 @@ $large-size: $default-size + 6;
       left: auto;
       right: 100%;
     }
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+    border-radius: 0;
   }
 }
 

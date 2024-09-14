@@ -20,8 +20,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideToggleDemo {
-  firstToggle: boolean = false;
-  formToggle: boolean = false;
+  firstToggle = false;
+  formToggle = false;
 
   onFormSubmit() {
     alert(`You submitted the form. Value: ${this.formToggle}.`);

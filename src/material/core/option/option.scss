@@ -52,6 +52,11 @@ $_side-padding: 16px;
         @include token-utils.create-token-slot(background-color, selected-state-layer-color);
       }
     }
+
+    .mat-pseudo-checkbox {
+      --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+          token-utils.get-token-variable(selected-state-label-text-color)};
+    }
   }
 
   &.mdc-list-item {
@@ -71,21 +76,20 @@ $_side-padding: 16px;
     // we can't use directly, because it comes with some selectors.
     cursor: default;
 
+    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
+    // keyboard, but not with mouse.
+    pointer-events: none;
+
     // Give the visual content of this list item a lower opacity. This creates the "gray" appearance
     // for disabled state. Set the opacity on the pseudo checkbox and projected content. Set
     // opacity only on the visual content rather than the entire list-item so we don't affect the
-    // focus ring from `.mat-mdc-focus-indicator`.
+    // focus ring from `.mat-focus-indicator`.
     //
     // MatOption uses a child `<div>` element for its focus state to align with how ListItem does
     // its focus state.
     .mat-mdc-option-pseudo-checkbox, .mdc-list-item__primary-text, > mat-icon {
       opacity: 0.38;
     }
-
-    // Prevent clicking on disabled options with mouse. Support focusing on disabled option using
-    // keyboard, but not with mouse.
-    pointer-events: none;
-
   }
 
   // Note that we bump the padding here, rather than padding inside the
@@ -146,7 +150,6 @@ $_side-padding: 16px;
     font-family: inherit;
     text-decoration: inherit;
     text-transform: inherit;
-
     margin-right: auto;
 
     [dir='rtl'] & {
@@ -155,11 +158,11 @@ $_side-padding: 16px;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // In single selection mode, the selected option is indicated by changing its
     // background color, but that doesn't work in high contrast mode. We add an
     // alternate indication by rendering out a circle.
-    &.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+    &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
       $size: 10px;
       content: '';
       position: absolute;
@@ -172,7 +175,7 @@ $_side-padding: 16px;
       border-radius: $size;
     }
 
-    [dir='rtl'] &.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+    [dir='rtl'] &.mdc-list-item--selected:not(:has(.mat-mdc-option-pseudo-checkbox))::after {
       right: auto;
       left: $_side-padding;
     }
@@ -185,13 +188,13 @@ $_side-padding: 16px;
   // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
   // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
   @include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
-    $selected-token: token-utils.get-token-variable(list-item-selected-container-color);
-    $base-token: token-utils.get-token-variable(list-item-container-color);
-    #{$selected-token}: var(#{$base-token}, transparent);
+    $selected-token: token-utils.get-token-variable-name(list-item-selected-container-color);
+    $base-token: token-utils.get-token-variable(list-item-container-color, $fallback: transparent);
+    #{$selected-token}: $base-token;
   }
 }
 
 // For options, render the focus indicator when the class .mat-mdc-option-active is present.
-.mat-mdc-option-active .mat-mdc-focus-indicator::before {
+.mat-mdc-option-active .mat-focus-indicator::before {
   content: '';
 }

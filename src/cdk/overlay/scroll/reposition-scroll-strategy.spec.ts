@@ -29,8 +29,6 @@ describe('RepositionScrollStrategy', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {

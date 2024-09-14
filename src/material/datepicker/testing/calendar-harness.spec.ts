@@ -18,8 +18,8 @@ describe('MatCalendarHarness', () => {
   let fixture: ComponentFixture<CalendarHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule, CalendarHarnessTest],
       providers: [
         {
@@ -29,7 +29,7 @@ describe('MatCalendarHarness', () => {
           useClass: DefaultMatCalendarRangeStrategy,
         },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CalendarHarnessTest);
     fixture.detectChanges();

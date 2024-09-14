@@ -16,7 +16,7 @@ import {
   MatChipsModule,
 } from './index';
 
-describe('MDC-based Option Chips', () => {
+describe('Option Chips', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
@@ -49,8 +49,6 @@ describe('MDC-based Option Chips', () => {
       ],
       declarations: [SingleChip],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatChipOption', () => {
@@ -403,7 +401,7 @@ describe('MDC-based Option Chips', () => {
 
     it('should contain a focus indicator inside the text label', () => {
       const label = chipNativeElement.querySelector('.mdc-evolution-chip__text-label');
-      expect(label?.querySelector('.mat-mdc-focus-indicator')).toBeTruthy();
+      expect(label?.querySelector('.mat-focus-indicator')).toBeTruthy();
     });
   });
 });

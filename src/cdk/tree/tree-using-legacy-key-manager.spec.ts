@@ -12,7 +12,7 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
       imports: [CdkTreeModule],
       declarations: [SimpleCdkTreeApp],
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SimpleCdkTreeApp);
     fixture.detectChanges();

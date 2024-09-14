@@ -12,10 +12,10 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
-import { HighContrastModeDetector } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -27,9 +27,6 @@ import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
-
-// @public
-export type _AbstractConstructor<T = object> = abstract new (...args: any[]) => T;
 
 // @public
 export class AnimationCurves {
@@ -52,32 +49,6 @@ export class AnimationDurations {
     // (undocumented)
     static EXITING: string;
 }
-
-// @public @deprecated
-export interface CanColor {
-    color: ThemePalette;
-    defaultColor: ThemePalette | undefined;
-}
-
-// @public @deprecated
-export interface CanDisable {
-    disabled: boolean;
-}
-
-// @public @deprecated
-export interface CanDisableRipple {
-    disableRipple: boolean;
-}
-
-// @public @deprecated
-export interface CanUpdateErrorState {
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher_2;
-    updateErrorState(): void;
-}
-
-// @public
-export type _Constructor<T> = new (...args: any[]) => T;
 
 // @public
 export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>, optionGroups: QueryList<MatOptgroup>): number;
@@ -147,7 +118,7 @@ export class _ErrorStateTracker {
 // @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
-// @public
+// @public @deprecated
 export interface GranularSanityChecks {
     // (undocumented)
     doctype: boolean;
@@ -155,18 +126,6 @@ export interface GranularSanityChecks {
     theme: boolean;
     // (undocumented)
     version: boolean;
-}
-
-// @public @deprecated
-export interface HasInitialized {
-    initialized: Observable<void>;
-    _markInitialized: () => void;
-}
-
-// @public @deprecated
-export interface HasTabIndex {
-    defaultTabIndex: number;
-    tabIndex: number;
 }
 
 // @public (undocumented)
@@ -190,11 +149,11 @@ export const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponen
 // @public
 export const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
-// @public
+// @public @deprecated
 export class MatCommonModule {
-    constructor(highContrastModeDetector: HighContrastModeDetector, _sanityChecks: SanityChecks, _document: Document);
+    constructor(...args: any[]);
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, [null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCommonModule>;
     // (undocumented)
@@ -215,7 +174,7 @@ export type MatDateFormats = {
     };
 };
 
-// @public
+// @public @deprecated
 export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 // @public
@@ -372,7 +331,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 // @public (undocumented)
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-    constructor(_elementRef: ElementRef<HTMLElement>, ngZone: NgZone, platform: Platform, globalOptions?: RippleGlobalOptions, _animationMode?: string | undefined);
+    constructor(_elementRef: ElementRef<HTMLElement>, ngZone: NgZone, platform: Platform, globalOptions?: RippleGlobalOptions, _animationMode?: string | undefined, injector?: Injector);
     animation: RippleAnimationConfig;
     centered: boolean;
     color: string;
@@ -396,14 +355,12 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatRipple, "[mat-ripple], [matRipple]", ["matRipple"], { "color": { "alias": "matRippleColor"; "required": false; }; "unbounded": { "alias": "matRippleUnbounded"; "required": false; }; "centered": { "alias": "matRippleCentered"; "required": false; }; "radius": { "alias": "matRippleRadius"; "required": false; }; "animation": { "alias": "matRippleAnimation"; "required": false; }; "disabled": { "alias": "matRippleDisabled"; "required": false; }; "trigger": { "alias": "matRippleTrigger"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, [null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, [null, null, null, { optional: true; }, { optional: true; }, null]>;
 }
 
 // @public
 export class MatRippleLoader implements OnDestroy {
     constructor();
-    // (undocumented)
-    attachRipple(host: HTMLElement, ripple: MatRipple): void;
     configureRipple(host: HTMLElement, config: {
         className?: string;
         centered?: boolean;
@@ -411,7 +368,6 @@ export class MatRippleLoader implements OnDestroy {
     }): void;
     // (undocumented)
     destroyRipple(host: HTMLElement): void;
-    getRipple(host: HTMLElement): MatRipple | undefined;
     // (undocumented)
     ngOnDestroy(): void;
     setDisabled(host: HTMLElement, disabled: boolean): void;
@@ -430,24 +386,6 @@ export class MatRippleModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof i1_2.MatCommonModule, typeof i2.MatRipple], [typeof i2.MatRipple, typeof i1_2.MatCommonModule]>;
 }
-
-// @public @deprecated
-export function mixinColor<T extends _AbstractConstructor<HasElementRef>>(base: T, defaultColor?: ThemePalette): CanColorCtor & T;
-
-// @public @deprecated
-export function mixinDisabled<T extends _AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// @public @deprecated
-export function mixinDisableRipple<T extends _AbstractConstructor<{}>>(base: T): CanDisableRippleCtor & T;
-
-// @public @deprecated
-export function mixinErrorState<T extends _AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
-
-// @public @deprecated
-export function mixinInitialized<T extends _Constructor<{}>>(base: T): HasInitializedCtor & T;
-
-// @public @deprecated
-export function mixinTabIndex<T extends _AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
@@ -560,7 +498,7 @@ export class RippleRef {
 
 // @public
 export class RippleRenderer implements EventListenerObject {
-    constructor(_target: RippleTarget, _ngZone: NgZone, elementOrElementRef: HTMLElement | ElementRef<HTMLElement>, _platform: Platform);
+    constructor(_target: RippleTarget, _ngZone: NgZone, elementOrElementRef: HTMLElement | ElementRef<HTMLElement>, _platform: Platform, injector?: Injector);
     fadeInRipple(x: number, y: number, config?: RippleConfig): RippleRef;
     fadeOutAll(): void;
     fadeOutAllNonPersistent(): void;
@@ -588,7 +526,7 @@ export interface RippleTarget {
     rippleDisabled: boolean;
 }
 
-// @public
+// @public @deprecated
 export type SanityChecks = boolean | GranularSanityChecks;
 
 // @public

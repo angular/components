@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {FocusTrap, InteractivityChecker} from '@angular/cdk/a11y';
 import {Observable, Subject} from 'rxjs';
@@ -54,15 +54,9 @@ export class FocusEscapeNotifier extends FocusTrap {
 /** Factory that allows easy instantiation of focus escape notifiers. */
 @Injectable({providedIn: 'root'})
 export class FocusEscapeNotifierFactory {
-  private _document: Document;
-
-  constructor(
-    private _checker: InteractivityChecker,
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) _document: any,
-  ) {
-    this._document = _document;
-  }
+  private _checker = inject(InteractivityChecker);
+  private _ngZone = inject(NgZone);
+  private _document = inject(DOCUMENT);
 
   /**
    * Creates a focus escape notifier region around the given element.

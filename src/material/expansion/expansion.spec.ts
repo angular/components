@@ -38,7 +38,6 @@ describe('MatExpansionPanel', () => {
         NestedLazyPanelWithContent,
       ],
     });
-    TestBed.compileComponents();
   }));
 
   it('should expand and collapse the panel', fakeAsync(() => {
@@ -56,16 +55,16 @@ describe('MatExpansionPanel', () => {
     expect(headerEl.classList).toContain('mat-expanded');
   }));
 
-  it('should add strong focus indication', fakeAsync(() => {
+  it('should add strong focus indication', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.mat-expansion-panel-header').classList).toContain(
       'mat-focus-indicator',
     );
-  }));
+  });
 
-  it('should be able to render panel content lazily', fakeAsync(() => {
+  it('should be able to render panel content lazily', () => {
     const fixture = TestBed.createComponent(LazyPanelWithContent);
     const content = fixture.debugElement.query(
       By.css('.mat-expansion-panel-content'),
@@ -83,9 +82,9 @@ describe('MatExpansionPanel', () => {
     expect(content.textContent.trim())
       .withContext('Expected content to be rendered.')
       .toContain('Some content');
-  }));
+  });
 
-  it('should render the content for a lazy-loaded panel that is opened on init', fakeAsync(() => {
+  it('should render the content for a lazy-loaded panel that is opened on init', () => {
     const fixture = TestBed.createComponent(LazyPanelOpenOnLoad);
     const content = fixture.debugElement.query(
       By.css('.mat-expansion-panel-content'),
@@ -95,9 +94,9 @@ describe('MatExpansionPanel', () => {
     expect(content.textContent.trim())
       .withContext('Expected content to be rendered.')
       .toContain('Some content');
-  }));
+  });
 
-  it('should not render lazy content from a child panel inside the parent', fakeAsync(() => {
+  it('should not render lazy content from a child panel inside the parent', () => {
     const fixture = TestBed.createComponent(NestedLazyPanelWithContent);
     fixture.componentInstance.parentExpanded = true;
     fixture.changeDetectorRef.markForCheck();
@@ -127,7 +126,7 @@ describe('MatExpansionPanel', () => {
       'Child content',
       'Expected child content element to be rendered.',
     );
-  }));
+  });
 
   it('emit correct events for change in panel expanded state', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -419,21 +418,19 @@ describe('MatExpansionPanel', () => {
   }));
 
   it('should be able to set the default options through the injection token', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatExpansionModule, NoopAnimationsModule],
-        providers: [
-          {
-            provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
-            useValue: {
-              hideToggle: true,
-              expandedHeight: '10px',
-              collapsedHeight: '16px',
-            },
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatExpansionModule, NoopAnimationsModule],
+      providers: [
+        {
+          provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+          useValue: {
+            hideToggle: true,
+            expandedHeight: '10px',
+            collapsedHeight: '16px',
           },
-        ],
-      })
-      .compileComponents();
+        },
+      ],
+    });
 
     const fixture = TestBed.createComponent(PanelWithTwoWayBinding);
     fixture.detectChanges();
@@ -452,13 +449,13 @@ describe('MatExpansionPanel', () => {
     expect(header.nativeElement.style.height).toBe('10px');
   });
 
-  it('should be able to set a custom tabindex on the header', fakeAsync(() => {
+  it('should be able to set a custom tabindex on the header', () => {
     const fixture = TestBed.createComponent(PanelWithHeaderTabindex);
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
     fixture.detectChanges();
 
     expect(headerEl.getAttribute('tabindex')).toBe('7');
-  }));
+  });
 
   describe('disabled state', () => {
     let fixture: ComponentFixture<PanelWithContent>;

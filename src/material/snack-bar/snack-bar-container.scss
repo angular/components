@@ -45,7 +45,7 @@ $_side-padding: 8px;
     min-width: 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 

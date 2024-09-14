@@ -1,19 +1,21 @@
 @use '@angular/cdk';
 @use './tokens/m2/mat/app' as tokens-mat-app;
 @use './tokens/token-utils';
-@use './ripple/ripple';
 @use './style/elevation';
 @use './focus-indicators/private';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
-  @include ripple.ripple();
+  // TODO: Move ripple styles to be dynamically loaded instead of in core.
+  // This variable is used as a fallback for the ripple element's
+  // background color. However, if it isn't defined anywhere, then MSS
+  // complains in its verification stage.
+  html {
+    --mat-app-on-surface: initial;
+  }
+
   @include cdk.a11y-visually-hidden();
-  @include cdk.overlay();
-  @include cdk.text-field-autosize();
-  @include cdk.text-field-autofill();
-  @include private.structural-styling('mat');
-  @include private.structural-styling('mat-mdc');
+  @include private.structural-styling();
 
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.

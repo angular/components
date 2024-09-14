@@ -205,6 +205,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _viewportMargin = 8;
   private _currentPosition: TooltipPosition;
   private readonly _cssClassPrefix: string = 'mat-mdc';
+  private _ariaDescriptionPending: boolean;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -246,13 +247,19 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+    const isDisabled = coerceBooleanProperty(value);
 
-    // If tooltip is disabled, hide immediately.
-    if (this._disabled) {
-      this.hide(0);
-    } else {
-      this._setupPointerEnterEventsIfNeeded();
+    if (this._disabled !== isDisabled) {
+      this._disabled = isDisabled;
+
+      // If tooltip is disabled, hide immediately.
+      if (isDisabled) {
+        this.hide(0);
+      } else {
+        this._setupPointerEnterEventsIfNeeded();
+      }
+
+      this._syncAriaDescription(this.message);
     }
   }
 
@@ -307,7 +314,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   set message(value: string | null | undefined) {
-    this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message, 'tooltip');
+    const oldMessage = this._message;
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     // Must convert with `String(value)`, not `${value}`, otherwise Closure Compiler optimises
@@ -319,16 +326,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     } else {
       this._setupPointerEnterEventsIfNeeded();
       this._updateTooltipMessage();
-      this._ngZone.runOutsideAngular(() => {
-        // The `AriaDescriber` has some functionality that avoids adding a description if it's the
-        // same as the `aria-label` of an element, however we can't know whether the tooltip trigger
-        // has a data-bound `aria-label` or when it'll be set for the first time. We can avoid the
-        // issue by deferring the description by a tick so Angular has time to set the `aria-label`.
-        Promise.resolve().then(() => {
-          this._ariaDescriber.describe(this._elementRef.nativeElement, this.message, 'tooltip');
-        });
-      });
     }
+
+    this._syncAriaDescription(oldMessage);
   }
 
   private _message = '';
@@ -354,7 +354,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _document: Document;
 
   /** Timer started at the last `touchstart` event. */
-  private _touchstartTimeout: ReturnType<typeof setTimeout>;
+  private _touchstartTimeout: null | ReturnType<typeof setTimeout> = null;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -434,7 +434,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   ngOnDestroy() {
     const nativeElement = this._elementRef.nativeElement;
 
-    clearTimeout(this._touchstartTimeout);
+    // Optimization: Do not call clearTimeout unless there is an active timer.
+    if (this._touchstartTimeout) {
+      clearTimeout(this._touchstartTimeout);
+    }
 
     if (this._overlayRef) {
       this._overlayRef.dispose();
@@ -802,13 +805,15 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
           // Note that it's important that we don't `preventDefault` here,
           // because it can prevent click events from firing on the element.
           this._setupPointerExitEventsIfNeeded();
-          clearTimeout(this._touchstartTimeout);
+          if (this._touchstartTimeout) {
+            clearTimeout(this._touchstartTimeout);
+          }
 
           const DEFAULT_LONGPRESS_DELAY = 500;
-          this._touchstartTimeout = setTimeout(
-            () => this.show(undefined, origin),
-            this._defaultOptions.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY,
-          );
+          this._touchstartTimeout = setTimeout(() => {
+            this._touchstartTimeout = null;
+            this.show(undefined, origin);
+          }, this._defaultOptions.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
         },
       ]);
     }
@@ -839,7 +844,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
       const touchendListener = () => {
-        clearTimeout(this._touchstartTimeout);
+        if (this._touchstartTimeout) {
+          clearTimeout(this._touchstartTimeout);
+        }
         this.hide(this._defaultOptions.touchendHideDelay);
       };
 
@@ -904,6 +911,30 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       (style as any).webkitTapHighlightColor = 'transparent';
     }
   }
+
+  /** Updates the tooltip's ARIA description based on it current state. */
+  private _syncAriaDescription(oldMessage: string): void {
+    if (this._ariaDescriptionPending) {
+      return;
+    }
+
+    this._ariaDescriptionPending = true;
+    this._ariaDescriber.removeDescription(this._elementRef.nativeElement, oldMessage, 'tooltip');
+
+    this._ngZone.runOutsideAngular(() => {
+      // The `AriaDescriber` has some functionality that avoids adding a description if it's the
+      // same as the `aria-label` of an element, however we can't know whether the tooltip trigger
+      // has a data-bound `aria-label` or when it'll be set for the first time. We can avoid the
+      // issue by deferring the description by a tick so Angular has time to set the `aria-label`.
+      Promise.resolve().then(() => {
+        this._ariaDescriptionPending = false;
+
+        if (this.message && !this.disabled) {
+          this._ariaDescriber.describe(this._elementRef.nativeElement, this.message, 'tooltip');
+        }
+      });
+    });
+  }
 }
 
 /**
@@ -917,9 +948,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    // Forces the element to have a layout in IE and Edge. This fixes issues where the element
-    // won't be rendered if the animations are disabled or there is no web animations polyfill.
-    '[style.zoom]': 'isVisible() ? 1 : null',
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
   },

@@ -17,7 +17,7 @@ describe('CdkTextColumn', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

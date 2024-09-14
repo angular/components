@@ -30,11 +30,9 @@ import {
   ComponentRef,
   ElementRef,
   EmbeddedViewRef,
-  Inject,
   Injector,
   NgZone,
   OnDestroy,
-  Optional,
   ViewChild,
   ViewEncapsulation,
   afterNextRender,
@@ -75,8 +73,16 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
   implements OnDestroy
 {
+  protected _elementRef = inject(ElementRef);
+  protected _focusTrapFactory = inject(FocusTrapFactory);
+  readonly _config: C;
+  private _interactivityChecker = inject(InteractivityChecker);
+  protected _ngZone = inject(NgZone);
+  private _overlayRef = inject(OverlayRef);
+  private _focusMonitor = inject(FocusMonitor);
+
   private _platform = inject(Platform);
-  protected _document: Document;
+  protected _document = inject(DOCUMENT, {optional: true})!;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
@@ -108,19 +114,14 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   private _isDestroyed = false;
 
-  constructor(
-    protected _elementRef: ElementRef,
-    protected _focusTrapFactory: FocusTrapFactory,
-    @Optional() @Inject(DOCUMENT) _document: any,
-    @Inject(DialogConfig) readonly _config: C,
-    private _interactivityChecker: InteractivityChecker,
-    protected _ngZone: NgZone,
-    private _overlayRef: OverlayRef,
-    private _focusMonitor?: FocusMonitor,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
 
-    this._document = _document;
+    // Callback is primarily for some internal tests
+    // that were instantiating the dialog container manually.
+    this._config = (inject(DialogConfig, {optional: true}) || new DialogConfig()) as C;
 
     if (this._config.ariaLabelledBy) {
       this._ariaLabelledByQueue.push(this._config.ariaLabelledBy);

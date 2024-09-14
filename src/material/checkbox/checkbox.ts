@@ -160,6 +160,19 @@ export class MatCheckbox
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
   @Input('aria-describedby') ariaDescribedby: string;
 
+  /**
+   * Users can specify the `aria-expanded` attribute which will be forwarded to the input element
+   */
+  @Input({alias: 'aria-expanded', transform: booleanAttribute}) ariaExpanded: boolean;
+
+  /**
+   * Users can specify the `aria-controls` attribute which will be forwarded to the input element
+   */
+  @Input('aria-controls') ariaControls: string;
+
+  /** Users can specify the `aria-owns` attribute which will be forwarded to the input element */
+  @Input('aria-owns') ariaOwns: string;
+
   private _uniqueId: string;
 
   /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
@@ -215,13 +228,6 @@ export class MatCheckbox
   /** Whether the checkbox should remain interactive when it is disabled. */
   @Input({transform: booleanAttribute})
   disabledInteractive: boolean;
-
-  /**
-   * Reference to the MatRipple instance of the checkbox.
-   * @deprecated Considered an implementation detail. To be removed.
-   * @breaking-change 17.0.0
-   */
-  @ViewChild(MatRipple) ripple: MatRipple;
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.

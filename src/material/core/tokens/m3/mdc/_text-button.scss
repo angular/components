@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, text-button);
@@ -11,7 +11,7 @@ $prefix: (mdc, text-button);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC text-button
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-utils.get-mdc-tokens('text-button', $systems, $exclude-hardcoded);
+  $mdc-tokens: token-definition.get-mdc-tokens('text-button', $systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed.
     secondary: (
@@ -55,9 +55,9 @@ $prefix: (mdc, text-button);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, (
+  @return token-definition.namespace-tokens($prefix, (
     _fix-tokens($mdc-tokens),
-    token-utils.map-values($variant-tokens, meta.get-function(_fix-tokens))
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
   ), $token-slots);
 }
 
@@ -68,9 +68,9 @@ $prefix: (mdc, text-button);
 @function _fix-tokens($initial-tokens) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
   // state.
-  $hardcoded-tokens: token-utils.get-mdc-tokens('text-button', (), false);
+  $hardcoded-tokens: token-definition.get-mdc-tokens('text-button', (), false);
 
-  @return token-utils.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+  @return token-definition.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
     (
       color: disabled-label-text-color,
       opacity: disabled-label-text-opacity,

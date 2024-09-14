@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, text-button);
@@ -12,10 +12,10 @@ $prefix: (mat, text-button);
 /// @return {Map} A set of custom tokens for the mat-button
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: ((
-    horizontal-padding: token-utils.hardcode(12px, $exclude-hardcoded),
-    with-icon-horizontal-padding: token-utils.hardcode(16px, $exclude-hardcoded),
-    icon-spacing: token-utils.hardcode(8px, $exclude-hardcoded),
-    icon-offset: token-utils.hardcode(-4px, $exclude-hardcoded),
+    horizontal-padding: token-definition.hardcode(12px, $exclude-hardcoded),
+    with-icon-horizontal-padding: token-definition.hardcode(16px, $exclude-hardcoded),
+    icon-spacing: token-definition.hardcode(8px, $exclude-hardcoded),
+    icon-offset: token-definition.hardcode(-4px, $exclude-hardcoded),
     state-layer-color: map.get($systems, md-sys-color, primary),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: sass-utils.safe-color-change(
@@ -51,5 +51,5 @@ $prefix: (mat, text-button);
     )
   ));
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

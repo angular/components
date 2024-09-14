@@ -12,18 +12,18 @@ import {DOCUMENT, Location} from '@angular/common';
 import {
   ApplicationRef,
   ComponentFactoryResolver,
-  Inject,
   Injectable,
   Injector,
   NgZone,
   ANIMATION_MODULE_TYPE,
-  Optional,
   EnvironmentInjector,
+  inject,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {OverlayContainer} from './overlay-container';
+import {_CdkOverlayStyleLoader, OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
@@ -44,23 +44,24 @@ let nextUniqueId = 0;
  */
 @Injectable({providedIn: 'root'})
 export class Overlay {
-  private _appRef: ApplicationRef;
+  scrollStrategies = inject(ScrollStrategyOptions);
+  private _overlayContainer = inject(OverlayContainer);
+  private _componentFactoryResolver = inject(ComponentFactoryResolver);
+  private _positionBuilder = inject(OverlayPositionBuilder);
+  private _keyboardDispatcher = inject(OverlayKeyboardDispatcher);
+  private _injector = inject(Injector);
+  private _ngZone = inject(NgZone);
+  private _document = inject(DOCUMENT);
+  private _directionality = inject(Directionality);
+  private _location = inject(Location);
+  private _outsideClickDispatcher = inject(OverlayOutsideClickDispatcher);
+  private _animationsModuleType = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
-  constructor(
-    /** Scrolling strategies that can be used when creating an overlay. */
-    public scrollStrategies: ScrollStrategyOptions,
-    private _overlayContainer: OverlayContainer,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _positionBuilder: OverlayPositionBuilder,
-    private _keyboardDispatcher: OverlayKeyboardDispatcher,
-    private _injector: Injector,
-    private _ngZone: NgZone,
-    @Inject(DOCUMENT) private _document: any,
-    private _directionality: Directionality,
-    private _location: Location,
-    private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
-    @Inject(ANIMATION_MODULE_TYPE) @Optional() private _animationsModuleType?: string,
-  ) {}
+  private _appRef: ApplicationRef;
+  private _styleLoader = inject(_CdkPrivateStyleLoader);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Creates an overlay.
@@ -68,6 +69,10 @@ export class Overlay {
    * @returns Reference to the created overlay.
    */
   create(config?: OverlayConfig): OverlayRef {
+    // This is done in the overlay container as well, but we have it here
+    // since it's common to mock out the overlay container in tests.
+    this._styleLoader.load(_CdkOverlayStyleLoader);
+
     const host = this._createHostElement();
     const pane = this._createPaneElement(host);
     const portalOutlet = this._createPortalOutlet(pane);

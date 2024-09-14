@@ -30,6 +30,8 @@ type PatchedProxyZone = ProxyZone & {
  * This serves as a workaround for https://github.com/angular/angular/issues/32896.
  */
 export class TaskStateZoneInterceptor {
+  private _lastState: HasTaskState | null = null;
+
   /** Subject that can be used to emit a new state change. */
   private readonly _stateSubject = new BehaviorSubject<TaskState>(
     this._lastState ? this._getTaskStateFromInternalZoneState(this._lastState) : {stable: true},
@@ -38,7 +40,9 @@ export class TaskStateZoneInterceptor {
   /** Public observable that emits whenever the task state changes. */
   readonly state: Observable<TaskState> = this._stateSubject;
 
-  constructor(private _lastState: HasTaskState | null) {}
+  constructor(lastState: HasTaskState | null) {
+    this._lastState = lastState;
+  }
 
   /** This will be called whenever the task state changes in the intercepted zone. */
   onHasTask(delegate: ZoneDelegate, current: Zone, target: Zone, hasTaskState: HasTaskState) {

@@ -34,6 +34,8 @@ export const CDK_DRAG_PREVIEW = new InjectionToken<CdkDragPreview>('CdkDragPrevi
   providers: [{provide: CDK_DRAG_PREVIEW, useExisting: CdkDragPreview}],
 })
 export class CdkDragPreview<T = any> implements OnDestroy {
+  templateRef = inject<TemplateRef<T>>(TemplateRef);
+
   private _drag = inject(CDK_DRAG_PARENT, {optional: true});
 
   /** Context data to be added to the preview template instance. */
@@ -42,7 +44,9 @@ export class CdkDragPreview<T = any> implements OnDestroy {
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
 
-  constructor(public templateRef: TemplateRef<T>) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._drag?._setPreviewTemplate(this);
   }
 

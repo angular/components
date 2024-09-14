@@ -33,8 +33,8 @@
 
   @include token-utils.use-tokens(
     tokens-mdc-icon-button.$prefix, tokens-mdc-icon-button.get-token-slots()) {
-    $button-size: var(#{token-utils.get-token-variable(state-layer-size)}, 48px);
-    $icon-size: var(#{token-utils.get-token-variable(icon-size)}, 24px);
+    $button-size: token-utils.get-token-variable(state-layer-size, $fallback: 48px);
+    $icon-size: token-utils.get-token-variable(icon-size, $fallback: 24px);
 
     // We emit these tokens ourselves here so we can provide a default value.
     // This avoids a lot internal breakages in apps that didn't include the icon button theme.
@@ -49,7 +49,17 @@
     // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
     @include token-utils.create-token-slot(font-size, icon-size);
     @include token-utils.create-token-slot(color, icon-color);
+  }
 
+  @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-ripple(tokens-mat-icon-button.$prefix,
+    tokens-mat-icon-button.get-token-slots());
+  @include button-base.mat-private-button-touch-target(true, tokens-mat-icon-button.$prefix,
+    tokens-mat-icon-button.get-token-slots());
+  @include private.private-animation-noop();
+
+  @include token-utils.use-tokens(
+    tokens-mdc-icon-button.$prefix, tokens-mdc-icon-button.get-token-slots()) {
     @include button-base.mat-private-button-disabled {
       @include token-utils.create-token-slot(color, disabled-icon-color);
     };
@@ -61,13 +71,6 @@
       vertical-align: baseline;
     }
   }
-
-  @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-ripple(tokens-mat-icon-button.$prefix,
-    tokens-mat-icon-button.get-token-slots());
-  @include button-base.mat-private-button-touch-target(true, tokens-mat-icon-button.$prefix,
-    tokens-mat-icon-button.get-token-slots());
-  @include private.private-animation-noop();
 
   .mat-mdc-button-persistent-ripple {
     border-radius: 50%;

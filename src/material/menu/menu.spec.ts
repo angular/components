@@ -52,7 +52,7 @@ import {
 
 const MENU_PANEL_TOP_PADDING = 8;
 
-describe('MDC-based MatMenu', () => {
+describe('MatMenu', () => {
   let overlayContainerElement: HTMLElement;
   let focusMonitor: FocusMonitor;
   let viewportRuler: ViewportRuler;
@@ -66,7 +66,7 @@ describe('MDC-based MatMenu', () => {
       providers,
       imports: [MatMenuModule, NoopAnimationsModule],
       declarations: [component, ...declarations],
-    }).compileComponents();
+    });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     focusMonitor = TestBed.inject(FocusMonitor);
@@ -501,7 +501,7 @@ describe('MDC-based MatMenu', () => {
     expect(event.defaultPrevented).toBe(false);
   }));
 
-  it('should open a custom menu', fakeAsync(() => {
+  it('should open a custom menu', () => {
     const fixture = createComponent(CustomMenu, [], [CustomMenuPanel]);
     fixture.detectChanges();
     expect(overlayContainerElement.textContent).toBe('');
@@ -512,7 +512,7 @@ describe('MDC-based MatMenu', () => {
       expect(overlayContainerElement.textContent).toContain('Custom Menu header');
       expect(overlayContainerElement.textContent).toContain('Custom Content');
     }).not.toThrowError();
-  }));
+  });
 
   it('should set the panel direction based on the trigger direction', fakeAsync(() => {
     const fixture = createComponent(
@@ -609,6 +609,7 @@ describe('MDC-based MatMenu', () => {
     expect(panel.classList).toContain('mat-elevation-z2');
 
     fixture.componentInstance.panelClass = 'custom-two';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(panel.classList).not.toContain('custom-one');
@@ -719,16 +720,16 @@ describe('MDC-based MatMenu', () => {
     expect(secondMenuItemDebugEl.nativeElement.classList).toContain('cdk-mouse-focused');
   }));
 
-  it('should not throw an error on destroy', fakeAsync(() => {
+  it('should not throw an error on destroy', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     expect(fixture.destroy.bind(fixture)).not.toThrow();
-  }));
+  });
 
-  it('should be able to extract the menu item text', fakeAsync(() => {
+  it('should be able to extract the menu item text', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
     expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
-  }));
+  });
 
   it('should filter out icon nodes when figuring out the label', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
@@ -1047,39 +1048,34 @@ describe('MDC-based MatMenu', () => {
     flush();
   }));
 
-  it(
-    'should respect the DOM order, rather than insertion order, when moving focus using ' +
-      'the arrow keys',
-    fakeAsync(() => {
-      let fixture = createComponent(SimpleMenuWithRepeater);
+  it('should respect the DOM order, rather than insertion order, when moving focus using the arrow keys', fakeAsync(() => {
+    let fixture = createComponent(SimpleMenuWithRepeater);
 
-      fixture.detectChanges();
-      fixture.componentInstance.trigger.openMenu();
-      fixture.detectChanges();
-      tick(500);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
 
-      let menuPanel = document.querySelector('.mat-mdc-menu-panel')!;
-      let items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
+    let menuPanel = document.querySelector('.mat-mdc-menu-panel')!;
+    let items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
 
-      expect(document.activeElement)
-        .withContext('Expected first item to be focused on open')
-        .toBe(items[0]);
+    expect(document.activeElement)
+      .withContext('Expected first item to be focused on open')
+      .toBe(items[0]);
 
-      // Add a new item after the first one.
-      fixture.componentInstance.items.splice(1, 0, {label: 'Calzone', disabled: false});
-      fixture.detectChanges();
+    // Add a new item after the first one.
+    fixture.componentInstance.items.splice(1, 0, {label: 'Calzone', disabled: false});
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
 
-      items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
-      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
-      fixture.detectChanges();
-      tick();
+    items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
+    dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+    fixture.detectChanges();
+    tick();
 
-      expect(document.activeElement)
-        .withContext('Expected second item to be focused')
-        .toBe(items[1]);
-      flush();
-    }),
-  );
+    expect(document.activeElement).withContext('Expected second item to be focused').toBe(items[1]);
+    flush();
+  }));
 
   it('should sync the focus order when an item is focused programmatically', fakeAsync(() => {
     const fixture = createComponent(SimpleMenuWithRepeater);
@@ -1362,6 +1358,7 @@ describe('MDC-based MatMenu', () => {
       expect(panel.classList).not.toContain('mat-menu-after');
 
       fixture.componentInstance.xPosition = 'after';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(panel.classList).toContain('mat-menu-after');
@@ -1379,6 +1376,7 @@ describe('MDC-based MatMenu', () => {
       expect(panel.classList).not.toContain('mat-menu-below');
 
       fixture.componentInstance.yPosition = 'below';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(panel.classList).toContain('mat-menu-below');
@@ -1444,9 +1442,9 @@ describe('MDC-based MatMenu', () => {
         .toBe(Math.floor(trigger.getBoundingClientRect().bottom));
     }));
 
-    it('should not throw if a menu reposition is requested while the menu is closed', fakeAsync(() => {
+    it('should not throw if a menu reposition is requested while the menu is closed', () => {
       expect(() => fixture.componentInstance.trigger.updatePosition()).not.toThrow();
-    }));
+    });
   });
 
   describe('fallback positions', () => {
@@ -1954,6 +1952,7 @@ describe('MDC-based MatMenu', () => {
         .toBe(2);
 
       items[1].componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Invoke the handler directly since the fake events are flaky on disabled elements.
@@ -1979,6 +1978,7 @@ describe('MDC-based MatMenu', () => {
       const item = fixture.debugElement.query(By.directive(MatMenuItem))!;
 
       item.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       // Invoke the handler directly since the fake events are flaky on disabled elements.
@@ -2498,6 +2498,7 @@ describe('MDC-based MatMenu', () => {
         .toBe(1);
 
       instance.showLazy = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       const lazyTrigger = overlay.querySelector('#lazy-trigger')!;
@@ -2707,9 +2708,7 @@ describe('MDC-based MatMenu', () => {
     );
 
     expect(
-      menuItemNativeElements.every(element =>
-        element.classList.contains('mat-mdc-focus-indicator'),
-      ),
+      menuItemNativeElements.every(element => element.classList.contains('mat-focus-indicator')),
     ).toBe(true);
   }));
 });
@@ -2725,7 +2724,7 @@ describe('MatMenu default overrides', () => {
         },
       ],
       declarations: [SimpleMenu, FakeIcon],
-    }).compileComponents();
+    });
   }));
 
   it('should allow for the default menu options to be overridden', fakeAsync(() => {

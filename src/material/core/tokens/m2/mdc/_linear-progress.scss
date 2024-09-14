@@ -1,6 +1,6 @@
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 @use 'sass:color';
 @use 'sass:meta';
 
@@ -54,8 +54,8 @@ $prefix: (mdc, linear-progress);
 @function get-token-slots() {
   @return sass-utils.deep-merge-all(
       get-unthemable-tokens(),
-      get-color-tokens(token-utils.$placeholder-color-config),
-      get-typography-tokens(token-utils.$placeholder-typography-config),
-      get-density-tokens(token-utils.$placeholder-density-config)
+      get-color-tokens(token-definition.$placeholder-color-config),
+      get-typography-tokens(token-definition.$placeholder-typography-config),
+      get-density-tokens(token-definition.$placeholder-density-config)
   );
 }

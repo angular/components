@@ -44,8 +44,8 @@ Chips are always used inside a container. To create chips connected to an input 
 Chips are compatible with `@angular/forms` and supports both `FormsModule`
 and `ReactiveFormsModule`.
 
-<!-- example(chips-template-form-example) -->
-<!-- example(chips-reactive-form-example) -->
+<!-- example(chips-template-form) -->
+<!-- example(chips-reactive-form) -->
 
 #### Disabled `<mat-chip-row>`
 

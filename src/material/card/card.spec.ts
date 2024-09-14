@@ -3,12 +3,12 @@ import {Component, Provider, Type, signal} from '@angular/core';
 import {MatCardModule} from './module';
 import {MatCard, MAT_CARD_CONFIG, MatCardAppearance} from './card';
 
-describe('MDC-based MatCard', () => {
+describe('MatCard', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatCardModule, component],
       providers,
-    }).compileComponents();
+    });
 
     return TestBed.createComponent<T>(component);
   }

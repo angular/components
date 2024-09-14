@@ -10,7 +10,7 @@ export async function installDepsForDocsSite(
   repoDirPath: string,
   options: InstallOptions = {frozenLockfile: true},
 ) {
-  const additionalArgs = ['--non-interactive'];
+  const additionalArgs = [];
 
   if (options.frozenLockfile) {
     additionalArgs.push('--frozen-lockfile');

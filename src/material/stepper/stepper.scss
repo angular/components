@@ -6,7 +6,7 @@
 
 // Gets the `calc` expression for the vertical padding of the stepper header.
 @function _get-vertical-padding-calc() {
-  $height: var(#{token-utils.get-token-variable(header-height)});
+  $height: token-utils.get-token-variable(header-height);
   @return calc(calc(#{$height} - #{stepper-variables.$label-header-height}) / 2);
 }
 
@@ -77,6 +77,11 @@
   align-items: center;
   padding: 0 stepper-variables.$side-gap;
 
+  @include token-utils.use-tokens(
+    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+    @include token-utils.create-token-slot(height, header-height);
+  }
+
   .mat-step-icon {
     margin-right: stepper-variables.$line-gap;
     flex: none;
@@ -90,7 +95,6 @@
   @include token-utils.use-tokens(
     tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
     $vertical-padding: _get-vertical-padding-calc();
-    @include token-utils.create-token-slot(height, header-height);
 
     &::before,
     &::after {
@@ -192,12 +196,12 @@
 }
 
 .mat-horizontal-content-container {
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-  }
-
   overflow: hidden;
   padding: 0 stepper-variables.$side-gap stepper-variables.$side-gap stepper-variables.$side-gap;
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
 
   .mat-stepper-header-position-bottom & {
     padding: stepper-variables.$side-gap stepper-variables.$side-gap 0 stepper-variables.$side-gap;
@@ -205,13 +209,13 @@
 }
 
 .mat-vertical-content-container {
-  @include cdk.high-contrast(active, off) {
-    outline: solid 1px;
-  }
-
   margin-left: stepper-variables.$vertical-stepper-content-margin;
   border: 0;
   position: relative;
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
 
   [dir='rtl'] & {
     margin-left: 0;

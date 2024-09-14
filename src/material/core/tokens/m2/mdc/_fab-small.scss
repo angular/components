@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use '../../../theming/inspection';
 @use '../../../style/elevation';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mdc, fab-small);
@@ -82,10 +82,10 @@ $prefix: (mdc, fab-small);
   @return map.merge(
     get-unthemable-tokens(),
     map.merge(
-      get-color-tokens(token-utils.$placeholder-color-config),
+      get-color-tokens(token-definition.$placeholder-color-config),
       map.merge(
-        get-typography-tokens(token-utils.$placeholder-typography-config),
-        get-density-tokens(token-utils.$placeholder-density-config)
+        get-typography-tokens(token-definition.$placeholder-typography-config),
+        get-density-tokens(token-definition.$placeholder-density-config)
       )
     )
   );

@@ -13,7 +13,7 @@ describe('TooltipHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatTooltipModule, NoopAnimationsModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(TooltipHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

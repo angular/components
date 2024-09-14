@@ -83,7 +83,7 @@ $mat-tab-animation-duration: 500ms !default;
     }
   }
 
-  .mat-mdc-tab-ripple {
+  .mat-mdc-tab-ripple.mat-mdc-tab-ripple {
     position: absolute;
     top: 0;
     left: 0;
@@ -109,6 +109,17 @@ $mat-tab-animation-duration: 500ms !default;
     @include token-utils.create-token-slot(height, container-height);
   }
 
+  @include token-utils.use-tokens(
+    tokens-mat-tab-header.$prefix,
+    tokens-mat-tab-header.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+  }
+
   &.mdc-tab {
     // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
     // is an opt-in behavior. Also technically we don't need to combine the two classes, but
@@ -131,12 +142,6 @@ $mat-tab-animation-duration: 500ms !default;
     tokens-mat-tab-header.$prefix,
     tokens-mat-tab-header.get-token-slots()
   ) {
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
-    @include token-utils.create-token-slot(line-height, label-text-line-height);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
-
     &:hover .mdc-tab__text-label {
       @include token-utils.create-token-slot(color, inactive-hover-label-text-color);
     }
@@ -300,10 +305,7 @@ $mat-tab-animation-duration: 500ms !default;
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
     box-sizing: content-box;
-    background: none;
-    border: none;
     outline: 0;
-    padding: 0;
 
     &::-moz-focus-inner {
       border: 0;
@@ -478,7 +480,7 @@ $mat-tab-animation-duration: 500ms !default;
 
       > #{$header-selector}, > .mat-mdc-tab-header-pagination {
         .mat-mdc-tab-header-pagination-chevron,
-        .mat-mdc-focus-indicator::before {
+        .mat-focus-indicator::before {
           @include token-utils.create-token-slot(border-color, foreground-color);
         }
 

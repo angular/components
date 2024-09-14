@@ -1,4 +1,3 @@
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -7,7 +6,9 @@ import {
   NgZone,
   OnDestroy,
   ViewChild,
+  inject,
 } from '@angular/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 /** @title Monitoring focus with FocusMonitor */
 @Component({
@@ -17,17 +18,15 @@ import {
   standalone: true,
 })
 export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
+  private _focusMonitor = inject(FocusMonitor);
+  private _cdr = inject(ChangeDetectorRef);
+  private _ngZone = inject(NgZone);
+
   @ViewChild('element') element: ElementRef<HTMLElement>;
   @ViewChild('subtree') subtree: ElementRef<HTMLElement>;
 
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);
-
-  constructor(
-    private _focusMonitor: FocusMonitor,
-    private _cdr: ChangeDetectorRef,
-    private _ngZone: NgZone,
-  ) {}
 
   ngAfterViewInit() {
     this._focusMonitor.monitor(this.element).subscribe(origin =>

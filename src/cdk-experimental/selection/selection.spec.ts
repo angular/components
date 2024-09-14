@@ -1,6 +1,6 @@
 import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
-import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
@@ -14,7 +14,7 @@ describe('CdkSelection', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, ListWithMultiSelection],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -240,7 +240,7 @@ describe('CdkSelection with multiple = false', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, ListWithSingleSelection],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -305,14 +305,15 @@ describe('cdkSelectionColumn', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, CdkTableModule, MultiSelectTableWithSelectionColumn],
-    }).compileComponents();
+    });
   }));
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(MultiSelectTableWithSelectionColumn);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    flush();
+  }));
 
   it('should show check boxes', () => {
     const checkboxes =
@@ -399,7 +400,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [CdkSelectionModule, CdkTableModule, SingleSelectTableWithSelectionColumn],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -455,16 +456,14 @@ describe('cdkSelectionColumn with multiple = false', () => {
   imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithMultiSelection {
+  private readonly _elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
 
   selectionChange?: SelectionChange<string>;
-
-  constructor(
-    private readonly _elementRef: ElementRef,
-    private readonly _cdr: ChangeDetectorRef,
-  ) {}
 
   selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
@@ -522,6 +521,9 @@ class ListWithMultiSelection {
   imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithSingleSelection {
+  private readonly _elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
@@ -537,11 +539,6 @@ class ListWithSingleSelection {
     flush();
     this._cdr.detectChanges();
   }
-
-  constructor(
-    private readonly _elementRef: ElementRef,
-    private readonly _cdr: ChangeDetectorRef,
-  ) {}
 
   getSelectionToggle(index: number) {
     return this._elementRef.nativeElement.querySelectorAll('[cdkselectiontoggle]')[index];
@@ -566,6 +563,9 @@ class ListWithSingleSelection {
   imports: [CdkSelectionModule, CdkTableModule],
 })
 class MultiSelectTableWithSelectionColumn {
+  readonly elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   columns = ['select', 'name'];
@@ -585,6 +585,7 @@ class MultiSelectTableWithSelectionColumn {
     this.getSelectAll().click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   clickSelectionToggle(index: number) {
@@ -596,12 +597,8 @@ class MultiSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
-
-  constructor(
-    readonly elementRef: ElementRef,
-    private readonly _cdr: ChangeDetectorRef,
-  ) {}
 
   getSelectAll(): HTMLInputElement {
     return this.elementRef.nativeElement.querySelector('input[cdkselectall]');
@@ -634,6 +631,9 @@ class MultiSelectTableWithSelectionColumn {
   imports: [CdkSelectionModule, CdkTableModule],
 })
 class SingleSelectTableWithSelectionColumn {
+  readonly elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   columns = ['select', 'name'];
@@ -648,12 +648,8 @@ class SingleSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
-
-  constructor(
-    readonly elementRef: ElementRef,
-    private readonly _cdr: ChangeDetectorRef,
-  ) {}
 
   getSelectionToggle(index: number): HTMLInputElement {
     return this.elementRef.nativeElement.querySelectorAll('input[cdkselectiontoggle]')[index];

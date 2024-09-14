@@ -22,7 +22,7 @@ import {MatAutocomplete} from './autocomplete';
 import {MatAutocompleteTrigger} from './autocomplete-trigger';
 import {MatAutocompleteModule} from './module';
 
-describe('MDC-based MatAutocomplete Zone.js integration', () => {
+describe('MatAutocomplete Zone.js integration', () => {
   // Creates a test component fixture.
   function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
     TestBed.configureTestingModule({
@@ -38,8 +38,6 @@ describe('MDC-based MatAutocomplete Zone.js integration', () => {
       providers: [provideZoneChangeDetection(), ...providers],
       declarations: [component],
     });
-
-    TestBed.compileComponents();
 
     return TestBed.createComponent<T>(component);
   }

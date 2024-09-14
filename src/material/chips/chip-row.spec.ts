@@ -19,7 +19,7 @@ import {
   MatChipsModule,
 } from './index';
 
-describe('MDC-based Row Chips', () => {
+describe('Row Chips', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
@@ -40,8 +40,6 @@ describe('MDC-based Row Chips', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatChipRow', () => {

@@ -6,10 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CommonModule} from '@angular/common';
-import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
-import {loadExample} from '@angular/components-examples/private';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,7 +14,12 @@ import {
   Input,
   OnInit,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CommonModule} from '@angular/common';
+import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
+import {loadExample} from '@angular/components-examples/private';
 
 @Component({
   selector: 'material-example',
@@ -61,6 +62,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Example implements OnInit {
+  private _injector = inject(Injector);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** ID of the material example to display. */
   @Input() id: string;
 
@@ -74,12 +79,6 @@ export class Example implements OnInit {
   _showLabel: boolean;
 
   title: string;
-
-  constructor(
-    private _injector: Injector,
-    private _viewContainerRef: ViewContainerRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-  ) {}
 
   async ngOnInit() {
     this.title = EXAMPLE_COMPONENTS[this.id].title;

@@ -14,7 +14,7 @@ describe('DatepickerHarnessExample', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatDatepickerModule, NoopAnimationsModule, MatNativeDateModule],
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(DatepickerHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

@@ -11,10 +11,10 @@ describe('MatNativeSelectHarness', () => {
   let fixture: ComponentFixture<SelectHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, MatInputModule, FormsModule, SelectHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();

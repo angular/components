@@ -34,8 +34,8 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 
   @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(border-radius, active-track-shape);
-    $active-height-ref: var(#{token-utils.get-token-variable(active-track-height)});
-    $inactive-height-ref: var(#{token-utils.get-token-variable(inactive-track-height)});
+    $active-height-ref: token-utils.get-token-variable(active-track-height);
+    $inactive-height-ref: token-utils.get-token-variable(inactive-track-height);
     height: $active-height-ref;
     top: calc((#{$inactive-height-ref} - #{$active-height-ref}) / 2);
   }
@@ -93,7 +93,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     content: '';
     pointer-events: none;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: CanvasText;
     }
   }
@@ -181,7 +181,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     content: '';
     pointer-events: none;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: CanvasText;
     }
   }
@@ -236,8 +236,8 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   border-style: solid;
 
   @include token-utils.use-tokens($_mdc-slots...) {
-    $width-ref: var(#{token-utils.get-token-variable(handle-width)});
-    $height-ref: var(#{token-utils.get-token-variable(handle-height)});
+    $width-ref: token-utils.get-token-variable(handle-width);
+    $height-ref: token-utils.get-token-variable(handle-height);
     width: $width-ref;
     height: $height-ref;
     border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
@@ -421,12 +421,12 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 
   // Slider components have to set `border-radius: 50%` in order to support density scaling
   // which will clip a square focus indicator so we have to turn it into a circle.
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     border-radius: 50%;
   }
 }
 
 // In the MDC slider the focus indicator is inside the thumb.
-.mdc-slider__thumb--focused .mat-mdc-focus-indicator::before {
+.mdc-slider__thumb--focused .mat-focus-indicator::before {
   content: '';
 }

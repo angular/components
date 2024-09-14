@@ -60,6 +60,8 @@ export interface MatButtonToggleDefaultOptions {
   hideSingleSelectionIndicator?: boolean;
   /** Whether icon indicators should be hidden for multiple-selection button toggle groups. */
   hideMultipleSelectionIndicator?: boolean;
+  /** Whether disabled toggle buttons should be interactive. */
+  disabledInteractive?: boolean;
 }
 
 /**
@@ -78,6 +80,7 @@ export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonTogg
   return {
     hideSingleSelectionIndicator: false,
     hideMultipleSelectionIndicator: false,
+    disabledInteractive: false,
   };
 }
 
@@ -136,6 +139,7 @@ export class MatButtonToggleChange {
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
   private _multiple = false;
   private _disabled = false;
+  private _disabledInteractive = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
 
   /**
@@ -226,6 +230,16 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
   set disabled(value: boolean) {
     this._disabled = value;
+    this._markButtonsForCheck();
+  }
+
+  /** Whether buttons in the group should be interactive while they're disabled. */
+  @Input({transform: booleanAttribute})
+  get disabledInteractive(): boolean {
+    return this._disabledInteractive;
+  }
+  set disabledInteractive(value: boolean) {
+    this._disabledInteractive = value;
     this._markButtonsForCheck();
   }
 
@@ -529,6 +543,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
     '[class.mat-button-toggle-checked]': 'checked',
     '[class.mat-button-toggle-disabled]': 'disabled',
+    '[class.mat-button-toggle-disabled-interactive]': 'disabledInteractive',
     '[class.mat-button-toggle-appearance-standard]': 'appearance === "standard"',
     'class': 'mat-button-toggle',
     '[attr.aria-label]': 'null',
@@ -626,6 +641,19 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   }
   private _disabled: boolean = false;
 
+  /** Whether the button should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute})
+  get disabledInteractive(): boolean {
+    return (
+      this._disabledInteractive ||
+      (this.buttonToggleGroup !== null && this.buttonToggleGroup.disabledInteractive)
+    );
+  }
+  set disabledInteractive(value: boolean) {
+    this._disabledInteractive = value;
+  }
+  private _disabledInteractive: boolean;
+
   /** Event emitted when the group value changes. */
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
@@ -645,6 +673,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     this.buttonToggleGroup = toggleGroup;
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
+    this.disabledInteractive = defaultOptions?.disabledInteractive ?? false;
   }
 
   ngOnInit() {
@@ -687,6 +716,10 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
   /** Checks the button toggle due to an interaction with the underlying native button. */
   _onButtonClick() {
+    if (this.disabled) {
+      return;
+    }
+
     const newChecked = this.isSingleSelector() ? true : !this._checked;
 
     if (newChecked !== this._checked) {

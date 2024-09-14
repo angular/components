@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef} from '@angular/core';
+import {Directive, TemplateRef, inject} from '@angular/core';
 
 /** Context provided to the tree node component. */
 export class CdkTreeNodeOutletContext<T> {
@@ -37,6 +37,9 @@ export class CdkTreeNodeOutletContext<T> {
   standalone: true,
 })
 export class CdkTreeNodeDef<T> {
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
   /**
    * Function that should return true if this node template should be used for the provided node
    * data and index. If left undefined, this node will be considered the default node template to
@@ -46,6 +49,6 @@ export class CdkTreeNodeDef<T> {
    */
   when: (index: number, nodeData: T) => boolean;
 
-  /** @docs-private */
-  constructor(public template: TemplateRef<any>) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 }

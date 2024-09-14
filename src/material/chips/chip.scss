@@ -351,7 +351,7 @@ $_avatar-trailing-padding: 8px;
     stroke-dashoffset: 0;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     // SVG colors won't be changed in high contrast mode and since the checkmark is white
     // by default, it'll blend in with the background in black-on-white mode. Override the
     // color to ensure that it's visible. We need !important, because the theme styles are
@@ -370,23 +370,19 @@ $_avatar-trailing-padding: 8px;
   $disabled-icon-opacity: null;
   @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
     $disabled-icon-opacity:
-      #{token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity)};
+      token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
   }
 
   // If the trailing icon is a chip-remove button, we have to factor in the trailing action
   // opacity as well as the disabled opacity.
   .mdc-evolution-chip--disabled &.mat-mdc-chip-remove {
     @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
-      opacity: calc(
-        var(#{token-utils.get-token-variable(trailing-action-opacity)}) *
-        var(#{$disabled-icon-opacity})
-      );
+      $action-opacity: token-utils.get-token-variable(trailing-action-opacity);
+      opacity: calc(#{$action-opacity} * #{$disabled-icon-opacity});
 
       &:focus {
-        opacity: calc(
-          var(#{token-utils.get-token-variable(trailing-action-focus-opacity)}) *
-          var(#{$disabled-icon-opacity})
-        );
+        $action-focus-opacity: token-utils.get-token-variable(trailing-action-focus-opacity);
+        opacity: calc(#{$action-focus-opacity} * #{$disabled-icon-opacity});
       }
     }
   }
@@ -415,7 +411,7 @@ $_avatar-trailing-padding: 8px;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 }
@@ -458,7 +454,7 @@ $_avatar-trailing-padding: 8px;
     );
 
     @each $selected, $base in $highlighted-remapped-tokens {
-      #{token-utils.get-token-variable($selected)}: var(token-utils.get-token-variable($base));
+      #{token-utils.get-token-variable-name($selected)}: token-utils.get-token-variable($base);
     }
   }
 }
@@ -646,6 +642,11 @@ $_avatar-trailing-padding: 8px;
   // MDC centers the text, but we have a lot of internal customers who have it at the start.
   text-align: left;
 
+  // Give the text label a higher z-index than the focus overlay to ensure that the focus overlay
+  // does not affect the color of the text. Material spec requires state layer to not interfere with
+  // text color.
+  z-index: 1;
+
   [dir='rtl'] & {
     text-align: right;
   }
@@ -669,23 +670,18 @@ $_avatar-trailing-padding: 8px;
 
   // For the chip element, default inset/offset values are necessary to ensure that
   // the focus indicator is sufficiently contrastive and renders appropriately.
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     $default-border-width: focus-indicators-private.$default-border-width;
-    $border-width: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
     $offset: calc(#{$border-width} + 2px);
     margin: calc(#{$offset} * -1);
   }
-
-  // Give the text label a higher z-index than the focus overlay to ensure that the focus overlay
-  // does not affect the color of the text. Material spec requires state layer to not interfere with
-  // text color.
-  z-index: 1;
 }
 
 .mat-mdc-chip-remove {
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
-    $offset: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    $offset: var(--mat-focus-indicator-border-width, #{$default-border-width});
     margin: calc(#{$offset} * -1);
 
     // MDC sets a padding a on the chip button which stretches out the focus indicator.
@@ -725,13 +721,13 @@ $_avatar-trailing-padding: 8px;
 // Single-selection chips show their selected state using a background color which won't be visible
 // in high contrast mode. This isn't necessary in multi-selection since there's a checkmark.
 .mat-mdc-chip-selected:not(.mat-mdc-chip-multiple) {
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline-width: 3px;
   }
 }
 
 // The chip has multiple focus targets so we have to put the indicator on
 // a separate element, rather than on the focusable element itself.
-.mat-mdc-chip-action:focus .mat-mdc-focus-indicator::before {
+.mat-mdc-chip-action:focus .mat-focus-indicator::before {
   content: '';
 }

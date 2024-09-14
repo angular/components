@@ -41,7 +41,7 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
 
-describe('MDC-based MatChipGrid', () => {
+describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
   let chipGridNativeElement: HTMLElement;
   let chipGridInstance: MatChipGrid;
@@ -1056,7 +1056,7 @@ describe('MDC-based MatChipGrid', () => {
       ],
       providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent<T>(component);
     fixture.detectChanges();

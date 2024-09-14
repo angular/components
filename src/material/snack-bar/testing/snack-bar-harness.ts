@@ -10,7 +10,7 @@ import {ContentContainerComponentHarness, HarnessPredicate, parallel} from '@ang
 import {AriaLivePoliteness} from '@angular/cdk/a11y';
 import {SnackBarHarnessFilters} from './snack-bar-harness-filters';
 
-/** Harness for interacting with an MDC-based mat-snack-bar in tests. */
+/** Harness for interacting with a mat-snack-bar in tests. */
 export class MatSnackBarHarness extends ContentContainerComponentHarness<string> {
   // Developers can provide a custom component or template for the
   // snackbar. The canonical snack-bar parent is the "MatSnackBarContainer".

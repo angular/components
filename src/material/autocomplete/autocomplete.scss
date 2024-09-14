@@ -24,7 +24,7 @@ div.mat-mdc-autocomplete-panel {
     @include token-utils.create-token-slot(background-color, background-color);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 

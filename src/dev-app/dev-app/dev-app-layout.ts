@@ -13,7 +13,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   NgZone,
   ViewEncapsulation,
   inject,
@@ -26,9 +25,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
-import {DevAppDirectionality} from './dev-app-directionality';
 import {getAppState, setAppState} from './dev-app-state';
 import {DevAppRippleOptions} from './ripple-options';
+import {DevAppDirectionality} from './dev-app-directionality';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -50,6 +49,13 @@ import {DevAppRippleOptions} from './ripple-options';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _rippleOptions = inject(DevAppRippleOptions);
+  private _dir = inject(Directionality) as DevAppDirectionality;
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _document = inject(DOCUMENT);
+  private _iconRegistry = inject(MatIconRegistry);
+
   state = getAppState();
   navItems = [
     {name: 'Examples', route: '/examples'},
@@ -104,6 +110,7 @@ export class DevAppLayout {
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
+    {name: 'Theme', route: '/theme'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
@@ -119,15 +126,9 @@ export class DevAppLayout {
 
   readonly isZoneless = this._ngZone instanceof ɵNoopNgZone;
 
-  constructor(
-    private _element: ElementRef<HTMLElement>,
-    private _rippleOptions: DevAppRippleOptions,
-    @Inject(Directionality) private _dir: DevAppDirectionality,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Inject(DOCUMENT) private _document: Document,
-    private _iconRegistry: MatIconRegistry,
-  ) {
+  constructor() {
     this.toggleTheme(this.state.darkTheme);
+    this.toggleSystemTheme(this.state.systemTheme);
     this.toggleStrongFocus(this.state.strongFocusEnabled);
     this.toggleDensity(Math.max(this._densityScales.indexOf(this.state.density), 0));
     this.toggleRippleDisabled(this.state.rippleDisabled);
@@ -139,6 +140,12 @@ export class DevAppLayout {
   toggleTheme(value = !this.state.darkTheme) {
     this.state.darkTheme = value;
     this._document.body.classList.toggle('demo-unicorn-dark-theme', value);
+    setAppState(this.state);
+  }
+
+  toggleSystemTheme(value = !this.state.systemTheme) {
+    this.state.systemTheme = value;
+    this._document.body.classList.toggle('demo-experimental-theme', value);
     setAppState(this.state);
   }
 

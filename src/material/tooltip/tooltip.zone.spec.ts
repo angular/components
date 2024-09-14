@@ -16,7 +16,7 @@ import {MatTooltip} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-describe('MDC-based MatTooltip Zone.js integration', () => {
+describe('MatTooltip Zone.js integration', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTooltipModule, OverlayModule, ScrollableTooltipDemo],
@@ -28,8 +28,6 @@ describe('MDC-based MatTooltip Zone.js integration', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('scrollable usage', () => {

@@ -121,7 +121,7 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
       -webkit-text-fill-color: transparent;
       transition: none;
 
-      @include cdk.high-contrast(active, off) {
+      @include cdk.high-contrast {
         // In high contrast mode the browser will render the
         // placeholder despite the `color: transparent` above.
         opacity: 0;

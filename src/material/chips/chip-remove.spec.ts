@@ -5,7 +5,7 @@ import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angula
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipsModule} from './index';
 
-describe('MDC-based Chip Remove', () => {
+describe('Chip Remove', () => {
   let fixture: ComponentFixture<TestChip>;
   let testChip: TestChip;
   let chipNativeElement: HTMLElement;
@@ -14,8 +14,6 @@ describe('MDC-based Chip Remove', () => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule, TestChip],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {
@@ -92,7 +90,7 @@ describe('MDC-based Chip Remove', () => {
 
     it('should have a focus indicator', fakeAsync(() => {
       const buttonElement = chipNativeElement.querySelector('.mdc-evolution-chip__icon--trailing')!;
-      expect(buttonElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
+      expect(buttonElement.classList.contains('mat-focus-indicator')).toBe(true);
     }));
 
     it('should prevent the default click action', fakeAsync(() => {

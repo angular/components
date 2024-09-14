@@ -15,10 +15,10 @@ describe('MatTooltipHarness', () => {
     });
   });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTooltipModule, NoopAnimationsModule, TooltipHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TooltipHarnessTest);
     fixture.detectChanges();

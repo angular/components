@@ -24,6 +24,7 @@ ng_module(
         ":option/option.css",
         ":option/optgroup.css",
         ":internal-form-field/internal-form-field.css",
+        ":ripple/ripple-structure.css",
     ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
@@ -33,6 +34,7 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
+        "//src/cdk/private",
         "@npm//@angular/animations",
         "@npm//@angular/core",
         "@npm//@angular/forms",
@@ -91,6 +93,12 @@ sass_binary(
 sass_binary(
     name = "internal_form_field_scss",
     src = "internal-form-field/internal-form-field.scss",
+    deps = [":core_scss_lib"],
+)
+
+sass_binary(
+    name = "ripple_structure_scss",
+    src = "ripple/ripple-structure.scss",
     deps = [":core_scss_lib"],
 )
 

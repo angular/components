@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {Platform, getSupportedInputTypes} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   selector: 'platform-demo',
@@ -18,7 +18,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlatformDemo {
-  supportedInputTypes = getSupportedInputTypes();
+  platform = inject(Platform);
 
-  constructor(public platform: Platform) {}
+  supportedInputTypes = getSupportedInputTypes();
 }

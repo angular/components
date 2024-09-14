@@ -397,7 +397,7 @@ describe('CDK Popover Edit', () => {
         TestBed.configureTestingModule({
           imports: [CdkTableModule, CdkPopoverEditModule, CommonModule, FormsModule, BidiModule],
           declarations: [componentClass],
-        }).compileComponents();
+        });
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();

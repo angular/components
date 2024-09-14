@@ -7,8 +7,9 @@
     [class.mdc-switch--unselected]="!checked"
     [class.mdc-switch--checked]="checked"
     [class.mdc-switch--disabled]="disabled"
-    [tabIndex]="disabled ? -1 : tabIndex"
-    [disabled]="disabled"
+    [class.mat-mdc-slide-toggle-disabled-interactive]="disabledInteractive"
+    [tabIndex]="disabled && !disabledInteractive ? -1 : tabIndex"
+    [disabled]="disabled && !disabledInteractive"
     [attr.id]="buttonId"
     [attr.name]="name"
     [attr.aria-label]="ariaLabel"
@@ -16,22 +17,23 @@
     [attr.aria-describedby]="ariaDescribedby"
     [attr.aria-required]="required || null"
     [attr.aria-checked]="checked"
+    [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
     (click)="_handleClick()"
     #switch>
-    <div class="mdc-switch__track"></div>
-    <div class="mdc-switch__handle-track">
-      <div class="mdc-switch__handle">
-        <div class="mdc-switch__shadow">
-          <div class="mdc-elevation-overlay"></div>
-        </div>
-        <div class="mdc-switch__ripple">
-          <div class="mat-mdc-slide-toggle-ripple mat-mdc-focus-indicator" mat-ripple
+    <span class="mdc-switch__track"></span>
+    <span class="mdc-switch__handle-track">
+      <span class="mdc-switch__handle">
+        <span class="mdc-switch__shadow">
+          <span class="mdc-elevation-overlay"></span>
+        </span>
+        <span class="mdc-switch__ripple">
+          <span class="mat-mdc-slide-toggle-ripple mat-focus-indicator" mat-ripple
             [matRippleTrigger]="switch"
             [matRippleDisabled]="disableRipple || disabled"
-            [matRippleCentered]="true"></div>
-        </div>
+            [matRippleCentered]="true"></span>
+        </span>
         @if (!hideIcon) {
-          <div class="mdc-switch__icons">
+          <span class="mdc-switch__icons">
             <svg
               class="mdc-switch__icon mdc-switch__icon--on"
               viewBox="0 0 24 24"
@@ -44,10 +46,10 @@
               aria-hidden="true">
               <path d="M20 13H4v-2h16v2z" />
             </svg>
-          </div>
+          </span>
         }
-      </div>
-    </div>
+      </span>
+    </span>
   </button>
 
   <!--

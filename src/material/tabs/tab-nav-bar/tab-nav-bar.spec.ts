@@ -16,7 +16,7 @@ import {MAT_TABS_CONFIG} from '../index';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
-describe('MDC-based MatTabNavBar', () => {
+describe('MatTabNavBar', () => {
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
@@ -37,8 +37,6 @@ describe('MDC-based MatTabNavBar', () => {
         {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
       ],
     });
-
-    TestBed.compileComponents();
 
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
@@ -443,9 +441,7 @@ describe('MDC-based MatTabNavBar', () => {
       ];
 
       expect(
-        tabLinkNativeElements.every(element =>
-          element.classList.contains('mat-mdc-focus-indicator'),
-        ),
+        tabLinkNativeElements.every(element => element.classList.contains('mat-focus-indicator')),
       ).toBe(true);
     });
   });
@@ -497,8 +493,6 @@ describe('MatTabNavBar with a default config', () => {
       imports: [MatTabsModule, BrowserAnimationsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {
@@ -520,8 +514,6 @@ describe('MatTabNavBar with enabled animations', () => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule, TabsWithCustomAnimationDuration],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should not throw when setting an animationDuration without units', fakeAsync(() => {

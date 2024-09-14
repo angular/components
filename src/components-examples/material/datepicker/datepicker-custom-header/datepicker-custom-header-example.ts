@@ -1,11 +1,6 @@
-import {ChangeDetectionStrategy, Component, Inject, OnDestroy, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, signal, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatDateFormats,
-  provideNativeDateAdapter,
-} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, provideNativeDateAdapter} from '@angular/material/core';
 import {MatCalendar, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -65,16 +60,16 @@ export class DatepickerCustomHeaderExample {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleHeader<D> implements OnDestroy {
+  private _calendar = inject<MatCalendar<D>>(MatCalendar);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter);
+  private _dateFormats = inject(MAT_DATE_FORMATS);
+
   private _destroyed = new Subject<void>();
 
   readonly periodLabel = signal('');
 
-  constructor(
-    private _calendar: MatCalendar<D>,
-    private _dateAdapter: DateAdapter<D>,
-    @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-  ) {
-    _calendar.stateChanges.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
+  constructor() {
+    this._calendar.stateChanges.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
       this.periodLabel.set(
         this._dateAdapter
           .format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel)

@@ -15,8 +15,6 @@ describe('Observe content directive', () => {
       TestBed.configureTestingModule({
         imports: [ObserversModule, ComponentWithTextContent, ComponentWithChildTextContent],
       });
-
-      TestBed.compileComponents();
     }));
 
     it('should trigger the callback when the content of the element changes', done => {
@@ -108,8 +106,6 @@ describe('Observe content directive', () => {
         ],
       });
 
-      TestBed.compileComponents();
-
       fixture = TestBed.createComponent(ComponentWithDebouncedListener);
       fixture.detectChanges();
     }));
@@ -151,8 +147,6 @@ describe('ContentObserver injectable', () => {
           },
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(inject([ContentObserver], (co: ContentObserver) => {
@@ -213,7 +207,6 @@ describe('ContentObserver injectable', () => {
         imports: [ObserversModule, UnobservedComponentWithTextContent],
       });
 
-      TestBed.compileComponents();
       const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
       fixture.autoDetectChanges();
       spy = jasmine.createSpy('content observer');

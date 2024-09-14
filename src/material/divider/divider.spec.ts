@@ -1,4 +1,4 @@
-import {fakeAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatDividerModule} from './divider-module';
@@ -6,14 +6,13 @@ import {MatDividerModule} from './divider-module';
 describe('MatDivider', () => {
   let fixture: ComponentFixture<MatDividerTestComponent>;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatDividerModule, MatDividerTestComponent],
     });
 
-    TestBed.compileComponents();
     fixture = TestBed.createComponent(MatDividerTestComponent);
-  }));
+  });
 
   it('should apply vertical class to vertical divider', () => {
     fixture.componentInstance.vertical = true;

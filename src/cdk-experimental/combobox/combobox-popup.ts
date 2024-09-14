@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Input, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, OnInit, inject} from '@angular/core';
 import {AriaHasPopupValue, CDK_COMBOBOX, CdkCombobox} from './combobox';
 
 let nextId = 0;
@@ -24,6 +24,9 @@ let nextId = 0;
   standalone: true,
 })
 export class CdkComboboxPopup<T = unknown> implements OnInit {
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _combobox = inject<CdkCombobox>(CDK_COMBOBOX);
+
   @Input()
   get role(): AriaHasPopupValue {
     return this._role;
@@ -43,11 +46,6 @@ export class CdkComboboxPopup<T = unknown> implements OnInit {
   private _firstFocusElement: HTMLElement;
 
   @Input() id = `cdk-combobox-popup-${nextId++}`;
-
-  constructor(
-    private readonly _elementRef: ElementRef<HTMLElement>,
-    @Inject(CDK_COMBOBOX) private readonly _combobox: CdkCombobox,
-  ) {}
 
   ngOnInit() {
     this.registerWithPanel();

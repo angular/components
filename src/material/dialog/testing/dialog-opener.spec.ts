@@ -4,13 +4,11 @@ import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '@angular/material/d
 import {MatTestDialogOpener, MatTestDialogOpenerModule} from '@angular/material/dialog/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-describe('MDC-based MatTestDialogOpener', () => {
+describe('MatTestDialogOpener', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTestDialogOpenerModule, NoopAnimationsModule, ExampleComponent],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should open a dialog when created', fakeAsync(() => {

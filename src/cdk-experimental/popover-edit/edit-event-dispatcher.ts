@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, pipe, Subject} from 'rxjs';
 import {
   audit,
@@ -50,6 +50,8 @@ export enum HoverContentState {
  */
 @Injectable()
 export class EditEventDispatcher<R> {
+  private readonly _ngZone = inject(NgZone);
+
   /** A subject that indicates which table cell is currently editing (unless it is disabled). */
   readonly editing = new Subject<Element | null>();
 
@@ -155,7 +157,7 @@ export class EditEventDispatcher<R> {
   private _lastSeenRow: Element | null = null;
   private _lastSeenRowHoverOrFocus: Observable<HoverContentState> | null = null;
 
-  constructor(private readonly _ngZone: NgZone) {
+  constructor() {
     this._editingAndEnabledDistinct.subscribe(cell => {
       this._currentlyEditing = cell;
     });

@@ -15,7 +15,7 @@ import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 
-describe('MDC-based MatDialog', () => {
+describe('MatDialog', () => {
   let dialog: MatDialog;
   let scrolledSubject = new Subject();
 
@@ -44,8 +44,6 @@ describe('MDC-based MatDialog', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {

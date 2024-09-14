@@ -4,7 +4,7 @@ import {TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
-describe('MDC-based MatList', () => {
+describe('MatList', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -27,8 +27,6 @@ describe('MDC-based MatList', () => {
         StandaloneListItem,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should apply an additional class to lists without lines', () => {
@@ -74,7 +72,7 @@ describe('MDC-based MatList', () => {
       .queryAll(By.css('mat-list-item'))
       .map(debugEl => debugEl.nativeElement as HTMLElement);
 
-    expect(listItems.every(i => i.querySelector('.mat-mdc-focus-indicator') !== null))
+    expect(listItems.every(i => i.querySelector('.mat-focus-indicator') !== null))
       .withContext('Expected all list items to have a strong focus indicator element.')
       .toBe(true);
   });

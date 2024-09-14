@@ -21,7 +21,7 @@ export enum MatCardSection {
   FOOTER = '.mat-mdc-card-footer',
 }
 
-/** Harness for interacting with an MDC-based mat-card in tests. */
+/** Harness for interacting with a mat-card in tests. */
 export class MatCardHarness extends ContentContainerComponentHarness<MatCardSection> {
   /** The selector for the host element of a `MatCard` instance. */
   static hostSelector = '.mat-mdc-card';

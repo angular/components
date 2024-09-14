@@ -47,7 +47,7 @@ describe('MatSnackBar', () => {
         BurritosNotification,
         DirectiveWithViewContainer,
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject(
@@ -591,8 +591,7 @@ describe('MatSnackBar', () => {
         deps: [],
         useFactory: () => ({panelClass: 'custom-class'}),
       })
-      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]})
-      .compileComponents();
+      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]});
 
     inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
       snackBar = sb;
@@ -754,7 +753,7 @@ describe('MatSnackBar with parent MatSnackBar', () => {
         ComponentThatProvidesMatSnackBar,
         DirectiveWithViewContainer,
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
@@ -832,7 +831,7 @@ describe('MatSnackBar Positioning', () => {
         ComponentWithChildViewContainer,
         DirectiveWithViewContainer,
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {

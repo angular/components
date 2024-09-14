@@ -85,7 +85,7 @@ $header-arrow-hint-opacity: 0.38;
   display: flex;
   align-items: center;
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     width: 0;
     border-left: solid $header-arrow-thickness;
   }
@@ -108,7 +108,7 @@ $header-arrow-hint-opacity: 0.38;
   background: currentColor;
   transform: rotate(45deg);
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     width: 0;
     height: 0;
     border-top: solid $header-arrow-thickness;
@@ -124,7 +124,7 @@ $header-arrow-hint-opacity: 0.38;
   position: absolute;
   top: 0;
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     width: 0;
     height: 0;
     border-left: solid $header-arrow-pointer-length;

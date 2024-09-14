@@ -74,11 +74,12 @@ $icon-margin: 16px !default;
     // Invert the arrow direction.
     polygon {
       transform: scaleX(-1);
+      transform-origin: center;
     }
   }
 
   // Fix for Chromium-based browsers blending in the `currentColor` with the background.
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     fill: CanvasText;
   }
 }

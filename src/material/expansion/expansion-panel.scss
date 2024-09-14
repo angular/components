@@ -6,7 +6,6 @@
 @use '../core/style/elevation';
 
 .mat-expansion-panel {
-  @include elevation.overridable-elevation(2);
   box-sizing: content-box;
   display: block;
   margin: 0;
@@ -24,6 +23,8 @@
     @include token-utils.create-token-slot(color, container-text-color);
     @include token-utils.create-token-slot(border-radius, container-shape);
   }
+
+  @include elevation.overridable-elevation(2);
 
   .mat-accordion & {
     &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {
@@ -44,7 +45,7 @@
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 

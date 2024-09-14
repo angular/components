@@ -97,7 +97,7 @@ $drawer-over-drawer-z-index: 4;
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     opacity: 0.5;
   }
 }
@@ -145,13 +145,13 @@ $drawer-over-drawer-z-index: 4;
 
 
   &, [dir='rtl'] &.mat-drawer-end {
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-right: $high-contrast-border;
     }
   }
 
   [dir='rtl'] &, &.mat-drawer-end {
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-left: $high-contrast-border;
       border-right: none;
     }

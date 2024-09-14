@@ -7,6 +7,10 @@
 </p>
 
 <p>
+  <mat-checkbox (change)="disabledInteractive = $event.checked">Allow Interaction with Disabled Button Toggles</mat-checkbox>
+</p>
+
+<p>
   <mat-checkbox (change)="hideSingleSelectionIndicator = $event.checked">Hide Single Selection Indicator</mat-checkbox>
 </p>
 
@@ -17,7 +21,11 @@
 <h1>Exclusive Selection</h1>
 
 <section>
-  <mat-button-toggle-group name="alignment" [vertical]="isVertical" [hideSingleSelectionIndicator]="hideSingleSelectionIndicator">
+  <mat-button-toggle-group
+    name="alignment"
+    [vertical]="isVertical"
+    [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     <mat-button-toggle value="left" [disabled]="isDisabled">
       <mat-icon>format_align_left</mat-icon>
     </mat-button-toggle>
@@ -34,7 +42,12 @@
 </section>
 
 <section>
-  <mat-button-toggle-group appearance="legacy" name="alignment" [vertical]="isVertical" [hideSingleSelectionIndicator]="hideSingleSelectionIndicator">
+  <mat-button-toggle-group
+    appearance="legacy"
+    name="alignment"
+    [vertical]="isVertical"
+    [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     <mat-button-toggle value="left" [disabled]="isDisabled">
       <mat-icon>format_align_left</mat-icon>
     </mat-button-toggle>
@@ -53,7 +66,12 @@
 <h1>Disabled Group</h1>
 
 <section>
-  <mat-button-toggle-group name="checkbox" [vertical]="isVertical" [disabled]="isDisabled" [hideSingleSelectionIndicator]="hideSingleSelectionIndicator">
+  <mat-button-toggle-group
+    name="checkbox"
+    [vertical]="isVertical"
+    [disabled]="isDisabled"
+    [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     <mat-button-toggle value="bold">
       <mat-icon>format_bold</mat-icon>
     </mat-button-toggle>
@@ -61,14 +79,18 @@
       <mat-icon>format_italic</mat-icon>
     </mat-button-toggle>
     <mat-button-toggle value="underline">
-      <mat-icon>format_underline</mat-icon>
+      <mat-icon>format_underlined</mat-icon>
     </mat-button-toggle>
   </mat-button-toggle-group>
 </section>
 
 <h1>Multiple Selection</h1>
 <section>
-  <mat-button-toggle-group multiple [vertical]="isVertical" [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator">
+  <mat-button-toggle-group
+    multiple
+    [vertical]="isVertical"
+    [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     <mat-button-toggle>Flour</mat-button-toggle>
     <mat-button-toggle>Eggs</mat-button-toggle>
     <mat-button-toggle>Sugar</mat-button-toggle>
@@ -76,7 +98,12 @@
   </mat-button-toggle-group>
 </section>
 <section>
-  <mat-button-toggle-group appearance="legacy" multiple [vertical]="isVertical" [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator">
+  <mat-button-toggle-group
+    appearance="legacy"
+    multiple
+    [vertical]="isVertical"
+    [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     <mat-button-toggle>Flour</mat-button-toggle>
     <mat-button-toggle>Eggs</mat-button-toggle>
     <mat-button-toggle>Sugar</mat-button-toggle>
@@ -90,7 +117,12 @@
 
 <h1>Dynamic Exclusive Selection</h1>
 <section>
-  <mat-button-toggle-group name="pies" [(ngModel)]="favoritePie" [vertical]="isVertical" [hideSingleSelectionIndicator]="hideSingleSelectionIndicator">
+  <mat-button-toggle-group
+    name="pies"
+    [(ngModel)]="favoritePie"
+    [vertical]="isVertical"
+    [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
+    [disabledInteractive]="disabledInteractive">
     @for (pie of pieOptions; track pie) {
       <mat-button-toggle [value]="pie">{{pie}}</mat-button-toggle>
     }

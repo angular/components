@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
-@use '../../token-utils';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, expansion);
@@ -12,12 +12,12 @@ $prefix: (mat, expansion);
 /// @return {Map} A set of custom tokens for the mat-expansion
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: sass-utils.merge-all(
-    token-utils.generate-typography-tokens($systems, header-text, title-medium),
-    token-utils.generate-typography-tokens($systems, container-text, body-large),
+    token-definition.generate-typography-tokens($systems, header-text, title-medium),
+    token-definition.generate-typography-tokens($systems, container-text, body-large),
     (
-      container-shape: token-utils.hardcode(12px, $exclude-hardcoded),
-      legacy-header-indicator-display: token-utils.hardcode(none, $exclude-hardcoded),
-      header-indicator-display: token-utils.hardcode(inline-block, $exclude-hardcoded),
+      container-shape: token-definition.hardcode(12px, $exclude-hardcoded),
+      legacy-header-indicator-display: token-definition.hardcode(none, $exclude-hardcoded),
+      header-indicator-display: token-definition.hardcode(inline-block, $exclude-hardcoded),
       container-background-color: map.get($systems, md-sys-color, surface),
       container-text-color: map.get($systems, md-sys-color, on-surface),
       actions-divider-color: map.get($systems, md-sys-color, outline),
@@ -37,5 +37,5 @@ $prefix: (mat, expansion);
     )
   );
 
-  @return token-utils.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

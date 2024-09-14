@@ -39,15 +39,15 @@ describe('MatFormFieldHarness', () => {
   let fixture: ComponentFixture<FormFieldHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
         MatNativeDateModule,
         FormFieldHarnessTest,
         MatDatepickerModule,
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);
     fixture.detectChanges();

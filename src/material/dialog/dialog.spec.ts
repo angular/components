@@ -57,7 +57,7 @@ import {
   MatDialogTitle,
 } from './index';
 
-describe('MDC-based MatDialog', () => {
+describe('MatDialog', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
   let scrolledSubject = new Subject();
@@ -93,8 +93,6 @@ describe('MDC-based MatDialog', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject(
@@ -1245,7 +1243,7 @@ describe('MDC-based MatDialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expect(
         overlayContainerElement.querySelectorAll('.cdk-focus-trap-anchor').length,
@@ -1892,7 +1890,7 @@ describe('MDC-based MatDialog', () => {
   }));
 });
 
-describe('MDC-based MatDialog with a parent MatDialog', () => {
+describe('MatDialog with a parent MatDialog', () => {
   let parentDialog: MatDialog;
   let childDialog: MatDialog;
   let overlayContainerElement: HTMLElement;
@@ -1912,8 +1910,6 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
         {provide: Location, useClass: SpyLocation},
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {
@@ -1992,7 +1988,7 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
   }));
 });
 
-describe('MDC-based MatDialog with default options', () => {
+describe('MatDialog with default options', () => {
   let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
 
@@ -2021,8 +2017,6 @@ describe('MDC-based MatDialog with default options', () => {
       ],
       providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog, OverlayContainer], (d: MatDialog, oc: OverlayContainer) => {
@@ -2077,7 +2071,7 @@ describe('MDC-based MatDialog with default options', () => {
   }));
 });
 
-describe('MDC-based MatDialog with animations enabled', () => {
+describe('MatDialog with animations enabled', () => {
   let dialog: MatDialog;
 
   let testViewContainerRef: ViewContainerRef;
@@ -2092,8 +2086,6 @@ describe('MDC-based MatDialog with animations enabled', () => {
         DirectiveWithViewContainer,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatDialog], (d: MatDialog) => {
@@ -2151,8 +2143,6 @@ describe('MatDialog with explicit injector provided', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, BrowserAnimationsModule, ModuleBoundDialogParentComponent],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {

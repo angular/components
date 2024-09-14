@@ -35,8 +35,6 @@ describe('MatMultiYearView', () => {
       ],
       providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('standard multi-year view', () => {

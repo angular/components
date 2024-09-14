@@ -13,7 +13,7 @@ esbuild_config(
     name = "esbuild_config",
     config_file = "esbuild.config.mjs",
     deps = [
-        "@npm//@angular-devkit/build-angular",
+        "@npm//@angular/build",
         "@npm//@angular/compiler-cli",
         "@npm//@babel/core",
     ],

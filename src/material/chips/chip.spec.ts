@@ -5,7 +5,7 @@ import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
-describe('MDC-based MatChip', () => {
+describe('MatChip', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
@@ -32,8 +32,6 @@ describe('MDC-based MatChip', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('MatBasicChip', () => {
@@ -66,16 +64,6 @@ describe('MDC-based MatChip', () => {
       fixture.detectChanges();
 
       expect(chip.getAttribute('tabindex')).toBe('15');
-    });
-
-    it('should have its ripple disabled', () => {
-      fixture = TestBed.createComponent(BasicChip);
-      fixture.detectChanges();
-      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
-      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
-      expect(chipInstance.ripple.disabled)
-        .withContext('Expected basic chip ripples to be disabled.')
-        .toBe(true);
     });
   });
 
@@ -131,34 +119,6 @@ describe('MDC-based MatChip', () => {
       fixture.detectChanges();
 
       expect(testComponent.chipRemove).toHaveBeenCalledWith({chip: chipInstance});
-    });
-
-    it('should be able to disable ripples with the `[rippleDisabled]` input', () => {
-      expect(chipInstance.ripple.disabled)
-        .withContext('Expected chip ripples to be enabled.')
-        .toBe(false);
-
-      testComponent.rippleDisabled = true;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(chipInstance.ripple.disabled)
-        .withContext('Expected chip ripples to be disabled.')
-        .toBe(true);
-    });
-
-    it('should disable ripples when the chip is disabled', () => {
-      expect(chipInstance.ripple.disabled)
-        .withContext('Expected chip ripples to be enabled.')
-        .toBe(false);
-
-      testComponent.disabled = true;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(chipInstance.ripple.disabled)
-        .withContext('Expected chip ripples to be disabled.')
-        .toBe(true);
     });
 
     it('should make disabled chips non-focusable', () => {

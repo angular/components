@@ -29,7 +29,7 @@ describe('MatTree', () => {
     TestBed.configureTestingModule({
       imports: [MatTreeModule],
       declarations: declarations,
-    }).compileComponents();
+    });
   }
 
   describe('flat tree', () => {

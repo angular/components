@@ -37,7 +37,7 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
-    constructor(radioGroup: MatRadioGroup, _elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions | undefined, tabIndex?: string);
+    constructor(radioGroup: MatRadioGroup, _elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _defaultOptions?: MatRadioDefaultOptions | undefined, tabIndex?: string);
     ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string;
@@ -48,6 +48,8 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     set color(newValue: ThemePalette);
     get disabled(): boolean;
     set disabled(value: boolean);
+    get disabledInteractive(): boolean;
+    set disabledInteractive(value: boolean);
     disableRipple: boolean;
     // (undocumented)
     protected _elementRef: ElementRef;
@@ -66,6 +68,8 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
+    // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
     static ngAcceptInputType_required: unknown;
@@ -80,8 +84,6 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // (undocumented)
     ngOnInit(): void;
     _noopAnimations: boolean;
-    // (undocumented)
-    _onInputClick(event: Event): void;
     _onInputInteraction(event: Event): void;
     _onTouchTargetClick(event: Event): void;
     radioGroup: MatRadioGroup;
@@ -93,7 +95,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatRadioButton, "mat-radio-button", ["matRadioButton"], { "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; }, { "change": "change"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatRadioButton, "mat-radio-button", ["matRadioButton"], { "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, { "change": "change"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioButton, [{ optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -110,6 +112,7 @@ export class MatRadioChange {
 // @public (undocumented)
 export interface MatRadioDefaultOptions {
     color: ThemePalette;
+    disabledInteractive?: boolean;
 }
 
 // @public
@@ -122,6 +125,8 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     _controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    get disabledInteractive(): boolean;
+    set disabledInteractive(value: boolean);
     _emitChangeEvent(): void;
     get labelPosition(): 'before' | 'after';
     set labelPosition(v: 'before' | 'after');
@@ -131,6 +136,8 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     set name(value: string);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
     // (undocumented)
     static ngAcceptInputType_required: unknown;
     ngAfterContentInit(): void;
@@ -150,7 +157,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     set value(newValue: any);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRadioGroup, "mat-radio-group", ["matRadioGroup"], { "color": { "alias": "color"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["_radios"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatRadioGroup, "mat-radio-group", ["matRadioGroup"], { "color": { "alias": "color"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, { "change": "change"; }, ["_radios"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRadioGroup, never>;
 }

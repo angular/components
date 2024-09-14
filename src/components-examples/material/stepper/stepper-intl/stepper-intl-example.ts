@@ -1,4 +1,4 @@
-import {Component, Injectable} from '@angular/core';
+import {Component, Injectable, inject} from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
@@ -32,6 +32,9 @@ export class StepperIntl extends MatStepperIntl {
   ],
 })
 export class StepperIntlExample {
+  private _formBuilder = inject(FormBuilder);
+  private _matStepperIntl = inject(MatStepperIntl);
+
   optionalLabelText: string;
   optionalLabelTextChoices: string[] = ['Option 1', 'Option 2', 'Option 3'];
   firstFormGroup = this._formBuilder.group({
@@ -40,11 +43,6 @@ export class StepperIntlExample {
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
-
-  constructor(
-    private _formBuilder: FormBuilder,
-    private _matStepperIntl: MatStepperIntl,
-  ) {}
 
   updateOptionalLabel() {
     this._matStepperIntl.optionalLabel = this.optionalLabelText;

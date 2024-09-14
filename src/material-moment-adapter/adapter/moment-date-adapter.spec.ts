@@ -25,7 +25,7 @@ describe('MomentDateAdapter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (dateAdapter: MomentDateAdapter) => {
@@ -543,7 +543,7 @@ describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
@@ -562,7 +562,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'fr'}],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
@@ -586,7 +586,7 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
           useValue: {useUtc: true},
         },
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
@@ -624,7 +624,7 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
             },
           },
         ],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {

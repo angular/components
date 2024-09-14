@@ -45,10 +45,6 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  [dir='rtl'] & {
-    text-align: right;
-  }
-
   @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
     tokens-mat-form-field.get-token-slots()) {
     @include vendor-prefixes.smooth-font();
@@ -59,7 +55,7 @@ $_icon-prefix-infix-padding: 4px;
     @include token-utils.create-token-slot(font-weight, container-text-weight);
 
     .mdc-text-field--outlined {
-      $token-value: var(#{token-utils.get-token-variable(outlined-label-text-populated-size)});
+      $token-value: token-utils.get-token-variable(outlined-label-text-populated-size);
 
       // For the non-upgraded notch label (i.e. when rendered on the server), also
       // use the correct typography.
@@ -71,6 +67,10 @@ $_icon-prefix-infix-padding: 4px;
         font-size: $token-value;
       }
     }
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
   }
 }
 

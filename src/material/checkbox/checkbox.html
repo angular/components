@@ -10,7 +10,10 @@
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
            [attr.aria-checked]="indeterminate ? 'mixed' : null"
+           [attr.aria-controls]="ariaControls"
            [attr.aria-disabled]="disabled && disabledInteractive ? true : null"
+           [attr.aria-expanded]="ariaExpanded"
+           [attr.aria-owns]="ariaOwns"
            [attr.name]="name"
            [attr.value]="value"
            [checked]="checked"
@@ -34,7 +37,7 @@
       </svg>
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
-    <div class="mat-mdc-checkbox-ripple mat-mdc-focus-indicator" mat-ripple
+    <div class="mat-mdc-checkbox-ripple mat-focus-indicator" mat-ripple
       [matRippleTrigger]="checkbox"
       [matRippleDisabled]="disableRipple || disabled"
       [matRippleCentered]="true"></div>

@@ -27,7 +27,7 @@ describe('MatSnackBar Zone.js integration', () => {
         DirectiveWithViewContainer,
       ],
       providers: [provideZoneChangeDetection()],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject([MatSnackBar], (sb: MatSnackBar) => {

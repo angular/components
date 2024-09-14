@@ -7,7 +7,7 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, OnDestroy, APP_ID, inject} from '@angular/core';
+import {Injectable, OnDestroy, APP_ID, inject} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
 
@@ -54,7 +54,8 @@ let nextId = 0;
  */
 @Injectable({providedIn: 'root'})
 export class AriaDescriber implements OnDestroy {
-  private _document: Document;
+  private _platform = inject(Platform);
+  private _document = inject(DOCUMENT);
 
   /** Map of all registered message elements that have been placed into the document. */
   private _messageRegistry = new Map<string | Element, RegisteredMessage>();
@@ -65,15 +66,9 @@ export class AriaDescriber implements OnDestroy {
   /** Unique ID for the service. */
   private readonly _id = `${nextId++}`;
 
-  constructor(
-    @Inject(DOCUMENT) _document: any,
-    /**
-     * @deprecated To be turned into a required parameter.
-     * @breaking-change 14.0.0
-     */
-    private _platform?: Platform,
-  ) {
-    this._document = _document;
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._id = inject(APP_ID) + '-' + nextId++;
   }
 

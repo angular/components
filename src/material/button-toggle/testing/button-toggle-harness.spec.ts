@@ -9,10 +9,10 @@ describe('MatButtonToggleHarness', () => {
   let fixture: ComponentFixture<ButtonToggleHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatButtonToggleModule, ButtonToggleHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ButtonToggleHarnessTest);
     fixture.detectChanges();
@@ -56,6 +56,14 @@ describe('MatButtonToggleHarness', () => {
   it('should get the toggle disabled state', async () => {
     const [enabledToggle, disabledToggle] = await loader.getAllHarnesses(MatButtonToggleHarness);
     expect(await enabledToggle.isDisabled()).toBe(false);
+    expect(await disabledToggle.isDisabled()).toBe(true);
+  });
+
+  it('should get the disabled state for an interactive disabled button', async () => {
+    fixture.componentInstance.disabledInteractive = true;
+    fixture.changeDetectorRef.markForCheck();
+
+    const disabledToggle = (await loader.getAllHarnesses(MatButtonToggleHarness))[1];
     expect(await disabledToggle.isDisabled()).toBe(true);
   });
 
@@ -141,6 +149,7 @@ describe('MatButtonToggleHarness', () => {
         checked>First</mat-button-toggle>
       <mat-button-toggle
         [disabled]="disabled"
+        [disabledInteractive]="disabledInteractive"
         aria-labelledby="second-label"
         appearance="legacy">Second</mat-button-toggle>
       <span id="second-label">Second toggle</span>
@@ -150,4 +159,5 @@ describe('MatButtonToggleHarness', () => {
 })
 class ButtonToggleHarnessTest {
   disabled = true;
+  disabledInteractive = false;
 }

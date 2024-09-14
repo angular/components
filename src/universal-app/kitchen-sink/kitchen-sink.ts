@@ -210,6 +210,10 @@ export class TestEntryComponent {}
   ],
 })
 export class KitchenSink {
+  private _snackBar = inject(MatSnackBar);
+  private _dialog = inject(MatDialog);
+  private _bottomSheet = inject(MatBottomSheet);
+
   /** List of columns for the CDK and Material table. */
   tableColumns = ['position', 'name', 'weight', 'symbol'];
 
@@ -222,14 +226,11 @@ export class KitchenSink {
   /** Whether the kitchen sink is running as a part of an automated test or for local debugging. */
   isAutomated: boolean;
 
-  constructor(
-    private _snackBar: MatSnackBar,
-    private _dialog: MatDialog,
-    viewportRuler: ViewportRuler,
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef<HTMLElement>,
-    private _bottomSheet: MatBottomSheet,
-  ) {
+  constructor() {
+    const viewportRuler = inject(ViewportRuler);
+    const focusMonitor = inject(FocusMonitor);
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     this.isAutomated = inject(AUTOMATED_KITCHEN_SINK, {optional: true}) ?? true;
     focusMonitor.focusVia(elementRef, 'program');
 

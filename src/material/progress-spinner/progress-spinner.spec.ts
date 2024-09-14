@@ -5,7 +5,7 @@ import {Component, ElementRef, ViewChild, ViewEncapsulation, signal} from '@angu
 import {MatProgressSpinnerModule} from './module';
 import {MatProgressSpinner, MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from './progress-spinner';
 
-describe('MDC-based MatProgressSpinner', () => {
+describe('MatProgressSpinner', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -23,7 +23,7 @@ describe('MDC-based MatProgressSpinner', () => {
         IndeterminateSpinnerInShadowDomWithNgIf,
         SpinnerWithMode,
       ],
-    }).compileComponents();
+    });
   }));
 
   it('should apply a mode of "determinate" if no mode is provided.', () => {
@@ -296,17 +296,15 @@ describe('MDC-based MatProgressSpinner', () => {
   });
 
   it('should be able to set a default diameter', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatProgressSpinnerModule, BasicProgressSpinner],
-        providers: [
-          {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-            useValue: {diameter: 23},
-          },
-        ],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatProgressSpinnerModule, BasicProgressSpinner],
+      providers: [
+        {
+          provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+          useValue: {diameter: 23},
+        },
+      ],
+    });
 
     const fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
@@ -316,17 +314,15 @@ describe('MDC-based MatProgressSpinner', () => {
   });
 
   it('should be able to set a default stroke width', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatProgressSpinnerModule, BasicProgressSpinner],
-        providers: [
-          {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-            useValue: {strokeWidth: 7},
-          },
-        ],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatProgressSpinnerModule, BasicProgressSpinner],
+      providers: [
+        {
+          provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+          useValue: {strokeWidth: 7},
+        },
+      ],
+    });
 
     const fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
@@ -336,17 +332,15 @@ describe('MDC-based MatProgressSpinner', () => {
   });
 
   it('should be able to set a default color', () => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatProgressSpinnerModule, BasicProgressSpinner],
-        providers: [
-          {
-            provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
-            useValue: {color: 'warn'},
-          },
-        ],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatProgressSpinnerModule, BasicProgressSpinner],
+      providers: [
+        {
+          provide: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+          useValue: {color: 'warn'},
+        },
+      ],
+    });
 
     const fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();

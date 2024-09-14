@@ -1,7 +1,7 @@
 @use 'sass:color';
 @use 'sass:meta';
 @use 'sass:math';
-@use '../../token-utils';
+@use '../../token-definition';
 @use '../../../theming/inspection';
 @use '../../../style/elevation';
 @use '../../../style/sass-utils';
@@ -106,7 +106,7 @@ $private-default-overlap-color: #a8dab5;
     // that were set in the previous theming API to reduce the amount of subtle screenshot
     // differences. We should look into introducing the other tokens in a follow-up.
     calendar-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    calendar-text-size: 13px, // TODO(crisbeto): this doesn't appear to affect anything
+    calendar-text-size: 13px,
 
     calendar-body-label-text-size: inspection.get-theme-typography($theme, button, font-size),
     calendar-body-label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
@@ -175,8 +175,8 @@ $private-default-overlap-color: #a8dab5;
 @function get-token-slots() {
   @return sass-utils.deep-merge-all(
       get-unthemable-tokens(),
-      get-color-tokens(token-utils.$placeholder-color-config),
-      get-typography-tokens(token-utils.$placeholder-typography-config),
-      get-density-tokens(token-utils.$placeholder-density-config)
+      get-color-tokens(token-definition.$placeholder-color-config),
+      get-typography-tokens(token-definition.$placeholder-typography-config),
+      get-density-tokens(token-definition.$placeholder-density-config)
   );
 }

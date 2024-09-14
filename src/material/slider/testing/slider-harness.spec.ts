@@ -15,14 +15,14 @@ import {MatSliderHarness} from './slider-harness';
 import {MatSliderThumbHarness} from './slider-thumb-harness';
 import {ThumbPosition} from './slider-harness-filters';
 
-describe('MDC-based MatSliderHarness', () => {
+describe('MatSliderHarness', () => {
   let fixture: ComponentFixture<SliderHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatSliderModule, SliderHarnessTest],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SliderHarnessTest);
     fixture.detectChanges();

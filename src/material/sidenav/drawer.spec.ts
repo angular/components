@@ -42,8 +42,6 @@ describe('MatDrawer', () => {
         NestedDrawerContainers,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('methods', () => {
@@ -476,7 +474,7 @@ describe('MatDrawer', () => {
             useValue: errorHandler,
           },
         ],
-      }).compileComponents();
+      });
 
       const fixture = TestBed.createComponent(DrawerDynamicPosition);
       fixture.detectChanges();
@@ -520,11 +518,9 @@ describe('MatDrawer', () => {
     }));
 
     it('should not throw when a two-way binding is toggled quickly while animating', fakeAsync(() => {
-      TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
-        })
-        .compileComponents();
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
+      });
 
       const fixture = TestBed.createComponent(DrawerOpenBinding);
       fixture.detectChanges();
@@ -714,6 +710,29 @@ describe('MatDrawer', () => {
         .withContext('Expected focus trap anchors to be enabled in over mode.')
         .toBe(true);
     }));
+
+    it('should disable the focus trap while closed', fakeAsync(() => {
+      testComponent.mode = 'over';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+
+      const anchors = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-focus-trap-anchor'),
+      );
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual([null, null]);
+
+      drawer.open();
+      fixture.detectChanges();
+      flush();
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual(['0', '0']);
+
+      drawer.close();
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+      expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual([null, null]);
+    }));
   });
 
   it('should mark the drawer content as scrollable', () => {
@@ -889,8 +908,6 @@ describe('MatDrawerContainer', () => {
         DrawerContainerWithContent,
       ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should be able to open and close all drawers', fakeAsync(() => {
@@ -1003,11 +1020,9 @@ describe('MatDrawerContainer', () => {
   }));
 
   it('should not animate when the sidenav is open on load', fakeAsync(() => {
-    TestBed.resetTestingModule()
-      .configureTestingModule({
-        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
+    });
 
     const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);
 
@@ -1075,7 +1090,7 @@ describe('MatDrawerContainer', () => {
     discardPeriodicTasks();
   }));
 
-  it('should be able to toggle whether the container has a backdrop', fakeAsync(() => {
+  it('should be able to toggle whether the container has a backdrop', () => {
     const fixture = TestBed.createComponent(BasicTestApp);
     fixture.detectChanges();
 
@@ -1086,7 +1101,7 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.mat-drawer-backdrop')).toBeFalsy();
-  }));
+  });
 
   it('should be able to explicitly enable the backdrop in `side` mode', fakeAsync(() => {
     const fixture = TestBed.createComponent(BasicTestApp);
@@ -1120,7 +1135,7 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawer.opened).toBe(false);
   }));
 
-  it('should expose a scrollable when the consumer has not specified drawer content', fakeAsync(() => {
+  it('should expose a scrollable when the consumer has not specified drawer content', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
 
     fixture.detectChanges();
@@ -1128,9 +1143,9 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawerContainer.scrollable instanceof CdkScrollable).toBe(
       true,
     );
-  }));
+  });
 
-  it('should expose a scrollable when the consumer has specified drawer content', fakeAsync(() => {
+  it('should expose a scrollable when the consumer has specified drawer content', () => {
     const fixture = TestBed.createComponent(DrawerContainerWithContent);
 
     fixture.detectChanges();
@@ -1138,9 +1153,9 @@ describe('MatDrawerContainer', () => {
     expect(fixture.componentInstance.drawerContainer.scrollable instanceof CdkScrollable).toBe(
       true,
     );
-  }));
+  });
 
-  it('should clean up the drawers stream on destroy', fakeAsync(() => {
+  it('should clean up the drawers stream on destroy', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
     fixture.detectChanges();
 
@@ -1153,9 +1168,9 @@ describe('MatDrawerContainer', () => {
 
     expect(spy).toHaveBeenCalled();
     subscription.unsubscribe();
-  }));
+  });
 
-  it('should position the drawers before/after the content in the DOM based on their position', fakeAsync(() => {
+  it('should position the drawers before/after the content in the DOM based on their position', () => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
     fixture.detectChanges();
 
@@ -1188,7 +1203,7 @@ describe('MatDrawerContainer', () => {
     expect(endIndex)
       .withContext('Expected end drawer to be after content')
       .toBeGreaterThan(contentIndex);
-  }));
+  });
 });
 
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */

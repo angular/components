@@ -2,7 +2,7 @@ import {BidiModule} from '@angular/cdk/bidi';
 import {DataSource} from '@angular/cdk/collections';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {ChangeDetectionStrategy, Component, Directive, ElementRef, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flushMicrotasks} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -375,11 +375,11 @@ describe('Material Popover Edit', () => {
         TestBed.configureTestingModule({
           imports: [BidiModule, MatTableModule, resizeModule],
           declarations: [componentClass],
-        }).compileComponents();
+        });
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
       }));
 
       it('shows resize handle overlays on header row hover and while a resize handle is in use', fakeAsync(() => {
@@ -427,7 +427,7 @@ describe('Material Popover Edit', () => {
         component.completeResizeWithMouseInProgress(0);
         component.endHoverState();
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         expect(component.getOverlayThumbElement(0)).toBeUndefined();
       }));
@@ -445,7 +445,7 @@ describe('Material Popover Edit', () => {
         const initialThumbPosition = component.getOverlayThumbPosition(1);
         component.updateResizeWithMouseInProgress(5);
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
@@ -463,7 +463,7 @@ describe('Material Popover Edit', () => {
 
         component.updateResizeWithMouseInProgress(1);
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
@@ -473,7 +473,7 @@ describe('Material Popover Edit', () => {
         (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
 
         component.completeResizeWithMouseInProgress(1);
-        flushMicrotasks();
+        flush();
 
         (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
 
@@ -509,7 +509,7 @@ describe('Material Popover Edit', () => {
 
         component.updateResizeWithMouseInProgress(5);
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
@@ -521,7 +521,7 @@ describe('Material Popover Edit', () => {
         // (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 5);
 
         dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flushMicrotasks();
+        flush();
 
         (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth);
         (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth);
@@ -545,7 +545,7 @@ describe('Material Popover Edit', () => {
 
         component.resizeColumnWithMouse(1, 5);
         fixture.detectChanges();
-        flushMicrotasks();
+        flush();
 
         expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5} as any);
 
@@ -564,10 +564,10 @@ describe('Material Popover Edit', () => {
         component.beginColumnResizeWithMouse(0);
 
         component.updateResizeWithMouseInProgress(5);
-        flushMicrotasks();
+        flush();
 
         dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flushMicrotasks();
+        flush();
 
         component.endHoverState();
         fixture.detectChanges();
@@ -580,7 +580,7 @@ describe('Material Popover Edit', () => {
         (expect(component.getColumnWidth(1)) as any).not.isApproximately(173);
 
         component.columnResize.columnResizeNotifier.resize('name', 173);
-        flushMicrotasks();
+        flush();
 
         (expect(component.getColumnWidth(1)) as any).isApproximately(173);
       }));

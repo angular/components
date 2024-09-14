@@ -42,10 +42,12 @@ jobs:
         run: yarn tslint
       - name: Check for circular dependencies
         run: yarn -s ts-circular-deps:check
-      - name: Check commit message
-        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
       - name: Check code format
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+      # Commit message check is last intentionally, because the caretaker can fix it
+      # during merge, while other lint failures have to be resolved by the PR author.
+      - name: Check commit message
+        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
 
   api_golden_checks:
     runs-on: ubuntu-latest
@@ -147,7 +149,7 @@ jobs:
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
 
   build:
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest-16core
     steps:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d

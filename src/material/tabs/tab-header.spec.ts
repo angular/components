@@ -18,6 +18,7 @@ import {
   TestBed,
   discardPeriodicTasks,
   fakeAsync,
+  flush,
   flushMicrotasks,
   tick,
   waitForAsync,
@@ -28,7 +29,7 @@ import {Subject} from 'rxjs';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 
-describe('MDC-based MatTabHeader', () => {
+describe('MatTabHeader', () => {
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
   let resizeEvents: Subject<ResizeObserverEntry[]>;
@@ -47,8 +48,6 @@ describe('MDC-based MatTabHeader', () => {
       ],
       providers: [ViewportRuler],
     });
-
-    TestBed.compileComponents();
 
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
@@ -572,6 +571,7 @@ describe('MDC-based MatTabHeader', () => {
           .toBeGreaterThan(previousDistance);
 
         dispatchFakeEvent(nextButton, endEventName);
+        flush();
       }
 
       /**
@@ -610,6 +610,7 @@ describe('MDC-based MatTabHeader', () => {
           .toBeLessThan(currentScroll);
 
         dispatchFakeEvent(nextButton, endEventName);
+        flush();
       }
     });
 

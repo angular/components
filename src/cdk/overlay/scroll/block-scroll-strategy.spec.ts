@@ -21,7 +21,7 @@ describe('BlockScrollStrategy', () => {
 
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, FocacciaMsg],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(inject(

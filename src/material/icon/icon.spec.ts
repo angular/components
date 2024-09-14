@@ -48,8 +48,6 @@ function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
     providers: [...providers],
   });
 
-  TestBed.compileComponents();
-
   return TestBed.createComponent<T>(component);
 }
 
@@ -88,8 +86,6 @@ describe('MatIcon', () => {
         },
       ],
     });
-
-    TestBed.compileComponents();
 
     iconRegistry = TestBed.inject(MatIconRegistry);
     http = TestBed.inject(HttpTestingController);
@@ -1378,8 +1374,6 @@ describe('MatIcon without HttpClientModule', () => {
       imports: [MatIconModule],
       declarations: [IconFromSvgName],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(inject([MatIconRegistry, DomSanitizer], (mir: MatIconRegistry, ds: DomSanitizer) => {

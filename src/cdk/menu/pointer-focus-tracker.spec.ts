@@ -1,4 +1,4 @@
-import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit} from '@angular/core';
+import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit, inject} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
 import {Observable} from 'rxjs';
@@ -20,7 +20,7 @@ describe('FocusMouseManger', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MultiElementWithConditionalComponent, MockWrapper],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -102,7 +102,7 @@ describe('FocusMouseManger', () => {
   standalone: true,
 })
 class MockWrapper implements FocusableElement {
-  constructor(readonly _elementRef: ElementRef<HTMLElement>) {}
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 }
 
 @Component({

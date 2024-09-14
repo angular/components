@@ -4,36 +4,31 @@
 @use './radio-common';
 
 .mat-mdc-radio-button {
+  -webkit-tap-highlight-color: transparent;
+
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
-  -webkit-tap-highlight-color: transparent;
 
   @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
     .mdc-radio__background::before {
       @include token-utils.create-token-slot(background-color, ripple-color);
     }
-  }
 
-  &.mat-mdc-radio-checked {
-    @include token-utils.use-tokens(
-      tokens-mat-radio.$prefix,
-      tokens-mat-radio.get-token-slots()
-    ) {
+    &.mat-mdc-radio-checked {
+      .mat-ripple-element,
       .mdc-radio__background::before {
         @include token-utils.create-token-slot(background-color, checked-ripple-color);
       }
+    }
 
-      .mat-ripple-element {
-        @include token-utils.create-token-slot(background-color, checked-ripple-color);
+    &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
+      .mat-ripple-element,
+      .mdc-radio__background::before {
+        @include token-utils.create-token-slot(background-color, ripple-color);
       }
     }
-  }
 
-  .mat-internal-form-field {
-    @include token-utils.use-tokens(
-      tokens-mat-radio.$prefix,
-      tokens-mat-radio.get-token-slots()
-    ) {
+    .mat-internal-form-field {
       @include token-utils.create-token-slot(color, label-text-color);
       @include token-utils.create-token-slot(font-family, label-text-font);
       @include token-utils.create-token-slot(line-height, label-text-line-height);
@@ -41,14 +36,8 @@
       @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
       @include token-utils.create-token-slot(font-weight, label-text-weight);
     }
-  }
 
-  // MDC should set the disabled color on the label, but doesn't, so we do it here instead.
-  .mdc-radio--disabled + label {
-    @include token-utils.use-tokens(
-      tokens-mat-radio.$prefix,
-      tokens-mat-radio.get-token-slots()
-    ) {
+    .mdc-radio--disabled + label {
       @include token-utils.create-token-slot(color, disabled-label-color);
     }
   }
@@ -79,8 +68,17 @@
 
   // For radios render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
-  &.cdk-focused .mat-mdc-focus-indicator::before {
+  &.cdk-focused .mat-focus-indicator::before {
     content: '';
+  }
+}
+
+.mat-mdc-radio-disabled {
+  cursor: default;
+  pointer-events: none;
+
+  &.mat-mdc-radio-disabled-interactive {
+    pointer-events: auto;
   }
 }
 
@@ -93,13 +91,13 @@
   width: 48px;
   transform: translate(-50%, -50%);
 
+  @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
+    @include token-utils.create-token-slot(display, touch-target-display);
+  }
+
   [dir='rtl'] & {
     left: auto;
     right: 50%;
     transform: translate(50%, -50%);
-  }
-
-  @include token-utils.use-tokens(tokens-mat-radio.$prefix, tokens-mat-radio.get-token-slots()) {
-    @include token-utils.create-token-slot(display, touch-target-display);
   }
 }

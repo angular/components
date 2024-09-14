@@ -18,7 +18,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [SimpleContextMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -152,7 +152,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [NestedContextMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -267,7 +267,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [ContextMenuWithSubmenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -298,7 +298,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [ContextMenuWithMenuBarAndInlineMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -402,7 +402,7 @@ describe('CdkContextMenuTrigger', () => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule],
         declarations: [componentClass],
-      }).compileComponents();
+      });
 
       const fixture = TestBed.createComponent(componentClass);
       fixture.detectChanges();
@@ -428,7 +428,7 @@ describe('CdkContextMenuTrigger', () => {
     TestBed.configureTestingModule({
       imports: [CdkMenuModule],
       declarations: [ContextTriggerWithData],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent(ContextTriggerWithData);
     fixture.componentInstance.menuData = {message: 'Hello!'};

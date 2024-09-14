@@ -23,7 +23,7 @@ describe('AutofillMonitor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TextFieldModule, Inputs],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
@@ -175,7 +175,7 @@ describe('cdkAutofill', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TextFieldModule, InputWithCdkAutofilled],
-    }).compileComponents();
+    });
   });
 
   beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, model} from '@angular/core';
+import {ChangeDetectionStrategy, Component, model, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {
@@ -24,9 +24,9 @@ export interface DialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerDialogExample {
-  selectedDate = model<Date | null>(null);
+  dialog = inject(MatDialog);
 
-  constructor(public dialog: MatDialog) {}
+  selectedDate = model<Date | null>(null);
 
   openDialog() {
     const dialogRef = this.dialog.open(DatepickerDialogExampleDialog, {
@@ -58,12 +58,16 @@ export class DatepickerDialogExample {
   ],
 })
 export class DatepickerDialogExampleDialog {
+  dialogRef = inject<MatDialogRef<DatepickerDialogExampleDialog>>(
+    MatDialogRef<DatepickerDialogExampleDialog>,
+  );
+  data = inject(MAT_DIALOG_DATA);
+
   readonly date = new FormControl(new Date());
 
-  constructor(
-    public dialogRef: MatDialogRef<DatepickerDialogExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.date.setValue(data.selectedDate);
   }
 }

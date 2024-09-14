@@ -377,7 +377,7 @@ export class DragRef<T = any> {
     private _document: Document,
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry,
   ) {
     this.withRootElement(element).withParent(_config.parentDragRef || null);
     this._parentPositions = new ParentPositionTracker(_document);
@@ -829,7 +829,10 @@ export class DragRef<T = any> {
       const parent = element.parentNode as HTMLElement;
       const placeholder = (this._placeholder = this._createPlaceholderElement());
       const anchor = (this._anchor =
-        this._anchor || this._document.createComment(ngDevMode ? 'cdk-drag-anchor' : ''));
+        this._anchor ||
+        this._document.createComment(
+          typeof ngDevMode === 'undefined' || ngDevMode ? 'cdk-drag-anchor' : '',
+        ));
 
       // Insert an anchor node so that we can restore the element's position in the DOM.
       parent.insertBefore(anchor, element);

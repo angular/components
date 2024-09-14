@@ -32,7 +32,7 @@ interface Point {
   y: number;
 }
 
-describe('MDC-based MatSlider', () => {
+describe('MatSlider', () => {
   let platform: Platform;
 
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
@@ -40,7 +40,7 @@ describe('MDC-based MatSlider', () => {
       imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
       providers: [...providers],
       declarations: [component],
-    }).compileComponents();
+    });
     platform = TestBed.inject(Platform);
     return TestBed.createComponent<T>(component);
   }
@@ -1319,11 +1319,11 @@ describe('MDC-based MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 7, translateX: 21});
     });
 
-    it('should update the disabled state when control is disabled', fakeAsync(() => {
+    it('should update the disabled state when control is disabled', () => {
       expect(slider.disabled).toBe(false);
       fixture.componentInstance.control.disable();
       expect(slider.disabled).toBe(true);
-    }));
+    });
 
     it('should update the disabled state when the control is enabled', () => {
       slider.disabled = true;

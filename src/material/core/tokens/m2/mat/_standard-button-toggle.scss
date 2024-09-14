@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../../token-utils';
+@use '../../token-definition';
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
@@ -24,7 +24,7 @@ $prefix: (mat, standard-button-toggle);
 
   // By default the theme usually has an rgba color for the dividers, which can
   // stack up with the background of a button toggle. This can cause the border
-  // of a selected toggle to look different from an deselected one. We use a solid
+  // of a selected toggle to look different from an unselected one. We use a solid
   // color to ensure that the border always stays the same.
   $divider-color: if(
       meta.type-of($theme-divider-color) == color,
@@ -81,8 +81,8 @@ $prefix: (mat, standard-button-toggle);
 @function get-token-slots() {
   @return sass-utils.deep-merge-all(
       get-unthemable-tokens(),
-      get-color-tokens(token-utils.$placeholder-color-config),
-      get-typography-tokens(token-utils.$placeholder-typography-config),
-      get-density-tokens(token-utils.$placeholder-density-config)
+      get-color-tokens(token-definition.$placeholder-color-config),
+      get-typography-tokens(token-definition.$placeholder-typography-config),
+      get-density-tokens(token-definition.$placeholder-density-config)
   );
 }

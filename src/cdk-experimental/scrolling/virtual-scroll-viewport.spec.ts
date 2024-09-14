@@ -12,7 +12,7 @@ describe('CdkVirtualScrollViewport', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [ScrollingModule, ExperimentalScrollingModule, AutoSizeVirtualScroll],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {

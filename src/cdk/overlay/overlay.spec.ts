@@ -10,6 +10,7 @@ import {
   Type,
   ViewChild,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -59,7 +60,7 @@ describe('Overlay', () => {
           useClass: SpyLocation,
         },
       ],
-    }).compileComponents();
+    });
 
     overlay = TestBed.inject(Overlay);
     overlayContainer = TestBed.inject(OverlayContainer);
@@ -352,9 +353,7 @@ describe('Overlay', () => {
     /** Dummy provider that depends on `Overlay`. */
     @Injectable()
     class CustomErrorHandler extends ErrorHandler {
-      constructor(private _overlay: Overlay) {
-        super();
-      }
+      private _overlay = inject(Overlay);
 
       override handleError(error: any) {
         const overlayRef = this._overlay.create({hasBackdrop: !!error});
@@ -528,6 +527,7 @@ describe('Overlay', () => {
       tick();
 
       overlayRef.attach(componentPortal);
+      tick();
 
       expect(overlayPresentInDom)
         .withContext('Expected host element to be attached to the DOM.')
@@ -1112,9 +1112,9 @@ class PizzaMsg {}
   imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  viewContainerRef = inject(ViewContainerRef);
 
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  @ViewChild(CdkPortal) templatePortal: CdkPortal;
 }
 
 class FakePositionStrategy implements PositionStrategy {

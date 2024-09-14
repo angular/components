@@ -40,7 +40,7 @@ export function updateNamedImport(
   for (let i = 0; i < node.elements.length; i++) {
     const n = node.elements[i];
     const name = n.propertyName ? n.propertyName : n.name;
-    if (name.escapedText === opts.oldExport) {
+    if (name.text === opts.oldExport) {
       return {
         offset: name.pos,
         updateFn: (text: string) => {

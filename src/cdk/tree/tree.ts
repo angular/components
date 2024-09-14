@@ -125,6 +125,11 @@ export class CdkTree<T, K = T>
     OnDestroy,
     OnInit
 {
+  private _differs = inject(IterableDiffers);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
+  private _dir = inject(Directionality);
+
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
@@ -262,11 +267,8 @@ export class CdkTree<T, K = T>
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
-  constructor(
-    private _differs: IterableDiffers,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _dir: Directionality,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     this._initializeKeyManager();
@@ -1147,6 +1149,8 @@ export class CdkTree<T, K = T>
   standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _tree = inject<CdkTree<T, K>>(CdkTree);
   protected _tabindex: number | null = -1;
 
   /**
@@ -1176,6 +1180,16 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
   set isExpandable(isExpandable: boolean) {
     this._inputIsExpandable = isExpandable;
+    if ((this.data && !this._isExpandable) || !this._inputIsExpandable) {
+      return;
+    }
+    // If the node is being set to expandable, ensure that the status of the
+    // node is propagated
+    if (this._inputIsExpanded) {
+      this.expand();
+    } else if (this._inputIsExpanded === false) {
+      this.collapse();
+    }
   }
 
   @Input()
@@ -1183,6 +1197,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     return this._tree.isExpanded(this._data);
   }
   set isExpanded(isExpanded: boolean) {
+    this._inputIsExpanded = isExpanded;
     if (isExpanded) {
       this.expand();
     } else {
@@ -1227,6 +1242,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   readonly _dataChanges = new Subject<void>();
 
   private _inputIsExpandable: boolean = false;
+  private _inputIsExpanded: boolean | undefined = undefined;
   /**
    * Flag used to determine whether or not we should be focusing the actual element based on
    * some user interaction (click or focus). On click, we don't forcibly focus the element
@@ -1321,10 +1337,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    protected _elementRef: ElementRef<HTMLElement>,
-    protected _tree: CdkTree<T, K>,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
   }
 
@@ -1400,6 +1415,12 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     if (this.isExpandable) {
       this._tree.expand(this._data);
     }
+  }
+
+  /** Makes the node focusable. Implemented for TreeKeyManagerItem. */
+  makeFocusable(): void {
+    this._tabindex = 0;
+    this._changeDetectorRef.markForCheck();
   }
 
   _focusItem() {

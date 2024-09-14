@@ -28,7 +28,6 @@ $_standard-tokens: (
 
 .mat-button-toggle-standalone,
 .mat-button-toggle-group {
-  @include elevation.overridable-elevation(2);
   position: relative;
   display: inline-flex;
   flex-direction: row;
@@ -43,7 +42,9 @@ $_standard-tokens: (
     @include token-utils.create-token-slot(border-radius, shape);
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include elevation.overridable-elevation(2);
+
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 }
@@ -52,12 +53,11 @@ $_standard-tokens: (
 .mat-button-toggle-group-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
     @include token-utils.create-token-slot(border-radius, shape);
-    border: solid 1px var(#{token-utils.get-token-variable(divider-color)});
+    border: solid 1px token-utils.get-token-variable(divider-color);
 
     .mat-pseudo-checkbox {
-      --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(
-        #{token-utils.get-token-variable(selected-state-text-color)}
-      );
+      --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+          token-utils.get-token-variable(selected-state-text-color)};
     }
   }
 
@@ -65,7 +65,7 @@ $_standard-tokens: (
     box-shadow: none;
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: 0;
   }
 }
@@ -92,9 +92,8 @@ $_standard-tokens: (
     @include token-utils.create-token-slot(font-weight, label-text-weight);
     @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
 
-    --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(
-      #{token-utils.get-token-variable(selected-state-text-color)}
-    );
+    --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+        token-utils.get-token-variable(selected-state-text-color)};
 
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
@@ -123,12 +122,13 @@ $_standard-tokens: (
 }
 
 .mat-button-toggle-disabled {
+  pointer-events: none;
+
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(color, disabled-state-text-color);
     @include token-utils.create-token-slot(background-color, disabled-state-background-color);
-    --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: var(
-      #{token-utils.get-token-variable(disabled-state-text-color)}
-    );
+    --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
+        token-utils.get-token-variable(disabled-state-text-color)};
 
     &.mat-button-toggle-checked {
       @include token-utils.create-token-slot(background-color,
@@ -137,9 +137,13 @@ $_standard-tokens: (
   }
 }
 
+.mat-button-toggle-disabled-interactive {
+  pointer-events: auto;
+}
+
 .mat-button-toggle-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
-    $divider-color: var(#{token-utils.get-token-variable(divider-color)});
+    $divider-color: token-utils.get-token-variable(divider-color);
     @include token-utils.create-token-slot(color, text-color);
     @include token-utils.create-token-slot(background-color, background-color);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -173,9 +177,8 @@ $_standard-tokens: (
       @include token-utils.create-token-slot(background-color, disabled-state-background-color);
 
       .mat-pseudo-checkbox {
-        --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: var(
-          #{token-utils.get-token-variable(disabled-selected-state-text-color)}
-        );
+        --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
+            token-utils.get-token-variable(disabled-selected-state-text-color)};
       }
 
       &.mat-button-toggle-checked {
@@ -189,16 +192,15 @@ $_standard-tokens: (
       @include token-utils.create-token-slot(background-color, state-layer-color);
     }
 
-    &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+    &:hover .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
     }
 
     // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
     // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be
-    // always treated as programmatic focus. Note that it needs the extra `:not` in order to have
-    // more specificity than the `:hover` above.
+    // always treated as programmatic focus.
     // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
-    &.cdk-keyboard-focused:not(.mat-button-toggle-disabled) .mat-button-toggle-focus-overlay {
+    &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
     }
   }
@@ -208,7 +210,7 @@ $_standard-tokens: (
   // because we still want to preserve the keyboard focus state for hybrid devices that have
   // a keyboard and a touchscreen.
   @media (hover: none) {
-    &:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+    &:hover .mat-button-toggle-focus-overlay {
       display: none;
     }
   }
@@ -253,7 +255,7 @@ $_standard-tokens: (
   }
 }
 
-@include cdk.high-contrast(active, off) {
+@include cdk.high-contrast {
   // Changing the background color for the selected item won't be visible in high contrast mode.
   // We fall back to using the overlay to draw a brighter, semi-transparent tint on top instead.
   // It uses a border, because the browser will render it using a brighter color.

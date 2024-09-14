@@ -28,7 +28,7 @@ describe('Menu', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, MenuCheckboxGroup],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(MenuCheckboxGroup);
       fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('Menu', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [CdkMenuModule, InlineMenu],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -138,7 +138,7 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenus],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {
@@ -329,7 +329,7 @@ describe('Menu', () => {
       beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
           imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
-        }).compileComponents();
+        });
       }));
 
       beforeEach(() => {

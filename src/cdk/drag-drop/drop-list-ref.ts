@@ -49,13 +49,6 @@ enum AutoScrollHorizontalDirection {
   RIGHT,
 }
 
-type RootNode = DocumentOrShadowRoot & {
-  // As of TS 4.4 the built in DOM typings don't include `elementFromPoint` on `ShadowRoot`,
-  // even though it exists (see https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
-  // This type is a utility to avoid having to add casts everywhere.
-  elementFromPoint(x: number, y: number): Element | null;
-};
-
 /**
  * Reference to a drop list. Used to manipulate or dispose of the container.
  */
@@ -181,7 +174,7 @@ export class DropListRef<T = any> {
   private readonly _stopScrollTimers = new Subject<void>();
 
   /** Shadow root of the current element. Necessary for `elementFromPoint` to resolve correctly. */
-  private _cachedShadowRoot: RootNode | null = null;
+  private _cachedShadowRoot: DocumentOrShadowRoot | null = null;
 
   /** Reference to the document. */
   private _document: Document;
@@ -197,7 +190,7 @@ export class DropListRef<T = any> {
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry,
     _document: any,
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
@@ -760,10 +753,10 @@ export class DropListRef<T = any> {
    * in order to ensure that the element has been moved into the shadow DOM. Doing it inside the
    * constructor might be too early if the element is inside of something like `ngFor` or `ngIf`.
    */
-  private _getShadowRoot(): RootNode {
+  private _getShadowRoot(): DocumentOrShadowRoot {
     if (!this._cachedShadowRoot) {
       const shadowRoot = _getShadowRoot(this._container);
-      this._cachedShadowRoot = (shadowRoot || this._document) as RootNode;
+      this._cachedShadowRoot = shadowRoot || this._document;
     }
 
     return this._cachedShadowRoot;

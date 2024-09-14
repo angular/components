@@ -213,6 +213,19 @@
     </mat-selection-list>
 
     <p>Selected: {{favoriteOptions | json}}</p>
+
+    <h4>Single Selection List with Reactive Forms</h4>
+
+    <form [formGroup]="form">
+      <mat-selection-list #shoesList [formControl]="shoesControl" name="shoes" [multiple]="false">
+        @for (shoe of shoes; track shoe) {
+          <mat-list-option [value]="shoe.value">{{shoe.name}}</mat-list-option>
+        }
+      </mat-selection-list>
+      <p>
+         Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
+      </p>
+    </form>
   </div>
 
   <div>

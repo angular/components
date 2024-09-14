@@ -11,14 +11,17 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  inject,
   Injectable,
   NgZone,
   OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {coerceElement} from '@angular/cdk/coercion';
 import {EMPTY, Observable, Subject} from 'rxjs';
+import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** An event that is emitted when the autofill state of an input changes. */
 export type AutofillEvent = {
@@ -44,12 +47,14 @@ const listenerOptions = normalizePassiveListenerOptions({passive: true});
  */
 @Injectable({providedIn: 'root'})
 export class AutofillMonitor implements OnDestroy {
+  private _platform = inject(Platform);
+  private _ngZone = inject(NgZone);
+
+  private _styleLoader = inject(_CdkPrivateStyleLoader);
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
-  constructor(
-    private _platform: Platform,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Monitor for changes in the autofill state of the given input element.
@@ -69,6 +74,8 @@ export class AutofillMonitor implements OnDestroy {
     if (!this._platform.isBrowser) {
       return EMPTY;
     }
+
+    this._styleLoader.load(_CdkTextFieldStyleLoader);
 
     const element = coerceElement(elementOrRef);
     const info = this._monitoredElements.get(element);
@@ -149,13 +156,14 @@ export class AutofillMonitor implements OnDestroy {
   standalone: true,
 })
 export class CdkAutofill implements OnDestroy, OnInit {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _autofillMonitor = inject(AutofillMonitor);
+
   /** Emits when the autofill state of the element changes. */
   @Output() readonly cdkAutofill = new EventEmitter<AutofillEvent>();
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _autofillMonitor: AutofillMonitor,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     this._autofillMonitor

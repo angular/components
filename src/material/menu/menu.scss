@@ -65,7 +65,7 @@ mat-menu {
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
 
@@ -75,9 +75,9 @@ mat-menu {
       tokens-mat-menu.$prefix,
       tokens-mat-menu.get-token-slots()
     ) {
-      color: var(#{token-utils.get-token-variable(divider-color)});
-      margin-bottom: var(#{token-utils.get-token-variable(divider-bottom-spacing)});
-      margin-top: var(#{token-utils.get-token-variable(divider-top-spacing)});
+      color: token-utils.get-token-variable(divider-color);
+      margin-bottom: token-utils.get-token-variable(divider-bottom-spacing);
+      margin-top: token-utils.get-token-variable(divider-top-spacing);
     }
   }
 }
@@ -90,37 +90,8 @@ mat-menu {
   overflow: hidden;
   padding: 0;
 
-  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
-    $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
-    $leading-padding: var(#{token-utils.get-token-variable(item-leading-spacing)});
-    $trailing-padding: var(#{token-utils.get-token-variable(item-trailing-spacing)});
-    $with-icon-leading-padding:
-      var(#{token-utils.get-token-variable(item-with-icon-leading-spacing)});
-    $with-icon-trailing-padding:
-      var(#{token-utils.get-token-variable(item-with-icon-trailing-spacing)});
-
-    padding-left: $leading-padding;
-    padding-right: $trailing-padding;
-
-    [dir='rtl'] & {
-      padding-right: $leading-padding;
-      padding-left: $trailing-padding;
-    }
-
-    &:has(#{$icons-selector}) {
-      padding-left: $with-icon-leading-padding;
-      padding-right: $with-icon-trailing-padding;
-    }
-
-    [dir='rtl'] &:has(#{$icons-selector}) {
-      padding-right: $with-icon-leading-padding;
-      padding-left: $with-icon-trailing-padding;
-    }
-  }
-
   // MDC's menu items are `<li>` nodes which don't need resets, however ours
   // can be anything, including buttons, so we need to do the reset ourselves.
-  @include button-common.reset;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -131,6 +102,32 @@ mat-menu {
   text-decoration: none;
   margin: 0; // Resolves an issue where buttons have an extra 2px margin on Safari.
   min-height: 48px;
+
+  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+    @include token-utils.create-token-slot(padding-left, item-leading-spacing);
+    @include token-utils.create-token-slot(padding-right, item-trailing-spacing);
+  }
+
+  @include button-common.reset;
+
+  @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+    $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
+
+    [dir='rtl'] & {
+      @include token-utils.create-token-slot(padding-left, item-trailing-spacing);
+      @include token-utils.create-token-slot(padding-right, item-leading-spacing);
+    }
+
+    &:has(#{$icons-selector}) {
+      @include token-utils.create-token-slot(padding-left, item-with-icon-leading-spacing);
+      @include token-utils.create-token-slot(padding-right, item-with-icon-trailing-spacing);
+    }
+
+    [dir='rtl'] &:has(#{$icons-selector}) {
+      @include token-utils.create-token-slot(padding-left, item-with-icon-trailing-spacing);
+      @include token-utils.create-token-slot(padding-right, item-with-icon-leading-spacing);
+    }
+  }
 
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     // The class selector isn't specific enough to overide the link pseudo selectors so we need
@@ -173,9 +170,9 @@ mat-menu {
   .mat-icon {
     flex-shrink: 0;
     @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
-      margin-right: var(#{token-utils.get-token-variable(item-spacing)});
-      height: var(#{token-utils.get-token-variable(item-icon-size)});
-      width: var(#{token-utils.get-token-variable(item-icon-size)});
+      margin-right: token-utils.get-token-variable(item-spacing);
+      height: token-utils.get-token-variable(item-icon-size);
+      width: token-utils.get-token-variable(item-icon-size);
     }
   }
 
@@ -185,7 +182,7 @@ mat-menu {
     .mat-icon {
       margin-right: 0;
       @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
-        margin-left: var(#{token-utils.get-token-variable(item-spacing)});
+        margin-left: token-utils.get-token-variable(item-spacing);
       }
     }
   }
@@ -204,7 +201,7 @@ mat-menu {
     }
   }
 
-  @include cdk.high-contrast(active, off) {
+  @include cdk.high-contrast {
     $outline-width: 1px;
 
     // We need to move the item 1px down, because Firefox seems to have
@@ -216,8 +213,8 @@ mat-menu {
 .mat-mdc-menu-submenu-icon {
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     @include menu-common.item-submenu-icon(
-      var(#{token-utils.get-token-variable(item-spacing)}),
-      var(#{token-utils.get-token-variable(item-icon-size)})
+      token-utils.get-token-variable(item-spacing),
+      token-utils.get-token-variable(item-icon-size)
     );
   }
 }

@@ -16,10 +16,10 @@ describe('MatSnackBarHarness', () => {
   let fixture: ComponentFixture<SnackbarHarnessTest>;
   let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SnackbarHarnessTest);
     fixture.detectChanges();

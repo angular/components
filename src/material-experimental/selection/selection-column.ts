@@ -19,11 +19,10 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   ViewChild,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  Inject,
+  inject,
 } from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 
@@ -43,7 +42,7 @@ import {MatSelectAll} from './select-all';
   template: `
     <ng-container matColumnDef>
       <th mat-header-cell *matHeaderCellDef class="mat-selection-column-header">
-        @if (selection.multiple) {
+        @if (selection && selection.multiple) {
           <mat-checkbox
               matSelectAll
               #allToggler="matSelectAll"
@@ -75,6 +74,9 @@ import {MatSelectAll} from './select-all';
   ],
 })
 export class MatSelectionColumn<T> implements OnInit, OnDestroy {
+  private _table = inject<MatTable<T>>(MatTable, {optional: true});
+  readonly selection = inject<MatSelection<T>>(MatSelection, {optional: true});
+
   /** Column name that should be used to reference this column. */
   @Input()
   get name(): string {
@@ -91,11 +93,6 @@ export class MatSelectionColumn<T> implements OnInit, OnDestroy {
   @ViewChild(MatCellDef, {static: true}) private readonly _cell: MatCellDef;
   @ViewChild(MatHeaderCellDef, {static: true})
   private readonly _headerCell: MatHeaderCellDef;
-
-  constructor(
-    @Optional() @Inject(MatTable) private _table: MatTable<T>,
-    @Optional() @Inject(MatSelection) readonly selection: MatSelection<T>,
-  ) {}
 
   ngOnInit() {
     if (!this.selection && (typeof ngDevMode === 'undefined' || ngDevMode)) {

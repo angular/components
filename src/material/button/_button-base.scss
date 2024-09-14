@@ -48,11 +48,11 @@
   }
 
   // The focus indicator should match the bounds of the entire button.
-  .mat-mdc-focus-indicator {
+  .mat-focus-indicator {
     @include layout-common.fill();
   }
 
-  &:focus .mat-mdc-focus-indicator::before {
+  &:focus .mat-focus-indicator::before {
     content: '';
   }
 }
@@ -112,7 +112,7 @@
 // Adds an elevation shadow to a button.
 @mixin mat-private-button-elevation($token-name) {
   // MDC outputs a variable that is the same as the token name, but suffixed with `-shadow`.
-  box-shadow: var(#{token-utils.get-token-variable($token-name) + '-shadow'});
+  box-shadow: token-utils.get-token-variable($token-name + '-shadow');
 }
 
 @mixin mat-private-button-touch-target($is-square, $prefix, $slots) {
@@ -139,14 +139,12 @@
 
 @mixin mat-private-button-horizontal-layout($prefix, $slots, $has-with-icon-padding) {
   @include token-utils.use-tokens($prefix, $slots) {
-    $icon-spacing: token-utils.get-token-variable-reference(icon-spacing, true);
-    $icon-offset: token-utils.get-token-variable-reference(icon-offset, true);
-    $horizontal-padding: token-utils.get-token-variable-reference(horizontal-padding, true);
-    padding: 0 $horizontal-padding;
+    $icon-spacing: token-utils.get-token-variable(icon-spacing, true);
+    $icon-offset: token-utils.get-token-variable(icon-offset, true);
 
     @if ($has-with-icon-padding) {
       $with-icon-horizontal-padding:
-        token-utils.get-token-variable-reference(with-icon-horizontal-padding, true);
+        token-utils.get-token-variable(with-icon-horizontal-padding, true);
 
       // stylelint-disable-next-line selector-class-pattern
       &:has(.material-icons, mat-icon, [matButtonIcon]) {

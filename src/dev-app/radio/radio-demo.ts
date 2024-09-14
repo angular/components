@@ -6,25 +6,34 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'radio-demo',
   templateUrl: 'radio-demo.html',
   styleUrl: 'radio-demo.css',
   standalone: true,
-  imports: [CommonModule, MatRadioModule, FormsModule, MatButtonModule, MatCheckboxModule],
+  imports: [
+    CommonModule,
+    MatRadioModule,
+    FormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatTooltip,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioDemo {
-  isAlignEnd: boolean = false;
-  isDisabled: boolean = false;
-  isRequired: boolean = false;
-  favoriteSeason: string = 'Autumn';
+  isAlignEnd = false;
+  isDisabled = false;
+  isRequired = false;
+  disabledInteractive = true;
+  favoriteSeason = 'Autumn';
   seasonOptions = ['Winter', 'Spring', 'Summer', 'Autumn'];
 }

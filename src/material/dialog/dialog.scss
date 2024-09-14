@@ -106,6 +106,16 @@ $_emit-fallbacks: true;
   min-width: inherit;
   max-width: inherit;
 
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow,
+      $_emit-fallbacks);
+  }
+
+  @include _use-mdc-tokens {
+    @include token-utils.create-token-slot(border-radius, container-shape, $_emit-fallbacks);
+    @include token-utils.create-token-slot(background-color, container-color, $_emit-fallbacks);
+  }
+
   [dir='rtl'] & {
     text-align: right;
   }
@@ -132,16 +142,6 @@ $_emit-fallbacks: true;
     content: '';
     pointer-events: none;
   }
-
-  @include _use-mat-tokens {
-    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow,
-      $_emit-fallbacks);
-  }
-
-  @include _use-mdc-tokens {
-    @include token-utils.create-token-slot(border-radius, container-shape, $_emit-fallbacks);
-    @include token-utils.create-token-slot(background-color, container-color, $_emit-fallbacks);
-  }
 }
 
 .mat-mdc-dialog-title {
@@ -150,6 +150,10 @@ $_emit-fallbacks: true;
   flex-shrink: 0;
   box-sizing: border-box;
   margin: 0 0 1px;
+
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(padding, headline-padding, $_emit-fallbacks);
+  }
 
   // This was used by MDC to set the text baseline. We should figure out a way to
   // remove it, because it can introduce unnecessary whitespace at the beginning
@@ -166,15 +170,12 @@ $_emit-fallbacks: true;
     text-align: right;
   }
 
-  @include _use-mat-tokens {
-    @include token-utils.create-token-slot(padding, headline-padding, $_emit-fallbacks);
-  }
-
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
       @include token-utils.create-token-slot(color, subhead-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, subhead-font, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, subhead-font,
+        if($_emit-fallbacks, inherit, null));
       @include token-utils.create-token-slot(line-height, subhead-line-height, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-size, subhead-size, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-weight, subhead-weight, $_emit-fallbacks);
@@ -203,7 +204,8 @@ $_emit-fallbacks: true;
   .mat-mdc-dialog-container & {
     @include _use-mdc-tokens {
       @include token-utils.create-token-slot(color, supporting-text-color, $_emit-fallbacks);
-      @include token-utils.create-token-slot(font-family, supporting-text-font, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, supporting-text-font,
+        if($_emit-fallbacks, inherit, null));
       @include token-utils.create-token-slot(line-height, supporting-text-line-height,
         $_emit-fallbacks);
       @include token-utils.create-token-slot(font-size, supporting-text-size, $_emit-fallbacks);
@@ -245,15 +247,15 @@ $_emit-fallbacks: true;
   padding: 8px;
   border-top: 1px solid transparent;
 
-  @include cdk.high-contrast(active, off) {
-    border-top-color: CanvasText;
-  }
-
   // For backwards compatibility, actions align at start by default. MDC usually
   // aligns actions at the end of the container.
   @include _use-mat-tokens {
     @include token-utils.create-token-slot(padding, actions-padding, $_emit-fallbacks);
     @include token-utils.create-token-slot(justify-content, actions-alignment, $_emit-fallbacks);
+  }
+
+  @include cdk.high-contrast {
+    border-top-color: CanvasText;
   }
 
   // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"

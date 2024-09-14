@@ -4,13 +4,11 @@ import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
-describe('MDC-based MatChipSet', () => {
+describe('MatChipSet', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule, CommonModule, BasicChipSet, IndirectDescendantsChipSet],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('BasicChipSet', () => {

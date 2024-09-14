@@ -63,7 +63,7 @@ describe('CdkTree', () => {
         },
       ],
       declarations: declarations,
-    }).compileComponents();
+    });
   }
 
   describe('onDestroy', () => {
@@ -1448,6 +1448,17 @@ describe('CdkTree', () => {
       });
     });
   });
+
+  it('sets a node as expanded if attribute is ordered before `isExpandable`', () => {
+    configureCdkTreeTestingModule([IsExpandableOrderingTest]);
+    const fixture = TestBed.createComponent(IsExpandableOrderingTest);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    expect(getExpandedNodes(component.dataSource, component.tree).length)
+      .withContext(`expect an expanded node`)
+      .toBe(1);
+  });
 });
 
 export class TestData {
@@ -1554,7 +1565,7 @@ function getNodes(treeElement: Element): HTMLElement[] {
   return Array.from(treeElement.querySelectorAll('.cdk-tree-node'));
 }
 
-function getExpandedNodes(nodes: TestData[] | undefined, tree: CdkTree<TestData>): TestData[] {
+function getExpandedNodes<T>(nodes: T[] | undefined, tree: CdkTree<T>): T[] {
   return nodes?.filter(node => tree.isExpanded(node)) ?? [];
 }
 
@@ -2099,4 +2110,32 @@ class FlatTreeWithThreeNodes {
 
   @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
   @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+      <cdk-tree-node
+          *cdkTreeNodeDef="let node"
+          [isExpanded]="true"
+          [isExpandable]="true">
+        {{node.name}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+})
+class IsExpandableOrderingTest {
+  getChildren = (node: MinimalTestData) => node.children;
+
+  @ViewChild(CdkTree) tree: CdkTree<MinimalTestData>;
+
+  dataSource: MinimalTestData[];
+
+  constructor() {
+    const children = [new MinimalTestData('child')];
+    const data = [new MinimalTestData('parent')];
+    data[0].children = children;
+
+    this.dataSource = data;
+  }
 }

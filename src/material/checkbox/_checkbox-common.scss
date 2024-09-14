@@ -2,6 +2,7 @@
 @use '@angular/cdk';
 @use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
 @use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 $_path-length: 29.7833385;
 $_transition-duration: 90ms;
@@ -31,10 +32,9 @@ $_fallback-size: 40px;
     vertical-align: bottom;
 
     @include token-utils.use-tokens($prefix, $slots) {
-      $layer-size: token-utils.get-token-variable(state-layer-size);
-      padding: calc((var(#{$layer-size}, #{$_fallback-size}) - #{$_icon-size}) / 2);
-      margin: calc((var(#{$layer-size}, #{$_fallback-size}) -
-        var(#{$layer-size}, #{$_fallback-size})) / 2);
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
+      margin: calc((#{$layer-size} - #{$layer-size}) / 2);
 
       @if ($include-state-layer-styles) {
         @include _state-layer-styles;
@@ -51,11 +51,10 @@ $_fallback-size: 40px;
       cursor: inherit;
 
       @include token-utils.use-tokens($prefix, $slots) {
-        $layer-size: token-utils.get-token-variable(state-layer-size);
-        $offset: calc((var(#{$layer-size}, #{$_fallback-size}) -
-          var(#{$layer-size}, #{$_fallback-size})) / 2);
-        width: var(#{$layer-size}, #{$_fallback-size});
-        height: var(#{$layer-size}, #{$_fallback-size});
+        $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+        $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
+        width: $layer-size;
+        height: $layer-size;
         top: $offset;
         right: $offset;
         left: $offset;
@@ -66,6 +65,10 @@ $_fallback-size: 40px;
   .mdc-checkbox--disabled {
     cursor: default;
     pointer-events: none;
+
+    @include cdk.high-contrast {
+      opacity: 0.5;
+    }
   }
 
   .mdc-checkbox__background {
@@ -84,9 +87,12 @@ $_fallback-size: 40px;
     transition: background-color $_transition-duration $_exit-curve,
                 border-color $_transition-duration $_exit-curve;
 
+    // Force browser to show background-color when using the print function
+    @include vendor-prefixes.color-adjust(exact);
+
     @include token-utils.use-tokens($prefix, $slots) {
-      $layer-size: token-utils.get-token-variable(state-layer-size);
-      $offset: calc((var(#{$layer-size}, $_fallback-size) - #{$_icon-size}) / 2);
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
 
       @include token-utils.create-token-slot(border-color, unselected-icon-color);
       top: $offset;
@@ -170,6 +176,10 @@ $_fallback-size: 40px;
       // when unchecked. This makes the animation look better.
       @include token-utils.create-token-slot(color, selected-checkmark-color);
     }
+
+    @include cdk.high-contrast {
+      color: CanvasText;
+    }
   }
 
   @include token-utils.use-tokens($prefix, $slots) {
@@ -177,6 +187,10 @@ $_fallback-size: 40px;
       &, &.mat-mdc-checkbox-disabled-interactive {
         .mdc-checkbox__checkmark {
           @include token-utils.create-token-slot(color, disabled-selected-checkmark-color);
+
+          @include cdk.high-contrast {
+            color: CanvasText;
+          }
         }
       }
     }
@@ -200,14 +214,14 @@ $_fallback-size: 40px;
     transition: opacity $_transition-duration $_exit-curve,
                 transform $_transition-duration $_exit-curve;
 
-    @include cdk.high-contrast(active, off) {
-      margin: 0 1px;
-    }
-
     @include token-utils.use-tokens($prefix, $slots) {
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       @include token-utils.create-token-slot(border-color, selected-checkmark-color);
+    }
+
+    @include cdk.high-contrast {
+      margin: 0 1px;
     }
   }
 

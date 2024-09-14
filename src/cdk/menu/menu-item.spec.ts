@@ -25,7 +25,7 @@ describe('MenuItem', () => {
           // View engine can't figure out the ElementRef to inject so we need to provide a fake
           {provide: ElementRef, useValue: new ElementRef<null>(null)},
         ],
-      }).compileComponents();
+      });
     }));
 
     beforeEach(() => {
@@ -90,7 +90,7 @@ describe('MenuItem', () => {
           {provide: ElementRef, useValue: new ElementRef<null>(null)},
         ],
         declarations: [componentClass],
-      }).compileComponents();
+      });
 
       fixture = TestBed.createComponent(componentClass);
       fixture.detectChanges();

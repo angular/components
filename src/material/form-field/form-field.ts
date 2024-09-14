@@ -37,7 +37,7 @@ import {
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
-import {Subject, merge} from 'rxjs';
+import {Subject, Subscription, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
@@ -194,6 +194,8 @@ export class MatFormField
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
   @ViewChild('textPrefixContainer') _textPrefixContainer: ElementRef<HTMLElement>;
+  @ViewChild('iconSuffixContainer') _iconSuffixContainer: ElementRef<HTMLElement>;
+  @ViewChild('textSuffixContainer') _textSuffixContainer: ElementRef<HTMLElement>;
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel | undefined;
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline | undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple | undefined;
@@ -318,6 +320,9 @@ export class MatFormField
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdate = false;
+  private _previousControl: MatFormFieldControl<unknown> | null = null;
+  private _stateChanges: Subscription | undefined;
+  private _valueChanges: Subscription | undefined;
 
   private _injector = inject(Injector);
 
@@ -365,7 +370,6 @@ export class MatFormField
 
   ngAfterContentInit() {
     this._assertFormFieldControl();
-    this._initializeControl();
     this._initializeSubscript();
     this._initializePrefixAndSuffix();
     this._initializeOutlineLabelOffsetSubscriptions();
@@ -373,9 +377,16 @@ export class MatFormField
 
   ngAfterContentChecked() {
     this._assertFormFieldControl();
+
+    if (this._control !== this._previousControl) {
+      this._initializeControl(this._previousControl);
+      this._previousControl = this._control;
+    }
   }
 
   ngOnDestroy() {
+    this._stateChanges?.unsubscribe();
+    this._valueChanges?.unsubscribe();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -409,25 +420,31 @@ export class MatFormField
   }
 
   /** Initializes the registered form field control. */
-  private _initializeControl() {
+  private _initializeControl(previousControl: MatFormFieldControl<unknown> | null) {
     const control = this._control;
+    const classPrefix = 'mat-mdc-form-field-type-';
+
+    if (previousControl) {
+      this._elementRef.nativeElement.classList.remove(classPrefix + previousControl.controlType);
+    }
 
     if (control.controlType) {
-      this._elementRef.nativeElement.classList.add(
-        `mat-mdc-form-field-type-${control.controlType}`,
-      );
+      this._elementRef.nativeElement.classList.add(classPrefix + control.controlType);
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
-    control.stateChanges.subscribe(() => {
+    this._stateChanges?.unsubscribe();
+    this._stateChanges = control.stateChanges.subscribe(() => {
       this._updateFocusState();
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
 
+    this._valueChanges?.unsubscribe();
+
     // Run change detection if the value changes.
     if (control.ngControl && control.ngControl.valueChanges) {
-      control.ngControl.valueChanges
+      this._valueChanges = control.ngControl.valueChanges
         .pipe(takeUntil(this._destroyed))
         .subscribe(() => this._changeDetectorRef.markForCheck());
     }
@@ -693,8 +710,12 @@ export class MatFormField
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
     const textPrefixContainer = this._textPrefixContainer?.nativeElement;
+    const iconSuffixContainer = this._iconSuffixContainer?.nativeElement;
+    const textSuffixContainer = this._textSuffixContainer?.nativeElement;
     const iconPrefixContainerWidth = iconPrefixContainer?.getBoundingClientRect().width ?? 0;
     const textPrefixContainerWidth = textPrefixContainer?.getBoundingClientRect().width ?? 0;
+    const iconSuffixContainerWidth = iconSuffixContainer?.getBoundingClientRect().width ?? 0;
+    const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
     const negate = this._dir.value === 'rtl' ? '-1' : '1';
@@ -709,6 +730,17 @@ export class MatFormField
         --mat-mdc-form-field-label-transform,
         ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
     )`;
+
+    // Prevent the label from overlapping the suffix when in resting position.
+    const prefixAndSuffixWidth =
+      iconPrefixContainerWidth +
+      textPrefixContainerWidth +
+      iconSuffixContainerWidth +
+      textSuffixContainerWidth;
+    this._elementRef.nativeElement.style.setProperty(
+      '--mat-form-field-notch-max-width',
+      `calc(100% - ${prefixAndSuffixWidth}px)`,
+    );
   }
 
   /** Checks whether the form field is attached to the DOM. */

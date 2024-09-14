@@ -3,9 +3,11 @@
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
 @use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
 
 $_mdc-slots: (tokens-mdc-switch.$prefix, tokens-mdc-switch.get-token-slots());
 $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
+$_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc-switch--disabled';
 
 .mdc-switch {
   align-items: center;
@@ -20,13 +22,17 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   padding: 0;
   position: relative;
 
-  &:disabled {
+  @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.create-token-slot(width, track-width);
+  }
+
+  &.mdc-switch--disabled {
     cursor: default;
     pointer-events: none;
   }
 
-  @include token-utils.use-tokens($_mdc-slots...) {
-    @include token-utils.create-token-slot(width, track-width);
+  &.mat-mdc-slide-toggle-disabled-interactive {
+    pointer-events: auto;
   }
 }
 
@@ -39,7 +45,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     @include token-utils.create-token-slot(height, track-height);
     @include token-utils.create-token-slot(border-radius, track-shape);
 
-    .mdc-switch:disabled & {
+    .mdc-switch--disabled.mdc-switch & {
       @include token-utils.create-token-slot(opacity, disabled-track-opacity);
     }
   }
@@ -54,10 +60,6 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     left: 0;
     position: absolute;
     width: 100%;
-
-    @include cdk.high-contrast(active, off) {
-      border-color: currentColor;
-    }
 
     @include token-utils.use-tokens($_mat-slots...) {
       @include token-utils.create-token-slot(border-width, track-outline-width);
@@ -77,9 +79,17 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     }
   }
 
+  @include cdk.high-contrast {
+    border-color: currentColor;
+  }
+
   &::before {
     transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
     transform: translateX(0);
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, unselected-track-color);
+    }
 
     .mdc-switch--selected & {
       transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
@@ -103,8 +113,6 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     }
 
     @include token-utils.use-tokens($_mdc-slots...) {
-      @include token-utils.create-token-slot(background, unselected-track-color);
-
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, unselected-hover-track-color);
       }
@@ -117,7 +125,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
         @include token-utils.create-token-slot(background, unselected-pressed-track-color);
       }
 
-      .mdc-switch:disabled & {
+      #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+      #{$_interactive-disabled-selector}:focus:not(:active) &,
+      #{$_interactive-disabled-selector}:active &,
+      .mdc-switch.mdc-switch--disabled & {
         @include token-utils.create-token-slot(background, disabled-unselected-track-color);
       }
     }
@@ -125,6 +136,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 
   &::after {
     transform: translateX(-100%);
+
+    @include token-utils.use-tokens($_mdc-slots...) {
+      @include token-utils.create-token-slot(background, selected-track-color);
+    }
 
     [dir='rtl'] & {
       transform: translateX(100%);
@@ -147,8 +162,6 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     }
 
     @include token-utils.use-tokens($_mdc-slots...) {
-      @include token-utils.create-token-slot(background, selected-track-color);
-
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, selected-hover-track-color);
       }
@@ -161,7 +174,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
         @include token-utils.create-token-slot(background, selected-pressed-track-color);
       }
 
-      .mdc-switch:disabled & {
+      #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+      #{$_interactive-disabled-selector}:focus:not(:active) &,
+      #{$_interactive-disabled-selector}:active &,
+      .mdc-switch.mdc-switch--disabled & {
         @include token-utils.create-token-slot(background, disabled-selected-track-color);
       }
     }
@@ -178,6 +194,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   right: auto;
   transform: translateX(0);
 
+  @include token-utils.use-tokens($_mdc-slots...) {
+    width: calc(100% - #{token-utils.get-token-variable(handle-width)});
+  }
+
   [dir='rtl'] & {
     left: auto;
     right: 0;
@@ -189,10 +209,6 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     [dir='rtl'] & {
       transform: translateX(-100%);
     }
-  }
-
-  @include token-utils.use-tokens($_mdc-slots...) {
-    width: calc(100% - var(#{token-utils.get-token-variable(handle-width)}));
   }
 }
 
@@ -212,15 +228,15 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     height 75ms cubic-bezier(0.4, 0, 0.2, 1),
     margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  [dir='rtl'] & {
-    left: auto;
-    right: 0;
-  }
-
   @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(width, handle-width);
     @include token-utils.create-token-slot(height, handle-height);
     @include token-utils.create-token-slot(border-radius, handle-shape);
+  }
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
   }
 
   @include token-utils.use-tokens($_mat-slots...) {
@@ -250,16 +266,16 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       @include token-utils.create-token-slot(height, with-icon-handle-size);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(width, pressed-handle-size);
       @include token-utils.create-token-slot(height, pressed-handle-size);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch--selected:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch--selected:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(margin, selected-pressed-handle-horizontal-margin);
     }
 
-    .mat-mdc-slide-toggle:active .mdc-switch--unselected:not(.mdc-switch--disabled) & {
+    .mat-mdc-slide-toggle .mdc-switch--unselected:active:not(.mdc-switch--disabled) & {
       @include token-utils.create-token-slot(margin, unselected-pressed-handle-horizontal-margin);
     }
 
@@ -287,7 +303,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       border-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
     z-index: -1;
 
-    @include cdk.high-contrast(active, off) {
+    @include cdk.high-contrast {
       border-color: currentColor;
     }
   }
@@ -310,7 +326,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
         @include token-utils.create-token-slot(background, selected-pressed-handle-color);
       }
 
-      .mdc-switch--selected:disabled & {
+      #{$_interactive-disabled-selector}.mdc-switch--selected:hover:not(:focus):not(:active) &,
+      #{$_interactive-disabled-selector}.mdc-switch--selected:focus:not(:active) &,
+      #{$_interactive-disabled-selector}.mdc-switch--selected:active &,
+      .mdc-switch--selected.mdc-switch--disabled & {
         @include token-utils.create-token-slot(background, disabled-selected-handle-color);
       }
 
@@ -330,7 +349,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
         @include token-utils.create-token-slot(background, unselected-pressed-handle-color);
       }
 
-      .mdc-switch--unselected:disabled & {
+      .mdc-switch--unselected.mdc-switch--disabled & {
         @include token-utils.create-token-slot(background, disabled-unselected-handle-color);
       }
     }
@@ -354,7 +373,10 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       @include token-utils.create-token-slot(box-shadow, handle-elevation-shadow);
     }
 
-    .mdc-switch:disabled & {
+    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}:focus:not(:active) &,
+    #{$_interactive-disabled-selector}:active &,
+    .mdc-switch.mdc-switch--disabled & {
       @include token-utils.create-token-slot(box-shadow, disabled-handle-elevation-shadow);
     }
   }
@@ -376,8 +398,12 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     content: '';
     opacity: 0;
 
-    .mdc-switch:disabled & {
+    .mdc-switch--disabled & {
       display: none;
+    }
+
+    .mat-mdc-slide-toggle-disabled-interactive & {
+      display: block;
     }
 
     .mdc-switch:hover & {
@@ -391,6 +417,9 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
     }
 
     @include token-utils.use-tokens($_mdc-slots...) {
+      #{$_interactive-disabled-selector}:enabled:focus &,
+      #{$_interactive-disabled-selector}:enabled:active &,
+      #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
       .mdc-switch--unselected:enabled:hover:not(:focus) & {
         @include token-utils.create-token-slot(background, unselected-hover-state-layer-color);
       }
@@ -429,11 +458,11 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   z-index: 1;
 
   @include token-utils.use-tokens($_mdc-slots...) {
-    .mdc-switch--unselected:disabled & {
+    .mdc-switch--disabled.mdc-switch--unselected & {
       @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
     }
 
-    .mdc-switch--selected:disabled & {
+    .mdc-switch--disabled.mdc-switch--selected & {
       @include token-utils.create-token-slot(opacity, disabled-selected-icon-opacity);
     }
   }
@@ -456,7 +485,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       @include token-utils.create-token-slot(fill, unselected-icon-color);
     }
 
-    .mdc-switch--unselected:disabled & {
+    .mdc-switch--unselected.mdc-switch--disabled & {
       @include token-utils.create-token-slot(fill, disabled-unselected-icon-color);
     }
 
@@ -466,7 +495,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
       @include token-utils.create-token-slot(fill, selected-icon-color);
     }
 
-    .mdc-switch--selected:disabled & {
+    .mdc-switch--selected.mdc-switch--disabled & {
       @include token-utils.create-token-slot(fill, disabled-selected-icon-color);
     }
   }
@@ -479,6 +508,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 }
 
 .mat-mdc-slide-toggle {
+  @include vendor-prefixes.user-select(none);
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
 
@@ -504,7 +534,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
   // Needs a little more specificity so the :hover styles don't override it.
   // For slide-toggles render the focus indicator when we know
   // the hidden input is focused (slightly different for each control).
-  &.mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before {
+  &.mat-mdc-slide-toggle-focused .mat-focus-indicator::before {
     content: '';
   }
 
@@ -525,7 +555,7 @@ $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 
   // Slide-toggle components have to set `border-radius: 50%` in order to support density scaling
   // which will clip a square focus indicator so we have to turn it into a circle.
-  .mat-mdc-focus-indicator::before {
+  .mat-focus-indicator::before {
     border-radius: 50%;
   }
 
