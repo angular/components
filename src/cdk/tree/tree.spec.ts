@@ -1481,6 +1481,17 @@ describe('CdkTree', () => {
       .withContext(`expect an expanded node`)
       .toBe(1);
   });
+
+  fit('statically renders nested children', () => {
+    configureCdkTreeTestingModule([NestedChildrenExpansionTest]);
+    const fixture = TestBed.createComponent(NestedChildrenExpansionTest);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    expect(getExpandedNodes(component.allNodes, component.tree).length)
+      .withContext(`expect all expanded nodes`)
+      .toBe(3);
+  });
 });
 
 export class TestData {
@@ -2177,5 +2188,38 @@ class IsExpandableOrderingTest {
     data[0].children = children;
 
     this.dataSource = data;
+  }
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+      <cdk-tree-node
+          *cdkTreeNodeDef="let node"
+          [isExpandable]="true"
+          [isExpanded]="true">
+        {{node.name}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+})
+class NestedChildrenExpansionTest {
+  getChildren = (node: MinimalTestData) => node.children;
+
+  @ViewChild(CdkTree) tree: CdkTree<MinimalTestData>;
+
+  dataSource: MinimalTestData[];
+
+  allNodes: MinimalTestData[];
+
+  constructor() {
+    const nestedChildren = [new MinimalTestData('subchild')];
+    const children = [new MinimalTestData('child')];
+    children[0].children = nestedChildren;
+    const data = [new MinimalTestData('parent')];
+    data[0].children = children;
+
+    this.dataSource = data;
+    this.allNodes = [...data, ...children, ... nestedChildren];
   }
 }
