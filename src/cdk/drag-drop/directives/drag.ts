@@ -314,6 +314,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       () => {
         this._updateRootElement();
         this._setupHandlesListener();
+        this._dragRef.scale = this.scale;
 
         if (this.freeDragPosition) {
           this._dragRef.setFreeDragPosition(this.freeDragPosition);
@@ -332,6 +333,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     if (rootSelectorChange && !rootSelectorChange.firstChange) {
       this._updateRootElement();
     }
+
+    // Scale affects the free drag position so we need to sync it up here.
+    this._dragRef.scale = this.scale;
 
     // Skip the first change since it's being handled in the `afterNextRender` queued up in the
     // constructor.
