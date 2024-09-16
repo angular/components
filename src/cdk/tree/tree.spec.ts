@@ -104,6 +104,7 @@ describe('CdkTree', () => {
         fixture = TestBed.createComponent(SimpleCdkTreeApp);
 
         fixture.detectChanges();
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -223,7 +224,6 @@ describe('CdkTree', () => {
 
       it('should be able to set zero as the indent level', () => {
         component.paddingNodes.forEach(node => (node.level = 0));
-        fixture.detectChanges();
 
         const data = dataSource.data;
 
@@ -583,7 +583,9 @@ describe('CdkTree', () => {
 
         // Add new data
         component.dataSource.data = copiedData;
+        fixture.detectChanges();
         component.dataSource.addData();
+        fixture.detectChanges();
       }
 
       function mutateProperties() {
@@ -634,6 +636,7 @@ describe('CdkTree', () => {
         component.dataSource.data = component.dataSource.data.map(
           item => new TestData(item.pizzaTopping, item.pizzaCheese, item.pizzaBase),
         );
+        fixture.detectChanges();
 
         // Expect first two to be the same since they were swapped but indicies are consistent.
         // The third element was removed and caught by the tree so it was removed before another

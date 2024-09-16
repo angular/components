@@ -98,6 +98,7 @@ describe('CdkTree with TreeControl', () => {
         fixture = TestBed.createComponent(SimpleCdkTreeApp);
 
         fixture.detectChanges();
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -217,8 +218,6 @@ describe('CdkTree with TreeControl', () => {
 
       it('should be able to set zero as the indent level', () => {
         component.paddingNodes.forEach(node => (node.level = 0));
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
 
         const data = dataSource.data;
 
@@ -532,7 +531,9 @@ describe('CdkTree with TreeControl', () => {
 
         // Add new data
         component.dataSource.data = copiedData;
+        fixture.detectChanges();
         component.dataSource.addData();
+        fixture.detectChanges();
       }
 
       it('should add/remove/move nodes with reference-based trackBy', () => {
