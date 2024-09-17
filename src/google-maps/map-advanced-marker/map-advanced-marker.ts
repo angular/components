@@ -125,6 +125,36 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('click');
 
   /**
+   * This event is fired when the AdvancedMarkerElement is double-clicked.
+   */
+  @Output() readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
+
+  /**
+   * This event is fired when the mouse moves out of the AdvancedMarkerElement.
+   */
+  @Output() readonly mapMouseout: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseout');
+
+  /**
+   * This event is fired when the mouse moves over the AdvancedMarkerElement.
+   */
+  @Output() readonly mapMouseover: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseover');
+
+  /**
+   * This event is fired when the mouse button is released over the AdvancedMarkerElement.
+   */
+  @Output() readonly mapMouseup: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseup');
+
+  /**
+   * This event is fired when the AdvancedMarkerElement is right-clicked.
+   */
+  @Output() readonly mapRightclick: Observable<google.maps.MapMouseEvent> =
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
+
+  /**
    * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
    * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
    */

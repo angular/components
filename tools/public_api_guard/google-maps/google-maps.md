@@ -143,9 +143,14 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     getAnchor(): google.maps.marker.AdvancedMarkerElement;
     set gmpDraggable(draggable: boolean);
     readonly mapClick: Observable<google.maps.MapMouseEvent>;
+    readonly mapDblclick: Observable<google.maps.MapMouseEvent>;
     readonly mapDrag: Observable<google.maps.MapMouseEvent>;
     readonly mapDragend: Observable<google.maps.MapMouseEvent>;
     readonly mapDragstart: Observable<google.maps.MapMouseEvent>;
+    readonly mapMouseout: Observable<google.maps.MapMouseEvent>;
+    readonly mapMouseover: Observable<google.maps.MapMouseEvent>;
+    readonly mapMouseup: Observable<google.maps.MapMouseEvent>;
+    readonly mapRightclick: Observable<google.maps.MapMouseEvent>;
     readonly markerInitialized: EventEmitter<google.maps.marker.AdvancedMarkerElement>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
@@ -158,7 +163,7 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     set title(title: string);
     set zIndex(zIndex: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "mapRightclick": "mapRightclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapAdvancedMarker, never>;
 }
