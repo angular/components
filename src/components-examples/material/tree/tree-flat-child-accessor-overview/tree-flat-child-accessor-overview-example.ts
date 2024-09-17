@@ -47,5 +47,5 @@ export class TreeFlatChildAccessorOverviewExample {
 
   childrenAccessor = (node: FoodNode) => node.children ?? [];
 
-  hasChild = (_: number, node: FoodNode) => !!node.children &&node.children.length > 0;
+  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 }
