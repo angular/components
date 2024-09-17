@@ -2223,6 +2223,6 @@ class NestedChildrenExpansionTest {
     data[0].children = children;
 
     this.dataSource = data;
-    this.allNodes = [...data, ...children, ... nestedChildren];
+    this.allNodes = [...data, ...children, ...nestedChildren];
   }
 }

@@ -273,18 +273,21 @@ export class CdkTree<T, K = T>
 
   constructor(...args: unknown[]);
   constructor() {
-    effect(onCleanup => {
-      const data = this._data();
-      const nodeType = this._nodeType();
-      const expandedKeys = this._selection();
+    effect(
+      onCleanup => {
+        const data = this._data();
+        const nodeType = this._nodeType();
+        const expandedKeys = this._selection();
 
-      const sub = this._getRenderData(data, nodeType, expandedKeys).subscribe(renderData => {
-        this._renderDataChanges(renderData);
-      });
-      onCleanup(() => {
-        sub.unsubscribe();
-      });
-    }, {allowSignalWrites: true});
+        const sub = this._getRenderData(data, nodeType, expandedKeys).subscribe(renderData => {
+          this._renderDataChanges(renderData);
+        });
+        onCleanup(() => {
+          sub.unsubscribe();
+        });
+      },
+      {allowSignalWrites: true},
+    );
   }
 
   ngAfterContentInit() {
@@ -1030,7 +1033,11 @@ export class CdkTree<T, K = T>
    * This will still traverse all nested children in order to build up our internal data
    * models, but will not include them in the returned array.
    */
-  private _flattenNestedNodesWithExpansion(nodes: readonly T[], selection: readonly K[], level = 0): Observable<T[]> {
+  private _flattenNestedNodesWithExpansion(
+    nodes: readonly T[],
+    selection: readonly K[],
+    level = 0,
+  ): Observable<T[]> {
     const childrenAccessor = this._getChildrenAccessor();
     // If we're using a level accessor, we don't need to flatten anything.
     if (!childrenAccessor) {
@@ -1063,7 +1070,7 @@ export class CdkTree<T, K = T>
                 return observableOf([]);
               }
               return this._flattenNestedNodesWithExpansion(childNodes, selection, level + 1).pipe(
-                map(nestedNodes => selection.includes(parentKey) ? nestedNodes : []),
+                map(nestedNodes => (selection.includes(parentKey) ? nestedNodes : [])),
               );
             }),
           ),
