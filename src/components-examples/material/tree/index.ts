@@ -4,4 +4,5 @@ export {TreeFlatChildAccessorOverviewExample} from './tree-flat-child-accessor-o
 export {TreeHarnessExample} from './tree-harness/tree-harness-example';
 export {TreeLoadmoreExample} from './tree-loadmore/tree-loadmore-example';
 export {TreeNestedOverviewExample} from './tree-nested-overview/tree-nested-overview-example';
+export {TreeNestedChildAccessorOverviewExample} from './tree-nested-child-accessor-overview/tree-nested-child-accessor-overview-example';
 export {TreeLegacyKeyboardInterfaceExample} from './tree-legacy-keyboard-interface/tree-legacy-keyboard-interface-example';

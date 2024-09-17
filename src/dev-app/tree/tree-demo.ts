@@ -23,6 +23,7 @@ import {
   TreeLegacyKeyboardInterfaceExample,
   TreeLoadmoreExample,
   TreeNestedOverviewExample,
+  TreeNestedChildAccessorOverviewExample,
   TreeFlatChildAccessorOverviewExample,
 } from '@angular/components-examples/material/tree';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
@@ -58,6 +59,7 @@ import {MatTreeModule} from '@angular/material/tree';
     TreeFlatOverviewExample,
     TreeLegacyKeyboardInterfaceExample,
     TreeLoadmoreExample,
+    TreeNestedChildAccessorOverviewExample,
     TreeNestedOverviewExample,
     MatButtonModule,
     MatExpansionModule,
