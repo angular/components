@@ -1485,7 +1485,7 @@ describe('CdkTree', () => {
       .toBe(1);
   });
 
-  fit('statically renders nested children', () => {
+  it('statically renders nested children', () => {
     configureCdkTreeTestingModule([NestedChildrenExpansionTest]);
     const fixture = TestBed.createComponent(NestedChildrenExpansionTest);
     fixture.detectChanges();
