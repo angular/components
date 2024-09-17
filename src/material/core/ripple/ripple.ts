@@ -10,15 +10,14 @@ import {Platform} from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
-  Inject,
   InjectionToken,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   ANIMATION_MODULE_TYPE,
   Injector,
+  inject,
 } from '@angular/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
@@ -66,6 +65,9 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS = new InjectionToken<RippleGlobalOptions>
   standalone: true,
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /** Custom color for all ripples. */
   @Input('matRippleColor') color: string;
 
@@ -132,18 +134,18 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** @docs-private Whether ripple directive is initialized and the input bindings are set. */
   _isInitialized: boolean = false;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-    platform: Platform,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
-    injector?: Injector,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
+    const platform = inject(Platform);
+    const globalOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
+    const injector = inject(Injector);
+
     // Note: cannot use `inject()` here, because this class
     // gets instantiated manually in the ripple loader.
     this._globalOptions = globalOptions || {};
-    this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform, injector);
+    this._rippleRenderer = new RippleRenderer(this, ngZone, this._elementRef, platform, injector);
   }
 
   ngOnInit() {

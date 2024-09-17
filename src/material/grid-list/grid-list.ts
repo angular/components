@@ -15,8 +15,8 @@ import {
   ContentChildren,
   QueryList,
   ElementRef,
-  Optional,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
@@ -59,6 +59,9 @@ const MAT_FIT_MODE = 'fit';
   standalone: true,
 })
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+
   /** Number of columns being rendered. */
   private _cols: number;
 
@@ -82,10 +85,8 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MatGridTile, {descendants: true}) _tiles: QueryList<MatGridTile>;
 
-  constructor(
-    private _element: ElementRef<HTMLElement>,
-    @Optional() private _dir: Directionality,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Amount of columns in the grid list. */
   @Input()

@@ -7,21 +7,15 @@
  */
 
 import {AnimationEvent} from '@angular/animations';
-import {CdkDialogContainer, DialogConfig} from '@angular/cdk/dialog';
-import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
+import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {OverlayRef} from '@angular/cdk/overlay';
-import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
-  Inject,
-  NgZone,
   OnDestroy,
-  Optional,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {matBottomSheetAnimations} from './bottom-sheet-animations';
@@ -67,27 +61,12 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
   /** Whether the component has been destroyed. */
   private _destroyed: boolean;
 
-  constructor(
-    elementRef: ElementRef,
-    focusTrapFactory: FocusTrapFactory,
-    @Optional() @Inject(DOCUMENT) document: any,
-    config: DialogConfig,
-    checker: InteractivityChecker,
-    ngZone: NgZone,
-    overlayRef: OverlayRef,
-    breakpointObserver: BreakpointObserver,
-    focusMonitor?: FocusMonitor,
-  ) {
-    super(
-      elementRef,
-      focusTrapFactory,
-      document,
-      config,
-      checker,
-      ngZone,
-      overlayRef,
-      focusMonitor,
-    );
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const breakpointObserver = inject(BreakpointObserver);
 
     this._breakpointSubscription = breakpointObserver
       .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])

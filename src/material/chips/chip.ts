@@ -21,13 +21,11 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
-  Inject,
   Injector,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -92,7 +90,15 @@ export interface MatChipEvent {
   imports: [MatChipAction],
 })
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
-  protected _document: Document;
+  _changeDetectorRef = inject(ChangeDetectorRef);
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _ngZone = inject(NgZone);
+  private _focusMonitor = inject(FocusMonitor);
+  private _globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+    optional: true,
+  });
+
+  protected _document = inject(DOCUMENT);
 
   /** Emits when the chip is focused. */
   readonly _onFocus = new Subject<MatChipEvent>();
@@ -226,18 +232,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   protected _injector = inject(Injector);
 
-  constructor(
-    public _changeDetectorRef: ChangeDetectorRef,
-    public _elementRef: ElementRef<HTMLElement>,
-    protected _ngZone: NgZone,
-    private _focusMonitor: FocusMonitor,
-    @Inject(DOCUMENT) _document: any,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    private _globalRippleOptions?: RippleGlobalOptions,
-  ) {
-    this._document = _document;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._animationsDisabled = animationMode === 'NoopAnimations';
     this._monitorFocus();
 

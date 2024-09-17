@@ -207,8 +207,7 @@ export class AriaDescriber implements OnDestroy {
     messagesContainer.classList.add(containerClassName);
     messagesContainer.classList.add('cdk-visually-hidden');
 
-    // @breaking-change 14.0.0 Remove null check for `_platform`.
-    if (this._platform && !this._platform.isBrowser) {
+    if (!this._platform.isBrowser) {
       messagesContainer.setAttribute('platform', 'server');
     }
 

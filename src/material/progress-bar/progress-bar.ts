@@ -12,8 +12,6 @@ import {
   ViewEncapsulation,
   ElementRef,
   NgZone,
-  Optional,
-  Inject,
   Input,
   Output,
   EventEmitter,
@@ -110,16 +108,19 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
   standalone: true,
 })
 export class MatProgressBar implements AfterViewInit, OnDestroy {
-  constructor(
-    readonly _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    @Optional()
-    @Inject(MAT_PROGRESS_BAR_DEFAULT_OPTIONS)
-    defaults?: MatProgressBarDefaultOptions,
-  ) {
-    this._isNoopAnimation = _animationMode === 'NoopAnimations';
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaults = inject<MatProgressBarDefaultOptions>(MAT_PROGRESS_BAR_DEFAULT_OPTIONS, {
+      optional: true,
+    });
+
+    this._isNoopAnimation = this._animationMode === 'NoopAnimations';
 
     if (defaults) {
       if (defaults.color) {

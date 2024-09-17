@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {CDK_TREE_NODE_OUTLET_NODE, CdkTreeNodeOutlet} from '@angular/cdk/tree';
-import {Directive, Inject, Optional, ViewContainerRef} from '@angular/core';
+import {Directive, ViewContainerRef, inject} from '@angular/core';
 
 /**
  * Outlet for nested CdkNode. Put `[matTreeNodeOutlet]` on a tag to place children dataNodes
@@ -23,8 +23,6 @@ import {Directive, Inject, Optional, ViewContainerRef} from '@angular/core';
   standalone: true,
 })
 export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
-  constructor(
-    public viewContainer: ViewContainerRef,
-    @Inject(CDK_TREE_NODE_OUTLET_NODE) @Optional() public _node?: any,
-  ) {}
+  viewContainer = inject(ViewContainerRef);
+  _node = inject(CDK_TREE_NODE_OUTLET_NODE, {optional: true});
 }

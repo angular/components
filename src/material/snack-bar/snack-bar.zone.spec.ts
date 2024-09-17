@@ -6,8 +6,9 @@ import {
   ViewContainerRef,
   provideZoneChangeDetection,
   signal,
+  inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarModule} from './module';
 import {MatSnackBar} from './snack-bar';
@@ -15,7 +16,6 @@ import {MatSnackBarConfig} from './snack-bar-config';
 
 describe('MatSnackBar Zone.js integration', () => {
   let snackBar: MatSnackBar;
-
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
   beforeEach(fakeAsync(() => {
@@ -28,17 +28,11 @@ describe('MatSnackBar Zone.js integration', () => {
       ],
       providers: [provideZoneChangeDetection()],
     });
-  }));
 
-  beforeEach(inject([MatSnackBar], (sb: MatSnackBar) => {
-    snackBar = sb;
-  }));
-
-  beforeEach(() => {
+    snackBar = TestBed.inject(MatSnackBar);
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-
     viewContainerFixture.detectChanges();
-  });
+  }));
 
   it('should clear the dismiss timeout when dismissed before timeout expiration', fakeAsync(() => {
     let config = new MatSnackBarConfig();
@@ -73,7 +67,7 @@ describe('MatSnackBar Zone.js integration', () => {
   standalone: true,
 })
 class DirectiveWithViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({

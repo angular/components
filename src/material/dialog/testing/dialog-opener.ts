@@ -29,6 +29,8 @@ import {Subscription} from 'rxjs';
   standalone: true,
 })
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
+  dialog = inject(MatDialog);
+
   /** Component that should be opened with the MatDialog `open` method. */
   protected static component: ComponentType<unknown> | undefined;
 
@@ -55,7 +57,9 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
     return MatTestDialogOpener as ComponentType<MatTestDialogOpener<T, R>>;
   }
 
-  constructor(public dialog: MatDialog) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (!MatTestDialogOpener.component) {
       throw new Error(`MatTestDialogOpener does not have a component provided.`);
     }

@@ -62,7 +62,7 @@ export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 // @public
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _iconRegistry: MatIconRegistry, ariaHidden: string, _location: MatIconLocation, _errorHandler: ErrorHandler, defaults?: MatIconDefaultOptions);
+    constructor(...args: unknown[]);
     get color(): string | null | undefined;
     set color(value: string | null | undefined);
     // (undocumented)
@@ -91,7 +91,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatIcon, "mat-icon", ["matIcon"], { "color": { "alias": "color"; "required": false; }; "inline": { "alias": "inline"; "required": false; }; "svgIcon": { "alias": "svgIcon"; "required": false; }; "fontSet": { "alias": "fontSet"; "required": false; }; "fontIcon": { "alias": "fontIcon"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatIcon, [null, null, { attribute: "aria-hidden"; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatIcon, never>;
 }
 
 // @public

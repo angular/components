@@ -11,12 +11,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Input,
   OnDestroy,
   ViewEncapsulation,
   TemplateRef,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MatStepLabel} from './step-label';
@@ -42,6 +42,9 @@ import {NgTemplateOutlet} from '@angular/common';
   imports: [MatRipple, NgTemplateOutlet, MatIcon],
 })
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
+  _intl = inject(MatStepperIntl);
+  private _focusMonitor = inject(FocusMonitor);
+
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
@@ -80,14 +83,13 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
    */
   @Input() color: ThemePalette;
 
-  constructor(
-    public _intl: MatStepperIntl,
-    private _focusMonitor: FocusMonitor,
-    _elementRef: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-  ) {
-    super(_elementRef);
-    this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const changeDetectorRef = inject(ChangeDetectorRef);
+    this._intlSubscription = this._intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngAfterViewInit() {

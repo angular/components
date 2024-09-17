@@ -8,29 +8,23 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
-import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { RippleGlobalOptions } from '@angular/material/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -53,7 +47,7 @@ export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined);
+    constructor(...args: unknown[]);
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
     protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
@@ -123,7 +117,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "role": { "alias": "role"; "required": false; }; "id": { "alias": "id"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaDescription": { "alias": "aria-description"; "required": false; }; "value": { "alias": "value"; "required": false; }; "color": { "alias": "color"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "highlighted": { "alias": "highlighted"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon", "_allLeadingIcons", "_allTrailingIcons", "_allRemoveIcons"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, never>;
 }
 
 // @public
@@ -141,7 +135,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
 
 // @public
 export class MatChipEditInput {
-    constructor(_elementRef: ElementRef, _document: any);
+    constructor(...args: unknown[]);
     // (undocumented)
     getNativeElement(): HTMLElement;
     // (undocumented)
@@ -163,7 +157,7 @@ export interface MatChipEvent {
 
 // @public
 export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, ngControl: NgControl);
+    constructor(...args: unknown[]);
     protected _allowFocusEscape(): void;
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
@@ -229,7 +223,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipGrid, "mat-chip-grid", never, { "disabled": { "alias": "disabled"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["_chips"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipGrid, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipGrid, never>;
 }
 
 // @public
@@ -243,7 +237,7 @@ export class MatChipGridChange {
 
 // @public
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLInputElement>, defaultOptions: MatChipsDefaultOptions, formField?: MatFormField);
+    constructor(...args: unknown[]);
     addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
@@ -280,7 +274,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, never>;
 }
 
 // @public
@@ -405,7 +399,7 @@ export class MatChipRemove extends MatChipAction {
 
 // @public
 export class MatChipRow extends MatChip implements AfterViewInit {
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, ngZone: NgZone, focusMonitor: FocusMonitor, _document: any, animationMode?: string, globalRippleOptions?: RippleGlobalOptions, tabIndex?: string);
+    constructor(...args: unknown[]);
     // (undocumented)
     protected basicChipAttrName: string;
     contentEditInput?: MatChipEditInput;
@@ -427,7 +421,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "[matChipEditInput]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRow, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRow, never>;
 }
 
 // @public
@@ -449,7 +443,7 @@ export class MatChipSelectionChange {
 
 // @public
 export class MatChipSet implements AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality);
+    constructor(...args: unknown[]);
     protected _allowFocusEscape(): void;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
@@ -491,7 +485,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipSet, "mat-chip-set", never, { "disabled": { "alias": "disabled"; "required": false; }; "role": { "alias": "role"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["_chips"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipSet, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipSet, never>;
 }
 
 // @public (undocumented)

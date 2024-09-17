@@ -34,15 +34,12 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
-  forwardRef,
   inject,
-  Inject,
   InjectionToken,
   Injector,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -117,13 +114,16 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
   standalone: true,
 })
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Inject(forwardRef(() => MatDrawerContainer)) public _container: MatDrawerContainer,
-    elementRef: ElementRef<HTMLElement>,
-    scrollDispatcher: ScrollDispatcher,
-    ngZone: NgZone,
-  ) {
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _container = inject(MatDrawerContainer);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    const scrollDispatcher = inject(ScrollDispatcher);
+    const ngZone = inject(NgZone);
+
     super(elementRef, scrollDispatcher, ngZone);
   }
 
@@ -162,6 +162,15 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   imports: [CdkScrollable],
 })
 export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _focusTrapFactory = inject(FocusTrapFactory);
+  private _focusMonitor = inject(FocusMonitor);
+  private _platform = inject(Platform);
+  private _ngZone = inject(NgZone);
+  private readonly _interactivityChecker = inject(InteractivityChecker);
+  private _doc = inject(DOCUMENT, {optional: true})!;
+  _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
+
   private _focusTrap: FocusTrap | null = null;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
 
@@ -324,16 +333,9 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   private _injector = inject(Injector);
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _focusTrapFactory: FocusTrapFactory,
-    private _focusMonitor: FocusMonitor,
-    private _platform: Platform,
-    private _ngZone: NgZone,
-    private readonly _interactivityChecker: InteractivityChecker,
-    @Optional() @Inject(DOCUMENT) private _doc: any,
-    @Optional() @Inject(MAT_DRAWER_CONTAINER) public _container?: MatDrawerContainer,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
         if (this._doc) {
@@ -671,6 +673,12 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   imports: [MatDrawerContent],
 })
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
+  private _dir = inject(Directionality, {optional: true});
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /** All drawers in the container. Includes drawers from inside nested containers. */
   @ContentChildren(MatDrawer, {
     // We need to use `descendants: true`, because Ivy will no longer match
@@ -710,7 +718,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   set autosize(value: BooleanInput) {
     this._autosize = coerceBooleanProperty(value);
   }
-  private _autosize: boolean;
+  private _autosize = inject(MAT_DRAWER_DEFAULT_AUTOSIZE);
 
   /**
    * Whether the drawer container should have a backdrop while one of the sidenavs is open.
@@ -764,23 +772,17 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
 
   private _injector = inject(Injector);
 
-  constructor(
-    @Optional() private _dir: Directionality,
-    private _element: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    @Inject(MAT_DRAWER_DEFAULT_AUTOSIZE) defaultAutosize = false,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const viewportRuler = inject(ViewportRuler);
+
     // If a `Dir` directive exists up the tree, listen direction changes
     // and update the left/right properties to point to the proper start/end.
-    if (_dir) {
-      _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
-        this._validateDrawers();
-        this.updateContentMargins();
-      });
-    }
+    this._dir?.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+      this._validateDrawers();
+      this.updateContentMargins();
+    });
 
     // Since the minimum width of the sidenav depends on the viewport width,
     // we need to recompute the margins if the viewport changes.
@@ -788,8 +790,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
       .change()
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.updateContentMargins());
-
-    this._autosize = defaultAutosize;
   }
 
   ngAfterContentInit() {

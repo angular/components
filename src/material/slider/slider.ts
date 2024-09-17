@@ -18,12 +18,10 @@ import {
   ContentChildren,
   ElementRef,
   inject,
-  Inject,
   Input,
   NgZone,
   numberAttribute,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -76,6 +74,14 @@ import {MatSliderVisualThumb} from './slider-thumb';
   imports: [MatSliderVisualThumb],
 })
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
+  readonly _ngZone = inject(NgZone);
+  readonly _cdr = inject(ChangeDetectorRef);
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly _dir = inject(Directionality, {optional: true});
+  readonly _globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+    optional: true,
+  });
+
   /** The active portion of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
@@ -395,19 +401,16 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _platform = inject(Platform);
 
-  constructor(
-    readonly _ngZone: NgZone,
-    readonly _cdr: ChangeDetectorRef,
-    readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() readonly _dir: Directionality,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    readonly _globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._noopAnimations = animationMode === 'NoopAnimations';
-    this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
-    this._isRtl = this._dir.value === 'rtl';
+
+    if (this._dir) {
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._isRtl = this._dir.value === 'rtl';
+    }
   }
 
   /** The radius of the native slider's knob. AFAIK there is no way to avoid hardcoding this. */
@@ -488,7 +491,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /** Handles updating the slider ui after a dir change. */
   private _onDirChange(): void {
-    this._isRtl = this._dir.value === 'rtl';
+    this._isRtl = this._dir?.value === 'rtl';
     this._isRange ? this._onDirChangeRange() : this._onDirChangeNonRange();
     this._updateTickMarkUI();
   }

@@ -15,12 +15,10 @@ import {
   Directive,
   ElementRef,
   inject,
-  Inject,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Renderer2,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
@@ -78,6 +76,12 @@ export class _MatBadgeStyleLoader {}
   standalone: true,
 })
 export class MatBadge implements OnInit, OnDestroy {
+  private _ngZone = inject(NgZone);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ariaDescriber = inject(AriaDescriber);
+  private _renderer = inject(Renderer2);
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /**
    * Theme color of the badge. This API is supported in M2 themes only, it
    * has no effect in M3 themes.
@@ -150,18 +154,13 @@ export class MatBadge implements OnInit, OnDestroy {
 
   private _document = inject(DOCUMENT);
 
-  constructor(
-    private _ngZone: NgZone,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _ariaDescriber: AriaDescriber,
-    private _renderer: Renderer2,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
-  ) {
-    const styleLoader = inject(_CdkPrivateStyleLoader);
-    styleLoader.load(_MatBadgeStyleLoader);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_MatBadgeStyleLoader);
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      const nativeElement = _elementRef.nativeElement;
+      const nativeElement = this._elementRef.nativeElement;
       if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
         throw Error('matBadge must be attached to an element node.');
       }

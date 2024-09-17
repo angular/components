@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef} from '@angular/core';
+import {Directive, TemplateRef, inject} from '@angular/core';
 
 /**
  * Content for a `mat-step` that will be rendered lazily.
@@ -16,5 +16,8 @@ import {Directive, TemplateRef} from '@angular/core';
   standalone: true,
 })
 export class MatStepContent {
-  constructor(public _template: TemplateRef<any>) {}
+  _template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

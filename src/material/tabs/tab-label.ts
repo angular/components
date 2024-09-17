@@ -6,14 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  Inject,
-  InjectionToken,
-  Optional,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import {Directive, InjectionToken, inject} from '@angular/core';
 import {CdkPortal} from '@angular/cdk/portal';
 
 /**
@@ -36,11 +29,5 @@ export const MAT_TAB = new InjectionToken<any>('MAT_TAB');
   standalone: true,
 })
 export class MatTabLabel extends CdkPortal {
-  constructor(
-    templateRef: TemplateRef<any>,
-    viewContainerRef: ViewContainerRef,
-    @Inject(MAT_TAB) @Optional() public _closestTab: any,
-  ) {
-    super(templateRef, viewContainerRef);
-  }
+  _closestTab = inject(MAT_TAB, {optional: true});
 }

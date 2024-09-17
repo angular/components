@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, NgZone, OnDestroy} from '@angular/core';
+import {Directive, ElementRef, NgZone, OnDestroy, inject} from '@angular/core';
 
 /** Class added when the line ripple is active. */
 const ACTIVATE_CLASS = 'mdc-line-ripple--active';
@@ -30,12 +30,15 @@ const DEACTIVATING_CLASS = 'mdc-line-ripple--deactivating';
   standalone: true,
 })
 export class MatFormFieldLineRipple implements OnDestroy {
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-  ) {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
+
     ngZone.runOutsideAngular(() => {
-      _elementRef.nativeElement.addEventListener('transitionend', this._handleTransitionEnd);
+      this._elementRef.nativeElement.addEventListener('transitionend', this._handleTransitionEnd);
     });
   }
 

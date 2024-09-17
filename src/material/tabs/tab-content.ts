@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, InjectionToken, TemplateRef} from '@angular/core';
+import {Directive, InjectionToken, TemplateRef, inject} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `MatTabContent`. It serves as
@@ -22,5 +22,8 @@ export const MAT_TAB_CONTENT = new InjectionToken<MatTabContent>('MatTabContent'
   standalone: true,
 })
 export class MatTabContent {
-  constructor(/** Content for the tab. */ public template: TemplateRef<any>) {}
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

@@ -6,13 +6,10 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
@@ -34,7 +31,7 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
-    constructor(toggleGroup: MatButtonToggleGroup, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _focusMonitor: FocusMonitor, defaultTabIndex: string, defaultOptions?: MatButtonToggleDefaultOptions);
+    constructor(...args: unknown[]);
     get appearance(): MatButtonToggleAppearance;
     set appearance(value: MatButtonToggleAppearance);
     ariaLabel: string;
@@ -77,7 +74,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatButtonToggle, "mat-button-toggle", ["matButtonToggle"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, { "change": "change"; }, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggle, [{ optional: true; }, null, null, null, { attribute: "tabindex"; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggle, never>;
 }
 
 // @public
@@ -102,7 +99,7 @@ export interface MatButtonToggleDefaultOptions {
 
 // @public
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    constructor(_changeDetector: ChangeDetectorRef, defaultOptions?: MatButtonToggleDefaultOptions, _dir?: Directionality | undefined);
+    constructor(...args: unknown[]);
     appearance: MatButtonToggleAppearance;
     _buttonToggles: QueryList<MatButtonToggle>;
     readonly change: EventEmitter<MatButtonToggleChange>;
@@ -157,7 +154,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatButtonToggleGroup, "mat-button-toggle-group", ["matButtonToggleGroup"], { "appearance": { "alias": "appearance"; "required": false; }; "name": { "alias": "name"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "hideMultipleSelectionIndicator": { "alias": "hideMultipleSelectionIndicator"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["_buttonToggles"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggleGroup, [null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatButtonToggleGroup, never>;
 }
 
 // @public (undocumented)

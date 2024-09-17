@@ -9,20 +9,18 @@
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
-  Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   ErrorHandler,
   inject,
-  Inject,
   InjectionToken,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   ViewEncapsulation,
+  HostAttributeToken,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {Subscription} from 'rxjs';
@@ -154,6 +152,10 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   standalone: true,
 })
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _iconRegistry = inject(MatIconRegistry);
+  private _location = inject<MatIconLocation>(MAT_ICON_LOCATION);
+  private readonly _errorHandler = inject(ErrorHandler);
   private _defaultColor: ThemePalette;
 
   /**
@@ -241,16 +243,12 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   /** Subscription to the current in-progress SVG icon request. */
   private _currentIconFetch = Subscription.EMPTY;
 
-  constructor(
-    readonly _elementRef: ElementRef<HTMLElement>,
-    private _iconRegistry: MatIconRegistry,
-    @Attribute('aria-hidden') ariaHidden: string,
-    @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
-    private readonly _errorHandler: ErrorHandler,
-    @Optional()
-    @Inject(MAT_ICON_DEFAULT_OPTIONS)
-    defaults?: MatIconDefaultOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ariaHidden = inject(new HostAttributeToken('aria-hidden'), {optional: true});
+    const defaults = inject<MatIconDefaultOptions>(MAT_ICON_DEFAULT_OPTIONS, {optional: true});
+
     if (defaults) {
       if (defaults.color) {
         this.color = this._defaultColor = defaults.color;
@@ -264,7 +262,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
     // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
     // the right thing to do for the majority of icon use-cases.
     if (!ariaHidden) {
-      _elementRef.nativeElement.setAttribute('aria-hidden', 'true');
+      this._elementRef.nativeElement.setAttribute('aria-hidden', 'true');
     }
   }
 

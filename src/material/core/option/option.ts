@@ -14,8 +14,6 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
   ChangeDetectorRef,
-  Optional,
-  Inject,
   AfterViewChecked,
   OnDestroy,
   Input,
@@ -24,6 +22,7 @@ import {
   QueryList,
   ViewChild,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
@@ -83,6 +82,11 @@ export class MatOptionSelectionChange<T = any> {
   imports: [MatPseudoCheckbox, MatRipple],
 })
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  _changeDetectorRef = inject(ChangeDetectorRef);
+  private _parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});
+  group = inject<MatOptgroup>(MAT_OPTGROUP, {optional: true});
+
   private _selected = false;
   private _active = false;
   private _disabled = false;
@@ -133,12 +137,8 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
 
-  constructor(
-    private _element: ElementRef<HTMLElement>,
-    public _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) private _parent: MatOptionParentComponent,
-    @Optional() @Inject(MAT_OPTGROUP) public group: MatOptgroup,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.

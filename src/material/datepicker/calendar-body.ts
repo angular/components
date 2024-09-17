@@ -96,6 +96,8 @@ const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
   imports: [NgClass],
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
 
   /**
@@ -203,12 +205,11 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
    */
   _trackRow = (row: MatCalendarCell[]) => row;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-  ) {
-    _ngZone.runOutsideAngular(() => {
-      const element = _elementRef.nativeElement;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    this._ngZone.runOutsideAngular(() => {
+      const element = this._elementRef.nativeElement;
 
       // `touchmove` is active since we need to call `preventDefault`.
       element.addEventListener('touchmove', this._touchmoveHandler, activeCapturingEventOptions);

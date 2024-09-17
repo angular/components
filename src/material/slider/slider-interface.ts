@@ -125,7 +125,7 @@ export interface _MatSlider {
   _rippleRadius: number;
 
   /** The global configuration for `matRipple` instances. */
-  readonly _globalRippleOptions?: RippleGlobalOptions;
+  readonly _globalRippleOptions: RippleGlobalOptions | null;
 
   /** Whether animations have been disabled. */
   _noopAnimations: boolean;

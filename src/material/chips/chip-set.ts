@@ -17,11 +17,11 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  Optional,
   QueryList,
   ViewEncapsulation,
   booleanAttribute,
   numberAttribute,
+  inject,
 } from '@angular/core';
 import {Observable, Subject, merge} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
@@ -51,6 +51,10 @@ import {MatChipAction} from './chip-action';
   standalone: true,
 })
 export class MatChipSet implements AfterViewInit, OnDestroy {
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dir = inject(Directionality, {optional: true});
+
   /** Index of the last destroyed chip that had focus. */
   private _lastDestroyedFocusedChipIndex: number | null = null;
 
@@ -131,11 +135,8 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   /** Flat list of all the actions contained within the chips. */
   _chipActions = new QueryList<MatChipAction>();
 
-  constructor(
-    protected _elementRef: ElementRef<HTMLElement>,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    @Optional() private _dir: Directionality,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     this._setUpFocusManagement();
