@@ -428,7 +428,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       _validateInputs(
         this._isRange,
-        this._getInput(_MatThumb.END)!,
+        this._getInput(_MatThumb.END),
         this._getInput(_MatThumb.START),
       );
     }
@@ -938,12 +938,12 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 /** Ensures that there is not an invalid configuration for the slider thumb inputs. */
 function _validateInputs(
   isRange: boolean,
-  endInputElement: _MatSliderThumb | _MatSliderRangeThumb,
-  startInputElement?: _MatSliderThumb,
+  endInputElement: _MatSliderThumb | _MatSliderRangeThumb | undefined,
+  startInputElement: _MatSliderThumb | undefined,
 ): void {
   const startValid =
     !isRange || startInputElement?._hostElement.hasAttribute('matSliderStartThumb');
-  const endValid = endInputElement._hostElement.hasAttribute(
+  const endValid = endInputElement?._hostElement.hasAttribute(
     isRange ? 'matSliderEndThumb' : 'matSliderThumb',
   );
 
