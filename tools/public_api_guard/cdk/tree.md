@@ -27,6 +27,7 @@ import { TrackByFunction } from '@angular/core';
 import { TreeKeyManagerItem } from '@angular/cdk/a11y';
 import { TreeKeyManagerStrategy } from '@angular/cdk/a11y';
 import { ViewContainerRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public @deprecated
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
@@ -202,7 +203,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     // (undocumented)
     _setActiveItem(): void;
     // (undocumented)
-    protected _tabindex: number | null;
+    protected readonly _tabindex: WritableSignal<number | null>;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)
