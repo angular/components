@@ -24,6 +24,7 @@ import {
   QueryList,
   ViewChild,
   booleanAttribute,
+  signal,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
@@ -83,9 +84,9 @@ export class MatOptionSelectionChange<T = any> {
   imports: [MatPseudoCheckbox, MatRipple],
 })
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-  private _selected = false;
-  private _active = false;
-  private _disabled = false;
+  private _selected = signal(false);
+  private _active = signal(false);
+  private _disabled = signal(false);
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
@@ -95,7 +96,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   /** Whether or not the option is currently selected. */
   get selected(): boolean {
-    return this._selected;
+    return this._selected();
   }
 
   /** The form value of the option. */
@@ -107,10 +108,10 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   /** Whether the option is disabled. */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
-    return (this.group && this.group.disabled) || this._disabled;
+    return (this.group && this.group.disabled) || this._disabled();
   }
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled.set(value);
   }
 
   /** Whether ripples for the option are disabled. */
@@ -147,7 +148,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
    * for components like autocomplete where focus must remain on the input.
    */
   get active(): boolean {
-    return this._active;
+    return this._active();
   }
 
   /**
@@ -161,9 +162,8 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   /** Selects the option. */
   select(emitEvent = true): void {
-    if (!this._selected) {
-      this._selected = true;
-      this._changeDetectorRef.markForCheck();
+    if (!this._selected()) {
+      this._selected.set(true);
 
       if (emitEvent) {
         this._emitSelectionChangeEvent();
@@ -173,9 +173,8 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   /** Deselects the option. */
   deselect(emitEvent = true): void {
-    if (this._selected) {
-      this._selected = false;
-      this._changeDetectorRef.markForCheck();
+    if (this._selected()) {
+      this._selected.set(false);
 
       if (emitEvent) {
         this._emitSelectionChangeEvent();
@@ -200,9 +199,8 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
    * events will display the proper options as active on arrow key events.
    */
   setActiveStyles(): void {
-    if (!this._active) {
-      this._active = true;
-      this._changeDetectorRef.markForCheck();
+    if (!this._active()) {
+      this._active.set(true);
     }
   }
 
@@ -213,8 +211,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
    */
   setInactiveStyles(): void {
     if (this._active) {
-      this._active = false;
-      this._changeDetectorRef.markForCheck();
+      this._active.set(false);
     }
   }
 
@@ -239,8 +236,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
    */
   _selectViaInteraction(): void {
     if (!this.disabled) {
-      this._selected = this.multiple ? !this._selected : true;
-      this._changeDetectorRef.markForCheck();
+      this._selected.set(this.multiple ? !this._selected() : true);
       this._emitSelectionChangeEvent(true);
     }
   }
@@ -264,7 +260,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     // we have to check for changes in the DOM ourselves and dispatch an event. These checks are
     // relatively cheap, however we still limit them only to selected options in order to avoid
     // hitting the DOM too often.
-    if (this._selected) {
+    if (this._selected()) {
       const viewValue = this.viewValue;
 
       if (viewValue !== this._mostRecentViewValue) {
