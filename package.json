@@ -122,7 +122,7 @@
     "browser-sync": "2.26.13",
     "chalk": "^4.1.0",
     "cross-env": "^7.0.3",
-    "date-fns": "^3.0.6",
+    "date-fns": "^4.1.0",
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.29.5",
     "esbuild": "^0.17.5",
