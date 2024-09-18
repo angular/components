@@ -13,6 +13,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChild,
+  Directive,
   EventEmitter,
   forwardRef,
   Inject,
@@ -23,6 +25,7 @@ import {
   Output,
   SimpleChange,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -42,6 +45,7 @@ import {MatYearView} from './year-view';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 import {MatIconButton, MatButton} from '@angular/material/button';
 import {CdkMonitorFocus} from '@angular/cdk/a11y';
+import {CommonModule} from '@angular/common';
 
 let calendarHeaderId = 1;
 
@@ -51,6 +55,14 @@ let calendarHeaderId = 1;
  */
 export type MatCalendarView = 'month' | 'year' | 'multi-year';
 
+@Directive({
+  selector: '[periodButtonIcon]',
+  standalone: true,
+})
+export class MatCalendarHeaderPeriodButtonIcon {
+  constructor(public templateRef: TemplateRef<any>) {}
+}
+
 /** Default header for MatCalendar */
 @Component({
   selector: 'mat-calendar-header',
@@ -59,9 +71,11 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButton, MatIconButton],
+  imports: [MatButton, MatIconButton, CommonModule],
 })
 export class MatCalendarHeader<D> {
+  @ContentChild(MatCalendarHeaderPeriodButtonIcon)
+  _customPeriodButtonIcon: MatCalendarHeaderPeriodButtonIcon;
   constructor(
     private _intl: MatDatepickerIntl,
     @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
