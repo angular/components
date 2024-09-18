@@ -123,7 +123,11 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 export class MatListItemLine {
     constructor(_elementRef: ElementRef<HTMLElement>);
     // (undocumented)
+    addTitleToTruncatedText(): void;
+    // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatListItemLine, "[matListItemLine]", never, {}, {}, never, never, true, never>;
     // (undocumented)
