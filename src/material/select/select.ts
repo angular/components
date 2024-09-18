@@ -178,7 +178,6 @@ export class MatSelectChange {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'combobox',
-    'aria-autocomplete': 'none',
     'aria-haspopup': 'listbox',
     'class': 'mat-mdc-select',
     '[attr.id]': 'id',
