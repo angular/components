@@ -16,6 +16,14 @@ export class _CdkPrivateStyleLoader {
     static ɵprov: i0.ɵɵInjectableDeclaration<_CdkPrivateStyleLoader>;
 }
 
+// @public
+export class _VisuallyHiddenLoader {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<_VisuallyHiddenLoader, "ng-component", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<_VisuallyHiddenLoader, never>;
+}
+
 // (No @packageDocumentation comment for this package)
 
 ```

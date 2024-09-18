@@ -7,3 +7,4 @@
  */
 
 export * from './style-loader';
+export * from './visually-hidden/visually-hidden';
