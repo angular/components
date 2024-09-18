@@ -15,6 +15,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 @Component({
   standalone: true,
   styleUrl: 'visually-hidden.css',
+  exportAs: 'cdkVisuallyHidden',
   encapsulation: ViewEncapsulation.None,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
