@@ -19,7 +19,7 @@ export class _CdkPrivateStyleLoader {
 // @public
 export class _VisuallyHiddenLoader {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<_VisuallyHiddenLoader, "ng-component", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<_VisuallyHiddenLoader, "ng-component", ["cdkVisuallyHidden"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_VisuallyHiddenLoader, never>;
 }
