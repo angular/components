@@ -551,9 +551,15 @@ export class CdkTree<T, K = T>
       }
     });
 
-    // TODO: change to `this._changeDetectorRef.markForCheck()`, or just switch this component to
-    // use signals.
-    this._changeDetectorRef.detectChanges();
+    // Note: we only `detectChanges` from a top-level call, otherwise we risk overflowing
+    // the call stack since this method is called recursively (see #29733.)
+    // TODO: change to `this._changeDetectorRef.markForCheck()`,
+    // or just switch this component to use signals.
+    if (parentData) {
+      this._changeDetectorRef.markForCheck();
+    } else {
+      this._changeDetectorRef.detectChanges();
+    }
   }
 
   /**
