@@ -224,3 +224,8 @@ $rem-typography: mat.m2-define-rem-typography-config();
 @include mat.tree-color($theme);
 @include mat.tree-typography($theme);
 @include mat.tree-density($theme);
+
+@include mat.timepicker-theme($theme);
+@include mat.timepicker-color($theme);
+@include mat.timepicker-typography($theme);
+@include mat.timepicker-density($theme);

@@ -143,3 +143,5 @@
   tooltip-typography, tooltip-density, tooltip-base, tooltip-overrides;
 @forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density,
   tree-base, tree-overrides;
+@forward './timepicker/timepicker-theme' as timepicker-* show timepicker-theme, timepicker-color,
+  timepicker-typography, timepicker-density, timepicker-base, timepicker-overrides;

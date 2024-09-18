@@ -1,0 +1,66 @@
+load(
+    "//tools:defaults.bzl",
+    "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
+    "ng_web_test_suite",
+    "sass_binary",
+    "sass_library",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "timepicker",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":timepicker.css"] + glob(["**/*.html"]),
+    deps = [
+        "//src:dev_mode_types",
+        "//src/cdk/bidi",
+        "//src/cdk/coercion",
+        "//src/material/core",
+        "@npm//@angular/core",
+    ],
+)
+
+sass_library(
+    name = "timepicker_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+sass_binary(
+    name = "timepicker_scss",
+    src = "timepicker.scss",
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+    ),
+    deps = [
+        ":timepicker",
+        "//src/cdk/bidi",
+        "@npm//@angular/platform-browser",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":timepicker.md"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

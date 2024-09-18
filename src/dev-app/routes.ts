@@ -226,6 +226,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./theme/theme-demo').then(m => m.ThemeDemo),
   },
   {
+    path: 'timepicker',
+    loadComponent: () => import('./timepicker/timepicker-demo').then(m => m.TimepickerDemo),
+  },
+  {
     path: 'toolbar',
     loadComponent: () => import('./toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },

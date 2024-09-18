@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "timepicker",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "timepicker-demo.html",
+        ":timepicker_demo_scss",
+    ],
+    deps = [
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/icon",
+        "//src/material/timepicker",
+    ],
+)
+
+sass_binary(
+    name = "timepicker_demo_scss",
+    src = "timepicker-demo.scss",
+)

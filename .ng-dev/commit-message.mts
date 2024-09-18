@@ -81,6 +81,7 @@ export const commitMessage: CommitMessageConfig = {
     'material/sort',
     'material/stepper',
     'material/testing',
+    'material/timepicker',
     'material/theming',
     'material/toolbar',
     'material/tooltip',

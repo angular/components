@@ -36,6 +36,7 @@
 @use '../../tree/tree-theme';
 @use '../../snack-bar/snack-bar-theme';
 @use '../../form-field/form-field-theme';
+@use '../../timepicker/timepicker-theme';
 @use './theming';
 
 // Create a theme.
@@ -79,6 +80,7 @@
     @include sort-theme.theme($theme);
     @include toolbar-theme.theme($theme);
     @include tree-theme.theme($theme);
+    @include timepicker-theme.theme($theme);
   }
 }
 
@@ -120,6 +122,7 @@
   @include sort-theme.base($theme);
   @include toolbar-theme.base($theme);
   @include tree-theme.base($theme);
+  @include timepicker-theme.base($theme);
 }
 
 // @deprecated Use `all-component-themes`.
