@@ -35,6 +35,7 @@
 @use '../../tooltip/tooltip-theme';
 @use '../../snack-bar/snack-bar-theme';
 @use '../../form-field/form-field-theme';
+@use '../../timepicker/timepicker-theme';
 @use '../../tree/tree-theme';
 @use '../theming/inspection';
 @use '../core-theme';
@@ -94,6 +95,7 @@
   @include fab-theme.typography($theme);
   @include snack-bar-theme.typography($theme);
   @include table-theme.typography($theme);
+  @include timepicker-theme.typography($theme);
 }
 
 // @deprecated Use `all-component-typographies`.

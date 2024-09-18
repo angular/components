@@ -42,6 +42,7 @@
 @use './mat/table' as tokens-mat-table;
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/tree' as tokens-mat-tree;
+@use './mat/timepicker' as tokens-mat-timepicker;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
 @use './mdc/text-button' as tokens-mdc-text-button;
 @use './mdc/protected-button' as tokens-mdc-protected-button;
@@ -112,6 +113,7 @@ $_module-names: (
   tokens-mat-text-button,
   tokens-mat-toolbar,
   tokens-mat-tree,
+  tokens-mat-timepicker,
   // MDC tokens
   tokens-mdc-checkbox,
   tokens-mdc-chip,

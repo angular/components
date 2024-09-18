@@ -37,6 +37,7 @@ ALL_EXAMPLES = [
     "//src/components-examples/material/bottom-sheet",
     "//src/components-examples/material/badge",
     "//src/components-examples/material/autocomplete",
+    "//src/components-examples/material/timepicker",
     "//src/components-examples/material-experimental/column-resize",
     "//src/components-examples/material-experimental/popover-edit",
     "//src/components-examples/material-experimental/selection",

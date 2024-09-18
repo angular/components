@@ -111,6 +111,7 @@ export class DevAppLayout {
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
     {name: 'Theme', route: '/theme'},
+    {name: 'Timepicker', route: '/timepicker'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},

@@ -64,6 +64,8 @@ entryPoints = [
     "table/testing",
     "tabs",
     "tabs/testing",
+    "timepicker",
+    "timepicker/testing",
     "toolbar",
     "toolbar/testing",
     "tooltip",

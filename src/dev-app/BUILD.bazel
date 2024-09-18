@@ -72,6 +72,7 @@ ng_module(
         "//src/dev-app/table-scroll-container",
         "//src/dev-app/tabs",
         "//src/dev-app/theme",
+        "//src/dev-app/timepicker",
         "//src/dev-app/toolbar",
         "//src/dev-app/tooltip",
         "//src/dev-app/tree",

@@ -1,0 +1,10 @@
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/timepicker' as tokens-mat-timepicker;
+
+.mat-timepicker {
+  @include token-utils.use-tokens(
+    tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(color, enabled-trigger-text-color);
+    @include token-utils.create-token-slot(font-family, trigger-text-font);
+  }
+}
