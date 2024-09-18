@@ -127,6 +127,11 @@ describe('MapAdvancedMarker', () => {
     flush();
 
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
@@ -163,6 +168,11 @@ describe('MapAdvancedMarker', () => {
         [gmpDraggable]="gmpDraggable"
         [zIndex]="zIndex"
         (mapClick)="handleClick()"
+        (mapDblclick)="handleDblclick()"
+        (mapMouseout)="handleMouseout()"
+        (mapMouseover)="handleMouseover()"
+        (mapMouseup)="handleMouseup()"
+        (mapRightclick)="handleRightclick()"
         [options]="options" />
     </google-map>
   `,
@@ -179,4 +189,9 @@ class TestApp {
   options: google.maps.marker.AdvancedMarkerElementOptions;
 
   handleClick() {}
+  handleDblclick() {}
+  handleMouseout() {}
+  handleMouseover() {}
+  handleMouseup() {}
+  handleRightclick() {}
 }
