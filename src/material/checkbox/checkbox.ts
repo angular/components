@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {
   ANIMATION_MODULE_TYPE,
   AfterViewInit,
@@ -28,6 +28,7 @@ import {
   booleanAttribute,
   forwardRef,
   numberAttribute,
+  OnDestroy,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -116,7 +117,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
-  implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
+  implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption, OnDestroy
 {
   /** Focuses the checkbox. */
   focus() {
@@ -244,6 +245,7 @@ export class MatCheckbox
     public _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ngZone: NgZone,
+    private _focusMonitor: FocusMonitor,
     @Attribute('tabindex') tabIndex: string,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
     @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?: MatCheckboxDefaultOptions,
@@ -263,6 +265,11 @@ export class MatCheckbox
 
   ngAfterViewInit() {
     this._syncIndeterminate(this._indeterminate);
+    this._focusMonitor.monitor(this._elementRef, true);
+  }
+
+  ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Whether the checkbox is checked. */
