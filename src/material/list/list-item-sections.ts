@@ -37,6 +37,25 @@ export class MatListItemTitle {
 })
 export class MatListItemLine {
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    this.addTitleToTruncatedText();
+  }
+
+  // In case text overflow is triggered and ellipsis is applied, adds role='tooltip' and title
+  // attribute to container so visual users can see the full text on hover
+  addTitleToTruncatedText() {
+    if (this._elementRef.nativeElement.offsetWidth < this._elementRef.nativeElement.scrollWidth) {
+      this._elementRef.nativeElement.setAttribute('role', 'tooltip');
+      this._elementRef.nativeElement.setAttribute(
+        'title',
+        this._elementRef.nativeElement.innerText,
+      );
+    } else {
+      this._elementRef.nativeElement.removeAttribute('role');
+      this._elementRef.nativeElement.removeAttribute('title');
+    }
+  }
 }
 
 /**
