@@ -120,7 +120,7 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 }
 
 // @public
-export class MatListItemLine {
+export class MatListItemLine implements AfterViewInit {
     constructor(_elementRef: ElementRef<HTMLElement>);
     // (undocumented)
     addTitleToTruncatedText(): void;

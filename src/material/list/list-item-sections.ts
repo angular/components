@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Optional} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Inject, Optional} from '@angular/core';
 import {LIST_OPTION, ListOption} from './list-option-types';
 
 /**
@@ -35,7 +35,7 @@ export class MatListItemTitle {
   host: {'class': 'mat-mdc-list-item-line mdc-list-item__secondary-text'},
   standalone: true,
 })
-export class MatListItemLine {
+export class MatListItemLine implements AfterViewInit {
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
