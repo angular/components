@@ -5519,12 +5519,14 @@ class SelectInNgContainer {}
   `,
 })
 class SelectInsideDynamicFormGroup {
+  private _formBuilder = inject(FormBuilder);
+
   @ViewChild(MatSelect) select: MatSelect;
   form: FormGroup;
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor() {
     this.assignGroup(false);
   }
 

@@ -8,15 +8,14 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 
 // @public (undocumented)
 export class MatToolbar implements AfterViewInit {
-    constructor(_elementRef: ElementRef, _platform: Platform, document?: any);
+    constructor(...args: unknown[]);
     color?: string | null;
     // (undocumented)
-    protected _elementRef: ElementRef;
+    protected _elementRef: ElementRef<any>;
     // (undocumented)
     ngAfterViewInit(): void;
     _toolbarRows: QueryList<MatToolbarRow>;

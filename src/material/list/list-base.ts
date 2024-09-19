@@ -14,11 +14,9 @@ import {
   Directive,
   ElementRef,
   inject,
-  Inject,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   QueryList,
   ANIMATION_MODULE_TYPE,
   Injector,
@@ -86,6 +84,11 @@ export abstract class MatListBase {
 })
 /** @docs-private */
 export abstract class MatListItemBase implements AfterViewInit, OnDestroy, RippleTarget {
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _ngZone = inject(NgZone);
+  private _listBase = inject(MatListBase, {optional: true});
+  private _platform = inject(Platform);
+
   /** Query list matching list-item line elements. */
   abstract _lines: QueryList<MatListItemLine> | undefined;
 
@@ -174,22 +177,20 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
     return this.disableRipple || !!this.rippleConfig.disabled;
   }
 
-  constructor(
-    public _elementRef: ElementRef<HTMLElement>,
-    protected _ngZone: NgZone,
-    @Optional() private _listBase: MatListBase | null,
-    private _platform: Platform,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+      optional: true,
+    });
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.rippleConfig = globalRippleOptions || {};
     this._hostElement = this._elementRef.nativeElement;
     this._isButtonElement = this._hostElement.nodeName.toLowerCase() === 'button';
     this._noopAnimations = animationMode === 'NoopAnimations';
 
-    if (_listBase && !_listBase._isNonInteractive) {
+    if (this._listBase && !this._listBase._isNonInteractive) {
       this._initInteractiveListItem();
     }
 

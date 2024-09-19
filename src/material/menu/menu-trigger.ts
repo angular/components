@@ -31,14 +31,11 @@ import {
   ElementRef,
   EventEmitter,
   inject,
-  Inject,
   InjectionToken,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
-  Self,
   ViewContainerRef,
 } from '@angular/core';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
@@ -100,14 +97,22 @@ export const MENU_PANEL_TOP_PADDING = 8;
   standalone: true,
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
+  private _overlay = inject(Overlay);
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _menuItemInstance = inject(MatMenuItem, {optional: true, self: true})!;
+  private _dir = inject(Directionality, {optional: true});
+  private _focusMonitor = inject(FocusMonitor);
+  private _ngZone = inject(NgZone);
+  private _scrollStrategy = inject(MAT_MENU_SCROLL_STRATEGY);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
-  private _scrollStrategy: () => ScrollStrategy;
-  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   /**
    * We're specifically looking for a `MatMenu` here since the generic `MatMenuPanel`
@@ -211,65 +216,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
-  constructor(
-    overlay: Overlay,
-    element: ElementRef<HTMLElement>,
-    viewContainerRef: ViewContainerRef,
-    scrollStrategy: any,
-    parentMenu: MatMenuPanel,
-    menuItemInstance: MatMenuItem,
-    dir: Directionality,
-    focusMonitor: FocusMonitor,
-    ngZone: NgZone,
-  );
+  constructor(...args: unknown[]);
 
-  /**
-   * @deprecated `focusMonitor` will become a required parameter.
-   * @breaking-change 8.0.0
-   */
-  constructor(
-    overlay: Overlay,
-    element: ElementRef<HTMLElement>,
-    viewContainerRef: ViewContainerRef,
-    scrollStrategy: any,
-    parentMenu: MatMenuPanel,
-    menuItemInstance: MatMenuItem,
-    dir: Directionality,
-    focusMonitor?: FocusMonitor | null,
-  );
+  constructor() {
+    const parentMenu = inject<MatMenuPanel>(MAT_MENU_PANEL, {optional: true});
 
-  /**
-   * @deprecated `ngZone` will become a required parameter.
-   * @breaking-change 15.0.0
-   */
-  constructor(
-    overlay: Overlay,
-    element: ElementRef<HTMLElement>,
-    viewContainerRef: ViewContainerRef,
-    scrollStrategy: any,
-    parentMenu: MatMenuPanel,
-    menuItemInstance: MatMenuItem,
-    dir: Directionality,
-    focusMonitor: FocusMonitor,
-  );
-
-  constructor(
-    private _overlay: Overlay,
-    private _element: ElementRef<HTMLElement>,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_MENU_SCROLL_STRATEGY) scrollStrategy: any,
-    @Inject(MAT_MENU_PANEL) @Optional() parentMenu: MatMenuPanel,
-    // `MatMenuTrigger` is commonly used in combination with a `MatMenuItem`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() @Self() private _menuItemInstance: MatMenuItem,
-    @Optional() private _dir: Directionality,
-    private _focusMonitor: FocusMonitor | null,
-    private _ngZone?: NgZone,
-  ) {
-    this._scrollStrategy = scrollStrategy;
     this._parentMaterialMenu = parentMenu instanceof MatMenu ? parentMenu : undefined;
 
-    _element.nativeElement.addEventListener(
+    this._element.nativeElement.addEventListener(
       'touchstart',
       this._handleTouchStart,
       passiveEventListenerOptions,
@@ -500,7 +454,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       backdropClass: menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       panelClass: menu.overlayPanelClass,
       scrollStrategy: this._scrollStrategy(),
-      direction: this._dir,
+      direction: this._dir || 'ltr',
     });
   }
 
@@ -512,17 +466,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _subscribeToPositions(menu: MatMenuPanel, position: FlexibleConnectedPositionStrategy) {
     if (menu.setPositionClasses) {
       position.positionChanges.subscribe(change => {
-        const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
-        const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
-
-        // @breaking-change 15.0.0 Remove null check for `ngZone`.
-        // `positionChanges` fires outside of the `ngZone` and `setPositionClasses` might be
-        // updating something in the view so we need to bring it back in.
-        if (this._ngZone) {
-          this._ngZone.run(() => menu.setPositionClasses!(posX, posY));
-        } else {
+        this._ngZone.run(() => {
+          const posX: MenuPositionX =
+            change.connectionPair.overlayX === 'start' ? 'after' : 'before';
+          const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
           menu.setPositionClasses!(posX, posY);
-        }
+        });
       });
     }
   }

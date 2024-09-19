@@ -12,7 +12,6 @@ import {
   ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -21,14 +20,12 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Injector,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -38,6 +35,7 @@ import {
   forwardRef,
   inject,
   numberAttribute,
+  HostAttributeToken,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {MatRipple, ThemePalette, _MatInternalFormField} from '@angular/material/core';
@@ -120,6 +118,8 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
   standalone: true,
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
+  private _changeDetector = inject(ChangeDetectorRef);
+
   /** Selected value for the radio group. */
   private _value: any = null;
 
@@ -264,7 +264,9 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   }
   private _disabledInteractive = false;
 
-  constructor(private _changeDetector: ChangeDetectorRef) {}
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   /**
    * Initialize properties once content children are available.
@@ -407,6 +409,14 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
+  protected _elementRef = inject(ElementRef);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _focusMonitor = inject(FocusMonitor);
+  private _radioDispatcher = inject(UniqueSelectionDispatcher);
+  private _defaultOptions = inject<MatRadioDefaultOptions>(MAT_RADIO_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
   private _ngZone = inject(NgZone);
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -587,23 +597,18 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
 
   private _injector = inject(Injector);
 
-  constructor(
-    @Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
-    protected _elementRef: ElementRef,
-    private _changeDetector: ChangeDetectorRef,
-    private _focusMonitor: FocusMonitor,
-    private _radioDispatcher: UniqueSelectionDispatcher,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional()
-    @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-    private _defaultOptions?: MatRadioDefaultOptions,
-    @Attribute('tabindex') tabIndex?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const radioGroup = inject<MatRadioGroup>(MAT_RADIO_GROUP, {optional: true})!;
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
     this._noopAnimations = animationMode === 'NoopAnimations';
-    this._disabledInteractive = _defaultOptions?.disabledInteractive ?? false;
+    this._disabledInteractive = this._defaultOptions?.disabledInteractive ?? false;
 
     if (tabIndex) {
       this.tabIndex = numberAttribute(tabIndex, 0);

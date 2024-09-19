@@ -14,13 +14,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {merge, Subscription} from 'rxjs';
 import {
@@ -96,6 +95,16 @@ interface MatSortHeaderColumnDef {
   standalone: true,
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
+  _intl = inject(MatSortHeaderIntl);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _sort = inject(MatSort, {optional: true})!;
+  _columnDef = inject<MatSortHeaderColumnDef>('MAT_SORT_HEADER_COLUMN_DEF' as any, {
+    optional: true,
+  });
+  private _focusMonitor = inject(FocusMonitor);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ariaDescriber = inject(AriaDescriber, {optional: true});
+
   private _rerenderSubscription: Subscription;
 
   /**
@@ -161,32 +170,18 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   @Input({transform: booleanAttribute})
   disableClear: boolean;
 
-  constructor(
-    /**
-     * @deprecated `_intl` parameter isn't being used anymore and it'll be removed.
-     * @breaking-change 13.0.0
-     */
-    public _intl: MatSortHeaderIntl,
-    private _changeDetectorRef: ChangeDetectorRef,
-    // `MatSort` is not optionally injected, but just asserted manually w/ better error.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() public _sort: MatSort,
-    @Inject('MAT_SORT_HEADER_COLUMN_DEF')
-    @Optional()
-    public _columnDef: MatSortHeaderColumnDef,
-    private _focusMonitor: FocusMonitor,
-    private _elementRef: ElementRef<HTMLElement>,
-    /** @breaking-change 14.0.0 _ariaDescriber will be required. */
-    @Optional() private _ariaDescriber?: AriaDescriber | null,
-    @Optional()
-    @Inject(MAT_SORT_DEFAULT_OPTIONS)
-    defaultOptions?: MatSortDefaultOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaultOptions = inject<MatSortDefaultOptions>(MAT_SORT_DEFAULT_OPTIONS, {
+      optional: true,
+    });
+
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
     // of this single reference.
-    if (!_sort && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (!this._sort && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getSortHeaderNotContainedWithinSortError();
     }
 

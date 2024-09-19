@@ -10,11 +10,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
-  Inject,
   InjectionToken,
   Input,
-  Optional,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 
 export type MatCardAppearance = 'outlined' | 'raised';
@@ -51,7 +50,10 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
 export class MatCard {
   @Input() appearance: MatCardAppearance;
 
-  constructor(@Inject(MAT_CARD_CONFIG) @Optional() config?: MatCardConfig) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const config = inject<MatCardConfig>(MAT_CARD_CONFIG, {optional: true});
     this.appearance = config?.appearance || 'raised';
   }
 }

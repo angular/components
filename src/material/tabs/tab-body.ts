@@ -19,16 +19,14 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  forwardRef,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {distinctUntilChanged, startWith} from 'rxjs/operators';
@@ -43,17 +41,20 @@ import {matTabsAnimations} from './tabs-animations';
   standalone: true,
 })
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
+  private _host = inject(MatTabBody);
+
   /** Subscription to events for when the tab body begins centering. */
   private _centeringSub = Subscription.EMPTY;
   /** Subscription to events for when the tab body finishes leaving from center position. */
   private _leavingSub = Subscription.EMPTY;
 
-  constructor(
-    componentFactoryResolver: ComponentFactoryResolver,
-    viewContainerRef: ViewContainerRef,
-    @Inject(forwardRef(() => MatTabBody)) private _host: MatTabBody,
-    @Inject(DOCUMENT) _document: any,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const componentFactoryResolver = inject(ComponentFactoryResolver);
+    const viewContainerRef = inject(ViewContainerRef);
+    const _document = inject(DOCUMENT);
+
     super(componentFactoryResolver, viewContainerRef, _document);
   }
 
@@ -120,6 +121,9 @@ export type MatTabBodyPositionState =
   imports: [MatTabBodyPortal, CdkScrollable],
 })
 export class MatTabBody implements OnInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
   private _positionIndex: number;
 
@@ -168,13 +172,12 @@ export class MatTabBody implements OnInit, OnDestroy {
     this._computePositionAnimationState();
   }
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    @Optional() private _dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef,
-  ) {
-    if (_dir) {
-      this._dirChangeSubscription = _dir.change.subscribe((dir: Direction) => {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    if (this._dir) {
+      const changeDetectorRef = inject(ChangeDetectorRef);
+      this._dirChangeSubscription = this._dir.change.subscribe((dir: Direction) => {
         this._computePositionAnimationState(dir);
         changeDetectorRef.markForCheck();
       });

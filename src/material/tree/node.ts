@@ -9,21 +9,19 @@
 import {
   CDK_TREE_NODE_OUTLET_NODE,
   CdkNestedTreeNode,
-  CdkTree,
   CdkTreeNode,
   CdkTreeNodeDef,
 } from '@angular/cdk/tree';
 import {
   AfterContentInit,
-  Attribute,
   Directive,
-  ElementRef,
   Input,
-  IterableDiffers,
   OnDestroy,
   OnInit,
   booleanAttribute,
   numberAttribute,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
 
@@ -108,21 +106,12 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     this.isDisabled = value;
   }
 
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    tree: CdkTree<T, K>,
-    /**
-     * The tabindex of the tree node.
-     *
-     * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
-     *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
-     *   an unexpected state. Tabindex to be removed in a future version.
-     * @breaking-change 21.0.0 Remove this attribute.
-     */
-    @Attribute('tabindex') tabIndex: string,
-  ) {
-    super(elementRef, tree);
+  constructor(...args: unknown[]);
 
+  constructor() {
+    super();
+
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     this.tabIndexInputBinding = Number(tabIndex) || this.defaultTabIndex;
   }
 
@@ -200,18 +189,6 @@ export class MatNestedTreeNode<T, K = T>
     this._tabIndex = value;
   }
   private _tabIndex: number;
-
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    tree: CdkTree<T, K>,
-    differs: IterableDiffers,
-    // Ignore tabindex attribute. MatTree manages its own active state using TreeKeyManager.
-    // Keeping tabIndex in constructor for backwards compatibility with trees created before
-    // introducing TreeKeyManager.
-    @Attribute('tabindex') tabIndex: string,
-  ) {
-    super(elementRef, tree, differs);
-  }
 
   // This is a workaround for https://github.com/angular/angular/issues/19145
   // In aot mode, the lifecycle hooks from parent class are not called.

@@ -20,12 +20,10 @@ import {
   Component,
   Directive,
   ElementRef,
-  Inject,
   InjectionToken,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
@@ -190,6 +188,20 @@ const MAX_WIDTH = 200;
   standalone: true,
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
+  private _overlay = inject(Overlay);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _scrollDispatcher = inject(ScrollDispatcher);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
+  private _ariaDescriber = inject(AriaDescriber);
+  private _focusMonitor = inject(FocusMonitor);
+  protected _dir = inject(Directionality);
+  private _injector = inject(Injector);
+  private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
 
@@ -198,7 +210,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _positionAtOrigin: boolean = false;
   private _disabled: boolean = false;
   private _tooltipClass: string | string[] | Set<string> | {[key: string]: any};
-  private _scrollStrategy: () => ScrollStrategy;
+  private _scrollStrategy = inject(MAT_TOOLTIP_SCROLL_STRATEGY);
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   private readonly _tooltipComponent = TooltipComponent;
@@ -351,7 +363,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     [];
 
   /** Reference to the current document. */
-  private _document: Document;
+  private _document = inject(DOCUMENT);
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: null | ReturnType<typeof setTimeout> = null;
@@ -359,49 +371,33 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
 
-  private _injector = inject(Injector);
+  constructor(...args: unknown[]);
 
-  constructor(
-    private _overlay: Overlay,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _scrollDispatcher: ScrollDispatcher,
-    private _viewContainerRef: ViewContainerRef,
-    private _ngZone: NgZone,
-    private _platform: Platform,
-    private _ariaDescriber: AriaDescriber,
-    private _focusMonitor: FocusMonitor,
-    @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
-    protected _dir: Directionality,
-    @Optional()
-    @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS)
-    private _defaultOptions: MatTooltipDefaultOptions,
-    @Inject(DOCUMENT) _document: any,
-  ) {
-    this._scrollStrategy = scrollStrategy;
-    this._document = _document;
+  constructor() {
+    const defaultOptions = this._defaultOptions;
 
-    if (_defaultOptions) {
-      this._showDelay = _defaultOptions.showDelay;
-      this._hideDelay = _defaultOptions.hideDelay;
+    if (defaultOptions) {
+      this._showDelay = defaultOptions.showDelay;
+      this._hideDelay = defaultOptions.hideDelay;
 
-      if (_defaultOptions.position) {
-        this.position = _defaultOptions.position;
+      if (defaultOptions.position) {
+        this.position = defaultOptions.position;
       }
 
-      if (_defaultOptions.positionAtOrigin) {
-        this.positionAtOrigin = _defaultOptions.positionAtOrigin;
+      if (defaultOptions.positionAtOrigin) {
+        this.positionAtOrigin = defaultOptions.positionAtOrigin;
       }
 
-      if (_defaultOptions.touchGestures) {
-        this.touchGestures = _defaultOptions.touchGestures;
+      if (defaultOptions.touchGestures) {
+        this.touchGestures = defaultOptions.touchGestures;
       }
 
-      if (_defaultOptions.tooltipClass) {
-        this.tooltipClass = _defaultOptions.tooltipClass;
+      if (defaultOptions.tooltipClass) {
+        this.tooltipClass = defaultOptions.tooltipClass;
       }
     }
 
-    _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
       if (this._overlayRef) {
         this._updatePosition(this._overlayRef);
       }
@@ -813,7 +809,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
           this._touchstartTimeout = setTimeout(() => {
             this._touchstartTimeout = null;
             this.show(undefined, origin);
-          }, this._defaultOptions.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
+          }, this._defaultOptions?.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
         },
       ]);
     }
@@ -847,7 +843,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
         if (this._touchstartTimeout) {
           clearTimeout(this._touchstartTimeout);
         }
-        this.hide(this._defaultOptions.touchendHideDelay);
+        this.hide(this._defaultOptions?.touchendHideDelay);
       };
 
       exitListeners.push(['touchend', touchendListener], ['touchcancel', touchendListener]);
@@ -955,6 +951,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   imports: [NgClass],
 })
 export class TooltipComponent implements OnDestroy {
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /* Whether the tooltip text overflows to multiple lines */
   _isMultiline = false;
 
@@ -1002,11 +1001,10 @@ export class TooltipComponent implements OnDestroy {
   /** Name of the hide animation and the class that toggles it. */
   private readonly _hideAnimation = 'mat-mdc-tooltip-hide';
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    protected _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._animationsDisabled = animationMode === 'NoopAnimations';
   }
 

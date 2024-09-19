@@ -6,23 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   ContentChildren,
   ElementRef,
-  Inject,
-  NgZone,
-  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
   InjectionToken,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
 import {MatListItemLine, MatListItemMeta, MatListItemTitle} from './list-item-sections';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -87,17 +81,6 @@ export class MatListItem extends MatListItemBase {
     this._activated = coerceBooleanProperty(activated);
   }
   _activated = false;
-
-  constructor(
-    element: ElementRef,
-    ngZone: NgZone,
-    @Optional() listBase: MatListBase | null,
-    platform: Platform,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(element, ngZone, listBase, platform, globalRippleOptions, animationMode);
-  }
 
   /**
    * Determine the value of `aria-current`. Return 'page' if this item is an activated anchor tag.

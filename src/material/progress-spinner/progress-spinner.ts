@@ -10,14 +10,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
   InjectionToken,
   Input,
-  Optional,
   ViewChild,
   ViewEncapsulation,
   numberAttribute,
   ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {NgTemplateOutlet} from '@angular/common';
@@ -97,6 +96,8 @@ const BASE_STROKE_WIDTH = 10;
   imports: [NgTemplateOutlet],
 })
 export class MatProgressSpinner {
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
 
@@ -121,16 +122,16 @@ export class MatProgressSpinner {
   /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
-  constructor(
-    readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-    @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-    defaults?: MatProgressSpinnerDefaultOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    const defaults = inject<MatProgressSpinnerDefaultOptions>(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS);
+
     this._noopAnimations =
       animationMode === 'NoopAnimations' && !!defaults && !defaults._forceAnimations;
     this.mode =
-      _elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner'
+      this._elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner'
         ? 'indeterminate'
         : 'determinate';
 

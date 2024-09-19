@@ -12,12 +12,11 @@ import {
   ElementRef,
   OnDestroy,
   ViewEncapsulation,
-  Inject,
-  Optional,
   Input,
   AfterViewInit,
   ChangeDetectorRef,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
@@ -49,6 +48,12 @@ import {MatRipple} from '@angular/material/core';
   imports: [MatRipple],
 })
 export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _document = inject(DOCUMENT);
+  private _focusMonitor = inject(FocusMonitor);
+  _parentMenu? = inject<MatMenuPanel<MatMenuItem>>(MAT_MENU_PANEL, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** ARIA role for the menu item. */
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
 
@@ -70,34 +75,10 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   /** Whether the menu item acts as a trigger for a sub-menu. */
   _triggersSubmenu: boolean = false;
 
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    document: any,
-    focusMonitor: FocusMonitor,
-    parentMenu: MatMenuPanel<MatMenuItem> | undefined,
-    changeDetectorRef: ChangeDetectorRef,
-  );
+  constructor(...args: unknown[]);
 
-  /**
-   * @deprecated `document`, `changeDetectorRef` and `focusMonitor` to become required.
-   * @breaking-change 12.0.0
-   */
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    document?: any,
-    focusMonitor?: FocusMonitor,
-    parentMenu?: MatMenuPanel<MatMenuItem>,
-    changeDetectorRef?: ChangeDetectorRef,
-  );
-
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) private _document?: any,
-    private _focusMonitor?: FocusMonitor,
-    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
-    private _changeDetectorRef?: ChangeDetectorRef,
-  ) {
-    _parentMenu?.addItem?.(this);
+  constructor() {
+    this._parentMenu?.addItem?.(this);
   }
 
   /** Focuses the menu item. */
@@ -173,15 +154,13 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
     // We need to mark this for check for the case where the content is coming from a
     // `matMenuContent` whose change detection tree is at the declaration position,
     // not the insertion position. See #23175.
-    // @breaking-change 12.0.0 Remove null check for `_changeDetectorRef`.
     this._highlighted = isHighlighted;
-    this._changeDetectorRef?.markForCheck();
+    this._changeDetectorRef.markForCheck();
   }
 
   _setTriggersSubmenu(triggersSubmenu: boolean) {
-    // @breaking-change 12.0.0 Remove null check for `_changeDetectorRef`.
     this._triggersSubmenu = triggersSubmenu;
-    this._changeDetectorRef?.markForCheck();
+    this._changeDetectorRef.markForCheck();
   }
 
   _hasFocus(): boolean {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Optional} from '@angular/core';
+import {Directive, ElementRef, inject} from '@angular/core';
 import {LIST_OPTION, ListOption} from './list-option-types';
 
 /**
@@ -21,7 +21,10 @@ import {LIST_OPTION, ListOption} from './list-option-types';
   standalone: true,
 })
 export class MatListItemTitle {
-  constructor(public _elementRef: ElementRef<HTMLElement>) {}
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -36,7 +39,10 @@ export class MatListItemTitle {
   standalone: true,
 })
 export class MatListItemLine {
-  constructor(public _elementRef: ElementRef<HTMLElement>) {}
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -72,7 +78,10 @@ export class MatListItemMeta {}
   standalone: true,
 })
 export class _MatListItemGraphicBase {
-  constructor(@Optional() @Inject(LIST_OPTION) public _listOption: ListOption) {}
+  _listOption = inject<ListOption>(LIST_OPTION, {optional: true});
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   _isAlignedAtStart() {
     // By default, in all list items the graphic is aligned at start. In list options,

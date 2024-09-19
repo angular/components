@@ -11,9 +11,8 @@ import {
   ViewEncapsulation,
   Input,
   ChangeDetectionStrategy,
-  Inject,
-  Optional,
   ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
 
 /**
@@ -53,6 +52,8 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
   standalone: true,
 })
 export class MatPseudoCheckbox {
+  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /** Display state of the checkbox. */
   @Input() state: MatPseudoCheckboxState = 'unchecked';
 
@@ -65,5 +66,6 @@ export class MatPseudoCheckbox {
    */
   @Input() appearance: 'minimal' | 'full' = 'full';
 
-  constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 }

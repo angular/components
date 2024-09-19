@@ -77,6 +77,9 @@ export class MatSelectionList
   extends MatListBase
   implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
 {
+  _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+
   private _initialized = false;
   private _keyManager: FocusKeyManager<MatListOption>;
 
@@ -155,10 +158,9 @@ export class MatSelectionList
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    public _element: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
     this._isNonInteractive = false;
   }

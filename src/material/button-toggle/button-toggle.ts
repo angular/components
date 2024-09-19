@@ -11,7 +11,6 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, SPACE, ENTER} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -23,15 +22,15 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
   InjectionToken,
-  Inject,
   AfterViewInit,
   booleanAttribute,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -137,6 +136,9 @@ export class MatButtonToggleChange {
   standalone: true,
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _dir = inject(Directionality, {optional: true});
+
   private _multiple = false;
   private _disabled = false;
   private _disabledInteractive = false;
@@ -274,13 +276,14 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
   private _hideMultipleSelectionIndicator: boolean;
 
-  constructor(
-    private _changeDetector: ChangeDetectorRef,
-    @Optional()
-    @Inject(MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS)
-    defaultOptions?: MatButtonToggleDefaultOptions,
-    @Optional() private _dir?: Directionality,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaultOptions = inject<MatButtonToggleDefaultOptions>(
+      MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
+      {optional: true},
+    );
+
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
     this.hideSingleSelectionIndicator = defaultOptions?.hideSingleSelectionIndicator ?? false;
@@ -557,6 +560,10 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   imports: [MatRipple, MatPseudoCheckbox],
 })
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _focusMonitor = inject(FocusMonitor);
+
   private _checked = false;
 
   /**
@@ -658,16 +665,16 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
 
-  constructor(
-    @Optional() @Inject(MAT_BUTTON_TOGGLE_GROUP) toggleGroup: MatButtonToggleGroup,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _focusMonitor: FocusMonitor,
-    @Attribute('tabindex') defaultTabIndex: string,
-    @Optional()
-    @Inject(MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS)
-    defaultOptions?: MatButtonToggleDefaultOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const toggleGroup = inject<MatButtonToggleGroup>(MAT_BUTTON_TOGGLE_GROUP, {optional: true})!;
+    const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const defaultOptions = inject<MatButtonToggleDefaultOptions>(
+      MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
+      {optional: true},
+    );
+
     const parsedTabIndex = Number(defaultTabIndex);
     this.tabIndex = parsedTabIndex || parsedTabIndex === 0 ? parsedTabIndex : null;
     this.buttonToggleGroup = toggleGroup;

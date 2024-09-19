@@ -10,19 +10,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  Inject,
   InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Optional,
   SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {MatTabContent} from './tab-content';
 import {MAT_TAB, MatTabLabel} from './tab-label';
@@ -54,6 +53,9 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   },
 })
 export class MatTab implements OnInit, OnChanges, OnDestroy {
+  private _viewContainerRef = inject(ViewContainerRef);
+  _closestTabGroup = inject(MAT_TAB_GROUP, {optional: true});
+
   /** whether the tab is disabled. */
   @Input({transform: booleanAttribute})
   disabled: boolean = false;
@@ -124,10 +126,8 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    */
   isActive = false;
 
-  constructor(
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_TAB_GROUP) @Optional() public _closestTabGroup: any,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {

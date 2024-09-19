@@ -42,16 +42,13 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   inject,
   InjectionToken,
   Injector,
   Input,
-  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   SimpleChanges,
   ViewChild,
@@ -140,6 +137,15 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   implements OnInit, AfterViewInit, OnDestroy
 {
+  protected _elementRef = inject(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _globalModel = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter)!;
+  private _rangeSelectionStrategy = inject<MatDateRangeSelectionStrategy<D>>(
+    MAT_DATE_RANGE_SELECTION_STRATEGY,
+    {optional: true},
+  );
+
   private _subscriptions = new Subscription();
   private _model: MatDateSelectionModel<S, D>;
   /** Reference to the internal calendar component. */
@@ -193,16 +199,11 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Id of the label for the `role="dialog"` element. */
   _dialogLabelId: string | null;
 
-  constructor(
-    protected _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _globalModel: MatDateSelectionModel<S, D>,
-    private _dateAdapter: DateAdapter<D>,
-    @Optional()
-    @Inject(MAT_DATE_RANGE_SELECTION_STRATEGY)
-    private _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>,
-    intl: MatDatepickerIntl,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const intl = inject(MatDatepickerIntl);
+
     this._closeButtonText = intl.closeCalendarLabel;
   }
 
@@ -358,7 +359,13 @@ export abstract class MatDatepickerBase<
   >
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
-  private _scrollStrategy: () => ScrollStrategy;
+  private _overlay = inject(Overlay);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dir = inject(Directionality, {optional: true});
+  private _model = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
+
+  private _scrollStrategy = inject(MAT_DATEPICKER_SCROLL_STRATEGY);
   private _inputStateChanges = Subscription.EMPTY;
   private _document = inject(DOCUMENT);
 
@@ -530,24 +537,12 @@ export abstract class MatDatepickerBase<
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    private _overlay: Overlay,
-    /**
-     * @deprecated parameter is unused and will be removed
-     * @breaking-change 19.0.0
-     */
-    _unusedNgZone: NgZone,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() private _dateAdapter: DateAdapter<D>,
-    @Optional() private _dir: Directionality,
-    private _model: MatDateSelectionModel<S, D>,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');
     }
-
-    this._scrollStrategy = scrollStrategy;
 
     this._model.selectionChanged.subscribe(() => {
       this._changeDetectorRef.markForCheck();
@@ -741,7 +736,7 @@ export abstract class MatDatepickerBase<
           isDialog ? 'cdk-overlay-dark-backdrop' : 'mat-overlay-transparent-backdrop',
           this._backdropHarnessClass,
         ],
-        direction: this._dir,
+        direction: this._dir || 'ltr',
         scrollStrategy: isDialog ? this._overlay.scrollStrategies.block() : this._scrollStrategy(),
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
       }),

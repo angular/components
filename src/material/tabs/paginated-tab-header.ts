@@ -21,12 +21,10 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   Injector,
   Input,
   NgZone,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
   afterNextRender,
@@ -81,6 +79,14 @@ export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRe
 export abstract class MatPaginatedTabHeader
   implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
 {
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _changeDetectorRef = inject(ChangeDetectorRef);
+  private _viewportRuler = inject(ViewportRuler);
+  private _dir = inject(Directionality, {optional: true});
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   abstract _items: QueryList<MatPaginatedTabHeaderItem>;
   abstract _inkBar: {hide: () => void; alignToElement: (element: HTMLElement) => void};
   abstract _tabListContainer: ElementRef<HTMLElement>;
@@ -161,22 +167,14 @@ export abstract class MatPaginatedTabHeader
 
   private _injector = inject(Injector);
 
-  constructor(
-    protected _elementRef: ElementRef<HTMLElement>,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    private _viewportRuler: ViewportRuler,
-    @Optional() private _dir: Directionality,
-    private _ngZone: NgZone,
-    private _platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
-    _ngZone.runOutsideAngular(() => {
-      fromEvent(_elementRef.nativeElement, 'mouseleave')
+    this._ngZone.runOutsideAngular(() => {
+      fromEvent(this._elementRef.nativeElement, 'mouseleave')
         .pipe(takeUntil(this._destroyed))
-        .subscribe(() => {
-          this._stopInterval();
-        });
+        .subscribe(() => this._stopInterval());
     });
   }
 

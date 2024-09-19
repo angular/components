@@ -10,20 +10,18 @@ import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
   ElementRef,
-  Host,
-  Inject,
   Input,
   numberAttribute,
   OnDestroy,
-  Optional,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -64,19 +62,24 @@ import {
   standalone: true,
 })
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
+  panel = inject(MatExpansionPanel, {host: true});
+  private _element = inject(ElementRef);
+  private _focusMonitor = inject(FocusMonitor);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   private _parentChangeSubscription = Subscription.EMPTY;
 
-  constructor(
-    @Host() public panel: MatExpansionPanel,
-    private _element: ElementRef,
-    private _focusMonitor: FocusMonitor,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS)
-    @Optional()
-    defaultOptions?: MatExpansionPanelDefaultOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    @Attribute('tabindex') tabIndex?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const panel = this.panel;
+    const defaultOptions = inject<MatExpansionPanelDefaultOptions>(
+      MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+      {optional: true},
+    );
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+
     const accordionHideToggleChange = panel.accordion
       ? panel.accordion._stateChanges.pipe(
           filter(changes => !!(changes['hideToggle'] || changes['togglePosition'])),
@@ -100,7 +103,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
     // Avoids focus being lost if the panel contained the focused element and was closed.
     panel.closed
       .pipe(filter(() => panel._containsFocus()))
-      .subscribe(() => _focusMonitor.focusVia(_element, 'program'));
+      .subscribe(() => this._focusMonitor.focusVia(this._element, 'program'));
 
     if (defaultOptions) {
       this.expandedHeight = defaultOptions.expandedHeight;

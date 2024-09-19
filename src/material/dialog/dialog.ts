@@ -6,18 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentType, Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
-import {Location} from '@angular/common';
+import {ComponentType, Overlay, ScrollStrategy} from '@angular/cdk/overlay';
 import {
-  ANIMATION_MODULE_TYPE,
   ComponentRef,
-  Inject,
   Injectable,
   InjectionToken,
-  Injector,
   OnDestroy,
-  Optional,
-  SkipSelf,
   TemplateRef,
   Type,
   inject,
@@ -79,10 +73,15 @@ let uniqueId = 0;
  */
 @Injectable({providedIn: 'root'})
 export class MatDialog implements OnDestroy {
+  private _overlay = inject(Overlay);
+  private _defaultOptions = inject<MatDialogConfig>(MAT_DIALOG_DEFAULT_OPTIONS, {optional: true});
+  private _scrollStrategy = inject(MAT_DIALOG_SCROLL_STRATEGY);
+  private _parentDialog = inject(MatDialog, {optional: true, skipSelf: true});
+  protected _dialog = inject(Dialog);
+
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
-  protected _dialog: Dialog;
   protected dialogConfigClass = MatDialogConfig;
 
   private readonly _dialogRefConstructor: Type<MatDialogRef<any>>;
@@ -114,32 +113,9 @@ export class MatDialog implements OnDestroy {
       : this._getAfterAllClosed().pipe(startWith(undefined)),
   ) as Observable<any>;
 
-  constructor(
-    private _overlay: Overlay,
-    injector: Injector,
-    /**
-     * @deprecated `_location` parameter to be removed.
-     * @breaking-change 10.0.0
-     */
-    @Optional() location: Location,
-    @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions: MatDialogConfig,
-    @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy: any,
-    @Optional() @SkipSelf() private _parentDialog: MatDialog,
-    /**
-     * @deprecated No longer used. To be removed.
-     * @breaking-change 15.0.0
-     */
-    _overlayContainer: OverlayContainer,
-    /**
-     * @deprecated No longer used. To be removed.
-     * @breaking-change 14.0.0
-     */
-    @Optional()
-    @Inject(ANIMATION_MODULE_TYPE)
-    _animationMode?: 'NoopAnimations' | 'BrowserAnimations',
-  ) {
-    this._dialog = injector.get(Dialog);
+  constructor(...args: unknown[]);
 
+  constructor() {
     this._dialogRefConstructor = MatDialogRef;
     this._dialogContainerType = MatDialogContainer;
     this._dialogDataToken = MAT_DIALOG_DATA;

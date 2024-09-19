@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Input, booleanAttribute} from '@angular/core';
+import {Directive, ElementRef, Input, booleanAttribute, inject} from '@angular/core';
 import {InkBarItem} from './ink-bar';
 
 /**
@@ -22,13 +22,11 @@ import {InkBarItem} from './ink-bar';
   standalone: true,
 })
 export class MatTabLabelWrapper extends InkBarItem {
+  elementRef = inject(ElementRef);
+
   /** Whether the tab is disabled. */
   @Input({transform: booleanAttribute})
   disabled: boolean = false;
-
-  constructor(public elementRef: ElementRef) {
-    super();
-  }
 
   /** Sets focus on the wrapper element */
   focus(): void {

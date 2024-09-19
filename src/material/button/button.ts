@@ -6,18 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform} from '@angular/cdk/platform';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Inject,
-  NgZone,
-  Optional,
-  ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
-} from '@angular/core';
-
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './button-base';
 
 /**
@@ -42,16 +31,7 @@ import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
-export class MatButton extends MatButtonBase {
-  constructor(
-    elementRef: ElementRef,
-    platform: Platform,
-    ngZone: NgZone,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, platform, ngZone, animationMode);
-  }
-}
+export class MatButton extends MatButtonBase {}
 
 /**
  * Material Design button component for anchor elements. Anchor elements are used to provide
@@ -73,13 +53,4 @@ export class MatButton extends MatButtonBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
-export class MatAnchor extends MatAnchorBase {
-  constructor(
-    elementRef: ElementRef,
-    platform: Platform,
-    ngZone: NgZone,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, platform, ngZone, animationMode);
-  }
-}
+export class MatAnchor extends MatAnchorBase {}

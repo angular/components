@@ -14,17 +14,15 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  forwardRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   SimpleChange,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
@@ -62,13 +60,15 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   imports: [MatButton, MatIconButton],
 })
 export class MatCalendarHeader<D> {
-  constructor(
-    private _intl: MatDatepickerIntl,
-    @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
-    @Optional() private _dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-    changeDetectorRef: ChangeDetectorRef,
-  ) {
+  private _intl = inject(MatDatepickerIntl);
+  calendar = inject<MatCalendar<D>>(MatCalendar);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const changeDetectorRef = inject(ChangeDetectorRef);
     this.calendar.stateChanges.subscribe(() => changeDetectorRef.markForCheck());
   }
 
@@ -242,6 +242,10 @@ export class MatCalendarHeader<D> {
   imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
@@ -397,12 +401,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    */
   readonly stateChanges = new Subject<void>();
 
-  constructor(
-    _intl: MatDatepickerIntl,
-    @Optional() private _dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-    private _changeDetectorRef: ChangeDetectorRef,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
         throw createMissingDateImplError('DateAdapter');
@@ -413,8 +414,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       }
     }
 
-    this._intlChanges = _intl.changes.subscribe(() => {
-      _changeDetectorRef.markForCheck();
+    this._intlChanges = inject(MatDatepickerIntl).changes.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
   }

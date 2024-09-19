@@ -6,26 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, hasModifierKey, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   DoCheck,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
-  Self,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -92,6 +88,8 @@ export class MatChipGrid
     MatFormFieldControl<any>,
     OnDestroy
 {
+  ngControl = inject(NgControl, {optional: true, self: true})!;
+
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
@@ -254,16 +252,14 @@ export class MatChipGrid
     this._errorStateTracker.errorState = value;
   }
 
-  constructor(
-    elementRef: ElementRef,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() dir: Directionality,
-    @Optional() parentForm: NgForm,
-    @Optional() parentFormGroup: FormGroupDirective,
-    defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() @Self() public ngControl: NgControl,
-  ) {
-    super(elementRef, changeDetectorRef, dir);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const parentForm = inject(NgForm, {optional: true});
+    const parentFormGroup = inject(FormGroupDirective, {optional: true});
+    const defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
@@ -271,7 +267,7 @@ export class MatChipGrid
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      ngControl,
+      this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,

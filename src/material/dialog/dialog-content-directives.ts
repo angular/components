@@ -13,8 +13,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Optional,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 
@@ -38,6 +38,10 @@ let dialogElementUid = 0;
   },
 })
 export class MatDialogClose implements OnInit, OnChanges {
+  dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dialog = inject(MatDialog);
+
   /** Screen-reader label for the button. */
   @Input('aria-label') ariaLabel: string;
 
@@ -49,13 +53,8 @@ export class MatDialogClose implements OnInit, OnChanges {
 
   @Input('matDialogClose') _matDialogClose: any;
 
-  constructor(
-    // The dialog title directive is always used in combination with a `MatDialogRef`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() public dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (!this.dialogRef) {
@@ -91,13 +90,13 @@ export class MatDialogClose implements OnInit, OnChanges {
 
 @Directive({standalone: true})
 export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
-  constructor(
-    // The dialog title directive is always used in combination with a `MatDialogRef`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() protected _dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog,
-  ) {}
+  protected _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dialog = inject(MatDialog);
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   protected abstract _onAdd(): void;
   protected abstract _onRemove(): void;

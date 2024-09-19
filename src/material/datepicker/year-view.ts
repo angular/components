@@ -24,13 +24,12 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
-  Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -59,6 +58,11 @@ import {DateRange} from './date-selection-model';
   imports: [MatCalendarBody],
 })
 export class MatYearView<D> implements AfterContentInit, OnDestroy {
+  readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
+  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dir = inject(Directionality, {optional: true});
+
   private _rerenderSubscription = Subscription.EMPTY;
 
   /** Flag used to filter out space/enter keyup events that originated outside of the view. */
@@ -150,12 +154,9 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
    */
   _selectedMonth: number | null;
 
-  constructor(
-    readonly _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-    @Optional() public _dateAdapter: DateAdapter<D>,
-    @Optional() private _dir?: Directionality,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
         throw createMissingDateImplError('DateAdapter');

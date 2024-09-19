@@ -9,10 +9,10 @@
 import {
   Directive,
   ElementRef,
-  Inject,
   Input,
   booleanAttribute,
   numberAttribute,
+  inject,
 } from '@angular/core';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_CHIP} from './tokens';
@@ -37,6 +37,14 @@ import {MAT_CHIP} from './tokens';
   standalone: true,
 })
 export class MatChipAction {
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _parentChip = inject<{
+    _handlePrimaryActionInteraction(): void;
+    remove(): void;
+    disabled: boolean;
+    _isEditing?: boolean;
+  }>(MAT_CHIP);
+
   /** Whether the action is interactive. */
   @Input() isInteractive = true;
 
@@ -46,7 +54,7 @@ export class MatChipAction {
   /** Whether the action is disabled. */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
-    return this._disabled || this._parentChip.disabled;
+    return this._disabled || this._parentChip?.disabled || false;
   }
   set disabled(value: boolean) {
     this._disabled = value;
@@ -83,18 +91,11 @@ export class MatChipAction {
       : this.tabIndex.toString();
   }
 
-  constructor(
-    public _elementRef: ElementRef<HTMLElement>,
-    @Inject(MAT_CHIP)
-    protected _parentChip: {
-      _handlePrimaryActionInteraction(): void;
-      remove(): void;
-      disabled: boolean;
-      _isEditing?: boolean;
-    },
-  ) {
-    if (_elementRef.nativeElement.nodeName === 'BUTTON') {
-      _elementRef.nativeElement.setAttribute('type', 'button');
+  constructor(...args: unknown[]);
+
+  constructor() {
+    if (this._elementRef.nativeElement.nodeName === 'BUTTON') {
+      this._elementRef.nativeElement.setAttribute('type', 'button');
     }
   }
 

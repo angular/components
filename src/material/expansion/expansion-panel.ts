@@ -14,26 +14,23 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChild,
   Directive,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   SimpleChanges,
-  SkipSelf,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
   ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
@@ -101,8 +98,11 @@ export class MatExpansionPanel
   extends CdkAccordionItem
   implements AfterContentInit, OnChanges, OnDestroy
 {
+  private _viewContainerRef = inject(ViewContainerRef);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   protected _animationsDisabled: boolean;
-  private _document: Document;
+  private _document = inject(DOCUMENT);
 
   /** Whether the toggle indicator should be hidden. */
   @Input({transform: booleanAttribute})
@@ -134,7 +134,7 @@ export class MatExpansionPanel
   readonly _inputChanges = new Subject<SimpleChanges>();
 
   /** Optionally defined accordion the expansion panel belongs to. */
-  override accordion: MatAccordionBase;
+  override accordion = inject<MatAccordionBase>(MAT_ACCORDION, {optional: true, skipSelf: true})!;
 
   /** Content that will be rendered lazily. */
   @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
@@ -148,22 +148,18 @@ export class MatExpansionPanel
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;
 
-  constructor(
-    @Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
-    _changeDetectorRef: ChangeDetectorRef,
-    _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(DOCUMENT) _document: any,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
-    @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS)
-    @Optional()
-    defaultOptions?: MatExpansionPanelDefaultOptions,
-  ) {
-    super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
-    this._expansionDispatcher = _uniqueSelectionDispatcher;
-    this.accordion = accordion;
-    this._document = _document;
-    this._animationsDisabled = _animationMode === 'NoopAnimations';
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const defaultOptions = inject<MatExpansionPanelDefaultOptions>(
+      MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+      {optional: true},
+    );
+
+    this._expansionDispatcher = inject(UniqueSelectionDispatcher);
+    this._animationsDisabled = this._animationMode === 'NoopAnimations';
 
     if (defaultOptions) {
       this.hideToggle = defaultOptions.hideToggle;

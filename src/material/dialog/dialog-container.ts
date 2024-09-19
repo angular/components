@@ -6,19 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusTrapFactory, InteractivityChecker} from '@angular/cdk/a11y';
-import {OverlayRef} from '@angular/cdk/overlay';
-import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
-  ElementRef,
   EventEmitter,
-  Inject,
-  NgZone,
   OnDestroy,
-  Optional,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
   inject,
@@ -96,29 +89,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;
-
-  constructor(
-    elementRef: ElementRef,
-    focusTrapFactory: FocusTrapFactory,
-    @Optional() @Inject(DOCUMENT) _document: any,
-    dialogConfig: MatDialogConfig,
-    interactivityChecker: InteractivityChecker,
-    ngZone: NgZone,
-    overlayRef: OverlayRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) _unusedAnimationMode?: string,
-    focusMonitor?: FocusMonitor,
-  ) {
-    super(
-      elementRef,
-      focusTrapFactory,
-      _document,
-      dialogConfig,
-      interactivityChecker,
-      ngZone,
-      overlayRef,
-      focusMonitor,
-    );
-  }
 
   protected override _contentAttached(): void {
     // Delegate to the original dialog-container initialization (i.e. saving the

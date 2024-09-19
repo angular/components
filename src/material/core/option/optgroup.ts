@@ -11,10 +11,9 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   Input,
-  Inject,
-  Optional,
   InjectionToken,
   booleanAttribute,
+  inject,
 } from '@angular/core';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 
@@ -80,7 +79,10 @@ export class MatOptgroup {
   /** Whether the group is in inert a11y mode. */
   _inert: boolean;
 
-  constructor(@Inject(MAT_OPTION_PARENT_COMPONENT) @Optional() parent?: MatOptionParentComponent) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});
     this._inert = parent?.inertGroups ?? false;
   }
 }

@@ -9,30 +9,26 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
-  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Input,
-  NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';
-import {Platform} from '@angular/cdk/platform';
 import {NgTemplateOutlet} from '@angular/common';
 import {CdkObserveContent} from '@angular/cdk/observers';
 
@@ -105,6 +101,9 @@ export interface SelectionList extends MatListBase {
   imports: [NgTemplateOutlet, CdkObserveContent],
 })
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
+  private _selectionList = inject<SelectionList>(SELECTION_LIST);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
   @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
   @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
@@ -186,20 +185,6 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
    * clear the value of `selected` in the first cycle.
    */
   private _inputsInitialized = false;
-
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-    @Inject(SELECTION_LIST) private _selectionList: SelectionList,
-    platform: Platform,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, ngZone, _selectionList, platform, globalRippleOptions, animationMode);
-  }
 
   ngOnInit() {
     const list = this._selectionList;

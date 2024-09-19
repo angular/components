@@ -16,6 +16,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
@@ -27,7 +28,12 @@ import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
   standalone: true,
 })
 export class MatDatepickerApply {
-  constructor(private _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>) {}
+  private _datepicker =
+    inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   _applySelection() {
     this._datepicker._applyPendingSelection();
@@ -42,7 +48,10 @@ export class MatDatepickerApply {
   standalone: true,
 })
 export class MatDatepickerCancel {
-  constructor(public _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>) {}
+  _datepicker = inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -64,13 +73,15 @@ export class MatDatepickerCancel {
   standalone: true,
 })
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {
+  private _datepicker =
+    inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
+  private _viewContainerRef = inject(ViewContainerRef);
+
   @ViewChild(TemplateRef) _template: TemplateRef<unknown>;
   private _portal: TemplatePortal;
 
-  constructor(
-    private _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown>,
-    private _viewContainerRef: ViewContainerRef,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._template, this._viewContainerRef);

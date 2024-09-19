@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef} from '@angular/core';
+import {Directive, ElementRef, inject} from '@angular/core';
 
 /**
  * Directive applied to an element to make it usable
@@ -18,8 +18,8 @@ import {Directive, ElementRef} from '@angular/core';
   standalone: true,
 })
 export class MatAutocompleteOrigin {
-  constructor(
-    /** Reference to the element on which the directive is applied. */
-    public elementRef: ElementRef<HTMLElement>,
-  ) {}
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
