@@ -225,7 +225,6 @@ export class CdkTree<T, K = T>
   })
   _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
 
-  // signals?
   private readonly _data = signal<readonly T[]>([]);
   private readonly _selection = signal<readonly K[]>([]);
 
