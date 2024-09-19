@@ -251,6 +251,44 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return moment.invalid();
   }
 
+  override setTime(target: Moment, hours: number, minutes: number, seconds: number): Moment {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (hours < 0 || hours > 23) {
+        throw Error(`Invalid hours "${hours}". Hours value must be between 0 and 23.`);
+      }
+
+      if (minutes < 0 || minutes > 59) {
+        throw Error(`Invalid minutes "${minutes}". Minutes value must be between 0 and 59.`);
+      }
+
+      if (seconds < 0 || seconds > 59) {
+        throw Error(`Invalid seconds "${seconds}". Seconds value must be between 0 and 59.`);
+      }
+    }
+
+    return this.clone(target).set({hours, minutes, seconds});
+  }
+
+  override getHours(date: Moment): number {
+    return date.hours();
+  }
+
+  override getMinutes(date: Moment): number {
+    return date.minutes();
+  }
+
+  override getSeconds(date: Moment): number {
+    return date.seconds();
+  }
+
+  override parseTime(value: any, parseFormat: string | string[]): Moment | null {
+    return this.parse(value, parseFormat);
+  }
+
+  override addMilliseconds(date: Moment, amount: number): Moment {
+    return this.clone(date).add({milliseconds: amount});
+  }
+
   /** Creates a Moment instance while respecting the current UTC settings. */
   private _createMoment(
     date?: MomentInput,

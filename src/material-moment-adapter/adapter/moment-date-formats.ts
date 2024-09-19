@@ -11,11 +11,14 @@ import {MatDateFormats} from '@angular/material/core';
 export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
   parse: {
     dateInput: 'l',
+    timeInput: 'LT',
   },
   display: {
     dateInput: 'l',
+    timeInput: 'LT',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
+    timeOptionLabel: 'LT',
   },
 };
