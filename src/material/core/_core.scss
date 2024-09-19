@@ -22,11 +22,6 @@
   @at-root {
     // Note: we need to emit fallback values here to avoid errors in internal builds.
     @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
-      .mat-app-background {
-        @include token-utils.create-token-slot(background-color, background-color, transparent);
-        @include token-utils.create-token-slot(color, text-color, inherit);
-      }
-
       // Provides external CSS classes for each elevation value. Each CSS class is formatted as
       // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
       // is elevated.
@@ -38,6 +33,18 @@
           @include token-utils.create-token-slot(box-shadow, 'elevation-shadow-level-#{$z-value}',
             none);
         }
+      }
+    }
+  }
+}
+
+// Mixin that provides the .mat-app-background class.
+@mixin app-background() {
+  @at-root {
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
+      .mat-app-background {
+        @include token-utils.create-token-slot(background-color, background-color, transparent);
+        @include token-utils.create-token-slot(color, text-color, inherit);
       }
     }
   }
