@@ -14,11 +14,16 @@ import {
   getYear,
   getDate,
   getDay,
+  getHours,
+  getMinutes,
+  getSeconds,
+  set,
   getDaysInMonth,
   formatISO,
   addYears,
   addMonths,
   addDays,
+  addMilliseconds,
   isValid,
   isDate,
   format,
@@ -240,5 +245,43 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
 
   invalid(): Date {
     return new Date(NaN);
+  }
+
+  override setTime(target: Date, hours: number, minutes: number, seconds: number): Date {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (hours < 0 || hours > 23) {
+        throw Error(`Invalid hours "${hours}". Hours value must be between 0 and 23.`);
+      }
+
+      if (minutes < 0 || minutes > 59) {
+        throw Error(`Invalid minutes "${minutes}". Minutes value must be between 0 and 59.`);
+      }
+
+      if (seconds < 0 || seconds > 59) {
+        throw Error(`Invalid seconds "${seconds}". Seconds value must be between 0 and 59.`);
+      }
+    }
+
+    return set(this.clone(target), {hours, minutes, seconds});
+  }
+
+  override getHours(date: Date): number {
+    return getHours(date);
+  }
+
+  override getMinutes(date: Date): number {
+    return getMinutes(date);
+  }
+
+  override getSeconds(date: Date): number {
+    return getSeconds(date);
+  }
+
+  override parseTime(value: any, parseFormat: string | string[]): Date | null {
+    return this.parse(value, parseFormat);
+  }
+
+  override addMilliseconds(date: Date, amount: number): Date {
+    return addMilliseconds(date, amount);
   }
 }
