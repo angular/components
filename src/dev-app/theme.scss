@@ -25,7 +25,7 @@ $candy-app-theme: mat.m2-define-light-theme((
 // have to load a single css file for Angular Material in your app.
 // **Be sure that you only ever include this mixin once!**
 @include mat.core();
-@include mat.elevation();
+@include mat.elevation-classes();
 
 // Include the default theme styles.
 @include mat.all-component-themes($candy-app-theme);

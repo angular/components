@@ -31,7 +31,7 @@
 }
 
 // Mixin that provides the .mat-elevation-* classes.
-@mixin elevation() {
+@mixin elevation-classes() {
   @at-root {
     @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
       // Provides external CSS classes for each elevation value. Each CSS class is formatted as
