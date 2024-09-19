@@ -11,6 +11,7 @@ import {InjectionToken} from '@angular/core';
 export type MatDateFormats = {
   parse: {
     dateInput: any;
+    timeInput?: any;
   };
   display: {
     dateInput: any;
@@ -18,6 +19,8 @@ export type MatDateFormats = {
     monthYearLabel: any;
     dateA11yLabel: any;
     monthYearA11yLabel: any;
+    timeInput?: any;
+    timeOptionLabel?: any;
   };
 };
 

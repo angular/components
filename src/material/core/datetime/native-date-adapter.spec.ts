@@ -1,20 +1,18 @@
 import {LOCALE_ID} from '@angular/core';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
+import {Platform} from '@angular/cdk/platform';
 import {DEC, FEB, JAN, MAR} from '../../testing';
 import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 describe('NativeDateAdapter', () => {
   let adapter: NativeDateAdapter;
   let assertValidDate: (d: Date | null, valid: boolean) => void;
+  let platform: Platform;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [NativeDateModule],
-    });
-  }));
-
-  beforeEach(inject([DateAdapter], (dateAdapter: NativeDateAdapter) => {
-    adapter = dateAdapter;
+  beforeEach(() => {
+    TestBed.configureTestingModule({imports: [NativeDateModule]});
+    adapter = TestBed.inject(DateAdapter) as NativeDateAdapter;
+    platform = TestBed.inject(Platform);
 
     assertValidDate = (d: Date | null, valid: boolean) => {
       expect(adapter.isDateInstance(d))
@@ -27,7 +25,7 @@ describe('NativeDateAdapter', () => {
         )
         .toBe(valid);
     };
-  }));
+  });
 
   it('should get year', () => {
     expect(adapter.getYear(new Date(2017, JAN, 1))).toBe(2017);
@@ -464,21 +462,189 @@ describe('NativeDateAdapter', () => {
   it('should not throw when attempting to format a date with a year greater than 9999', () => {
     expect(() => adapter.format(new Date(10000, 1, 1), {})).not.toThrow();
   });
+
+  it('should get hours', () => {
+    expect(adapter.getHours(new Date(2024, JAN, 1, 14))).toBe(14);
+  });
+
+  it('should get minutes', () => {
+    expect(adapter.getMinutes(new Date(2024, JAN, 1, 14, 53))).toBe(53);
+  });
+
+  it('should get seconds', () => {
+    expect(adapter.getSeconds(new Date(2024, JAN, 1, 14, 53, 42))).toBe(42);
+  });
+
+  it('should set the time of a date', () => {
+    const target = new Date(2024, JAN, 1, 0, 0, 0);
+    const result = adapter.setTime(target, 14, 53, 42);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(53);
+    expect(adapter.getSeconds(result)).toBe(42);
+  });
+
+  it('should throw when passing in invalid hours to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), -1, 0, 0)).toThrowError(
+      'Invalid hours "-1". Hours value must be between 0 and 23.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 51, 0, 0)).toThrowError(
+      'Invalid hours "51". Hours value must be between 0 and 23.',
+    );
+  });
+
+  it('should throw when passing in invalid minutes to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), 0, -1, 0)).toThrowError(
+      'Invalid minutes "-1". Minutes value must be between 0 and 59.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 0, 65, 0)).toThrowError(
+      'Invalid minutes "65". Minutes value must be between 0 and 59.',
+    );
+  });
+
+  it('should throw when passing in invalid seconds to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), 0, 0, -1)).toThrowError(
+      'Invalid seconds "-1". Seconds value must be between 0 and 59.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 0, 0, 65)).toThrowError(
+      'Invalid seconds "65". Seconds value must be between 0 and 59.',
+    );
+  });
+
+  it('should parse a 24-hour time string', () => {
+    const result = adapter.parseTime('14:52')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a 12-hour time string', () => {
+    const result = adapter.parseTime('2:52 PM')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a 12-hour time string with seconds', () => {
+    const result = adapter.parseTime('2:52:46 PM')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(46);
+  });
+
+  it('should parse a padded 12-hour time string', () => {
+    const result = adapter.parseTime('02:52 PM')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a padded time string', () => {
+    const result = adapter.parseTime('03:04:05')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(3);
+    expect(adapter.getMinutes(result)).toBe(4);
+    expect(adapter.getSeconds(result)).toBe(5);
+  });
+
+  it('should parse a time string that uses dot as a separator', () => {
+    const result = adapter.parseTime('14.52')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a time string with characters around the time', () => {
+    const result = adapter.parseTime('14:52 ч.')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a 12-hour time string using a dot separator', () => {
+    const result = adapter.parseTime('2.52.46 PM')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(46);
+  });
+
+  it('should return an invalid date when parsing invalid time string', () => {
+    expect(adapter.isValid(adapter.parseTime('abc')!)).toBe(false);
+    expect(adapter.isValid(adapter.parseTime('123')!)).toBe(false);
+    expect(adapter.isValid(adapter.parseTime('14:52 PM')!)).toBe(false);
+    expect(adapter.isValid(adapter.parseTime('24:05')!)).toBe(false);
+
+    // Firefox is a bit more forgiving of invalid times than other browsers.
+    // E.g. these just roll over instead of producing an invalid object.
+    if (!platform.FIREFOX) {
+      expect(adapter.isValid(adapter.parseTime('00:61:05')!)).toBe(false);
+      expect(adapter.isValid(adapter.parseTime('14:52:78')!)).toBe(false);
+    }
+  });
+
+  it('should return null when parsing unsupported time values', () => {
+    expect(adapter.parseTime(321)).toBeNull();
+    expect(adapter.parseTime('')).toBeNull();
+    expect(adapter.parseTime('    ')).toBeNull();
+    expect(adapter.parseTime(true)).toBeNull();
+    expect(adapter.parseTime(undefined)).toBeNull();
+  });
+
+  it('should compare times', () => {
+    const base = [2024, JAN, 1] as const;
+
+    expect(
+      adapter.compareTime(new Date(...base, 12, 0, 0), new Date(...base, 13, 0, 0)),
+    ).toBeLessThan(0);
+    expect(
+      adapter.compareTime(new Date(...base, 12, 50, 0), new Date(...base, 12, 51, 0)),
+    ).toBeLessThan(0);
+    expect(adapter.compareTime(new Date(...base, 1, 2, 3), new Date(...base, 1, 2, 3))).toBe(0);
+    expect(
+      adapter.compareTime(new Date(...base, 13, 0, 0), new Date(...base, 12, 0, 0)),
+    ).toBeGreaterThan(0);
+    expect(
+      adapter.compareTime(new Date(...base, 12, 50, 11), new Date(...base, 12, 50, 10)),
+    ).toBeGreaterThan(0);
+    expect(
+      adapter.compareTime(new Date(...base, 13, 0, 0), new Date(...base, 10, 59, 59)),
+    ).toBeGreaterThan(0);
+  });
+
+  it('should add milliseconds to a date', () => {
+    const amount = 1234567;
+    const initial = new Date(2024, JAN, 1, 12, 34, 56);
+    const result = adapter.addMilliseconds(initial, amount);
+    expect(result).not.toBe(initial);
+    expect(result.getTime() - initial.getTime()).toBe(amount);
+  });
 });
 
 describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
   let adapter: NativeDateAdapter;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}],
     });
-  }));
 
-  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
-    adapter = d;
-  }));
+    adapter = TestBed.inject(DateAdapter) as NativeDateAdapter;
+  });
 
   it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
     const expectedValue = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
@@ -489,16 +655,14 @@ describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
 describe('NativeDateAdapter with LOCALE_ID override', () => {
   let adapter: NativeDateAdapter;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
     });
-  }));
 
-  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
-    adapter = d;
-  }));
+    adapter = TestBed.inject(DateAdapter) as NativeDateAdapter;
+  });
 
   it('should cascade locale id from the LOCALE_ID injection token to MAT_DATE_LOCALE', () => {
     const expectedValue = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];

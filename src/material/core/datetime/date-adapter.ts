@@ -20,6 +20,8 @@ export function MAT_DATE_LOCALE_FACTORY(): {} {
   return inject(LOCALE_ID);
 }
 
+const NOT_IMPLEMENTED = 'Method not implemented';
+
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
 export abstract class DateAdapter<D, L = any> {
   /** The locale to use for all dates. */
@@ -196,6 +198,60 @@ export abstract class DateAdapter<D, L = any> {
   abstract invalid(): D;
 
   /**
+   * Sets the time of one date to the time of another.
+   * @param target Date whose time will be set.
+   * @param hours New hours to set on the date object.
+   * @param minutes New minutes to set on the date object.
+   * @param seconds New seconds to set on the date object.
+   */
+  setTime(target: D, hours: number, minutes: number, seconds: number): D {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
+   * Gets the hours component of the given date.
+   * @param date The date to extract the hours from.
+   */
+  getHours(date: D): number {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
+   * Gets the minutes component of the given date.
+   * @param date The date to extract the minutes from.
+   */
+  getMinutes(date: D): number {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
+   * Gets the seconds component of the given date.
+   * @param date The date to extract the seconds from.
+   */
+  getSeconds(date: D): number {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
+   * Parses a date with a specific time from a user-provided value.
+   * @param value The value to parse.
+   * @param parseFormat The expected format of the value being parsed
+   *     (type is implementation-dependent).
+   */
+  parseTime(value: any, parseFormat: any): D | null {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
+   * Adds an amount of milliseconds to the specified date.
+   * @param date Date to which to add the milliseconds.
+   * @param amount Amount of milliseconds to add to the date.
+   */
+  addMilliseconds(date: D, amount: number): D {
+    throw new Error(NOT_IMPLEMENTED);
+  }
+
+  /**
    * Given a potential date object, returns that same date object if it is
    * a valid date, or `null` if it's not a valid date.
    * @param obj The object to check.
@@ -249,6 +305,21 @@ export abstract class DateAdapter<D, L = any> {
   }
 
   /**
+   * Compares the time values of two dates.
+   * @param first First date to compare.
+   * @param second Second date to compare.
+   * @returns 0 if the times are equal, a number less than 0 if the first time is earlier,
+   *     a number greater than 0 if the first time is later.
+   */
+  compareTime(first: D, second: D): number {
+    return (
+      this.getHours(first) - this.getHours(second) ||
+      this.getMinutes(first) - this.getMinutes(second) ||
+      this.getSeconds(first) - this.getSeconds(second)
+    );
+  }
+
+  /**
    * Checks if two dates are equal.
    * @param first The first date to check.
    * @param second The second date to check.
@@ -261,6 +332,25 @@ export abstract class DateAdapter<D, L = any> {
       let secondValid = this.isValid(second);
       if (firstValid && secondValid) {
         return !this.compareDate(first, second);
+      }
+      return firstValid == secondValid;
+    }
+    return first == second;
+  }
+
+  /**
+   * Checks if the times of two dates are equal.
+   * @param first The first date to check.
+   * @param second The second date to check.
+   * @returns Whether the times of the two dates are equal.
+   *     Null dates are considered equal to other null dates.
+   */
+  sameTime(first: D | null, second: D | null): boolean {
+    if (first && second) {
+      const firstValid = this.isValid(first);
+      const secondValid = this.isValid(second);
+      if (firstValid && secondValid) {
+        return !this.compareTime(first, second);
       }
       return firstValid == secondValid;
     }

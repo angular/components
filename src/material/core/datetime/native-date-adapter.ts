@@ -17,6 +17,19 @@ import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 const ISO_8601_REGEX =
   /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))?)?$/;
 
+/**
+ * Matches a time string. Supported formats:
+ * - {{hours}}:{{minutes}}
+ * - {{hours}}:{{minutes}}:{{seconds}}
+ * - {{hours}}:{{minutes}} AM/PM
+ * - {{hours}}:{{minutes}}:{{seconds}} AM/PM
+ * - {{hours}}.{{minutes}}
+ * - {{hours}}.{{minutes}}.{{seconds}}
+ * - {{hours}}.{{minutes}} AM/PM
+ * - {{hours}}.{{minutes}}.{{seconds}} AM/PM
+ */
+const TIME_REGEX = /(\d?\d)[:.](\d?\d)(?:[:.](\d?\d))?\s*(AM|PM)?/i;
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   const valuesArray = Array(length);
@@ -219,6 +232,116 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date(NaN);
   }
 
+  override setTime(target: Date, hours: number, minutes: number, seconds: number): Date {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!inRange(hours, 0, 23)) {
+        throw Error(`Invalid hours "${hours}". Hours value must be between 0 and 23.`);
+      }
+
+      if (!inRange(minutes, 0, 59)) {
+        throw Error(`Invalid minutes "${minutes}". Minutes value must be between 0 and 59.`);
+      }
+
+      if (!inRange(seconds, 0, 59)) {
+        throw Error(`Invalid seconds "${seconds}". Seconds value must be between 0 and 59.`);
+      }
+    }
+
+    const clone = this.clone(target);
+    clone.setHours(hours, minutes, seconds, 0);
+    return clone;
+  }
+
+  override getHours(date: Date): number {
+    return date.getHours();
+  }
+
+  override getMinutes(date: Date): number {
+    return date.getMinutes();
+  }
+
+  override getSeconds(date: Date): number {
+    return date.getSeconds();
+  }
+
+  override parseTime(userValue: any, parseFormat?: any): Date | null {
+    if (typeof userValue !== 'string') {
+      return userValue instanceof Date ? new Date(userValue.getTime()) : null;
+    }
+
+    const value = userValue.trim();
+
+    if (value.length === 0) {
+      return null;
+    }
+
+    const today = this.today();
+    const base = this.toIso8601(today);
+
+    // JS is able to parse colon-separated times (including AM/PM) by
+    // appending it to a valid date string. Generate one from today's date.
+    let result = Date.parse(`${base} ${value}`);
+
+    // Some locales use a dot instead of a colon as a separator, try replacing it before parsing.
+    if (!result && value.includes('.')) {
+      result = Date.parse(`${base} ${value.replace(/\./g, ':')}`);
+    }
+
+    // Other locales add extra characters around the time, but are otherwise parseable
+    // (e.g. `00:05 ч.` in bg-BG). Try replacing all non-number and non-colon characters.
+    if (!result) {
+      const withoutExtras = value.replace(/[^0-9:(AM|PM)]/gi, '').trim();
+
+      if (withoutExtras.length > 0) {
+        result = Date.parse(`${base} ${withoutExtras}`);
+      }
+    }
+
+    // Some browser implementations of Date aren't very flexible with the time formats.
+    // E.g. Safari doesn't support AM/PM or padded numbers. As a final resort, we try
+    // parsing some of the more common time formats ourselves.
+    if (!result) {
+      const parsed = value.toUpperCase().match(TIME_REGEX);
+
+      if (parsed) {
+        let hours = parseInt(parsed[1]);
+        const minutes = parseInt(parsed[2]);
+        let seconds: number | undefined = parsed[3] == null ? undefined : parseInt(parsed[3]);
+        const amPm = parsed[4] as 'AM' | 'PM' | undefined;
+
+        if (hours === 12) {
+          hours = amPm === 'AM' ? 0 : hours;
+        } else if (amPm === 'PM') {
+          hours += 12;
+        }
+
+        if (
+          inRange(hours, 0, 23) &&
+          inRange(minutes, 0, 59) &&
+          (seconds == null || inRange(seconds, 0, 59))
+        ) {
+          return this.setTime(today, hours, minutes, seconds || 0);
+        }
+      }
+    }
+
+    if (result) {
+      const date = new Date(result);
+
+      // Firefox allows overflows in the time string, e.g. 25:00 gets parsed as the next day.
+      // Other browsers return invalid date objects in such cases so try to normalize it.
+      if (this.sameDate(today, date)) {
+        return date;
+      }
+    }
+
+    return this.invalid();
+  }
+
+  override addMilliseconds(date: Date, amount: number): Date {
+    return new Date(date.getTime() + amount);
+  }
+
   /** Creates a date but allows the month and date to overflow. */
   private _createDateWithOverflow(year: number, month: number, date: number) {
     // Passing the year to the constructor causes year numbers <100 to be converted to 19xx.
@@ -257,4 +380,9 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
   }
+}
+
+/** Checks whether a number is within a certain range. */
+function inRange(value: number, min: number, max: number): boolean {
+  return !isNaN(value) && value >= min && value <= max;
 }
