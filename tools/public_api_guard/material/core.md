@@ -58,9 +58,11 @@ export abstract class DateAdapter<D, L = any> {
     abstract addCalendarDays(date: D, days: number): D;
     abstract addCalendarMonths(date: D, months: number): D;
     abstract addCalendarYears(date: D, years: number): D;
+    addMilliseconds(date: D, amount: number): D;
     clampDate(date: D, min?: D | null, max?: D | null): D;
     abstract clone(date: D): D;
     compareDate(first: D, second: D): number;
+    compareTime(first: D, second: D): number;
     abstract createDate(year: number, month: number, date: number): D;
     deserialize(value: any): D | null;
     abstract format(date: D, displayFormat: any): string;
@@ -69,9 +71,12 @@ export abstract class DateAdapter<D, L = any> {
     abstract getDayOfWeek(date: D): number;
     abstract getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[];
     abstract getFirstDayOfWeek(): number;
+    getHours(date: D): number;
+    getMinutes(date: D): number;
     abstract getMonth(date: D): number;
     abstract getMonthNames(style: 'long' | 'short' | 'narrow'): string[];
     abstract getNumDaysInMonth(date: D): number;
+    getSeconds(date: D): number;
     getValidDateOrNull(obj: unknown): D | null;
     abstract getYear(date: D): number;
     abstract getYearName(date: D): string;
@@ -83,8 +88,11 @@ export abstract class DateAdapter<D, L = any> {
     // (undocumented)
     protected readonly _localeChanges: Subject<void>;
     abstract parse(value: any, parseFormat: any): D | null;
+    parseTime(value: any, parseFormat: any): D | null;
     sameDate(first: D | null, second: D | null): boolean;
+    sameTime(first: D | null, second: D | null): boolean;
     setLocale(locale: L): void;
+    setTime(target: D, hours: number, minutes: number, seconds: number): D;
     abstract today(): D;
     abstract toIso8601(date: D): string;
 }
@@ -164,6 +172,7 @@ export class MatCommonModule {
 export type MatDateFormats = {
     parse: {
         dateInput: any;
+        timeInput?: any;
     };
     display: {
         dateInput: any;
@@ -171,6 +180,8 @@ export type MatDateFormats = {
         monthYearLabel: any;
         dateA11yLabel: any;
         monthYearA11yLabel: any;
+        timeInput?: any;
+        timeOptionLabel?: any;
     };
 };
 
@@ -397,6 +408,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     addCalendarYears(date: Date, years: number): Date;
     // (undocumented)
+    addMilliseconds(date: Date, amount: number): Date;
+    // (undocumented)
     clone(date: Date): Date;
     // (undocumented)
     createDate(year: number, month: number, date: number): Date;
@@ -414,11 +427,17 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     getFirstDayOfWeek(): number;
     // (undocumented)
+    getHours(date: Date): number;
+    // (undocumented)
+    getMinutes(date: Date): number;
+    // (undocumented)
     getMonth(date: Date): number;
     // (undocumented)
     getMonthNames(style: 'long' | 'short' | 'narrow'): string[];
     // (undocumented)
     getNumDaysInMonth(date: Date): number;
+    // (undocumented)
+    getSeconds(date: Date): number;
     // (undocumented)
     getYear(date: Date): number;
     // (undocumented)
@@ -431,6 +450,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     isValid(date: Date): boolean;
     // (undocumented)
     parse(value: any, parseFormat?: any): Date | null;
+    // (undocumented)
+    parseTime(userValue: any, parseFormat?: any): Date | null;
+    // (undocumented)
+    setTime(target: Date, hours: number, minutes: number, seconds: number): Date;
     // (undocumented)
     today(): Date;
     // (undocumented)
