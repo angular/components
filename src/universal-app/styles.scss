@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
 @include mat.core();
+@include mat.elevation();
 
 $theme: mat.define-theme((
   color: (
