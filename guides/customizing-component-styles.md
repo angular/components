@@ -39,7 +39,7 @@ By default, Angular scopes component styles to exclusively affect that component
 that the styles you author affect only the elements directly within your component template.
 Encapsulated styles do *not* affect elements that are children of other components within your
 template. You can read more about view encapsulation in the
-[Angular documentation](https://angular.io/guide/component-styles#view-encapsulation). You may
+[Angular documentation](https://angular.dev/guide/components/styling#style-scoping). You may
 also wish to review
 [_The State of CSS in Angular_](https://blog.angular.io/the-state-of-css-in-angular-4a52d4bd2700)
 on the Angular blog.
@@ -66,7 +66,7 @@ Global CSS affects all elements in your application. Global CSS class names may 
 names defined by components. Global CSS is often a source of hard-to-diagnose bugs and is generally
 difficult to maintain.
 
-[ng-deep]: https://angular.io/guide/component-styles#deprecated-deep--and-ng-deep
+[ng-deep]: https://angular.dev/guide/components/styling#ng-deep
 
 ### CSS specificity
 

@@ -29,7 +29,7 @@ Both`<mat-select>` and `<select>` support all of the form directives from the co
 `ReactiveFormsModule` (`FormControl`, `FormGroup`, etc.) As with native `<select>`, `<mat-select>`
 also supports a `compareWith` function. (Additional information about using a custom `compareWith`
 function can be found in the
-[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).
 
 <!-- example(select-form) -->
 
@@ -200,4 +200,4 @@ meant to do was `mySelect.value = ['option1']`.
 
 This error occurs if you attempt to assign something other than a function to the `compareWith`
 property. For more information on proper usage of `compareWith` see the
-[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).

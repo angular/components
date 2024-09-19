@@ -52,7 +52,7 @@ In order to guard against XSS vulnerabilities, any SVG URLs and HTML strings pas
 `MatIconRegistry` must be marked as trusted by using Angular's `DomSanitizer` service.
 
 `MatIconRegistry` fetches all remote SVG icons via Angular's `HttpClient` service. If you haven't
-included [`HttpClientModule` from the `@angular/common/http` package](https://angular.io/guide/http)
+included [`HttpClientModule` from the `@angular/common/http` package](https://angular.dev/guide/http)
 in your `NgModule` imports, you will get an error at runtime.
 
 Note that `HttpClient` fetches SVG icons registered with a URL via `XmlHttpRequest`, subject to the
