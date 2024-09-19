@@ -17,7 +17,7 @@ ng_module(
 sass_binary(
     name = "visually-hidden-styles",
     src = ":visually-hidden/visually-hidden.scss",
-    deps = ["@npm//@angular/cdk"],
+    deps = ["//src/cdk/a11y:a11y_scss_lib"],
 )
 
 markdown_to_html(
