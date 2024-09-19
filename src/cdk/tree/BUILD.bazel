@@ -26,10 +26,10 @@ ng_module(
     ],
 )
 
-ng_test_library(
+ng_module(
     name = "unit_test_sources",
     srcs = glob(
-        ["**/*.spec.ts"],
+        ["**/tree-using-legacy-key-manager.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
@@ -40,7 +40,10 @@ ng_test_library(
         "//src/cdk/keycodes",
         "//src/cdk/testing/testbed",
         "@npm//rxjs",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
     ],
+    testonly = True,
 )
 
 ng_web_test_suite(

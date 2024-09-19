@@ -1,4 +1,4 @@
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, viewChildren, viewChild, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {CdkTreeModule} from './tree-module';
@@ -7,21 +7,19 @@ import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
 describe('CdkTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleCdkTreeApp>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [CdkTreeModule],
-      declarations: [SimpleCdkTreeApp],
+      imports: [SimpleCdkTreeApp],
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
     });
 
+    await TestBed.compileComponents();
     fixture = TestBed.createComponent(SimpleCdkTreeApp);
-    fixture.detectChanges();
-    fixture.detectChanges();
   });
 
   describe('with default node options', () => {
     it('renders nodes with tabindex attribute of -1', () => {
-      const treeItems = fixture.componentInstance.treeNodes;
+      const treeItems = fixture.componentInstance.treeNodes();
 
       expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
         .withContext('tabindex of tree nodes')
@@ -31,14 +29,14 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
 
   describe('when focusing the second node', () => {
     beforeEach(() => {
-      const treeItems = fixture.componentInstance.treeNodes;
+      const treeItems = fixture.componentInstance.treeNodes();
 
-      treeItems.get(1)!.nativeElement.focus();
+      treeItems[1]!.nativeElement.focus();
       fixture.detectChanges();
     });
 
     it('does not change tabindex of nodes', () => {
-      const treeItems = fixture.componentInstance.treeNodes;
+      const treeItems = fixture.componentInstance.treeNodes();
 
       expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
         .withContext('tabindex of tree nodes')
@@ -48,9 +46,9 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
 
   describe('when clicking the second node', () => {
     beforeEach(() => {
-      const treeItems = fixture.componentInstance.treeNodes;
+      const treeItems = fixture.componentInstance.treeNodes();
 
-      treeItems.get(1)!.nativeElement.click();
+      treeItems[1]!.nativeElement.click();
       fixture.detectChanges();
     });
 
@@ -59,7 +57,7 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
     });
 
     it('does not change tabindex of nodes', () => {
-      const treeItems = fixture.componentInstance.treeNodes;
+      const treeItems = fixture.componentInstance.treeNodes();
 
       expect(treeItems.map(x => `${x.nativeElement.getAttribute('tabindex')}`).join(', '))
         .withContext('tabindex of tree nodes')
@@ -75,13 +73,14 @@ class MinimalTestData {
 
 @Component({
   template: `
-    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
       <cdk-tree-node #node *cdkTreeNodeDef="let node">
         {{node.name}}
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class SimpleCdkTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;
@@ -89,6 +88,5 @@ class SimpleCdkTreeApp {
 
   dataSource = of([new MinimalTestData('apple'), new MinimalTestData('banana')]);
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
-  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+  readonly treeNodes = viewChildren<ElementRef<HTMLElement>>('node');
 }
