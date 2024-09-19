@@ -25,6 +25,7 @@ ng_module(
         ":option/optgroup.css",
         ":internal-form-field/internal-form-field.css",
         ":ripple/ripple-structure.css",
+        ":focus-indicators/structural-styles.css",
     ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
