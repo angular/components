@@ -272,6 +272,61 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     return LuxonDateTime.invalid('Invalid Luxon DateTime object.');
   }
 
+  override setTime(
+    target: LuxonDateTime,
+    hours: number,
+    minutes: number,
+    seconds: number,
+  ): LuxonDateTime {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (hours < 0 || hours > 23) {
+        throw Error(`Invalid hours "${hours}". Hours value must be between 0 and 23.`);
+      }
+
+      if (minutes < 0 || minutes > 59) {
+        throw Error(`Invalid minutes "${minutes}". Minutes value must be between 0 and 59.`);
+      }
+
+      if (seconds < 0 || seconds > 59) {
+        throw Error(`Invalid seconds "${seconds}". Seconds value must be between 0 and 59.`);
+      }
+    }
+
+    return this.clone(target).set({
+      hour: hours,
+      minute: minutes,
+      second: seconds,
+    });
+  }
+
+  override getHours(date: LuxonDateTime): number {
+    return date.hour;
+  }
+
+  override getMinutes(date: LuxonDateTime): number {
+    return date.minute;
+  }
+
+  override getSeconds(date: LuxonDateTime): number {
+    return date.second;
+  }
+
+  override parseTime(value: any, parseFormat: string | string[]): LuxonDateTime | null {
+    const result = this.parse(value, parseFormat);
+
+    if ((!result || !this.isValid(result)) && typeof value === 'string') {
+      // It seems like Luxon doesn't work well cross-browser for strings that have
+      // additional characters around the time. Try parsing without those characters.
+      return this.parse(value.replace(/[^0-9:(AM|PM)]/gi, ''), parseFormat) || result;
+    }
+
+    return result;
+  }
+
+  override addMilliseconds(date: LuxonDateTime, amount: number): LuxonDateTime {
+    return date.reconfigure(this._getOptions()).plus({milliseconds: amount});
+  }
+
   /** Gets the options that should be used when constructing a new `DateTime` object. */
   private _getOptions(): LuxonDateTimeOptions {
     return {
