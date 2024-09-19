@@ -73,6 +73,11 @@ sass_library(
 )
 
 sass_binary(
+    name = "structural_styles_scss",
+    src = "focus-indicators/structural-styles.scss",
+)
+
+sass_binary(
     name = "pseudo_checkbox_scss",
     src = "selection/pseudo-checkbox/pseudo-checkbox.scss",
     deps = [":core_scss_lib"],
