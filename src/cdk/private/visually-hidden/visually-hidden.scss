@@ -1,34 +1,3 @@
-/// This class can be applied to an element to make that element
-/// visually hidden while remaining available to assistive technology.
-.cdk-visually-hidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
+@use '@angular/cdk';
 
-  // This works around a Chrome bug that can cause the tab to crash when large amounts of
-  // non-English text get wrapped: https://bugs.chromium.org/p/chromium/issues/detail?id=1201444
-  white-space: nowrap;
-
-  // Avoid browsers rendering the focus ring in some cases.
-  outline: 0;
-
-  // Avoid some cases where the browser will still render the native controls (see #9049).
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  // We need at least one of top/bottom/left/right in order to prevent cases where the
-  // absolute-positioned element is pushed down and can affect scrolling (see #24597).
-  // `left` was chosen here, because it's the least likely to break overrides where the
-  // element might have been positioned (e.g. `mat-checkbox`).
-  left: 0;
-
-  [dir='rtl'] & {
-    left: auto;
-    right: 0;
-  }
-}
+@include cdk.a11y-visually-hidden();
