@@ -120,10 +120,12 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 }
 
 // @public
-export class MatListItemLine {
+export class MatListItemLine implements AfterViewInit {
     constructor(_elementRef: ElementRef<HTMLElement>);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatListItemLine, "[matListItemLine]", never, {}, {}, never, never, true, never>;
     // (undocumented)

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Optional} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Inject, Optional} from '@angular/core';
 import {LIST_OPTION, ListOption} from './list-option-types';
 
 /**
@@ -35,8 +35,27 @@ export class MatListItemTitle {
   host: {'class': 'mat-mdc-list-item-line mdc-list-item__secondary-text'},
   standalone: true,
 })
-export class MatListItemLine {
+export class MatListItemLine implements AfterViewInit {
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    this._addTitleToTruncatedText();
+  }
+
+  // In case text overflow is triggered and ellipsis is applied, adds role='tooltip' and title
+  // attribute to container so visual users can see the full text on hover
+  private _addTitleToTruncatedText() {
+    if (this._elementRef.nativeElement.offsetWidth < this._elementRef.nativeElement.scrollWidth) {
+      this._elementRef.nativeElement.setAttribute('role', 'tooltip');
+      this._elementRef.nativeElement.setAttribute(
+        'title',
+        this._elementRef.nativeElement.innerText,
+      );
+    } else {
+      this._elementRef.nativeElement.removeAttribute('role');
+      this._elementRef.nativeElement.removeAttribute('title');
+    }
+  }
 }
 
 /**
