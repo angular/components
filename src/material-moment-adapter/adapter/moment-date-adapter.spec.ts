@@ -7,7 +7,7 @@
  */
 
 import {LOCALE_ID} from '@angular/core';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {DEC, FEB, JAN, MAR} from '../../material/testing';
 import {MomentDateModule} from './index';
@@ -22,15 +22,10 @@ describe('MomentDateAdapter', () => {
   let adapter: MomentDateAdapter;
   let assertValidDate: (d: moment.Moment | null, valid: boolean) => void;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MomentDateModule],
-    });
-  }));
-
-  beforeEach(inject([DateAdapter], (dateAdapter: MomentDateAdapter) => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({imports: [MomentDateModule]});
     moment.locale('en');
-    adapter = dateAdapter;
+    adapter = TestBed.inject(DateAdapter) as MomentDateAdapter;
     adapter.setLocale('en');
 
     assertValidDate = (d: moment.Moment | null, valid: boolean) => {
@@ -44,7 +39,7 @@ describe('MomentDateAdapter', () => {
         )
         .toBe(valid);
     };
-  }));
+  });
 
   it('should get year', () => {
     expect(adapter.getYear(moment([2017, JAN, 1]))).toBe(2017);
@@ -534,21 +529,156 @@ describe('MomentDateAdapter', () => {
   it('should create invalid date', () => {
     assertValidDate(adapter.invalid(), false);
   });
+
+  it('should get hours', () => {
+    expect(adapter.getHours(moment([2024, JAN, 1, 14]))).toBe(14);
+  });
+
+  it('should get minutes', () => {
+    expect(adapter.getMinutes(moment([2024, JAN, 1, 14, 53]))).toBe(53);
+  });
+
+  it('should get seconds', () => {
+    expect(adapter.getSeconds(moment([2024, JAN, 1, 14, 53, 42]))).toBe(42);
+  });
+
+  it('should set the time of a date', () => {
+    const target = moment([2024, JAN, 1, 0, 0, 0]);
+    const result = adapter.setTime(target, 14, 53, 42);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(53);
+    expect(adapter.getSeconds(result)).toBe(42);
+  });
+
+  it('should throw when passing in invalid hours to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), -1, 0, 0)).toThrowError(
+      'Invalid hours "-1". Hours value must be between 0 and 23.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 51, 0, 0)).toThrowError(
+      'Invalid hours "51". Hours value must be between 0 and 23.',
+    );
+  });
+
+  it('should throw when passing in invalid minutes to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), 0, -1, 0)).toThrowError(
+      'Invalid minutes "-1". Minutes value must be between 0 and 59.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 0, 65, 0)).toThrowError(
+      'Invalid minutes "65". Minutes value must be between 0 and 59.',
+    );
+  });
+
+  it('should throw when passing in invalid seconds to setTime', () => {
+    expect(() => adapter.setTime(adapter.today(), 0, 0, -1)).toThrowError(
+      'Invalid seconds "-1". Seconds value must be between 0 and 59.',
+    );
+    expect(() => adapter.setTime(adapter.today(), 0, 0, 65)).toThrowError(
+      'Invalid seconds "65". Seconds value must be between 0 and 59.',
+    );
+  });
+
+  it('should parse a 24-hour time string', () => {
+    const result = adapter.parseTime('14:52', 'LT')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a 12-hour time string', () => {
+    const result = adapter.parseTime('2:52 PM', 'LT')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a padded time string', () => {
+    const result = adapter.parseTime('03:04:05', 'LTS')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(3);
+    expect(adapter.getMinutes(result)).toBe(4);
+    expect(adapter.getSeconds(result)).toBe(5);
+  });
+
+  it('should parse a time string that uses dot as a separator', () => {
+    adapter.setLocale('fi-FI');
+    const result = adapter.parseTime('14.52', 'LT')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should parse a time string with characters around the time', () => {
+    adapter.setLocale('bg-BG');
+    const result = adapter.parseTime('14:52 ч.', 'LT')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(14);
+    expect(adapter.getMinutes(result)).toBe(52);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
+  it('should return an invalid date when parsing invalid time string', () => {
+    expect(adapter.isValid(adapter.parseTime('abc', 'LT')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime('    ', 'LT')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime(true, 'LT')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime('24:05', 'LT')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime('00:61:05', 'LTS')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime('14:52:78', 'LTS')!)).toBeFalse();
+  });
+
+  it('should return null when parsing unsupported time values', () => {
+    expect(adapter.parseTime(undefined, 'LT')).toBeNull();
+    expect(adapter.parseTime('', 'LT')).toBeNull();
+  });
+
+  it('should compare times', () => {
+    const base = [2024, JAN, 1] as const;
+
+    expect(
+      adapter.compareTime(moment([...base, 12, 0, 0]), moment([...base, 13, 0, 0])),
+    ).toBeLessThan(0);
+    expect(
+      adapter.compareTime(moment([...base, 12, 50, 0]), moment([...base, 12, 51, 0])),
+    ).toBeLessThan(0);
+    expect(adapter.compareTime(moment([...base, 1, 2, 3]), moment([...base, 1, 2, 3]))).toBe(0);
+    expect(
+      adapter.compareTime(moment([...base, 13, 0, 0]), moment([...base, 12, 0, 0])),
+    ).toBeGreaterThan(0);
+    expect(
+      adapter.compareTime(moment([...base, 12, 50, 11]), moment([...base, 12, 50, 10])),
+    ).toBeGreaterThan(0);
+    expect(
+      adapter.compareTime(moment([...base, 13, 0, 0]), moment([...base, 10, 59, 59])),
+    ).toBeGreaterThan(0);
+  });
+
+  it('should add milliseconds to a date', () => {
+    const amount = 1234567;
+    const initial = moment([2024, JAN, 1, 12, 34, 56]);
+    const result = adapter.addMilliseconds(initial, amount);
+    expect(result).not.toBe(initial);
+    expect(result.valueOf() - initial.valueOf()).toBe(amount);
+  });
 });
 
 describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
   let adapter: MomentDateAdapter;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}],
     });
-  }));
 
-  beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
-    adapter = d;
-  }));
+    adapter = TestBed.inject(DateAdapter) as MomentDateAdapter;
+  });
 
   it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
     expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('2017年1月2日');
@@ -558,16 +688,14 @@ describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
 describe('MomentDateAdapter with LOCALE_ID override', () => {
   let adapter: MomentDateAdapter;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'fr'}],
     });
-  }));
 
-  beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
-    adapter = d;
-  }));
+    adapter = TestBed.inject(DateAdapter) as MomentDateAdapter;
+  });
 
   it('should take the default locale id from the LOCALE_ID injection token', () => {
     expect(adapter.format(moment([2017, JAN, 2]), 'll')).toEqual('2 janv. 2017');
@@ -577,7 +705,7 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
 describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () => {
   let adapter: MomentDateAdapter;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
       providers: [
@@ -587,11 +715,9 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
         },
       ],
     });
-  }));
 
-  beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
-    adapter = d;
-  }));
+    adapter = TestBed.inject(DateAdapter) as MomentDateAdapter;
+  });
 
   describe('use UTC', () => {
     it('should create Moment date in UTC', () => {
@@ -612,7 +738,7 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
   });
 
   describe('strict mode', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [MomentDateModule],
@@ -625,11 +751,9 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
           },
         ],
       });
-    }));
 
-    beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
-      adapter = d;
-    }));
+      adapter = TestBed.inject(DateAdapter) as MomentDateAdapter;
+    });
 
     it('should detect valid strings according to given format', () => {
       expect(adapter.parse('1/2/2017', 'D/M/YYYY')!.format('l')).toEqual(
