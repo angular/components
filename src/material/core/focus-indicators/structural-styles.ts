@@ -14,6 +14,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
  */
 @Component({
   standalone: true,
+  selector: 'structural-styles',
   styleUrl: 'structural-styles.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
