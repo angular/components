@@ -19,7 +19,7 @@ are rendered as siblings in sequence.
 
 ```
 
-<!-- example(cdk-tree-flat) -->
+<!-- example(cdk-tree-flat-children-accessor) -->
 
 Flat trees are generally easier to style and inspect. They are also more friendly to scrolling
 variations, such as infinite or virtual scrolling.
@@ -40,7 +40,7 @@ contains a node outlet into which children are projected.
 </cdk-tree>
 ```
 
-<!-- example(cdk-tree-nested) -->
+<!-- example(cdk-tree-nested-children-accessor) -->
 
 Nested trees are easier to work with when hierarchical relationships are visually represented in
 ways that would be difficult to accomplish with flat nodes.
