@@ -1,3 +1,21 @@
+<a name="18.2.5"></a>
+# 18.2.5 "bismuth-badge" (2024-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1ea55b6e8](https://github.com/angular/components/commit/1ea55b6e80127046a9bc597f4d495374ad4d0524) | fix | **drag-drop:** account for scale when setting free drag position ([#29739](https://github.com/angular/components/pull/29739)) |
+| [aae74b031](https://github.com/angular/components/commit/aae74b031b23520440b6556ac89391303cc8894b) | fix | **listbox:** scroll active option into view when using aria-activedescendant ([#29722](https://github.com/angular/components/pull/29722)) |
+| [7db4b5f4c](https://github.com/angular/components/commit/7db4b5f4c19ed7e0e797dfc31a853713932d875b) | fix | **tree:** resolve maximum call stack error ([#29754](https://github.com/angular/components/pull/29754)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f9e18109e](https://github.com/angular/components/commit/f9e18109e813d9f735a324ae9fdf27cb6ddc08bd) | fix | **chips:** increase chip remove touch target size ([#29452](https://github.com/angular/components/pull/29452)) |
+| [2cf2f5321](https://github.com/angular/components/commit/2cf2f5321e724bced1b9c43eeca2503a7fe2fdc4) | fix | **datepicker:** replace labels not pointing to anything ([#29755](https://github.com/angular/components/pull/29755)) |
+| [7ab65e4fb](https://github.com/angular/components/commit/7ab65e4fb99e063cce7d0aa29701e811d10771c0) | fix | **select:** remove incompatible aria-autocomplete attribute ([#29645](https://github.com/angular/components/pull/29645)) |
+| [06818a7ed](https://github.com/angular/components/commit/06818a7ed8777d6fe5b9eca7802977691385ab67) | fix | **slider:** log proper error when slider isn't configured correctly ([#29745](https://github.com/angular/components/pull/29745)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.4"></a>
 # 18.2.4 "aramid-angle" (2024-09-12)
 ### cdk
