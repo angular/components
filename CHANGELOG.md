@@ -1,3 +1,31 @@
+<a name="19.0.0-next.5"></a>
+# 19.0.0-next.5 "astatine-armor" (2024-09-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4cd2152d9](https://github.com/angular/components/commit/4cd2152d9813078f81fc2be671f123ffa8c09974) | fix | **drag-drop:** account for scale when setting free drag position ([#29739](https://github.com/angular/components/pull/29739)) |
+| [fd4085895](https://github.com/angular/components/commit/fd4085895e67a695a4fbb5d3da2db9271f35a4e6) | fix | **listbox:** scroll active option into view when using aria-activedescendant ([#29722](https://github.com/angular/components/pull/29722)) |
+| [560878a23](https://github.com/angular/components/commit/560878a231373dca51ecac07f913503ee3e860aa) | fix | **overlay:** load structural styles in a cascade layer ([#29725](https://github.com/angular/components/pull/29725)) |
+| [873eb01e0](https://github.com/angular/components/commit/873eb01e018018f19434a4187a6b2a871272d09a) | fix | **portal:** remove ComponentFactoryResolver usages ([#27427](https://github.com/angular/components/pull/27427)) |
+| [be004b89f](https://github.com/angular/components/commit/be004b89fc7938b5a020a743e3344268601d0e9f) | fix | **tree:** resolve maximum call stack error ([#29754](https://github.com/angular/components/pull/29754)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [777d1d295](https://github.com/angular/components/commit/777d1d295aaa8bc6e47a7c76e8fe9246ed30db2e) | fix | **chips:** increase chip remove touch target size ([#29452](https://github.com/angular/components/pull/29452)) |
+| [602bef1cd](https://github.com/angular/components/commit/602bef1cd6a4e11c89105ec3cd2f1410eea9cb50) | fix | **datepicker:** replace labels not pointing to anything ([#29755](https://github.com/angular/components/pull/29755)) |
+| [60776637e](https://github.com/angular/components/commit/60776637ee78cd942a3527402e3e8f9f25d871c1) | fix | **select:** remove incompatible aria-autocomplete attribute ([#29645](https://github.com/angular/components/pull/29645)) |
+| [0ed5d7d4f](https://github.com/angular/components/commit/0ed5d7d4fe91a3442a6d5cb80b032b66fc7ac30a) | fix | **slider:** log proper error when slider isn't configured correctly ([#29745](https://github.com/angular/components/pull/29745)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1bd976c6a](https://github.com/angular/components/commit/1bd976c6a7b4493e9dc741f6fe25fde455adfbcf) | feat | Add support for some mouse events [#29741](https://github.com/angular/components/pull/29741) ([#29747](https://github.com/angular/components/pull/29747)) |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [234e5e0e8](https://github.com/angular/components/commit/234e5e0e8b7001671b459491bc048c379e29fc1d) | feat | add support for date-fns 4 ([#29744](https://github.com/angular/components/pull/29744)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.4"></a>
 # 18.2.4 "aramid-angle" (2024-09-12)
 ### cdk
