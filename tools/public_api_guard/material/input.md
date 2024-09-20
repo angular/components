@@ -26,6 +26,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { Subject } from 'rxjs';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export function getMatInputUnsupportedTypeError(type: string): Error;
@@ -35,7 +36,7 @@ export const MAT_INPUT_CONFIG: InjectionToken<MatInputConfig>;
 
 // @public
 export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
-    value: any;
+    value: any | WritableSignal<any>;
 }>;
 
 export { MatError }

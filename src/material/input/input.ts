@@ -14,13 +14,16 @@ import {
   booleanAttribute,
   Directive,
   DoCheck,
+  effect,
   ElementRef,
   inject,
   InjectionToken,
   Input,
+  isSignal,
   NgZone,
   OnChanges,
   OnDestroy,
+  WritableSignal,
 } from '@angular/core';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
@@ -104,6 +107,7 @@ export class MatInput
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
+  private _signalBasedValueAccessor?: {value: WritableSignal<any>};
   private _previousPlaceholder: string | null;
   private _errorStateTracker: _ErrorStateTracker;
   private _webkitBlinkWheelListenerAttached = false;
@@ -244,11 +248,18 @@ export class MatInput
    */
   @Input()
   get value(): string {
-    return this._inputValueAccessor.value;
+    return this._signalBasedValueAccessor
+      ? this._signalBasedValueAccessor.value()
+      : this._inputValueAccessor.value;
   }
   set value(value: any) {
     if (value !== this.value) {
-      this._inputValueAccessor.value = value;
+      if (this._signalBasedValueAccessor) {
+        this._signalBasedValueAccessor.value.set(value);
+      } else {
+        this._inputValueAccessor.value = value;
+      }
+
       this.stateChanges.next();
     }
   }
@@ -290,14 +301,22 @@ export class MatInput
     const parentForm = inject(NgForm, {optional: true});
     const parentFormGroup = inject(FormGroupDirective, {optional: true});
     const defaultErrorStateMatcher = inject(ErrorStateMatcher);
-    const inputValueAccessor = inject(MAT_INPUT_VALUE_ACCESSOR, {optional: true, self: true});
+    const accessor = inject(MAT_INPUT_VALUE_ACCESSOR, {optional: true, self: true});
 
     const element = this._elementRef.nativeElement;
     const nodeName = element.nodeName.toLowerCase();
 
-    // If no input value accessor was explicitly specified, use the element as the input value
-    // accessor.
-    this._inputValueAccessor = inputValueAccessor || element;
+    if (accessor) {
+      if (isSignal(accessor.value)) {
+        this._signalBasedValueAccessor = accessor;
+      } else {
+        this._inputValueAccessor = accessor;
+      }
+    } else {
+      // If no input value accessor was explicitly specified, use the element as the input value
+      // accessor.
+      this._inputValueAccessor = element;
+    }
 
     this._previousNativeValue = this.value;
 
@@ -330,6 +349,14 @@ export class MatInput
       this.controlType = (element as HTMLSelectElement).multiple
         ? 'mat-native-select-multiple'
         : 'mat-native-select';
+    }
+
+    if (this._signalBasedValueAccessor) {
+      effect(() => {
+        // Read the value so the effect can register the dependency.
+        this._signalBasedValueAccessor!.value();
+        this.stateChanges.next();
+      });
     }
   }
 
