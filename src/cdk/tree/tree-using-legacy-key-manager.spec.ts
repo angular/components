@@ -1,4 +1,4 @@
-import {Component, viewChildren, viewChild, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, viewChildren, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {CdkTreeModule} from './tree-module';
@@ -13,8 +13,8 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
     });
 
-    await TestBed.compileComponents();
     fixture = TestBed.createComponent(SimpleCdkTreeApp);
+    fixture.detectChanges();
   });
 
   describe('with default node options', () => {

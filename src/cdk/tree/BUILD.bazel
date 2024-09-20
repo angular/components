@@ -2,7 +2,6 @@ load(
     "//tools:defaults.bzl",
     "markdown_to_html",
     "ng_module",
-    "ng_test_library",
     "ng_web_test_suite",
 )
 
@@ -28,8 +27,9 @@ ng_module(
 
 ng_module(
     name = "unit_test_sources",
+    testonly = True,
     srcs = glob(
-        ["**/tree-using-legacy-key-manager.spec.ts"],
+        ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
@@ -39,11 +39,10 @@ ng_module(
         "//src/cdk/collections",
         "//src/cdk/keycodes",
         "//src/cdk/testing/testbed",
-        "@npm//rxjs",
         "@npm//@angular/core",
         "@npm//@types/jasmine",
+        "@npm//rxjs",
     ],
-    testonly = True,
 )
 
 ng_web_test_suite(

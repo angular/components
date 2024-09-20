@@ -83,7 +83,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     collapseAll(): void;
     collapseDescendants(dataNode: T): void;
     get dataSource(): DataSource<T> | Observable<T[]> | T[];
-    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]);
+    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null);
     expand(dataNode: T): void;
     expandAll(): void;
     expandDescendants(dataNode: T): void;

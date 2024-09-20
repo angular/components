@@ -50,15 +50,16 @@ import {
   inject,
   booleanAttribute,
 } from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {coerceObservable} from '@angular/cdk/coercion/private';
 import {
   BehaviorSubject,
   combineLatest,
+  Subscriber,
   concat,
   EMPTY,
   Observable,
   Subject,
-  Subscription,
   isObservable,
   of as observableOf,
 } from 'rxjs';
@@ -71,6 +72,7 @@ import {
   switchMap,
   take,
   takeUntil,
+  shareReplay,
   tap,
 } from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
@@ -141,9 +143,6 @@ export class CdkTree<T, K = T>
   /** Stores the node definition that does not have a when predicate. */
   private _defaultNodeDef: CdkTreeNodeDef<T> | null;
 
-  /** Data subscription */
-  private _dataSubscription: Subscription | null;
-
   /** Level of nodes */
   private _levels: Map<K, number> = new Map<K, number>();
 
@@ -167,14 +166,35 @@ export class CdkTree<T, K = T>
    */
   @Input()
   get dataSource(): DataSource<T> | Observable<T[]> | T[] {
-    return this._dataSource;
+    return this._dataSource.value;
   }
-  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-    if (this._dataSource !== dataSource) {
-      this._switchDataSource(dataSource);
+  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null) {
+    if (this._dataSource.value !== dataSource) {
+      this._dataSource.next(dataSource!);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  private readonly _dataSource = new BehaviorSubject<DataSource<T> | Observable<T[]> | T[]>([]);
+  private readonly _transformedDataSource = this._dataSource.pipe(
+    tap(dataSource => {
+      if (!dataSource) {
+        this._nodeOutlet.viewContainer.clear();
+      }
+    }),
+    switchMap(dataSource => {
+      if (isDataSource(dataSource)) {
+        return this._fromDataSource(dataSource);
+      } else if (isObservable(dataSource)) {
+        return dataSource;
+      } else if (Array.isArray(dataSource)) {
+        return observableOf(dataSource);
+      }
+
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw getTreeNoValidDataSourceError();
+      }
+      return EMPTY;
+    }),
+  );
 
   /**
    * The tree controller
@@ -225,8 +245,7 @@ export class CdkTree<T, K = T>
   })
   _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
 
-  private readonly _data = signal<readonly T[]>([]);
-  private readonly _selection = signal<readonly K[]>([]);
+  private readonly _selection = new BehaviorSubject<readonly K[]>([]);
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -250,7 +269,7 @@ export class CdkTree<T, K = T>
   private _flattenedNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
 
   /** The automatically determined node type for the tree. */
-  private _nodeType = signal<'flat' | 'nested' | null>(null);
+  private _nodeType = new BehaviorSubject<'flat' | 'nested' | null>(null);
 
   /** The mapping between data and the node that is rendered. */
   private _nodes: BehaviorSubject<Map<K, CdkTreeNode<T, K>>> = new BehaviorSubject(
@@ -270,20 +289,20 @@ export class CdkTree<T, K = T>
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
+  private readonly _renderData = toSignal(
+    combineLatest([this._transformedDataSource, this._nodeType, this._selection]).pipe(
+      switchMap(([data, nodeType, expandedKeys]) =>
+        this._getRenderData(data, nodeType, expandedKeys),
+      ),
+    ),
+    {initialValue: null},
+  );
+
   constructor(...args: unknown[]);
   constructor() {
     effect(
-      onCleanup => {
-        const data = this._data();
-        const nodeType = this._nodeType();
-        const expandedKeys = this._selection();
-
-        const sub = this._getRenderData(data, nodeType, expandedKeys).subscribe(renderData => {
-          this._renderDataChanges(renderData);
-        });
-        onCleanup(() => {
-          sub.unsubscribe();
-        });
+      () => {
+        this._renderDataChanges(this._renderData());
       },
       {allowSignalWrites: true},
     );
@@ -295,7 +314,6 @@ export class CdkTree<T, K = T>
 
   ngAfterContentChecked() {
     this._updateDefaultNodeDefinition();
-    this._subscribeToDataChanges();
   }
 
   ngOnDestroy() {
@@ -304,15 +322,6 @@ export class CdkTree<T, K = T>
     this.viewChange.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
-
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
-    }
-
-    if (this._dataSubscription) {
-      this._dataSubscription.unsubscribe();
-      this._dataSubscription = null;
-    }
 
     // In certain tests, the tree might be destroyed before this is initialized
     // in `ngAfterContentInit`.
@@ -343,52 +352,26 @@ export class CdkTree<T, K = T>
    * This will be called by the first node that's rendered in order for the tree
    * to determine what data transformations are required.
    */
-  _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
-    const currentType = this._nodeType();
-
-    if (currentType === null) {
-      this._nodeType.set(newType);
-    } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
-      console.warn(
-        `Tree is using conflicting node types which can cause unexpected behavior. ` +
-          `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
-          `Current node type: "${currentType}", new node type "${newType}".`,
-      );
-    }
-  }
-
-  /**
-   * Switch to the provided data source by resetting the data and unsubscribing from the current
-   * render change subscription if one exists. If the data source is null, interpret this by
-   * clearing the node outlet. Otherwise start listening for new data.
-   */
-  private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
-    }
-
-    if (this._dataSubscription) {
-      this._dataSubscription.unsubscribe();
-      this._dataSubscription = null;
-    }
-
-    // Remove the all dataNodes if there is now no data source
-    if (!dataSource) {
-      this._nodeOutlet.viewContainer.clear();
-    }
-
-    this._dataSource = dataSource;
-    if (this._nodeDefs) {
-      this._subscribeToDataChanges();
+   _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
+     const currentType = this._nodeType.value;
+ 
+     if (currentType === null) {
+       this._nodeType.next(newType);
+     } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
+       console.warn(
+         `Tree is using conflicting node types which can cause unexpected behavior. ` +
+           `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
+           `Current node type: "${currentType}", new node type "${newType}".`,
+       );
     }
   }
 
   private _subscribeToExpansionChanges() {
     const model = this._getExpansionModel();
-    this._selection.set([...model.selected]);
+    this._selection.next([...model.selected]);
     model.changed.pipe(takeUntil(this._onDestroy)).subscribe(changes => {
       this._emitExpansionChanges(changes);
-      this._selection.set([...model.selected]);
+      this._selection.next([...model.selected]);
     });
   }
 
@@ -398,34 +381,6 @@ export class CdkTree<T, K = T>
       return this._expansionModel;
     }
     return this.treeControl.expansionModel;
-  }
-
-  /** Set up a subscription for the data provided by the data source. */
-  private _subscribeToDataChanges() {
-    if (this._dataSubscription) {
-      return;
-    }
-
-    let dataStream: Observable<readonly T[]> | undefined;
-
-    if (isDataSource(this._dataSource)) {
-      dataStream = this._dataSource.connect(this);
-    } else if (isObservable(this._dataSource)) {
-      dataStream = this._dataSource;
-    } else if (Array.isArray(this._dataSource)) {
-      dataStream = observableOf(this._dataSource);
-    }
-
-    if (!dataStream) {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        throw getTreeNoValidDataSourceError();
-      }
-      return;
-    }
-
-    this._dataSubscription = dataStream.pipe(takeUntil(this._onDestroy)).subscribe(data => {
-      this._data.set(data);
-    });
   }
 
   /** Given the raw data, returns an Observable containing the RenderingData */
@@ -445,7 +400,11 @@ export class CdkTree<T, K = T>
     );
   }
 
-  private _renderDataChanges(data: RenderingData<T>) {
+  private _renderDataChanges(data: RenderingData<T> | null) {
+    if (!data) {
+      return;
+    }
+
     if (data.nodeType === null) {
       this.renderNodeChanges(data.renderNodes);
       return;
@@ -1174,6 +1133,27 @@ export class CdkTree<T, K = T>
       group.splice(index, 0, dataNode);
       this._ariaSets.set(parentKey, group);
     }
+  }
+
+  private _fromDataSource(dataSource: DataSource<T>): Observable<readonly T[]> {
+    return new Observable((subscriber: Subscriber<readonly T[]>) => {
+      const subscription = dataSource.connect(this).subscribe({
+        next(val) {
+          subscriber.next(val);
+        },
+        error(err) {
+          subscriber.next(err);
+        },
+        complete() {
+          subscriber.complete();
+        },
+      });
+
+      return () => {
+        dataSource.disconnect(this);
+        subscription.unsubscribe();
+      };
+    }).pipe(shareReplay({bufferSize: 1, refCount: true}));
   }
 }
 

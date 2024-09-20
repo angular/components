@@ -13,8 +13,8 @@ import {
   TrackByFunction,
   Type,
   EventEmitter,
-  ViewChildren,
-  QueryList,
+  viewChildren,
+  viewChild,
 } from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -28,6 +28,7 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
+import {NgIf, NgSwitch} from '@angular/common';
 
 describe('CdkTree with TreeControl', () => {
   /** Represents an indent for expectNestedTreeToMatch */
@@ -37,9 +38,9 @@ describe('CdkTree with TreeControl', () => {
   let tree: CdkTree<TestData>;
   let dir: {value: Direction; readonly change: EventEmitter<Direction>};
 
-  function configureCdkTreeTestingModule(declarations: Type<any>[]) {
+  function configureCdkTreeTestingModule(imports: Type<any>[]) {
     TestBed.configureTestingModule({
-      imports: [CdkTreeModule],
+      imports,
       providers: [
         {
           provide: Directionality,
@@ -58,7 +59,6 @@ describe('CdkTree with TreeControl', () => {
           },
         },
       ],
-      declarations: declarations,
     });
   }
 
@@ -81,7 +81,7 @@ describe('CdkTree with TreeControl', () => {
     const fixture = TestBed.createComponent(SimpleCdkTreeApp);
     fixture.detectChanges();
     const spy = jasmine.createSpy('completeSpy');
-    const subscription = fixture.componentInstance.tree.viewChange.subscribe({complete: spy});
+    const subscription = fixture.componentInstance.tree().viewChange.subscribe({complete: spy});
 
     fixture.destroy();
     expect(spy).toHaveBeenCalled();
@@ -98,11 +98,10 @@ describe('CdkTree with TreeControl', () => {
         fixture = TestBed.createComponent(SimpleCdkTreeApp);
 
         fixture.detectChanges();
-        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
-        tree = component.tree;
+        tree = component.tree();
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
       });
 
@@ -217,7 +216,7 @@ describe('CdkTree with TreeControl', () => {
       });
 
       it('should be able to set zero as the indent level', () => {
-        component.paddingNodes.forEach(node => (node.level = 0));
+        component.paddingNodes().forEach(node => (node.level = 0));
 
         const data = dataSource.data;
 
@@ -1463,7 +1462,8 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class SimpleCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1473,8 +1473,8 @@ class SimpleCdkTreeApp {
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
   indent: number | string = 28;
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
-  @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
+  readonly tree = viewChild.required<CdkTree<TestData>>(CdkTree);
+  readonly paddingNodes = viewChildren(CdkTreeNodePadding);
 }
 
 @Component({
@@ -1489,7 +1489,8 @@ class SimpleCdkTreeApp {
       </ng-container>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule, NgSwitch],
 })
 class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
 
@@ -1502,7 +1503,8 @@ class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class NestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1526,7 +1528,8 @@ class NestedCdkTreeApp {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class StaticNestedCdkTreeApp {
   getChildren = (node: TestData) => node.children;
@@ -1563,7 +1566,8 @@ class StaticNestedCdkTreeApp {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class WhenNodeNestedCdkTreeApp {
   isSecondNode = (_: number, node: TestData) => node.pizzaBase.indexOf('2') > 0;
@@ -1587,7 +1591,8 @@ class WhenNodeNestedCdkTreeApp {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class CdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1614,7 +1619,8 @@ class CdkTreeAppWithToggle {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule, NgIf],
 })
 class NestedCdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1644,7 +1650,8 @@ class NestedCdkTreeAppWithToggle {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class WhenNodeCdkTreeApp {
   isOddNode = (_: number, node: TestData) => node.level % 2 === 1;
@@ -1668,7 +1675,8 @@ class WhenNodeCdkTreeApp {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class ArrayDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1695,7 +1703,8 @@ class ArrayDataSourceCdkTreeApp {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class ObservableDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1721,7 +1730,8 @@ class ObservableDataSourceCdkTreeApp {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class ArrayDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1746,7 +1756,8 @@ class ArrayDataSourceNestedCdkTreeApp {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class ObservableDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1772,7 +1783,8 @@ class ObservableDataSourceNestedCdkTreeApp {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class DepthNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1796,7 +1808,8 @@ class DepthNestedCdkTreeApp {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class CdkTreeAppWithTrackBy {
   trackByStrategy: 'reference' | 'property' | 'index' = 'reference';
@@ -1830,7 +1843,8 @@ class CdkTreeAppWithTrackBy {
       </cdk-nested-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class NestedCdkTreeAppWithTrackBy {
   trackByStrategy: 'reference' | 'property' | 'index' = 'reference';
