@@ -7,7 +7,7 @@ import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
 describe('CdkTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleCdkTreeApp>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SimpleCdkTreeApp],
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
