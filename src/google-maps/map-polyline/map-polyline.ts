@@ -36,6 +36,8 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapPolyline implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.PolylineOptions>({});
   private readonly _path = new BehaviorSubject<
@@ -139,10 +141,8 @@ export class MapPolyline implements OnInit, OnDestroy {
   @Output() readonly polylineInitialized: EventEmitter<google.maps.Polyline> =
     new EventEmitter<google.maps.Polyline>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

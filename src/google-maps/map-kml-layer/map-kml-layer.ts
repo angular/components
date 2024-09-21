@@ -36,6 +36,8 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapKmlLayer implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.KmlLayerOptions>({});
   private readonly _url = new BehaviorSubject<string>('');
@@ -83,10 +85,8 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   @Output() readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer> =
     new EventEmitter<google.maps.KmlLayer>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {
