@@ -245,7 +245,7 @@ $my-theme: mat.m2-define-light-theme((
 To include the emitted styles in your application, [add your theme file to the `styles` array of
 your project's `angular.json` file][adding-styles].
 
-[adding-styles]: https://angular.io/guide/workspace-config#styles-and-scripts-configuration
+[adding-styles]: https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
 
 #### Theming dimensions
 
@@ -735,7 +735,7 @@ requests][font-inlining].
 
 [roboto]: https://fonts.google.com/share?selection.family=Roboto:wght@300;400;500
 [fonts-api]: https://developers.google.com/fonts/docs/getting_started
-[font-inlining]: https://angular.io/guide/workspace-config#fonts-optimization-options
+[font-inlining]: https://angular.dev/reference/configs/workspace-config#fonts-optimization-options
 
 ### Typography levels
 

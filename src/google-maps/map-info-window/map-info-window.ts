@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
@@ -39,6 +39,9 @@ import {MapAnchorPoint} from '../map-anchor-point';
   host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
+  private readonly _googleMap = inject(GoogleMap);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
   private readonly _position = new BehaviorSubject<
@@ -105,11 +108,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   @Output() readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow> =
     new EventEmitter<google.maps.InfoWindow>();
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

@@ -3,12 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
+import {NgTemplateOutlet} from '@angular/common';
 import {
   ANIMATION_MODULE_TYPE,
   AfterContentChecked,
@@ -20,13 +20,10 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
-  Inject,
   InjectionToken,
   Injector,
   Input,
-  NgZone,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
@@ -191,6 +188,15 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
 export class MatFormField
   implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
+  _elementRef = inject(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dir = inject(Directionality);
+  private _platform = inject(Platform);
+  private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
   @ViewChild('textPrefixContainer') _textPrefixContainer: ElementRef<HTMLElement>;
@@ -326,33 +332,18 @@ export class MatFormField
 
   private _injector = inject(Injector);
 
-  constructor(
-    public _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-    /**
-     * @deprecated not needed, to be removed.
-     * @breaking-change 19.0.0 remove this param
-     */
-    _unusedNgZone: NgZone,
-    private _dir: Directionality,
-    private _platform: Platform,
-    @Optional()
-    @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
-    private _defaults?: MatFormFieldDefaultOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    /**
-     * @deprecated not needed, to be removed.
-     * @breaking-change 17.0.0 remove this param
-     */
-    @Inject(DOCUMENT) _unusedDocument?: any,
-  ) {
-    if (_defaults) {
-      if (_defaults.appearance) {
-        this.appearance = _defaults.appearance;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaults = this._defaults;
+
+    if (defaults) {
+      if (defaults.appearance) {
+        this.appearance = defaults.appearance;
       }
-      this._hideRequiredMarker = Boolean(_defaults?.hideRequiredMarker);
-      if (_defaults.color) {
-        this.color = _defaults.color;
+      this._hideRequiredMarker = Boolean(defaults?.hideRequiredMarker);
+      if (defaults.color) {
+        this.color = defaults.color;
       }
     }
   }

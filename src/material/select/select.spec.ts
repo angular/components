@@ -143,7 +143,6 @@ describe('MatSelect', () => {
 
         it('should set the role of the select to combobox', () => {
           expect(select.getAttribute('role')).toEqual('combobox');
-          expect(select.getAttribute('aria-autocomplete')).toBe('none');
           expect(select.getAttribute('aria-haspopup')).toBe('listbox');
         });
 
@@ -5520,12 +5519,14 @@ class SelectInNgContainer {}
   `,
 })
 class SelectInsideDynamicFormGroup {
+  private _formBuilder = inject(FormBuilder);
+
   @ViewChild(MatSelect) select: MatSelect;
   form: FormGroup;
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor() {
     this.assignGroup(false);
   }
 

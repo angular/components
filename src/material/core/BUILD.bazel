@@ -25,6 +25,7 @@ ng_module(
         ":option/optgroup.css",
         ":internal-form-field/internal-form-field.css",
         ":ripple/ripple-structure.css",
+        ":focus-indicators/structural-styles.css",
     ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
@@ -70,6 +71,12 @@ sass_library(
     deps = MATERIAL_SCSS_LIBS + [
         "//src/cdk:sass_lib",
     ],
+)
+
+sass_binary(
+    name = "structural_styles_scss",
+    src = "focus-indicators/structural-styles.scss",
+    deps = [":core_scss_lib"],
 )
 
 sass_binary(

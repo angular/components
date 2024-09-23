@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
@@ -35,13 +35,14 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapCircle implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.CircleOptions>({});
   private readonly _center = new BehaviorSubject<
     google.maps.LatLng | google.maps.LatLngLiteral | undefined
   >(undefined);
   private readonly _radius = new BehaviorSubject<number | undefined>(undefined);
-
   private readonly _destroyed = new Subject<void>();
 
   /**
@@ -161,10 +162,8 @@ export class MapCircle implements OnInit, OnDestroy {
   @Output() readonly circleInitialized: EventEmitter<google.maps.Circle> =
     new EventEmitter<google.maps.Circle>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (!this._map._isBrowser) {

@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   AfterContentInit,
-  Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,17 +15,17 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  Inject,
   Input,
   numberAttribute,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -100,6 +99,11 @@ let nextUniqueId = 0;
 export class MatSlideToggle
   implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
 {
+  private _elementRef = inject(ElementRef);
+  protected _focusMonitor = inject(FocusMonitor);
+  protected _changeDetectorRef = inject(ChangeDetectorRef);
+  defaults = inject<MatSlideToggleDefaultOptions>(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS);
+
   private _onChange = (_: any) => {};
   private _onTouched = () => {};
   private _validatorOnChange = () => {};
@@ -205,15 +209,14 @@ export class MatSlideToggle
     return `${this.id || this._uniqueId}-input`;
   }
 
-  constructor(
-    private _elementRef: ElementRef,
-    protected _focusMonitor: FocusMonitor,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    @Attribute('tabindex') tabIndex: string,
-    @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS) public defaults: MatSlideToggleDefaultOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    this.tabIndex = parseInt(tabIndex) || 0;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const defaults = this.defaults;
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
+    this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.color = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
     this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;

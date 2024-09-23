@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Platform} from '@angular/cdk/platform';
@@ -15,10 +15,10 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Inject,
   Input,
   QueryList,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 
 @Directive({
@@ -45,6 +45,10 @@ export class MatToolbarRow {}
   standalone: true,
 })
 export class MatToolbar implements AfterViewInit {
+  protected _elementRef = inject(ElementRef);
+  private _platform = inject(Platform);
+  private _document = inject(DOCUMENT);
+
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
   /**
    * Theme color of the toolbar. This API is supported in M2 themes only, it has
@@ -55,19 +59,11 @@ export class MatToolbar implements AfterViewInit {
    */
   @Input() color?: string | null;
 
-  private _document: Document;
-
   /** Reference to all toolbar row elements that have been projected. */
   @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
 
-  constructor(
-    protected _elementRef: ElementRef,
-    private _platform: Platform,
-    @Inject(DOCUMENT) document?: any,
-  ) {
-    // TODO: make the document a required param when doing breaking changes.
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     if (this._platform.isBrowser) {

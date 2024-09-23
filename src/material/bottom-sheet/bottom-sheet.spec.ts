@@ -14,12 +14,12 @@ import {
   Component,
   ComponentRef,
   Directive,
-  Inject,
   Injector,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -27,7 +27,6 @@ import {
   fakeAsync,
   flush,
   flushMicrotasks,
-  inject,
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -63,24 +62,15 @@ describe('MatBottomSheet', () => {
       ],
       providers: [{provide: Location, useClass: SpyLocation}],
     });
-  }));
 
-  beforeEach(inject(
-    [MatBottomSheet, OverlayContainer, ViewportRuler, Location],
-    (bs: MatBottomSheet, oc: OverlayContainer, vr: ViewportRuler, l: Location) => {
-      bottomSheet = bs;
-      viewportRuler = vr;
-      overlayContainerElement = oc.getContainerElement();
-      mockLocation = l as SpyLocation;
-    },
-  ));
-
-  beforeEach(() => {
+    bottomSheet = TestBed.inject(MatBottomSheet);
+    viewportRuler = TestBed.inject(ViewportRuler);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    mockLocation = TestBed.inject(Location) as SpyLocation;
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  });
+  }));
 
   it('should open a bottom sheet with a component', () => {
     const bottomSheetRef = bottomSheet.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -873,18 +863,13 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
     TestBed.configureTestingModule({
       imports: [MatBottomSheetModule, NoopAnimationsModule, ComponentThatProvidesMatBottomSheet],
     });
-  }));
 
-  beforeEach(inject(
-    [MatBottomSheet, OverlayContainer],
-    (bs: MatBottomSheet, oc: OverlayContainer) => {
-      parentBottomSheet = bs;
-      overlayContainerElement = oc.getContainerElement();
-      fixture = TestBed.createComponent(ComponentThatProvidesMatBottomSheet);
-      childBottomSheet = fixture.componentInstance.bottomSheet;
-      fixture.detectChanges();
-    },
-  ));
+    parentBottomSheet = TestBed.inject(MatBottomSheet);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    fixture = TestBed.createComponent(ComponentThatProvidesMatBottomSheet);
+    childBottomSheet = fixture.componentInstance.bottomSheet;
+    fixture.detectChanges();
+  }));
 
   it('should close bottom sheets opened by parent when opening from child', fakeAsync(() => {
     parentBottomSheet.open(PizzaMsg);
@@ -964,22 +949,13 @@ describe('MatBottomSheet with default options', () => {
       ],
       providers: [{provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
-  }));
 
-  beforeEach(inject(
-    [MatBottomSheet, OverlayContainer],
-    (b: MatBottomSheet, oc: OverlayContainer) => {
-      bottomSheet = b;
-      overlayContainerElement = oc.getContainerElement();
-    },
-  ));
-
-  beforeEach(() => {
+    bottomSheet = TestBed.inject(MatBottomSheet);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  });
+  }));
 
   it('should use the provided defaults', () => {
     bottomSheet.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -1018,7 +994,7 @@ describe('MatBottomSheet with default options', () => {
   standalone: true,
 })
 class DirectiveWithViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -1057,11 +1033,9 @@ class ComponentWithTemplateRef {
   standalone: true,
 })
 class PizzaMsg {
-  constructor(
-    public bottomSheetRef: MatBottomSheetRef<PizzaMsg>,
-    public injector: Injector,
-    public directionality: Directionality,
-  ) {}
+  bottomSheetRef = inject<MatBottomSheetRef<PizzaMsg>>(MatBottomSheetRef);
+  injector = inject(Injector);
+  directionality = inject(Directionality);
 }
 
 @Component({
@@ -1086,7 +1060,7 @@ class ContentElementDialog {}
   imports: [MatBottomSheetModule],
 })
 class ComponentThatProvidesMatBottomSheet {
-  constructor(public bottomSheet: MatBottomSheet) {}
+  bottomSheet = inject(MatBottomSheet);
 }
 
 @Component({
@@ -1094,7 +1068,7 @@ class ComponentThatProvidesMatBottomSheet {
   standalone: true,
 })
 class BottomSheetWithInjectedData {
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {}
+  data = inject(MAT_BOTTOM_SHEET_DATA);
 }
 
 @Component({

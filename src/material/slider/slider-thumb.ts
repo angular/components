@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -12,7 +12,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   Input,
   NgZone,
   OnDestroy,
@@ -52,6 +51,10 @@ import {Platform} from '@angular/cdk/platform';
   imports: [MatRipple],
 })
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
+  readonly _cdr = inject(ChangeDetectorRef);
+  private readonly _ngZone = inject(NgZone);
+  private _slider = inject<_MatSlider>(MAT_SLIDER);
+
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
   @Input() discrete: boolean;
 
@@ -96,18 +99,12 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   _isValueIndicatorVisible: boolean = false;
 
   /** The host native HTML input element. */
-  _hostElement: HTMLElement;
+  _hostElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   private _platform = inject(Platform);
 
-  constructor(
-    readonly _cdr: ChangeDetectorRef,
-    private readonly _ngZone: NgZone,
-    _elementRef: ElementRef<HTMLElement>,
-    @Inject(MAT_SLIDER) private _slider: _MatSlider,
-  ) {
-    this._hostElement = _elementRef.nativeElement;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     const sliderInput = this._slider._getInput(this.thumbPosition);

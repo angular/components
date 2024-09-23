@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -14,7 +14,6 @@ import {
   EventEmitter,
   forwardRef,
   inject,
-  Inject,
   Input,
   NgZone,
   numberAttribute,
@@ -85,6 +84,11 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
   standalone: true,
 })
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
+  readonly _ngZone = inject(NgZone);
+  readonly _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  readonly _cdr = inject(ChangeDetectorRef);
+  protected _slider = inject<_MatSlider>(MAT_SLIDER);
+
   @Input({transform: numberAttribute})
   get value(): number {
     return numberAttribute(this._hostElement.value, 0);
@@ -209,7 +213,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   /** The host native HTML input element. */
-  _hostElement: HTMLInputElement;
+  _hostElement = this._elementRef.nativeElement;
 
   /** The aria-valuetext string representation of the input's value. */
   _valuetext = signal('');
@@ -274,13 +278,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   private _platform = inject(Platform);
 
-  constructor(
-    readonly _ngZone: NgZone,
-    readonly _elementRef: ElementRef<HTMLInputElement>,
-    readonly _cdr: ChangeDetectorRef,
-    @Inject(MAT_SLIDER) protected _slider: _MatSlider,
-  ) {
-    this._hostElement = _elementRef.nativeElement;
+  constructor(...args: unknown[]);
+
+  constructor() {
     this._ngZone.runOutsideAngular(() => {
       this._hostElement.addEventListener('pointerdown', this._onPointerDown.bind(this));
       this._hostElement.addEventListener('pointermove', this._onPointerMove.bind(this));
@@ -609,6 +609,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   standalone: true,
 })
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
+  override readonly _cdr = inject(ChangeDetectorRef);
+
   /** @docs-private */
   getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
@@ -655,13 +657,11 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   /** Whether this slider corresponds to the input with greater value. */
   _isEndThumb: boolean;
 
-  constructor(
-    _ngZone: NgZone,
-    @Inject(MAT_SLIDER) _slider: _MatSlider,
-    _elementRef: ElementRef<HTMLInputElement>,
-    override readonly _cdr: ChangeDetectorRef,
-  ) {
-    super(_ngZone, _elementRef, _cdr, _slider);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
     this._isEndThumb = this._hostElement.hasAttribute('matSliderEndThumb');
     this._setIsLeftThumb();
     this.thumbPosition = this._isEndThumb ? _MatThumb.END : _MatThumb.START;

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {InjectionToken, ChangeDetectorRef, WritableSignal} from '@angular/core';
@@ -125,7 +125,7 @@ export interface _MatSlider {
   _rippleRadius: number;
 
   /** The global configuration for `matRipple` instances. */
-  readonly _globalRippleOptions?: RippleGlobalOptions;
+  readonly _globalRippleOptions: RippleGlobalOptions | null;
 
   /** Whether animations have been disabled. */
   _noopAnimations: boolean;

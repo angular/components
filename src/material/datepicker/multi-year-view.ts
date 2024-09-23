@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -25,11 +25,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -62,6 +62,9 @@ export const yearsPerRow = 4;
   imports: [MatCalendarBody],
 })
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dir = inject(Directionality, {optional: true});
   private _rerenderSubscription = Subscription.EMPTY;
 
   /** Flag used to filter out space/enter keyup events that originated outside of the view. */
@@ -156,11 +159,9 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   /** The year of the selected date. Null if the selected date is null. */
   _selectedYear: number | null;
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() public _dateAdapter: DateAdapter<D>,
-    @Optional() private _dir?: Directionality,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');
     }

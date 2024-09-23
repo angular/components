@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {parallel} from './change-detection';
@@ -52,13 +52,13 @@ export type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = {
   [I in keyof T]: T[I] extends new (...args: any[]) => infer C // Map `ComponentHarnessConstructor<C>` to `C`.
     ? C
     : // Map `HarnessPredicate<C>` to `C`.
-    T[I] extends {harnessType: new (...args: any[]) => infer C}
-    ? C
-    : // Map `string` to `TestElement`.
-    T[I] extends string
-    ? TestElement
-    : // Map everything else to `never` (should not happen due to the type constraint on `T`).
-      never;
+      T[I] extends {harnessType: new (...args: any[]) => infer C}
+      ? C
+      : // Map `string` to `TestElement`.
+        T[I] extends string
+        ? TestElement
+        : // Map everything else to `never` (should not happen due to the type constraint on `T`).
+          never;
 }[number];
 
 /**
@@ -471,7 +471,10 @@ export class HarnessPredicate<T extends ComponentHarness> {
   private _descriptions: string[] = [];
   private _ancestor: string;
 
-  constructor(public harnessType: ComponentHarnessConstructor<T>, options: BaseHarnessFilters) {
+  constructor(
+    public harnessType: ComponentHarnessConstructor<T>,
+    options: BaseHarnessFilters,
+  ) {
     this._addBaseOptions(options);
   }
 

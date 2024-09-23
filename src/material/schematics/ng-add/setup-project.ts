@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {chain, noop, Rule, SchematicContext, Tree, callRule} from '@angular-devkit/schematics';
@@ -113,7 +113,7 @@ function addAnimations(options: Schema): Rule {
           'Failed to add animations to project. Continuing with the Angular Material setup.',
         );
         context.logger.info(
-          'Read more about setting up the animations manually: https://angular.io/guide/animations',
+          'Read more about setting up the animations manually: https://angular.dev/guide/animations',
         );
         return observableOf(host);
       }),

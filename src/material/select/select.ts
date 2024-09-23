@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -34,7 +34,6 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
-  Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -45,22 +44,19 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
-  Inject,
   inject,
   InjectionToken,
   Input,
-  NgZone,
   numberAttribute,
   OnChanges,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
-  Self,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  HostAttributeToken,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -216,6 +212,14 @@ export class MatSelect
     ControlValueAccessor,
     MatFormFieldControl<any>
 {
+  protected _viewportRuler = inject(ViewportRuler);
+  protected _changeDetectorRef = inject(ChangeDetectorRef);
+  readonly _elementRef = inject(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+  protected _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
+  ngControl = inject(NgControl, {self: true, optional: true})!;
+  private _liveAnnouncer = inject(LiveAnnouncer);
+
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
 
   /** All of the defined select options. */
@@ -300,7 +304,7 @@ export class MatSelect
   }
 
   /** Factory function used to create a scroll strategy for this select. */
-  private _scrollStrategyFactory: () => ScrollStrategy;
+  private _scrollStrategyFactory = inject(MAT_SELECT_SCROLL_STRATEGY);
 
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
@@ -590,26 +594,14 @@ export class MatSelect
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(
-    protected _viewportRuler: ViewportRuler,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    /**
-     * @deprecated Unused param, will be removed.
-     * @breaking-change 19.0.0
-     */
-    _unusedNgZone: NgZone,
-    defaultErrorStateMatcher: ErrorStateMatcher,
-    readonly _elementRef: ElementRef,
-    @Optional() private _dir: Directionality,
-    @Optional() parentForm: NgForm,
-    @Optional() parentFormGroup: FormGroupDirective,
-    @Optional() @Inject(MAT_FORM_FIELD) protected _parentFormField: MatFormField,
-    @Self() @Optional() public ngControl: NgControl,
-    @Attribute('tabindex') tabIndex: string,
-    @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
-    private _liveAnnouncer: LiveAnnouncer,
-    @Optional() @Inject(MAT_SELECT_CONFIG) _unusedDefaultOptions?: unknown,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    const parentForm = inject(NgForm, {optional: true});
+    const parentFormGroup = inject(FormGroupDirective, {optional: true});
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
       // the `providers` to avoid running into a circular import.
@@ -624,14 +616,13 @@ export class MatSelect
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      ngControl,
+      this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,
     );
-    this._scrollStrategyFactory = scrollStrategyFactory;
     this._scrollStrategy = this._scrollStrategyFactory();
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -1364,7 +1355,7 @@ export class MatSelect
       return null;
     }
 
-    const labelId = this._parentFormField?.getLabelId();
+    const labelId = this._parentFormField?.getLabelId() || null;
     const labelExpression = labelId ? labelId + ' ' : '';
     return this.ariaLabelledby ? labelExpression + this.ariaLabelledby : labelId;
   }

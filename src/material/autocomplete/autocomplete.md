@@ -18,7 +18,7 @@ track the value of the input.
 in this example because it makes subscribing to changes in the input's value easy. For this
 example, be sure to import `ReactiveFormsModule` from `@angular/forms` into your `NgModule`.
 If you are unfamiliar with using reactive forms, you can read more about the subject in the
-[Angular documentation](https://angular.io/guide/reactive-forms).
+[Angular documentation](https://angular.dev/guide/forms/reactive-forms).
 
 Now we'll need to link the text input to its panel. We can do this by exporting the autocomplete
 panel instance into a local template variable (here we called it "auto"), and binding that variable

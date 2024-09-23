@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Inject, Injectable, Optional, InjectionToken} from '@angular/core';
+import {Injectable, InjectionToken, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
   DateTime as LuxonDateTime,
@@ -70,13 +70,16 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   private _firstDayOfWeek: number;
   private _defaultOutputCalendar: LuxonCalendarSystem;
 
-  constructor(
-    @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
-    @Optional()
-    @Inject(MAT_LUXON_DATE_ADAPTER_OPTIONS)
-    options?: MatLuxonDateAdapterOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
+
+    const dateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+    const options = inject<MatLuxonDateAdapterOptions>(MAT_LUXON_DATE_ADAPTER_OPTIONS, {
+      optional: true,
+    });
+
     this._useUTC = !!options?.useUtc;
     this._firstDayOfWeek = options?.firstDayOfWeek || 0;
     this._defaultOutputCalendar = options?.defaultOutputCalendar || 'gregory';

@@ -15,12 +15,8 @@ import { CdkStepLabel } from '@angular/cdk/stepper';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { CdkStepperNext } from '@angular/cdk/stepper';
 import { CdkStepperPrevious } from '@angular/cdk/stepper';
-import { ChangeDetectorRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
-import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -33,14 +29,12 @@ import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { StepperOptions } from '@angular/cdk/stepper';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { StepState } from '@angular/cdk/stepper';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export const MAT_STEPPER_INTL_PROVIDER: {
@@ -54,7 +48,6 @@ export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl): M
 
 // @public (undocumented)
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
-    constructor(stepper: MatStepper, _errorStateMatcher: ErrorStateMatcher, _viewContainerRef: ViewContainerRef, stepperOptions?: StepperOptions);
     color: ThemePalette;
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     _lazyContent: MatStepContent;
@@ -67,12 +60,12 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatStep, "mat-step", ["matStep"], { "color": { "alias": "color"; "required": false; }; }, {}, ["stepLabel", "_lazyContent"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatStep, [null, { skipSelf: true; }, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatStep, never>;
 }
 
 // @public
 export class MatStepContent {
-    constructor(_template: TemplateRef<any>);
+    constructor(...args: unknown[]);
     // (undocumented)
     _template: TemplateRef<any>;
     // (undocumented)
@@ -83,7 +76,7 @@ export class MatStepContent {
 
 // @public (undocumented)
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
-    constructor(_intl: MatStepperIntl, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     active: boolean;
     color: ThemePalette;
     disableRipple: boolean;
@@ -125,7 +118,7 @@ export class MatStepLabel extends CdkStepLabel {
 
 // @public (undocumented)
 export class MatStepper extends CdkStepper implements AfterContentInit {
-    constructor(dir: Directionality, changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     readonly animationDone: EventEmitter<void>;
     readonly _animationDone: Subject<AnimationEvent_2>;
     get animationDuration(): string;
@@ -149,7 +142,7 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
 
 // @public
@@ -160,7 +153,7 @@ export const matStepperAnimations: {
 
 // @public
 export class MatStepperIcon {
-    constructor(templateRef: TemplateRef<MatStepperIconContext>);
+    constructor(...args: unknown[]);
     name: StepState;
     // (undocumented)
     templateRef: TemplateRef<MatStepperIconContext>;

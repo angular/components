@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
@@ -28,15 +28,12 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  Host,
-  Inject,
   InjectionToken,
   Injector,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
-  Optional,
   SimpleChanges,
   ViewContainerRef,
   afterNextRender,
@@ -134,10 +131,24 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export class MatAutocompleteTrigger
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
 {
+  private _element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private _overlay = inject(Overlay);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _zone = inject(NgZone);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dir = inject(Directionality, {optional: true});
+  private _formField = inject<MatFormField | null>(MAT_FORM_FIELD, {optional: true, host: true});
+  private _document = inject(DOCUMENT);
+  private _viewportRuler = inject(ViewportRuler);
+  private _defaults = inject<MatAutocompleteDefaultOptions | null>(
+    MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
+    {optional: true},
+  );
+
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
   private _componentDestroyed = false;
-  private _scrollStrategy: () => ScrollStrategy;
+  private _scrollStrategy = inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY);
   private _keydownSubscription: Subscription | null;
   private _outsideClickSubscription: Subscription | null;
 
@@ -238,23 +249,8 @@ export class MatAutocompleteTrigger
 
   private _injector = inject(Injector);
 
-  constructor(
-    private _element: ElementRef<HTMLInputElement>,
-    private _overlay: Overlay,
-    private _viewContainerRef: ViewContainerRef,
-    private _zone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
-    @Optional() private _dir: Directionality | null,
-    @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField | null,
-    @Optional() @Inject(DOCUMENT) private _document: any,
-    private _viewportRuler: ViewportRuler,
-    @Optional()
-    @Inject(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS)
-    private _defaults?: MatAutocompleteDefaultOptions | null,
-  ) {
-    this._scrollStrategy = scrollStrategy;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Class to apply to the panel when it's above the input. */
   private _aboveClass = 'mat-mdc-autocomplete-panel-above';

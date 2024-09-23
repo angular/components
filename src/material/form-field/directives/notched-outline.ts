@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -15,6 +15,7 @@ import {
   NgZone,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 
 /**
@@ -37,15 +38,16 @@ import {
   standalone: true,
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+
   /** Whether the notch should be opened. */
   @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
 
   @ViewChild('notch') _notch: ElementRef;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit(): void {
     const label = this._elementRef.nativeElement.querySelector<HTMLElement>('.mdc-floating-label');

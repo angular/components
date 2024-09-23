@@ -6,7 +6,7 @@ import {
   dispatchMouseEvent,
   wrappedErrorMessage,
 } from '@angular/cdk/testing/private';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {By} from '@angular/platform-browser';
@@ -677,8 +677,8 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class SimpleMatSortApp {
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   latestSortEvent: Sort;
-
   active: string;
   start: SortDirection = 'asc';
   direction: SortDirection = '';
@@ -692,8 +692,6 @@ class SimpleMatSortApp {
   @ViewChild('defaultB') defaultB: MatSortHeader;
   @ViewChild('overrideStart') overrideStart: MatSortHeader;
   @ViewChild('overrideDisableClear') overrideDisableClear: MatSortHeader;
-
-  constructor(public elementRef: ElementRef<HTMLElement>) {}
 
   sort(id: SimpleMatSortAppColumnIds) {
     this.dispatchMouseEvent(id, 'click');
@@ -853,15 +851,13 @@ class MatSortableInvalidDirection {}
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutExplicitInputs {
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   latestSortEvent: Sort;
-
   active: string;
   start: SortDirection = 'asc';
 
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild('defaultA') defaultA: MatSortHeader;
-
-  constructor(public elementRef: ElementRef<HTMLElement>) {}
 
   sort(id: SimpleMatSortAppColumnIds) {
     this.dispatchMouseEvent(id, 'click');

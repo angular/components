@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
@@ -19,6 +19,7 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  inject,
 } from '@angular/core';
 
 import {GoogleMap} from '../google-map/google-map';
@@ -41,6 +42,9 @@ export type HeatmapData =
   standalone: true,
 })
 export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
+  private readonly _googleMap = inject(GoogleMap);
+  private _ngZone = inject(NgZone);
+
   /**
    * Data shown on the heatmap.
    * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
@@ -72,10 +76,8 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   @Output() readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer> =
     new EventEmitter<google.maps.visualization.HeatmapLayer>();
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

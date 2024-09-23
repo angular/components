@@ -216,7 +216,7 @@ export class MatNativeDateModule {
 
 // @public
 export class MatOptgroup {
-    constructor(parent?: MatOptionParentComponent);
+    constructor(...args: unknown[]);
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -226,12 +226,12 @@ export class MatOptgroup {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, never>;
 }
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: MatOptgroup);
+    constructor(...args: unknown[]);
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
@@ -244,11 +244,11 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     getLabel(): string;
     _getTabIndex(): string;
     // (undocumented)
-    group: MatOptgroup;
+    group: MatOptgroup | null;
     _handleKeydown(event: KeyboardEvent): void;
     get hideSingleSelectionIndicator(): boolean;
     id: string;
-    get multiple(): boolean | undefined;
+    get multiple(): boolean | null | undefined;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -268,7 +268,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, never>;
 }
 
 // @public (undocumented)
@@ -304,16 +304,16 @@ export class MatOptionSelectionChange<T = any> {
 
 // @public
 export class MatPseudoCheckbox {
-    constructor(_animationMode?: string | undefined);
+    constructor(...args: unknown[]);
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode?: "NoopAnimations" | "BrowserAnimations" | null | undefined;
     appearance: 'minimal' | 'full';
     disabled: boolean;
     state: MatPseudoCheckboxState;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatPseudoCheckbox, "mat-pseudo-checkbox", never, { "state": { "alias": "state"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckbox, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPseudoCheckbox, never>;
 }
 
 // @public (undocumented)
@@ -331,7 +331,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 // @public (undocumented)
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-    constructor(_elementRef: ElementRef<HTMLElement>, ngZone: NgZone, platform: Platform, globalOptions?: RippleGlobalOptions, _animationMode?: string | undefined, injector?: Injector);
+    constructor(...args: unknown[]);
     animation: RippleAnimationConfig;
     centered: boolean;
     color: string;
@@ -355,7 +355,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatRipple, "[mat-ripple], [matRipple]", ["matRipple"], { "color": { "alias": "matRippleColor"; "required": false; }; "unbounded": { "alias": "matRippleUnbounded"; "required": false; }; "centered": { "alias": "matRippleCentered"; "required": false; }; "radius": { "alias": "matRippleRadius"; "required": false; }; "animation": { "alias": "matRippleAnimation"; "required": false; }; "disabled": { "alias": "matRippleDisabled"; "required": false; }; "trigger": { "alias": "matRippleTrigger"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, [null, null, null, { optional: true; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatRipple, never>;
 }
 
 // @public
@@ -389,8 +389,7 @@ export class MatRippleModule {
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
-    constructor(
-    matDateLocale?: string);
+    constructor(...args: unknown[]);
     // (undocumented)
     addCalendarDays(date: Date, days: number): Date;
     // (undocumented)
@@ -439,7 +438,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // @deprecated (undocumented)
     useUtcForDisplay: boolean;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<NativeDateAdapter>;
 }

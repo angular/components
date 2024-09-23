@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -16,14 +16,11 @@ import {
   DoCheck,
   ElementRef,
   inject,
-  Inject,
   InjectionToken,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
-  Optional,
-  Self,
 } from '@angular/core';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
@@ -96,6 +93,14 @@ export const MAT_INPUT_CONFIG = new InjectionToken<MatInputConfig>('MAT_INPUT_CO
 export class MatInput
   implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck
 {
+  protected _elementRef =
+    inject<ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>>(ElementRef);
+  protected _platform = inject(Platform);
+  ngControl = inject(NgControl, {optional: true, self: true})!;
+  private _autofillMonitor = inject(AutofillMonitor);
+  private _ngZone = inject(NgZone);
+  protected _formField? = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
+
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
@@ -279,20 +284,14 @@ export class MatInput
     'week',
   ].filter(t => getSupportedInputTypes().has(t));
 
-  constructor(
-    protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-    protected _platform: Platform,
-    @Optional() @Self() public ngControl: NgControl,
-    @Optional() parentForm: NgForm,
-    @Optional() parentFormGroup: FormGroupDirective,
-    defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-    private _autofillMonitor: AutofillMonitor,
-    private _ngZone: NgZone,
-    // TODO: Remove this once the legacy appearance has been removed. We only need
-    // to inject the form field for determining whether the placeholder has been promoted.
-    @Optional() @Inject(MAT_FORM_FIELD) protected _formField?: MatFormField,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const parentForm = inject(NgForm, {optional: true});
+    const parentFormGroup = inject(FormGroupDirective, {optional: true});
+    const defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    const inputValueAccessor = inject(MAT_INPUT_VALUE_ACCESSOR, {optional: true, self: true});
+
     const element = this._elementRef.nativeElement;
     const nodeName = element.nodeName.toLowerCase();
 
@@ -308,15 +307,15 @@ export class MatInput
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
     // exists on iOS, we only bother to install the listener on iOS.
-    if (_platform.IOS) {
-      _ngZone.runOutsideAngular(() => {
-        _elementRef.nativeElement.addEventListener('keyup', this._iOSKeyupListener);
+    if (this._platform.IOS) {
+      this._ngZone.runOutsideAngular(() => {
+        element.addEventListener('keyup', this._iOSKeyupListener);
       });
     }
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      ngControl,
+      this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,
@@ -324,7 +323,7 @@ export class MatInput
     this._isServer = !this._platform.isBrowser;
     this._isNativeSelect = nodeName === 'select';
     this._isTextarea = nodeName === 'textarea';
-    this._isInFormField = !!_formField;
+    this._isInFormField = !!this._formField;
     this.disabledInteractive = this._config?.disabledInteractive || false;
 
     if (this._isNativeSelect) {

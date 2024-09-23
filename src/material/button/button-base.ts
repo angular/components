@@ -3,13 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   Directive,
   ElementRef,
@@ -87,6 +88,11 @@ const HOST_SELECTOR_MDC_CLASS_PAIR: {attribute: string; mdcClasses: string[]}[] 
 /** Base class for all buttons.  */
 @Directive()
 export class MatButtonBase implements AfterViewInit, OnDestroy {
+  _elementRef = inject(ElementRef);
+  _platform = inject(Platform);
+  _ngZone = inject(NgZone);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   private readonly _focusMonitor = inject(FocusMonitor);
 
   /**
@@ -147,14 +153,11 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   @Input({transform: booleanAttribute})
   disabledInteractive: boolean;
 
-  constructor(
-    public _elementRef: ElementRef,
-    public _platform: Platform,
-    public _ngZone: NgZone,
-    public _animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     const config = inject(MAT_BUTTON_CONFIG, {optional: true});
-    const element = _elementRef.nativeElement;
+    const element = this._elementRef.nativeElement;
     const classList = (element as HTMLElement).classList;
 
     this.disabledInteractive = config?.disabledInteractive ?? false;
@@ -241,10 +244,6 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
     },
   })
   tabIndex: number;
-
-  constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone, animationMode?: string) {
-    super(elementRef, platform, ngZone, animationMode);
-  }
 
   ngOnInit(): void {
     this._ngZone.runOutsideAngular(() => {

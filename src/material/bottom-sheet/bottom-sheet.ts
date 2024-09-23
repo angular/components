@@ -3,22 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Dialog} from '@angular/cdk/dialog';
 import {Overlay} from '@angular/cdk/overlay';
 import {ComponentType} from '@angular/cdk/portal';
-import {
-  Injectable,
-  Optional,
-  SkipSelf,
-  TemplateRef,
-  InjectionToken,
-  Inject,
-  OnDestroy,
-  Injector,
-} from '@angular/core';
+import {Injectable, TemplateRef, InjectionToken, OnDestroy, inject} from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
@@ -33,8 +24,14 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomShee
  */
 @Injectable({providedIn: 'root'})
 export class MatBottomSheet implements OnDestroy {
+  private _overlay = inject(Overlay);
+  private _parentBottomSheet = inject(MatBottomSheet, {optional: true, skipSelf: true});
+  private _defaultOptions = inject<MatBottomSheetConfig>(MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
   private _bottomSheetRefAtThisLevel: MatBottomSheetRef<any> | null = null;
-  private _dialog: Dialog;
+  private _dialog = inject(Dialog);
 
   /** Reference to the currently opened bottom sheet. */
   get _openedBottomSheetRef(): MatBottomSheetRef<any> | null {
@@ -50,16 +47,8 @@ export class MatBottomSheet implements OnDestroy {
     }
   }
 
-  constructor(
-    private _overlay: Overlay,
-    injector: Injector,
-    @Optional() @SkipSelf() private _parentBottomSheet: MatBottomSheet,
-    @Optional()
-    @Inject(MAT_BOTTOM_SHEET_DEFAULT_OPTIONS)
-    private _defaultOptions?: MatBottomSheetConfig,
-  ) {
-    this._dialog = injector.get(Dialog);
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Opens a bottom sheet containing the given component.

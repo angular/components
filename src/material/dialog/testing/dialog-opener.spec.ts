@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {MatTestDialogOpener, MatTestDialogOpenerModule} from '@angular/material/dialog/testing';
@@ -64,10 +64,8 @@ interface ExampleDialogResult {
   standalone: true,
 })
 class ExampleComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ExampleComponent, ExampleDialogResult>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
+  dialogRef = inject<MatDialogRef<ExampleComponent, ExampleDialogResult>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
 
   close() {
     this.dialogRef.close({reason: 'closed'});

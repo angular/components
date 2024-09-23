@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Inject, Injectable, Optional} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
   Locale,
@@ -52,8 +52,11 @@ const DAY_OF_WEEK_FORMATS = {
 /** Adds date-fns support to Angular Material. */
 @Injectable()
 export class DateFnsAdapter extends DateAdapter<Date, Locale> {
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: {}) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
+    const matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
     this.setLocale(matDateLocale as Locale);
   }
 

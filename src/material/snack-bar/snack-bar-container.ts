@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -60,6 +60,12 @@ let uniqueId = 0;
   },
 })
 export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
+  private _ngZone = inject(NgZone);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _platform = inject(Platform);
+  snackBarConfig = inject(MatSnackBarConfig);
+
   private _document = inject(DOCUMENT);
   private _trackedModals = new Set<Element>();
 
@@ -106,21 +112,17 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   /** Unique ID of the aria-live element. */
   readonly _liveElementId = `mat-snack-bar-container-live-${uniqueId++}`;
 
-  constructor(
-    private _ngZone: NgZone,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _platform: Platform,
-    /** The snack bar configuration. */
-    public snackBarConfig: MatSnackBarConfig,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
+    const config = this.snackBarConfig;
 
     // Use aria-live rather than a live role like 'alert' or 'status'
     // because NVDA and JAWS have show inconsistent behavior with live roles.
-    if (snackBarConfig.politeness === 'assertive' && !snackBarConfig.announcementMessage) {
+    if (config.politeness === 'assertive' && !config.announcementMessage) {
       this._live = 'assertive';
-    } else if (snackBarConfig.politeness === 'off') {
+    } else if (config.politeness === 'off') {
       this._live = 'off';
     } else {
       this._live = 'polite';

@@ -3,13 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" preserve="true" />
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export interface MapGeocoderResponse {
@@ -23,9 +23,11 @@ export interface MapGeocoderResponse {
  */
 @Injectable({providedIn: 'root'})
 export class MapGeocoder {
+  private readonly _ngZone = inject(NgZone);
   private _geocoder: google.maps.Geocoder | undefined;
 
-  constructor(private readonly _ngZone: NgZone) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode

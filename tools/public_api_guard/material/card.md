@@ -14,13 +14,13 @@ export const MAT_CARD_CONFIG: InjectionToken<MatCardConfig>;
 
 // @public
 export class MatCard {
-    constructor(config?: MatCardConfig);
+    constructor(...args: unknown[]);
     // (undocumented)
     appearance: MatCardAppearance;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatCard, "mat-card", ["matCard"], { "appearance": { "alias": "appearance"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCard, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCard, never>;
 }
 
 // @public

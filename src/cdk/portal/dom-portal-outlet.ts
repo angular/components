@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -150,12 +150,6 @@ export class DomPortalOutlet extends BasePortalOutlet {
    * @breaking-change 10.0.0
    */
   override attachDomPortal = (portal: DomPortal) => {
-    // @breaking-change 10.0.0 Remove check and error once the
-    // `_document` constructor parameter is required.
-    if (!this._document && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error('Cannot attach DOM portal without _document constructor parameter');
-    }
-
     const element = portal.element;
     if (!element.parentNode && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('DOM portal content must be attached to a parent node.');

@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -126,9 +126,9 @@ describe('MatDialogHarness', () => {
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions],
 })
 class DialogHarnessTest {
-  @ViewChild(TemplateRef) dialogTmpl: TemplateRef<any>;
+  readonly dialog = inject(MatDialog);
 
-  constructor(readonly dialog: MatDialog) {}
+  @ViewChild(TemplateRef) dialogTmpl: TemplateRef<any>;
 
   open(config?: MatDialogConfig) {
     return this.dialog.open(this.dialogTmpl, config);

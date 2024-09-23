@@ -3,10 +3,17 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Attribute, Directive, ElementRef, InjectionToken, Input} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  InjectionToken,
+  Input,
+  HostAttributeToken,
+  inject,
+} from '@angular/core';
 
 let nextUniqueId = 0;
 
@@ -31,10 +38,15 @@ export const MAT_ERROR = new InjectionToken<MatError>('MatError');
 export class MatError {
   @Input() id: string = `mat-mdc-error-${nextUniqueId++}`;
 
-  constructor(@Attribute('aria-live') ariaLive: string, elementRef: ElementRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ariaLive = inject(new HostAttributeToken('aria-live'), {optional: true});
+
     // If no aria-live value is set add 'polite' as a default. This is preferred over setting
     // role='alert' so that screen readers do not interrupt the current task to read this aloud.
     if (!ariaLive) {
+      const elementRef = inject(ElementRef);
       elementRef.nativeElement.setAttribute('aria-live', 'polite');
     }
   }

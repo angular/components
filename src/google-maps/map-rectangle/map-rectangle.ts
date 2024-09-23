@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
@@ -36,6 +36,8 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapRectangle implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.RectangleOptions>({});
   private readonly _bounds = new BehaviorSubject<
@@ -148,10 +150,8 @@ export class MapRectangle implements OnInit, OnDestroy {
   @Output() readonly rectangleInitialized: EventEmitter<google.maps.Rectangle> =
     new EventEmitter<google.maps.Rectangle>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

@@ -10,11 +10,9 @@ import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkAccordion } from '@angular/cdk/accordion';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
@@ -28,8 +26,6 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export const EXPANSION_PANEL_ANIMATION_TIMING = "225ms cubic-bezier(0.4,0.0,0.2,1)";
@@ -97,13 +93,13 @@ export class MatExpansionModule {
 
 // @public
 export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges, OnDestroy {
-    constructor(accordion: MatAccordionBase, _changeDetectorRef: ChangeDetectorRef, _uniqueSelectionDispatcher: UniqueSelectionDispatcher, _viewContainerRef: ViewContainerRef, _document: any, _animationMode: string, defaultOptions?: MatExpansionPanelDefaultOptions);
+    constructor(...args: unknown[]);
     accordion: MatAccordionBase;
     readonly afterCollapse: EventEmitter<void>;
     readonly afterExpand: EventEmitter<void>;
     protected _animationDone(event: AnimationEvent_2): void;
     // (undocumented)
-    _animationMode: string;
+    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
     // (undocumented)
     protected _animationsDisabled: boolean;
     protected _animationStarted(event: AnimationEvent_2): void;
@@ -133,7 +129,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatExpansionPanel, "mat-expansion-panel", ["matExpansionPanel"], { "hideToggle": { "alias": "hideToggle"; "required": false; }; "togglePosition": { "alias": "togglePosition"; "required": false; }; }, { "afterExpand": "afterExpand"; "afterCollapse": "afterCollapse"; }, ["_lazyContent"], ["mat-expansion-panel-header", "*", "mat-action-row"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanel, [{ optional: true; skipSelf: true; }, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanel, never>;
 }
 
 // @public
@@ -146,15 +142,15 @@ export class MatExpansionPanelActionRow {
 
 // @public
 export class MatExpansionPanelContent {
-    constructor(_template: TemplateRef<any>, _expansionPanel?: MatExpansionPanelBase | undefined);
+    constructor(...args: unknown[]);
     // (undocumented)
-    _expansionPanel?: MatExpansionPanelBase | undefined;
+    _expansionPanel: MatExpansionPanelBase | null;
     // (undocumented)
     _template: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatExpansionPanelContent, "ng-template[matExpansionPanelContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelContent, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelContent, never>;
 }
 
 // @public
@@ -174,9 +170,9 @@ export class MatExpansionPanelDescription {
 
 // @public
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
-    constructor(panel: MatExpansionPanel, _element: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, defaultOptions?: MatExpansionPanelDefaultOptions, _animationMode?: string | undefined, tabIndex?: string);
+    constructor(...args: unknown[]);
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
     collapsedHeight: string;
     get disabled(): boolean;
     expandedHeight: string;
@@ -201,7 +197,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatExpansionPanelHeader, "mat-expansion-panel-header", never, { "expandedHeight": { "alias": "expandedHeight"; "required": false; }; "collapsedHeight": { "alias": "collapsedHeight"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["mat-panel-title", "mat-panel-description", "*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelHeader, [{ host: true; }, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatExpansionPanelHeader, never>;
 }
 
 // @public

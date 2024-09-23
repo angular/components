@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -48,6 +48,8 @@ export const FLOATING_LABEL_PARENT = new InjectionToken<FloatingLabelParent>('Fl
   standalone: true,
 })
 export class MatFormFieldFloatingLabel implements OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /** Whether the label is floating. */
   @Input()
   get floating() {
@@ -88,7 +90,8 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   /** The current resize event subscription. */
   private _resizeSubscription = new Subscription();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnDestroy() {
     this._resizeSubscription.unsubscribe();

@@ -3,24 +3,21 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {FocusableOption} from '@angular/cdk/a11y';
 import {
   ANIMATION_MODULE_TYPE,
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   NgZone,
   OnChanges,
-  Optional,
   Output,
   SimpleChanges,
   ViewChild,
@@ -28,6 +25,8 @@ import {
   booleanAttribute,
   forwardRef,
   numberAttribute,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -118,6 +117,14 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 export class MatCheckbox
   implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
 {
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _ngZone = inject(NgZone);
+  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _options = inject<MatCheckboxDefaultOptions>(MAT_CHECKBOX_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
   /** Focuses the checkbox. */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -240,19 +247,15 @@ export class MatCheckbox
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
   private _validatorChangeFn = () => {};
 
-  constructor(
-    public _elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone,
-    @Attribute('tabindex') tabIndex: string,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-    @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS) private _options?: MatCheckboxDefaultOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     this._options = this._options || defaults;
     this.color = this._options.color || defaults.color;
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
-    this.disabledInteractive = _options?.disabledInteractive ?? false;
+    this.disabledInteractive = this._options?.disabledInteractive ?? false;
   }
 
   ngOnChanges(changes: SimpleChanges) {

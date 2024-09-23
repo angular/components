@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -14,10 +14,8 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
-  Inject,
   InjectionToken,
   Input,
-  NgZone,
   OnDestroy,
   Output,
   TemplateRef,
@@ -114,6 +112,9 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   standalone: true,
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
@@ -274,35 +275,10 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   private _injector = inject(Injector);
 
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-    defaultOptions: MatMenuDefaultOptions,
-    changeDetectorRef: ChangeDetectorRef,
-  );
+  constructor(...args: unknown[]);
 
-  /**
-   * @deprecated `_changeDetectorRef` to become a required parameter.
-   * @breaking-change 15.0.0
-   */
-  constructor(
-    elementRef: ElementRef<HTMLElement>,
-    ngZone: NgZone,
-    defaultOptions: MatMenuDefaultOptions,
-    changeDetectorRef?: ChangeDetectorRef,
-  );
-
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated Unused param, will be removed.
-     * @breaking-change 19.0.0
-     */
-    _unusedNgZone: NgZone,
-    @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions,
-    // @breaking-change 15.0.0 `_changeDetectorRef` to become a required parameter.
-    private _changeDetectorRef?: ChangeDetectorRef,
-  ) {
+  constructor() {
+    const defaultOptions = inject<MatMenuDefaultOptions>(MAT_MENU_DEFAULT_OPTIONS);
     this.overlayPanelClass = defaultOptions.overlayPanelClass || '';
     this._xPosition = defaultOptions.xPosition;
     this._yPosition = defaultOptions.yPosition;
@@ -518,8 +494,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
       ['mat-menu-below']: posY === 'below',
     };
 
-    // @breaking-change 15.0.0 Remove null check for `_changeDetectorRef`.
-    this._changeDetectorRef?.markForCheck();
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Starts the enter animation. */

@@ -3,32 +3,22 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
 import {ENTER} from '@angular/cdk/keycodes';
-import {DOCUMENT} from '@angular/common';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterViewInit,
-  Attribute,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChild,
-  ElementRef,
   EventEmitter,
-  Inject,
   Input,
-  NgZone,
-  Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
   afterNextRender,
 } from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction} from './chip-action';
@@ -105,27 +95,10 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
   _isEditing = false;
 
-  constructor(
-    changeDetectorRef: ChangeDetectorRef,
-    elementRef: ElementRef,
-    ngZone: NgZone,
-    focusMonitor: FocusMonitor,
-    @Inject(DOCUMENT) _document: any,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    globalRippleOptions?: RippleGlobalOptions,
-    @Attribute('tabindex') tabIndex?: string,
-  ) {
-    super(
-      changeDetectorRef,
-      elementRef,
-      ngZone,
-      focusMonitor,
-      _document,
-      animationMode,
-      globalRippleOptions,
-    );
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
 
     this.role = 'row';
     this._onBlur.pipe(takeUntil(this.destroyed)).subscribe(() => {

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {DOCUMENT} from '@angular/common';
@@ -207,8 +207,7 @@ export class AriaDescriber implements OnDestroy {
     messagesContainer.classList.add(containerClassName);
     messagesContainer.classList.add('cdk-visually-hidden');
 
-    // @breaking-change 14.0.0 Remove null check for `_platform`.
-    if (this._platform && !this._platform.isBrowser) {
+    if (!this._platform.isBrowser) {
       messagesContainer.setAttribute('platform', 'server');
     }
 

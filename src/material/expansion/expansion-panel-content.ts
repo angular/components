@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, TemplateRef, Inject, Optional} from '@angular/core';
+import {Directive, TemplateRef, inject} from '@angular/core';
 import {MAT_EXPANSION_PANEL, MatExpansionPanelBase} from './expansion-panel-base';
 
 /**
@@ -18,8 +18,9 @@ import {MAT_EXPANSION_PANEL, MatExpansionPanelBase} from './expansion-panel-base
   standalone: true,
 })
 export class MatExpansionPanelContent {
-  constructor(
-    public _template: TemplateRef<any>,
-    @Inject(MAT_EXPANSION_PANEL) @Optional() public _expansionPanel?: MatExpansionPanelBase,
-  ) {}
+  _template = inject<TemplateRef<any>>(TemplateRef);
+  _expansionPanel = inject<MatExpansionPanelBase>(MAT_EXPANSION_PANEL, {optional: true});
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

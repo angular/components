@@ -29,7 +29,7 @@ determine which features to include:
 
 3. Set up browser animations for Angular Material:
 
-   Importing the [`BrowserAnimationsModule`](https://angular.io/api/platform-browser/animations/BrowserAnimationsModule) into your application enables Angular's [animation system](https://angular.dev/guide/animations). Declining this will disable most of Angular Material's animations.
+   Importing the [`BrowserAnimationsModule`](https://angular.dev/api/platform-browser/animations/BrowserAnimationsModule) into your application enables Angular's [animation system](https://angular.dev/guide/animations). Declining this will disable most of Angular Material's animations.
 
 The `ng add` command will additionally perform the following actions:
 
