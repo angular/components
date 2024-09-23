@@ -79,6 +79,7 @@ const ENABLE_BACKGROUND_INPUT = true;
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
     '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
+    '[attr.mat-align-tabs]': 'alignTabs',
     '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
   standalone: true,
@@ -146,6 +147,10 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   /** Whether tabs should be stretched to fill the header. */
   @Input({alias: 'mat-stretch-tabs', transform: booleanAttribute})
   stretchTabs: boolean = true;
+
+  /** Alignment for tabs label. */
+  @Input({alias: 'mat-align-tabs'})
+  alignTabs: string | null = null;
 
   /** Whether the tab group should grow to the size of the active tab. */
   @Input({transform: booleanAttribute})
@@ -293,6 +298,8 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
         : false;
     this.stretchTabs =
       defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
+    this.alignTabs =
+      defaultConfig && defaultConfig.alignTabs != null ? defaultConfig.alignTabs : null;
   }
 
   /**

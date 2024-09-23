@@ -39,6 +39,9 @@ export interface MatTabsConfig {
 
   /** Whether tabs should be stretched to fill the header. */
   stretchTabs?: boolean;
+
+  /** Alignment for the tabs label. */
+  alignTabs?: 'start' | 'center' | 'end';
 }
 
 /** Injection token that can be used to provide the default options the tabs module. */
