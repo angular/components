@@ -6,8 +6,6 @@
 
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { MatLine } from '@angular/material/core';
@@ -25,7 +23,7 @@ export class MatGridAvatarCssMatStyler {
 
 // @public (undocumented)
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
-    constructor(_element: ElementRef<HTMLElement>, _dir: Directionality);
+    constructor(...args: unknown[]);
     get cols(): number;
     set cols(value: NumberInput);
     get gutterSize(): string;
@@ -40,7 +38,7 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatGridList, "mat-grid-list", ["matGridList"], { "cols": { "alias": "cols"; "required": false; }; "gutterSize": { "alias": "gutterSize"; "required": false; }; "rowHeight": { "alias": "rowHeight"; "required": false; }; }, {}, ["_tiles"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatGridList, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatGridList, never>;
 }
 
 // @public (undocumented)
@@ -55,13 +53,13 @@ export class MatGridListModule {
 
 // @public (undocumented)
 export class MatGridTile {
-    constructor(_element: ElementRef<HTMLElement>, _gridList?: MatGridListBase | undefined);
+    constructor(...args: unknown[]);
     get colspan(): number;
     set colspan(value: NumberInput);
     // (undocumented)
     _colspan: number;
     // (undocumented)
-    _gridList?: MatGridListBase | undefined;
+    _gridList?: MatGridListBase | null | undefined;
     get rowspan(): number;
     set rowspan(value: NumberInput);
     // (undocumented)
@@ -70,7 +68,7 @@ export class MatGridTile {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatGridTile, "mat-grid-tile", ["matGridTile"], { "rowspan": { "alias": "rowspan"; "required": false; }; "colspan": { "alias": "colspan"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatGridTile, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatGridTile, never>;
 }
 
 // @public
@@ -91,7 +89,7 @@ export class MatGridTileHeaderCssMatStyler {
 
 // @public (undocumented)
 export class MatGridTileText implements AfterContentInit {
-    constructor(_element: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     _lines: QueryList<MatLine>;
     // (undocumented)

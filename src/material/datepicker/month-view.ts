@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -26,15 +26,14 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
-  Optional,
   Output,
   ViewEncapsulation,
   ViewChild,
   OnDestroy,
   SimpleChanges,
   OnChanges,
+  inject,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -71,6 +70,15 @@ let uniqueIdCounter = 0;
   imports: [MatCalendarBody],
 })
 export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
+  readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
+  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dir = inject(Directionality, {optional: true});
+  private _rangeStrategy = inject<MatDateRangeSelectionStrategy<D>>(
+    MAT_DATE_RANGE_SELECTION_STRATEGY,
+    {optional: true},
+  );
+
   private _rerenderSubscription = Subscription.EMPTY;
 
   /** Flag used to filter out space/enter keyup events that originated outside of the view. */
@@ -210,15 +218,9 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** The names of the weekdays. */
   _weekdays: {long: string; narrow: string; id: number}[];
 
-  constructor(
-    readonly _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-    @Optional() public _dateAdapter: DateAdapter<D>,
-    @Optional() private _dir?: Directionality,
-    @Inject(MAT_DATE_RANGE_SELECTION_STRATEGY)
-    @Optional()
-    private _rangeStrategy?: MatDateRangeSelectionStrategy<D>,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
         throw createMissingDateImplError('DateAdapter');

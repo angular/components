@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -11,24 +11,16 @@ import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
-  Inject,
   Input,
-  NgZone,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {Platform} from '@angular/cdk/platform';
-import {Directionality} from '@angular/cdk/bidi';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatInkBar} from './ink-bar';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
@@ -78,18 +70,6 @@ export class MatTabHeader
   /** Whether the ripple effect is disabled or not. */
   @Input({transform: booleanAttribute})
   disableRipple: boolean = false;
-
-  constructor(
-    elementRef: ElementRef,
-    changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    @Optional() dir: Directionality,
-    ngZone: NgZone,
-    platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
-    super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
-  }
 
   override ngAfterContentInit() {
     this._inkBar = new MatInkBar(this._items);

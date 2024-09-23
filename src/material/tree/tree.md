@@ -21,7 +21,7 @@ but instead are rendered as siblings in sequence.
 </mat-tree>
 ```
 
-<!-- example(tree-flat-overview) -->
+<!-- example(tree-flat-child-accessor-overview) -->
 
 Flat trees are generally easier to style and inspect. They are also more friendly to scrolling
 variations, such as infinite or virtual scrolling.
@@ -41,7 +41,7 @@ contains a node outlet into which children are projected.
 </mat-tree>
 ```
 
-<!-- example(tree-nested-overview) -->
+<!-- example(tree-nested-child-accessor-overview) -->
 
 Nested trees are easier to work with when hierarchical relationships are visually represented in
 ways that would be difficult to accomplish with flat nodes.
@@ -180,7 +180,7 @@ the root nodes of the tree.
 #### `trackBy`
 
 To improve performance, a `trackBy` function can be provided to the tree similar to Angular’s
-[`ngFor` `trackBy`](https://angular.io/api/common/NgForOf#change-propagation). This informs the
+[`ngFor` `trackBy`](https://angular.dev/api/common/NgForOf?tab=usage-notes). This informs the
 tree how to uniquely identify nodes to track how the data changes with each update.
 
 ```html

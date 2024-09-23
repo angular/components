@@ -3,22 +3,17 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
-  forwardRef,
-  Inject,
   Input,
   ViewEncapsulation,
   QueryList,
-  ElementRef,
-  NgZone,
 } from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent, MAT_DRAWER_CONTAINER} from './drawer';
 import {matDrawerAnimations} from './drawer-animations';
@@ -28,7 +23,7 @@ import {
   coerceNumberProperty,
   NumberInput,
 } from '@angular/cdk/coercion';
-import {ScrollDispatcher, CdkScrollable} from '@angular/cdk/scrolling';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'mat-sidenav-content',
@@ -48,17 +43,7 @@ import {ScrollDispatcher, CdkScrollable} from '@angular/cdk/scrolling';
   ],
   standalone: true,
 })
-export class MatSidenavContent extends MatDrawerContent {
-  constructor(
-    changeDetectorRef: ChangeDetectorRef,
-    @Inject(forwardRef(() => MatSidenavContainer)) container: MatSidenavContainer,
-    elementRef: ElementRef<HTMLElement>,
-    scrollDispatcher: ScrollDispatcher,
-    ngZone: NgZone,
-  ) {
-    super(changeDetectorRef, container, elementRef, scrollDispatcher, ngZone);
-  }
-}
+export class MatSidenavContent extends MatDrawerContent {}
 
 @Component({
   selector: 'mat-sidenav',
@@ -83,6 +68,7 @@ export class MatSidenavContent extends MatDrawerContent {
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [CdkScrollable],
+  providers: [{provide: MatDrawer, useExisting: MatSidenav}],
 })
 export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
@@ -136,6 +122,10 @@ export class MatSidenav extends MatDrawer {
   providers: [
     {
       provide: MAT_DRAWER_CONTAINER,
+      useExisting: MatSidenavContainer,
+    },
+    {
+      provide: MatDrawerContainer,
       useExisting: MatSidenavContainer,
     },
   ],

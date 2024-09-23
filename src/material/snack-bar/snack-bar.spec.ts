@@ -5,13 +5,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
-  Inject,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   signal,
+  inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_SNACK_BAR_DATA,
@@ -48,23 +48,14 @@ describe('MatSnackBar', () => {
         DirectiveWithViewContainer,
       ],
     });
-  }));
 
-  beforeEach(inject(
-    [MatSnackBar, LiveAnnouncer, OverlayContainer],
-    (sb: MatSnackBar, la: LiveAnnouncer, oc: OverlayContainer) => {
-      snackBar = sb;
-      liveAnnouncer = la;
-      overlayContainerElement = oc.getContainerElement();
-    },
-  ));
-
-  beforeEach(() => {
+    snackBar = TestBed.inject(MatSnackBar);
+    liveAnnouncer = TestBed.inject(LiveAnnouncer);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  });
+  }));
 
   it('should open with content first in the inert region', () => {
     snackBar.open('Snack time!', 'Chew');
@@ -593,10 +584,8 @@ describe('MatSnackBar', () => {
       })
       .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]});
 
-    inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
-      snackBar = sb;
-      overlayContainerElement = oc.getContainerElement();
-    })();
+    snackBar = TestBed.inject(MatSnackBar);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
 
     snackBar.open(simpleMessage);
     flush();
@@ -754,12 +743,9 @@ describe('MatSnackBar with parent MatSnackBar', () => {
         DirectiveWithViewContainer,
       ],
     });
-  }));
 
-  beforeEach(inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
-    parentSnackBar = sb;
-    overlayContainerElement = oc.getContainerElement();
-
+    parentSnackBar = TestBed.inject(MatSnackBar);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ComponentThatProvidesMatSnackBar);
     childSnackBar = fixture.componentInstance.snackBar;
     fixture.detectChanges();
@@ -832,17 +818,12 @@ describe('MatSnackBar Positioning', () => {
         DirectiveWithViewContainer,
       ],
     });
-  }));
 
-  beforeEach(inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
-    snackBar = sb;
-    overlayContainerEl = oc.getContainerElement();
-  }));
-
-  beforeEach(() => {
+    snackBar = TestBed.inject(MatSnackBar);
+    overlayContainerEl = TestBed.inject(OverlayContainer).getContainerElement();
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
-  });
+  }));
 
   it('should default to bottom center', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel);
@@ -1079,7 +1060,7 @@ describe('MatSnackBar Positioning', () => {
   standalone: true,
 })
 class DirectiveWithViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -1119,10 +1100,8 @@ class ComponentWithTemplateRef {
   standalone: true,
 })
 class BurritosNotification {
-  constructor(
-    public snackBarRef: MatSnackBarRef<BurritosNotification>,
-    @Inject(MAT_SNACK_BAR_DATA) public data: any,
-  ) {}
+  snackBarRef = inject<MatSnackBarRef<BurritosNotification>>(MatSnackBarRef);
+  data = inject(MAT_SNACK_BAR_DATA);
 }
 
 @Component({
@@ -1131,5 +1110,5 @@ class BurritosNotification {
   standalone: true,
 })
 class ComponentThatProvidesMatSnackBar {
-  constructor(public snackBar: MatSnackBar) {}
+  snackBar = inject(MatSnackBar);
 }

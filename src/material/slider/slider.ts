@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Directionality} from '@angular/cdk/bidi';
@@ -18,12 +18,10 @@ import {
   ContentChildren,
   ElementRef,
   inject,
-  Inject,
   Input,
   NgZone,
   numberAttribute,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -76,6 +74,14 @@ import {MatSliderVisualThumb} from './slider-thumb';
   imports: [MatSliderVisualThumb],
 })
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
+  readonly _ngZone = inject(NgZone);
+  readonly _cdr = inject(ChangeDetectorRef);
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly _dir = inject(Directionality, {optional: true});
+  readonly _globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+    optional: true,
+  });
+
   /** The active portion of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
@@ -395,19 +401,16 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _platform = inject(Platform);
 
-  constructor(
-    readonly _ngZone: NgZone,
-    readonly _cdr: ChangeDetectorRef,
-    readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() readonly _dir: Directionality,
-    @Optional()
-    @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-    readonly _globalRippleOptions?: RippleGlobalOptions,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._noopAnimations = animationMode === 'NoopAnimations';
-    this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
-    this._isRtl = this._dir.value === 'rtl';
+
+    if (this._dir) {
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._isRtl = this._dir.value === 'rtl';
+    }
   }
 
   /** The radius of the native slider's knob. AFAIK there is no way to avoid hardcoding this. */
@@ -428,7 +431,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       _validateInputs(
         this._isRange,
-        this._getInput(_MatThumb.END)!,
+        this._getInput(_MatThumb.END),
         this._getInput(_MatThumb.START),
       );
     }
@@ -488,7 +491,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /** Handles updating the slider ui after a dir change. */
   private _onDirChange(): void {
-    this._isRtl = this._dir.value === 'rtl';
+    this._isRtl = this._dir?.value === 'rtl';
     this._isRange ? this._onDirChangeRange() : this._onDirChangeNonRange();
     this._updateTickMarkUI();
   }
@@ -938,12 +941,12 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 /** Ensures that there is not an invalid configuration for the slider thumb inputs. */
 function _validateInputs(
   isRange: boolean,
-  endInputElement: _MatSliderThumb | _MatSliderRangeThumb,
-  startInputElement?: _MatSliderThumb,
+  endInputElement: _MatSliderThumb | _MatSliderRangeThumb | undefined,
+  startInputElement: _MatSliderThumb | undefined,
 ): void {
   const startValid =
     !isRange || startInputElement?._hostElement.hasAttribute('matSliderStartThumb');
-  const endValid = endInputElement._hostElement.hasAttribute(
+  const endValid = endInputElement?._hostElement.hasAttribute(
     isRange ? 'matSliderEndThumb' : 'matSliderThumb',
   );
 

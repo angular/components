@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as keyCodes from '@angular/cdk/keycodes';
@@ -66,7 +66,10 @@ const keyMap = {
 
 /** A `TestElement` implementation for unit tests. */
 export class UnitTestElement implements TestElement {
-  constructor(readonly element: Element, private _stabilize: () => Promise<void>) {}
+  constructor(
+    readonly element: Element,
+    private _stabilize: () => Promise<void>,
+  ) {}
 
   /** Blur the element. */
   async blur(): Promise<void> {

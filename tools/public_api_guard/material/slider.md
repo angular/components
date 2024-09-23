@@ -23,7 +23,7 @@ import { WritableSignal } from '@angular/core';
 
 // @public
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
-    constructor(_ngZone: NgZone, _cdr: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _dir: Directionality, _globalRippleOptions?: RippleGlobalOptions | undefined, animationMode?: string);
+    constructor(...args: unknown[]);
     // (undocumented)
     _cachedLeft: number;
     // (undocumented)
@@ -33,7 +33,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     readonly _cdr: ChangeDetectorRef;
     color: ThemePalette;
     // (undocumented)
-    readonly _dir: Directionality;
+    readonly _dir: Directionality | null;
     get disabled(): boolean;
     set disabled(v: boolean);
     disableRipple: boolean;
@@ -48,7 +48,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
     _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb;
     // (undocumented)
-    readonly _globalRippleOptions?: RippleGlobalOptions | undefined;
+    readonly _globalRippleOptions: RippleGlobalOptions | null;
     // (undocumented)
     _hasAnimation: boolean;
     _input: _MatSliderThumb;
@@ -123,7 +123,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSlider, "mat-slider", ["matSlider"], { "disabled": { "alias": "disabled"; "required": false; }; "discrete": { "alias": "discrete"; "required": false; }; "showTickMarks": { "alias": "showTickMarks"; "required": false; }; "min": { "alias": "min"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "max": { "alias": "max"; "required": false; }; "step": { "alias": "step"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; }, {}, ["_input", "_inputs"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSlider, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSlider, never>;
 }
 
 // @public @deprecated
@@ -152,7 +152,7 @@ export class MatSliderModule {
 
 // @public (undocumented)
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
-    constructor(_ngZone: NgZone, _slider: _MatSlider, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -197,7 +197,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
 // @public
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
-    constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLInputElement>, _cdr: ChangeDetectorRef, _slider: _MatSlider);
+    constructor(...args: unknown[]);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -301,7 +301,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
 // @public
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
-    constructor(_cdr: ChangeDetectorRef, _ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _slider: _MatSlider);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     discrete: boolean;

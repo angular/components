@@ -261,7 +261,7 @@ html {
 To include the emitted styles in your application, [add your theme file to the `styles` array of
 your project's `angular.json` file][adding-styles].
 
-[adding-styles]: https://angular.io/guide/workspace-config#styles-and-scripts-configuration
+[adding-styles]: https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
 
 #### Theming dimensions
 

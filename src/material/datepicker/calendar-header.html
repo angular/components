@@ -3,7 +3,7 @@
     <!-- [Firefox Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1880533]
       Relocated label next to related button and made visually hidden via cdk-visually-hidden
       to enable label to appear in a11y tree for SR when using Firefox -->
-    <label [id]="_periodButtonLabelId" class="cdk-visually-hidden" aria-live="polite">{{periodButtonDescription}}</label>
+    <span [id]="_periodButtonLabelId" class="cdk-visually-hidden" aria-live="polite">{{periodButtonDescription}}</span>
     <button mat-button type="button" class="mat-calendar-period-button"
             (click)="currentPeriodClicked()" [attr.aria-label]="periodButtonLabel"
             [attr.aria-describedby]="_periodButtonLabelId">

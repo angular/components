@@ -150,7 +150,7 @@ them when calculating sticky styles. This can reduce rendering latency for large
 ##### `trackBy`
 
 To improve performance, a `trackBy` function can be provided to the table similar to Angular’s
-[`ngFor` `trackBy`](https://angular.io/api/common/NgForOf#change-propagation). This informs the
+[`ngFor` `trackBy`](https://angular.dev/api/common/NgForOf?tab=usage-notes). This informs the
 table how to uniquely identify rows to track how the data changes with each update.
 
 ```html

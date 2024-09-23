@@ -4,20 +4,16 @@
 
 ```ts
 
-import { AriaDescriber } from '@angular/cdk/a11y';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/material/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 // @public
 export class MatBadge implements OnInit, OnDestroy {
-    constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _ariaDescriber: AriaDescriber, _renderer: Renderer2, _animationMode?: string | undefined);
+    constructor(...args: unknown[]);
     get color(): ThemePalette;
     set color(value: ThemePalette);
     get content(): string | number | undefined | null;
@@ -46,7 +42,7 @@ export class MatBadge implements OnInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatBadge, "[matBadge]", never, { "color": { "alias": "matBadgeColor"; "required": false; }; "overlap": { "alias": "matBadgeOverlap"; "required": false; }; "disabled": { "alias": "matBadgeDisabled"; "required": false; }; "position": { "alias": "matBadgePosition"; "required": false; }; "content": { "alias": "matBadge"; "required": false; }; "description": { "alias": "matBadgeDescription"; "required": false; }; "size": { "alias": "matBadgeSize"; "required": false; }; "hidden": { "alias": "matBadgeHidden"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatBadge, [null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatBadge, never>;
 }
 
 // @public (undocumented)

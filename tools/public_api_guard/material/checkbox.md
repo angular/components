@@ -6,7 +6,6 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
@@ -15,7 +14,6 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
@@ -37,7 +35,7 @@ export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public (undocumented)
 export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
-    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
+    constructor(...args: unknown[]);
     protected _animationClasses: {
         uncheckedToChecked: string;
         uncheckedToIndeterminate: string;
@@ -47,7 +45,7 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
         indeterminateToUnchecked: string;
     };
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode?: "NoopAnimations" | "BrowserAnimations" | null | undefined;
     ariaControls: string;
     ariaDescribedby: string;
     ariaExpanded: boolean;
@@ -130,7 +128,7 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "ariaExpanded": { "alias": "aria-expanded"; "required": false; }; "ariaControls": { "alias": "aria-controls"; "required": false; }; "ariaOwns": { "alias": "aria-owns"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckbox, [null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatCheckbox, never>;
 }
 
 // @public

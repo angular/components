@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
@@ -14,16 +14,14 @@ import {
   Component,
   ContentChild,
   ElementRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
-  Self,
   SimpleChanges,
   ViewEncapsulation,
   booleanAttribute,
   signal,
+  inject,
 } from '@angular/core';
 import {ControlContainer, NgControl, Validators} from '@angular/forms';
 import {DateAdapter, ThemePalette} from '@angular/material/core';
@@ -79,6 +77,11 @@ export class MatDateRangeInput<D>
     OnChanges,
     OnDestroy
 {
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _formField = inject<_MatFormFieldPartial>(MAT_FORM_FIELD, {optional: true});
+
   private _closedSubscription = Subscription.EMPTY;
   private _openedSubscription = Subscription.EMPTY;
 
@@ -273,21 +276,17 @@ export class MatDateRangeInput<D>
    */
   readonly disableAutomaticLabeling = true;
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Self() control: ControlContainer,
-    @Optional() private _dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: _MatFormFieldPartial,
-  ) {
-    if (!_dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');
     }
 
     // The datepicker module can be used both with MDC and non-MDC form fields. We have
     // to conditionally add the MDC input class so that the range picker looks correctly.
-    if (_formField?._elementRef.nativeElement.classList.contains('mat-mdc-form-field')) {
-      _elementRef.nativeElement.classList.add(
+    if (this._formField?._elementRef.nativeElement.classList.contains('mat-mdc-form-field')) {
+      this._elementRef.nativeElement.classList.add(
         'mat-mdc-input-element',
         'mat-mdc-form-field-input-control',
         'mdc-text-field__input',
@@ -295,7 +294,7 @@ export class MatDateRangeInput<D>
     }
 
     // TODO(crisbeto): remove `as any` after #18206 lands.
-    this.ngControl = control as any;
+    this.ngControl = inject(ControlContainer, {optional: true, self: true}) as any;
   }
 
   /**

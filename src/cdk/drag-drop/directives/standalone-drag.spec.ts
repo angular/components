@@ -1371,6 +1371,20 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
   }));
 
+  it('should account for the scale when setting the free drag position', fakeAsync(() => {
+    const fixture = createComponent(StandaloneDraggable);
+    fixture.componentInstance.scale = 0.5;
+    fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    const dragElement = fixture.componentInstance.dragElement.nativeElement;
+    const dragInstance = fixture.componentInstance.dragInstance;
+
+    expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
+    expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
+  }));
+
   it('should include the dragged distance as the user is dragging', fakeAsync(() => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();

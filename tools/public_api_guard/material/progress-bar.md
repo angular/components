@@ -5,13 +5,11 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
@@ -26,10 +24,10 @@ export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation;
 
 // @public (undocumented)
 export class MatProgressBar implements AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, _animationMode?: string | undefined, defaults?: MatProgressBarDefaultOptions);
+    constructor(...args: unknown[]);
     readonly animationEnd: EventEmitter<ProgressAnimationEnd>;
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode?: "NoopAnimations" | "BrowserAnimations" | null | undefined;
     get bufferValue(): number;
     set bufferValue(v: number);
     get color(): string | null | undefined;
@@ -55,7 +53,7 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "bufferValue": { "alias": "bufferValue"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, { "animationEnd": "animationEnd"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, [null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, never>;
 }
 
 // @public

@@ -3,13 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  Attribute,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,16 +16,16 @@ import {
   ContentChildren,
   ElementRef,
   forwardRef,
-  Inject,
   Input,
   NgZone,
   numberAttribute,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -164,16 +163,18 @@ export class MatTabNav
   @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
   _inkBar: MatInkBar;
 
-  constructor(
-    elementRef: ElementRef,
-    @Optional() dir: Directionality,
-    ngZone: NgZone,
-    changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-    @Optional() @Inject(MAT_TABS_CONFIG) defaultConfig?: MatTabsConfig,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const elementRef = inject(ElementRef);
+    const dir = inject(Directionality, {optional: true});
+    const ngZone = inject(NgZone);
+    const changeDetectorRef = inject(ChangeDetectorRef);
+    const viewportRuler = inject(ViewportRuler);
+    const platform = inject(Platform);
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
+
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
     this.disablePagination =
       defaultConfig && defaultConfig.disablePagination != null
@@ -271,6 +272,10 @@ export class MatTabLink
   extends InkBarItem
   implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption
 {
+  private _tabNavBar = inject(MatTabNav);
+  elementRef = inject(ElementRef);
+  private _focusMonitor = inject(FocusMonitor);
+
   private readonly _destroyed = new Subject<void>();
 
   /** Whether the tab link is active or not. */
@@ -326,24 +331,25 @@ export class MatTabLink
   /** Unique id for the tab. */
   @Input() id = `mat-tab-link-${nextUniqueId++}`;
 
-  constructor(
-    private _tabNavBar: MatTabNav,
-    /** @docs-private */ public elementRef: ElementRef,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions | null,
-    @Attribute('tabindex') tabIndex: string,
-    private _focusMonitor: FocusMonitor,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
 
+    const globalRippleOptions = inject<RippleGlobalOptions | null>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+      optional: true,
+    });
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.rippleConfig = globalRippleOptions || {};
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
 
     if (animationMode === 'NoopAnimations') {
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
     }
 
-    _tabNavBar._fitInkBarToContent
+    this._tabNavBar._fitInkBarToContent
       .pipe(takeUntil(this._destroyed))
       .subscribe(fitInkBarToContent => {
         this.fitInkBarToContent = fitInkBarToContent;

@@ -5,12 +5,10 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { AutofillMonitor } from '@angular/cdk/text-field';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import * as i2 from '@angular/material/form-field';
@@ -24,8 +22,6 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatPrefix } from '@angular/material/form-field';
 import { MatSuffix } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
@@ -50,7 +46,7 @@ export { MatHint }
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
-    constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, _ngZone: NgZone, _formField?: MatFormField | undefined);
+    constructor(...args: unknown[]);
     autofilled: boolean;
     controlType: string;
     protected _dirtyCheckNativeValue(): void;
@@ -70,7 +66,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     _focusChanged(isFocused: boolean): void;
     focused: boolean;
     // (undocumented)
-    protected _formField?: MatFormField | undefined;
+    protected _formField?: MatFormField | null | undefined;
     protected _getPlaceholder(): string | null;
     protected _getReadonlyAttribute(): string | null;
     get id(): string;
@@ -130,7 +126,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "name": { "alias": "name"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "value": { "alias": "value"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatInput, never>;
 }
 
 // @public

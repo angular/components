@@ -13,22 +13,17 @@ import { BehaviorSubject } from 'rxjs';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { RippleConfig } from '@angular/material/core';
 import { RippleGlobalOptions } from '@angular/material/core';
@@ -38,8 +33,6 @@ import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { ViewContainerRef } from '@angular/core';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
@@ -80,10 +73,10 @@ export interface _MatInkBarPositioner {
 
 // @public
 export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _viewportRuler: ViewportRuler, _dir: Directionality, _ngZone: NgZone, _platform: Platform, _animationMode?: string | undefined);
+    constructor(...args: unknown[]);
     _alignInkBarToSelectedTab(): void;
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
     _checkPaginationEnabled(): void;
@@ -152,12 +145,12 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatPaginatedTabHeader, never, never, { "disablePagination": { "alias": "disablePagination"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginatedTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginatedTabHeader, never>;
 }
 
 // @public (undocumented)
 export class MatTab implements OnInit, OnChanges, OnDestroy {
-    constructor(_viewContainerRef: ViewContainerRef, _closestTabGroup: any);
+    constructor(...args: unknown[]);
     ariaLabel: string;
     ariaLabelledby: string;
     bodyClass: string | string[];
@@ -185,12 +178,12 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, never>;
 }
 
 // @public
 export class MatTabBody implements OnInit, OnDestroy {
-    constructor(_elementRef: ElementRef<HTMLElement>, _dir: Directionality, changeDetectorRef: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     readonly _afterLeavingCenter: EventEmitter<void>;
     animationDuration: string;
     readonly _beforeCentering: EventEmitter<boolean>;
@@ -213,7 +206,7 @@ export class MatTabBody implements OnInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabBody, "mat-tab-body", never, { "_content": { "alias": "content"; "required": false; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBody, [null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBody, never>;
 }
 
 // @public
@@ -221,7 +214,7 @@ export type MatTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor(componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, _host: MatTabBody, _document: any);
+    constructor(...args: unknown[]);
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -241,7 +234,7 @@ export class MatTabChangeEvent {
 
 // @public
 export class MatTabContent {
-    constructor(template: TemplateRef<any>);
+    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -252,13 +245,13 @@ export class MatTabContent {
 
 // @public
 export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
-    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, defaultConfig?: MatTabsConfig, _animationMode?: string | undefined);
+    constructor(...args: unknown[]);
     _allTabs: QueryList<MatTab>;
     readonly animationDone: EventEmitter<void>;
     get animationDuration(): string;
     set animationDuration(value: string | number);
     // (undocumented)
-    _animationMode?: string | undefined;
+    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
@@ -271,7 +264,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     disableRipple: boolean;
     dynamicHeight: boolean;
     // (undocumented)
-    readonly _elementRef: ElementRef;
+    readonly _elementRef: ElementRef<any>;
     get fitInkBarToContent(): boolean;
     set fitInkBarToContent(value: boolean);
     readonly focusChange: EventEmitter<MatTabChangeEvent>;
@@ -324,7 +317,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabGroup, "mat-tab-group", ["matTabGroup"], { "color": { "alias": "color"; "required": false; }; "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "contentTabIndex": { "alias": "contentTabIndex"; "required": false; }; "disablePagination": { "alias": "disablePagination"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["_allTabs"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabGroup, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabGroup, never>;
 }
 
 // @public
@@ -339,7 +332,6 @@ export interface MatTabGroupBaseHeader {
 
 // @public
 export class MatTabHeader extends MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, dir: Directionality, ngZone: NgZone, platform: Platform, animationMode?: string);
     ariaLabel: string;
     ariaLabelledby: string;
     disableRipple: boolean;
@@ -366,7 +358,7 @@ export class MatTabHeader extends MatPaginatedTabHeader implements AfterContentC
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabHeader, "mat-tab-header", never, { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, ["_items"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabHeader, [null, null, null, { optional: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabHeader, never>;
 }
 
 // @public
@@ -374,21 +366,19 @@ export type MatTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class MatTabLabel extends CdkPortal {
-    constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef, _closestTab: any);
     // (undocumented)
     _closestTab: any;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabel, "[mat-tab-label], [matTabLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLabel, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLabel, never>;
 }
 
 // @public
 export class MatTabLabelWrapper extends InkBarItem {
-    constructor(elementRef: ElementRef);
     disabled: boolean;
     // (undocumented)
-    elementRef: ElementRef;
+    elementRef: ElementRef<any>;
     focus(): void;
     // (undocumented)
     getOffsetLeft(): number;
@@ -404,13 +394,13 @@ export class MatTabLabelWrapper extends InkBarItem {
 
 // @public
 export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption {
-    constructor(_tabNavBar: MatTabNav,
-    elementRef: ElementRef, globalRippleOptions: RippleGlobalOptions | null, tabIndex: string, _focusMonitor: FocusMonitor, animationMode?: string);
+    constructor(...args: unknown[]);
     get active(): boolean;
     set active(value: boolean);
     disabled: boolean;
     disableRipple: boolean;
-    elementRef: ElementRef;
+    // (undocumented)
+    elementRef: ElementRef<any>;
     focus(): void;
     // (undocumented)
     _getAriaControls(): string | null;
@@ -447,12 +437,12 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, [null, null, { optional: true; }, { attribute: "tabindex"; }, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, never>;
 }
 
 // @public
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, OnDestroy, AfterViewInit {
-    constructor(elementRef: ElementRef, dir: Directionality, ngZone: NgZone, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, platform: Platform, animationMode?: string, defaultConfig?: MatTabsConfig);
+    constructor(...args: unknown[]);
     // (undocumented)
     get animationDuration(): string;
     set animationDuration(value: string | number);
@@ -497,7 +487,7 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentChec
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "fitInkBarToContent": { "alias": "fitInkBarToContent"; "required": false; }; "stretchTabs": { "alias": "mat-stretch-tabs"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "backgroundColor": { "alias": "backgroundColor"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "tabPanel": { "alias": "tabPanel"; "required": false; }; }, {}, ["_items"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNav, [null, { optional: true; }, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNav, never>;
 }
 
 // @public

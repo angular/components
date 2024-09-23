@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
@@ -23,6 +23,8 @@ import {
   TreeLegacyKeyboardInterfaceExample,
   TreeLoadmoreExample,
   TreeNestedOverviewExample,
+  TreeNestedChildAccessorOverviewExample,
+  TreeFlatChildAccessorOverviewExample,
 } from '@angular/components-examples/material/tree';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
@@ -53,9 +55,11 @@ import {MatTreeModule} from '@angular/material/tree';
     CommonModule,
     FormsModule,
     TreeDynamicExample,
+    TreeFlatChildAccessorOverviewExample,
     TreeFlatOverviewExample,
     TreeLegacyKeyboardInterfaceExample,
     TreeLoadmoreExample,
+    TreeNestedChildAccessorOverviewExample,
     TreeNestedOverviewExample,
     MatButtonModule,
     MatExpansionModule,

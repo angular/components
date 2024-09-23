@@ -9,14 +9,16 @@ import {
   ViewChild,
   ViewContainerRef,
   provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 
 describe('MatDialog', () => {
   let dialog: MatDialog;
+  let zone: NgZone;
   let scrolledSubject = new Subject();
 
   let testViewContainerRef: ViewContainerRef;
@@ -44,36 +46,29 @@ describe('MatDialog', () => {
         },
       ],
     });
-  }));
 
-  beforeEach(inject([MatDialog], (d: MatDialog) => {
-    dialog = d;
-  }));
-
-  beforeEach(() => {
+    dialog = TestBed.inject(MatDialog);
+    zone = TestBed.inject(NgZone);
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  });
+  }));
 
-  it('should invoke the afterClosed callback inside the NgZone', fakeAsync(
-    inject([NgZone], (zone: NgZone) => {
-      const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
-      const afterCloseCallback = jasmine.createSpy('afterClose callback');
+  it('should invoke the afterClosed callback inside the NgZone', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    const afterCloseCallback = jasmine.createSpy('afterClose callback');
 
-      dialogRef.afterClosed().subscribe(() => {
-        afterCloseCallback(NgZone.isInAngularZone());
-      });
-      zone.run(() => {
-        dialogRef.close();
-        viewContainerFixture.detectChanges();
-        flush();
-      });
+    dialogRef.afterClosed().subscribe(() => {
+      afterCloseCallback(NgZone.isInAngularZone());
+    });
+    zone.run(() => {
+      dialogRef.close();
+      viewContainerFixture.detectChanges();
+      flush();
+    });
 
-      expect(afterCloseCallback).toHaveBeenCalledWith(true);
-    }),
-  ));
+    expect(afterCloseCallback).toHaveBeenCalledWith(true);
+  }));
 });
 
 @Directive({
@@ -81,7 +76,7 @@ describe('MatDialog', () => {
   standalone: true,
 })
 class DirectiveWithViewContainer {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -106,9 +101,7 @@ class ComponentWithChildViewContainer {
   standalone: true,
 })
 class PizzaMsg {
-  constructor(
-    public dialogRef: MatDialogRef<PizzaMsg>,
-    public dialogInjector: Injector,
-    public directionality: Directionality,
-  ) {}
+  dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
+  dialogInjector = inject(Injector);
+  directionality = inject(Directionality);
 }

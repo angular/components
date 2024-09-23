@@ -6,7 +6,6 @@
 
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -20,7 +19,6 @@ import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { RippleConfig } from '@angular/material/core';
 import { RippleGlobalOptions } from '@angular/material/core';
@@ -66,7 +64,6 @@ export interface MatListConfig {
 
 // @public (undocumented)
 export class MatListItem extends MatListItemBase {
-    constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase | null, platform: Platform, globalRippleOptions?: RippleGlobalOptions, animationMode?: string);
     get activated(): boolean;
     set activated(activated: boolean);
     // (undocumented)
@@ -87,7 +84,7 @@ export class MatListItem extends MatListItemBase {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatListItem, "mat-list-item, a[mat-list-item], button[mat-list-item]", ["matListItem"], { "activated": { "alias": "activated"; "required": false; }; }, {}, ["_lines", "_titles", "_meta"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "[matListItemMeta]", "mat-divider"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatListItem, [null, null, { optional: true; }, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatListItem, never>;
 }
 
 // @public
@@ -100,15 +97,15 @@ export class MatListItemAvatar extends _MatListItemGraphicBase {
 
 // @public
 export class _MatListItemGraphicBase {
-    constructor(_listOption: ListOption);
+    constructor(...args: unknown[]);
     // (undocumented)
     _isAlignedAtStart(): boolean;
     // (undocumented)
-    _listOption: ListOption;
+    _listOption: ListOption | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatListItemGraphicBase, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatListItemGraphicBase, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatListItemGraphicBase, never>;
 }
 
 // @public
@@ -121,7 +118,7 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 
 // @public
 export class MatListItemLine {
-    constructor(_elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -140,7 +137,7 @@ export class MatListItemMeta {
 
 // @public
 export class MatListItemTitle {
-    constructor(_elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -161,7 +158,6 @@ export class MatListModule {
 
 // @public (undocumented)
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, _selectionList: SelectionList, platform: Platform, _changeDetectorRef: ChangeDetectorRef, globalRippleOptions?: RippleGlobalOptions, animationMode?: string);
     // @deprecated
     get checkboxPosition(): MatListOptionTogglePosition;
     set checkboxPosition(value: MatListOptionTogglePosition);
@@ -202,7 +198,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": { "alias": "togglePosition"; "required": false; }; "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatListOption, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatListOption, never>;
 }
 
 // @public
@@ -230,7 +226,7 @@ export class MatNavList extends MatListBase {
 
 // @public (undocumented)
 export class MatSelectionList extends MatListBase implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    constructor(_element: ElementRef<HTMLElement>, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     color: ThemePalette;
     compareWith: (o1: any, o2: any) => boolean;
     deselectAll(): MatListOption[];

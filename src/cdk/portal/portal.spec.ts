@@ -3,14 +3,12 @@ import {
   AfterViewInit,
   ApplicationRef,
   Component,
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   ElementRef,
   Injector,
   QueryList,
   TemplateRef,
-  Type,
   ViewChild,
   ViewChildren,
   ViewContainerRef,
@@ -38,12 +36,10 @@ describe('Portals', () => {
 
   describe('CdkPortalOutlet', () => {
     let fixture: ComponentFixture<PortalTestApp>;
-    let componentFactoryResolver: ComponentFactoryResolver;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
-      componentFactoryResolver = TestBed.inject(ComponentFactoryResolver);
     });
 
     it('should load a component into the portal', () => {
@@ -451,19 +447,6 @@ describe('Portals', () => {
       expect(instance.portalOutlet.hasAttached()).toBe(true);
     });
 
-    it('should use the `ComponentFactoryResolver` from the portal, if available', () => {
-      const spy = jasmine.createSpy('resolveComponentFactorySpy');
-      const portal = new ComponentPortal(PizzaMsg, undefined, undefined, {
-        resolveComponentFactory: <T>(...args: [Type<T>]) => {
-          spy();
-          return componentFactoryResolver.resolveComponentFactory(...args);
-        },
-      });
-
-      fixture.componentInstance.portalOutlet.attachComponentPortal(portal);
-      expect(spy).toHaveBeenCalled();
-    });
-
     it('should render inside outlet when component portal specifies view container ref', () => {
       const hostContainer = fixture.nativeElement.querySelector('.portal-container');
       const portal = new ComponentPortal(PizzaMsg, fixture.componentInstance.alternateContainer);
@@ -491,7 +474,6 @@ describe('Portals', () => {
   });
 
   describe('DomPortalOutlet', () => {
-    let componentFactoryResolver: ComponentFactoryResolver;
     let someViewContainerRef: ViewContainerRef;
     let someInjector: Injector;
     let someFixture: ComponentFixture<ArbitraryViewContainerRefComponent>;
@@ -501,18 +483,10 @@ describe('Portals', () => {
     let appRef: ApplicationRef;
 
     beforeEach(() => {
-      componentFactoryResolver = TestBed.inject(ComponentFactoryResolver);
       injector = TestBed.inject(Injector);
       appRef = TestBed.inject(ApplicationRef);
       someDomElement = document.createElement('div');
-      host = new DomPortalOutlet(
-        someDomElement,
-        componentFactoryResolver,
-        appRef,
-        injector,
-        document,
-      );
-
+      host = new DomPortalOutlet(someDomElement, null, appRef, injector, document);
       someFixture = TestBed.createComponent(ArbitraryViewContainerRefComponent);
       someViewContainerRef = someFixture.componentInstance.viewContainerRef;
       someInjector = someFixture.componentInstance.injector;
@@ -666,19 +640,6 @@ describe('Portals', () => {
       host.setDisposeFn(spy);
       host.dispose();
 
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should use the `ComponentFactoryResolver` from the portal, if available', () => {
-      const spy = jasmine.createSpy('resolveComponentFactorySpy');
-      const portal = new ComponentPortal(PizzaMsg, undefined, undefined, {
-        resolveComponentFactory: <T>(...args: [Type<T>]) => {
-          spy();
-          return componentFactoryResolver.resolveComponentFactory(...args);
-        },
-      });
-
-      host.attachComponentPortal(portal);
       expect(spy).toHaveBeenCalled();
     });
 

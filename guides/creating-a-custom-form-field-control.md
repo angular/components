@@ -219,7 +219,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, ControlValueAcces
 }
 ```
 
-For additional information about `ControlValueAccessor` see the [API docs](https://angular.io/api/forms/ControlValueAccessor).
+For additional information about `ControlValueAccessor` see the [API docs](https://angular.dev/api/forms/ControlValueAccessor).
 
 
 #### `focused`

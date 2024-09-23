@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -175,10 +175,10 @@ describe('MatSnackBarHarness', () => {
   imports: [MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
 })
 class SnackbarHarnessTest {
+  snackBar = inject(MatSnackBar);
+
   @ViewChild('custom') customTmpl: TemplateRef<any>;
   @ViewChild('customWithAction') customWithActionTmpl: TemplateRef<any>;
-
-  constructor(public snackBar: MatSnackBar) {}
 
   openSimple(message: string, action = '', config?: MatSnackBarConfig) {
     return this.snackBar.open(message, action, config);

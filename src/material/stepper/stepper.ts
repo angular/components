@@ -3,36 +3,24 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {
-  CdkStep,
-  CdkStepper,
-  StepContentPositionState,
-  STEPPER_GLOBAL_OPTIONS,
-  StepperOptions,
-} from '@angular/cdk/stepper';
+import {CdkStep, CdkStepper, StepContentPositionState} from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
-  forwardRef,
   inject,
-  Inject,
   Input,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
-  SkipSelf,
   TemplateRef,
   ViewChildren,
   ViewContainerRef,
@@ -73,6 +61,8 @@ import {Platform} from '@angular/cdk/platform';
   },
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
+  private _errorStateMatcher = inject(ErrorStateMatcher, {skipSelf: true});
+  private _viewContainerRef = inject(ViewContainerRef);
   private _isSelected = Subscription.EMPTY;
 
   /** Content for step label given by `<ng-template matStepLabel>`. */
@@ -93,15 +83,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
   /** Currently-attached portal containing the lazy content. */
   _portal: TemplatePortal;
-
-  constructor(
-    @Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
-    @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
-    private _viewContainerRef: ViewContainerRef,
-    @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions,
-  ) {
-    super(stepper, stepperOptions);
-  }
 
   ngAfterContentInit() {
     this._isSelected = this._stepper.steps.changes
@@ -228,12 +209,12 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** Whether the stepper is rendering on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
 
-  constructor(
-    @Optional() dir: Directionality,
-    changeDetectorRef: ChangeDetectorRef,
-    elementRef: ElementRef<HTMLElement>,
-  ) {
-    super(dir, changeDetectorRef, elementRef);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
     this.orientation = nodeName === 'mat-vertical-stepper' ? 'vertical' : 'horizontal';
   }

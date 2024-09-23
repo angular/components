@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
@@ -11,12 +11,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Input,
   OnDestroy,
   ViewEncapsulation,
   TemplateRef,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MatStepLabel} from './step-label';
@@ -42,6 +42,9 @@ import {NgTemplateOutlet} from '@angular/common';
   imports: [MatRipple, NgTemplateOutlet, MatIcon],
 })
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
+  _intl = inject(MatStepperIntl);
+  private _focusMonitor = inject(FocusMonitor);
+
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
@@ -80,14 +83,13 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
    */
   @Input() color: ThemePalette;
 
-  constructor(
-    public _intl: MatStepperIntl,
-    private _focusMonitor: FocusMonitor,
-    _elementRef: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-  ) {
-    super(_elementRef);
-    this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const changeDetectorRef = inject(ChangeDetectorRef);
+    this._intlSubscription = this._intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngAfterViewInit() {

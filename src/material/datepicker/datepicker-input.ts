@@ -3,21 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Directive,
-  ElementRef,
-  forwardRef,
-  Inject,
-  Input,
-  OnDestroy,
-  Optional,
-  signal,
-} from '@angular/core';
+import {Directive, ElementRef, forwardRef, Input, OnDestroy, signal, inject} from '@angular/core';
 import {NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidatorFn, Validators} from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '@angular/material/core';
 import {MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
@@ -69,6 +60,7 @@ export class MatDatepickerInput<D>
   extends MatDatepickerInputBase<D | null, D>
   implements MatDatepickerControl<D | null>, OnDestroy
 {
+  private _formField = inject<_MatFormFieldPartial>(MAT_FORM_FIELD, {optional: true});
   private _closedSubscription = Subscription.EMPTY;
   private _openedSubscription = Subscription.EMPTY;
 
@@ -141,13 +133,10 @@ export class MatDatepickerInput<D>
   /** The combined form control validator for this input. */
   protected _validator: ValidatorFn | null;
 
-  constructor(
-    elementRef: ElementRef<HTMLInputElement>,
-    @Optional() dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
-    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: _MatFormFieldPartial,
-  ) {
-    super(elementRef, dateAdapter, dateFormats);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
     this._validator = Validators.compose(super._getValidators());
   }
 

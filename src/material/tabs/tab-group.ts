@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -15,10 +15,8 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -94,6 +92,10 @@ const ENABLE_BACKGROUND_INPUT = true;
   ],
 })
 export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
+  readonly _elementRef = inject(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
@@ -267,12 +269,11 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   /** Whether the tab group is rendered on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
 
-  constructor(
-    readonly _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
+
     this._groupId = nextId++;
     this.animationDuration =
       defaultConfig && defaultConfig.animationDuration ? defaultConfig.animationDuration : '500ms';

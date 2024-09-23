@@ -8,9 +8,7 @@ import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -19,23 +17,18 @@ import * as i2 from '@angular/material/core';
 import * as i3 from '@angular/common';
 import * as i7 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
-import { MatFormField } from '@angular/material/form-field';
 import { MatOptgroup } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { ViewContainerRef } from '@angular/core';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export function getMatAutocompleteMissingPanelError(): Error;
@@ -64,7 +57,7 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // @public
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, _defaults: MatAutocompleteDefaultOptions, platform?: Platform);
+    constructor(...args: unknown[]);
     _animationDone: EventEmitter<AnimationEvent_2>;
     ariaLabel: string;
     ariaLabelledby: string;
@@ -154,8 +147,8 @@ export class MatAutocompleteModule {
 
 // @public
 export class MatAutocompleteOrigin {
-    constructor(
-    elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
+    // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteOrigin, "[matAutocompleteOrigin]", ["matAutocompleteOrigin"], {}, {}, never, never, true, never>;
@@ -174,7 +167,7 @@ export class MatAutocompleteSelectedEvent {
 
 // @public
 export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality | null, _formField: MatFormField | null, _document: any, _viewportRuler: ViewportRuler, _defaults?: (MatAutocompleteDefaultOptions | null) | undefined);
+    constructor(...args: unknown[]);
     get activeOption(): MatOption | null;
     autocomplete: MatAutocomplete;
     autocompleteAttribute: string;
@@ -216,7 +209,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], { "autocomplete": { "alias": "matAutocomplete"; "required": false; }; "position": { "alias": "matAutocompletePosition"; "required": false; }; "connectedTo": { "alias": "matAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "matAutocompleteDisabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, { optional: true; }, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteTrigger, never>;
 }
 
 export { MatOptgroup }
