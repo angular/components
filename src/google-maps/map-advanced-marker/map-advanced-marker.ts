@@ -46,6 +46,8 @@ export const DEFAULT_MARKER_OPTIONS = {
   standalone: true,
 })
 export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+  private readonly _googleMap = inject(GoogleMap);
+  private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
 
   /**
@@ -186,10 +188,8 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
    */
   advancedMarker: google.maps.marker.AdvancedMarkerElement;
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (!this._googleMap._isBrowser) {

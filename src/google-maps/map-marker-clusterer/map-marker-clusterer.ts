@@ -60,16 +60,18 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
   exportAs: 'mapMarkerClusterer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  template: '<ng-content />',
+  template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
 export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+  private readonly _googleMap = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private readonly _currentMarkers = new Set<google.maps.Marker>();
   private readonly _eventManager = new MapEventManager(inject(NgZone));
   private readonly _destroy = new Subject<void>();
 
   /** Whether the clusterer is allowed to be initialized. */
-  private readonly _canInitialize: boolean;
+  private readonly _canInitialize = this._googleMap._isBrowser;
 
   @Input()
   ariaLabelFn: AriaLabelFn = () => '';
@@ -212,12 +214,8 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   @Output() readonly markerClustererInitialized: EventEmitter<MarkerClustererInstance> =
     new EventEmitter<MarkerClustererInstance>();
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {
-    this._canInitialize = _googleMap._isBrowser;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._canInitialize) {

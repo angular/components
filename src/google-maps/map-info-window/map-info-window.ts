@@ -39,6 +39,9 @@ import {MapAnchorPoint} from '../map-anchor-point';
   host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
+  private readonly _googleMap = inject(GoogleMap);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
   private readonly _position = new BehaviorSubject<
@@ -105,11 +108,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   @Output() readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow> =
     new EventEmitter<google.maps.InfoWindow>();
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {

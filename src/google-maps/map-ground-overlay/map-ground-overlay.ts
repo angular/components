@@ -36,8 +36,9 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapGroundOverlay implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
-
   private readonly _opacity = new BehaviorSubject<number>(1);
   private readonly _url = new BehaviorSubject<string>('');
   private readonly _bounds = new BehaviorSubject<
@@ -96,10 +97,8 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   @Output() readonly groundOverlayInitialized: EventEmitter<google.maps.GroundOverlay> =
     new EventEmitter<google.maps.GroundOverlay>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

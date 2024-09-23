@@ -7,7 +7,6 @@
 /// <reference types="google.maps" />
 
 import { AfterContentInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { NgZone } from '@angular/core';
@@ -58,7 +57,7 @@ export interface ClusterIconStyle {
 
 // @public
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
-    constructor(_elementRef: ElementRef, _ngZone: NgZone, platformId: Object);
+    constructor(...args: unknown[]);
     readonly authFailure: EventEmitter<void>;
     readonly boundsChanged: Observable<void>;
     // (undocumented)
@@ -136,7 +135,7 @@ export type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.
 
 // @public
 export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
-    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     advancedMarker: google.maps.marker.AdvancedMarkerElement;
     set content(content: Node | google.maps.marker.PinElement | null);
     // (undocumented)
@@ -176,7 +175,7 @@ export interface MapAnchorPoint {
 
 // @public (undocumented)
 export class MapBaseLayer implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _initializeObject(): void;
     // (undocumented)
@@ -213,7 +212,7 @@ export class MapBicyclingLayer implements OnInit, OnDestroy {
 
 // @public
 export class MapCircle implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     // (undocumented)
     set center(center: google.maps.LatLng | google.maps.LatLngLiteral);
     // (undocumented)
@@ -272,7 +271,7 @@ export class MapCircle implements OnInit, OnDestroy {
 
 // @public
 export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
-    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     set directions(directions: google.maps.DirectionsResult);
     readonly directionsChanged: Observable<void>;
     directionsRenderer?: google.maps.DirectionsRenderer;
@@ -303,7 +302,7 @@ export interface MapDirectionsResponse {
 
 // @public
 export class MapDirectionsService {
-    constructor(_ngZone: NgZone);
+    constructor(...args: unknown[]);
     route(request: google.maps.DirectionsRequest): Observable<MapDirectionsResponse>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapDirectionsService, never>;
@@ -321,7 +320,7 @@ export class MapEventManager {
 
 // @public
 export class MapGeocoder {
-    constructor(_ngZone: NgZone);
+    constructor(...args: unknown[]);
     geocode(request: google.maps.GeocoderRequest): Observable<MapGeocoderResponse>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGeocoder, never>;
@@ -339,7 +338,7 @@ export interface MapGeocoderResponse {
 
 // @public
 export class MapGroundOverlay implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     get bounds(): google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral;
     set bounds(bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral);
     clickable: boolean;
@@ -364,7 +363,7 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
 
 // @public
 export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
-    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     set data(data: HeatmapData);
     getData(): HeatmapData;
     heatmap?: google.maps.visualization.HeatmapLayer;
@@ -384,7 +383,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
 
 // @public
 export class MapInfoWindow implements OnInit, OnDestroy {
-    constructor(_googleMap: GoogleMap, _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     close(): void;
     readonly closeclick: Observable<void>;
     readonly contentChanged: Observable<void>;
@@ -415,7 +414,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
 // @public
 export class MapKmlLayer implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     readonly defaultviewportChanged: Observable<void>;
     getDefaultViewport(): google.maps.LatLngBounds | null;
     getMetadata(): google.maps.KmlLayerMetadata | null;
@@ -442,7 +441,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
 
 // @public
 export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
-    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     readonly animationChanged: Observable<void>;
     set clickable(clickable: boolean);
     readonly clickableChanged: Observable<void>;
@@ -501,7 +500,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
 
 // @public
 export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
-    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     // (undocumented)
     ariaLabelFn: AriaLabelFn;
     // (undocumented)
@@ -603,7 +602,7 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
 // @public
 export class MapPolygon implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     getDraggable(): boolean;
     getEditable(): boolean;
     getPath(): google.maps.MVCArray<google.maps.LatLng>;
@@ -638,7 +637,7 @@ export class MapPolygon implements OnInit, OnDestroy {
 
 // @public
 export class MapPolyline implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     getDraggable(): boolean;
     getEditable(): boolean;
     getPath(): google.maps.MVCArray<google.maps.LatLng>;
@@ -672,7 +671,7 @@ export class MapPolyline implements OnInit, OnDestroy {
 
 // @public
 export class MapRectangle implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     // (undocumented)
     set bounds(bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral);
     readonly boundsChanged: Observable<void>;
@@ -707,7 +706,7 @@ export class MapRectangle implements OnInit, OnDestroy {
 
 // @public
 export class MapTrafficLayer implements OnInit, OnDestroy {
-    constructor(_map: GoogleMap, _ngZone: NgZone);
+    constructor(...args: unknown[]);
     set autoRefresh(autoRefresh: boolean);
     // (undocumented)
     ngOnDestroy(): void;

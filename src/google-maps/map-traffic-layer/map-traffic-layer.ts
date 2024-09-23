@@ -9,7 +9,16 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" preserve="true" />
 
-import {Directive, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -26,6 +35,8 @@ import {GoogleMap} from '../google-map/google-map';
   standalone: true,
 })
 export class MapTrafficLayer implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private readonly _autoRefresh = new BehaviorSubject<boolean>(true);
   private readonly _destroyed = new Subject<void>();
 
@@ -48,10 +59,8 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
   @Output() readonly trafficLayerInitialized: EventEmitter<google.maps.TrafficLayer> =
     new EventEmitter<google.maps.TrafficLayer>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

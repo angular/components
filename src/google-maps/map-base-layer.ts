@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="google.maps" preserve="true" />
 
-import {Directive, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Directive, NgZone, OnDestroy, OnInit, inject} from '@angular/core';
 
 import {GoogleMap} from './google-map/google-map';
 
@@ -19,10 +19,11 @@ import {GoogleMap} from './google-map/google-map';
   standalone: true,
 })
 export class MapBaseLayer implements OnInit, OnDestroy {
-  constructor(
-    protected readonly _map: GoogleMap,
-    protected readonly _ngZone: NgZone,
-  ) {}
+  protected readonly _map = inject(GoogleMap);
+  protected readonly _ngZone = inject(NgZone);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

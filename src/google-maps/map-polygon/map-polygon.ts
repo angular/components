@@ -36,6 +36,8 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapPolygon implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.PolygonOptions>({});
   private readonly _paths = new BehaviorSubject<
@@ -141,10 +143,8 @@ export class MapPolygon implements OnInit, OnDestroy {
   @Output() readonly polygonInitialized: EventEmitter<google.maps.Polygon> =
     new EventEmitter<google.maps.Polygon>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {

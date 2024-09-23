@@ -36,6 +36,8 @@ import {MapEventManager} from '../map-event-manager';
   standalone: true,
 })
 export class MapRectangle implements OnInit, OnDestroy {
+  private readonly _map = inject(GoogleMap);
+  private readonly _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
   private readonly _options = new BehaviorSubject<google.maps.RectangleOptions>({});
   private readonly _bounds = new BehaviorSubject<
@@ -148,10 +150,8 @@ export class MapRectangle implements OnInit, OnDestroy {
   @Output() readonly rectangleInitialized: EventEmitter<google.maps.Rectangle> =
     new EventEmitter<google.maps.Rectangle>();
 
-  constructor(
-    private readonly _map: GoogleMap,
-    private readonly _ngZone: NgZone,
-  ) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._map._isBrowser) {
