@@ -27,6 +27,9 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
 .mat-calendar {
   display: block;
 
+  // Prevents layout issues if the line height bleeds in from the body (see #29756).
+  line-height: normal;
+
   @include token-utils.use-tokens($_tokens...) {
     @include token-utils.create-token-slot(font-family, calendar-text-font);
     @include token-utils.create-token-slot(font-size, calendar-text-size);
