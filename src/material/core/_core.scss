@@ -42,3 +42,9 @@
     }
   }
 }
+
+// Mixin that provides the .mat-app-background class.
+@mixin app-background() {}
+
+// Mixin that provides the .mat-elevation-* classes.
+@mixin elevation-classes() {}
