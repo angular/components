@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
 @include mat.core();
+@include mat.app-background();
 
 $theme: mat.define-theme((
   color: (
