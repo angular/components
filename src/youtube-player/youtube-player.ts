@@ -19,7 +19,6 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
-  Inject,
   PLATFORM_ID,
   OnChanges,
   SimpleChanges,
@@ -131,18 +130,20 @@ enum PlayerState {
   `,
 })
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
-  /** Whether we're currently rendering inside a browser. */
-  private readonly _isBrowser: boolean;
+  private _ngZone = inject(NgZone);
+  private readonly _nonce = inject(CSP_NONCE, {optional: true});
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
   private _player: YT.Player | undefined;
   private _pendingPlayer: YT.Player | undefined;
   private _existingApiReadyCallback: (() => void) | undefined;
   private _pendingPlayerState: PendingPlayerState | undefined;
   private readonly _destroyed = new Subject<void>();
   private readonly _playerChanges = new BehaviorSubject<YT.Player | undefined>(undefined);
-  private readonly _nonce = inject(CSP_NONCE, {optional: true});
-  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
   protected _isLoading = false;
   protected _hasPlaceholder = true;
+
+  /** Whether we're currently rendering inside a browser. */
+  private readonly _isBrowser: boolean;
 
   /** YouTube Video ID to view */
   @Input()
@@ -241,10 +242,10 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('youtubeContainer', {static: true})
   youtubeContainer: ElementRef<HTMLElement>;
 
-  constructor(
-    private _ngZone: NgZone,
-    @Inject(PLATFORM_ID) platformId: Object,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const platformId = inject<Object>(PLATFORM_ID);
     const config = inject(YOUTUBE_PLAYER_CONFIG, {optional: true});
     this.loadApi = config?.loadApi ?? true;
     this.disablePlaceholder = !!config?.disablePlaceholder;

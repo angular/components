@@ -10,7 +10,6 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -24,7 +23,7 @@ export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
-    constructor(_ngZone: NgZone, platformId: Object);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
     disableCookies: boolean;
