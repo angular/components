@@ -43,7 +43,7 @@
 
       @if (showFirstLastButtons) {
         <button mat-icon-button type="button"
-                class="mat-mdc-paginator-navigation-first"
+                class="mat-mdc-paginator-navigation-first mat-mdc-button-disabled-interactive"
                 (click)="firstPage()"
                 [attr.aria-label]="_intl.firstPageLabel"
                 [matTooltip]="_intl.firstPageLabel"
@@ -60,7 +60,7 @@
         </button>
       }
       <button mat-icon-button type="button"
-              class="mat-mdc-paginator-navigation-previous"
+              class="mat-mdc-paginator-navigation-previous mat-mdc-button-disabled-interactive"
               (click)="previousPage()"
               [attr.aria-label]="_intl.previousPageLabel"
               [matTooltip]="_intl.previousPageLabel"
@@ -76,7 +76,7 @@
         </svg>
       </button>
       <button mat-icon-button type="button"
-              class="mat-mdc-paginator-navigation-next"
+              class="mat-mdc-paginator-navigation-next mat-mdc-button-disabled-interactive"
               (click)="nextPage()"
               [attr.aria-label]="_intl.nextPageLabel"
               [matTooltip]="_intl.nextPageLabel"
@@ -93,7 +93,7 @@
       </button>
       @if (showFirstLastButtons) {
         <button mat-icon-button type="button"
-                class="mat-mdc-paginator-navigation-last"
+                class="mat-mdc-paginator-navigation-last mat-mdc-button-disabled-interactive"
                 (click)="lastPage()"
                 [attr.aria-label]="_intl.lastPageLabel"
                 [matTooltip]="_intl.lastPageLabel"
