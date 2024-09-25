@@ -10,6 +10,7 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessPredicate,
+  TestElement,
 } from '@angular/cdk/testing';
 import {TooltipHarnessFilters} from './tooltip-harness-filters';
 
@@ -17,7 +18,6 @@ import {TooltipHarnessFilters} from './tooltip-harness-filters';
 export class MatTooltipHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-tooltip-trigger';
 
-  private _optionalPanel = this.documentRootLocatorFactory().locatorForOptional('.mat-mdc-tooltip');
   private _hiddenClass = 'mat-mdc-tooltip-hide';
   private _disabledClass = 'mat-mdc-tooltip-disabled';
   private _showAnimationName = 'mat-mdc-tooltip-show';
@@ -45,7 +45,7 @@ export class MatTooltipHarness extends ComponentHarness {
     // element has ripples.
     await host.dispatchEvent('touchstart', {changedTouches: []});
     await host.hover();
-    const panel = await this._optionalPanel();
+    const panel = await this._getPanel();
     await panel?.dispatchEvent('animationend', {animationName: this._showAnimationName});
   }
 
@@ -57,13 +57,13 @@ export class MatTooltipHarness extends ComponentHarness {
     // the tooltip binds different events depending on the device.
     await host.dispatchEvent('touchend');
     await host.mouseAway();
-    const panel = await this._optionalPanel();
+    const panel = await this._getPanel();
     await panel?.dispatchEvent('animationend', {animationName: this._hideAnimationName});
   }
 
   /** Gets whether the tooltip is open. */
   async isOpen(): Promise<boolean> {
-    const panel = await this._optionalPanel();
+    const panel = await this._getPanel();
     return !!panel && !(await panel.hasClass(this._hiddenClass));
   }
 
@@ -75,7 +75,14 @@ export class MatTooltipHarness extends ComponentHarness {
 
   /** Gets a promise for the tooltip panel's text. */
   async getTooltipText(): Promise<string> {
-    const panel = await this._optionalPanel();
+    const panel = await this._getPanel();
     return panel ? panel.text() : '';
+  }
+
+  /** Gets the tooltip panel associated with the trigger. */
+  private async _getPanel(): Promise<TestElement | null> {
+    const host = await this.host();
+    const locatorFactory = this.documentRootLocatorFactory();
+    return locatorFactory.locatorForOptional(`#${await host.getAttribute('data-mat-tooltip')}`)();
   }
 }

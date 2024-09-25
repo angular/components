@@ -75,6 +75,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     ngOnDestroy(): void;
     // (undocumented)
     _overlayRef: OverlayRef | null;
+    // (undocumented)
+    protected readonly _panelId: string;
     get position(): TooltipPosition;
     set position(value: TooltipPosition);
     get positionAtOrigin(): boolean;
@@ -150,6 +152,7 @@ export class TooltipComponent implements OnDestroy {
     // (undocumented)
     _handleMouseLeave({ relatedTarget }: MouseEvent): void;
     hide(delay: number): void;
+    _id: string | undefined;
     // (undocumented)
     _isMultiline: boolean;
     isVisible(): boolean;
