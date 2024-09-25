@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 
@@ -32,7 +32,7 @@ export class HeaderLink {
    * Id of the anchor element. Note that is uses "example" because we instantiate the
    * header link components through the ComponentPortal.
    */
-  @Input() example: string | undefined;
+  example: string = '';
 
   /** Base URL that is used to build an absolute fragment URL. */
   private _baseUrl: string;

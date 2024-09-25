@@ -1,5 +1,5 @@
 <div class="docs-component-viewer-nav">
-  @if ((params | async)?.section; as section) {
+  @if ((params() | async)?.section; as section) {
     <div class="docs-component-viewer-nav-content">
         <mat-nav-list>
           @for (component of docItems.getItems(section); track component) {

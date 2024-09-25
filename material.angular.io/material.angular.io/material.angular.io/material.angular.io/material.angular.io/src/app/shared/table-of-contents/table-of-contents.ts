@@ -3,11 +3,11 @@ import {
   Component,
   ElementRef,
   Inject,
-  Input,
   OnDestroy,
   OnInit,
   NgZone,
   ChangeDetectorRef,
+  input
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -44,7 +44,7 @@ interface Link {
   standalone: true
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
-  @Input() container: string | undefined;
+  readonly container = input<string>();
 
   _linkSections: LinkSection[] = [];
   _links: Link[] = [];
@@ -87,8 +87,9 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
     // to subscribe to its scroll event until next tick (when it does exist).
     this._ngZone.runOutsideAngular(() => {
       Promise.resolve().then(() => {
-        this._scrollContainer = this.container ?
-          this._document.querySelector(this.container) as HTMLElement :
+        const container = this.container();
+        this._scrollContainer = container ?
+          this._document.querySelector(container) as HTMLElement :
           window;
 
         if (this._scrollContainer) {
