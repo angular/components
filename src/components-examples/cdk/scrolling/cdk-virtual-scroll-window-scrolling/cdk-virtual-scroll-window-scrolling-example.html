@@ -1,4 +1,4 @@
-@if (shouldRun) {
+@if (shouldRun()) {
   <div class="example-header">Content before</div>
   <cdk-virtual-scroll-viewport scrollWindow itemSize="50">
     <div *cdkVirtualFor="let item of items" class="example-item">{{item}}</div>
@@ -6,6 +6,6 @@
   <div class="example-footer">Content after</div>
 }
 
-@if (!shouldRun) {
+@if (!shouldRun()) {
   <div>Please open on StackBlitz to see result</div>
 }

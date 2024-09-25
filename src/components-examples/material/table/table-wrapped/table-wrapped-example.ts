@@ -3,12 +3,12 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
-  Input,
   AfterViewInit,
   QueryList,
   ViewChild,
   ContentChild,
   forwardRef,
+  input,
 } from '@angular/core';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {
@@ -94,9 +94,8 @@ export class WrapperTable<T> implements AfterContentInit {
 
   @ViewChild(MatTable, {static: true}) table: MatTable<T>;
 
-  @Input() columns: string[];
-
-  @Input() dataSource: DataSource<T>;
+  readonly columns = input.required<string[]>();
+  readonly dataSource = input.required<DataSource<T>>();
 
   ngAfterContentInit() {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
