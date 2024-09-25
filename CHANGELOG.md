@@ -1,3 +1,18 @@
+<a name="19.0.0-next.6"></a>
+# 19.0.0-next.6 "topaz-tornado" (2024-09-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9b4085c6e3](https://github.com/angular/components/commit/9b4085c6e3eee78556000c0f60ef2c51c0668ed9) | feat | **private:** create cdk-visually-hidden style loader ([#29757](https://github.com/angular/components/pull/29757)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d206225c58](https://github.com/angular/components/commit/d206225c58d071e6cb6b680ef11d1c7bab7a73cc) | feat | **core:** create focus-indicator structural styles loader ([#29763](https://github.com/angular/components/pull/29763)) |
+| [4adc3725dd](https://github.com/angular/components/commit/4adc3725dd08ef3cf3868f9c752e16c8c1492466) | feat | **schematics:** create v19 core removal schematic ([#29768](https://github.com/angular/components/pull/29768)) |
+| [49af49bb01](https://github.com/angular/components/commit/49af49bb019b93e48a1f6386a1b0b9ab20989a23) | fix | **datepicker:** set explicit line height on calendar ([#29770](https://github.com/angular/components/pull/29770)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.6"></a>
 # 18.2.6 "emerald-egg" (2024-09-25)
 ### material
