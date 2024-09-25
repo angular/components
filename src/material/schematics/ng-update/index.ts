@@ -14,8 +14,9 @@ import {
 } from '@angular/cdk/schematics';
 
 import {materialUpgradeData} from './upgrade-data';
+import {MatCoreMigration} from './migrations/mat-core-removal';
 
-const materialMigrations: NullableDevkitMigration[] = [];
+const materialMigrations: NullableDevkitMigration[] = [MatCoreMigration];
 
 /** Entry point for the migration schematics with target of Angular Material v19 */
 export function updateToV19(): Rule {
