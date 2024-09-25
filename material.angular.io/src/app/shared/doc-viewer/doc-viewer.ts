@@ -15,6 +15,7 @@ import {
   Output,
   SecurityContext,
   ViewContainerRef,
+  input
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -46,7 +47,7 @@ export class DocViewer implements OnDestroy {
   private _portalHosts: DomPortalOutlet[] = [];
   private _documentFetchSubscription: Subscription | undefined;
 
-  @Input() name: string | undefined;
+  readonly name = input<string>();
 
   /** The URL of the document to display. */
   @Input()

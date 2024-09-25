@@ -1,12 +1,13 @@
-import {Component,
-  Input,
+import {
+  Component,
   NgModule,
   NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  forwardRef
+  forwardRef,
+  input
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
@@ -142,7 +143,7 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   ],
 })
 export class ComponentNav {
-  @Input() params: Observable<Params> | undefined;
+  readonly params = input<Observable<Params>>();
   currentItemId: string | undefined;
 
   constructor(public docItems: DocumentationItems) {}

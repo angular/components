@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   ViewChild,
-  forwardRef
+  forwardRef,
+  input
 } from '@angular/core';
 import {DocViewer} from '../doc-viewer/doc-viewer';
 
@@ -16,6 +16,6 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
   imports: [forwardRef(() => DocViewer)]
 })
 export class CodeSnippet {
-  @Input() source: string | undefined;
+  readonly source = input<string>();
   @ViewChild('viewer') viewer!: DocViewer;
 }
