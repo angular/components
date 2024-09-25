@@ -1,3 +1,12 @@
+<a name="18.2.6"></a>
+# 18.2.6 "emerald-egg" (2024-09-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d8c2b420c9](https://github.com/angular/components/commit/d8c2b420c939ab65da926d1fc99a64e08f6e494d) | fix | **datepicker:** set explicit line height on calendar ([#29770](https://github.com/angular/components/pull/29770)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.5"></a>
 # 18.2.5 "bismuth-badge" (2024-09-20)
 ### cdk
