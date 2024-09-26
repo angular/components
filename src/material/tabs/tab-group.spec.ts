@@ -1187,6 +1187,95 @@ describe('MatTabNavBar with a default config', () => {
   });
 });
 
+describe('MatTabGroup labels aligned with a config', () => {
+  it('should work with start align', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      providers: [
+        {
+          provide: MAT_TABS_CONFIG,
+          useValue: {alignTabs: 'start'},
+        },
+      ],
+    }).createComponent(TabsWithAlignConfig);
+    fixture.detectChanges();
+
+    const tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="start"]');
+    expect(tabElement).toBeTruthy();
+  });
+
+  it('should work with center align', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      providers: [
+        {
+          provide: MAT_TABS_CONFIG,
+          useValue: {alignTabs: 'center'},
+        },
+      ],
+    }).createComponent(TabsWithAlignConfig);
+    fixture.detectChanges();
+
+    const tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="center"]');
+    expect(tabElement).toBeTruthy();
+  });
+
+  it('should work with end align', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      providers: [
+        {
+          provide: MAT_TABS_CONFIG,
+          useValue: {alignTabs: 'end'},
+        },
+      ],
+    }).createComponent(TabsWithAlignConfig);
+    fixture.detectChanges();
+
+    const tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="end"]');
+    expect(tabElement).toBeTruthy();
+  });
+
+  it('should not add align if default config doesnt set align', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+    }).createComponent(TabsWithAlignConfig);
+    fixture.detectChanges();
+
+    let tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="start"]');
+    expect(tabElement).toBeFalsy();
+
+    tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="center"]');
+    expect(tabElement).toBeFalsy();
+
+    tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="end"]');
+    expect(tabElement).toBeFalsy();
+
+    tabElement = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+    expect(tabElement).toBeTruthy();
+  });
+
+  it('should not break if config sets align on already aligned tabs', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignCenter],
+      providers: [{provide: MAT_TABS_CONFIG, useValue: {alignTabs: 'end'}}],
+    }).createComponent(TabsWithAlignCenter);
+    fixture.detectChanges();
+
+    let tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="start"]');
+    expect(tabElement).toBeFalsy();
+
+    tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="center"]');
+    expect(tabElement).toBeTruthy();
+
+    tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="end"]');
+    expect(tabElement).toBeFalsy();
+
+    tabElement = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+    expect(tabElement).toBeTruthy();
+  });
+});
+
 @Component({
   template: `
     <mat-tab-group class="tab-group"
@@ -1547,3 +1636,35 @@ class TabsWithClassesTestApp {
   labelClassList?: string | string[];
   bodyClassList?: string | string[];
 }
+
+@Component({
+  template: `
+    <mat-tab-group>
+      <mat-tab>
+        First
+      </mat-tab>
+      <mat-tab>
+        Second
+      </mat-tab>
+    </mat-tab-group>
+  `,
+  standalone: true,
+  imports: [MatTabsModule],
+})
+class TabsWithAlignConfig {}
+
+@Component({
+  template: `
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab>
+        First
+      </mat-tab>
+      <mat-tab>
+        Second
+      </mat-tab>
+    </mat-tab-group>
+  `,
+  standalone: true,
+  imports: [MatTabsModule],
+})
+class TabsWithAlignCenter {}
