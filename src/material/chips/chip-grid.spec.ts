@@ -396,23 +396,23 @@ describe('MatChipGrid', () => {
 
           dispatchKeyboardEvent(firstNativeChip, 'keydown', TAB);
 
-          expect(chipGridInstance.tabIndex)
+          expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
           flush();
 
-          expect(chipGridInstance.tabIndex)
+          expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 0')
             .toBe(0);
         }));
 
-        it(`should use user defined tabIndex`, fakeAsync(() => {
+        it('should use user defined tabIndex', fakeAsync(() => {
           chipGridInstance.tabIndex = 4;
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
-          expect(chipGridInstance.tabIndex)
+          expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to user defined value 4.')
             .toBe(4);
 
@@ -420,13 +420,13 @@ describe('MatChipGrid', () => {
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
           dispatchKeyboardEvent(firstNativeChip, 'keydown', TAB);
-          expect(chipGridInstance.tabIndex)
+          expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
           flush();
 
-          expect(chipGridInstance.tabIndex)
+          expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 4')
             .toBe(4);
         }));

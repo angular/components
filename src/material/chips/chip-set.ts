@@ -192,17 +192,17 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
    * it back to the first chip, creating a focus trap, if it user tries to tab away.
    */
   protected _allowFocusEscape() {
-    if (this.tabIndex !== -1) {
-      const previousTabIndex = this.tabIndex;
-      this.tabIndex = -1;
-      this._changeDetectorRef.markForCheck();
+    const previous = this._elementRef.nativeElement.tabIndex;
+
+    if (previous !== -1) {
+      // Set the tabindex directly on the element, instead of going through
+      // the data binding, because we aren't guaranteed that change detection
+      // will run quickly enough to allow focus to escape.
+      this._elementRef.nativeElement.tabIndex = -1;
 
       // Note that this needs to be a `setTimeout`, because a `Promise.resolve`
       // doesn't allow enough time for the focus to escape.
-      setTimeout(() => {
-        this.tabIndex = previousTabIndex;
-        this._changeDetectorRef.markForCheck();
-      });
+      setTimeout(() => (this._elementRef.nativeElement.tabIndex = previous));
     }
   }
 

@@ -367,13 +367,13 @@ describe('MatChipListbox', () => {
         it('should allow focus to escape when tabbing away', fakeAsync(() => {
           dispatchKeyboardEvent(chipListboxNativeElement, 'keydown', TAB);
 
-          expect(chipListboxInstance.tabIndex)
+          expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
           flush();
 
-          expect(chipListboxInstance.tabIndex)
+          expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 0')
             .toBe(0);
         }));
@@ -384,19 +384,19 @@ describe('MatChipListbox', () => {
 
           fixture.detectChanges();
 
-          expect(chipListboxInstance.tabIndex)
+          expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to user defined value 4.')
             .toBe(4);
 
           dispatchKeyboardEvent(chipListboxNativeElement, 'keydown', TAB);
 
-          expect(chipListboxInstance.tabIndex)
+          expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
           flush();
 
-          expect(chipListboxInstance.tabIndex)
+          expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 4')
             .toBe(4);
         }));
