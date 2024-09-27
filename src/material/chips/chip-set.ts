@@ -158,12 +158,10 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
 
   /** Syncs the chip-set's state with the individual chips. */
   protected _syncChipsState() {
-    if (this._chips) {
-      this._chips.forEach(chip => {
-        chip.disabled = this._disabled;
-        chip._changeDetectorRef.markForCheck();
-      });
-    }
+    this._chips?.forEach(chip => {
+      chip._chipListDisabled = this._disabled;
+      chip._changeDetectorRef.markForCheck();
+    });
   }
 
   /** Dummy method for subclasses to override. Base chip set cannot be focused. */

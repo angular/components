@@ -113,6 +113,15 @@ describe('MatChipListbox', () => {
         expect(chipListboxNativeElement.hasAttribute('role')).toBe(false);
         expect(chipListboxNativeElement.hasAttribute('aria-required')).toBe(false);
       });
+
+      it('should toggle the chips disabled state based on whether it is disabled', fakeAsync(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
+        const disabledFixture = createComponent(IndividuallyDisabledChipInsideForm);
+        disabledFixture.detectChanges();
+        flush();
+        expect(disabledFixture.componentInstance.chip.disabled).toBe(true);
+      }));
     });
 
     describe('with selected chips', () => {
@@ -1042,4 +1051,18 @@ class FalsyBasicChipListbox {
 
   @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
   @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+}
+
+// Based on #29783.
+@Component({
+  template: `
+    <form>
+      <mat-chip-listbox name="test" [ngModel]="null">
+        <mat-chip-option value="1" disabled>Hello</mat-chip-option>
+      </mat-chip-listbox>
+    </form>
+  `,
+})
+class IndividuallyDisabledChipInsideForm {
+  @ViewChild(MatChipOption) chip: MatChipOption;
 }
