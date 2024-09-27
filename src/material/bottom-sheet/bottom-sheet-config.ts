@@ -72,4 +72,13 @@ export class MatBottomSheetConfig<D = any> {
 
   /** Scroll strategy to be used for the bottom sheet. */
   scrollStrategy?: ScrollStrategy;
+
+  /** Height for the bottom sheet. */
+  height?: string = '';
+
+  /** Minimum height for the bottom sheet. If a number is provided, assumes pixel units. */
+  minHeight?: number | string;
+
+  /** Maximum height for the bottom sheet. If a number is provided, assumes pixel units. */
+  maxHeight?: number | string;
 }
