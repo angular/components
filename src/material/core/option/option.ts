@@ -23,6 +23,8 @@ import {
   ViewChild,
   booleanAttribute,
   inject,
+  isSignal,
+  Signal,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
@@ -87,6 +89,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   private _parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});
   group = inject<MatOptgroup>(MAT_OPTGROUP, {optional: true});
 
+  private _signalDisableRipple = false;
   private _selected = false;
   private _active = false;
   private _disabled = false;
@@ -119,7 +122,9 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   /** Whether ripples for the option are disabled. */
   get disableRipple(): boolean {
-    return !!(this._parent && this._parent.disableRipple);
+    return this._signalDisableRipple
+      ? (this._parent!.disableRipple as Signal<boolean>)()
+      : !!this._parent?.disableRipple;
   }
 
   /** Whether to display checkmark for single-selection. */
@@ -138,7 +143,9 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   readonly _stateChanges = new Subject<void>();
 
   constructor(...args: unknown[]);
-  constructor() {}
+  constructor() {
+    this._signalDisableRipple = !!this._parent && isSignal(this._parent.disableRipple);
+  }
 
   /**
    * Whether or not the option is currently active and ready to be selected.

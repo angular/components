@@ -25,6 +25,7 @@ import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
 
@@ -295,7 +296,7 @@ export class MatOptionModule {
 // @public
 export interface MatOptionParentComponent {
     // (undocumented)
-    disableRipple?: boolean;
+    disableRipple?: boolean | Signal<boolean>;
     // (undocumented)
     hideSingleSelectionIndicator?: boolean;
     // (undocumented)
