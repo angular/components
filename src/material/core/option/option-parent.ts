@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken} from '@angular/core';
+import {InjectionToken, Signal} from '@angular/core';
 
 /**
  * Describes a parent component that manages a list of options.
@@ -14,7 +14,7 @@ import {InjectionToken} from '@angular/core';
  * @docs-private
  */
 export interface MatOptionParentComponent {
-  disableRipple?: boolean;
+  disableRipple?: boolean | Signal<boolean>;
   multiple?: boolean;
   inertGroups?: boolean;
   hideSingleSelectionIndicator?: boolean;
