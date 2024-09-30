@@ -679,12 +679,12 @@ describe('LuxonDateAdapter', () => {
     ).toBeGreaterThan(0);
   });
 
-  it('should add milliseconds to a date', () => {
-    const amount = 1234567;
+  it('should add seconds to a date', () => {
+    const amount = 20;
     const initial = DateTime.local(2024, JAN, 1, 12, 34, 56);
-    const result = adapter.addMilliseconds(initial, amount);
+    const result = adapter.addSeconds(initial, amount);
     expect(result).not.toBe(initial);
-    expect(result.toMillis() - initial.toMillis()).toBe(amount);
+    expect(result.toMillis() - initial.toMillis()).toBe(amount * 1000);
   });
 });
 

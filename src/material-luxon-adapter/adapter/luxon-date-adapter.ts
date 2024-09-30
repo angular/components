@@ -296,6 +296,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
       hour: hours,
       minute: minutes,
       second: seconds,
+      millisecond: 0,
     });
   }
 
@@ -323,8 +324,8 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     return result;
   }
 
-  override addMilliseconds(date: LuxonDateTime, amount: number): LuxonDateTime {
-    return date.reconfigure(this._getOptions()).plus({milliseconds: amount});
+  override addSeconds(date: LuxonDateTime, amount: number): LuxonDateTime {
+    return date.reconfigure(this._getOptions()).plus({seconds: amount});
   }
 
   /** Gets the options that should be used when constructing a new `DateTime` object. */

@@ -569,12 +569,12 @@ describe('DateFnsAdapter', () => {
     ).toBeGreaterThan(0);
   });
 
-  it('should add milliseconds to a date', () => {
-    const amount = 1234567;
+  it('should add seconds to a date', () => {
+    const amount = 20;
     const initial = new Date(2024, JAN, 1, 12, 34, 56);
-    const result = adapter.addMilliseconds(initial, amount);
+    const result = adapter.addSeconds(initial, amount);
     expect(result).not.toBe(initial);
-    expect(result.getTime() - initial.getTime()).toBe(amount);
+    expect(result.getTime() - initial.getTime()).toBe(amount * 1000);
   });
 });
 

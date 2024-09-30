@@ -660,11 +660,11 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should add milliseconds to a date', () => {
-    const amount = 1234567;
+    const amount = 20;
     const initial = moment([2024, JAN, 1, 12, 34, 56]);
-    const result = adapter.addMilliseconds(initial, amount);
+    const result = adapter.addSeconds(initial, amount);
     expect(result).not.toBe(initial);
-    expect(result.valueOf() - initial.valueOf()).toBe(amount);
+    expect(result.valueOf() - initial.valueOf()).toBe(amount * 1000);
   });
 });
 
