@@ -102,7 +102,24 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   getFirstDayOfWeek(): number {
-    // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
+    // At the time of writing `Intl.Locale` isn't available
+    // in the internal types so we need to cast to `any`.
+    if (typeof Intl !== 'undefined' && (Intl as any).Locale) {
+      const locale = new (Intl as any).Locale(this.locale) as {
+        getWeekInfo?: () => {firstDay: number};
+        weekInfo?: {firstDay: number};
+      };
+
+      // Some browsers implement a `getWeekInfo` method while others have a `weekInfo` getter.
+      // Note that this isn't supported in all browsers so we need to null check it.
+      const firstDay = (locale.getWeekInfo?.() || locale.weekInfo)?.firstDay ?? 0;
+
+      // `weekInfo.firstDay` is a number between 1 and 7 where, starting from Monday,
+      // whereas our representation is 0 to 6 where 0 is Sunday so we need to normalize it.
+      return firstDay === 7 ? 0 : firstDay;
+    }
+
+    // Default to Sunday if the browser doesn't provide the week information.
     return 0;
   }
 
