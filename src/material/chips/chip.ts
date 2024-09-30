@@ -158,6 +158,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** Id of a span that contains this chip's aria description. */
   _ariaDescriptionId = `${this.id}-aria-description`;
 
+  /** Whether the chip list is disabled. */
+  _chipListDisabled: boolean = false;
+
   private _textElement!: HTMLElement;
 
   /**
@@ -201,7 +204,13 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** Whether the chip is disabled. */
   @Input({transform: booleanAttribute})
-  disabled: boolean = false;
+  get disabled(): boolean {
+    return this._disabled || this._chipListDisabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = value;
+  }
+  private _disabled = false;
 
   /** Emitted when a chip is to be removed. */
   @Output() readonly removed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
