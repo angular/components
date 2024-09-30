@@ -66,9 +66,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     protected basicChipAttrName: string;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
+    _chipListDisabled: boolean;
     color?: string | null;
     readonly destroyed: EventEmitter<MatChipEvent>;
-    disabled: boolean;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     disableRipple: boolean;
     // (undocumented)
     protected _document: Document;
