@@ -22,6 +22,7 @@ import {
   Injector,
 } from '@angular/core';
 import {
+  _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleConfig,
   RippleGlobalOptions,
@@ -180,6 +181,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
       optional: true,
     });

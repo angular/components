@@ -46,6 +46,8 @@ import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
+import {_StructuralStylesLoader} from '@angular/material/core/focus-indicators/structural-styles';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 // Increasing integer for generating unique ids for tab nav components.
 let nextUniqueId = 0;
@@ -336,6 +338,7 @@ export class MatTabLink
   constructor() {
     super();
 
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const globalRippleOptions = inject<RippleGlobalOptions | null>(MAT_RIPPLE_GLOBAL_OPTIONS, {
       optional: true,
     });

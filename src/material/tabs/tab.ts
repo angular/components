@@ -27,6 +27,8 @@ import {MatTabContent} from './tab-content';
 import {MAT_TAB, MatTabLabel} from './tab-label';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject} from 'rxjs';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Used to provide a tab group to a tab without causing a circular dependency.
@@ -127,7 +129,9 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   isActive = false;
 
   constructor(...args: unknown[]);
-  constructor() {}
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {

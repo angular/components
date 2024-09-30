@@ -566,6 +566,14 @@ export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 // @public
+export class _StructuralStylesLoader {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<_StructuralStylesLoader, "structural-styles", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<_StructuralStylesLoader, never>;
+}
+
+// @public
 export type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 
 // @public

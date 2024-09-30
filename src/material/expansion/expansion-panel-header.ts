@@ -32,6 +32,8 @@ import {
   MatExpansionPanelDefaultOptions,
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Header element of a `<mat-expansion-panel>`.
@@ -73,6 +75,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const panel = this.panel;
     const defaultOptions = inject<MatExpansionPanelDefaultOptions>(
       MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,

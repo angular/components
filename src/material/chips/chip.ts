@@ -35,6 +35,7 @@ import {
   inject,
 } from '@angular/core';
 import {
+  _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRippleLoader,
   RippleGlobalOptions,
@@ -43,6 +44,7 @@ import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 let uid = 0;
 
@@ -244,6 +246,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._animationsDisabled = animationMode === 'NoopAnimations';
     this._monitorFocus();
