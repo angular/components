@@ -355,8 +355,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return this.invalid();
   }
 
-  override addMilliseconds(date: Date, amount: number): Date {
-    return new Date(date.getTime() + amount);
+  override addSeconds(date: Date, amount: number): Date {
+    return new Date(date.getTime() + amount * 1000);
   }
 
   /** Creates a date but allows the month and date to overflow. */

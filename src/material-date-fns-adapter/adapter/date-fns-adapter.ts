@@ -23,7 +23,7 @@ import {
   addYears,
   addMonths,
   addDays,
-  addMilliseconds,
+  addSeconds,
   isValid,
   isDate,
   format,
@@ -262,7 +262,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
       }
     }
 
-    return set(this.clone(target), {hours, minutes, seconds});
+    return set(this.clone(target), {hours, minutes, seconds, milliseconds: 0});
   }
 
   override getHours(date: Date): number {
@@ -281,7 +281,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return this.parse(value, parseFormat);
   }
 
-  override addMilliseconds(date: Date, amount: number): Date {
-    return addMilliseconds(date, amount);
+  override addSeconds(date: Date, amount: number): Date {
+    return addSeconds(date, amount);
   }
 }

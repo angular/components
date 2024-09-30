@@ -243,11 +243,11 @@ export abstract class DateAdapter<D, L = any> {
   }
 
   /**
-   * Adds an amount of milliseconds to the specified date.
-   * @param date Date to which to add the milliseconds.
-   * @param amount Amount of milliseconds to add to the date.
+   * Adds an amount of seconds to the specified date.
+   * @param date Date to which to add the seconds.
+   * @param amount Amount of seconds to add to the date.
    */
-  addMilliseconds(date: D, amount: number): D {
+  addSeconds(date: D, amount: number): D {
     throw new Error(NOT_IMPLEMENTED);
   }
 

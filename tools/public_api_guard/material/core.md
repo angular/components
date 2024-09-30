@@ -59,7 +59,7 @@ export abstract class DateAdapter<D, L = any> {
     abstract addCalendarDays(date: D, days: number): D;
     abstract addCalendarMonths(date: D, months: number): D;
     abstract addCalendarYears(date: D, years: number): D;
-    addMilliseconds(date: D, amount: number): D;
+    addSeconds(date: D, amount: number): D;
     clampDate(date: D, min?: D | null, max?: D | null): D;
     abstract clone(date: D): D;
     compareDate(first: D, second: D): number;
@@ -409,7 +409,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     addCalendarYears(date: Date, years: number): Date;
     // (undocumented)
-    addMilliseconds(date: Date, amount: number): Date;
+    addSeconds(date: Date, amount: number): Date;
     // (undocumented)
     clone(date: Date): Date;
     // (undocumented)

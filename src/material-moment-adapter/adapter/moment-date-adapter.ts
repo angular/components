@@ -266,7 +266,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
       }
     }
 
-    return this.clone(target).set({hours, minutes, seconds});
+    return this.clone(target).set({hours, minutes, seconds, milliseconds: 0});
   }
 
   override getHours(date: Moment): number {
@@ -285,8 +285,8 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this.parse(value, parseFormat);
   }
 
-  override addMilliseconds(date: Moment, amount: number): Moment {
-    return this.clone(date).add({milliseconds: amount});
+  override addSeconds(date: Moment, amount: number): Moment {
+    return this.clone(date).add({seconds: amount});
   }
 
   /** Creates a Moment instance while respecting the current UTC settings. */
