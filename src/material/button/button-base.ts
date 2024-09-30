@@ -22,7 +22,8 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {MatRippleLoader, ThemePalette} from '@angular/material/core';
+import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
@@ -156,6 +157,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const config = inject(MAT_BUTTON_CONFIG, {optional: true});
     const element = this._elementRef.nativeElement;
     const classList = (element as HTMLElement).classList;

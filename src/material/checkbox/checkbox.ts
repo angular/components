@@ -36,12 +36,13 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {MatRipple, _MatInternalFormField} from '@angular/material/core';
+import {MatRipple, _MatInternalFormField, _StructuralStylesLoader} from '@angular/material/core';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
   MatCheckboxDefaultOptions,
 } from './checkbox-config';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * Represents the different states that require custom transitions between them.
@@ -250,6 +251,7 @@ export class MatCheckbox
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     this._options = this._options || defaults;
     this.color = this._options.color || defaults.color;

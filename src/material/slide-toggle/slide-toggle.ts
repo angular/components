@@ -40,7 +40,8 @@ import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
-import {_MatInternalFormField, MatRipple} from '@angular/material/core';
+import {_MatInternalFormField, _StructuralStylesLoader, MatRipple} from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * @deprecated Will stop being exported.
@@ -212,6 +213,7 @@ export class MatSlideToggle
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     const defaults = this.defaults;
     const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});

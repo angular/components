@@ -23,9 +23,10 @@ import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
 import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
-import {MatRipple, ThemePalette} from '@angular/material/core';
+import {_StructuralStylesLoader, MatRipple, ThemePalette} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
 import {NgTemplateOutlet} from '@angular/common';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 @Component({
   selector: 'mat-step-header',
@@ -88,6 +89,7 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
   constructor() {
     super();
 
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const changeDetectorRef = inject(ChangeDetectorRef);
     this._intlSubscription = this._intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }

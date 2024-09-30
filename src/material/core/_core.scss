@@ -2,12 +2,10 @@
 @use './tokens/m2/mat/app' as tokens-mat-app;
 @use './tokens/token-utils';
 @use './style/elevation';
-@use './focus-indicators/private';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
   @include cdk.a11y-visually-hidden();
-  @include private.structural-styling();
 }
 
 // Emits the mat-app-background CSS class. This predefined class sets the

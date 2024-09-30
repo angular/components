@@ -28,7 +28,12 @@ import {
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, ThemePalette} from '@angular/material/core';
+import {
+  _StructuralStylesLoader,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+  ThemePalette,
+} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {
   _MatThumb,
@@ -43,6 +48,7 @@ import {
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
 import {MatSliderVisualThumb} from './slider-thumb';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
@@ -404,6 +410,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     this._noopAnimations = animationMode === 'NoopAnimations';
 

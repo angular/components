@@ -34,7 +34,8 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, MatPseudoCheckbox} from '@angular/material/core';
+import {MatRipple, MatPseudoCheckbox, _StructuralStylesLoader} from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * @deprecated No longer used.
@@ -668,6 +669,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const toggleGroup = inject<MatButtonToggleGroup>(MAT_BUTTON_TOGGLE_GROUP, {optional: true})!;
     const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     const defaultOptions = inject<MatButtonToggleDefaultOptions>(
