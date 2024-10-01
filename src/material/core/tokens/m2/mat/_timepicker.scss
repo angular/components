@@ -1,5 +1,7 @@
 @use '../../token-definition';
+@use '../../../theming/inspection';
 @use '../../../style/sass-utils';
+@use '../../../style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, timepicker);
@@ -7,21 +9,22 @@ $prefix: (mat, timepicker);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    container-shape: 4px,
+    container-elevation-shadow: elevation.get-box-shadow(8),
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    enabled-trigger-text-color: hotpink,
+    container-background-color: inspection.get-theme-color($theme, background, card)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return (
-    trigger-text-font: fantasy,
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

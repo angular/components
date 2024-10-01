@@ -1,10 +1,53 @@
+@use '@angular/cdk';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/timepicker' as tokens-mat-timepicker;
 
-.mat-timepicker {
+mat-timepicker {
+  display: none;
+}
+
+.mat-timepicker-panel {
+  width: 100%;
+  max-height: 256px;
+  transform-origin: center top;
+  overflow: auto;
+  padding: 8px 0;
+  box-sizing: border-box;
+
   @include token-utils.use-tokens(
     tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
-    @include token-utils.create-token-slot(color, enabled-trigger-text-color);
-    @include token-utils.create-token-slot(font-family, trigger-text-font);
+    @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+    @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+    @include token-utils.create-token-slot(background-color, container-background-color);
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  .mat-timepicker-above & {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    @include token-utils.use-tokens(
+      tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
+      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+    }
+  }
+}
+
+// stylelint-disable material/no-prefixes
+.mat-timepicker-input:read-only {
+  cursor: pointer;
+}
+// stylelint-enable material/no-prefixes
+
+@include cdk.high-contrast {
+  .mat-timepicker-toggle-default-icon {
+    // On Chromium-based browsers the icon doesn't appear to inherit the text color in high
+    // contrast mode so we have to set it explicitly. This is a no-op on IE and Firefox.
+    color: CanvasText;
   }
 }

@@ -1,1 +1,22 @@
-// TODO
+.demo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 100px;
+}
+
+.demo-card {
+  width: 600px;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+.demo-form-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2%;
+  margin-top: 16px;
+
+  mat-form-field {
+    flex-basis: 49%;
+  }
+}
