@@ -639,23 +639,25 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should compare times', () => {
-    const base = [2024, JAN, 1] as const;
+    // Use different dates to guarantee that we only compare the times.
+    const aDate = [2024, JAN, 1] as const;
+    const bDate = [2024, FEB, 7] as const;
 
     expect(
-      adapter.compareTime(moment([...base, 12, 0, 0]), moment([...base, 13, 0, 0])),
+      adapter.compareTime(moment([...aDate, 12, 0, 0]), moment([...bDate, 13, 0, 0])),
     ).toBeLessThan(0);
     expect(
-      adapter.compareTime(moment([...base, 12, 50, 0]), moment([...base, 12, 51, 0])),
+      adapter.compareTime(moment([...aDate, 12, 50, 0]), moment([...bDate, 12, 51, 0])),
     ).toBeLessThan(0);
-    expect(adapter.compareTime(moment([...base, 1, 2, 3]), moment([...base, 1, 2, 3]))).toBe(0);
+    expect(adapter.compareTime(moment([...aDate, 1, 2, 3]), moment([...bDate, 1, 2, 3]))).toBe(0);
     expect(
-      adapter.compareTime(moment([...base, 13, 0, 0]), moment([...base, 12, 0, 0])),
+      adapter.compareTime(moment([...aDate, 13, 0, 0]), moment([...bDate, 12, 0, 0])),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(moment([...base, 12, 50, 11]), moment([...base, 12, 50, 10])),
+      adapter.compareTime(moment([...aDate, 12, 50, 11]), moment([...bDate, 12, 50, 10])),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(moment([...base, 13, 0, 0]), moment([...base, 10, 59, 59])),
+      adapter.compareTime(moment([...aDate, 13, 0, 0]), moment([...bDate, 10, 59, 59])),
     ).toBeGreaterThan(0);
   });
 

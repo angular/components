@@ -549,23 +549,25 @@ describe('DateFnsAdapter', () => {
   });
 
   it('should compare times', () => {
-    const base = [2024, JAN, 1] as const;
+    // Use different dates to guarantee that we only compare the times.
+    const aDate = [2024, JAN, 1] as const;
+    const bDate = [2024, FEB, 7] as const;
 
     expect(
-      adapter.compareTime(new Date(...base, 12, 0, 0), new Date(...base, 13, 0, 0)),
+      adapter.compareTime(new Date(...aDate, 12, 0, 0), new Date(...bDate, 13, 0, 0)),
     ).toBeLessThan(0);
     expect(
-      adapter.compareTime(new Date(...base, 12, 50, 0), new Date(...base, 12, 51, 0)),
+      adapter.compareTime(new Date(...aDate, 12, 50, 0), new Date(...bDate, 12, 51, 0)),
     ).toBeLessThan(0);
-    expect(adapter.compareTime(new Date(...base, 1, 2, 3), new Date(...base, 1, 2, 3))).toBe(0);
+    expect(adapter.compareTime(new Date(...aDate, 1, 2, 3), new Date(...bDate, 1, 2, 3))).toBe(0);
     expect(
-      adapter.compareTime(new Date(...base, 13, 0, 0), new Date(...base, 12, 0, 0)),
+      adapter.compareTime(new Date(...aDate, 13, 0, 0), new Date(...bDate, 12, 0, 0)),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(new Date(...base, 12, 50, 11), new Date(...base, 12, 50, 10)),
+      adapter.compareTime(new Date(...aDate, 12, 50, 11), new Date(...bDate, 12, 50, 10)),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(new Date(...base, 13, 0, 0), new Date(...base, 10, 59, 59)),
+      adapter.compareTime(new Date(...aDate, 13, 0, 0), new Date(...bDate, 10, 59, 59)),
     ).toBeGreaterThan(0);
   });
 
