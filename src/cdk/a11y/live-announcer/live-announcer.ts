@@ -16,6 +16,7 @@ import {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
 } from './live-announcer-tokens';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 let uniqueIds = 0;
 
@@ -256,7 +257,9 @@ export class CdkAriaLive implements OnDestroy {
 
   constructor(...args: unknown[]);
 
-  constructor() {}
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+  }
 
   ngOnDestroy() {
     if (this._subscription) {
