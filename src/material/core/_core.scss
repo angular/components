@@ -16,7 +16,10 @@
 
   @include cdk.a11y-visually-hidden();
   @include private.structural-styling();
+}
 
+// Mixin that provides the .mat-app-background class.
+@mixin app-background() {
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.
   @at-root {
@@ -26,7 +29,14 @@
         @include token-utils.create-token-slot(background-color, background-color, transparent);
         @include token-utils.create-token-slot(color, text-color, inherit);
       }
+    }
+  }
+}
 
+// Mixin that provides the .mat-elevation-* classes.
+@mixin elevation-classes() {
+  @at-root {
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
       // Provides external CSS classes for each elevation value. Each CSS class is formatted as
       // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
       // is elevated.
@@ -42,9 +52,3 @@
     }
   }
 }
-
-// Mixin that provides the .mat-app-background class.
-@mixin app-background() {}
-
-// Mixin that provides the .mat-elevation-* classes.
-@mixin elevation-classes() {}
