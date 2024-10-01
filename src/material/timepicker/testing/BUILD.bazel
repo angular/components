@@ -9,7 +9,9 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//src/cdk/coercion",
         "//src/cdk/testing",
+        "//src/material/core/testing",
         "//src/material/timepicker",
     ],
 )
@@ -27,6 +29,7 @@ ng_test_library(
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
+        "//src/material/core",
         "//src/material/timepicker",
         "@npm//@angular/platform-browser",
     ],
