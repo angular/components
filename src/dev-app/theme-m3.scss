@@ -129,3 +129,8 @@ $density-scales: (-1, -2, -3, -4, minimum, maximum);
 .demo-config-buttons button {
   margin: 4px;
 }
+
+// In M3 we need some spacing around the list in the sidenav.
+mat-nav-list.demo-nav-list {
+  margin: 8px;
+}
