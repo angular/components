@@ -31,7 +31,7 @@ import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 import {MatRipple} from '../ripple/ripple';
 import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
-import {_StructuralStylesLoader} from '@angular/material/core';
+import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
