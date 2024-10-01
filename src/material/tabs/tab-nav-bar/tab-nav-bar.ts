@@ -34,6 +34,7 @@ import {
   RippleGlobalOptions,
   RippleTarget,
   ThemePalette,
+  _StructuralStylesLoader,
 } from '@angular/material/core';
 import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -46,7 +47,6 @@ import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
-import {_StructuralStylesLoader} from '@angular/material/core/focus-indicators/structural-styles';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 // Increasing integer for generating unique ids for tab nav components.
