@@ -657,25 +657,30 @@ describe('LuxonDateAdapter', () => {
   });
 
   it('should compare times', () => {
-    const base = [2024, JAN, 1] as const;
+    // Use different dates to guarantee that we only compare the times.
+    const aDate = [2024, JAN, 1] as const;
+    const bDate = [2024, FEB, 7] as const;
 
     expect(
-      adapter.compareTime(DateTime.local(...base, 12, 0, 0), DateTime.local(...base, 13, 0, 0)),
+      adapter.compareTime(DateTime.local(...aDate, 12, 0, 0), DateTime.local(...bDate, 13, 0, 0)),
     ).toBeLessThan(0);
     expect(
-      adapter.compareTime(DateTime.local(...base, 12, 50, 0), DateTime.local(...base, 12, 51, 0)),
+      adapter.compareTime(DateTime.local(...aDate, 12, 50, 0), DateTime.local(...bDate, 12, 51, 0)),
     ).toBeLessThan(0);
     expect(
-      adapter.compareTime(DateTime.local(...base, 1, 2, 3), DateTime.local(...base, 1, 2, 3)),
+      adapter.compareTime(DateTime.local(...aDate, 1, 2, 3), DateTime.local(...bDate, 1, 2, 3)),
     ).toBe(0);
     expect(
-      adapter.compareTime(DateTime.local(...base, 13, 0, 0), DateTime.local(...base, 12, 0, 0)),
+      adapter.compareTime(DateTime.local(...aDate, 13, 0, 0), DateTime.local(...bDate, 12, 0, 0)),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(DateTime.local(...base, 12, 50, 11), DateTime.local(...base, 12, 50, 10)),
+      adapter.compareTime(
+        DateTime.local(...aDate, 12, 50, 11),
+        DateTime.local(...bDate, 12, 50, 10),
+      ),
     ).toBeGreaterThan(0);
     expect(
-      adapter.compareTime(DateTime.local(...base, 13, 0, 0), DateTime.local(...base, 10, 59, 59)),
+      adapter.compareTime(DateTime.local(...aDate, 13, 0, 0), DateTime.local(...bDate, 10, 59, 59)),
     ).toBeGreaterThan(0);
   });
 
