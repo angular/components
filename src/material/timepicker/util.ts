@@ -6,10 +6,29 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {InjectionToken} from '@angular/core';
 import {DateAdapter, MatDateFormats} from '@angular/material/core';
 
 /** Pattern that interval strings have to match. */
 const INTERVAL_PATTERN = /^(\d*\.?\d+)(h|m|s)?$/i;
+
+/**
+ * Object that can be used to configure the default options for the timepicker component.
+ */
+export interface MatTimepickerConfig {
+  /** Default interval for all time pickers. */
+  interval?: string | number;
+
+  /** Whether ripples inside the timepicker should be disabled by default. */
+  disableRipple?: boolean;
+}
+
+/**
+ * Injection token that can be used to configure the default options for the timepicker component.
+ */
+export const MAT_TIMEPICKER_CONFIG = new InjectionToken<MatTimepickerConfig>(
+  'MAT_TIMEPICKER_CONFIG',
+);
 
 /**
  * Time selection option that can be displayed within a `mat-timepicker`.
@@ -83,4 +102,38 @@ export function generateOptions<D>(
   }
 
   return options;
+}
+
+/** Checks whether a date adapter is set up correctly for use with the timepicker. */
+export function validateAdapter(
+  adapter: DateAdapter<unknown> | null,
+  formats: MatDateFormats | null,
+) {
+  function missingAdapterError(provider: string) {
+    return Error(
+      `MatTimepicker: No provider found for ${provider}. You must add one of the following ` +
+        `to your app config: provideNativeDateAdapter, provideDateFnsAdapter, ` +
+        `provideLuxonDateAdapter, provideMomentDateAdapter, or provide a custom implementation.`,
+    );
+  }
+
+  if (!adapter) {
+    throw missingAdapterError('DateAdapter');
+  }
+
+  if (!formats) {
+    throw missingAdapterError('MAT_DATE_FORMATS');
+  }
+
+  if (
+    formats.display.timeInput === undefined ||
+    formats.display.timeOptionLabel === undefined ||
+    formats.parse.timeInput === undefined
+  ) {
+    throw new Error(
+      'MatTimepicker: Incomplete `MAT_DATE_FORMATS` has been provided. ' +
+        '`MAT_DATE_FORMATS` must provide `display.timeInput`, `display.timeOptionLabel` ' +
+        'and `parse.timeInput` formats in order to be compatible with MatTimepicker.',
+    );
+  }
 }

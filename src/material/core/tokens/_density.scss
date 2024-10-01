@@ -138,6 +138,7 @@ $_density-tokens: (
   (mat, slider): (),
   (mat, snack-bar): (),
   (mat, sort): (),
+  (mat, timepicker): (),
   (mat, standard-button-toggle): (
     height: (40px, 40px, 40px, 36px, 24px),
   ),
@@ -157,8 +158,6 @@ $_density-tokens: (
   (mat, tree): (
     node-min-height: (48px, 44px, 40px, 36px, 28px),
   ),
-  // TODO: timepicker
-  (mat, timepicker): (),
 );
 
 /// Gets the value for the given density scale from the given set of density values.

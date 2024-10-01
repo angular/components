@@ -7,10 +7,13 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatTimepicker} from './timepicker';
+import {MatTimepickerInput} from './timepicker-input';
+import {MatTimepickerToggle} from './timepicker-toggle';
 
 @NgModule({
-  imports: [MatTimepicker],
-  exports: [MatTimepicker],
+  imports: [MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
+  exports: [CdkScrollableModule, MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
 })
 export class MatTimepickerModule {}
