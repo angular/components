@@ -18,7 +18,8 @@
   @include private.structural-styling();
 }
 
-// Mixin that provides the .mat-app-background class.
+// Emits the mat-app-background CSS class. This predefined class sets the
+// background color and text color of an element.
 @mixin app-background() {
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.
@@ -33,7 +34,10 @@
   }
 }
 
-// Mixin that provides the .mat-elevation-* classes.
+// Emits CSS classes for applying elevation. These classes follow the pattern
+// mat-elevation-z#, where # is the elevation number you want, from 0 to 24.
+// These predefined classes use the CSS box-shadow settings defined by the
+// Material Design specification.
 @mixin elevation-classes() {
   @at-root {
     @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
