@@ -45,8 +45,8 @@ mat-icon {
   }
 }
 
-.mat-icon:has(div[style*="letter-spacing:"]):has(div[style*="word-spacing:"]) {
-  /* Apply styles to avoid text spacing */
+.mat-icon:has(div[style*='letter-spacing:']):has(div[style*='word-spacing:']) {
+  // Apply styles to avoid text spacing
   letter-spacing: 0 !important;
   word-spacing: 0 !important;
   line-height: 1 !important;
