@@ -8,3 +8,5 @@
 
 export * from './timepicker-harness';
 export * from './timepicker-harness-filters';
+export * from './timepicker-input-harness';
+export * from './timepicker-toggle-harness';
