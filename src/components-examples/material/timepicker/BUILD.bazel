@@ -38,8 +38,10 @@ ng_test_library(
         ":timepicker",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
+        "//src/material/core",
         "//src/material/timepicker",
         "//src/material/timepicker/testing",
+        "@npm//@angular/platform-browser",
     ],
 )
 
