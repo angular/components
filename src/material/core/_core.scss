@@ -6,6 +6,13 @@
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
+  @include cdk.a11y-visually-hidden();
+  @include private.structural-styling();
+}
+
+// Emits the mat-app-background CSS class. This predefined class sets the
+// background color and text color of an element.
+@mixin app-background() {
   // TODO: Move ripple styles to be dynamically loaded instead of in core.
   // This variable is used as a fallback for the ripple element's
   // background color. However, if it isn't defined anywhere, then MSS
@@ -14,13 +21,6 @@
     --mat-app-on-surface: initial;
   }
 
-  @include cdk.a11y-visually-hidden();
-  @include private.structural-styling();
-}
-
-// Emits the mat-app-background CSS class. This predefined class sets the
-// background color and text color of an element.
-@mixin app-background() {
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.
   @at-root {
