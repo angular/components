@@ -6,6 +6,8 @@
 
 // Include non-theme styles for core.
 @include core.core();
+@include core.app-background();
+@include core.elevation-classes();
 
 // Define a theme.
 $primary: m2.define-palette(m2.$indigo-palette);

@@ -6,6 +6,8 @@
 @use '../../typography/typography';
 
 @include core.core();
+@include core.app-background();
+@include core.elevation-classes();
 
 $theme: definition.define-theme((
   color: (
