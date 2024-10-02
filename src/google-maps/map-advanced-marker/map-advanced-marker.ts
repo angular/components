@@ -201,10 +201,6 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
         advancedMarker.title = _title;
       }
 
-      if (changes['content']) {
-        advancedMarker.content = _content;
-      }
-
       if (changes['gmpDraggable']) {
         advancedMarker.gmpDraggable = _draggable;
       }
