@@ -6,6 +6,13 @@
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin core() {
+  @include cdk.a11y-visually-hidden();
+  @include private.structural-styling();
+}
+
+// Emits the mat-app-background CSS class. This predefined class sets the
+// background color and text color of an element.
+@mixin app-background() {
   // TODO: Move ripple styles to be dynamically loaded instead of in core.
   // This variable is used as a fallback for the ripple element's
   // background color. However, if it isn't defined anywhere, then MSS
@@ -13,9 +20,6 @@
   html {
     --mat-app-on-surface: initial;
   }
-
-  @include cdk.a11y-visually-hidden();
-  @include private.structural-styling();
 
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `mat-sidenav-container`.
@@ -26,7 +30,17 @@
         @include token-utils.create-token-slot(background-color, background-color, transparent);
         @include token-utils.create-token-slot(color, text-color, inherit);
       }
+    }
+  }
+}
 
+// Emits CSS classes for applying elevation. These classes follow the pattern
+// mat-elevation-z#, where # is the elevation number you want, from 0 to 24.
+// These predefined classes use the CSS box-shadow settings defined by the
+// Material Design specification.
+@mixin elevation-classes() {
+  @at-root {
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
       // Provides external CSS classes for each elevation value. Each CSS class is formatted as
       // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
       // is elevated.
@@ -42,9 +56,3 @@
     }
   }
 }
-
-// Mixin that provides the .mat-app-background class.
-@mixin app-background() {}
-
-// Mixin that provides the .mat-elevation-* classes.
-@mixin elevation-classes() {}
