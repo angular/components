@@ -4,6 +4,10 @@
     border: none;
     padding: 0;
     color: inherit;
+
+    // Chrome sets a user agent style of `inset: 0` which combined
+    // with `align-self` can break the positioning (see #29809).
+    inset: auto;
   }
 }
 
