@@ -33,6 +33,8 @@ import {matSortAnimations} from './sort-animations';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -173,6 +175,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const defaultOptions = inject<MatSortDefaultOptions>(MAT_SORT_DEFAULT_OPTIONS, {
       optional: true,
     });

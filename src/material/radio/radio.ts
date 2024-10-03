@@ -38,8 +38,14 @@ import {
   HostAttributeToken,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, ThemePalette, _MatInternalFormField} from '@angular/material/core';
+import {
+  MatRipple,
+  ThemePalette,
+  _MatInternalFormField,
+  _StructuralStylesLoader,
+} from '@angular/material/core';
 import {Subscription} from 'rxjs';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -600,6 +606,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const radioGroup = inject<MatRadioGroup>(MAT_RADIO_GROUP, {optional: true})!;
     const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});

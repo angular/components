@@ -31,6 +31,8 @@ import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 import {MatRipple} from '../ripple/ripple';
 import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
+import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -144,6 +146,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   constructor(...args: unknown[]);
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     this._signalDisableRipple = !!this._parent && isSignal(this._parent.disableRipple);
   }
 

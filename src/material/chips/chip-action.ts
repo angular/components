@@ -16,6 +16,8 @@ import {
 } from '@angular/core';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_CHIP} from './tokens';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Section within a chip.
@@ -94,6 +96,7 @@ export class MatChipAction {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     if (this._elementRef.nativeElement.nodeName === 'BUTTON') {
       this._elementRef.nativeElement.setAttribute('type', 'button');
     }

@@ -25,6 +25,8 @@ import {
   Injector,
 } from '@angular/core';
 import {NgClass} from '@angular/common';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -208,6 +210,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     this._ngZone.runOutsideAngular(() => {
       const element = this._elementRef.nativeElement;
 

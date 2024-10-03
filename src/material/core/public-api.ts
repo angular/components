@@ -11,6 +11,7 @@ export * from './animation/animation';
 export * from './common-behaviors/index';
 export * from './datetime/index';
 export * from './error/error-options';
+export * from './focus-indicators/structural-styles';
 export * from './line/line';
 export * from './option/index';
 export * from './private/index';
