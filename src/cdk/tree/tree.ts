@@ -336,13 +336,6 @@ export class CdkTree<T, K = T>
     new Map<K, CdkTreeNode<T, K>>(),
   );
 
-  /**
-   * Synchronous cache of nodes for the `TreeKeyManager`. This is separate
-   * from `_flattenedNodes` so they can be independently updated at different
-   * times.
-   */
-  private _keyManagerNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
-
   private _keyManagerFactory = inject(TREE_KEY_MANAGER) as TreeKeyManagerFactory<CdkTreeNode<T, K>>;
 
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
@@ -357,7 +350,7 @@ export class CdkTree<T, K = T>
     // - if an expansionKey is provided, TS will infer the type of K to be
     //   the return type.
     // - if it's not, then K will be defaulted to T.
-    return this.expansionKey() ?? ((item: T) => (item as unknown as K));
+    return this.expansionKey() ?? ((item: T) => item as unknown as K);
   });
   readonly _trackByFn = computed(() => {
     const trackBy = this.trackBy();
@@ -412,16 +405,15 @@ export class CdkTree<T, K = T>
       };
     });
   });
+  /**
+   * Synchronous cache of nodes for the `TreeKeyManager`. This is separate
+   * from `_flattenedNodes` so they can be independently updated at different
+   * times.
+   */
+  private readonly _keyManagerNodes = toObservable(this._flattenedNodes);
 
   constructor(...args: unknown[]);
-  constructor() {
-    effect(
-      () => {
-        this._renderDataChanges(this._renderData());
-      },
-      {allowSignalWrites: true},
-    );
-  }
+  constructor() {}
 
   ngAfterContentInit() {
     this._initializeKeyManager();
@@ -518,22 +510,6 @@ export class CdkTree<T, K = T>
     return this._computeRenderingData(data, nodeType, selection).pipe(
       map(convertedData => ({...convertedData, nodeType}) as const),
     );
-  }
-
-  private _renderDataChanges(data: RenderingData<T> | null) {
-    if (!data) {
-      return;
-    }
-
-    if (data.nodeType === null) {
-      return;
-    }
-
-    // If we're here, then we know what our node type is, and therefore can
-    // perform our usual rendering pipeline.
-    this._updateKeyManagerItems(data.flattenedNodes);
-    // Explicitly detect the initial set of changes to this component subtree
-    this._changeDetectorRef.detectChanges();
   }
 
   private _emitExpansionChanges(expansionChanges: SelectionChange<K> | null) {
@@ -1201,10 +1177,6 @@ export class CdkTree<T, K = T>
     }
   }
 
-  private _updateKeyManagerItems(flattenedNodes: readonly T[]) {
-    this._keyManagerNodes.next(flattenedNodes);
-  }
-
   /** Traverse the flattened node data and compute parents, levels, and group data. */
   private _calculateParents(flattenedNodes: readonly T[]): void {
     const levelAccessor = this._getLevelAccessor();
@@ -1463,6 +1435,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
+    console.log(inject(ViewContainerRef));
   }
 
   ngOnInit(): void {
@@ -1501,6 +1474,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._tabindex.set(0);
+    this._changeDetectorRef.detectChanges();
     if (this._shouldFocus) {
       this._elementRef.nativeElement.focus();
     }
@@ -1509,6 +1483,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Defocus this data node. */
   unfocus(): void {
     this._tabindex.set(-1);
+    this._changeDetectorRef.detectChanges();
   }
 
   /** Emits an activation event. Implemented for TreeKeyManagerItem. */
@@ -1536,6 +1511,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Makes the node focusable. Implemented for TreeKeyManagerItem. */
   makeFocusable(): void {
     this._tabindex.set(0);
+    this._changeDetectorRef.detectChanges();
   }
 
   _focusItem() {

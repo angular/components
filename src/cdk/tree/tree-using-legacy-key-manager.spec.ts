@@ -15,7 +15,6 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
 
     fixture = TestBed.createComponent(SimpleCdkTreeApp);
     fixture.detectChanges();
-    fixture.detectChanges();
   });
 
   describe('with default node options', () => {
