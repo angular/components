@@ -13,8 +13,8 @@ import {
   TrackByFunction,
   Type,
   EventEmitter,
-  viewChildren,
-  viewChild,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -81,7 +81,7 @@ describe('CdkTree with TreeControl', () => {
     const fixture = TestBed.createComponent(SimpleCdkTreeApp);
     fixture.detectChanges();
     const spy = jasmine.createSpy('completeSpy');
-    const subscription = fixture.componentInstance.tree().viewChange.subscribe({complete: spy});
+    const subscription = fixture.componentInstance.tree.viewChange.subscribe({complete: spy});
 
     fixture.destroy();
     expect(spy).toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe('CdkTree with TreeControl', () => {
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
-        tree = component.tree();
+        tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
       });
 
@@ -216,7 +216,8 @@ describe('CdkTree with TreeControl', () => {
       });
 
       it('should be able to set zero as the indent level', () => {
-        component.paddingNodes().forEach(node => (node.level = 0));
+        fixture.detectChanges();
+        component.paddingNodes.forEach(node => (node.level = 0));
 
         const data = dataSource.data;
 
@@ -1473,8 +1474,8 @@ class SimpleCdkTreeApp {
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
   indent: number | string = 28;
 
-  readonly tree = viewChild.required<CdkTree<TestData>>(CdkTree);
-  readonly paddingNodes = viewChildren(CdkTreeNodePadding);
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
 }
 
 @Component({
