@@ -529,10 +529,10 @@ describe('MatPaginator', () => {
     fixture.detectChanges();
 
     expect(select.disabled).toBe(true);
-    expect(getPreviousButton(fixture).hasAttribute('disabled')).toBe(true);
-    expect(getNextButton(fixture).hasAttribute('disabled')).toBe(true);
-    expect(getFirstButton(fixture).hasAttribute('disabled')).toBe(true);
-    expect(getLastButton(fixture).hasAttribute('disabled')).toBe(true);
+    expect(getPreviousButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getNextButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getFirstButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getLastButton(fixture).hasAttribute('aria-disabled')).toBe(true);
   });
 
   it('should be able to configure the default options via a provider', () => {

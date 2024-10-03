@@ -119,7 +119,7 @@ $button-icon-size: 28px;
   ) {
     @include token-utils.create-token-slot(fill, enabled-icon-color);
 
-    .mat-mdc-icon-button[disabled] & {
+    .mat-mdc-icon-button[aria-disabled] & {
       @include token-utils.create-token-slot(fill, disabled-icon-color);
     }
   }
