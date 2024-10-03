@@ -41,7 +41,9 @@ import {
   Output,
   QueryList,
   TrackByFunction,
+  input,
   computed,
+  Signal,
   signal,
   effect,
   ViewChild,
@@ -50,6 +52,8 @@ import {
   numberAttribute,
   inject,
   booleanAttribute,
+  TemplateRef,
+  OnChanges,
 } from '@angular/core';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {coerceObservable} from '@angular/cdk/coercion/private';
@@ -86,7 +90,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
-import { NgTemplateOutlet } from '@angular/common';
+import {NgTemplateOutlet} from '@angular/common';
 
 type RenderingData<T> =
   | {
@@ -100,6 +104,66 @@ type RenderingData<T> =
       renderNodes: readonly T[];
     };
 
+interface TemplateParams<T, K> {
+  context: CdkTreeNodeOutletContext<T>;
+  template: TemplateRef<CdkTreeNodeOutletContext<T>>;
+  key: K;
+}
+
+class NodeOutletTemplateContext<T, K> {
+  $implicit: Signal<Array<TemplateParams<T, K>>>;
+
+  constructor(nodes: Signal<Array<TemplateParams<T, K>>>) {
+    this.$implicit = nodes;
+  }
+}
+
+/** @docs-private */
+@Directive({
+  selector: '[cdkTreeNodeRenderer]',
+  standalone: true,
+  hostDirectives: [
+    {
+      directive: NgTemplateOutlet,
+      inputs: ['ngTemplateOutlet: template', 'ngTemplateOutletContext: context'],
+    },
+  ],
+})
+export class CdkTreeNodeRenderer<T, K> implements OnChanges {
+  readonly node = input.required<TemplateParams<T, K>>();
+
+  ngOnChanges() {
+    if (CdkTreeNode.mostRecentTreeNode) {
+      CdkTreeNode.mostRecentTreeNode.data = this.node().context.$implicit;
+    }
+  }
+}
+
+/** @docs-private */
+@Component({
+  selector: 'cdk-tree-node-outlet-template',
+  template: `
+    <ng-template #outletTemplate let-nodes>
+      @for (node of nodes(); track node.key) {
+        <ng-container
+            cdkTreeNodeRenderer
+            [node]="node"
+            [template]="node.template"
+            [context]="node.context"
+            />
+      }
+    </ng-template>
+  `,
+  standalone: true,
+  styles: [`:host {display: none !important}`],
+  imports: [CdkTreeNodeRenderer],
+})
+export class CdkTreeNodeOutletTemplate<T, K> {
+  @ViewChild('outletTemplate', {static: true, read: TemplateRef}) _nodeOutletTemplate: TemplateRef<
+    NodeOutletTemplateContext<T, K>
+  >;
+}
+
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
@@ -107,16 +171,7 @@ type RenderingData<T> =
 @Component({
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
-  template: `
-    <ng-template let-nodes>
-      @for (node of nodes(); track node.key) {
-        <ng-container
-            [ngTemplateOutlet]="node.template"
-            [ngTemplateOutletContext]="node.context" />
-      }
-    </ng-template>
-    <ng-container cdkTreeNodeOutlet></ng-container>
-  `,
+  template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
@@ -129,7 +184,7 @@ type RenderingData<T> =
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [CdkTreeNodeOutlet, NgTemplateOutlet],
+  imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
   implements
@@ -145,6 +200,7 @@ export class CdkTree<T, K = T>
   private _elementRef = inject(ElementRef);
 
   private _dir = inject(Directionality);
+  private _viewContainer = inject(ViewContainerRef);
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -311,8 +367,32 @@ export class CdkTree<T, K = T>
     return this._renderData()?.flattenedNodes ?? [];
   });
   private readonly _flatNodesObs = toObservable(this._flattenedNodes);
-  private readonly _renderNodes = computed(() => {
-    return this._renderData()?.renderNodes ?? [];
+  private readonly _renderNodes = computed((): Array<TemplateParams<T, K>> => {
+    const nodes = this._renderData()?.renderNodes ?? [];
+    const levelAccessor = this._getLevelAccessor();
+
+    return nodes.map((nodeData, index) => {
+      const node = this._getNodeDef(nodeData, index);
+      const key = this._getExpansionKey(nodeData);
+      const parentData = this._parents.get(key) ?? undefined;
+
+      const context = new CdkTreeNodeOutletContext<T>(nodeData);
+      // If the tree is flat tree, then use the `getLevel` function in flat tree control
+      // Otherwise, use the level of parent node.
+      if (levelAccessor) {
+        context.level = levelAccessor(nodeData);
+      } else if (parentData !== undefined && this._levels.has(this._getExpansionKey(parentData))) {
+        context.level = this._levels.get(this._getExpansionKey(parentData))! + 1;
+      } else {
+        context.level = 0;
+      }
+      this._levels.set(key, context.level);
+      return {
+        context,
+        template: node.template,
+        key,
+      };
+    });
   });
 
   constructor(...args: unknown[]);
@@ -353,6 +433,11 @@ export class CdkTree<T, K = T>
 
   ngAfterViewInit() {
     this._viewInit = true;
+    const componentRef = this._viewContainer.createComponent(CdkTreeNodeOutletTemplate);
+    this._nodeOutlet.viewContainer.createEmbeddedView(
+      componentRef.instance._nodeOutletTemplate,
+      new NodeOutletTemplateContext(this._renderNodes),
+    );
   }
 
   private _updateDefaultNodeDefinition() {
@@ -423,13 +508,11 @@ export class CdkTree<T, K = T>
     }
 
     if (data.nodeType === null) {
-      this.renderNodeChanges(data.renderNodes);
       return;
     }
 
     // If we're here, then we know what our node type is, and therefore can
     // perform our usual rendering pipeline.
-    this.renderNodeChanges(data.renderNodes);
     this._updateKeyManagerItems(data.flattenedNodes);
     // Explicitly detect the initial set of changes to this component subtree
     this._changeDetectorRef.detectChanges();
@@ -709,9 +792,7 @@ export class CdkTree<T, K = T>
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      expansionModel.select(
-        ...this._flattenedNodes().map(child => this._getExpansionKey(child)),
-      );
+      expansionModel.select(...this._flattenedNodes().map(child => this._getExpansionKey(child)));
     }
   }
 
@@ -721,9 +802,7 @@ export class CdkTree<T, K = T>
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      expansionModel.deselect(
-        ...this._flattenedNodes().map(child => this._getExpansionKey(child)),
-      );
+      expansionModel.deselect(...this._flattenedNodes().map(child => this._getExpansionKey(child)));
     }
   }
 
@@ -768,12 +847,7 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          return this._findChildrenByLevel(
-            levelAccessor,
-            flattenedNodes,
-            dataNode,
-            1,
-          );
+          return this._findChildrenByLevel(levelAccessor, flattenedNodes, dataNode, 1);
         }),
       );
     }
