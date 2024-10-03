@@ -45,7 +45,6 @@ import {
   computed,
   Signal,
   signal,
-  effect,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
@@ -103,16 +102,16 @@ type RenderingData<T> =
       renderNodes: readonly T[];
     };
 
-interface TemplateParams<T, K> {
+interface RenderNode<T, K> {
   context: CdkTreeNodeOutletContext<T>;
   template: TemplateRef<CdkTreeNodeOutletContext<T>>;
   key: K;
 }
 
 class NodeOutletTemplateContext<T, K> {
-  $implicit: Signal<Array<TemplateParams<T, K>>>;
+  $implicit: Signal<RenderNode<T, K>[]>;
 
-  constructor(nodes: Signal<Array<TemplateParams<T, K>>>) {
+  constructor(nodes: Signal<RenderNode<T, K>[]>) {
     this.$implicit = nodes;
   }
 }
@@ -129,7 +128,7 @@ class NodeOutletTemplateContext<T, K> {
   ],
 })
 export class CdkTreeNodeRenderer<T, K> implements OnInit {
-  readonly node = input.required<TemplateParams<T, K>>();
+  readonly node = input.required<RenderNode<T, K>>();
 
   ngOnInit() {
     if (CdkTreeNode.mostRecentTreeNode) {
@@ -138,7 +137,11 @@ export class CdkTreeNodeRenderer<T, K> implements OnInit {
   }
 }
 
-/** @docs-private */
+/**
+ * Invisible component that holds a template to be rendered inside the CdkTreeNodeOutlet.
+ *
+ * @docs-private
+ */
 @Component({
   selector: 'cdk-tree-node-outlet-template',
   template: `
@@ -154,8 +157,12 @@ export class CdkTreeNodeRenderer<T, K> implements OnInit {
     </ng-template>
   `,
   standalone: true,
-  styles: [`:host {display: none !important}`],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTreeNodeRenderer],
+  host: {
+    'style': 'display: none;',
+  },
 })
 export class CdkTreeNodeOutletTemplate<T, K> {
   @ViewChild('outletTemplate', {static: true, read: TemplateRef}) _nodeOutletTemplate: TemplateRef<
@@ -377,7 +384,7 @@ export class CdkTree<T, K = T>
     return this._renderData()?.flattenedNodes ?? [];
   });
   private readonly _flatNodesObs = toObservable(this._flattenedNodes);
-  private readonly _renderNodes = computed((): Array<TemplateParams<T, K>> => {
+  private readonly _renderNodes = computed((): RenderNode<T, K>[] => {
     const nodes = this._renderData()?.renderNodes ?? [];
     const levelAccessor = this._getLevelAccessor();
     const trackBy = this._trackByFn();
@@ -1435,7 +1442,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
-    console.log(inject(ViewContainerRef));
   }
 
   ngOnInit(): void {
