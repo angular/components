@@ -1,3 +1,19 @@
+<a name="18.2.7"></a>
+# 18.2.7 "lava-labyrinth" (2024-10-03)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3e1faec2aa](https://github.com/angular/components/commit/3e1faec2aa70938259d409b3696ca3f83cbb04df) | fix | **drag-drop:** positioning thrown off with align-self ([#29813](https://github.com/angular/components/pull/29813)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9280ad3948](https://github.com/angular/components/commit/9280ad3948a52e737bc23abc94ed098ed311afd9) | fix | **chips:** chip grid not re-focusing first item |
+| [7a5c1dfb46](https://github.com/angular/components/commit/7a5c1dfb46b12c6ba99b7448fc458342d8ef6629) | fix | **chips:** chip set overwriting disabled state ([#29795](https://github.com/angular/components/pull/29795)) |
+| [0fabf52036](https://github.com/angular/components/commit/0fabf52036a6e0a7ea20022a18d7247d669074dc) | fix | **chips:** focus escape not working consistently |
+| [da55ad02bc](https://github.com/angular/components/commit/da55ad02bc913cdeaee7a53afbf470bd283a52db) | fix | **core:** infer first day of week in native date adapter ([#29802](https://github.com/angular/components/pull/29802)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.6"></a>
 # 19.0.0-next.6 "topaz-tornado" (2024-09-25)
 ### cdk
