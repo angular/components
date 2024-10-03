@@ -1,3 +1,20 @@
+<a name="19.0.0-next.7"></a>
+# 19.0.0-next.7 "snow-supernova" (2024-10-03)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5be8905f65](https://github.com/angular/components/commit/5be8905f65cc907506fc0791223a7499a6235603) | fix | **drag-drop:** positioning thrown off with align-self ([#29813](https://github.com/angular/components/pull/29813)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ff3d342fd4](https://github.com/angular/components/commit/ff3d342fd4ab91d0dd24147bc747c5a0ba8f1aaf) | feat | **tabs:** add `alignTabs` in `MatTabsConfig` ([#29779](https://github.com/angular/components/pull/29779)) |
+| [2861a306ae](https://github.com/angular/components/commit/2861a306aebc54eafe4a72b4a53860d8612af5d4) | fix | **chips:** chip grid not re-focusing first item |
+| [86ebb9bfd5](https://github.com/angular/components/commit/86ebb9bfd55e637be1e6d0117a10e290c5247ebd) | fix | **chips:** chip set overwriting disabled state ([#29795](https://github.com/angular/components/pull/29795)) |
+| [8e1711216f](https://github.com/angular/components/commit/8e1711216f7d07324e311e0f6ada3d2426c7891e) | fix | **chips:** focus escape not working consistently |
+| [6a8c73d3da](https://github.com/angular/components/commit/6a8c73d3da8999bf2dcc711ba4610fa193bef9a4) | fix | **core:** infer first day of week in native date adapter ([#29802](https://github.com/angular/components/pull/29802)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.7"></a>
 # 18.2.7 "lava-labyrinth" (2024-10-03)
 ### cdk
