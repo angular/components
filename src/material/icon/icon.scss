@@ -45,13 +45,6 @@ mat-icon {
   }
 }
 
-.mat-icon:has(div[style*='letter-spacing:']):has(div[style*='word-spacing:']) {
-  // Apply styles to avoid text spacing
-  letter-spacing: 0 !important;
-  word-spacing: 0 !important;
-  line-height: 1 !important;
-}
-
 // Icons that will be mirrored in RTL.
 [dir='rtl'] .mat-icon-rtl-mirror {
   transform: scale(-1, 1);
@@ -81,6 +74,11 @@ mat-icon {
 .mat-mdc-form-field .mat-icon,
 .mat-grid-tile .mat-icon,
 .mat-mdc-list-item .mat-icon,
-.mat-mdc-list-option .mat-icon {
+.mat-mdc-list-option .mat-icon,
+.mat-icon:has(div[style*='letter-spacing:']):has(div[style*='word-spacing:']) {
   overflow: visible;
+  // Apply styles to avoid text spacing
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
+  line-height: 1 !important;
 }
