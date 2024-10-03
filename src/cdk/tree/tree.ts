@@ -41,6 +41,7 @@ import {
   Output,
   QueryList,
   TrackByFunction,
+  computed,
   signal,
   effect,
   ViewChild,
@@ -50,7 +51,7 @@ import {
   inject,
   booleanAttribute,
 } from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {coerceObservable} from '@angular/cdk/coercion/private';
 import {
   BehaviorSubject,
@@ -85,6 +86,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
+import { NgTemplateOutlet } from '@angular/common';
 
 type RenderingData<T> =
   | {
@@ -105,7 +107,16 @@ type RenderingData<T> =
 @Component({
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
-  template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
+  template: `
+    <ng-template let-nodes>
+      @for (node of nodes(); track node.key) {
+        <ng-container
+            [ngTemplateOutlet]="node.template"
+            [ngTemplateOutletContext]="node.context" />
+      }
+    </ng-template>
+    <ng-container cdkTreeNodeOutlet></ng-container>
+  `,
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
@@ -118,7 +129,7 @@ type RenderingData<T> =
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [CdkTreeNodeOutlet],
+  imports: [CdkTreeNodeOutlet, NgTemplateOutlet],
 })
 export class CdkTree<T, K = T>
   implements
@@ -261,13 +272,6 @@ export class CdkTree<T, K = T>
   /** Keep track of which nodes are expanded. */
   private _expansionModel?: SelectionModel<K>;
 
-  /**
-   * Maintain a synchronous cache of flattened data nodes. This will only be
-   * populated after initial render, and in certain cases, will be delayed due to
-   * relying on Observable `getChildren` calls.
-   */
-  private _flattenedNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
-
   /** The automatically determined node type for the tree. */
   private _nodeType = new BehaviorSubject<'flat' | 'nested' | null>(null);
 
@@ -297,6 +301,18 @@ export class CdkTree<T, K = T>
     ),
     {initialValue: null},
   );
+  /**
+   * Maintain a synchronous cache of flattened data nodes. This will only be
+   * populated after initial render, and in certain cases, will be delayed due to
+   * relying on Observable `getChildren` calls.
+   */
+  private readonly _flattenedNodes = computed(() => {
+    return this._renderData()?.flattenedNodes ?? [];
+  });
+  private readonly _flatNodesObs = toObservable(this._flattenedNodes);
+  private readonly _renderNodes = computed(() => {
+    return this._renderData()?.renderNodes ?? [];
+  });
 
   constructor(...args: unknown[]);
   constructor() {
@@ -404,7 +420,6 @@ export class CdkTree<T, K = T>
 
     // If we're here, then we know what our node type is, and therefore can
     // perform our usual rendering pipeline.
-    this._updateCachedData(data.flattenedNodes);
     this.renderNodeChanges(data.renderNodes);
     this._updateKeyManagerItems(data.flattenedNodes);
     // Explicitly detect the initial set of changes to this component subtree
@@ -686,7 +701,7 @@ export class CdkTree<T, K = T>
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       expansionModel.select(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
+        ...this._flattenedNodes().map(child => this._getExpansionKey(child)),
       );
     }
   }
@@ -698,7 +713,7 @@ export class CdkTree<T, K = T>
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
       expansionModel.deselect(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
+        ...this._flattenedNodes().map(child => this._getExpansionKey(child)),
       );
     }
   }
@@ -739,7 +754,7 @@ export class CdkTree<T, K = T>
     );
 
     if (levelAccessor) {
-      return combineLatest([isExpanded, this._flattenedNodes]).pipe(
+      return combineLatest([isExpanded, this._flatNodesObs]).pipe(
         map(([expanded, flattenedNodes]) => {
           if (!expanded) {
             return [];
@@ -747,7 +762,6 @@ export class CdkTree<T, K = T>
           return this._findChildrenByLevel(
             levelAccessor,
             flattenedNodes,
-
             dataNode,
             1,
           );
@@ -878,7 +892,7 @@ export class CdkTree<T, K = T>
     if (this.levelAccessor) {
       const results = this._findChildrenByLevel(
         this.levelAccessor,
-        this._flattenedNodes.value,
+        this._flattenedNodes(),
         dataNode,
         Infinity,
       );
@@ -1081,10 +1095,6 @@ export class CdkTree<T, K = T>
         })),
       );
     }
-  }
-
-  private _updateCachedData(flattenedNodes: readonly T[]) {
-    this._flattenedNodes.next(flattenedNodes);
   }
 
   private _updateKeyManagerItems(flattenedNodes: readonly T[]) {
