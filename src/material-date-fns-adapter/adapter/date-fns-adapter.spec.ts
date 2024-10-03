@@ -546,6 +546,7 @@ describe('DateFnsAdapter', () => {
     expect(adapter.isValid(adapter.parseTime('24:05', 'p')!)).toBe(false);
     expect(adapter.isValid(adapter.parseTime('00:61:05', 'p')!)).toBe(false);
     expect(adapter.isValid(adapter.parseTime('14:52:78', 'p')!)).toBe(false);
+    expect(adapter.isValid(adapter.parseTime('12:10 PM11:10 PM', 'p')!)).toBe(false);
   });
 
   it('should compare times', () => {
