@@ -1256,7 +1256,7 @@ describe('CdkTree', () => {
         expect(treeElement.hasAttribute('tabindex')).toBeFalse();
       });
 
-      fit('sets the tabindex to the first item by default', () => {
+      it('sets the tabindex to the first item by default', () => {
         expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
       });
 
