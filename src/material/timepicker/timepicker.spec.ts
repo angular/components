@@ -1007,7 +1007,22 @@ describe('MatTimepicker', () => {
       clearElement(input);
       typeInElement(input, 'not a valid date');
       fixture.detectChanges();
-      expect(control.errors?.['matTimepickerParse']).toBeTruthy();
+      expect(control.errors?.['matTimepickerParse']).toEqual(
+        jasmine.objectContaining({
+          text: 'not a valid date',
+        }),
+      );
+      expect(control.value).toBeTruthy();
+      expect(adapter.isValid(control.value!)).toBe(false);
+
+      // Change from one invalid value to the other to make sure that the object stays in sync.
+      typeInElement(input, ' (changed)');
+      fixture.detectChanges();
+      expect(control.errors?.['matTimepickerParse']).toEqual(
+        jasmine.objectContaining({
+          text: 'not a valid date (changed)',
+        }),
+      );
       expect(control.value).toBeTruthy();
       expect(adapter.isValid(control.value!)).toBe(false);
 
