@@ -28,7 +28,7 @@ const ISO_8601_REGEX =
  * - {{hours}}.{{minutes}} AM/PM
  * - {{hours}}.{{minutes}}.{{seconds}} AM/PM
  */
-const TIME_REGEX = /(\d?\d)[:.](\d?\d)(?:[:.](\d?\d))?\s*(AM|PM)?/i;
+const TIME_REGEX = /^(\d?\d)[:.](\d?\d)(?:[:.](\d?\d))?\s*(AM|PM)?$/i;
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
@@ -292,67 +292,20 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       return null;
     }
 
-    const today = this.today();
-    const base = this.toIso8601(today);
+    // Attempt to parse the value directly.
+    let result = this._parseTimeString(value);
 
-    // JS is able to parse colon-separated times (including AM/PM) by
-    // appending it to a valid date string. Generate one from today's date.
-    let result = Date.parse(`${base} ${value}`);
-
-    // Some locales use a dot instead of a colon as a separator, try replacing it before parsing.
-    if (!result && value.includes('.')) {
-      result = Date.parse(`${base} ${value.replace(/\./g, ':')}`);
-    }
-
-    // Other locales add extra characters around the time, but are otherwise parseable
+    // Some locales add extra characters around the time, but are otherwise parseable
     // (e.g. `00:05 ч.` in bg-BG). Try replacing all non-number and non-colon characters.
-    if (!result) {
+    if (result === null) {
       const withoutExtras = value.replace(/[^0-9:(AM|PM)]/gi, '').trim();
 
       if (withoutExtras.length > 0) {
-        result = Date.parse(`${base} ${withoutExtras}`);
+        result = this._parseTimeString(withoutExtras);
       }
     }
 
-    // Some browser implementations of Date aren't very flexible with the time formats.
-    // E.g. Safari doesn't support AM/PM or padded numbers. As a final resort, we try
-    // parsing some of the more common time formats ourselves.
-    if (!result) {
-      const parsed = value.toUpperCase().match(TIME_REGEX);
-
-      if (parsed) {
-        let hours = parseInt(parsed[1]);
-        const minutes = parseInt(parsed[2]);
-        let seconds: number | undefined = parsed[3] == null ? undefined : parseInt(parsed[3]);
-        const amPm = parsed[4] as 'AM' | 'PM' | undefined;
-
-        if (hours === 12) {
-          hours = amPm === 'AM' ? 0 : hours;
-        } else if (amPm === 'PM') {
-          hours += 12;
-        }
-
-        if (
-          inRange(hours, 0, 23) &&
-          inRange(minutes, 0, 59) &&
-          (seconds == null || inRange(seconds, 0, 59))
-        ) {
-          return this.setTime(today, hours, minutes, seconds || 0);
-        }
-      }
-    }
-
-    if (result) {
-      const date = new Date(result);
-
-      // Firefox allows overflows in the time string, e.g. 25:00 gets parsed as the next day.
-      // Other browsers return invalid date objects in such cases so try to normalize it.
-      if (this.sameDate(today, date)) {
-        return date;
-      }
-    }
-
-    return this.invalid();
+    return result || this.invalid();
   }
 
   override addSeconds(date: Date, amount: number): Date {
@@ -396,6 +349,44 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     d.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
+  }
+
+  /**
+   * Attempts to parse a time string into a date object. Returns null if it cannot be parsed.
+   * @param value Time string to parse.
+   */
+  private _parseTimeString(value: string): Date | null {
+    // Note: we can technically rely on the browser for the time parsing by generating
+    // an ISO string and appending the string to the end of it. We don't do it, because
+    // browsers aren't consistent in what they support. Some examples:
+    // - Safari doesn't support AM/PM.
+    // - Firefox produces a valid date object if the time string has overflows (e.g. 12:75) while
+    //   other browsers produce an invalid date.
+    // - Safari doesn't allow padded numbers.
+    const parsed = value.toUpperCase().match(TIME_REGEX);
+
+    if (parsed) {
+      let hours = parseInt(parsed[1]);
+      const minutes = parseInt(parsed[2]);
+      let seconds: number | undefined = parsed[3] == null ? undefined : parseInt(parsed[3]);
+      const amPm = parsed[4] as 'AM' | 'PM' | undefined;
+
+      if (hours === 12) {
+        hours = amPm === 'AM' ? 0 : hours;
+      } else if (amPm === 'PM') {
+        hours += 12;
+      }
+
+      if (
+        inRange(hours, 0, 23) &&
+        inRange(minutes, 0, 59) &&
+        (seconds == null || inRange(seconds, 0, 59))
+      ) {
+        return this.setTime(this.today(), hours, minutes, seconds || 0);
+      }
+    }
+
+    return null;
   }
 }
 

@@ -648,6 +648,7 @@ describe('LuxonDateAdapter', () => {
     expect(adapter.isValid(adapter.parseTime('24:05', 't')!)).toBeFalse();
     expect(adapter.isValid(adapter.parseTime('00:61:05', 'tt')!)).toBeFalse();
     expect(adapter.isValid(adapter.parseTime('14:52:78', 'tt')!)).toBeFalse();
+    expect(adapter.isValid(adapter.parseTime('12:10 PM11:10 PM', 'tt')!)).toBeFalse();
   });
 
   it('should return null when parsing unsupported time values', () => {
