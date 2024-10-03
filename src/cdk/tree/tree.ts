@@ -53,7 +53,6 @@ import {
   inject,
   booleanAttribute,
   TemplateRef,
-  OnChanges,
 } from '@angular/core';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {coerceObservable} from '@angular/cdk/coercion/private';
@@ -129,10 +128,10 @@ class NodeOutletTemplateContext<T, K> {
     },
   ],
 })
-export class CdkTreeNodeRenderer<T, K> implements OnChanges {
+export class CdkTreeNodeRenderer<T, K> implements OnInit {
   readonly node = input.required<TemplateParams<T, K>>();
 
-  ngOnChanges() {
+  ngOnInit() {
     if (CdkTreeNode.mostRecentTreeNode) {
       CdkTreeNode.mostRecentTreeNode.data = this.node().context.$implicit;
     }
@@ -295,12 +294,12 @@ export class CdkTree<T, K = T>
    * relative to the function to know if a node should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  @Input() trackBy: TrackByFunction<T>;
+  readonly trackBy = input<TrackByFunction<T>>();
 
   /**
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
-  @Input() expansionKey?: (dataNode: T) => K;
+  readonly expansionKey = input<(dataNode: T) => K>();
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
@@ -350,6 +349,24 @@ export class CdkTree<T, K = T>
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
+  private readonly _expansionKeyFn = computed(() => {
+    // In the case that a key accessor function was not provided by the
+    // tree user, we'll default to using the node object itself as the key.
+    //
+    // This cast is safe since:
+    // - if an expansionKey is provided, TS will infer the type of K to be
+    //   the return type.
+    // - if it's not, then K will be defaulted to T.
+    return this.expansionKey() ?? ((item: T) => (item as unknown as K));
+  });
+  readonly _trackByFn = computed(() => {
+    const trackBy = this.trackBy();
+    if (trackBy) return trackBy;
+    const expansionKey = this._expansionKeyFn();
+    // Provide a default trackBy based on `_ExpansionKey` if one isn't provided.
+    return (_index: number, item: T) => expansionKey(item);
+  });
+
   private readonly _renderData = toSignal(
     combineLatest([this._transformedDataSource, this._nodeType, this._selection]).pipe(
       switchMap(([data, nodeType, expandedKeys]) =>
@@ -370,6 +387,7 @@ export class CdkTree<T, K = T>
   private readonly _renderNodes = computed((): Array<TemplateParams<T, K>> => {
     const nodes = this._renderData()?.renderNodes ?? [];
     const levelAccessor = this._getLevelAccessor();
+    const trackBy = this._trackByFn();
 
     return nodes.map((nodeData, index) => {
       const node = this._getNodeDef(nodeData, index);
@@ -390,7 +408,7 @@ export class CdkTree<T, K = T>
       return {
         context,
         template: node.template,
-        key,
+        key: trackBy(index, nodeData),
       };
     });
   });
@@ -558,9 +576,7 @@ export class CdkTree<T, K = T>
   }
 
   private _initializeDataDiffer() {
-    // Provide a default trackBy based on `_getExpansionKey` if one isn't provided.
-    const trackBy = this.trackBy ?? ((_index: number, item: T) => this._getExpansionKey(item));
-    this._dataDiffer = this._differs.find([]).create(trackBy);
+    this._dataDiffer = this._differs.find([]).create(this._trackByFn());
   }
 
   private _checkTreeControlUsage() {
@@ -1030,14 +1046,7 @@ export class CdkTree<T, K = T>
   }
 
   private _getExpansionKey(dataNode: T): K {
-    // In the case that a key accessor function was not provided by the
-    // tree user, we'll default to using the node object itself as the key.
-    //
-    // This cast is safe since:
-    // - if an expansionKey is provided, TS will infer the type of K to be
-    //   the return type.
-    // - if it's not, then K will be defaulted to T.
-    return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
+    return this._expansionKeyFn()(dataNode);
   }
 
   private _getAriaSet(node: T) {
