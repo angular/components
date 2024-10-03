@@ -1,6 +1,7 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_e2e_test_library",
     "ng_module",
@@ -55,6 +56,11 @@ sass_binary(
 markdown_to_html(
     name = "overview",
     srcs = [":slider.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":slider_scss_lib"],
 )
 
 filegroup(

@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -70,6 +71,11 @@ ng_web_test_suite(
 markdown_to_html(
     name = "overview",
     srcs = [":slide-toggle.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":slide_toggle_scss_lib"],
 )
 
 filegroup(
