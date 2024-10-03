@@ -18,7 +18,6 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
 
     fixture = TestBed.createComponent(SimpleMatTreeApp);
     fixture.detectChanges();
-    fixture.detectChanges();
   });
 
   describe('when nodes have default options', () => {
