@@ -251,8 +251,14 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     const date = this._dateAdapter.parseTime(value, this._dateFormats.parse.timeInput);
     const hasChanged = !this._dateAdapter.sameTime(date, currentValue);
 
-    // We need to fire the CVA change event for all nulls, otherwise the validators won't run.
-    this._assignUserSelection(date, !date || hasChanged || !!(value && !currentValue));
+    if (!date || hasChanged || !!(value && !currentValue)) {
+      // We need to fire the CVA change event for all nulls, otherwise the validators won't run.
+      this._assignUserSelection(date, true);
+    } else {
+      // Call the validator even if the value hasn't changed since
+      // some fields change depending on what the user has entered.
+      this._validatorOnChange?.();
+    }
   }
 
   /** Handles the `blur` event. */
