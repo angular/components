@@ -10,7 +10,7 @@ import {InjectionToken} from '@angular/core';
 import {DateAdapter, MatDateFormats} from '@angular/material/core';
 
 /** Pattern that interval strings have to match. */
-const INTERVAL_PATTERN = /^(\d*\.?\d+)(h|m|s)?$/i;
+const INTERVAL_PATTERN = /^(\d*\.?\d+)\s*(h|hour|hours|m|min|minute|minutes|s|second|seconds)?$/i;
 
 /**
  * Object that can be used to configure the default options for the timepicker component.
@@ -62,9 +62,9 @@ export function parseInterval(value: number | string | null): number | null {
       return null;
     }
 
-    if (unit === 'h') {
+    if (unit === 'h' || unit === 'hour' || unit === 'hours') {
       result = amount * 3600;
-    } else if (unit === 'm') {
+    } else if (unit === 'm' || unit === 'min' || unit === 'minute' || unit === 'minutes') {
       result = amount * 60;
     } else {
       result = amount;
