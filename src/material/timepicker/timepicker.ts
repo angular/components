@@ -208,20 +208,25 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   /** Opens the timepicker. */
   open(): void {
-    if (!this._input || this._isOpen()) {
+    if (!this._input) {
       return;
     }
 
+    // Focus should already be on the input, but this call is in case the timepicker is opened
+    // programmatically. We need to call this even if the timepicker is already open, because
+    // the user might be clicking the toggle.
+    this._input.focus();
+
+    if (this._isOpen()) {
+      return;
+    }
+
+    this._isOpen.set(true);
     this._generateOptions();
     const overlayRef = this._getOverlayRef();
     overlayRef.updateSize({width: this._input.getOverlayOrigin().nativeElement.offsetWidth});
     this._portal ??= new TemplatePortal(this._panelTemplate(), this._viewContainerRef);
     overlayRef.attach(this._portal);
-    this._isOpen.set(true);
-
-    // Focus should already be on the input, but this call is
-    // in case the timepicker is opened programmatically.
-    this._input.focus();
     this._onOpenRender?.destroy();
     this._onOpenRender = afterNextRender(
       () => {
