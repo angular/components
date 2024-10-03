@@ -56,6 +56,21 @@ describe('timepicker utilities', () => {
       expect(parseInterval('3M')).toBe(180);
       expect(parseInterval('3S')).toBe(3);
     });
+
+    it('should parse interval with space', () => {
+      expect(parseInterval('3 h')).toBe(10_800);
+      expect(parseInterval('6     h')).toBe(21_600);
+    });
+
+    it('should handle long versions of units', () => {
+      expect(parseInterval('1 hour')).toBe(3600);
+      expect(parseInterval('3 hours')).toBe(10_800);
+      expect(parseInterval('1 minute')).toBe(60);
+      expect(parseInterval('3 min')).toBe(180);
+      expect(parseInterval('3 minutes')).toBe(180);
+      expect(parseInterval('1 second')).toBe(1);
+      expect(parseInterval('10 seconds')).toBe(10);
+    });
   });
 
   describe('generateOptions', () => {
