@@ -18,8 +18,6 @@ import {
   ViewChildren,
   inject,
   ElementRef,
-  viewChildren,
-  viewChild,
 } from '@angular/core';
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
@@ -88,7 +86,7 @@ describe('CdkTree', () => {
       const fixture = TestBed.createComponent(SimpleCdkTreeApp);
       fixture.detectChanges();
       const spy = jasmine.createSpy('completeSpy');
-      const subscription = fixture.componentInstance.tree().viewChange.subscribe({complete: spy});
+      const subscription = fixture.componentInstance.tree.viewChange.subscribe({complete: spy});
 
       fixture.destroy();
       expect(spy).toHaveBeenCalled();
@@ -109,7 +107,7 @@ describe('CdkTree', () => {
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
-        tree = component.tree();
+        tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
       });
 
@@ -224,7 +222,8 @@ describe('CdkTree', () => {
       });
 
       it('should be able to set zero as the indent level', () => {
-        component.paddingNodes().forEach(node => (node.level = 0));
+        fixture.detectChanges();
+        component.paddingNodes.forEach(node => (node.level = 0));
 
         const data = dataSource.data;
 
@@ -1712,11 +1711,11 @@ class SimpleCdkTreeApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   indent: number | string = 28;
 
-  readonly tree = viewChild.required<CdkTree<TestData>>(CdkTree);
-  readonly paddingNodes = viewChildren(CdkTreeNodePadding);
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
 
   expandAll() {
-    this.tree().expandAll();
+    this.tree.expandAll();
   }
 }
 
