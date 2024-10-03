@@ -566,6 +566,10 @@ datepicker pop-up. However, ChromeOS intercepts this key combination at the OS l
 browser only receives a `PageDown` key event. Because of this behavior, you should always include an
 additional means of opening the pop-up, such as `MatDatepickerToggle`.
 
+`MatDatepickerToggle` must be included along with `MatDatepicker` for optimal mobile a11y 
+compatibility. Mobile screen reader users currently do not have a way to trigger the datepicker
+dialog without the icon button present.
+
 #### Keyboard interaction
 
 The datepicker supports the following keyboard shortcuts:
