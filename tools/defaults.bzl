@@ -17,6 +17,7 @@ load("@npm//tsec:index.bzl", _tsec_test = "tsec_test")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
+load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
 _DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
@@ -30,6 +31,7 @@ npmPackageSubstitutions = select({
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
 integration_test = _integration_test
+extract_tokens = _extract_tokens
 esbuild = _esbuild
 esbuild_config = _esbuild_config
 http_server = _http_server

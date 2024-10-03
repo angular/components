@@ -1,0 +1,26 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "extract_tokens_lib",
+    srcs = glob(["**/*.ts"]),
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
+    deps = [
+        "@npm//@types/node",
+        "@npm//sass",
+    ],
+)
+
+nodejs_binary(
+    name = "extract-tokens",
+    data = [
+        ":extract_tokens_lib",
+        "@npm//sass",
+    ],
+    entry_point = ":extract-tokens.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+)
