@@ -10,9 +10,11 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -24,6 +26,7 @@ export class CdkStep implements OnChanges {
     constructor(...args: unknown[]);
     ariaLabel: string;
     ariaLabelledby: string;
+    protected _childForms: QueryList<Partial<NgForm | FormGroupDirective>> | undefined;
     get completed(): boolean;
     set completed(value: boolean);
     // (undocumented)
@@ -60,7 +63,7 @@ export class CdkStep implements OnChanges {
     // (undocumented)
     _stepper: CdkStepper;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkStep, "cdk-step", ["cdkStep"], { "stepControl": { "alias": "stepControl"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "state": { "alias": "state"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "completed": { "alias": "completed"; "required": false; }; "hasError": { "alias": "hasError"; "required": false; }; }, { "interactedStream": "interacted"; }, ["stepLabel"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkStep, "cdk-step", ["cdkStep"], { "stepControl": { "alias": "stepControl"; "required": false; }; "label": { "alias": "label"; "required": false; }; "errorMessage": { "alias": "errorMessage"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "state": { "alias": "state"; "required": false; }; "editable": { "alias": "editable"; "required": false; }; "optional": { "alias": "optional"; "required": false; }; "completed": { "alias": "completed"; "required": false; }; "hasError": { "alias": "hasError"; "required": false; }; }, { "interactedStream": "interacted"; }, ["stepLabel", "_childForms"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStep, never>;
 }
