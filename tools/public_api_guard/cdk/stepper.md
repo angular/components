@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -12,7 +13,6 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -55,7 +55,7 @@ export class CdkStep implements OnChanges {
     select(): void;
     _showError(): boolean;
     state: StepState;
-    stepControl: AbstractControlLike;
+    stepControl: AbstractControl;
     stepLabel: CdkStepLabel;
     // (undocumented)
     _stepper: CdkStepper;
