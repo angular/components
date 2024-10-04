@@ -88,7 +88,8 @@ $_avatar-trailing-padding: 8px;
       border-style: solid;
     }
 
-    .mat-mdc-standard-chip & {
+    .mat-mdc-standard-chip &,
+    .mat-mdc-basic-chip & {
       padding-left: $_action-padding;
       padding-right: $_action-padding;
     }
