@@ -35,6 +35,7 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
+import {type AbstractControl} from '@angular/forms';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -118,7 +119,7 @@ export class CdkStep implements OnChanges {
   @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: AbstractControlLike;
+  @Input() stepControl: AbstractControl;
 
   /** Whether user has attempted to move away from the step. */
   interacted = false;
@@ -557,55 +558,4 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _isValidIndex(index: number): boolean {
     return index > -1 && (!this.steps || index < this.steps.length);
   }
-}
-
-/**
- * Simplified representation of an "AbstractControl" from @angular/forms.
- * Used to avoid having to bring in @angular/forms for a single optional interface.
- * @docs-private
- */
-interface AbstractControlLike {
-  asyncValidator: ((control: any) => any) | null;
-  dirty: boolean;
-  disabled: boolean;
-  enabled: boolean;
-  errors: {[key: string]: any} | null;
-  invalid: boolean;
-  parent: any;
-  pending: boolean;
-  pristine: boolean;
-  root: AbstractControlLike;
-  status: string;
-  readonly statusChanges: Observable<any>;
-  touched: boolean;
-  untouched: boolean;
-  updateOn: any;
-  valid: boolean;
-  validator: ((control: any) => any) | null;
-  value: any;
-  readonly valueChanges: Observable<any>;
-  clearAsyncValidators(): void;
-  clearValidators(): void;
-  disable(opts?: any): void;
-  enable(opts?: any): void;
-  get(path: (string | number)[] | string): AbstractControlLike | null;
-  getError(errorCode: string, path?: (string | number)[] | string): any;
-  hasError(errorCode: string, path?: (string | number)[] | string): boolean;
-  markAllAsTouched(): void;
-  markAsDirty(opts?: any): void;
-  markAsPending(opts?: any): void;
-  markAsPristine(opts?: any): void;
-  markAsTouched(opts?: any): void;
-  markAsUntouched(opts?: any): void;
-  patchValue(value: any, options?: Object): void;
-  reset(value?: any, options?: Object): void;
-  setAsyncValidators(newValidator: (control: any) => any | ((control: any) => any)[] | null): void;
-  setErrors(errors: {[key: string]: any} | null, opts?: any): void;
-  setParent(parent: any): void;
-  setValidators(newValidator: (control: any) => any | ((control: any) => any)[] | null): void;
-  setValue(value: any, options?: Object): void;
-  updateValueAndValidity(opts?: any): void;
-  patchValue(value: any, options?: any): void;
-  reset(formState?: any, options?: any): void;
-  setValue(value: any, options?: any): void;
 }
