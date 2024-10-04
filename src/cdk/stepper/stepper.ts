@@ -35,7 +35,12 @@ import {
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
-import {type AbstractControl} from '@angular/forms';
+import {
+  ControlContainer,
+  type AbstractControl,
+  type NgForm,
+  type FormGroupDirective,
+} from '@angular/forms';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -103,7 +108,7 @@ export interface StepperOptions {
 @Component({
   selector: 'cdk-step',
   exportAs: 'cdkStep',
-  template: '<ng-template><ng-content></ng-content></ng-template>',
+  template: '<ng-template><ng-content/></ng-template>',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -114,6 +119,19 @@ export class CdkStep implements OnChanges {
 
   /** Template for step label if it exists. */
   @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+
+  /** Forms that have been projected into the step. */
+  @ContentChildren(
+    // Note: we look for `ControlContainer` here, because both `NgForm` and `FormGroupDirective`
+    // provides themselves as such, but we don't want to have a concrete reference to both of
+    // the directives. The type is marked as `Partial` in case we run into a class that provides
+    // itself as `ControlContainer` but doesn't have the same interface as the directives.
+    ControlContainer,
+    {
+      descendants: true,
+    },
+  )
+  protected _childForms: QueryList<Partial<NgForm | FormGroupDirective>> | undefined;
 
   /** Template for step content. */
   @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
@@ -206,6 +224,10 @@ export class CdkStep implements OnChanges {
     }
 
     if (this.stepControl) {
+      // Reset the forms since the default error state matchers will show errors on submit and we
+      // want the form to be back to its initial state (see #29781). Submitted state is on the
+      // individual directives, rather than the control, so we need to reset them ourselves.
+      this._childForms?.forEach(form => form.resetForm?.());
       this.stepControl.reset();
     }
   }
