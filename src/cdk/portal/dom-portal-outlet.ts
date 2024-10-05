@@ -25,7 +25,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
 
   /**
    * @param outletElement Element into which the content is projected.
-   * @param _componentFactoryResolver Used to resolve the component factory.
+   * @param _unusedComponentFactoryResolver Used to resolve the component factory.
    *   Only required when attaching component portals.
    * @param _appRef Reference to the application. Only used in component portals when there
    *   is no `ViewContainerRef` available.
@@ -41,7 +41,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
      * @deprecated No longer in use. To be removed.
      * @breaking-change 18.0.0
      */
-    _componentFactoryResolver?: any,
+    _unusedComponentFactoryResolver?: any,
     private _appRef?: ApplicationRef,
     private _defaultInjector?: Injector,
 

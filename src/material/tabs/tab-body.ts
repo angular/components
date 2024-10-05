@@ -10,12 +10,10 @@ import {AnimationEvent} from '@angular/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
   Directive,
   ElementRef,
   EventEmitter,
@@ -24,7 +22,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewContainerRef,
   ViewEncapsulation,
   inject,
 } from '@angular/core';
@@ -51,11 +48,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   constructor(...args: unknown[]);
 
   constructor() {
-    const componentFactoryResolver = inject(ComponentFactoryResolver);
-    const viewContainerRef = inject(ViewContainerRef);
-    const _document = inject(DOCUMENT);
-
-    super(componentFactoryResolver, viewContainerRef, _document);
+    super();
   }
 
   /** Set initial visibility or set up subscription for changing visibility. */

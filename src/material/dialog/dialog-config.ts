@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ViewContainerRef, ComponentFactoryResolver, Injector} from '@angular/core';
+import {ViewContainerRef, Injector} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {_defaultParams} from './dialog-animations';
@@ -133,8 +133,12 @@ export class MatDialogConfig<D = any> {
    */
   closeOnNavigation?: boolean = true;
 
-  /** Alternate `ComponentFactoryResolver` to use when resolving the associated component. */
-  componentFactoryResolver?: ComponentFactoryResolver;
+  /**
+   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
+   * @deprecated No longer used. Will be removed.
+   * @breaking-change 20.0.0
+   */
+  componentFactoryResolver?: unknown;
 
   /**
    * Duration of the enter animation in ms.

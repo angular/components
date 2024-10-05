@@ -11,7 +11,6 @@ import {DomPortalOutlet} from '@angular/cdk/portal';
 import {DOCUMENT, Location} from '@angular/common';
 import {
   ApplicationRef,
-  ComponentFactoryResolver,
   Injectable,
   Injector,
   NgZone,
@@ -31,9 +30,6 @@ import {ScrollStrategyOptions} from './scroll/index';
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
 
-// Note that Overlay is *not* scoped to the app root because of the ComponentFactoryResolver
-// which needs to be different depending on where OverlayModule is imported.
-
 /**
  * Service to create Overlays. Overlays are dynamically added pieces of floating UI, meant to be
  * used as a low-level building block for other components. Dialogs, tooltips, menus,
@@ -46,7 +42,6 @@ let nextUniqueId = 0;
 export class Overlay {
   scrollStrategies = inject(ScrollStrategyOptions);
   private _overlayContainer = inject(OverlayContainer);
-  private _componentFactoryResolver = inject(ComponentFactoryResolver);
   private _positionBuilder = inject(OverlayPositionBuilder);
   private _keyboardDispatcher = inject(OverlayKeyboardDispatcher);
   private _injector = inject(Injector);
@@ -141,12 +136,6 @@ export class Overlay {
       this._appRef = this._injector.get<ApplicationRef>(ApplicationRef);
     }
 
-    return new DomPortalOutlet(
-      pane,
-      this._componentFactoryResolver,
-      this._appRef,
-      this._injector,
-      this._document,
-    );
+    return new DomPortalOutlet(pane, null, this._appRef, this._injector, this._document);
   }
 }

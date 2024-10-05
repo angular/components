@@ -7,7 +7,6 @@
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
@@ -134,7 +133,8 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;
-    componentFactoryResolver?: ComponentFactoryResolver;
+    // @deprecated
+    componentFactoryResolver?: unknown;
     container?: Type<C> | {
         type: Type<C>;
         providers: (config: DialogConfig<D, R, C>) => StaticProvider[];

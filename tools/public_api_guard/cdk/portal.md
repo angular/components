@@ -106,7 +106,7 @@ export class DomPortalHost extends DomPortalOutlet {
 export class DomPortalOutlet extends BasePortalOutlet {
     constructor(
     outletElement: Element,
-    _componentFactoryResolver?: any, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined,
+    _unusedComponentFactoryResolver?: any, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined,
     _document?: any);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated

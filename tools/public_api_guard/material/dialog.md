@@ -6,7 +6,6 @@
 
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
-import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
@@ -151,7 +150,8 @@ export class MatDialogConfig<D = any> {
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
     closeOnNavigation?: boolean;
-    componentFactoryResolver?: ComponentFactoryResolver;
+    // @deprecated
+    componentFactoryResolver?: unknown;
     data?: D | null;
     delayFocusTrap?: boolean;
     direction?: Direction;
