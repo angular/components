@@ -187,6 +187,12 @@ $_icon-prefix-infix-padding: 4px;
   // Needed so that the floating label does not overlap with prefixes or suffixes.
   position: relative;
   box-sizing: border-box;
+
+  // We do not want to set fixed width on textarea with cols attribute as it makes different
+  // columns look same width.
+  &:has(textarea[cols]) {
+    width: auto;
+  }
 }
 
 // In the form-field theme, we add a 1px left margin to the notch to fix a rendering bug in Chrome.
