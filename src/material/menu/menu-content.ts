@@ -11,7 +11,6 @@ import {DOCUMENT} from '@angular/common';
 import {
   ApplicationRef,
   ChangeDetectorRef,
-  ComponentFactoryResolver,
   Directive,
   InjectionToken,
   Injector,
@@ -37,7 +36,6 @@ export const MAT_MENU_CONTENT = new InjectionToken<MatMenuContent>('MatMenuConte
 })
 export class MatMenuContent implements OnDestroy {
   private _template = inject<TemplateRef<any>>(TemplateRef);
-  private _componentFactoryResolver = inject(ComponentFactoryResolver);
   private _appRef = inject(ApplicationRef);
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
@@ -68,7 +66,7 @@ export class MatMenuContent implements OnDestroy {
     if (!this._outlet) {
       this._outlet = new DomPortalOutlet(
         this._document.createElement('div'),
-        this._componentFactoryResolver,
+        null,
         this._appRef,
         this._injector,
       );

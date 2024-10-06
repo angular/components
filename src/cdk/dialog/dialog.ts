@@ -240,7 +240,6 @@ export class Dialog implements OnDestroy {
       containerType,
       config.viewContainerRef,
       Injector.create({parent: userInjector || this._injector, providers}),
-      config.componentFactoryResolver,
     );
     const containerRef = overlay.attach(containerPortal);
 
@@ -280,12 +279,7 @@ export class Dialog implements OnDestroy {
     } else {
       const injector = this._createInjector(config, dialogRef, dialogContainer, this._injector);
       const contentRef = dialogContainer.attachComponentPortal<C>(
-        new ComponentPortal(
-          componentOrTemplateRef,
-          config.viewContainerRef,
-          injector,
-          config.componentFactoryResolver,
-        ),
+        new ComponentPortal(componentOrTemplateRef, config.viewContainerRef, injector),
       );
       (dialogRef as {componentRef: ComponentRef<C>}).componentRef = contentRef;
       (dialogRef as {componentInstance: C}).componentInstance = contentRef.instance;
