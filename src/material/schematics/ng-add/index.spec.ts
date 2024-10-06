@@ -657,6 +657,67 @@ describe('ng-add schematic', () => {
       );
     });
   });
+
+  describe('using lower dependency builder', () => {
+    beforeEach(() => {
+      const config = {
+        version: 1,
+        projects: {
+          material: {
+            projectType: 'application',
+            root: 'projects/material',
+            sourceRoot: 'projects/material/src',
+            prefix: 'app',
+            architect: {
+              build: {
+                builder: '@angular/build:application',
+                options: {
+                  outputPath: 'dist/material',
+                  index: 'projects/material/src/index.html',
+                  browser: 'projects/material/src/main.ts',
+                  styles: ['projects/material/src/styles.css'],
+                },
+              },
+            },
+          },
+        },
+      };
+
+      appTree.overwrite('/angular.json', JSON.stringify(config, null, 2));
+    });
+
+    it('should add a theme', async () => {
+      const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
+      const workspace = await getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace, baseOptions.project);
+
+      expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
+    });
+
+    it('should add material app styles', async () => {
+      const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
+      const workspace = await getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace, baseOptions.project);
+
+      const defaultStylesPath = getProjectStyleFile(project)!;
+      const htmlContent = tree.read(defaultStylesPath)!.toString();
+
+      expect(htmlContent).toContain('html, body { height: 100%; }');
+      expect(htmlContent).toContain(
+        'body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }',
+      );
+    });
+
+    it('should add the provideAnimationsAsync to the project module', async () => {
+      const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
+      const fileContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+
+      expect(fileContent).toContain('provideAnimationsAsync()');
+      expect(fileContent).toContain(
+        `import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';`,
+      );
+    });
+  });
 });
 
 describe('ng-add schematic - library project', () => {
