@@ -1,3 +1,4 @@
+@use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
 @use './m2-icon';
 @use '../core/tokens/token-utils';
@@ -80,4 +81,12 @@ mat-icon {
   letter-spacing: 0;
   word-spacing: 0;
   line-height: 1;
+}
+
+// Makes button icon visibility hidden to fix b/250063405 to avoid
+// overrunning into sibling/neighboring elements.
+@media (variables.$xsmall) {
+  .mdc-button .mat-icon {
+    visibility: hidden;
+  }
 }
