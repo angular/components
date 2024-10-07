@@ -74,11 +74,10 @@ mat-icon {
 .mat-mdc-form-field .mat-icon,
 .mat-grid-tile .mat-icon,
 .mat-mdc-list-item .mat-icon,
-.mat-mdc-list-option .mat-icon,
-.mat-icon:has(div[style*='letter-spacing:']):has(div[style*='word-spacing:']) {
+.mat-mdc-list-option .mat-icon {
   overflow: visible;
   // Apply styles to avoid text spacing
-  letter-spacing: 0 !important;
-  word-spacing: 0 !important;
-  line-height: 1 !important;
+  letter-spacing: 0;
+  word-spacing: 0;
+  line-height: 1;
 }
