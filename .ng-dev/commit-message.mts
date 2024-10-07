@@ -49,7 +49,6 @@ export const commitMessage: CommitMessageConfig = {
     'material/card',
     'material/checkbox',
     'material/dialog',
-    'material/form-field',
     'material/input',
     'material/paginator',
     'material/progress-bar',
