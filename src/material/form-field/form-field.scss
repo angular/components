@@ -218,3 +218,11 @@ $_icon-prefix-infix-padding: 4px;
 .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
   max-width: calc(100% * 4 / 3 + 1px);
 }
+
+.mat-mdc-form-field-error-wrapper--hidden {
+  visibility: hidden;
+}
+
+.mat-mdc-form-field-hint-wrapper--hidden {
+  visibility: hidden;
+}
