@@ -117,15 +117,6 @@ information as the icon.
 2. Add the `cdk-visually-hidden` class to the `<span>`. This will make the message invisible
 on-screen but still available to screen-reader users.
 
-##### Interactive / Indicator icons within a button
-* *Note that when the presence of an icon in a button is supposed to communicate some
-information to the user or by being inlined into a block of text, as mentioned by
-Interactive icons above, an appropriate element should "own" the icon with interaction:
-* The `<mat-icon>` element should be a child of a `<button>` or `<a>` element.
-* The parent `<button>` or `<a>` should either have a meaningful label provided either through
-direct text content, `aria-label`, or `aria-labelledby`.
-* On mobile/small screens for these icons inlined with text in a button, the icon visibility is set to `hidden` to avoid overlapping into other elements and improve accessibility.
-
 ### Bidirectionality
 
 By default icons in an RTL layout will look exactly the same as in LTR, however certain icons have

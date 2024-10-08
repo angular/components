@@ -1,4 +1,3 @@
-@use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
 @use './m2-icon';
 @use '../core/tokens/token-utils';
@@ -30,10 +29,6 @@ mat-icon {
   height: $size;
   width: $size;
 
-  // In some cases the icon elements may extend beyond the container. Clip these cases
-  // in order to avoid weird overflows and click areas. See #11826.
-  overflow: hidden;
-
   &.mat-icon-inline {
     font-size: inherit;
     height: inherit;
@@ -44,6 +39,10 @@ mat-icon {
   &.mat-ligature-font[fontIcon]::before {
     content: attr(fontIcon);
   }
+
+  // Makes button icon overflow visible to fix b/250063405
+  // Apply styles to avoid applying text-spacing to .mat-icon
+  overflow: visible;
 }
 
 // Icons that will be mirrored in RTL.
@@ -62,31 +61,5 @@ mat-icon {
       margin: auto;
       overflow: visible;
     }
-  }
-}
-
-// Makes button icon overflow visible to fix b/250063405
-.mat-mdc-icon-button .mat-icon,
-.mdc-button .mat-icon,
-.mat-mdc-fab-base .mat-icon,
-.mat-toolbar .mat-icon,
-.mat-mdc-tooltip-trigger .mat-icon,
-.mat-mdc-tab .mat-icon,
-.mat-mdc-form-field .mat-icon,
-.mat-grid-tile .mat-icon,
-.mat-mdc-list-item .mat-icon,
-.mat-mdc-list-option .mat-icon {
-  overflow: visible;
-  // Apply styles to avoid text spacing
-  letter-spacing: 0;
-  word-spacing: 0;
-  line-height: 1;
-}
-
-// Makes button icon visibility hidden to fix b/250063405 to avoid
-// overrunning into sibling/neighboring elements.
-@media (variables.$xsmall) {
-  .mdc-button .mat-icon {
-    visibility: hidden;
   }
 }

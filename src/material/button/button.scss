@@ -16,7 +16,8 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-width: 64px;
+  min-width: min-content;
+  min-height: min-content;
   border: none;
   outline: none;
   line-height: inherit;
