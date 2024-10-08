@@ -41,7 +41,9 @@ mat-icon {
   }
 
   // Makes button icon overflow visible to fix b/250063405
-  // Apply styles to avoid applying text-spacing to .mat-icon
+  // Undoes previous fix to Issue #11826 in preference of
+  // fixing to improve accessibility by not having the icon
+  // get cut off
   overflow: visible;
 }
 
