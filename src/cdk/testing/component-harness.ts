@@ -263,6 +263,13 @@ export interface LocatorFactory {
    * authors to wait for async tasks outside of the Angular zone.
    */
   waitForTasksOutsideAngular(): Promise<void>;
+
+  /**
+   * Waits for the given condition
+   */
+  until(log: string, condition: () => boolean | Promise<boolean>): Promise<void>;
+
+  sleep(ms: number): Promise<void>;
 }
 
 /**
@@ -399,6 +406,14 @@ export abstract class ComponentHarness {
   protected async waitForTasksOutsideAngular() {
     return this.locatorFactory.waitForTasksOutsideAngular();
   }
+
+  protected async sleep(ms: number) {
+    return this.locatorFactory.sleep(ms);
+  }
+
+  protected async until(log: string, condition: () => boolean | Promise<boolean>) {
+    return this.locatorFactory.until(log, condition);
+  }
 }
 
 /**
@@ -452,6 +467,8 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
    * for the Angular component.
    */
   hostSelector: string;
+
+  readonly zoneless?: boolean;
 }
 
 /** A set of criteria that can be used to filter a list of `ComponentHarness` instances. */

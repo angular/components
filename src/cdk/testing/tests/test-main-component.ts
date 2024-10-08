@@ -8,7 +8,6 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -20,6 +19,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TestShadowBoundary} from './test-shadow-boundary';
 import {TestSubComponent} from './test-sub-component';
 
@@ -72,7 +72,7 @@ export class TestMainComponent implements OnDestroy {
     setTimeout(() => {
       this.asyncCounter = 5;
       this._cdr.markForCheck();
-    }, 1000);
+    }, 1);
 
     this._fakeOverlayElement = document.createElement('div');
     this._fakeOverlayElement.classList.add('fake-overlay');
@@ -89,7 +89,7 @@ export class TestMainComponent implements OnDestroy {
     setTimeout(() => {
       this.asyncCounter++;
       this._cdr.markForCheck();
-    }, 500);
+    }, 1);
   }
 
   onKeyDown(event: KeyboardEvent) {
