@@ -93,8 +93,11 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   /** The state of the snack bar animations. */
   _animationState = 'void';
 
-  /** aria-live value for the live region. */
-  _live: AriaLivePoliteness;
+  /**
+   * aria-live value for the live region. Set as 'assertive' by default if not specificed by
+   * developer.
+   */
+  _live?: AriaLivePoliteness | 'assertive';
 
   /**
    * Element that will have the `mdc-snackbar__label` class applied if the attached component
