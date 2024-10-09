@@ -11,6 +11,11 @@ $mat-dialog-content-max-height: 65vh !default;
 // don't expose this value as variable.
 $mat-dialog-button-horizontal-margin: 8px !default;
 
+// Dialog container max height. This has been given a default value so the
+// flex-children can be calculated and not overflow on smaller screens.
+// Fixes b/323588333
+$mat-dialog-container-max-height: 95vh !default;
+
 // Whether to emit fallback values for the structural styles. Previously MDC was emitting
 // paddings in the static styles which meant that users would get them even if they didn't
 // include the `dialog-base`. Eventually we should clean up the usages of this flag.
@@ -36,7 +41,7 @@ $_emit-fallbacks: true;
   height: 100%;
   display: block;
   box-sizing: border-box;
-  max-height: inherit;
+  max-height: $mat-dialog-container-max-height;
   min-height: inherit;
   min-width: inherit;
   max-width: inherit;
