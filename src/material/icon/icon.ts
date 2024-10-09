@@ -129,7 +129,7 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
  * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
  *   font, and the fontIcon input to specify the icon. Typically the fontIcon will specify a
  *   CSS class which causes the glyph to be displayed via a :before selector, as in
- *   https://fortawesome.github.io/Font-Awesome/examples/
+ *   https://fontawesome-v4.github.io/examples/
  *   Example:
  *     `<mat-icon fontSet="fa" fontIcon="alarm"></mat-icon>`
  */
