@@ -1,4 +1,4 @@
-import {Component, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import {Component, AfterViewInit, ViewEncapsulation, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule, MatTooltip} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
@@ -16,9 +16,9 @@ import {MatIconModule} from '@angular/material/icon';
   ],
 })
 export class TooltipScene implements AfterViewInit {
-  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  readonly tooltip = viewChild.required(MatTooltip);
 
   ngAfterViewInit() {
-    this.tooltip.toggle();
+    this.tooltip().toggle();
   }
 }

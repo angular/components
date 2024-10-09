@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ViewEncapsulation, viewChild} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelect, MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from '@angular/material/core';
@@ -12,9 +12,9 @@ import {MatOptionModule} from '@angular/material/core';
   imports: [MatFormFieldModule, MatSelectModule, MatOptionModule]
 })
 export class SelectScene implements AfterViewInit {
-  @ViewChild(MatSelect) select!: MatSelect;
+  readonly select = viewChild.required(MatSelect);
 
   ngAfterViewInit() {
-    this.select.open();
+    this.select().open();
   }
 }

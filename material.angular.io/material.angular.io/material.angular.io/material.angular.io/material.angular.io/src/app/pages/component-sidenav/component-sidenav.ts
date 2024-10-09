@@ -4,10 +4,10 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild,
   ViewEncapsulation,
   forwardRef,
-  input
+  input,
+  viewChild
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
@@ -82,7 +82,7 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   ],
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
-  @ViewChild(MatSidenav) sidenav!: MatSidenav;
+  readonly sidenav = viewChild.required(MatSidenav);
   params: Observable<Params> | undefined;
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
@@ -108,8 +108,9 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     this.subscriptions.add(
       this._navigationFocusService.navigationEndEvents.pipe(map(() => this.isScreenSmall))
       .subscribe((shouldCloseSideNav) => {
-          if (shouldCloseSideNav && this.sidenav) {
-            this.sidenav.close();
+          const sidenav = this.sidenav();
+          if (shouldCloseSideNav && sidenav) {
+            sidenav.close();
           }
         }
       ));

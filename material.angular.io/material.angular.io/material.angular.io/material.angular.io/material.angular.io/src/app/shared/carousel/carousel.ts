@@ -1,16 +1,15 @@
 import {
   AfterContentInit,
   Component,
-  ContentChildren,
   Directive,
   ElementRef,
   HostBinding,
   Inject,
   Optional,
-  QueryList,
-  ViewChild,
   ViewEncapsulation,
-  input
+  input,
+  contentChildren,
+  viewChild
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
@@ -43,8 +42,8 @@ export class CarouselItem implements FocusableOption {
 })
 export class Carousel implements AfterContentInit {
   readonly ariaLabel = input<string|undefined>(undefined, { alias: 'aria-label' });
-  @ContentChildren(CarouselItem) items!: QueryList<CarouselItem>;
-  @ViewChild('list') list!: ElementRef<HTMLElement>;
+  readonly items = contentChildren(CarouselItem);
+  readonly list = viewChild.required<ElementRef<HTMLElement>>('list');
   @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
   position = 0;
   showPrevArrow = false;
@@ -79,12 +78,12 @@ export class Carousel implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    this._keyManager = new FocusKeyManager<CarouselItem>(this.items);
+    this._keyManager = new FocusKeyManager<CarouselItem>(this.items());
   }
 
   /** Goes to the next set of items */
   next() {
-    for (let i = this.index; i < this.items.length; i++) {
+    for (let i = this.index; i < this.items().length; i++) {
       if (this._isOutOfView(i)) {
         this.index = i;
         this._scrollToActiveItem();
@@ -106,7 +105,7 @@ export class Carousel implements AfterContentInit {
 
   /** Updates the `tabindex` of each of the items based on their active state. */
   private _updateItemTabIndices() {
-    this.items.forEach((item: CarouselItem) => {
+    this.items().forEach((item: CarouselItem) => {
       if (this._keyManager != null) {
         item.tabindex = item === this._keyManager.activeItem ? '0' : '-1';
       }
@@ -119,7 +118,7 @@ export class Carousel implements AfterContentInit {
       return;
     }
 
-    const itemsArray = this.items.toArray();
+    const itemsArray = this.items();
     let targetItemIndex = this.index;
 
     // Only shift the carousel by one if we're going forwards. This
@@ -129,7 +128,7 @@ export class Carousel implements AfterContentInit {
     }
 
     this.position = itemsArray[targetItemIndex].element.nativeElement.offsetLeft;
-    this.list.nativeElement.style.transform = `translateX(-${this.position}px)`;
+    this.list().nativeElement.style.transform = `translateX(-${this.position}px)`;
     this.showPrevArrow = this.index > 0;
     this.showNextArrow = false;
 
@@ -143,7 +142,7 @@ export class Carousel implements AfterContentInit {
 
   /** Checks whether an item at a specific index is outside of the viewport. */
   private _isOutOfView(index: number, side?: 'start' | 'end') {
-    const {offsetWidth, offsetLeft} = this.items.toArray()[index].element.nativeElement;
+    const {offsetWidth, offsetLeft} = this.items()[index].element.nativeElement;
 
     if ((!side || side === 'start') && offsetLeft - this.position < 0) {
       return true;
@@ -151,7 +150,7 @@ export class Carousel implements AfterContentInit {
 
     return (
       (!side || side === 'end') &&
-      offsetWidth + offsetLeft - this.position > this.list.nativeElement.clientWidth
+      offsetWidth + offsetLeft - this.position > this.list().nativeElement.clientWidth
     );
   }
 }

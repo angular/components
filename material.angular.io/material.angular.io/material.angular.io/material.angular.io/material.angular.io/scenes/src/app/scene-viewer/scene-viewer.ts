@@ -4,9 +4,9 @@ import {
   HostBinding,
   Input,
   OnInit,
-  ViewChild,
   ViewContainerRef,
-  ViewEncapsulation
+  ViewEncapsulation,
+  viewChild
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
@@ -44,8 +44,7 @@ export class SceneViewer implements OnInit {
   /** Component of scene to display */
   @Input() component: any;
 
-  @ViewChild('scene', {read: ViewContainerRef, static: true})
-  scene!: ViewContainerRef;
+  readonly scene = viewChild.required('scene', { read: ViewContainerRef });
 
   constructor(private readonly componentFactoryResolver: ComponentFactoryResolver,
               private route: ActivatedRoute,
@@ -57,7 +56,7 @@ export class SceneViewer implements OnInit {
 
   ngOnInit() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.component);
-    this.scene.createComponent(componentFactory);
+    this.scene().createComponent(componentFactory);
     const container = document.querySelector('#scene-content-container') as HTMLElement;
     container.style.transform = `scale(${this.scale})`;
     container.style.transformOrigin = 'center';
