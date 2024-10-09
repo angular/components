@@ -1,3 +1,18 @@
+<a name="18.2.8"></a>
+# 18.2.8 "actinium-angle" (2024-10-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fa43a2456](https://github.com/angular/components/commit/fa43a245668201f7a54fa76c320825c5234a7c04) | fix | **stepper:** remove mock of forms type |
+| [5bed0943a](https://github.com/angular/components/commit/5bed0943a6f3a0913242b7b998e473da875303e6) | fix | **stepper:** reset submitted state when resetting stepper |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [104b5932c](https://github.com/angular/components/commit/104b5932c6aba2f06172f9156f68bc4390a11215) | feat | **core:** expose styling information to the docs site |
+| [7ebfbeb6c](https://github.com/angular/components/commit/7ebfbeb6c9ecf08f6fd3926113c43ed91be5da6d) | fix | **schematics:** treat lower dependency builder as default builder ([#29833](https://github.com/angular/components/pull/29833)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.7"></a>
 # 18.2.7 "lava-labyrinth" (2024-10-03)
 ### cdk
