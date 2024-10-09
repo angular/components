@@ -7,12 +7,15 @@ import {compileString} from 'sass';
 interface Token {
   /** Name of the token. */
   name: string;
-  /** Prefix under which the token is exposed in the DOM. */
-  prefix: string;
   /** Type of the token (color, typography etc.) */
   type: string;
-  /** System token that it was derived from. */
-  derivedFrom?: string;
+  /** Places from which the token with the specific name can originate. */
+  sources: {
+    /** Prefix of the source. */
+    prefix: string;
+    /** System-level token from which the source dervies its value. */
+    derivedFrom?: string;
+  }[];
 }
 
 /** Extracted map of tokens from the source Sass files. */
@@ -41,11 +44,17 @@ if (require.main === module) {
     throw new Error(`Could not find theme files in ${packagePath}`);
   }
 
-  const themes: {name: string; tokens: Token[]}[] = [];
+  const themes: {name: string; overridesMixin: string; tokens: Token[]}[] = [];
 
   themeFiles.forEach(theme => {
     const tokens = extractTokens(theme.filePath);
-    themes.push({name: theme.mixinPrefix, tokens});
+    themes.push({
+      name: theme.mixinPrefix,
+      // This can be derived from the `name` already, but we want the source
+      // of truth to be in this repo, instead of whatever page consumes the data.
+      overridesMixin: `${theme.mixinPrefix}-overrides`,
+      tokens,
+    });
   });
 
   writeFileSync(outputPath, JSON.stringify(themes));
@@ -125,25 +134,46 @@ function extractTokens(themePath: string): Token[] {
  * @param groups Extracted data from the Sass file.
  */
 function createTokens(type: string, groups: ExtractedTokenMap): Token[] {
-  const result: Token[] = [];
+  const data: Map<string, Map<string, string | null>> = new Map();
 
+  // First step is to go through the whole data and group the tokens by their name. We need to
+  // group the tokens, because the same name can be used by different prefixes (e.g. both
+  // `mdc-filled-text-field` and `mdc-outlined-text-field` have a `label-text-color` token).
   Object.keys(groups).forEach(prefix => {
     const tokens = groups[prefix];
 
     // The token data for some components may be null.
     if (tokens) {
       Object.keys(tokens).forEach(name => {
+        let tokenData = data.get(name);
+
+        if (!tokenData) {
+          tokenData = new Map();
+          data.set(name, tokenData);
+        }
+
         const value = tokens[name];
         const derivedFrom = typeof value === 'string' ? textBetween(value, 'var(', ')') : null;
-        const token: Token = {name, prefix, type};
-        if (derivedFrom) {
-          token.derivedFrom = derivedFrom.replace('--sys-', '');
-        }
-        result.push(token);
+        tokenData.set(prefix, derivedFrom ? derivedFrom.replace('--sys-', '') : null);
       });
     }
   });
 
+  // After the tokens have been grouped, we can create the `Token` object for each one.
+  const result: Token[] = [];
+
+  data.forEach((tokenData, name) => {
+    const token: Token = {name, type, sources: []};
+
+    tokenData.forEach((derivedFrom, prefix) => {
+      // Set `derivedFrom` to `undefined` if it hasn't been set so it doesn't show up in the JSON.
+      token.sources.push({prefix, derivedFrom: derivedFrom || undefined});
+    });
+
+    result.push(token);
+  });
+
+  // Sort the tokens by name so they're easier to scan.
   return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
