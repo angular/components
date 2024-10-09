@@ -90,21 +90,29 @@ $_has-inserted-loaded-marker: false;
   }
 }
 
-@mixin overrides($tokens: ()) {
+// This theme is a special case where not all of the imported tokens are supported in `overrides`.
+// To aid the docs token extraction, we have to pull the `overrides` token config out into a
+// separate function.
+// !!!Important!!! renaming or removal of this function requires the `extract-tokens.ts` script to
+// be updated as well.
+@function _get-supported-overrides-tokens() {
   $app-tokens: tokens-mat-app.get-token-slots();
   $ripple-tokens: tokens-mat-ripple.get-token-slots();
   $option-tokens: tokens-mat-option.get-token-slots();
   $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
   $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
-    $tokens,
+  @return (
     (prefix: tokens-mat-app.$prefix, tokens: $app-tokens),
     (prefix: tokens-mat-ripple.$prefix, tokens: $ripple-tokens),
     (prefix: tokens-mat-option.$prefix, tokens: $option-tokens),
     (prefix: tokens-mat-full-pseudo-checkbox.$prefix, tokens: $full-pseudo-checkbox-tokens),
     (prefix: tokens-mat-minimal-pseudo-checkbox.$prefix, tokens: $minimal-pseudo-checkbox-tokens),
   );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _get-supported-overrides-tokens()...);
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
