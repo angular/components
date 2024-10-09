@@ -187,13 +187,35 @@ function getTokenExtractionCode(
 
   // Goes through all the available namespaces looking for a `$prefix` variable. This allows us to
   // determine the prefixes that are used within the theme. Once we know the prefixes we can use
-  // them to extract only the tokens we care about from the full token set.
+  // them to extract only the tokens we care about from the full token set. Note: `core-theme`
+  // is a special case where not all of the imported tokens are supported in the `overrides`
+  // mixin. Such cases will expose a `_get-supported-overrides-tokens` private function that
+  // can be used to determine the exact set of prefixes that are used.
   // After the tokens are extracted, we log them out using `@debug` and then intercept the log
   // in order to get the raw data. We have to go through `@debug`, because there's no way to
   // output a Sass map to CSS.
   // The tokens are encoded as JSON so we don't have to implement parsing of Sass maps in TS.
   const append = `
-    $__namespaces: (${useStatements.map(stmt => `"${extractNamespace(stmt)}"`).join(', ')});
+    $__prefixes: ();
+
+    @if ${meta}.function-exists('_get-supported-overrides-tokens') {
+      $__configs: _get-supported-overrides-tokens();
+
+      @each $config in $__configs {
+        $__prefixes: ${list}.append($__prefixes, ${map}.get($config, prefix));
+      }
+    } @else {
+      $__namespaces: (${useStatements.map(stmt => `"${extractNamespace(stmt)}"`).join(', ')});
+
+      @each $name in $__namespaces {
+        $prefix: ${map}.get(${meta}.module-variables($name), prefix);
+
+        @if ($prefix) {
+          $__prefixes: ${list}.append($__prefixes, $prefix);
+        }
+      }
+    }
+
     $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
       ${palettes}.$azure-palette, ${palettes}.$azure-palette, 'sys');
     $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'sys');
@@ -204,15 +226,11 @@ function getTokenExtractionCode(
     $__density: ();
     $__base: ();
 
-    @each $name in $__namespaces {
-      $prefix: map-get(${meta}.module-variables($name), 'prefix');
-
-      @if ($prefix) {
-        $__color: ${map}.set($__color, $prefix, map-get($__all-color, $prefix));
-        $__typography: ${map}.set($__typography, $prefix, map-get($__all-typography, $prefix));
-        $__density: ${map}.set($__density, $prefix, map-get($__all-density, $prefix));
-        $__base: ${map}.set($__base, $prefix, map-get($__all-base, $prefix));
-      }
+    @each $prefix in $__prefixes {
+      $__color: ${map}.set($__color, $prefix, ${map}.get($__all-color, $prefix));
+      $__typography: ${map}.set($__typography, $prefix, ${map}.get($__all-typography, $prefix));
+      $__density: ${map}.set($__density, $prefix, ${map}.get($__all-density, $prefix));
+      $__base: ${map}.set($__base, $prefix, ${map}.get($__all-base, $prefix));
     }
 
     // Define our JSON.stringify implementation so it can be used below.
