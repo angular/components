@@ -33,7 +33,7 @@ import {takeWhile} from 'rxjs/operators';
 import {Overlay} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
-import {ConnectedOverlayPositionChange} from './position/connected-position';
+import {ConnectedOverlayPositionChange, ViewportMargin} from './position/connected-position';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
@@ -178,7 +178,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
-  @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
+  @Input('cdkConnectedOverlayViewportMargin') viewportMargin: ViewportMargin = 0;
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
   @Input('cdkConnectedOverlayScrollStrategy') scrollStrategy: ScrollStrategy;

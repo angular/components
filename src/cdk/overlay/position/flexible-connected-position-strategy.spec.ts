@@ -1367,6 +1367,50 @@ describe('FlexibleConnectedPositionStrategy', () => {
       expect(Math.floor(overlayRect.top)).toBe(15);
     });
 
+    it('should set separate margins when pushing the overlay into the viewport', () => {
+      originElement.style.top = `${-OVERLAY_HEIGHT}px`;
+      originElement.style.left = `${-OVERLAY_WIDTH / 2}px`;
+
+      positionStrategy.withViewportMargin({top: 15, start: 10}).withPositions([
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.top)).toBe(15);
+      expect(Math.floor(overlayRect.left)).toBe(10);
+    });
+
+    it('should only set the margins that were provided when pushing the overlay into the viewport from both axes', () => {
+      originElement.style.top = `${-OVERLAY_HEIGHT / 2}px`;
+      originElement.style.left = `${-OVERLAY_WIDTH / 2}px`;
+
+      positionStrategy.withViewportMargin({start: 30}).withPositions([
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+        },
+      ]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.left)).toBe(OVERLAY_WIDTH / 2);
+      expect(Math.floor(overlayRect.right)).toBe(
+        originElement.offsetWidth - OVERLAY_WIDTH / 2 + OVERLAY_WIDTH,
+      );
+      expect(Math.floor(overlayRect.top)).toBe(0);
+      expect(Math.floor(overlayRect.bottom)).toBe(OVERLAY_HEIGHT);
+    });
+
     it('should not mess with the left offset when pushing from the top', () => {
       originElement.style.top = `${-OVERLAY_HEIGHT * 2}px`;
       originElement.style.left = '200px';
