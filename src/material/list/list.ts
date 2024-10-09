@@ -80,7 +80,7 @@ export class MatListItem extends MatListItemBase {
 
   /** Indicates whether an item in a `<mat-nav-list>` is the currently active page. */
   @Input()
-  get activated() {
+  get activated(): boolean {
     return this._activated;
   }
   set activated(activated) {
