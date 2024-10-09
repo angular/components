@@ -1,3 +1,33 @@
+<a name="19.0.0-next.8"></a>
+# 19.0.0-next.8 "thulium-trumpet" (2024-10-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9eb1f867d](https://github.com/angular/components/commit/9eb1f867d8b45bbc9771062e6a6c40fdd2ca24d1) | fix | **stepper:** remove mock of forms type |
+| [02823c080](https://github.com/angular/components/commit/02823c080be730d3c8cb7900b2449b660a5b0e08) | fix | **stepper:** reset submitted state when resetting stepper |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b777c2df0](https://github.com/angular/components/commit/b777c2df0052232cc304e20c46b0d0572d1f9894) | feat | **core:** expose styling information to the docs site |
+| [9546fe77e](https://github.com/angular/components/commit/9546fe77ef7322276bddf25ed826b2ab73e5ee20) | feat | **timepicker:** add test harnesses |
+| [2646e0885](https://github.com/angular/components/commit/2646e088510f00ca2ae885d42acae9c7fcd8656e) | feat | **timepicker:** add timepicker component |
+| [0fb4247ce](https://github.com/angular/components/commit/0fb4247ce834c475556a17e116e20f1ec0fd5a5a) | fix | **core:** avoid browser inconsistencies when parsing time |
+| [984723e10](https://github.com/angular/components/commit/984723e10bf3cf412058f20c57a4c8117024b0c0) | fix | **schematics:** treat lower dependency builder as default builder ([#29833](https://github.com/angular/components/pull/29833)) |
+| [14e9ec7cc](https://github.com/angular/components/commit/14e9ec7ccb0956f54604ee9f19c6dbee6b496fcd) | fix | **timepicker:** always re-focus input |
+| [1eda48604](https://github.com/angular/components/commit/1eda4860400fbb08c76b7760bb0eba3234f0c707) | fix | **timepicker:** hide toggle icon from assistive technology |
+| [490bcfe38](https://github.com/angular/components/commit/490bcfe38c1f640beefdf537d2af46467f07a4c7) | fix | **timepicker:** more flexible interval parsing |
+| [fb6e20290](https://github.com/angular/components/commit/fb6e20290ba6842c5190217de55d13044169eebf) | fix | **timepicker:** text field in parse error not up to date |
+### mat
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8f0369a27](https://github.com/angular/components/commit/8f0369a27faa7cd6758d78a0a4e1c40811747e49) | fix | **paginator:** fix focus issues with paginator buttons ([#29379](https://github.com/angular/components/pull/29379)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [be342289c](https://github.com/angular/components/commit/be342289c2cc720af31edf1ce98eee08e2bf9235) | fix | remove final references to ComponentFactoryResolver ([#29832](https://github.com/angular/components/pull/29832)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.8"></a>
 # 18.2.8 "actinium-angle" (2024-10-09)
 ### cdk
