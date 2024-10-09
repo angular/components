@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ViewEncapsulation, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
@@ -12,9 +12,9 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
   imports: [MatButtonModule, MatMenuModule, MatIconModule]
 })
 export class MenuScene implements AfterViewInit {
-  @ViewChild('menuTrigger') trigger!: MatMenuTrigger;
+  readonly trigger = viewChild.required<MatMenuTrigger>('menuTrigger');
 
   ngAfterViewInit() {
-    this.trigger.openMenu();
+    this.trigger().openMenu();
   }
 }

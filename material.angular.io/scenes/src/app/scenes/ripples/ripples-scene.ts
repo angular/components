@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ViewEncapsulation, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatRipple, MatRippleModule} from '@angular/material/core';
 
@@ -11,17 +11,17 @@ import {MatRipple, MatRippleModule} from '@angular/material/core';
   imports: [MatRippleModule, MatButtonModule]
 })
 export class RipplesScene implements AfterViewInit {
-  @ViewChild('button', {read: MatRipple}) buttonRipple!: MatRipple;
-  @ViewChild('wrapper', {read: MatRipple}) wrapperRipple!: MatRipple;
+  readonly buttonRipple = viewChild.required('button', { read: MatRipple });
+  readonly wrapperRipple = viewChild.required('wrapper', { read: MatRipple });
 
   ngAfterViewInit() {
-    this.buttonRipple.launch(140, 100, {
+    this.buttonRipple().launch(140, 100, {
       persistent: true,
       animation: {enterDuration: 0},
       radius: 50,
     });
 
-    this.wrapperRipple.launch(300, 100, {
+    this.wrapperRipple().launch(300, 100, {
       persistent: true,
       animation: {enterDuration: 0},
       radius: 150,

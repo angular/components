@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewChild,
   forwardRef,
-  input
+  input,
+  viewChild
 } from '@angular/core';
 import {DocViewer} from '../doc-viewer/doc-viewer';
 
@@ -17,5 +17,5 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
 })
 export class CodeSnippet {
   readonly source = input<string>();
-  @ViewChild('viewer') viewer!: DocViewer;
+  readonly viewer = viewChild.required<DocViewer>('viewer');
 }

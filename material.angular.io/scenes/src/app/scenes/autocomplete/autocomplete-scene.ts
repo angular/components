@@ -1,8 +1,8 @@
 import {
   AfterViewInit,
   Component,
-  ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  viewChild
 } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -27,10 +27,10 @@ export class AutocompleteScene implements AfterViewInit {
   myControl = new FormControl('');
   options: string[] = ['hello', 'hello world'];
 
-  @ViewChild(MatInput) input!: MatInput;
+  readonly input = viewChild.required(MatInput);
 
   ngAfterViewInit() {
-    this.input.focus();
+    this.input().focus();
   }
 }
 

@@ -7,10 +7,9 @@ import {
   NgModule,
   OnDestroy,
   OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
   ViewEncapsulation,
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import {ActivatedRoute,
@@ -95,8 +94,8 @@ export class ComponentViewer implements OnDestroy {
  */
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
-  @ViewChild('toc') tableOfContents!: TableOfContents;
-  @ViewChildren(DocViewer) viewers!: QueryList<DocViewer>;
+  readonly tableOfContents = viewChild.required<TableOfContents>('toc');
+  readonly viewers = viewChildren(DocViewer);
 
   showToc: Observable<boolean>;
   private _destroyed = new Subject();
@@ -116,8 +115,9 @@ export class ComponentBaseView implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.componentViewer.componentDocItem.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      if (this.tableOfContents) {
-        this.tableOfContents.resetHeaders();
+      const tableOfContents = this.tableOfContents();
+      if (tableOfContents) {
+        tableOfContents.resetHeaders();
       }
     });
 
@@ -125,8 +125,8 @@ export class ComponentBaseView implements OnInit, OnDestroy {
       skip(1),
       takeUntil(this._destroyed)
     ).subscribe(() => {
-      if (this.tableOfContents) {
-        this.viewers.forEach(viewer => {
+      if (this.tableOfContents()) {
+        this.viewers().forEach(viewer => {
           viewer.contentRendered.emit(viewer._elementRef.nativeElement);
         });
       }
@@ -139,9 +139,10 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   }
 
   updateTableOfContents(sectionName: string, docViewerContent: HTMLElement, sectionIndex = 0) {
-    if (this.tableOfContents) {
-      this.tableOfContents.addHeaders(sectionName, docViewerContent, sectionIndex);
-      this.tableOfContents.updateScrollPosition();
+    const tableOfContents = this.tableOfContents();
+    if (tableOfContents) {
+      tableOfContents.addHeaders(sectionName, docViewerContent, sectionIndex);
+      tableOfContents.updateScrollPosition();
     }
   }
 }

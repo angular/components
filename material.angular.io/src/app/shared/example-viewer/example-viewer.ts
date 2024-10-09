@@ -4,9 +4,8 @@ import {
   HostBinding,
   Input,
   OnInit,
-  QueryList,
   Type,
-  ViewChildren,
+  viewChildren
 } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
@@ -45,7 +44,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
   ],
 })
 export class ExampleViewer implements OnInit {
-  @ViewChildren(CodeSnippet) readonly snippet!: QueryList<CodeSnippet>;
+  readonly snippet = viewChildren(CodeSnippet);
 
   /** The tab to jump to when expanding from snippet view. */
   selectedTab: number = 0;
@@ -139,8 +138,8 @@ export class ExampleViewer implements OnInit {
     this.view = this.view === 'full' ? 'demo' : 'full';
   }
 
-  copySource(snippet: QueryList<CodeSnippet>, selectedIndex: number = 0) {
-    const text = snippet.toArray()[selectedIndex].viewer.textContent || '';
+  copySource(snippets: readonly CodeSnippet[], selectedIndex: number = 0) {
+    const text = snippets[selectedIndex].viewer().textContent || '';
     if (this.clipboard.copy(text)) {
       this.snackbar.open('Code copied', '', {duration: 2500});
     } else {
