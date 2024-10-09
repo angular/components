@@ -74,8 +74,9 @@ function extractTokens(themePath: string): Token[] {
 
   const startMarker = '/*! extract tokens start */';
   const endMarker = '/*! extract tokens end */';
-  const absoluteThemePath = join(process.cwd(), themePath);
-  const srcPath = join(process.cwd(), 'src');
+  const root = process.cwd();
+  const absoluteThemePath = join(root, themePath);
+  const srcPath = join(root, 'src');
   const {prepend, append} = getTokenExtractionCode(
     srcPath,
     themePath,
@@ -93,6 +94,16 @@ function extractTokens(themePath: string): Token[] {
   compileString(toCompile, {
     loadPaths: [srcPath],
     url: pathToFileURL(absoluteThemePath),
+    importers: [
+      {
+        findFileUrl: (url: string) => {
+          const angularPrefix = '@angular/';
+          return url.startsWith(angularPrefix)
+            ? pathToFileURL(join(srcPath, url.substring(angularPrefix.length)))
+            : null;
+        },
+      },
+    ],
     sourceMap: false,
     logger: {
       debug: message => {
