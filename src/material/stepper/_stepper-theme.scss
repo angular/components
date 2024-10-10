@@ -12,8 +12,8 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
   }
-  @else {}
 }
 
 /// Outputs color theme styles for mat-stepper.
@@ -24,20 +24,25 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.get-color-tokens($theme)
+      );
 
       .mat-step-header.mat-accent {
-        @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, accent));
+        @include token-utils.create-token-values(
+          tokens-mat-stepper.$prefix,
+          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, accent)
+        );
       }
 
       .mat-step-header.mat-warn {
-        @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mat-stepper.$prefix,
+          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -48,11 +53,12 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -62,11 +68,12 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-stepper.$prefix,
+        tokens-mat-stepper.get-density-tokens($theme)
+      );
     }
   }
 }
@@ -76,7 +83,10 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-stepper.$prefix, tokens: tokens-mat-stepper.get-token-slots()),
+    (
+      namespace: tokens-mat-stepper.$prefix,
+      tokens: tokens-mat-stepper.get-token-slots(),
+    )
   );
 }
 
@@ -85,12 +95,11 @@
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
 ///   $color-variant: The color variant to use for the stepper: primary, secondary,
 ///   tertiary, or error (If not specified, primary color values will be used).
-@mixin theme($theme,  $options...) {
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-stepper') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -107,14 +116,14 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   @if ($tokens != ()) {
     $mat-stepper-tokens: token-utils.get-tokens-for(
       $tokens,
       tokens-mat-stepper.$prefix,
       $options...
     );
-    @include token-utils.create-token-values(
-        tokens-mat-stepper.$prefix, $mat-stepper-tokens);
+    @include token-utils.create-token-values(tokens-mat-stepper.$prefix, $mat-stepper-tokens);
   }
 }

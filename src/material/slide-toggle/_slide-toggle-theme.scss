@@ -15,12 +15,16 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-unthemable-tokens()
+      );
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values(tokens-mat-switch.$prefix,
-          tokens-mat-switch.get-unthemable-tokens());
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-unthemable-tokens()
+        );
       }
     }
   }
@@ -39,8 +43,10 @@
 
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-color-tokens($theme)
+      );
 
       & {
         // TODO(wagnermaciel): Use our token system to define this css variable.
@@ -52,18 +58,24 @@
       }
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values(tokens-mat-switch.$prefix,
-          tokens-mat-switch.get-color-tokens($theme));
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-color-tokens($theme)
+        );
 
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
-          @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent));
+          @include token-utils.create-token-values(
+            tokens-mdc-switch.$prefix,
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent)
+          );
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn));
+          @include token-utils.create-token-values(
+            tokens-mdc-switch.$prefix,
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn)
+          );
         }
       }
     }
@@ -77,12 +89,16 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-typography-tokens($theme)
+      );
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values(tokens-mat-switch.$prefix,
-          tokens-mat-switch.get-typography-tokens($theme));
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-typography-tokens($theme)
+        );
       }
     }
   }
@@ -95,12 +111,16 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-density-tokens($theme)
+      );
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values(tokens-mat-switch.$prefix,
-          tokens-mat-switch.get-density-tokens($theme));
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-density-tokens($theme)
+        );
       }
     }
   }
@@ -112,11 +132,11 @@
   @include token-utils.batch-create-token-values(
     $tokens,
     (
-      prefix: tokens-mat-switch.$prefix,
+      namespace: tokens-mat-switch.$prefix,
       tokens: tokens-mat-switch.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-switch.$prefix,
+      namespace: tokens-mdc-switch.$prefix,
       tokens: tokens-mdc-switch.get-token-slots(),
     )
   );

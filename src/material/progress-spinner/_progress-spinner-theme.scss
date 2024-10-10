@@ -11,11 +11,12 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
-        tokens-mdc-circular-progress.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -28,20 +29,25 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
-        tokens-mdc-circular-progress.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values(
+        tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-color-tokens($theme, primary)
+      );
 
       .mat-accent {
-        @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
-          tokens-mdc-circular-progress.get-color-tokens($theme, accent));
+        @include token-utils.create-token-values(
+          tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, accent)
+        );
       }
 
       .mat-warn {
-        @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
-          tokens-mdc-circular-progress.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -64,7 +70,10 @@
 
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mdc-circular-progress.$prefix, tokens: $circular-progress-tokens),
+    (
+      namespace: tokens-mdc-circular-progress.$prefix,
+      tokens: $circular-progress-tokens,
+    )
   );
 }
 
@@ -77,8 +86,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-spinner') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -95,9 +103,15 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
-  $mdc-circular-progress-tokens:
-    token-utils.get-tokens-for($tokens, tokens-mdc-circular-progress.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mdc-circular-progress.$prefix,
-    $mdc-circular-progress-tokens);
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-circular-progress-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-circular-progress.$prefix,
+    $options...
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-circular-progress.$prefix,
+    $mdc-circular-progress-tokens
+  );
 }
