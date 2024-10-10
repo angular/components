@@ -16,11 +16,7 @@ import {AsyncPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
-import {
-  MatSidenav,
-  MatSidenavModule,
-  MatDrawerToggleResult,
-} from '@angular/material/sidenav';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {
   ActivatedRoute,
   Params,
