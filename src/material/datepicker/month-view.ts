@@ -51,6 +51,7 @@ import {
   MatDateRangeSelectionStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
 } from './date-range-selection-strategy';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 const DAYS_PER_WEEK = 7;
 
@@ -221,6 +222,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
         throw createMissingDateImplError('DateAdapter');
