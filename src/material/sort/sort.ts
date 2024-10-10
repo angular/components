@@ -83,7 +83,7 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
   readonly _stateChanges = new Subject<void>();
 
   /** The id of the most recently sorted MatSortable. */
-  @Input('matSortActive') active: string;
+  @Input('matSortActive') active: string = '';
 
   /**
    * The direction to set when an MatSortable is initially sorted.
@@ -166,7 +166,9 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
     } else {
       this.direction = this.getNextSortDirection(sortable);
     }
-
+    if (!this.direction) {
+      this.active = '';
+    }
     this.sortChange.emit({active: this.active, direction: this.direction});
   }
 
