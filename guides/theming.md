@@ -128,30 +128,36 @@ and `tertiary` options:
 - `$rose-palette`
 
 ##### Custom theme
-Alternatively, a theme can be generated with a custom color with the following schematic:
+Alternatively, custom palettes can be generated with a custom color with the following schematic:
 
 ```shell
-ng generate @angular/material:m3-theme
+ng generate @angular/material:theme-color
 ```
 
-This schematic integrates with [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) to build a theme based on a generated set of palettes based on a single color. Optionally you can provide additional custom colors for the secondary, tertiary, and neutral palettes.
+This schematic integrates with [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) to build palettes based on a single color. Optionally you can provide
+additional custom colors for the secondary, tertiary, and neutral palettes.
 
-The output of the schematic is a new Sass file that exports a theme or themes (if generating both a light and dark theme) that can be provided to component theme mixins.
+The output of the schematic is a new Sass file that exports the palettes that can be provided to
+a theme definition.
 
 ```scss
 @use '@angular/material' as mat;
-@use './path/to/m3-theme';
-
-@include mat.core();
+@use './path/to/my-theme'; // location of generated file
 
 html {
-  // Apply the light theme by default
-  @include mat.core-theme(m3-theme.$light-theme);
-  @include mat.button-theme(m3-theme.$light-theme);
+  @include mat.theme(
+    color: (
+      primary: my-theme.$primary-palette,
+      tertiary: my-theme.$tertiary-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  )
 }
 ```
 
-Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
+You can also optionally generate high contrast override mixins for your custom theme that allows for
+a better accessibility experience. Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md).
 
 <!-- TODO(mmalerba): Illustrate palettes with example. -->
 

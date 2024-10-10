@@ -207,7 +207,7 @@
       "src/cdk/schematics/ng-update/test-cases/**/*_expected_output.ts",
       "src/material/schematics/ng-update/test-cases/**/*_input.ts",
       "src/material/schematics/ng-update/test-cases/**/*_expected_output.ts",
-      "src/material/schematics/ng-generate/m3-theme/index.ts",
+      "src/material/schematics/ng-generate/theme-color/index.ts",
       // These CLI-generated projects are not necessarily compliant with the lint
       // rules and they should remain as unmodified as possible.
       "integration/ng-add/**/*",
