@@ -105,14 +105,16 @@ $_side-padding: 8px;
 // The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
 // the specificity over the button styles that may bleed in from the rest of the app.
 .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-  // MDC's `action-label-text-color` should be able to do this, but the button theme has a
-  // higher specificity so it ends up overriding it. Define our own variable that we can
-  // use to control the color instead.
-  @include token-utils.use-tokens(
-    tokens-mat-snack-bar.$prefix,
-    tokens-mat-snack-bar.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(color, button-color);
+  &.mat-unthemed {
+    // MDC's `action-label-text-color` should be able to do this, but the button theme has a
+    // higher specificity so it ends up overriding it. Define our own variable that we can
+    // use to control the color instead.
+    @include token-utils.use-tokens(
+      tokens-mat-snack-bar.$prefix,
+      tokens-mat-snack-bar.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(color, button-color);
+    }
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
