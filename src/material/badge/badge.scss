@@ -22,11 +22,11 @@ $large-size: $default-size + 6;
       // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
       // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
       // grow with the content.
-      width: token-utils.get-token-variable($legacy-size-var-name, $fallback: unset);
-      height: token-utils.get-token-variable($legacy-size-var-name, $fallback: unset);
-      min-width: token-utils.get-token-variable($size-var-name, $fallback: unset);
-      min-height: token-utils.get-token-variable($size-var-name, $fallback: unset);
-      line-height: token-utils.get-token-variable($legacy-size-var-name);
+      @include token-utils.create-token-slot(width, $legacy-size-var-name);
+      @include token-utils.create-token-slot(height, $legacy-size-var-name);
+      @include token-utils.create-token-slot(min-width, $size-var-name);
+      @include token-utils.create-token-slot(min-height, $size-var-name);
+      @include token-utils.create-token-slot(line-height, '#{$prefix}line-height');
       @include token-utils.create-token-slot(padding, '#{$prefix}container-padding');
       @include token-utils.create-token-slot(font-size, '#{$prefix}text-size');
       @include token-utils.create-token-slot(margin, '#{$prefix}container-offset');
