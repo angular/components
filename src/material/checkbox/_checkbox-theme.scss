@@ -51,13 +51,15 @@
       &.mat-primary {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, primary));
+          tokens-mdc-checkbox.get-color-tokens($theme, primary)
+        );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, warn));
+          tokens-mdc-checkbox.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -116,6 +118,17 @@
       prefix: tokens-mdc-checkbox.$prefix,
       tokens: tokens-mdc-checkbox.get-token-slots(),
     )
+  );
+}
+
+/// Returns the theme config with the given checkbox tokens overridden.
+/// @param {Map} $theme An M3 material theme.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $overrides: ()) {
+  @return token-utils.extend-theme(
+    $theme,
+    sass-utils.list-of(tokens-mdc-checkbox.$prefix, tokens-mat-checkbox.$prefix),
+    $overrides
   );
 }
 

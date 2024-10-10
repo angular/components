@@ -1,8 +1,10 @@
 @use '../style/elevation';
 @use '../style/sass-utils';
+@use '../theming/inspection';
 @use './m3-system';
 @use 'sass:list';
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:string';
 
 $_tokens: null;
@@ -138,10 +140,13 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 @function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
   $elevation: map.get($tokens, $elevation-token);
   $shadow-color: map.get($tokens, $shadow-color-token);
-  @return map.merge($tokens, (
-    $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
-    $shadow-color-token: null,
-  ));
+  @return map.merge(
+    $tokens,
+    (
+      $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
+      $shadow-color-token: null,
+    )
+  );
 }
 
 /// Checks whether a list starts wih a given prefix
@@ -195,7 +200,8 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   $overrides: map.get($tokens, list.append($prefix, $color-variant));
   @if $overrides == null {
     $variants: _supported-color-variants($tokens, $prefix);
-    $secondary-message: if($variants == (),
+    $secondary-message: if(
+      $variants == (),
       'Mixin does not support color variants',
       'Supported color variants are: #{$variants}'
     );
@@ -245,4 +251,89 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
       );
     }
   }
+}
+
+// Returns a theme config with the given tokens overridden.
+/// @param {Map} $theme The material theme for an application.
+/// @param {List} $extend-namespaces The namespaces to extend in the theme. Each item can be either:
+///  1. A list, representing a namespace to match token names against.
+///  2. A map, representing a namespace to match tokens agaisnt + a prefix string that the token
+///     name must start with to match this namespace. The prefix will be stripped before matching
+///     the token name.
+/// @param {Map} $overrides The token values to override in the theme.
+@function extend-theme($theme, $extend-namespaces, $overrides: ()) {
+  $internals: _mat-theming-internals-do-not-access;
+  $systems: (color-tokens, typography-tokens, density-tokens, base-tokens);
+  $variants: (primary, secondary, tertiary, error, surface);
+
+  @if (inspection.get-theme-version($theme) < 1) {
+    @error #{'The `extend-theme` functions are only supported for M3 themes'};
+  }
+
+  // Determine which system and namespace each shorthand token belongs to.
+  $seen-tokens: ();
+  @each $namespace in $extend-namespaces {
+    $prefix: '';
+    // Unpack namespaces that come with a prefix.
+    @if meta.type-of($namespace) == 'map' {
+      $prefix: map.get($namespace, prefix);
+      $namespace: map.get($namespace, namespace);
+    }
+    $namespace-found: false;
+    @each $system in $systems {
+      $tokens: map.get($theme, $internals, $system, $namespace);
+      @if ($tokens != null) {
+        $namespace-found: true;
+        @each $name, $value in $tokens {
+          $prefixed-name: $prefix + $name;
+          @if map.has-key($seen-tokens, $prefixed-name) {
+            @error #{'Error extending theme: Ambiguous token name `'}#{$prefixed-name}#{
+            '` exists in multiple namespaces: `('}#{
+              list.nth(map.get($seen-tokens, $prefixed-name), 1)}#{')` and `('}#{$namespace}#{')`'};
+          }
+          $seen-tokens: map.set($seen-tokens, $prefixed-name, ($namespace, $system, $name));
+        }
+      }
+    }
+    @if not $namespace-found {
+      @error #{'Error extending theme: Theme does not have tokens for namespace `('}#{
+        $namespace}#{')`'};
+    }
+  }
+
+  // Update internal tokens based on given overrides.
+  @each $token, $value in $overrides {
+    @if (meta.type-of($value) == 'map') {
+      $variant: $token;
+      $variant-overrides: $value;
+      @if (list.index($variants, $variant) == null) {
+        @error #{'Error extending theme: Unrecognized color variant `'}#{$variant}#{
+          '`. Allowed variants are: '}#{$variants};
+      }
+      @each $token, $value in $variant-overrides {
+        $theme: _update-token($theme, $seen-tokens, $token, $value, $variant);
+      }
+    } @else {
+      $theme: _update-token($theme, $seen-tokens, $token, $value);
+    }
+  }
+
+  @return $theme;
+}
+
+// Update the given token in the given theme.
+@function _update-token($theme, $seen-tokens, $token, $value, $variant: null) {
+  $internals: _mat-theming-internals-do-not-access;
+  $token-info: map.get($seen-tokens, $token);
+  @if $token-info == null {
+    @error #{'Error extending theme: Unrecognized token `'}#{$token}#{'`. Allowed tokens are: '}#{
+      map.keys($seen-tokens)};
+  }
+  $namespace: list.nth($token-info, 1);
+  @if ($variant != null) {
+    $namespace: list.append($namespace, $variant);
+  }
+  $system: list.nth($token-info, 2);
+  $token-name: list.nth($token-info, 3);
+  @return map.set($theme, $internals, $system, $namespace, $token-name, $value);
 }
