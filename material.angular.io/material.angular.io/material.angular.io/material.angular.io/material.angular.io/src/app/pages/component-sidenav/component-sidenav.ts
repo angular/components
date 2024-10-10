@@ -82,7 +82,7 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   ],
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
-  readonly sidenav = viewChild.required(MatSidenav);
+  readonly sidenav = viewChild(MatSidenav);
   params: Observable<Params> | undefined;
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
@@ -120,8 +120,8 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  toggleSidenav(sidenav: MatSidenav): Promise<MatDrawerToggleResult> {
-    return sidenav.toggle();
+  toggleSidenav(): void {
+    this.sidenav()?.toggle();
   }
 }
 
