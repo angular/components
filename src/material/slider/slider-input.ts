@@ -353,6 +353,12 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     if (this._isActive) {
       this._updateThumbUIByValue({withAnimation: true});
     }
+    // special case to handle VoiceOver interacting with
+    // the slider since _onInput does not get called.
+    else if (this._isFocused) {
+      this._updateThumbUIByValue({withAnimation: true});
+      this._slider._onValueChange(this);
+    }
   }
 
   _onInput(): void {
