@@ -47,7 +47,7 @@ html {
   }
 
   body.demo-experimental-theme {
-    @include mat.private-experimental-theme((
+    @include mat.theme((
       color: (
         theme-type: light,
         primary: $primary,
@@ -83,7 +83,7 @@ body.demo-unicorn-dark-theme {
   }
 
   &.demo-experimental-theme {
-    @include mat.private-experimental-theme((
+    @include mat.theme((
       color: (
         theme-type: dark,
         primary: $primary,
@@ -110,7 +110,7 @@ $density-scales: (-1, -2, -3, -4, minimum, maximum);
     }
 
     body.demo-experimental-theme & {
-      @include mat.private-experimental-theme((density: $scale));
+      @include mat.theme((density: $scale));
     }
   }
 }
