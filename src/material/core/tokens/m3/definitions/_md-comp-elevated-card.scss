@@ -22,7 +22,7 @@ $_default: (
 
 @function values($deps: $_default, $exclude-hardcoded-values: false) {
   @return (
-    'container-color': map.get($deps, 'md-sys-color', 'surface'),
+    'container-color': map.get($deps, 'md-sys-color', 'surface-container-low'),
     'container-elevation': map.get($deps, 'md-sys-elevation', 'level1'),
     'container-shadow-color': map.get($deps, 'md-sys-color', 'shadow'),
     'container-shape': map.get($deps, 'md-sys-shape', 'corner-medium'),
