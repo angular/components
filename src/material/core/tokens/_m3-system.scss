@@ -84,6 +84,25 @@ $_system-level-prefix: sys;
   @include system-level-state($overrides: $overrides, $prefix: $_system-fallback-prefix);
 }
 
+/// Emits the system-level CSS variables for each of the provided override values. E.g. to
+/// change the primary color to red, use `mat.theme-overrides((primary: red));`
+@mixin theme-overrides($overrides, $prefix: $_system-fallback-prefix) {
+  $sys-names: map-merge-all(
+      definitions.md-sys-color-values-light(),
+      definitions.md-sys-typescale-values(),
+      definitions.md-sys-elevation-values(),
+      definitions.md-sys-shape-values(),
+      definitions.md-sys-state-values());
+
+  & {
+    @each $name, $value in $overrides {
+      @if (map.has-key($sys-names, $name)) {
+        --#{$prefix}-#{$name}: #{map.get($overrides, $name)};
+      }
+    }
+  }
+}
+
 @mixin system-level-colors($theme, $overrides: (), $prefix: null) {
   $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
   $base-palettes: (
@@ -225,4 +244,13 @@ $_system-level-prefix: sys;
       m3-tokens.generate-tokens($app-vars, true, true),
       m3-tokens.generate-density-tokens(0)
   );
+}
+
+/// Creates a single merged map from the provided variable-length map arguments
+@function map-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
 }
