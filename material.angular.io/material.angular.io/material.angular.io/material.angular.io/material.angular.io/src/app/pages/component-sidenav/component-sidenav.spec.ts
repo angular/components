@@ -30,7 +30,7 @@ describe('ComponentSidenav', () => {
     waitForAsync(() => {
       expect(component.sidenav() instanceof MatSidenav).toBeTruthy();
       component.isScreenSmall.pipe(take(1)).subscribe(isSmall => expect(isSmall).toBeTruthy());
-      expect(component.sidenav().opened).toBe(false);
+      expect(component.sidenav()!.opened).toBe(false);
     });
   });
 
