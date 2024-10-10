@@ -32,7 +32,7 @@ mat-icon {
   // In some cases the icon elements may extend beyond the container. Clip these cases
   // in order to avoid weird overflows and click areas. See #11826.
   overflow: hidden;
-
+  
   &.mat-icon-inline {
     font-size: inherit;
     height: inherit;
@@ -43,6 +43,7 @@ mat-icon {
   &.mat-ligature-font[fontIcon]::before {
     content: attr(fontIcon);
   }
+
 }
 
 // Icons that will be mirrored in RTL.
@@ -59,6 +60,12 @@ mat-icon {
 
     .mat-icon-button .mat-icon {
       margin: auto;
+      overflow: visible;
     }
   }
+}
+
+// Makes button icon not cut off/shrink making the icon visible to fix b/250063405
+.mat-mdc-button-base .mat-icon {
+  flex-shrink: 0;
 }
