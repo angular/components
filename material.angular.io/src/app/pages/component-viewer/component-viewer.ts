@@ -94,7 +94,7 @@ export class ComponentViewer implements OnDestroy {
  */
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
-  readonly tableOfContents = viewChild.required<TableOfContents>('toc');
+  readonly tableOfContents = viewChild<TableOfContents>('toc');
   readonly viewers = viewChildren(DocViewer);
 
   showToc: Observable<boolean>;
