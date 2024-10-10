@@ -20,7 +20,7 @@
 @forward './core/tokens/m2' show m2-tokens-from-theme;
 @forward './core/tokens/m3-system' show system-level-colors,
     system-level-typography, system-level-elevation, system-level-shape,
-    system-level-motion, system-level-state, theme;
+    system-level-motion, system-level-state, theme, theme-overrides;
 
 // Private/Internal
 @forward './core/density/private/all-density' show all-component-densities;

@@ -1,4 +1,4 @@
-@use '@angular/material';
+@use '@angular/material' as mat;
 
 :host {
   display: block;
@@ -82,7 +82,8 @@ a {
 .demo-surface-variable {
   display: inline-block;
   font-family: monospace;
-  background: var(--mat-app-surface-dim);
+  background: var(--mat-app-primary-container);
+  color: var(--mat-app-on-primary-container);
   padding: 2px 6px;
   margin: 0 2px;
   border-radius: 4px;
@@ -91,7 +92,7 @@ a {
 mat-expansion-panel {
   margin-top: 24px;
   overflow: visible;
-  @include material.expansion-overrides((
+  @include mat.expansion-overrides((
     'container-text-font': var(--mat-app-body-medium-font),
     'container-text-size': var(--mat-app-body-medium-size),
     'container-text-weight': var(--mat-app-body-medium-weight),
@@ -165,6 +166,9 @@ mat-expansion-panel {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--mat-app-surface-container);
+  color: var(--mat-app-on-surface);
+  border-radius: var(--mat-app-corner-extra-small);
 }
 
 .demo-code-block {
@@ -172,4 +176,21 @@ mat-expansion-panel {
   padding: 16px;
   border-radius: var(--mat-app-corner-small);
   border: 1px solid var(--mat-app-outline);
+}
+
+.demo-overrides {
+  background-color: var(--mat-app-primary);
+  color: var(--mat-app-on-primary);
+  font: var(--mat-app-body-medium);
+  border-radius: var(--mat-app-corner-large);
+  box-shadow: var(--mat-app-level3);
+  padding: 16px;
+
+  @include mat.theme-overrides((
+    primary: #ebdcff,
+    on-primary: #230f46,
+    body-medium: 600 1.5rem / 2.25rem Arial,
+    corner-large: 32px,
+    level3: 0 4px 6px 1px var(--mat-app-surface-dim),
+  ));
 }
