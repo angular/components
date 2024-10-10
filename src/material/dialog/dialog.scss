@@ -41,7 +41,7 @@ $_emit-fallbacks: true;
   height: 100%;
   display: block;
   box-sizing: border-box;
-  max-height: $mat-dialog-container-max-height;
+  max-height: inherit;
   min-height: inherit;
   min-width: inherit;
   max-width: inherit;
