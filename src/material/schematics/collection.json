@@ -47,9 +47,9 @@
     },
     "m3Theme": {
       "description": "Generate M3 theme",
-      "factory": "./ng-generate/m3-theme/index_bundled",
-      "schema": "./ng-generate/m3-theme/schema.json",
-      "aliases": ["m3-theme", "M3-theme"]
+      "factory": "./ng-generate/theme-color/index_bundled",
+      "schema": "./ng-generate/theme-color/schema.json",
+      "aliases": ["theme-color"]
     }
   }
 }

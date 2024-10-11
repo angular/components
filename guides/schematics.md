@@ -118,11 +118,12 @@ ng generate @angular/cdk:drag-drop <component-name>
 
 ### Material 3 Theme schematic
 
-The `m3-theme` schematic will generate a file with Material 3 themes created
-from custom colors.
+The `theme-color` schematic will generate a file with Material 3 palettes from the specified colors
+that can be used in a theme file. It also generates high contrast color override mixins if
+specified.
 
 ```
-ng generate @angular/material:m3-theme
+ng generate @angular/material:theme-color
 ```
 
-Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md).

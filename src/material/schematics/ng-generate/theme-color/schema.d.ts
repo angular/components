@@ -24,13 +24,9 @@ export interface Schema {
    */
   neutralColor?: string;
   /**
-   * Type for theme (ex. 'light', 'dark', or 'both').
+   * Whether to create high contrast override theme mixins.
    */
-  themeTypes?: string;
-  /**
-   * Whether to use system-level variables in the theme.
-   */
-  useSystemVariables?: boolean;
+  includeHighContrast?: boolean;
   /*
    * Workspace-relative path to a directory where the file with the custom M3
    * theme will be generated.
