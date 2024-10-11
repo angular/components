@@ -127,6 +127,7 @@ export class CdkTree<T, K = T>
 {
   private _differs = inject(IterableDiffers);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject(ElementRef);
 
   private _dir = inject(Directionality);
 
@@ -890,8 +891,20 @@ export class CdkTree<T, K = T>
   }
 
   /** `keydown` event handler; this just passes the event to the `TreeKeyManager`. */
-  _sendKeydownToKeyManager(event: KeyboardEvent) {
-    this._keyManager.onKeydown(event);
+  protected _sendKeydownToKeyManager(event: KeyboardEvent): void {
+    // Only handle events directly on the tree or directly on one of the nodes, otherwise
+    // we risk interfering with events in the projected content (see #29828).
+    if (event.target === this._elementRef.nativeElement) {
+      this._keyManager.onKeydown(event);
+    } else {
+      const nodes = this._nodes.getValue();
+      for (const [, node] of nodes) {
+        if (event.target === node._elementRef.nativeElement) {
+          this._keyManager.onKeydown(event);
+          break;
+        }
+      }
+    }
   }
 
   /** Gets all nested descendants of a given node. */
@@ -1155,7 +1168,7 @@ export class CdkTree<T, K = T>
   standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
-  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _tree = inject<CdkTree<T, K>>(CdkTree);
   protected _tabindex: number | null = -1;
 

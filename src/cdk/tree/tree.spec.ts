@@ -380,6 +380,28 @@ describe('CdkTree', () => {
           .withContext(`Expect node collapsed`)
           .toBe(0);
       });
+
+      it('should not handle events coming from a descendant of a node', () => {
+        expect(dataSource.data.length).toBe(3);
+
+        expect(getExpandedNodes(component.dataSource?.getRecursiveData(), component.tree).length)
+          .withContext('Expect no expanded node on init')
+          .toBe(0);
+
+        const node = getNodes(treeElement)[2] as HTMLElement;
+        const input = document.createElement('input');
+        node.appendChild(input);
+
+        const event = createKeyboardEvent('keydown', undefined, 'ArrowRight');
+        spyOn(event, 'preventDefault').and.callThrough();
+        input.dispatchEvent(event);
+        fixture.detectChanges();
+
+        expect(getExpandedNodes(component.dataSource?.getRecursiveData(), component.tree).length)
+          .withContext('Expect no expanded node after event')
+          .toBe(0);
+        expect(event.preventDefault).not.toHaveBeenCalled();
+      });
     });
 
     describe('with when node template', () => {
