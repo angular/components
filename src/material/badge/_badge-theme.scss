@@ -13,11 +13,12 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -30,21 +31,26 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-color-tokens($theme)
+      );
     }
 
     .mat-badge-accent {
-      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-        tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent));
+      @include token-utils.create-token-values(
+        tokens-mat-badge.$prefix,
+        tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent)
+      );
     }
 
     .mat-badge-warn {
-      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-        tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn));
+      @include token-utils.create-token-values(
+        tokens-mat-badge.$prefix,
+        tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn)
+      );
     }
   }
 }
@@ -54,11 +60,12 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-badge.$prefix,
+        tokens-mat-badge.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -68,8 +75,8 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
   }
-  @else {}
 }
 
 /// Outputs the CSS variable values for the given tokens.
@@ -77,7 +84,10 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-badge.$prefix, tokens: tokens-mat-badge.get-token-slots()),
+    (
+      namespace: tokens-mat-badge.$prefix,
+      tokens: tokens-mat-badge.get-token-slots(),
+    )
   );
 }
 
@@ -90,8 +100,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-badge') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -108,7 +117,8 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   $mat-badge-tokens: token-utils.get-tokens-for($tokens, tokens-mat-badge.$prefix, $options...);
   @include token-utils.create-token-values(tokens-mat-badge.$prefix, $mat-badge-tokens);
 }

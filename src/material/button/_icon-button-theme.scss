@@ -8,27 +8,29 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 
-
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix,
-        tokens-mdc-icon-button.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-icon-button.$prefix,
+        tokens-mdc-icon-button.get-unthemable-tokens()
+      );
     }
   }
 }
 
 @mixin _icon-button-variant($theme, $palette) {
-  $mdc-tokens: if($palette,
+  $mdc-tokens: if(
+    $palette,
     tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, $palette),
     tokens-mdc-icon-button.get-color-tokens($theme)
   );
 
-  $mat-tokens: if($palette,
+  $mat-tokens: if(
+    $palette,
     tokens-mat-icon-button.private-get-color-palette-color-tokens($theme, $palette),
     tokens-mat-icon-button.get-color-tokens($theme)
   );
@@ -44,8 +46,7 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
       @include _icon-button-variant($theme, null);
 
@@ -69,11 +70,12 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
-        tokens-mat-icon-button.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -81,8 +83,7 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     $icon-size: 24px;
     $density-scale: inspection.get-theme-density($theme);
     $size-map: (
@@ -96,8 +97,10 @@
     $calculated-size: map.get($size-map, $density-scale);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-icon-button.$prefix,
-        tokens-mat-icon-button.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-density-tokens($theme)
+      );
     }
 
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
@@ -121,8 +124,14 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mdc-icon-button.$prefix, tokens: tokens-mdc-icon-button.get-token-slots()),
-    (prefix: tokens-mat-icon-button.$prefix, tokens: tokens-mat-icon-button.get-token-slots()),
+    (
+      namespace: tokens-mdc-icon-button.$prefix,
+      tokens: tokens-mdc-icon-button.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mat-icon-button.$prefix,
+      tokens: tokens-mat-icon-button.get-token-slots(),
+    )
   );
 }
 
@@ -134,8 +143,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -152,7 +160,8 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   @if ($tokens != ()) {
     $mdc-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-icon-button.$prefix, $options...);
     $mat-tokens: token-utils.get-tokens-for($tokens, tokens-mat-icon-button.$prefix, $options...);

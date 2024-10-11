@@ -51,13 +51,15 @@
       &.mat-primary {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, primary));
+          tokens-mdc-checkbox.get-color-tokens($theme, primary)
+        );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values(
           tokens-mdc-checkbox.$prefix,
-          tokens-mdc-checkbox.get-color-tokens($theme, warn));
+          tokens-mdc-checkbox.get-color-tokens($theme, warn)
+        );
       }
     }
   }
@@ -109,11 +111,11 @@
   @include token-utils.batch-create-token-values(
     $tokens,
     (
-      prefix: tokens-mat-checkbox.$prefix,
+      namespace: tokens-mat-checkbox.$prefix,
       tokens: tokens-mat-checkbox.get-token-slots(),
     ),
     (
-      prefix: tokens-mdc-checkbox.$prefix,
+      namespace: tokens-mdc-checkbox.$prefix,
       tokens: tokens-mdc-checkbox.get-token-slots(),
     )
   );

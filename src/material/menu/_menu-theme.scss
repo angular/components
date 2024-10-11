@@ -10,11 +10,12 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mat-menu.$prefix,
+        tokens-mat-menu.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -22,11 +23,12 @@
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-menu.$prefix,
+        tokens-mat-menu.get-color-tokens($theme)
+      );
     }
   }
 }
@@ -34,11 +36,12 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mat-menu.$prefix,
+        tokens-mat-menu.get-typography-tokens($theme)
+      );
     }
   }
 }
@@ -46,14 +49,17 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
   }
-  @else {}
 }
 
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-menu.$prefix, tokens: tokens-mat-menu.get-token-slots()),
+    (
+      namespace: tokens-mat-menu.$prefix,
+      tokens: tokens-mat-menu.get-token-slots(),
+    )
   );
 }
 
@@ -61,8 +67,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-menu') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -79,9 +84,12 @@
 
 @mixin _theme-from-tokens($tokens) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-        tokens-mat-menu.$prefix, map.get($tokens, tokens-mat-menu.$prefix));
+      tokens-mat-menu.$prefix,
+      map.get($tokens, tokens-mat-menu.$prefix)
+    );
   }
 }

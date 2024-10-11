@@ -13,13 +13,16 @@
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-        tokens-mdc-slider.get-unthemable-tokens());
-      @include token-utils.create-token-values(tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-unthemable-tokens());
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-unthemable-tokens()
+      );
     }
   }
 }
@@ -32,57 +35,68 @@
 @mixin color($theme, $options...) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-        tokens-mdc-slider.get-color-tokens($theme));
-      @include token-utils.create-token-values(tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-color-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-color-tokens($theme)
+      );
 
       .mat-accent {
-        @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent));
-        @include token-utils.create-token-values(tokens-mat-slider.$prefix,
-          tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent));
+        @include token-utils.create-token-values(
+          tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent)
+        );
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent)
+        );
       }
 
       .mat-warn {
-        @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn));
-        @include token-utils.create-token-values(tokens-mat-slider.$prefix,
-          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn));
+        @include token-utils.create-token-values(
+          tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn)
+        );
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn)
+        );
       }
     }
   }
 }
-
 
 /// Outputs typography theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-        tokens-mdc-slider.get-typography-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-typography-tokens($theme)
+      );
     }
   }
 }
-
 
 /// Outputs density theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
-  }
-  @else {
+  } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(tokens-mdc-slider.$prefix,
-        tokens-mdc-slider.get-density-tokens($theme));
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-density-tokens($theme)
+      );
     }
   }
 }
@@ -92,8 +106,14 @@
 @mixin overrides($tokens: ()) {
   @include token-utils.batch-create-token-values(
     $tokens,
-    (prefix: tokens-mat-slider.$prefix, tokens: tokens-mat-slider.get-token-slots()),
-    (prefix: tokens-mdc-slider.$prefix, tokens: tokens-mdc-slider.get-token-slots()),
+    (
+      namespace: tokens-mat-slider.$prefix,
+      tokens: tokens-mat-slider.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-slider.$prefix,
+      tokens: tokens-mdc-slider.get-token-slots(),
+    )
   );
 }
 
@@ -106,8 +126,7 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-slider') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    }
-    @else {
+    } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
         @include color($theme);
@@ -124,7 +143,8 @@
 
 @mixin _theme-from-tokens($tokens, $options...) {
   @include validation.selector-defined(
-      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector');
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
   $mdc-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-slider.$prefix, $options...);
   $mat-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mat-slider.$prefix, $options...);
   @include token-utils.create-token-values(tokens-mdc-slider.$prefix, $mdc-slider-tokens);
