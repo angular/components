@@ -15,6 +15,7 @@ sass_library(
     srcs = [
         "_m3-card.scss",
         "_m3-elevated-card.scss",
+        "_m3-filled-card.scss",
         "_m3-outlined-card.scss",
     ],
     deps = [
@@ -28,6 +29,7 @@ sass_library(
     srcs = [
         "_m2-card.scss",
         "_m2-elevated-card.scss",
+        "_m2-filled-card.scss",
         "_m2-outlined-card.scss",
     ],
     deps = [

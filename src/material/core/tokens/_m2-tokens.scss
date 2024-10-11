@@ -15,6 +15,7 @@
 @use '../../button/m2-tonal-button';
 @use '../../card/m2-card';
 @use '../../card/m2-elevated-card';
+@use '../../card/m2-filled-card';
 @use '../../card/m2-outlined-card';
 @use '../../checkbox/m2-checkbox';
 @use '../../chips/m2-chip';
@@ -116,6 +117,7 @@
     _get-tokens-for-module($theme, m2-fab),
     _get-tokens-for-module($theme, m2-fab-small),
     _get-tokens-for-module($theme, m2-filled-button),
+    _get-tokens-for-module($theme, m2-filled-card),
     _get-tokens-for-module($theme, m2-filled-text-field),
     _get-tokens-for-module($theme, m2-form-field),
     _get-tokens-for-module($theme, m2-full-pseudo-checkbox),
