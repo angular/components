@@ -1,5 +1,9 @@
 <div class="demo-card-container">
-  <mat-checkbox (change)="toggleAppearance()">Use outlined cards</mat-checkbox>
+  <mat-radio-group (change)="appearance = $event.value">
+    <mat-radio-button value="raised">Raised</mat-radio-button>
+    <mat-radio-button value="outlined">Outlined</mat-radio-button>
+    <mat-radio-button value="filled">Filled</mat-radio-button>
+  </mat-radio-group>
 
 <!-- TODO(jelbourn): re-add dividers and footers with progress bars once the MDC versions exist -->
   <mat-card [appearance]="appearance">
