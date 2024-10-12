@@ -17,14 +17,12 @@ import {
   inject,
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CommonModule} from '@angular/common';
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {loadExample} from '@angular/components-examples/private';
 
 @Component({
   selector: 'material-example',
   standalone: true,
-  imports: [CommonModule],
   template: `
     @if (showLabel) {
       <div class="label">

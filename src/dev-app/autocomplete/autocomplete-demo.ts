@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -36,7 +36,7 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
   styleUrl: 'autocomplete-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
+    JsonPipe,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -246,7 +246,7 @@ export class AutocompleteDemo {
     }
   `,
   standalone: true,
-  imports: [CommonModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
+  imports: [FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemoExampleDialog {

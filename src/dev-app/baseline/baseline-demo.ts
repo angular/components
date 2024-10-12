@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -22,7 +21,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   styleUrl: 'baseline-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatCheckboxModule,
     MatFormFieldModule,
