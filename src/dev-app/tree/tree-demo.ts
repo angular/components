@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {CdkTreeModule} from '@angular/cdk/tree';
-import {CommonModule} from '@angular/common';
 import {
   CdkTreeFlatExample,
   CdkTreeNestedExample,
@@ -52,7 +51,6 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeNestedChildrenAccessorExample,
     CdkTreeNestedLevelAccessorExample,
     CdkTreeComplexExample,
-    CommonModule,
     FormsModule,
     TreeDynamicExample,
     TreeFlatChildAccessorOverviewExample,

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ANIMATION_MODULE_TYPE, ChangeDetectionStrategy, Component, Directive} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material/checkbox';
@@ -51,7 +50,7 @@ export class AnimationsNoop {}
   `,
   templateUrl: 'nested-checklist.html',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule, FormsModule],
+  imports: [MatCheckboxModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCheckboxDemoNestedChecklist {
@@ -104,7 +103,6 @@ export class MatCheckboxDemoNestedChecklist {
   styleUrl: 'checkbox-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCheckboxModule,
     MatInputModule,

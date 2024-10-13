@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,6 +17,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
+import {JsonPipe} from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -179,7 +179,7 @@ export class CustomHeaderNgContent<D> {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
+    JsonPipe,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

@@ -8,7 +8,6 @@
 
 import {CdkMenuModule} from '@angular/cdk/menu';
 import {ConnectedPosition} from '@angular/cdk/overlay';
-import {CommonModule} from '@angular/common';
 import {
   CdkMenuContextExample,
   CdkMenuInlineExample,
@@ -25,7 +24,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   standalone: true,
   imports: [
     CdkMenuModule,
-    CommonModule,
     CdkMenuStandaloneMenuExample,
     CdkMenuStandaloneStatefulMenuExample,
     CdkMenuMenubarExample,

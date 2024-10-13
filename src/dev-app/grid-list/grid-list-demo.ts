@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,14 +18,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'grid-list-demo.html',
   styleUrl: 'grid-list-demo.css',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatGridListModule,
-    MatIconModule,
-  ],
+  imports: [FormsModule, MatButtonModule, MatCardModule, MatGridListModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridListDemo {

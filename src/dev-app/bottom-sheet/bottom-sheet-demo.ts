@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
@@ -32,7 +31,6 @@ const defaultConfig = new MatBottomSheetConfig();
   templateUrl: 'bottom-sheet-demo.html',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatBottomSheetModule,
     MatButtonModule,
@@ -80,7 +78,7 @@ export class BottomSheetDemo {
     </mat-nav-list>
   `,
   standalone: true,
-  imports: [CommonModule, MatListModule],
+  imports: [MatListModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleBottomSheet {

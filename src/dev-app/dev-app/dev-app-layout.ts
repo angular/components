@@ -7,7 +7,7 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {CommonModule, DOCUMENT} from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -37,7 +37,6 @@ import {DevAppDirectionality} from './dev-app-directionality';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatListModule,
