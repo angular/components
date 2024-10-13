@@ -79,6 +79,7 @@ export type ContextMenuCoordinates = {x: number; y: number};
     'opened: cdkContextMenuOpened',
     'closed: cdkContextMenuClosed',
     'outsideClicked: cdkContextMenuOutsideClicked',
+    'triggered: cdkContextMenuTriggered',
   ],
   providers: [
     {provide: MENU_TRIGGER, useExisting: CdkContextMenuTrigger},
@@ -148,6 +149,9 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       } else {
         this.childMenu?.focusFirstItem('program');
       }
+
+      // Emit that the user have triggered contextmenu event.
+      this.triggered.emit({x: event.clientX, y: event.clientY});
     }
   }
 

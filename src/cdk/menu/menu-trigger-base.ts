@@ -76,6 +76,9 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
   /** Emits when the attached menu has click outside of it in open state */
   readonly outsideClicked: EventEmitter<MouseEvent> = new EventEmitter();
 
+  /** Emits when the user triggers context menu */
+  readonly triggered: EventEmitter<{x: number; y: number}> = new EventEmitter();
+
   /** Template reference variable to the menu this trigger opens */
   menuTemplateRef: TemplateRef<unknown> | null;
 

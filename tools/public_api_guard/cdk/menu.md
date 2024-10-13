@@ -44,7 +44,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; "disableCloseOnOutsideClick": { "alias": "cdkContextMenuDisableCloseOnOutsideClick"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; "outsideClicked": "cdkContextMenuOutsideClicked"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; "disableCloseOnOutsideClick": { "alias": "cdkContextMenuDisableCloseOnOutsideClick"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; "outsideClicked": "cdkContextMenuOutsideClicked"; "triggered": "cdkContextMenuTriggered"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkContextMenuTrigger, never>;
 }
@@ -239,6 +239,10 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected overlayRef: OverlayRef | null;
     registerChildMenu(child: Menu): void;
     protected readonly stopOutsideClicksListener: Observable<void>;
+    readonly triggered: EventEmitter<{
+        x: number;
+        y: number;
+    }>;
     protected readonly viewContainerRef: ViewContainerRef;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTriggerBase, never, never, {}, {}, never, never, true, never>;

@@ -165,6 +165,15 @@ describe('CdkContextMenuTrigger', () => {
       expect(fixture.componentInstance.trigger.outsideClicked.emit).toHaveBeenCalled();
       expect(getContextMenu()).not.toBeDefined();
     });
+
+    it('should emit that menu was triggered', () => {
+      fixture.detectChanges();
+      spyOn(fixture.componentInstance.trigger.triggered, 'emit');
+
+      openContextMenu();
+
+      expect(fixture.componentInstance.trigger.triggered.emit).toHaveBeenCalled();
+    });
   });
 
   describe('nested context menu triggers', () => {
