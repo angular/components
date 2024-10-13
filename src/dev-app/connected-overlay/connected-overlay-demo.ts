@@ -16,7 +16,6 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {CommonModule} from '@angular/common';
 import {CdkOverlayBasicExample} from '@angular/components-examples/cdk/overlay';
 import {
   ChangeDetectionStrategy,
@@ -40,7 +39,6 @@ import {MatRadioModule} from '@angular/material/radio';
   standalone: true,
   imports: [
     CdkOverlayBasicExample,
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

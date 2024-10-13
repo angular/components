@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {JsonPipe} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -36,7 +36,7 @@ type DisableDrinkOption = 'none' | 'first-middle-last' | 'all';
   styleUrl: 'select-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
+    JsonPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,

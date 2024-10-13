@@ -17,7 +17,6 @@ import {
   Point,
   DragRef,
 } from '@angular/cdk/drag-drop';
-import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -32,7 +31,6 @@ import {MatCheckbox} from '@angular/material/checkbox';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     DragDropModule,
     FormsModule,
     MatFormFieldModule,

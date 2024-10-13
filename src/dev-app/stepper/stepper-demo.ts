@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {
   AbstractControl,
@@ -28,7 +27,6 @@ import {MatStepperModule} from '@angular/material/stepper';
   templateUrl: 'stepper-demo.html',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

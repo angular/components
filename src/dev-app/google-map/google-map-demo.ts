@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -69,7 +68,6 @@ let apiLoadingPromise: Promise<unknown> | null = null;
   styleUrl: 'google-map-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
     GoogleMap,
     MapBicyclingLayer,
     MapCircle,

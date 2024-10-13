@@ -7,7 +7,6 @@
  */
 
 import {CdkTableScrollContainerModule} from '@angular/cdk-experimental/table-scroll-container';
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleGroup, MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -21,13 +20,7 @@ import {MatTableModule} from '@angular/material/table';
   styleUrl: 'table-scroll-container-demo.css',
   templateUrl: 'table-scroll-container-demo.html',
   standalone: true,
-  imports: [
-    CdkTableScrollContainerModule,
-    CommonModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatTableModule,
-  ],
+  imports: [CdkTableScrollContainerModule, MatButtonModule, MatButtonToggleModule, MatTableModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableScrollContainerDemo {

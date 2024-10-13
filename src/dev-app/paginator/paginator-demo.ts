@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
@@ -25,7 +24,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   styleUrl: 'paginator-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatFormFieldModule,

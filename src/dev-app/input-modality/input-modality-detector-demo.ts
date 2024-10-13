@@ -16,7 +16,6 @@ import {
   inject,
 } from '@angular/core';
 
-import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -31,7 +30,6 @@ import {takeUntil} from 'rxjs/operators';
   standalone: true,
   imports: [
     A11yModule,
-    CommonModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,

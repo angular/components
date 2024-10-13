@@ -7,13 +7,12 @@
  */
 
 import {CdkComboboxModule} from '@angular/cdk-experimental/combobox';
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
   standalone: true,
-  imports: [CdkComboboxModule, CommonModule],
+  imports: [CdkComboboxModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkComboboxDemo {}

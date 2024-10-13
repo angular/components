@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,14 +18,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: 'sidenav-demo.html',
   styleUrl: 'sidenav-demo.css',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatSidenavModule,
-    MatToolbarModule,
-  ],
+  imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidenavDemo {

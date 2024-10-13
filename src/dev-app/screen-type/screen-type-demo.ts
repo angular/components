@@ -7,8 +7,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {BreakpointObserver, BreakpointState, Breakpoints, LayoutModule} from '@angular/cdk/layout';
-import {CommonModule} from '@angular/common';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
@@ -18,7 +18,7 @@ import {Observable} from 'rxjs';
   templateUrl: 'screen-type-demo.html',
   styleUrl: 'screen-type-demo.css',
   standalone: true,
-  imports: [CommonModule, LayoutModule, MatGridListModule, MatIconModule],
+  imports: [AsyncPipe, LayoutModule, MatGridListModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreenTypeDemo {

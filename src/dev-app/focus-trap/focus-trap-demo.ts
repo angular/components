@@ -8,7 +8,6 @@
 
 import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {CommonModule} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -47,14 +46,7 @@ export class FocusTrapShadowDomDemo {}
   templateUrl: 'focus-trap-demo.html',
   styleUrl: 'focus-trap-demo.css',
   standalone: true,
-  imports: [
-    A11yModule,
-    CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    MatToolbarModule,
-    FocusTrapShadowDomDemo,
-  ],
+  imports: [A11yModule, MatButtonModule, MatCardModule, MatToolbarModule, FocusTrapShadowDomDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDemo implements AfterViewInit {

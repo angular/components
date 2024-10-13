@@ -44,6 +44,7 @@ import {MatSelectModule} from '@angular/material/select';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
+    JsonPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,

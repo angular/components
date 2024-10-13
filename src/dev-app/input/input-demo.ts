@@ -7,6 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   FloatLabelType,
@@ -14,7 +15,6 @@ import {
   MatFormFieldModule,
 } from '@angular/material/form-field';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
-import {CommonModule} from '@angular/common';
 import {
   FormFieldCustomControlExample,
   MyTelInput,
@@ -42,7 +42,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,

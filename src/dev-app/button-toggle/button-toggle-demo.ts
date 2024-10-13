@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -18,7 +17,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'button-toggle-demo.html',
   styleUrl: 'button-toggle-demo.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonToggleModule, MatCheckboxModule, MatIconModule],
+  imports: [FormsModule, MatButtonToggleModule, MatCheckboxModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleDemo {

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
 import {
   afterNextRender,
   AfterViewInit,
@@ -34,7 +33,6 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
   styleUrl: 'performance-demo.css',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatDividerModule,
