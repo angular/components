@@ -1,5 +1,9 @@
-{% macro deprecationTitle(doc) %}
-  {%- if doc.breakingChange -%}
-    title="Will be removed in v{$ doc.breakingChange $} or later"
+{% macro deprecationTitle(doc, innerText = "Deprecated") %}
+  {%- if doc.breakingChange and doc.deprecatedMessage -%}
+    deprecated-message="{$ doc.deprecatedMessage $} Will be removed in v{$ doc.breakingChange $} or later."
+    inner-text="{$ innerText $}"
+  {% else %}
+    deprecated-message="{$ doc.deprecatedMessage $}"
+    inner-text="{$ innerText $}"
   {%- endif -%}
 {% endmacro %}
