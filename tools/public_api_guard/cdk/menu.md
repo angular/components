@@ -35,13 +35,16 @@ export const CDK_MENU: InjectionToken<Menu>;
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     constructor();
     close(): void;
+    disableCloseOnOutsideClick: boolean;
     disabled: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disableCloseOnOutsideClick: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; "disableCloseOnOutsideClick": { "alias": "cdkContextMenuDisableCloseOnOutsideClick"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; "outsideClicked": "cdkContextMenuOutsideClicked"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkContextMenuTrigger, never>;
 }

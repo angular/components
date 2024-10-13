@@ -96,6 +96,10 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   /** Whether the context menu is disabled. */
   @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
+  /** Whether on clicking outside of menu should close it */
+  @Input({alias: 'cdkContextMenuDisableCloseOnOutsideClick', transform: booleanAttribute})
+  disableCloseOnOutsideClick: boolean = false;
+
   constructor() {
     super();
     this._setMenuStackCloseListener();
@@ -210,7 +214,10 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
       outsideClicks.pipe(takeUntil(this.stopOutsideClicksListener)).subscribe(event => {
         if (!this.isElementInsideMenuStack(_getEventTarget(event)!)) {
-          this.menuStack.closeAll();
+          // We do not want to close menu if user does not want to on outside clicks.
+          if (!this.disableCloseOnOutsideClick) {
+            this.menuStack.closeAll();
+          }
         }
       });
     }

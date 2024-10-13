@@ -143,6 +143,16 @@ describe('CdkContextMenuTrigger', () => {
       fixture.detectChanges();
       expect(getContextMenu()).toBeDefined();
     });
+
+    it('should stay open with disable close on outside click', () => {
+      fixture.componentInstance.shoudCloseOnOutsideClicks = true;
+      openContextMenu();
+      expect(getContextMenu()).toBeDefined();
+
+      fixture.nativeElement.querySelector('#other').click();
+      fixture.detectChanges();
+      expect(getContextMenu()).toBeDefined();
+    });
   });
 
   describe('nested context menu triggers', () => {
@@ -442,7 +452,8 @@ describe('CdkContextMenuTrigger', () => {
 
 @Component({
   template: `
-    <div [cdkContextMenuTriggerFor]="context"></div>
+    <div [cdkContextMenuTriggerFor]="context"
+    [cdkContextMenuDisableCloseOnOutsideClick]="shoudCloseOnOutsideClicks"></div>
     <div id="other"></div>
 
     <ng-template #context>
@@ -459,6 +470,8 @@ class SimpleContextMenu {
   @ViewChild(CdkMenu, {read: ElementRef}) nativeMenu?: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+
+  shoudCloseOnOutsideClicks = false;
 }
 
 @Component({
