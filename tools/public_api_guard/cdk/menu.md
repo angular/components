@@ -235,6 +235,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     readonly opened: EventEmitter<void>;
+    readonly outsideClicked: EventEmitter<MouseEvent>;
     protected overlayRef: OverlayRef | null;
     registerChildMenu(child: Menu): void;
     protected readonly stopOutsideClicksListener: Observable<void>;

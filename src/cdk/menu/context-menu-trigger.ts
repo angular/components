@@ -75,7 +75,11 @@ export type ContextMenuCoordinates = {x: number; y: number};
     {name: 'menuPosition', alias: 'cdkContextMenuPosition'},
     {name: 'menuData', alias: 'cdkContextMenuTriggerData'},
   ],
-  outputs: ['opened: cdkContextMenuOpened', 'closed: cdkContextMenuClosed'],
+  outputs: [
+    'opened: cdkContextMenuOpened',
+    'closed: cdkContextMenuClosed',
+    'outsideClicked: cdkContextMenuOutsideClicked',
+  ],
   providers: [
     {provide: MENU_TRIGGER, useExisting: CdkContextMenuTrigger},
     {provide: MENU_STACK, useClass: MenuStack},
@@ -218,6 +222,9 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
           if (!this.disableCloseOnOutsideClick) {
             this.menuStack.closeAll();
           }
+
+          // Emit that we had a click outside the menu.
+          this.outsideClicked.emit(event);
         }
       });
     }
