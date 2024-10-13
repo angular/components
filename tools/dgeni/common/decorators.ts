@@ -85,13 +85,19 @@ export function getBreakingChange(doc: ApiDoc): string | null {
   return breakingChange ? breakingChange.description : null;
 }
 
+export function getDeprecationMessage(doc: ApiDoc): string | null {
+  const deprecatedMessage = findJsDocTag(doc, 'deprecated');
+  return deprecatedMessage ? deprecatedMessage.description : null;
+}
+
 /**
  * Decorates public exposed docs. Creates a property on the doc that indicates whether
- * the item is deprecated or not.
+ * the item is deprecated or not and set deprecation message.
  */
 export function decorateDeprecatedDoc(doc: ApiDoc & DeprecationInfo) {
   doc.isDeprecated = isDeprecatedDoc(doc);
   doc.breakingChange = getBreakingChange(doc);
+  doc.deprecatedMessage = getDeprecationMessage(doc);
 
   if (doc.isDeprecated && !doc.breakingChange) {
     console.warn('Warning: There is a deprecated item without a @breaking-change tag.', doc.id);
