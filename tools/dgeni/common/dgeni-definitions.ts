@@ -12,6 +12,7 @@ import {NormalizedFunctionParameters} from './normalize-function-parameters';
 export interface DeprecationInfo {
   isDeprecated: boolean;
   breakingChange: string | null;
+  deprecatedMessage: string | null;
 }
 
 /** Interface that describes Dgeni documents that have decorators. */
