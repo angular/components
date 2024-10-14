@@ -15,3 +15,7 @@
 .example-tree-node .example-tree-node {
   padding-left: 40px;
 }
+
+.example-toggle {
+  vertical-align: middle;
+}
