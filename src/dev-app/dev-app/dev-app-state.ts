@@ -44,7 +44,7 @@ export function getAppState(): DevAppState {
       darkTheme: false,
       rippleDisabled: false,
       strongFocusEnabled: false,
-      m3Enabled: false,
+      m3Enabled: true,
       direction: 'ltr',
       colorApiBackCompat: true,
     };
