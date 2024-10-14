@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {FLAT_DATA, FlatFoodNode} from '../tree-data';
 
 /**
- * @title Tree with nested nodes
+ * @title Tree with nested nodes and level accessor
  */
 @Component({
   selector: 'cdk-tree-nested-level-accessor-example',
