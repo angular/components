@@ -17,7 +17,7 @@ function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
 }
 
 /**
- * @title Tree with nested nodes, using childAccessor
+ * @title Tree with nested nodes using childAccessor
  */
 @Component({
   selector: 'cdk-tree-nested-children-accessor-example',
