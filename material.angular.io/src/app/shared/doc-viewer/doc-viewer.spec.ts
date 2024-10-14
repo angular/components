@@ -6,7 +6,7 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewer} from './doc-viewer';
 import {DocViewerModule} from './doc-viewer-module';
 import {ExampleViewer} from '../example-viewer/example-viewer';
-
+import {MatTooltip} from '@angular/material/tooltip';
 
 describe('DocViewer', () => {
   let http: HttpTestingController;
@@ -149,6 +149,36 @@ describe('DocViewer', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
+  it('should show tooltip for deprecated symbol', () => {
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    fixture.componentInstance.documentUrl = `http://material.angular.io/deprecated.html`;
+    fixture.detectChanges();
+
+    const url = fixture.componentInstance.documentUrl;
+    http.expectOne(url).flush(FAKE_DOCS[url]);
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+
+    expect(docViewer).not.toBeNull();
+
+    // we have five deprecated symbols: class, constant, type alias, interface
+    // and properties.
+    expect(docViewer.children.length).toBe(5);
+
+    // it should have "Deprecated" as its inner text 
+    const deprecatedSymbol = docViewer.children.shift()!;
+    expect(deprecatedSymbol.nativeElement.innerText).toBe('Deprecated');
+
+    // should contain the tooltip component
+    const tooltipElement = deprecatedSymbol.children.shift()!;
+    expect(tooltipElement.nativeElement).toBeTruthy();
+
+    // should show tooltip on hovering the element
+    tooltipElement.nativeNode.dispatchEvent(new MouseEvent('hover'));
+    fixture.detectChanges();
+    expect(deprecatedSymbol.query(By.directive(MatTooltip))).toBeTruthy();
+  });
+
   // TODO(mmalerba): Add test that example-viewer is instantiated.
 });
 
@@ -177,6 +207,21 @@ const FAKE_DOCS: {[key: string]: string} = {
     '<div material-docs-example="demo-example"></div>',
   'http://material.angular.io/whole-snippet-example.html':
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
+  'http://material.angular.io/deprecated.html':
+    `<div class="docs-api-class-deprecated-marker" 
+        deprecated-message="deprecated class">Deprecated</div>
+  
+      <div class="docs-api-constant-deprecated-marker" 
+        deprecated-message="deprecated constant">Deprecated</div>
+        
+      <div class="docs-api-interface-deprecated-marker" 
+        deprecated-message="deprecated interface">Deprecated</div>
+        
+      <div class="docs-api-type-alias-deprecated-marker" 
+        deprecated-message="deprecated type alias">Deprecated</div>
+        
+      <div class="docs-api-deprecated-marker" 
+        deprecated-message="deprecated">Deprecated</div>`,
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 

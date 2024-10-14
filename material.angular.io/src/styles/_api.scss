@@ -131,8 +131,19 @@
 .docs-api-interface-deprecated-marker {
   display: inline-block;
   font-weight: bold;
+  position: relative;
 
-  &[title] {
+  // We want to set width and height according to our parent
+  // deprecated marker element because the component that presents
+  // the tooltip for depcreated message is empty by default and
+  // empty element can not be able to show up therefore the tooltip
+  // wont show either. This makes sure that our tooltip component 
+  // is aligned with deprecated marker in position and size.  
+  & .deprecated-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
     border-bottom: 1px dotted grey;
     cursor: help;
   }

@@ -9,6 +9,7 @@ import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
 import {HeaderLink} from './header-link';
 import {CodeSnippet} from '../example-viewer/code-snippet';
+import {DeprecatedFieldComponent} from './deprecated-tooltip';
 
 
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
@@ -23,8 +24,9 @@ import {CodeSnippet} from '../example-viewer/code-snippet';
     DocViewer,
     ExampleViewer,
     HeaderLink,
-    CodeSnippet
+    CodeSnippet,
+    DeprecatedFieldComponent
   ],
-  exports: [DocViewer, ExampleViewer, HeaderLink]
+  exports: [DocViewer, ExampleViewer, HeaderLink, DeprecatedFieldComponent]
 })
 export class DocViewerModule { }
