@@ -8,8 +8,8 @@
 @use './m3-tokens';
 
 // Prefix used for component token fallback variables, e.g.
-// `color: var(--mdc-text-button-label-text-color, var(--mat-app-primary));`
-$_system-fallback-prefix: mat-app;
+// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
+$_system-fallback-prefix: mat-sys;
 
 // Default system level prefix to use when directly calling the `system-level-*` mixins
 $_system-level-prefix: sys;
@@ -36,8 +36,8 @@ $_system-level-prefix: sys;
 /// if the density value is a map, it must have a `scale` value. Density variable definitions will
 /// not be emitted if there are no density values in the config.
 ///
-/// The application variables emitted use the namespace prefix "--mat-app".
-/// e.g. --mat-app-surface: #E5E5E5
+/// The application variables emitted use the namespace prefix "--mat-sys".
+/// e.g. --mat-sys-surface: #E5E5E5
 ///
 /// @param {Map} $config The color configuration with optional keys color, typography, or density.
 @mixin theme($config, $overrides: ()) {
@@ -205,8 +205,8 @@ $_system-level-prefix: sys;
 }
 
 // Return a new map where the values are the same as the provided map's
-// keys, prefixed with "--mat-app-". For example:
-// (key1: '', key2: '') --> (key1: --mat-app-key1, key2: --mat-app-key2)
+// keys, prefixed with "--mat-sys-". For example:
+// (key1: '', key2: '') --> (key1: --mat-sys-key1, key2: --mat-sys-key2)
 @function _create-system-app-vars-map($map) {
   $new-map: ();
   @each $key, $value in $map {

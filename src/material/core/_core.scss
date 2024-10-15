@@ -16,7 +16,7 @@
   // background color. However, if it isn't defined anywhere, then MSS
   // complains in its verification stage.
   html {
-    --mat-app-on-surface: initial;
+    --mat-sys-on-surface: initial;
   }
 
   // Wrapper element that provides the theme background when the

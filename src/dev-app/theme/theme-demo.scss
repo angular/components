@@ -6,24 +6,24 @@
 }
 
 h1 {
-  font: var(--mat-app-title-large);
+  font: var(--mat-sys-title-large);
   font-size: 28px;
   padding-top: 32px;
 }
 
 h2 {
-  font: var(--mat-app-title-large);
+  font: var(--mat-sys-title-large);
 }
 
 a {
-  color: var(--mat-app-primary);
+  color: var(--mat-sys-primary);
 }
 
 .demo-warn {
-  background: var(--mat-app-error-container);
-  color: var(--mat-app-on-error-container);
-  border: 1px solid var(--mat-app-outline-variant);
-  border-radius: var(--mat-app-corner-extra-small);
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
   padding: 8px;
 }
 
@@ -39,18 +39,18 @@ a {
 }
 
 .demo-color-container {
-  border-radius: var(--mat-app-corner-small);
+  border-radius: var(--mat-sys-corner-small);
   display: inline-block;
-  font: var(--mat-app-body-medium);
+  font: var(--mat-sys-body-medium);
   vertical-align: top;
 }
 
 .demo-heading {
-  color: var(--mat-app-on-primary);
-  background: var(--mat-app-primary);
-  border: 1px solid var(--mat-app-outline);
-  border-top-right-radius: var(--mat-app-corner-small);
-  border-top-left-radius: var(--mat-app-corner-small);
+  color: var(--mat-sys-on-primary);
+  background: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-outline);
+  border-top-right-radius: var(--mat-sys-corner-small);
+  border-top-left-radius: var(--mat-sys-corner-small);
   border-bottom: none;
   padding: 16px;
   display: flex;
@@ -59,19 +59,19 @@ a {
 }
 
 .demo-name {
-  font: var(--mat-app-title-medium);
+  font: var(--mat-sys-title-medium);
 }
 
 .demo-variable {
-  font: var(--mat-app-title-small);
+  font: var(--mat-sys-title-small);
   font-family: monospace;
   text-align: right;
 }
 
 .demo-description {
-  border: 1px solid var(--mat-app-outline);
-  border-bottom-right-radius: var(--mat-app-corner-small);
-  border-bottom-left-radius: var(--mat-app-corner-small);
+  border: 1px solid var(--mat-sys-outline);
+  border-bottom-right-radius: var(--mat-sys-corner-small);
+  border-bottom-left-radius: var(--mat-sys-corner-small);
   padding: 0 16px;
 }
 
@@ -82,8 +82,8 @@ a {
 .demo-surface-variable {
   display: inline-block;
   font-family: monospace;
-  background: var(--mat-app-primary-container);
-  color: var(--mat-app-on-primary-container);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
   padding: 2px 6px;
   margin: 0 2px;
   border-radius: 4px;
@@ -93,17 +93,17 @@ mat-expansion-panel {
   margin-top: 24px;
   overflow: visible;
   @include mat.expansion-overrides((
-    'container-text-font': var(--mat-app-body-medium-font),
-    'container-text-size': var(--mat-app-body-medium-size),
-    'container-text-weight': var(--mat-app-body-medium-weight),
-    'container-text-line-height': var(--mat-app-body-medium-line-height),
-    'container-text-tracking': var(--mat-app-body-medium-tracking),
+    'container-text-font': var(--mat-sys-body-medium-font),
+    'container-text-size': var(--mat-sys-body-medium-size),
+    'container-text-weight': var(--mat-sys-body-medium-weight),
+    'container-text-line-height': var(--mat-sys-body-medium-line-height),
+    'container-text-tracking': var(--mat-sys-body-medium-tracking),
   ));
 }
 
 .demo-compact-color-container {
-  border-radius: var(--mat-app-corner-small);
-  border: 1px solid var(--mat-app-outline);
+  border-radius: var(--mat-sys-corner-small);
+  border: 1px solid var(--mat-sys-outline);
   overflow: hidden; // Hide child heading background color
   margin-top: 24px;
 
@@ -112,7 +112,7 @@ mat-expansion-panel {
     border-radius: 0;
 
     &:not(:nth-child(1)) {
-      border-top: 1px solid var(--mat-app-outline);
+      border-top: 1px solid var(--mat-sys-outline);
     }
   }
 
@@ -122,19 +122,19 @@ mat-expansion-panel {
 }
 
 .demo-typography-group {
-  border: 1px solid var(--mat-app-outline);
-  border-radius: var(--mat-app-corner-small);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-small);
   margin-top: 40px;
   overflow: hidden;
 }
 
 .demo-typography-title {
   text-transform: capitalize;
-  font: var(--mat-app-title-medium);
+  font: var(--mat-sys-title-medium);
   padding: 16px;
-  border-bottom: 1px solid var(--mat-app-outline);
-  background: var(--mat-app-primary-container);
-  color: var(--mat-app-on-primary-container);
+  border-bottom: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
 }
 
 .demo-typography-variable {
@@ -145,7 +145,7 @@ mat-expansion-panel {
   padding: 16px;
   display: flex;
   align-items: baseline;
-  border-top: 1px solid var(--mat-app-outline-variant);
+  border-top: 1px solid var(--mat-sys-outline-variant);
 
   &:nth-child(1) {
     border: none;
@@ -166,24 +166,24 @@ mat-expansion-panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--mat-app-surface-container);
-  color: var(--mat-app-on-surface);
-  border-radius: var(--mat-app-corner-extra-small);
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 .demo-code-block {
-  background: var(--mat-app-surface-container-low);
+  background: var(--mat-sys-surface-container-low);
   padding: 16px;
-  border-radius: var(--mat-app-corner-small);
-  border: 1px solid var(--mat-app-outline);
+  border-radius: var(--mat-sys-corner-small);
+  border: 1px solid var(--mat-sys-outline);
 }
 
 .demo-overrides {
-  background-color: var(--mat-app-primary);
-  color: var(--mat-app-on-primary);
-  font: var(--mat-app-body-medium);
-  border-radius: var(--mat-app-corner-large);
-  box-shadow: var(--mat-app-level3);
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font: var(--mat-sys-body-medium);
+  border-radius: var(--mat-sys-corner-large);
+  box-shadow: var(--mat-sys-level3);
   padding: 16px;
 
   @include mat.theme-overrides((
@@ -191,6 +191,6 @@ mat-expansion-panel {
     on-primary: #230f46,
     body-medium: 600 1.5rem / 2.25rem Arial,
     corner-large: 32px,
-    level3: 0 4px 6px 1px var(--mat-app-surface-dim),
+    level3: 0 4px 6px 1px var(--mat-sys-surface-dim),
   ));
 }
