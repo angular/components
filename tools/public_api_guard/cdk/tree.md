@@ -117,7 +117,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _nodeOutlet: CdkTreeNodeOutlet;
     _registerNode(node: CdkTreeNode<T, K>): void;
     renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
-    _sendKeydownToKeyManager(event: KeyboardEvent): void;
+    protected _sendKeydownToKeyManager(event: KeyboardEvent): void;
     _setNodeTypeIfUnset(nodeType: 'flat' | 'nested'): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
@@ -158,7 +158,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     readonly _dataChanges: Subject<void>;
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
-    protected _elementRef: ElementRef<HTMLElement>;
+    _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     _emitExpansionState(expanded: boolean): void;
     expand(): void;
