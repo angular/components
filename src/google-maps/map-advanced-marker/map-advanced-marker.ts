@@ -24,8 +24,10 @@ import {
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
-import {Observable} from 'rxjs';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {MAP_MARKER, MarkerDirective} from '../marker-utilities';
+import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -43,8 +45,16 @@ export const DEFAULT_MARKER_OPTIONS = {
 @Directive({
   selector: 'map-advanced-marker',
   exportAs: 'mapAdvancedMarker',
+  providers: [
+    {
+      provide: MAP_MARKER,
+      useExisting: MapAdvancedMarker,
+    },
+  ],
 })
-export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export class MapAdvancedMarker
+  implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective
+{
   private readonly _googleMap = inject(GoogleMap);
   private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
@@ -260,6 +270,13 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
   getAnchor(): google.maps.marker.AdvancedMarkerElement {
     this._assertInitialized();
     return this.advancedMarker;
+  }
+
+  /** Returns a promise that resolves when the marker has been initialized. */
+  _resolveMarker(): Promise<google.maps.marker.AdvancedMarkerElement> {
+    return this.advancedMarker
+      ? Promise.resolve(this.advancedMarker)
+      : this.markerInitialized.pipe(take(1)).toPromise();
   }
 
   /** Creates a combined options object using the passed-in options and the individual inputs. */

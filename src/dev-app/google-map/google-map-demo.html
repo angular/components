@@ -10,26 +10,25 @@
                 (mapRightclick)="handleRightclick()"
                 [mapTypeId]="mapTypeId"
                 [mapId]="mapId">
-      <deprecated-map-marker-clusterer [imagePath]="markerClustererImagePath">
-        <map-marker #firstMarker="mapMarker"
-                    [position]="center"
-                    (mapClick)="infoWindow.open(firstMarker)"></map-marker>
+      <map-marker-clusterer>
+        <map-advanced-marker
+          #firstMarker="mapAdvancedMarker"
+          [position]="center"
+          (mapClick)="infoWindow.open(firstMarker)"></map-advanced-marker>
         @for (markerPosition of markerPositions; track markerPosition) {
-          <map-marker #marker="mapMarker"
+          <map-advanced-marker #marker="mapAdvancedMarker"
             [position]="markerPosition"
-            [options]="markerOptions"
-            (mapClick)="infoWindow.open(marker)"></map-marker>
+            (mapClick)="infoWindow.open(marker)"></map-advanced-marker>
         }
-      </deprecated-map-marker-clusterer>
-      @if (hasAdvancedMarker) {
+      </map-marker-clusterer>
+      @if (hasCustomContentMarker) {
         <map-advanced-marker
           #secondMarker="mapAdvancedMarker"
           (mapClick)="infoWindow.open(secondMarker)"
           title="Advanced Marker"
           [gmpDraggable]="false"
-          [content]="hasAdvancedMarkerCustomContent ? advancedMarkerContent : null"
+          [content]="advancedMarkerContent"
           [position]="mapAdvancedMarkerPosition">
-
           <svg #advancedMarkerContent fill="oklch(69.02% .277 332.77)" viewBox="0 0 960 960" width="50px" height="50px" xml:space="preserve">
             <g>
               <polygon points="562.6,109.8 804.1,629.5 829.2,233.1"/>
@@ -216,18 +215,8 @@
 
     <div>
       <label>
-        Toggle Advanced Marker
-        <input type="checkbox" [(ngModel)]="hasAdvancedMarker">
-      </label>
-    </div>
-
-    <div>
-      <label>
-        Toggle custom content for Advanced Marker
-        <input
-          type="checkbox"
-          [(ngModel)]="hasAdvancedMarkerCustomContent"
-          [disabled]="!hasAdvancedMarker">
+        Toggle Advanced Marker with custom content
+        <input type="checkbox" [(ngModel)]="hasCustomContentMarker">
       </label>
     </div>
 

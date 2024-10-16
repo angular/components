@@ -25,6 +25,7 @@ import {MapTrafficLayer} from './map-traffic-layer/map-traffic-layer';
 import {MapTransitLayer} from './map-transit-layer/map-transit-layer';
 import {MapHeatmapLayer} from './map-heatmap-layer/map-heatmap-layer';
 import {MapAdvancedMarker} from './map-advanced-marker/map-advanced-marker';
+import {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
 
 const COMPONENTS = [
   GoogleMap,
@@ -44,6 +45,7 @@ const COMPONENTS = [
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
+  MapMarkerClusterer,
 ];
 
 @NgModule({
