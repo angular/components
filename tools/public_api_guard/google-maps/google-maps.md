@@ -55,6 +55,108 @@ export interface ClusterIconStyle {
     width: number;
 }
 
+// @public @deprecated
+export class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+    constructor(...args: unknown[]);
+    // (undocumented)
+    ariaLabelFn: AriaLabelFn;
+    // (undocumented)
+    set averageCenter(averageCenter: boolean);
+    // (undocumented)
+    batchSize?: number;
+    // (undocumented)
+    set batchSizeIE(batchSizeIE: number);
+    // (undocumented)
+    set calculator(calculator: Calculator);
+    // (undocumented)
+    set clusterClass(clusterClass: string);
+    readonly clusterClick: Observable<Cluster>;
+    readonly clusteringbegin: Observable<void>;
+    readonly clusteringend: Observable<void>;
+    // (undocumented)
+    set enableRetinaIcons(enableRetinaIcons: boolean);
+    // (undocumented)
+    fitMapToMarkers(padding: number | google.maps.Padding): void;
+    // (undocumented)
+    getAverageCenter(): boolean;
+    // (undocumented)
+    getBatchSizeIE(): number;
+    // (undocumented)
+    getCalculator(): Calculator;
+    // (undocumented)
+    getClusterClass(): string;
+    // (undocumented)
+    getClusters(): Cluster[];
+    // (undocumented)
+    getEnableRetinaIcons(): boolean;
+    // (undocumented)
+    getGridSize(): number;
+    // (undocumented)
+    getIgnoreHidden(): boolean;
+    // (undocumented)
+    getImageExtension(): string;
+    // (undocumented)
+    getImagePath(): string;
+    // (undocumented)
+    getImageSizes(): number[];
+    // (undocumented)
+    getMaxZoom(): number;
+    // (undocumented)
+    getMinimumClusterSize(): number;
+    // (undocumented)
+    getStyles(): ClusterIconStyle[];
+    // (undocumented)
+    getTitle(): string;
+    // (undocumented)
+    getTotalClusters(): number;
+    // (undocumented)
+    getTotalMarkers(): number;
+    // (undocumented)
+    getZIndex(): number;
+    // (undocumented)
+    getZoomOnClick(): boolean;
+    // (undocumented)
+    set gridSize(gridSize: number);
+    // (undocumented)
+    set ignoreHidden(ignoreHidden: boolean);
+    // (undocumented)
+    set imageExtension(imageExtension: string);
+    // (undocumented)
+    set imagePath(imagePath: string);
+    // (undocumented)
+    set imageSizes(imageSizes: number[]);
+    markerClusterer?: MarkerClusterer;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
+    // (undocumented)
+    _markers: QueryList<MapMarker>;
+    // (undocumented)
+    set maxZoom(maxZoom: number);
+    // (undocumented)
+    set minimumClusterSize(minimumClusterSize: number);
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    set options(options: MarkerClustererOptions);
+    // (undocumented)
+    set styles(styles: ClusterIconStyle[]);
+    // (undocumented)
+    set title(title: string);
+    // (undocumented)
+    set zIndex(zIndex: number);
+    // (undocumented)
+    set zoomOnClick(zoomOnClick: boolean);
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<DeprecatedMapMarkerClusterer, "deprecated-map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<DeprecatedMapMarkerClusterer, never>;
+}
+
 // @public
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     constructor(...args: unknown[]);
@@ -127,7 +229,7 @@ export class GoogleMapsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
 }
 
 // @public
@@ -496,108 +598,6 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapMarker, "map-marker", ["mapMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "label": { "alias": "label"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "icon": { "alias": "icon"; "required": false; }; "visible": { "alias": "visible"; "required": false; }; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarker, never>;
-}
-
-// @public
-export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
-    // (undocumented)
-    ariaLabelFn: AriaLabelFn;
-    // (undocumented)
-    set averageCenter(averageCenter: boolean);
-    // (undocumented)
-    batchSize?: number;
-    // (undocumented)
-    set batchSizeIE(batchSizeIE: number);
-    // (undocumented)
-    set calculator(calculator: Calculator);
-    // (undocumented)
-    set clusterClass(clusterClass: string);
-    readonly clusterClick: Observable<Cluster>;
-    readonly clusteringbegin: Observable<void>;
-    readonly clusteringend: Observable<void>;
-    // (undocumented)
-    set enableRetinaIcons(enableRetinaIcons: boolean);
-    // (undocumented)
-    fitMapToMarkers(padding: number | google.maps.Padding): void;
-    // (undocumented)
-    getAverageCenter(): boolean;
-    // (undocumented)
-    getBatchSizeIE(): number;
-    // (undocumented)
-    getCalculator(): Calculator;
-    // (undocumented)
-    getClusterClass(): string;
-    // (undocumented)
-    getClusters(): Cluster[];
-    // (undocumented)
-    getEnableRetinaIcons(): boolean;
-    // (undocumented)
-    getGridSize(): number;
-    // (undocumented)
-    getIgnoreHidden(): boolean;
-    // (undocumented)
-    getImageExtension(): string;
-    // (undocumented)
-    getImagePath(): string;
-    // (undocumented)
-    getImageSizes(): number[];
-    // (undocumented)
-    getMaxZoom(): number;
-    // (undocumented)
-    getMinimumClusterSize(): number;
-    // (undocumented)
-    getStyles(): ClusterIconStyle[];
-    // (undocumented)
-    getTitle(): string;
-    // (undocumented)
-    getTotalClusters(): number;
-    // (undocumented)
-    getTotalMarkers(): number;
-    // (undocumented)
-    getZIndex(): number;
-    // (undocumented)
-    getZoomOnClick(): boolean;
-    // (undocumented)
-    set gridSize(gridSize: number);
-    // (undocumented)
-    set ignoreHidden(ignoreHidden: boolean);
-    // (undocumented)
-    set imageExtension(imageExtension: string);
-    // (undocumented)
-    set imagePath(imagePath: string);
-    // (undocumented)
-    set imageSizes(imageSizes: number[]);
-    markerClusterer?: MarkerClusterer;
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
-    // (undocumented)
-    _markers: QueryList<MapMarker>;
-    // (undocumented)
-    set maxZoom(maxZoom: number);
-    // (undocumented)
-    set minimumClusterSize(minimumClusterSize: number);
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    set options(options: MarkerClustererOptions);
-    // (undocumented)
-    set styles(styles: ClusterIconStyle[]);
-    // (undocumented)
-    set title(title: string);
-    // (undocumented)
-    set zIndex(zIndex: number);
-    // (undocumented)
-    set zoomOnClick(zoomOnClick: boolean);
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MapMarkerClusterer, never>;
 }
 
 // @public

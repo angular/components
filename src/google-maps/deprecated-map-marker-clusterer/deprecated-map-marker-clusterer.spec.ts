@@ -6,21 +6,21 @@ import {MapMarker} from '../map-marker/map-marker';
 import {
   createMapConstructorSpy,
   createMapSpy,
-  createMarkerClustererConstructorSpy,
-  createMarkerClustererSpy,
+  createDeprecatedMarkerClustererConstructorSpy,
+  createDeprecatedMarkerClustererSpy,
   createMarkerConstructorSpy,
   createMarkerSpy,
 } from '../testing/fake-google-map-utils';
-import {MapMarkerClusterer} from './map-marker-clusterer';
+import {DeprecatedMapMarkerClusterer} from './deprecated-map-marker-clusterer';
 import {
   AriaLabelFn,
   Calculator,
   ClusterIconStyle,
   MarkerClusterer,
   MarkerClustererOptions,
-} from './marker-clusterer-types';
+} from './deprecated-marker-clusterer-types';
 
-describe('MapMarkerClusterer', () => {
+describe('DeprecatedMapMarkerClusterer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
   let markerClustererSpy: jasmine.SpyObj<MarkerClusterer>;
   let markerClustererConstructorSpy: jasmine.Spy;
@@ -39,8 +39,9 @@ describe('MapMarkerClusterer', () => {
       return createMarkerSpy({});
     });
 
-    markerClustererSpy = createMarkerClustererSpy();
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy);
+    markerClustererSpy = createDeprecatedMarkerClustererSpy();
+    markerClustererConstructorSpy =
+      createDeprecatedMarkerClustererConstructorSpy(markerClustererSpy);
 
     fixture = TestBed.createComponent(TestApp);
   });
@@ -52,7 +53,10 @@ describe('MapMarkerClusterer', () => {
 
   it('throws an error if the clustering library has not been loaded', fakeAsync(() => {
     (window as any).MarkerClusterer = undefined;
-    markerClustererConstructorSpy = createMarkerClustererConstructorSpy(markerClustererSpy, false);
+    markerClustererConstructorSpy = createDeprecatedMarkerClustererConstructorSpy(
+      markerClustererSpy,
+      false,
+    );
 
     expect(() => {
       fixture.detectChanges();
@@ -304,7 +308,7 @@ describe('MapMarkerClusterer', () => {
   selector: 'test-app',
   template: `
     <google-map>
-      <map-marker-clusterer
+      <deprecated-map-marker-clusterer
         [ariaLabelFn]="ariaLabelFn"
         [averageCenter]="averageCenter"
         [batchSize]="batchSize"
@@ -335,14 +339,14 @@ describe('MapMarkerClusterer', () => {
           @if (state === 'state2') {
             <map-marker />
           }
-      </map-marker-clusterer>
+      </deprecated-map-marker-clusterer>
     </google-map>
   `,
   standalone: true,
-  imports: [GoogleMap, MapMarker, MapMarkerClusterer],
+  imports: [GoogleMap, MapMarker, DeprecatedMapMarkerClusterer],
 })
 class TestApp {
-  @ViewChild(MapMarkerClusterer) markerClusterer: MapMarkerClusterer;
+  @ViewChild(DeprecatedMapMarkerClusterer) markerClusterer: DeprecatedMapMarkerClusterer;
 
   ariaLabelFn?: AriaLabelFn;
   averageCenter?: boolean;

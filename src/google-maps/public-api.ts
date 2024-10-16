@@ -22,7 +22,7 @@ export {MapInfoWindow} from './map-info-window/map-info-window';
 export {MapKmlLayer} from './map-kml-layer/map-kml-layer';
 export {MapMarker} from './map-marker/map-marker';
 export {MapAdvancedMarker} from './map-advanced-marker/map-advanced-marker';
-export {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
+export {DeprecatedMapMarkerClusterer} from './deprecated-map-marker-clusterer/deprecated-map-marker-clusterer';
 export {MapPolygon} from './map-polygon/map-polygon';
 export {MapPolyline} from './map-polyline/map-polyline';
 export {MapRectangle} from './map-rectangle/map-rectangle';
@@ -35,5 +35,5 @@ export {
   ClusterIconStyle,
   AriaLabelFn,
   Calculator,
-} from './map-marker-clusterer/marker-clusterer-types';
+} from './deprecated-map-marker-clusterer/deprecated-marker-clusterer-types';
 export {MapEventManager} from './map-event-manager';
