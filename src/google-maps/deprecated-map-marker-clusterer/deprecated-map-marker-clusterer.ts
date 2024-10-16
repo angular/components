@@ -39,7 +39,7 @@ import {
   ClusterIconStyle,
   MarkerClusterer as MarkerClustererInstance,
   MarkerClustererOptions,
-} from './marker-clusterer-types';
+} from './deprecated-marker-clusterer-types';
 
 /** Default options for a clusterer. */
 const DEFAULT_CLUSTERER_OPTIONS: MarkerClustererOptions = {};
@@ -52,17 +52,23 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
 
 /**
  * Angular component for implementing a Google Maps Marker Clusterer.
- *
  * See https://developers.google.com/maps/documentation/javascript/marker-clustering
+ *
+ * @deprecated This component is using a deprecated clustering implementation. Use the
+ *   `map-marker-clusterer` component instead.
+ * @breaking-change 21.0.0
+ *
  */
 @Component({
-  selector: 'map-marker-clusterer',
+  selector: 'deprecated-map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
-export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+export class DeprecatedMapMarkerClusterer
+  implements OnInit, AfterContentInit, OnChanges, OnDestroy
+{
   private readonly _googleMap = inject(GoogleMap);
   private readonly _ngZone = inject(NgZone);
   private readonly _currentMarkers = new Set<google.maps.Marker>();

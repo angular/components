@@ -10,7 +10,7 @@
                 (mapRightclick)="handleRightclick()"
                 [mapTypeId]="mapTypeId"
                 [mapId]="mapId">
-      <map-marker-clusterer [imagePath]="markerClustererImagePath">
+      <deprecated-map-marker-clusterer [imagePath]="markerClustererImagePath">
         <map-marker #firstMarker="mapMarker"
                     [position]="center"
                     (mapClick)="infoWindow.open(firstMarker)"></map-marker>
@@ -20,7 +20,7 @@
             [options]="markerOptions"
             (mapClick)="infoWindow.open(marker)"></map-marker>
         }
-      </map-marker-clusterer>
+      </deprecated-map-marker-clusterer>
       @if (hasAdvancedMarker) {
         <map-advanced-marker
           #secondMarker="mapAdvancedMarker"
