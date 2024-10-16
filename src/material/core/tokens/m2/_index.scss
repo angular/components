@@ -70,6 +70,7 @@
 @use './mdc/switch' as tokens-mdc-switch;
 @use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mdc/filled-card' as tokens-mdc-filled-card;
 @use '../../theming/inspection';
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
@@ -182,6 +183,7 @@
     _get-tokens-for-module($theme, tokens-mdc-switch),
     _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
     _get-tokens-for-module($theme, tokens-mdc-secondary-navigation-tab),
-    _get-tokens-for-module($theme, tokens-mdc-text-button)
+    _get-tokens-for-module($theme, tokens-mdc-text-button),
+    _get-tokens-for-module($theme, tokens-mdc-filled-card),
   );
 }

@@ -8,6 +8,7 @@
 @use '../core/tokens/m2/mat/card' as tokens-mat-card;
 @use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
 @use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '../core/tokens/m2/mdc/filled-card' as tokens-mdc-filled-card;
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -21,6 +22,10 @@
       @include token-utils.create-token-values(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-filled-card.$prefix,
+        tokens-mdc-filled-card.get-unthemable-tokens()
       );
       @include token-utils.create-token-values(
         tokens-mat-card.$prefix,
@@ -44,6 +49,10 @@
         tokens-mdc-outlined-card.get-color-tokens($theme)
       );
       @include token-utils.create-token-values(
+        tokens-mdc-filled-card.$prefix,
+        tokens-mdc-filled-card.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-color-tokens($theme)
       );
@@ -65,6 +74,10 @@
         tokens-mdc-outlined-card.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values(
+        tokens-mdc-filled-card.$prefix,
+        tokens-mdc-filled-card.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-typography-tokens($theme)
       );
@@ -84,6 +97,10 @@
       @include token-utils.create-token-values(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-filled-card.$prefix,
+        tokens-mdc-filled-card.get-density-tokens($theme)
       );
       @include token-utils.create-token-values(
         tokens-mat-card.$prefix,
@@ -109,6 +126,11 @@
       namespace: tokens-mdc-outlined-card.$prefix,
       tokens: tokens-mdc-outlined-card.get-token-slots(),
       prefix: 'outlined-',
+    ),
+    (
+      namespace: tokens-mdc-filled-card.$prefix,
+      tokens: tokens-mdc-filled-card.get-token-slots(),
+      prefix: 'filled-',
     )
   );
 }
@@ -144,6 +166,10 @@
     @include token-utils.create-token-values(
       tokens-mdc-outlined-card.$prefix,
       map.get($tokens, tokens-mdc-outlined-card.$prefix)
+    );
+    @include token-utils.create-token-values(
+      tokens-mdc-filled-card.$prefix,
+      map.get($tokens, tokens-mdc-filled-card.$prefix)
     );
     @include token-utils.create-token-values(
       tokens-mat-card.$prefix,

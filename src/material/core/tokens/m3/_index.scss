@@ -68,6 +68,7 @@
 @use './mdc/switch' as tokens-mdc-switch;
 @use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mdc/filled-card' as tokens-mdc-filled-card;
 
 $_module-names: (
   // Custom tokens
@@ -140,7 +141,8 @@ $_module-names: (
   tokens-mdc-snack-bar,
   tokens-mdc-switch,
   tokens-mdc-secondary-navigation-tab,
-  tokens-mdc-tab-indicator
+  tokens-mdc-tab-indicator,
+  tokens-mdc-filled-card,
 );
 
 /// Gets the full set of M3 tokens for the given theme object.

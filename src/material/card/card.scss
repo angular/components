@@ -2,6 +2,7 @@
 @use '../core/tokens/m2/mat/card' as tokens-mat-card;
 @use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
 @use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '../core/tokens/m2/mdc/filled-card' as tokens-mdc-filled-card;
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -65,6 +66,17 @@ $mat-card-default-padding: 16px !default;
   // Overwriting styles set above to remove a duplicate border.
   &::after {
     border: none;
+  }
+}
+
+.mat-mdc-card-filled {
+  @include token-utils.use-tokens(
+    tokens-mdc-filled-card.$prefix,
+    tokens-mdc-filled-card.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(background-color, container-color);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(box-shadow, container-elevation);
   }
 }
 
