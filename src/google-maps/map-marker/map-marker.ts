@@ -27,6 +27,7 @@ import {take} from 'rxjs/operators';
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
 import {MapAnchorPoint} from '../map-anchor-point';
+import {MAP_MARKER, MarkerDirective} from '../marker-utilities';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -44,8 +45,14 @@ export const DEFAULT_MARKER_OPTIONS = {
 @Directive({
   selector: 'map-marker',
   exportAs: 'mapMarker',
+  providers: [
+    {
+      provide: MAP_MARKER,
+      useExisting: MapMarker,
+    },
+  ],
 })
-export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
   private readonly _googleMap = inject(GoogleMap);
   private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));

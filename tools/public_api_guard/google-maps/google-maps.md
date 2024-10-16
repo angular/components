@@ -229,14 +229,14 @@ export class GoogleMapsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer, typeof i18.MapMarkerClusterer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer, typeof i18.MapMarkerClusterer]>;
 }
 
 // @public
 export type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
 
 // @public
-export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
     constructor(...args: unknown[]);
     advancedMarker: google.maps.marker.AdvancedMarkerElement;
     set content(content: Node | google.maps.marker.PinElement | null);
@@ -261,6 +261,7 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     ngOnInit(): void;
     set options(options: google.maps.marker.AdvancedMarkerElementOptions);
     set position(position: google.maps.LatLngLiteral | google.maps.LatLng | google.maps.LatLngAltitude | google.maps.LatLngAltitudeLiteral);
+    _resolveMarker(): Promise<google.maps.marker.AdvancedMarkerElement>;
     set title(title: string);
     set zIndex(zIndex: number);
     // (undocumented)
@@ -542,7 +543,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
 }
 
 // @public
-export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
     constructor(...args: unknown[]);
     readonly animationChanged: Observable<void>;
     set clickable(clickable: boolean);
@@ -598,6 +599,29 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapMarker, "map-marker", ["mapMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "label": { "alias": "label"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "icon": { "alias": "icon"; "required": false; }; "visible": { "alias": "visible"; "required": false; }; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarker, never>;
+}
+
+// @public
+export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
+    algorithm: Algorithm_2;
+    readonly clusterClick: EventEmitter<Cluster_2>;
+    readonly clusteringbegin: Observable<void>;
+    readonly clusteringend: Observable<void>;
+    markerClusterer?: MarkerClusterer_2;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
+    // (undocumented)
+    _markers: QueryList<MarkerDirective>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): Promise<void>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): Promise<void>;
+    renderer: Renderer;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "renderer": { "alias": "renderer"; "required": false; }; "algorithm": { "alias": "algorithm"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MapMarkerClusterer, never>;
 }
 
 // @public
