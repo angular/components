@@ -8,7 +8,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'form-field-overview-example',
   templateUrl: 'form-field-overview-example.html',
   styleUrl: 'form-field-overview-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

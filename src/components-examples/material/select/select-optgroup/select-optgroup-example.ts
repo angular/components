@@ -19,7 +19,6 @@ interface PokemonGroup {
 @Component({
   selector: 'select-optgroup-example',
   templateUrl: 'select-optgroup-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectOptgroupExample {

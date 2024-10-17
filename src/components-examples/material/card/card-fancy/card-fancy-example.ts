@@ -9,7 +9,6 @@ import {MatCardModule} from '@angular/material/card';
   selector: 'card-fancy-example',
   templateUrl: 'card-fancy-example.html',
   styleUrl: 'card-fancy-example.css',
-  standalone: true,
   imports: [MatCardModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

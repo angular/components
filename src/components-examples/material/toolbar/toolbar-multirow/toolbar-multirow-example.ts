@@ -9,7 +9,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'toolbar-multirow-example',
   templateUrl: 'toolbar-multirow-example.html',
   styleUrl: 'toolbar-multirow-example.css',
-  standalone: true,
   imports: [MatToolbarModule, MatIconModule],
 })
 export class ToolbarMultirowExample {}

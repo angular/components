@@ -28,7 +28,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-sorting-example',
   styleUrl: 'table-sorting-example.css',
   templateUrl: 'table-sorting-example.html',
-  standalone: true,
   imports: [MatTableModule, MatSortModule],
 })
 export class TableSortingExample implements AfterViewInit {

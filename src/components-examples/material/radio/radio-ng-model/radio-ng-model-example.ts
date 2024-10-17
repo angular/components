@@ -9,7 +9,6 @@ import {MatRadioModule} from '@angular/material/radio';
   selector: 'radio-ng-model-example',
   templateUrl: 'radio-ng-model-example.html',
   styleUrl: 'radio-ng-model-example.css',
-  standalone: true,
   imports: [MatRadioModule, FormsModule],
 })
 export class RadioNgModelExample {

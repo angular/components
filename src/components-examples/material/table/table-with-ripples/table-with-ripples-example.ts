@@ -21,7 +21,6 @@ const ELEMENT_DATA = [
 @Component({
   selector: 'table-with-ripples-example',
   templateUrl: 'table-with-ripples-example.html',
-  standalone: true,
   imports: [MatTableModule, MatRippleModule],
 })
 export class TableWithRipplesExample {

@@ -7,7 +7,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 @Component({
   selector: 'sidenav-harness-example',
   templateUrl: 'sidenav-harness-example.html',
-  standalone: true,
   imports: [MatSidenavModule],
 })
 export class SidenavHarnessExample {}

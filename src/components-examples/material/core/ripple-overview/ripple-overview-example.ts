@@ -12,7 +12,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   selector: 'ripple-overview-example',
   templateUrl: 'ripple-overview-example.html',
   styleUrl: 'ripple-overview-example.css',
-  standalone: true,
   imports: [MatCheckboxModule, FormsModule, MatFormFieldModule, MatInputModule, MatRippleModule],
 })
 export class RippleOverviewExample {

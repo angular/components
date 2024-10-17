@@ -17,7 +17,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'focus-monitor-focus-via-example',
   templateUrl: 'focus-monitor-focus-via-example.html',
   styleUrl: 'focus-monitor-focus-via-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule],
 })
 export class FocusMonitorFocusViaExample implements OnDestroy, AfterViewInit {

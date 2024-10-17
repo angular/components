@@ -10,7 +10,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   selector: 'datepicker-actions-example',
   templateUrl: 'datepicker-actions-example.html',
   styleUrl: 'datepicker-actions-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

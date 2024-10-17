@@ -8,7 +8,6 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'table-sticky-header-example',
   styleUrl: 'table-sticky-header-example.css',
   templateUrl: 'table-sticky-header-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableStickyHeaderExample {

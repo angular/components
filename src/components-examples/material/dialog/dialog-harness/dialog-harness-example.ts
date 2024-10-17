@@ -7,7 +7,6 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 @Component({
   selector: 'dialog-harness-example',
   templateUrl: 'dialog-harness-example.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogHarnessExample {

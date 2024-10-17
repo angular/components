@@ -15,7 +15,6 @@ import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
   selector: 'focus-monitor-overview-example',
   templateUrl: 'focus-monitor-overview-example.html',
   styleUrl: 'focus-monitor-overview-example.css',
-  standalone: true,
 })
 export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
   private _focusMonitor = inject(FocusMonitor);

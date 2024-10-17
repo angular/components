@@ -7,7 +7,6 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-overview-example',
   templateUrl: 'button-toggle-overview-example.html',
-  standalone: true,
   imports: [MatButtonToggleModule],
 })
 export class ButtonToggleOverviewExample {}

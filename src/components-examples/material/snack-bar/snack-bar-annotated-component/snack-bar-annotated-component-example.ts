@@ -18,7 +18,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'snack-bar-annotated-component-example',
   templateUrl: 'snack-bar-annotated-component-example.html',
   styleUrl: 'snack-bar-annotated-component-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarAnnotatedComponentExample {
@@ -45,7 +44,6 @@ export class SnackBarAnnotatedComponentExample {
       color: hotpink;
     }
   `,
-  standalone: true,
   imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
 })
 export class PizzaPartyAnnotatedComponent {

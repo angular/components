@@ -7,7 +7,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-inverted-example',
   templateUrl: 'tab-group-inverted-example.html',
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabGroupInvertedExample {}

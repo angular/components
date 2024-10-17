@@ -6,7 +6,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'select-no-ripple-example',
   templateUrl: 'select-no-ripple-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule],
 })
 export class SelectNoRippleExample {}

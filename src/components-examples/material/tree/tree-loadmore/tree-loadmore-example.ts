@@ -128,7 +128,6 @@ export class LoadmoreDatabase {
   templateUrl: 'tree-loadmore-example.html',
   styleUrl: 'tree-loadmore-example.css',
   providers: [LoadmoreDatabase],
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

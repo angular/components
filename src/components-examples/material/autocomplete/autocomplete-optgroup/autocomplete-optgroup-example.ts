@@ -24,7 +24,6 @@ export const _filter = (opt: string[], value: string): string[] => {
 @Component({
   selector: 'autocomplete-optgroup-example',
   templateUrl: 'autocomplete-optgroup-example.html',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

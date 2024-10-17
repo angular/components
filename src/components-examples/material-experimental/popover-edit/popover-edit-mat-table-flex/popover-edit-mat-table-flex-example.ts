@@ -46,7 +46,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'popover-edit-mat-table-flex-example',
   styleUrl: 'popover-edit-mat-table-flex-example.css',
   templateUrl: 'popover-edit-mat-table-flex-example.html',
-  standalone: true,
   imports: [
     MatTableModule,
     FormsModule,

@@ -8,7 +8,6 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'badge-harness-example',
   templateUrl: 'badge-harness-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatBadgeModule],
 })
 export class BadgeHarnessExample {

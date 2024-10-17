@@ -8,7 +8,6 @@ import {MatSliderModule} from '@angular/material/slider';
   selector: 'slider-overview-example',
   templateUrl: 'slider-overview-example.html',
   styleUrl: 'slider-overview-example.css',
-  standalone: true,
   imports: [MatSliderModule],
 })
 export class SliderOverviewExample {}

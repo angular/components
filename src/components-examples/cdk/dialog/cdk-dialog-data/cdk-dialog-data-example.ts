@@ -11,7 +11,6 @@ export interface DialogData {
 @Component({
   selector: 'cdk-dialog-data-example',
   templateUrl: 'cdk-dialog-data-example.html',
-  standalone: true,
   imports: [DialogModule],
 })
 export class CdkDialogDataExample {
@@ -31,7 +30,6 @@ export class CdkDialogDataExample {
   selector: 'cdk-dialog-data-example-dialog',
   templateUrl: 'cdk-dialog-data-example-dialog.html',
   styleUrl: './cdk-dialog-data-example-dialog.css',
-  standalone: true,
 })
 export class CdkDialogDataExampleDialog {
   data = inject(DIALOG_DATA);

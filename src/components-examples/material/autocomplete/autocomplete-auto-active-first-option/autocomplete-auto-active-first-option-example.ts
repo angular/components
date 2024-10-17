@@ -14,7 +14,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'autocomplete-auto-active-first-option-example',
   templateUrl: 'autocomplete-auto-active-first-option-example.html',
   styleUrl: 'autocomplete-auto-active-first-option-example.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,

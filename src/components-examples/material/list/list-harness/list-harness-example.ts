@@ -7,7 +7,6 @@ import {MatListModule} from '@angular/material/list';
 @Component({
   selector: 'list-harness-example',
   templateUrl: 'list-harness-example.html',
-  standalone: true,
   imports: [MatListModule],
 })
 export class ListHarnessExample {}

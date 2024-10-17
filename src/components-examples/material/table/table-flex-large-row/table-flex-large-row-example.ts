@@ -28,7 +28,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-flex-large-row-example',
   styleUrl: 'table-flex-large-row-example.css',
   templateUrl: 'table-flex-large-row-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableFlexLargeRowExample {

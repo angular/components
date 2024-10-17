@@ -8,7 +8,6 @@ import {MatSliderModule} from '@angular/material/slider';
   selector: 'slider-formatting-example',
   templateUrl: 'slider-formatting-example.html',
   styleUrl: 'slider-formatting-example.css',
-  standalone: true,
   imports: [MatSliderModule],
 })
 export class SliderFormattingExample {

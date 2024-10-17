@@ -29,7 +29,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-text-column-example',
   styleUrl: 'table-text-column-example.css',
   templateUrl: 'table-text-column-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableTextColumnExample {

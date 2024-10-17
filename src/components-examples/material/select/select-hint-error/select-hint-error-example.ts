@@ -13,7 +13,6 @@ interface Animal {
 @Component({
   selector: 'select-hint-error-example',
   templateUrl: 'select-hint-error-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectHintErrorExample {

@@ -10,7 +10,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'datepicker-value-example',
   templateUrl: 'datepicker-value-example.html',
   styleUrl: 'datepicker-value-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
     MatFormFieldModule,

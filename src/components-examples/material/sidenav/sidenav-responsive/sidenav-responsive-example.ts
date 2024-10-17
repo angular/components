@@ -11,7 +11,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'sidenav-responsive-example',
   templateUrl: 'sidenav-responsive-example.html',
   styleUrl: 'sidenav-responsive-example.css',
-  standalone: true,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
 })
 export class SidenavResponsiveExample implements OnDestroy {

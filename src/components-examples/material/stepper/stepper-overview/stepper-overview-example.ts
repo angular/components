@@ -12,7 +12,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'stepper-overview-example',
   templateUrl: 'stepper-overview-example.html',
   styleUrl: 'stepper-overview-example.css',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatStepperModule,

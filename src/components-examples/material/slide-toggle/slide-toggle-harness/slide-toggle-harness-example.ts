@@ -8,7 +8,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @Component({
   selector: 'slide-toggle-harness-example',
   templateUrl: 'slide-toggle-harness-example.html',
-  standalone: true,
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 export class SlideToggleHarnessExample {

@@ -9,7 +9,6 @@ import {MatChipsModule} from '@angular/material/chips';
   selector: 'chips-avatar-example',
   templateUrl: 'chips-avatar-example.html',
   styleUrl: 'chips-avatar-example.css',
-  standalone: true,
   imports: [MatChipsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

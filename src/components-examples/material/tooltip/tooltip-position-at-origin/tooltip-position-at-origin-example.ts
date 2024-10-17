@@ -11,7 +11,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'tooltip-position-at-origin-example',
   templateUrl: 'tooltip-position-at-origin-example.html',
   styleUrl: 'tooltip-position-at-origin-example.css',
-  standalone: true,
   imports: [MatButtonModule, MatTooltipModule, MatCheckboxModule, FormsModule, ReactiveFormsModule],
 })
 export class TooltipPositionAtOriginExample {

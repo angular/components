@@ -8,7 +8,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-lazy-loaded-example',
   templateUrl: 'tab-group-lazy-loaded-example.html',
-  standalone: true,
   imports: [MatTabsModule, DatePipe],
 })
 export class TabGroupLazyLoadedExample {

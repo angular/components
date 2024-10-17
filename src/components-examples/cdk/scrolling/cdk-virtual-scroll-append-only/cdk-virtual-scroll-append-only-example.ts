@@ -7,7 +7,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   styleUrl: 'cdk-virtual-scroll-append-only-example.css',
   templateUrl: 'cdk-virtual-scroll-append-only-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollAppendOnlyExample {

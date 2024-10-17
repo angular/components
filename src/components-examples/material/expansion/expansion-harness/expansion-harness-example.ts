@@ -7,7 +7,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 @Component({
   selector: 'expansion-harness-example',
   templateUrl: 'expansion-harness-example.html',
-  standalone: true,
   imports: [MatExpansionModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

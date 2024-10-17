@@ -7,7 +7,6 @@ import {MatSliderModule} from '@angular/material/slider';
 @Component({
   selector: 'slider-harness-example',
   templateUrl: 'slider-harness-example.html',
-  standalone: true,
   imports: [MatSliderModule],
 })
 export class SliderHarnessExample {}

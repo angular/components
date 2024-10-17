@@ -7,7 +7,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-ink-bar-example',
   templateUrl: 'tab-group-ink-bar-example.html',
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabGroupInkBarExample {}

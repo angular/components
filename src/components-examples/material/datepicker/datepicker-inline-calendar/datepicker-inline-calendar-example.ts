@@ -8,7 +8,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   selector: 'datepicker-inline-calendar-example',
   templateUrl: 'datepicker-inline-calendar-example.html',
   styleUrl: 'datepicker-inline-calendar-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatCardModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

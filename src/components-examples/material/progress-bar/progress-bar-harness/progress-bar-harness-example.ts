@@ -7,7 +7,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 @Component({
   selector: 'progress-bar-harness-example',
   templateUrl: 'progress-bar-harness-example.html',
-  standalone: true,
   imports: [MatProgressBarModule],
 })
 export class ProgressBarHarnessExample {

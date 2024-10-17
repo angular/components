@@ -11,7 +11,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'input-prefix-suffix-example',
   templateUrl: 'input-prefix-suffix-example.html',
   styleUrl: 'input-prefix-suffix-example.css',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule, MatIconModule],
 })
 export class InputPrefixSuffixExample {}

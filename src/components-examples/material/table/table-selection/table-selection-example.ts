@@ -30,7 +30,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-selection-example',
   styleUrl: 'table-selection-example.css',
   templateUrl: 'table-selection-example.html',
-  standalone: true,
   imports: [MatTableModule, MatCheckboxModule],
 })
 export class TableSelectionExample {

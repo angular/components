@@ -42,7 +42,6 @@ export class FiveDayRangeSelectionStrategy<D> implements MatDateRangeSelectionSt
     },
     provideNativeDateAdapter(),
   ],
-  standalone: true,
   imports: [MatFormFieldModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

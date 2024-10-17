@@ -281,7 +281,6 @@ class ComplexDataStore {
   selector: 'cdk-tree-complex-example',
   templateUrl: 'cdk-tree-complex-example.html',
   styleUrls: ['cdk-tree-complex-example.css'],
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule, CommonModule, MatProgressSpinnerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

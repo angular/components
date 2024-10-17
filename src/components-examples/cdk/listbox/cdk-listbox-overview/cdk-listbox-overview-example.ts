@@ -7,7 +7,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxOverviewExample',
   templateUrl: 'cdk-listbox-overview-example.html',
   styleUrl: 'cdk-listbox-overview-example.css',
-  standalone: true,
   imports: [CdkListbox, CdkOption],
 })
 export class CdkListboxOverviewExample {}

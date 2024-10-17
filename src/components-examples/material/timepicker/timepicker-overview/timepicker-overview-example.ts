@@ -8,7 +8,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 @Component({
   selector: 'timepicker-overview-example',
   templateUrl: 'timepicker-overview-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatTimepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

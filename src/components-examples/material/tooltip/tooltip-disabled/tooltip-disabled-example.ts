@@ -11,7 +11,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'tooltip-disabled-example',
   templateUrl: 'tooltip-disabled-example.html',
   styleUrl: 'tooltip-disabled-example.css',
-  standalone: true,
   imports: [MatButtonModule, MatTooltipModule, MatCheckboxModule, FormsModule, ReactiveFormsModule],
 })
 export class TooltipDisabledExample {

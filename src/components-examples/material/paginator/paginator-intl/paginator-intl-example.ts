@@ -32,7 +32,6 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
 @Component({
   selector: 'paginator-intl-example',
   templateUrl: 'paginator-intl-example.html',
-  standalone: true,
   imports: [MatPaginatorModule],
   providers: [{provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl}],
 })

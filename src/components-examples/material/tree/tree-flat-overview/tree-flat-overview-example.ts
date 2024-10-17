@@ -46,7 +46,6 @@ interface ExampleFlatNode {
 @Component({
   selector: 'tree-flat-overview-example',
   templateUrl: 'tree-flat-overview-example.html',
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

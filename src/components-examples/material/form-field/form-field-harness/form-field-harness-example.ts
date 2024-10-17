@@ -9,7 +9,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'form-field-harness-example',
   templateUrl: 'form-field-harness-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

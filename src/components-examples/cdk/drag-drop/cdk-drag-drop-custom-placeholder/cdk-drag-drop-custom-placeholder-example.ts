@@ -14,7 +14,6 @@ import {
   selector: 'cdk-drag-drop-custom-placeholder-example',
   templateUrl: 'cdk-drag-drop-custom-placeholder-example.html',
   styleUrl: 'cdk-drag-drop-custom-placeholder-example.css',
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 export class CdkDragDropCustomPlaceholderExample {

@@ -20,7 +20,6 @@ interface Car {
 @Component({
   selector: 'select-reactive-form-example',
   templateUrl: 'select-reactive-form-example.html',
-  standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
 export class SelectReactiveFormExample {

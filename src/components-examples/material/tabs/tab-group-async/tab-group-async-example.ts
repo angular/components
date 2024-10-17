@@ -14,7 +14,6 @@ export interface ExampleTab {
 @Component({
   selector: 'tab-group-async-example',
   templateUrl: 'tab-group-async-example.html',
-  standalone: true,
   imports: [MatTabsModule, AsyncPipe],
 })
 export class TabGroupAsyncExample {

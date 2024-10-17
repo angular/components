@@ -13,7 +13,6 @@ export interface DialogData {
 @Component({
   selector: 'cdk-dialog-overview-example',
   templateUrl: 'cdk-dialog-overview-example.html',
-  standalone: true,
   imports: [FormsModule, DialogModule],
 })
 export class CdkDialogOverviewExample {
@@ -39,7 +38,6 @@ export class CdkDialogOverviewExample {
   selector: 'cdk-dialog-overview-example-dialog',
   templateUrl: 'cdk-dialog-overview-example-dialog.html',
   styleUrl: 'cdk-dialog-overview-example-dialog.css',
-  standalone: true,
   imports: [FormsModule],
 })
 export class CdkDialogOverviewExampleDialog {

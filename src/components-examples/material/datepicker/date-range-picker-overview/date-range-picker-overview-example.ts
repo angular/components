@@ -7,7 +7,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'date-range-picker-overview-example',
   templateUrl: 'date-range-picker-overview-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,

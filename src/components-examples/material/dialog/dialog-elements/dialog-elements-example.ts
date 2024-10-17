@@ -14,7 +14,6 @@ import {
 @Component({
   selector: 'dialog-elements-example',
   templateUrl: 'dialog-elements-example.html',
-  standalone: true,
   imports: [MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,7 +28,6 @@ export class DialogElementsExample {
 @Component({
   selector: 'dialog-elements-example-dialog',
   templateUrl: 'dialog-elements-example-dialog.html',
-  standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

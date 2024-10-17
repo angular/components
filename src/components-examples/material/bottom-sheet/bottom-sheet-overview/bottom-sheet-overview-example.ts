@@ -13,7 +13,6 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'bottom-sheet-overview-example',
   templateUrl: 'bottom-sheet-overview-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatBottomSheetModule],
 })
 export class BottomSheetOverviewExample {
@@ -27,7 +26,6 @@ export class BottomSheetOverviewExample {
 @Component({
   selector: 'bottom-sheet-overview-example-sheet',
   templateUrl: 'bottom-sheet-overview-example-sheet.html',
-  standalone: true,
   imports: [MatListModule],
 })
 export class BottomSheetOverviewExampleSheet {

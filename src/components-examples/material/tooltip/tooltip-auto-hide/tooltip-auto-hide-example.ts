@@ -13,7 +13,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'tooltip-auto-hide-example',
   templateUrl: 'tooltip-auto-hide-example.html',
   styleUrl: 'tooltip-auto-hide-example.css',
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatSelectModule,

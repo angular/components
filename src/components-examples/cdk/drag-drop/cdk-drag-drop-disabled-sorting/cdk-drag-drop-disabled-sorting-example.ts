@@ -15,7 +15,6 @@ import {
   selector: 'cdk-drag-drop-disabled-sorting-example',
   templateUrl: 'cdk-drag-drop-disabled-sorting-example.html',
   styleUrl: 'cdk-drag-drop-disabled-sorting-example.css',
-  standalone: true,
   imports: [CdkDropListGroup, CdkDropList, CdkDrag],
 })
 export class CdkDragDropDisabledSortingExample {

@@ -10,7 +10,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'input-errors-example',
   templateUrl: 'input-errors-example.html',
   styleUrl: 'input-errors-example.css',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
 })
 export class InputErrorsExample {

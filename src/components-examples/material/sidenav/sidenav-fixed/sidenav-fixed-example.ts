@@ -12,7 +12,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'sidenav-fixed-example',
   templateUrl: 'sidenav-fixed-example.html',
   styleUrl: 'sidenav-fixed-example.css',
-  standalone: true,
   imports: [
     MatToolbarModule,
     MatSidenavModule,

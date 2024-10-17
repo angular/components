@@ -31,7 +31,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-dynamic-observable-data-example',
   styleUrl: 'table-dynamic-observable-data-example.css',
   templateUrl: 'table-dynamic-observable-data-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatTableModule],
 })
 export class TableDynamicObservableDataExample {

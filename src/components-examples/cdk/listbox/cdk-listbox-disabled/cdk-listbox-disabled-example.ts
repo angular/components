@@ -8,7 +8,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxDisabledExample',
   templateUrl: 'cdk-listbox-disabled-example.html',
   styleUrl: 'cdk-listbox-disabled-example.css',
-  standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CdkListbox, CdkOption],
 })
 export class CdkListboxDisabledExample {

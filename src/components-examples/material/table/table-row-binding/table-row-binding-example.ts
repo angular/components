@@ -28,7 +28,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-row-binding-example',
   styleUrl: 'table-row-binding-example.css',
   templateUrl: 'table-row-binding-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableRowBindingExample {

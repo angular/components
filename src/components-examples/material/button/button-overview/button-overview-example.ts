@@ -10,7 +10,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'button-overview-example',
   templateUrl: 'button-overview-example.html',
   styleUrl: 'button-overview-example.css',
-  standalone: true,
   imports: [MatButtonModule, MatDividerModule, MatIconModule],
 })
 export class ButtonOverviewExample {}

@@ -8,7 +8,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
   selector: 'grid-list-overview-example',
   styleUrl: 'grid-list-overview-example.css',
   templateUrl: 'grid-list-overview-example.html',
-  standalone: true,
   imports: [MatGridListModule],
 })
 export class GridListOverviewExample {}

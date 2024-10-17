@@ -23,7 +23,6 @@ function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
   selector: 'cdk-tree-nested-children-accessor-example',
   templateUrl: 'cdk-tree-nested-children-accessor-example.html',
   styleUrls: ['cdk-tree-nested-children-accessor-example.css'],
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

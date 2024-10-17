@@ -37,7 +37,6 @@ interface ExampleFlatNode {
 @Component({
   selector: 'tree-harness-example',
   templateUrl: 'tree-harness-example.html',
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,7 +8,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'input-harness-example',
   templateUrl: 'input-harness-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule],
 })
 export class InputHarnessExample {

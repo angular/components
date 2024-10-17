@@ -11,7 +11,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'snack-bar-overview-example',
   templateUrl: 'snack-bar-overview-example.html',
   styleUrl: 'snack-bar-overview-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarOverviewExample {

@@ -8,7 +8,6 @@ import {MatListModule} from '@angular/material/list';
   selector: 'list-variants-example',
   templateUrl: 'list-variants-example.html',
   styleUrl: './list-variants-example.css',
-  standalone: true,
   imports: [MatListModule],
 })
 export class ListVariantsExample {}

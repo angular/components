@@ -7,7 +7,6 @@ import {CdkMenu, CdkMenuItem} from '@angular/cdk/menu';
   exportAs: 'cdkMenuInlineExample',
   styleUrl: 'cdk-menu-inline-example.css',
   templateUrl: 'cdk-menu-inline-example.html',
-  standalone: true,
   imports: [CdkMenu, CdkMenuItem],
 })
 export class CdkMenuInlineExample {}

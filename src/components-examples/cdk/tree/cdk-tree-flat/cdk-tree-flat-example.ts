@@ -77,7 +77,6 @@ interface ExampleFlatNode {
   selector: 'cdk-tree-flat-example',
   templateUrl: 'cdk-tree-flat-example.html',
   styleUrl: 'cdk-tree-flat-example.css',
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

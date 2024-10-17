@@ -8,7 +8,6 @@ import {CdkDragDrop, moveItemInArray, CdkDrag, CdkDropList} from '@angular/cdk/d
   selector: 'cdk-drag-drop-sort-predicate-example',
   templateUrl: 'cdk-drag-drop-sort-predicate-example.html',
   styleUrl: 'cdk-drag-drop-sort-predicate-example.css',
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 export class CdkDragDropSortPredicateExample {

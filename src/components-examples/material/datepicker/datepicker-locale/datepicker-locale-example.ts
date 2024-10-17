@@ -23,7 +23,6 @@ import 'moment/locale/ja';
     // of our example generation script.
     provideMomentDateAdapter(),
   ],
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

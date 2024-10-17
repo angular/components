@@ -15,7 +15,6 @@ export interface Task {
   selector: 'checkbox-overview-example',
   templateUrl: 'checkbox-overview-example.html',
   styleUrl: 'checkbox-overview-example.css',
-  standalone: true,
   imports: [MatCheckboxModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

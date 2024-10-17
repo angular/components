@@ -9,7 +9,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   selector: 'tab-nav-bar-basic-example',
   templateUrl: 'tab-nav-bar-basic-example.html',
   styleUrl: 'tab-nav-bar-basic-example.css',
-  standalone: true,
   imports: [MatTabsModule, MatButtonModule],
 })
 export class TabNavBarBasicExample {

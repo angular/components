@@ -13,7 +13,6 @@ import {
   selector: 'cdk-menu-standalone-stateful-menu-example',
   styleUrl: 'cdk-menu-standalone-stateful-menu-example.css',
   templateUrl: 'cdk-menu-standalone-stateful-menu-example.html',
-  standalone: true,
   imports: [
     CdkMenuTrigger,
     CdkMenu,

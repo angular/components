@@ -12,7 +12,6 @@ import {MatCardModule} from '@angular/material/card';
   selector: 'slide-toggle-configurable-example',
   templateUrl: 'slide-toggle-configurable-example.html',
   styleUrl: 'slide-toggle-configurable-example.css',
-  standalone: true,
   imports: [MatCardModule, MatRadioModule, FormsModule, MatCheckboxModule, MatSlideToggleModule],
 })
 export class SlideToggleConfigurableExample {

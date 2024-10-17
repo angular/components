@@ -14,7 +14,6 @@ export interface Tile {
 @Component({
   selector: 'grid-list-dynamic-example',
   templateUrl: 'grid-list-dynamic-example.html',
-  standalone: true,
   imports: [MatGridListModule],
 })
 export class GridListDynamicExample {

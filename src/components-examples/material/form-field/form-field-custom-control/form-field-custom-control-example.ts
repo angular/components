@@ -40,7 +40,6 @@ import {Subject} from 'rxjs';
 @Component({
   selector: 'form-field-custom-control-example',
   templateUrl: 'form-field-custom-control-example.html',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -77,7 +76,6 @@ export class MyTel {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
   },
-  standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

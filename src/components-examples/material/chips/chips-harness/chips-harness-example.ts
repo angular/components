@@ -8,7 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'chips-harness-example',
   templateUrl: 'chips-harness-example.html',
-  standalone: true,
   imports: [MatChipsModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

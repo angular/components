@@ -8,7 +8,6 @@ import {CdkDrag} from '@angular/cdk/drag-drop';
   selector: 'cdk-drag-drop-delay-example',
   templateUrl: 'cdk-drag-drop-delay-example.html',
   styleUrl: 'cdk-drag-drop-delay-example.css',
-  standalone: true,
   imports: [CdkDrag],
 })
 export class CdkDragDropDelayExample {}

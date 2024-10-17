@@ -13,7 +13,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   // Encapsulation has to be disabled in order for the
   // component style to apply to the select panel.
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
 })
 export class SelectPanelClassExample {

@@ -10,7 +10,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'input-hint-example',
   templateUrl: 'input-hint-example.html',
   styleUrl: 'input-hint-example.css',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule],
 })
 export class InputHintExample {}

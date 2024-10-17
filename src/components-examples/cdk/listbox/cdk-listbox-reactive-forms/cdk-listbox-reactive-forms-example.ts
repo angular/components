@@ -9,7 +9,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxReactiveFormsExample',
   templateUrl: 'cdk-listbox-reactive-forms-example.html',
   styleUrl: 'cdk-listbox-reactive-forms-example.css',
-  standalone: true,
   imports: [CdkListbox, FormsModule, ReactiveFormsModule, CdkOption, JsonPipe],
 })
 export class CdkListboxReactiveFormsExample {

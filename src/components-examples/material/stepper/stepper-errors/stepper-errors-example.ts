@@ -19,7 +19,6 @@ import {MatStepperModule} from '@angular/material/stepper';
       useValue: {showError: true},
     },
   ],
-  standalone: true,
   imports: [
     MatStepperModule,
     FormsModule,

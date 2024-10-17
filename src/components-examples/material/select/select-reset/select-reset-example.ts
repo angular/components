@@ -8,7 +8,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'select-reset-example',
   templateUrl: 'select-reset-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
 })
 export class SelectResetExample {

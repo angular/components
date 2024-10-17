@@ -11,7 +11,6 @@ interface Shoes {
 @Component({
   selector: 'list-single-selection-example',
   templateUrl: 'list-single-selection-example.html',
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 export class ListSingleSelectionExample {

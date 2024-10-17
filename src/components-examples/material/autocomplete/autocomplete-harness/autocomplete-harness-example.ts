@@ -7,7 +7,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @Component({
   selector: 'autocomplete-harness-example',
   templateUrl: 'autocomplete-harness-example.html',
-  standalone: true,
   imports: [MatAutocompleteModule],
 })
 export class AutocompleteHarnessExample {

@@ -14,7 +14,6 @@ import {
   selector: 'cdk-drag-drop-custom-preview-example',
   templateUrl: 'cdk-drag-drop-custom-preview-example.html',
   styleUrl: 'cdk-drag-drop-custom-preview-example.css',
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })
 export class CdkDragDropCustomPreviewExample {

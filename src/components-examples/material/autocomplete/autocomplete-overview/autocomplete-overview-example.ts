@@ -21,7 +21,6 @@ export interface State {
   selector: 'autocomplete-overview-example',
   templateUrl: 'autocomplete-overview-example.html',
   styleUrl: 'autocomplete-overview-example.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,

@@ -40,7 +40,6 @@ const TREE_DATA: FoodNode[] = [
   selector: 'tree-nested-overview-example',
   templateUrl: 'tree-nested-overview-example.html',
   styleUrl: 'tree-nested-overview-example.css',
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

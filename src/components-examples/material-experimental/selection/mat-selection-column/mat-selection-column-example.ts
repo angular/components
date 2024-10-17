@@ -9,7 +9,6 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'mat-selection-column-example',
   templateUrl: 'mat-selection-column-example.html',
   styleUrl: 'mat-selection-column-example.css',
-  standalone: true,
   imports: [MatTableModule, MatSelectionModule],
 })
 export class MatSelectionColumnExample {

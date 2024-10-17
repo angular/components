@@ -9,7 +9,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'datepicker-custom-icon-example',
   templateUrl: 'datepicker-custom-icon-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

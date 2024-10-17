@@ -16,7 +16,6 @@ import {
   selector: 'dialog-animations-example',
   styleUrl: 'dialog-animations-example.css',
   templateUrl: 'dialog-animations-example.html',
-  standalone: true,
   imports: [MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,7 +34,6 @@ export class DialogAnimationsExample {
 @Component({
   selector: 'dialog-animations-example-dialog',
   templateUrl: 'dialog-animations-example-dialog.html',
-  standalone: true,
   imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

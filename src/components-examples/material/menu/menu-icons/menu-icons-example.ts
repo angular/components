@@ -9,7 +9,6 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'menu-icons-example',
   templateUrl: 'menu-icons-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatMenuModule, MatIconModule],
 })
 export class MenuIconsExample {}

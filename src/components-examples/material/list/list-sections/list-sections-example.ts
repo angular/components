@@ -16,7 +16,6 @@ export interface Section {
   selector: 'list-sections-example',
   styleUrl: 'list-sections-example.css',
   templateUrl: 'list-sections-example.html',
-  standalone: true,
   imports: [MatListModule, MatIconModule, MatDividerModule, DatePipe],
 })
 export class ListSectionsExample {

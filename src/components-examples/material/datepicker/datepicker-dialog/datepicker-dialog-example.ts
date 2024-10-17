@@ -19,7 +19,6 @@ export interface DialogData {
 @Component({
   selector: 'datepicker-dialog-example',
   templateUrl: 'datepicker-dialog-example.html',
-  standalone: true,
   imports: [MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,7 +42,6 @@ export class DatepickerDialogExample {
 @Component({
   selector: 'datepicker-dialog-example',
   templateUrl: 'datepicker-dialog-example-dialog.html',
-  standalone: true,
   imports: [
     MatDatepickerModule,
     MatDialogModule,

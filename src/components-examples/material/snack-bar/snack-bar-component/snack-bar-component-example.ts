@@ -12,7 +12,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'snack-bar-component-example',
   templateUrl: 'snack-bar-component-example.html',
   styleUrl: 'snack-bar-component-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule],
 })
 export class SnackBarComponentExample {
@@ -35,6 +34,5 @@ export class SnackBarComponentExample {
       color: hotpink;
     }
   `,
-  standalone: true,
 })
 export class PizzaPartyComponent {}

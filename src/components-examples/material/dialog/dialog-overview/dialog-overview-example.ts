@@ -24,7 +24,6 @@ export interface DialogData {
 @Component({
   selector: 'dialog-overview-example',
   templateUrl: 'dialog-overview-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,7 +49,6 @@ export class DialogOverviewExample {
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'dialog-overview-example-dialog.html',
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

@@ -7,7 +7,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 @Component({
   selector: 'progress-bar-query-example',
   templateUrl: 'progress-bar-query-example.html',
-  standalone: true,
   imports: [MatProgressBarModule],
 })
 export class ProgressBarQueryExample {}

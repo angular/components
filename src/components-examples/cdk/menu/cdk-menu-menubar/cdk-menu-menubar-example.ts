@@ -15,7 +15,6 @@ import {
   exportAs: 'cdkMenuMenubarExample',
   styleUrl: 'cdk-menu-menubar-example.css',
   templateUrl: 'cdk-menu-menubar-example.html',
-  standalone: true,
   imports: [
     CdkMenuBar,
     CdkMenuItem,

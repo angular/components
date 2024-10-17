@@ -8,7 +8,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'elevation-overview-example',
   styleUrl: 'elevation-overview-example.css',
   templateUrl: 'elevation-overview-example.html',
-  standalone: true,
   imports: [MatButtonModule],
 })
 export class ElevationOverviewExample {

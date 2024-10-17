@@ -20,7 +20,6 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'tooltip-modified-defaults-example',
   templateUrl: 'tooltip-modified-defaults-example.html',
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}],
-  standalone: true,
   imports: [MatButtonModule, MatTooltipModule],
 })
 export class TooltipModifiedDefaultsExample {}

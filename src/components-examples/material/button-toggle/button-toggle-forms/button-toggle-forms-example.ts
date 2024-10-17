@@ -8,7 +8,6 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-forms-example',
   templateUrl: 'button-toggle-forms-example.html',
-  standalone: true,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

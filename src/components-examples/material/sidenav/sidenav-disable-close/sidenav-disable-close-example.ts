@@ -7,7 +7,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'sidenav-disable-close-example',
   templateUrl: 'sidenav-disable-close-example.html',
   styleUrl: 'sidenav-disable-close-example.css',
-  standalone: true,
   imports: [MatSidenavModule, MatButtonModule],
 })
 export class SidenavDisableCloseExample {

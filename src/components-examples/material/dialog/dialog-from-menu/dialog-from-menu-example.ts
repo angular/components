@@ -13,7 +13,6 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 @Component({
   selector: 'dialog-from-menu-example',
   templateUrl: 'dialog-from-menu-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatMenuModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,7 +35,6 @@ export class DialogFromMenuExample {
 @Component({
   selector: 'dialog-from-menu-dialog',
   templateUrl: 'dialog-from-menu-example-dialog.html',
-  standalone: true,
   imports: [MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

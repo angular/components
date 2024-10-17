@@ -7,7 +7,6 @@ import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
 @Component({
   selector: 'snack-bar-harness-example',
   templateUrl: 'snack-bar-harness-example.html',
-  standalone: true,
 })
 export class SnackBarHarnessExample {
   readonly snackBar = inject(MatSnackBar);

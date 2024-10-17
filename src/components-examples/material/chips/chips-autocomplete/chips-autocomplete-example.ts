@@ -14,7 +14,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'chips-autocomplete-example',
   templateUrl: 'chips-autocomplete-example.html',
   styleUrl: 'chips-autocomplete-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatChipsModule, MatIconModule, MatAutocompleteModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

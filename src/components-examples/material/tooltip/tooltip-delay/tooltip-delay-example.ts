@@ -12,7 +12,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'tooltip-delay-example',
   templateUrl: 'tooltip-delay-example.html',
   styleUrl: 'tooltip-delay-example.css',
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

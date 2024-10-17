@@ -13,7 +13,6 @@ const year = today.getFullYear();
   selector: 'date-range-picker-comparison-example',
   templateUrl: 'date-range-picker-comparison-example.html',
   styleUrl: 'date-range-picker-comparison-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

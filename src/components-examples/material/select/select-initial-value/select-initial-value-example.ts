@@ -20,7 +20,6 @@ interface Car {
 @Component({
   selector: 'select-initial-value-example',
   templateUrl: 'select-initial-value-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
 })
 export class SelectInitialValueExample {
