@@ -1,3 +1,35 @@
+<a name="19.0.0-next.9"></a>
+# 19.0.0-next.9 "howlite-headband" (2024-10-17)
+## Breaking Changes
+### google-maps
+- * The new @googlemaps/markerclusterer API should be imported instead of the old one. Read more at: https://github.com/googlemaps/js-markerclusterer
+  * The `MapMarkerClusterer` class has been renamed to `DeprecatedMapMarkerClusterer`.
+  * The `map-marker-clusterer` selector has been changed to `deprecated-map-marker-clusterer`.
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a05475e76](https://github.com/angular/components/commit/a05475e769d6a64e10cdcebca83f1906b322f9a9) | feat | deprecate marker cluster component |
+| [c70aae15b](https://github.com/angular/components/commit/c70aae15b095f5d7005b491270866f6647732a26) | feat | implement new marker clusterer |
+| [b9deeee85](https://github.com/angular/components/commit/b9deeee85b06fa24812f36d8290390b6f058d131) | fix | add schematic to switch to the new clusterer name |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a58e6f671](https://github.com/angular/components/commit/a58e6f6711af48f7106ed675b4b996c41899a0be) | feat | **core:** add theme-overrides mixin ([#29858](https://github.com/angular/components/pull/29858)) |
+| [486990912](https://github.com/angular/components/commit/4869909123c37a4910f5fde3f70d59cda4b44816) | feat | **core:** rename theme mixin ([#29857](https://github.com/angular/components/pull/29857)) |
+| [9c3af284f](https://github.com/angular/components/commit/9c3af284f89c9a10af66e0ded6f7805bab207a91) | feat | **schematics:** Switch custom theme schematic to use theme mixin instead of define-theme and add high contrast override mixins ([#29642](https://github.com/angular/components/pull/29642)) |
+| [371446a7c](https://github.com/angular/components/commit/371446a7cfb5176e02fe796b4d39941db82c22c2) | feat | **theming:** Disambiguate token names in theme overrides ([#29859](https://github.com/angular/components/pull/29859)) |
+| [cc0532bb2](https://github.com/angular/components/commit/cc0532bb26106691b5fcd5a159d66b4adfa8cf1b) | fix | **badge:** content incorrectly truncated in M3 ([#29854](https://github.com/angular/components/pull/29854)) |
+| [9262a018b](https://github.com/angular/components/commit/9262a018baa07a8328b3378239cc1b23b0e86372) | fix | **card:** elevated card container color ([#29835](https://github.com/angular/components/pull/29835)) |
+| [da9cb714e](https://github.com/angular/components/commit/da9cb714e92dc2fc997043bbca33004910763998) | fix | **dialog:** updates dialog max-height in landscape ([#29853](https://github.com/angular/components/pull/29853)) |
+| [48b2680f6](https://github.com/angular/components/commit/48b2680f6b41be5dc9bda7f261279cc4c9ad7d64) | fix | **form-field:** account in `cols` attribute on textarea ([#29836](https://github.com/angular/components/pull/29836)) |
+| [e975bb949](https://github.com/angular/components/commit/e975bb94996ad4031d0207e7d7af66c601e708b1) | fix | **radio:** use tokens for focused border color ([#29716](https://github.com/angular/components/pull/29716)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3b4ade5a0](https://github.com/angular/components/commit/3b4ade5a0b0df26cb72a9bb81742e1ea5d86a46a) | fix | **tree:** only handle keyboard events directly from the node ([#29861](https://github.com/angular/components/pull/29861)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.8"></a>
 # 19.0.0-next.8 "thulium-trumpet" (2024-10-09)
 ### cdk
