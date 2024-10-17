@@ -1,12 +1,9 @@
-@use '@angular/cdk';
 @use './tokens/m2/mat/app' as tokens-mat-app;
 @use './tokens/token-utils';
 @use './style/elevation';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
-@mixin core() {
-  @include cdk.a11y-visually-hidden();
-}
+@mixin core() {}
 
 // Emits the mat-app-background CSS class. This predefined class sets the
 // background color and text color of an element.

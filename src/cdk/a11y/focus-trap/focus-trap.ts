@@ -25,6 +25,7 @@ import {
   inject,
 } from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /**
  * Class that allows for trapping focus within a DOM element.
@@ -378,7 +379,9 @@ export class FocusTrapFactory {
   private _injector = inject(Injector);
 
   constructor(...args: unknown[]);
-  constructor() {}
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+  }
 
   /**
    * Creates a focus-trapped region around the given element.
