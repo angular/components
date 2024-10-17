@@ -1,3 +1,16 @@
+<a name="18.2.9"></a>
+# 18.2.9 "curite-castle" (2024-10-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80bfac26b](https://github.com/angular/components/commit/80bfac26b17a1e54779aaf806a2ed7a718104d8f) | fix | **badge:** content incorrectly truncated in M3 ([#29854](https://github.com/angular/components/pull/29854)) |
+| [2d7519178](https://github.com/angular/components/commit/2d7519178573c62022d2d65efa08a43b50a47e88) | fix | **card:** elevated card container color ([#29835](https://github.com/angular/components/pull/29835)) |
+| [6ce574731](https://github.com/angular/components/commit/6ce574731f14b5c675f5ddeadd2a93f4f105c825) | fix | **dialog:** updates dialog max-height in landscape ([#29853](https://github.com/angular/components/pull/29853)) |
+| [ddb55e2c2](https://github.com/angular/components/commit/ddb55e2c2bcb65048d57c692a830ddc1ded728fb) | fix | **form-field:** account in `cols` attribute on textarea ([#29836](https://github.com/angular/components/pull/29836)) |
+| [afc6b9db1](https://github.com/angular/components/commit/afc6b9db1aa784408e900f82ae7e04250a34f472) | fix | **radio:** use tokens for focused border color ([#29716](https://github.com/angular/components/pull/29716)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.9"></a>
 # 19.0.0-next.9 "howlite-headband" (2024-10-17)
 ## Breaking Changes
