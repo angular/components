@@ -18,6 +18,11 @@
     "./cdk/schematics/**/*",
     "./material/schematics/**/*",
     "./components-examples/**/*",
+    "./google-maps/schematics/**/*",
+    "./youtube-player/schematics/**/*",
+    "./material-moment-adapter/schematics/**/*",
+    "./material-luxon-adapter/schematics/**/*",
+    "./material-date-fns-adapter/schematics/**/*",
     "./material/core/theming/tests/**/*"
   ],
   "angularCompilerOptions": {

@@ -27,5 +27,10 @@
   },
   "sideEffects": false,
   "schematics": "./schematics/collection.json",
-  "ng-update": {}
+  "ng-update": {
+    "migrations": "./schematics/migration.json",
+    "packageGroup": [
+      "@angular/google-maps"
+    ]
+  }
 }

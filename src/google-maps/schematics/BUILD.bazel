@@ -30,5 +30,6 @@ pkg_npm(
     deps = [
         ":schematics",
         ":schematics_assets",
+        "//src/google-maps/schematics/ng-update:ng_update_index",
     ],
 )
