@@ -11,7 +11,7 @@ import {
   MatPaginatorModule,
   MatPaginatorSelectConfig,
 } from './index';
-import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
+import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions, PageEvent} from './paginator';
 
 describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
@@ -163,6 +163,17 @@ describe('MatPaginator', () => {
           pageIndex: 0,
         }),
       );
+    });
+
+    it('should emit a PageEvent instance', () => {
+      const fixture = createComponent(MatPaginatorApp);
+      const component = fixture.componentInstance;
+      const paginator = component.paginator;
+
+      dispatchMouseEvent(getNextButton(fixture), 'click');
+
+      expect(paginator.pageIndex).toBe(1);
+      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.any(PageEvent));
     });
   });
 
