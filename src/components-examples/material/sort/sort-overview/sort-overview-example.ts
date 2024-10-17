@@ -16,7 +16,6 @@ export interface Dessert {
   selector: 'sort-overview-example',
   templateUrl: 'sort-overview-example.html',
   styleUrl: 'sort-overview-example.css',
-  standalone: true,
   imports: [MatSortModule],
 })
 export class SortOverviewExample {

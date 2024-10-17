@@ -20,7 +20,6 @@ interface Car {
 @Component({
   selector: 'select-form-example',
   templateUrl: 'select-form-example.html',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
 export class SelectFormExample {

@@ -206,7 +206,6 @@ const FANTASY_ELEMENTS: readonly FantasyElement[] = [
   selector: 'popover-edit-mat-table-example',
   styleUrl: 'popover-edit-mat-table-example.css',
   templateUrl: 'popover-edit-mat-table-example.html',
-  standalone: true,
   imports: [
     MatTableModule,
     CdkPopoverEditModule,

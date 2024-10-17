@@ -7,7 +7,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxhorizontalExample',
   templateUrl: 'cdk-listbox-horizontal-example.html',
   styleUrl: 'cdk-listbox-horizontal-example.css',
-  standalone: true,
   imports: [CdkListbox, CdkOption],
 })
 export class CdkListboxHorizontalExample {

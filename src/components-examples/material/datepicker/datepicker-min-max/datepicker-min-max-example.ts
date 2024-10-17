@@ -8,7 +8,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'datepicker-min-max-example',
   templateUrl: 'datepicker-min-max-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

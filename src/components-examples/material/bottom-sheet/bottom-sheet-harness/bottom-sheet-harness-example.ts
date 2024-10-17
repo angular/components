@@ -11,7 +11,6 @@ import {
 @Component({
   selector: 'bottom-sheet-harness-example',
   templateUrl: 'bottom-sheet-harness-example.html',
-  standalone: true,
   imports: [MatBottomSheetModule],
 })
 export class BottomSheetHarnessExample {

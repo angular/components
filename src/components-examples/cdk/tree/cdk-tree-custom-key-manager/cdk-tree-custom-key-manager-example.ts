@@ -369,7 +369,6 @@ const VIM_TREE_KEY_MANAGER_PROVIDER = {
   selector: 'cdk-tree-custom-key-manager-example',
   templateUrl: 'cdk-tree-custom-key-manager-example.html',
   styleUrls: ['cdk-tree-custom-key-manager-example.css'],
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   providers: [VIM_TREE_KEY_MANAGER_PROVIDER],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,7 +7,6 @@ import {MatChipsModule} from '@angular/material/chips';
 @Component({
   selector: 'chips-overview-example',
   templateUrl: 'chips-overview-example.html',
-  standalone: true,
   imports: [MatChipsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

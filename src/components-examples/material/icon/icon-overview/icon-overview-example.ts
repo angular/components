@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'icon-overview-example',
   templateUrl: 'icon-overview-example.html',
-  standalone: true,
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

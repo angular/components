@@ -10,7 +10,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'toolbar-overview-example',
   templateUrl: 'toolbar-overview-example.html',
   styleUrl: 'toolbar-overview-example.css',
-  standalone: true,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule],
 })
 export class ToolbarOverviewExample {}

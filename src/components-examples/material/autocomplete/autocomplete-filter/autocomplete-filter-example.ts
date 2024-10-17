@@ -14,7 +14,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'autocomplete-filter-example',
   templateUrl: 'autocomplete-filter-example.html',
   styleUrl: 'autocomplete-filter-example.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,

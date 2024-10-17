@@ -8,7 +8,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'datepicker-disabled-example',
   templateUrl: 'datepicker-disabled-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

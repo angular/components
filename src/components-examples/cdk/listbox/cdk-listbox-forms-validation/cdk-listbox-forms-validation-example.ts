@@ -11,7 +11,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxFormsValidationExample',
   templateUrl: 'cdk-listbox-forms-validation-example.html',
   styleUrl: 'cdk-listbox-forms-validation-example.css',
-  standalone: true,
   imports: [CdkListbox, FormsModule, ReactiveFormsModule, CdkOption, AsyncPipe, JsonPipe],
 })
 export class CdkListboxFormsValidationExample {

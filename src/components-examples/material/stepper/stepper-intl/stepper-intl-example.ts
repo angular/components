@@ -20,7 +20,6 @@ export class StepperIntl extends MatStepperIntl {
   templateUrl: 'stepper-intl-example.html',
   styleUrl: 'stepper-intl-example.css',
   providers: [{provide: MatStepperIntl, useClass: StepperIntl}],
-  standalone: true,
   imports: [
     MatRadioModule,
     FormsModule,

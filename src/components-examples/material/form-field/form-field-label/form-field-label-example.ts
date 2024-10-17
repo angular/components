@@ -14,7 +14,6 @@ import {map} from 'rxjs/operators';
   selector: 'form-field-label-example',
   templateUrl: 'form-field-label-example.html',
   styleUrl: 'form-field-label-example.css',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

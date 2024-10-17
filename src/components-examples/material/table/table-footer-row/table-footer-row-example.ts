@@ -14,7 +14,6 @@ interface Transaction {
   selector: 'table-footer-row-example',
   styleUrl: 'table-footer-row-example.css',
   templateUrl: 'table-footer-row-example.html',
-  standalone: true,
   imports: [MatTableModule, CurrencyPipe],
 })
 export class TableFooterRowExample {

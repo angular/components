@@ -8,7 +8,6 @@ import {OverlayModule} from '@angular/cdk/overlay';
   selector: 'cdk-overlay-basic-example',
   templateUrl: './cdk-overlay-basic-example.html',
   styleUrl: './cdk-overlay-basic-example.css',
-  standalone: true,
   imports: [OverlayModule],
 })
 export class CdkOverlayBasicExample {

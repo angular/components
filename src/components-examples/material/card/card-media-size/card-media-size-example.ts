@@ -8,7 +8,6 @@ import {MatCardModule} from '@angular/material/card';
   selector: 'card-media-size-example',
   templateUrl: 'card-media-size-example.html',
   styleUrl: 'card-media-size-example.css',
-  standalone: true,
   imports: [MatCardModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

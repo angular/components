@@ -7,7 +7,6 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-overview-example',
   templateUrl: 'card-overview-example.html',
-  standalone: true,
   imports: [MatCardModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

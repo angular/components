@@ -8,7 +8,6 @@ import {MatTableModule} from '@angular/material/table';
 @Component({
   selector: 'table-harness-example',
   templateUrl: 'table-harness-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableHarnessExample {

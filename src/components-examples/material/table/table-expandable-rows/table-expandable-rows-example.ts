@@ -18,7 +18,6 @@ import {MatTableModule} from '@angular/material/table';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  standalone: true,
   imports: [MatTableModule, MatButtonModule, MatIconModule],
 })
 export class TableExpandableRowsExample {

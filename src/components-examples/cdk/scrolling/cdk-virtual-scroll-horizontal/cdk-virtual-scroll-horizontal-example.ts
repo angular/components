@@ -8,7 +8,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   templateUrl: 'cdk-virtual-scroll-horizontal-example.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollHorizontalExample {

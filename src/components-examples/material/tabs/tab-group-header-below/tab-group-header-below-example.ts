@@ -7,7 +7,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-header-below-example',
   templateUrl: 'tab-group-header-below-example.html',
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabGroupHeaderBelowExample {}

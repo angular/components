@@ -18,7 +18,6 @@ export interface User {
   selector: 'autocomplete-display-example',
   templateUrl: 'autocomplete-display-example.html',
   styleUrl: 'autocomplete-display-example.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,

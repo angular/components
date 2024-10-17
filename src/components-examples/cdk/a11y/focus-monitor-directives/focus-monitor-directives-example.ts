@@ -6,7 +6,6 @@ import {A11yModule, FocusOrigin} from '@angular/cdk/a11y';
   selector: 'focus-monitor-directives-example',
   templateUrl: 'focus-monitor-directives-example.html',
   styleUrl: 'focus-monitor-directives-example.css',
-  standalone: true,
   imports: [A11yModule],
 })
 export class FocusMonitorDirectivesExample {

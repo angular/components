@@ -15,7 +15,6 @@ import {
   selector: 'cdk-drag-drop-connected-sorting-group-example',
   templateUrl: 'cdk-drag-drop-connected-sorting-group-example.html',
   styleUrl: 'cdk-drag-drop-connected-sorting-group-example.css',
-  standalone: true,
   imports: [CdkDropListGroup, CdkDropList, CdkDrag],
 })
 export class CdkDragDropConnectedSortingGroupExample {

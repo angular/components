@@ -8,7 +8,6 @@ import {NgTemplateOutlet} from '@angular/common';
   selector: 'cdk-linear-stepper-with-form-example',
   templateUrl: './cdk-linear-stepper-with-form-example.html',
   styleUrl: './cdk-linear-stepper-with-form-example.css',
-  standalone: true,
   imports: [
     forwardRef(() => CustomLinearStepper),
     CdkStepperModule,
@@ -38,7 +37,6 @@ export class CdkLinearStepperWithFormExample {
   templateUrl: './example-custom-linear-stepper.html',
   styleUrl: './example-custom-linear-stepper.css',
   providers: [{provide: CdkStepper, useExisting: CustomLinearStepper}],
-  standalone: true,
   imports: [NgTemplateOutlet, CdkStepperModule],
 })
 export class CustomLinearStepper extends CdkStepper {

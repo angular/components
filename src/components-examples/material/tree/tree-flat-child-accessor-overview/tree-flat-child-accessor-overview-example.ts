@@ -38,7 +38,6 @@ const TREE_DATA: FoodNode[] = [
 @Component({
   selector: 'tree-flat-child-accessor-overview-example',
   templateUrl: 'tree-flat-child-accessor-overview-example.html',
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

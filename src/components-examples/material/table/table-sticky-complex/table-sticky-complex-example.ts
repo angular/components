@@ -10,7 +10,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'table-sticky-complex-example',
   styleUrl: 'table-sticky-complex-example.css',
   templateUrl: 'table-sticky-complex-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatButtonToggleModule, MatTableModule],
 })
 export class TableStickyComplexExample {

@@ -16,7 +16,6 @@ export interface Fruit {
   selector: 'chips-input-example',
   templateUrl: 'chips-input-example.html',
   styleUrl: 'chips-input-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatChipsModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

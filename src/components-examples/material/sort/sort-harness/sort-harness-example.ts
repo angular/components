@@ -7,7 +7,6 @@ import {Sort, MatSortModule} from '@angular/material/sort';
 @Component({
   selector: 'sort-harness-example',
   templateUrl: 'sort-harness-example.html',
-  standalone: true,
   imports: [MatSortModule],
 })
 export class SortHarnessExample {

@@ -9,7 +9,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'form-field-prefix-suffix-example',
   templateUrl: 'form-field-prefix-suffix-example.html',
   styleUrl: 'form-field-prefix-suffix-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

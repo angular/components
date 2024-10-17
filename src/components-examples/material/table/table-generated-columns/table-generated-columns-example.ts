@@ -28,7 +28,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-generated-columns-example',
   styleUrl: 'table-generated-columns-example.css',
   templateUrl: 'table-generated-columns-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableGeneratedColumnsExample {

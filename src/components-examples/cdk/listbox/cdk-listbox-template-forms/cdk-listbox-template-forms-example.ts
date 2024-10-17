@@ -9,7 +9,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxTemplateFormsExample',
   templateUrl: 'cdk-listbox-template-forms-example.html',
   styleUrl: 'cdk-listbox-template-forms-example.css',
-  standalone: true,
   imports: [CdkListbox, FormsModule, CdkOption, JsonPipe],
 })
 export class CdkListboxTemplateFormsExample {

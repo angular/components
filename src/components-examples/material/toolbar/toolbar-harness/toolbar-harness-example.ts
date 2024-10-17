@@ -8,7 +8,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 @Component({
   selector: 'toolbar-harness-example',
   templateUrl: 'toolbar-harness-example.html',
-  standalone: true,
   imports: [MatToolbarModule, MatButtonModule],
 })
 export class ToolbarHarnessExample {}

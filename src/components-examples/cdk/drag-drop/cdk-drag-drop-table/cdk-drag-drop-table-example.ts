@@ -31,7 +31,6 @@ export const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'cdk-drag-drop-table-example',
   templateUrl: 'cdk-drag-drop-table-example.html',
   styleUrl: 'cdk-drag-drop-table-example.css',
-  standalone: true,
   imports: [CdkDropList, CdkDrag, MatTableModule, MatIconModule],
 })
 export class CdkDragDropTableExample {

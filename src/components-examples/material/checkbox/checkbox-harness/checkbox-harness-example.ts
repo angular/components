@@ -7,7 +7,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'checkbox-harness-example',
   templateUrl: 'checkbox-harness-example.html',
-  standalone: true,
   imports: [MatCheckboxModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

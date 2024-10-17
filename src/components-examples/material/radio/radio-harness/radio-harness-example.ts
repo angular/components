@@ -7,7 +7,6 @@ import {MatRadioModule} from '@angular/material/radio';
 @Component({
   selector: 'radio-harness-example',
   templateUrl: 'radio-harness-example.html',
-  standalone: true,
   imports: [MatRadioModule],
 })
 export class RadioHarnessExample {}

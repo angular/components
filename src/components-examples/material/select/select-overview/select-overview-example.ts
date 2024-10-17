@@ -15,7 +15,6 @@ interface Food {
 @Component({
   selector: 'select-overview-example',
   templateUrl: 'select-overview-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
 })
 export class SelectOverviewExample {

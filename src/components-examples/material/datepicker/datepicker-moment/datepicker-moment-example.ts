@@ -24,7 +24,6 @@ const moment = _rollupMoment || _moment;
     // of our example generation script.
     provideMomentDateAdapter(),
   ],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

@@ -30,7 +30,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-filtering-example',
   styleUrl: 'table-filtering-example.css',
   templateUrl: 'table-filtering-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule],
 })
 export class TableFilteringExample {

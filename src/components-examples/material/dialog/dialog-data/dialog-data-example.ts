@@ -17,7 +17,6 @@ export interface DialogData {
 @Component({
   selector: 'dialog-data-example',
   templateUrl: 'dialog-data-example.html',
-  standalone: true,
   imports: [MatButtonModule],
 })
 export class DialogDataExample {
@@ -35,7 +34,6 @@ export class DialogDataExample {
 @Component({
   selector: 'dialog-data-example-dialog',
   templateUrl: 'dialog-data-example-dialog.html',
-  standalone: true,
   imports: [MatDialogTitle, MatDialogContent],
 })
 export class DialogDataExampleDialog {

@@ -9,7 +9,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'cdk-selection-list-example',
   templateUrl: 'cdk-selection-list-example.html',
-  standalone: true,
   imports: [CdkSelectionModule, MatCheckboxModule, AsyncPipe],
 })
 export class CdkSelectionListExample {

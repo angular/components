@@ -28,7 +28,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-recycle-rows-example',
   styleUrl: 'table-recycle-rows-example.css',
   templateUrl: 'table-recycle-rows-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableRecycleRowsExample {

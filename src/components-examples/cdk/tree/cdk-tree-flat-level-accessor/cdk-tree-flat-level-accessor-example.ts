@@ -12,7 +12,6 @@ import {FlatFoodNode, FLAT_DATA} from '../tree-data';
   selector: 'cdk-tree-flat-level-accessor-example',
   templateUrl: 'cdk-tree-flat-level-accessor-example.html',
   styleUrls: ['cdk-tree-flat-level-accessor-example.css'],
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

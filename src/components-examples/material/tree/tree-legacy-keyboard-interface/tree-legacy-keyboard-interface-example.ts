@@ -78,7 +78,6 @@ interface ExampleFlatNode {
   selector: 'tree-legacy-keyboard-interface-example',
   templateUrl: 'tree-legacy-keyboard-interface-example.html',
   styleUrls: ['tree-legacy-keyboard-interface-example.css'],
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
   changeDetection: ChangeDetectionStrategy.OnPush,

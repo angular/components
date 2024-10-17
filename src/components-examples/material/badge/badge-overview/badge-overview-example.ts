@@ -10,7 +10,6 @@ import {MatBadgeModule} from '@angular/material/badge';
   selector: 'badge-overview-example',
   templateUrl: 'badge-overview-example.html',
   styleUrl: 'badge-overview-example.css',
-  standalone: true,
   imports: [MatBadgeModule, MatButtonModule, MatIconModule],
 })
 export class BadgeOverviewExample {

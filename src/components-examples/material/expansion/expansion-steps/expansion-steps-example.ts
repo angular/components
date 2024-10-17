@@ -14,7 +14,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'expansion-steps-example',
   templateUrl: 'expansion-steps-example.html',
   styleUrl: 'expansion-steps-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
     MatExpansionModule,

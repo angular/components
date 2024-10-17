@@ -20,7 +20,6 @@ import {MatStepperModule} from '@angular/material/stepper';
   selector: 'stepper-animations-example',
   templateUrl: 'stepper-animations-example.html',
   styleUrl: 'stepper-animations-example.css',
-  standalone: true,
   imports: [
     MatStepperModule,
     FormsModule,

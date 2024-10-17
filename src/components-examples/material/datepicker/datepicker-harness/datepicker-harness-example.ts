@@ -10,7 +10,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'datepicker-harness-example',
   templateUrl: 'datepicker-harness-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatInputModule, MatDatepickerModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

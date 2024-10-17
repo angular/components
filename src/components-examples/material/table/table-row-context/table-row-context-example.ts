@@ -8,7 +8,6 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'table-row-context-example',
   styleUrl: 'table-row-context-example.css',
   templateUrl: 'table-row-context-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableRowContextExample {

@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'icon-harness-example',
   templateUrl: 'icon-harness-example.html',
-  standalone: true,
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -9,7 +9,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   selector: 'cdk-drag-drop-tabs-example',
   templateUrl: 'cdk-drag-drop-tabs-example.html',
   styleUrl: 'cdk-drag-drop-tabs-example.css',
-  standalone: true,
   imports: [CdkDrag, CdkDropList, MatTabsModule],
   encapsulation: ViewEncapsulation.None,
 })

@@ -18,7 +18,6 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
   templateUrl: 'cdk-virtual-scroll-custom-strategy-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}],
-  standalone: true,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollCustomStrategyExample {

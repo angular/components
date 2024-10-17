@@ -36,7 +36,6 @@ const PERSON_DATA: Person[] = [
   selector: 'popover-edit-cell-span-mat-table-example',
   styleUrl: 'popover-edit-cell-span-mat-table-example.css',
   templateUrl: 'popover-edit-cell-span-mat-table-example.html',
-  standalone: true,
   imports: [
     MatTableModule,
     CdkPopoverEditModule,

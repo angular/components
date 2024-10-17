@@ -28,7 +28,6 @@ const PERSON_DATA: Person[] = [
   selector: 'cdk-popover-edit-cell-span-vanilla-table-example',
   styleUrl: 'cdk-popover-edit-cell-span-vanilla-table-example.css',
   templateUrl: 'cdk-popover-edit-cell-span-vanilla-table-example.html',
-  standalone: true,
   imports: [CdkPopoverEditModule, FormsModule],
 })
 export class CdkPopoverEditCellSpanVanillaTableExample {

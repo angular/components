@@ -11,7 +11,6 @@ import {MatRadioModule} from '@angular/material/radio';
   selector: 'checkbox-configurable-example',
   templateUrl: 'checkbox-configurable-example.html',
   styleUrl: 'checkbox-configurable-example.css',
-  standalone: true,
   imports: [MatCardModule, MatCheckboxModule, FormsModule, MatRadioModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

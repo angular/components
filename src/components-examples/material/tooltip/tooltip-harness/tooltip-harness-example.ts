@@ -7,7 +7,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 @Component({
   selector: 'tooltip-harness-example',
   templateUrl: 'tooltip-harness-example.html',
-  standalone: true,
   imports: [MatTooltipModule],
 })
 export class TooltipHarnessExample {

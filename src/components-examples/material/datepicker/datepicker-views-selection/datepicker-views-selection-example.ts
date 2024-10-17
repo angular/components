@@ -41,7 +41,6 @@ export const MY_FORMATS = {
     provideMomentDateAdapter(MY_FORMATS),
   ],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

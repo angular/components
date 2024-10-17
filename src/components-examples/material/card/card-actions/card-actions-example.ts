@@ -8,7 +8,6 @@ import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'card-actions-example',
   templateUrl: 'card-actions-example.html',
-  standalone: true,
   imports: [MatCardModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

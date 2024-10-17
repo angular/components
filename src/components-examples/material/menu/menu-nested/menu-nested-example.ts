@@ -8,7 +8,6 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'menu-nested-example',
   templateUrl: 'menu-nested-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatMenuModule],
 })
 export class MenuNestedExample {}

@@ -12,7 +12,6 @@ import {FLAT_DATA, FlatFoodNode} from '../tree-data';
   selector: 'cdk-tree-nested-level-accessor-example',
   templateUrl: 'cdk-tree-nested-level-accessor-example.html',
   styleUrls: ['cdk-tree-nested-level-accessor-example.css'],
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

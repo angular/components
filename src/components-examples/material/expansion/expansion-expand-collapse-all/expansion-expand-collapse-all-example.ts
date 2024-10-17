@@ -14,7 +14,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'expansion-expand-collapse-all-example',
   templateUrl: 'expansion-expand-collapse-all-example.html',
   styleUrl: 'expansion-expand-collapse-all-example.css',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
     MatButtonModule,

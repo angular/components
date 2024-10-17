@@ -9,7 +9,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   selector: 'sidenav-open-close-example',
   templateUrl: 'sidenav-open-close-example.html',
   styleUrl: 'sidenav-open-close-example.css',
-  standalone: true,
   imports: [MatSidenavModule, MatCheckboxModule, FormsModule, MatButtonModule],
 })
 export class SidenavOpenCloseExample {

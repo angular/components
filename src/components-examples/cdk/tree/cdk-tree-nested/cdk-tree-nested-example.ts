@@ -40,7 +40,6 @@ const TREE_DATA: FoodNode[] = [
   selector: 'cdk-tree-nested-example',
   templateUrl: 'cdk-tree-nested-example.html',
   styleUrl: 'cdk-tree-nested-example.css',
-  standalone: true,
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,7 +8,6 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'menu-position-example',
   templateUrl: 'menu-position-example.html',
-  standalone: true,
   imports: [MatButtonModule, MatMenuModule],
 })
 export class MenuPositionExample {}

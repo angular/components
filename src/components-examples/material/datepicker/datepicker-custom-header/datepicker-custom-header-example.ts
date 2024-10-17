@@ -12,7 +12,6 @@ import {startWith, takeUntil} from 'rxjs/operators';
 @Component({
   selector: 'datepicker-custom-header-example',
   templateUrl: 'datepicker-custom-header-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +54,6 @@ export class DatepickerCustomHeaderExample {
       </button>
     </div>
   `,
-  standalone: true,
   imports: [MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

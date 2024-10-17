@@ -10,7 +10,6 @@ import {MatChipsModule} from '@angular/material/chips';
   selector: 'card-footer-example',
   templateUrl: 'card-footer-example.html',
   styleUrl: 'card-footer-example.css',
-  standalone: true,
   imports: [MatCardModule, MatChipsModule, MatProgressBarModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

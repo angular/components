@@ -7,7 +7,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxCustomNavigationExample',
   templateUrl: 'cdk-listbox-custom-navigation-example.html',
   styleUrl: 'cdk-listbox-custom-navigation-example.css',
-  standalone: true,
   imports: [CdkListbox, CdkOption],
 })
 export class CdkListboxCustomNavigationExample {}

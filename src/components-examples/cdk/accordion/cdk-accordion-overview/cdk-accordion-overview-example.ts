@@ -8,7 +8,6 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
   selector: 'cdk-accordion-overview-example',
   templateUrl: 'cdk-accordion-overview-example.html',
   styleUrl: 'cdk-accordion-overview-example.css',
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 export class CdkAccordionOverviewExample {

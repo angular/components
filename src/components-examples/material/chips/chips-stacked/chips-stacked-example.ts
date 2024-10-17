@@ -8,7 +8,6 @@ import {MatChipsModule} from '@angular/material/chips';
   selector: 'chips-stacked-example',
   templateUrl: 'chips-stacked-example.html',
   styleUrl: 'chips-stacked-example.css',
-  standalone: true,
   imports: [MatChipsModule],
 })
 export class ChipsStackedExample {

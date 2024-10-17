@@ -39,7 +39,6 @@ const TREE_DATA: FoodNode[] = [
   selector: 'tree-nested-child-accessor-overview-example',
   templateUrl: 'tree-nested-child-accessor-overview-example.html',
   styleUrl: 'tree-nested-child-accessor-overview-example.css',
-  standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,7 +8,6 @@ import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'datepicker-filter-example',
   templateUrl: 'datepicker-filter-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

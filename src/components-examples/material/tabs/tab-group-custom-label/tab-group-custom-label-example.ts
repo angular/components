@@ -9,7 +9,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   selector: 'tab-group-custom-label-example',
   templateUrl: 'tab-group-custom-label-example.html',
   styleUrl: 'tab-group-custom-label-example.css',
-  standalone: true,
   imports: [MatTabsModule, MatIconModule],
 })
 export class TabGroupCustomLabelExample {}

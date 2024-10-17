@@ -30,7 +30,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'cdk-table-basic-example',
   styleUrl: 'cdk-table-basic-example.css',
   templateUrl: 'cdk-table-basic-example.html',
-  standalone: true,
   imports: [CdkTableModule],
 })
 export class CdkTableBasicExample {

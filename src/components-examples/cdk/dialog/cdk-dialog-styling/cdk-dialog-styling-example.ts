@@ -7,7 +7,6 @@ import {Dialog, DialogModule, DialogRef} from '@angular/cdk/dialog';
 @Component({
   selector: 'cdk-dialog-styling-example',
   templateUrl: 'cdk-dialog-styling-example.html',
-  standalone: true,
   imports: [DialogModule],
 })
 export class CdkDialogStylingExample {
@@ -22,7 +21,6 @@ export class CdkDialogStylingExample {
   selector: 'cdk-dialog-styling-example-dialog',
   templateUrl: 'cdk-dialog-styling-example-dialog.html',
   styleUrl: 'cdk-dialog-styling-example-dialog.css',
-  standalone: true,
 })
 export class CdkDialogStylingExampleDialog {
   dialogRef = inject(DialogRef);

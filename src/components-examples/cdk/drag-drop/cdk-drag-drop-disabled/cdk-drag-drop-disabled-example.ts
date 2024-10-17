@@ -8,7 +8,6 @@ import {CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray} from '@angular/cdk/d
   selector: 'cdk-drag-drop-disabled-example',
   templateUrl: 'cdk-drag-drop-disabled-example.html',
   styleUrl: 'cdk-drag-drop-disabled-example.css',
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 export class CdkDragDropDisabledExample {

@@ -7,7 +7,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-preserve-content-example',
   templateUrl: 'tab-group-preserve-content-example.html',
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabGroupPreserveContentExample {}

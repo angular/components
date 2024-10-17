@@ -46,7 +46,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrl: 'popover-edit-tab-out-mat-table-example.css',
   templateUrl: 'popover-edit-tab-out-mat-table-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatTableModule,
     FormsModule,

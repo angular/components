@@ -22,7 +22,6 @@ import {
   selector: 'cdk-portal-overview-example',
   templateUrl: 'cdk-portal-overview-example.html',
   styleUrl: 'cdk-portal-overview-example.css',
-  standalone: true,
   imports: [PortalModule],
 })
 export class CdkPortalOverviewExample implements AfterViewInit {
@@ -46,6 +45,5 @@ export class CdkPortalOverviewExample implements AfterViewInit {
 @Component({
   selector: 'component-portal-example',
   template: 'Hello, this is a component portal',
-  standalone: true,
 })
 export class ComponentPortalExample {}

@@ -9,7 +9,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'cdk-clipboard-overview-example',
   templateUrl: 'cdk-clipboard-overview-example.html',
   styleUrl: 'cdk-clipboard-overview-example.css',
-  standalone: true,
   imports: [FormsModule, ClipboardModule],
 })
 export class CdkClipboardOverviewExample {

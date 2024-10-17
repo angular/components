@@ -13,7 +13,6 @@ export interface Vegetable {
   selector: 'chips-drag-drop-example',
   templateUrl: 'chips-drag-drop-example.html',
   styleUrl: 'chips-drag-drop-example.css',
-  standalone: true,
   imports: [MatChipsModule, CdkDropList, CdkDrag],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

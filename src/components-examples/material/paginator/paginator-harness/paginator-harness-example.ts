@@ -7,7 +7,6 @@ import {PageEvent, MatPaginatorModule} from '@angular/material/paginator';
 @Component({
   selector: 'paginator-harness-example',
   templateUrl: 'paginator-harness-example.html',
-  standalone: true,
   imports: [MatPaginatorModule],
 })
 export class PaginatorHarnessExample {

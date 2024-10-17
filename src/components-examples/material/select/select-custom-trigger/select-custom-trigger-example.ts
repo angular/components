@@ -8,7 +8,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'select-custom-trigger-example',
   templateUrl: 'select-custom-trigger-example.html',
   styleUrl: 'select-custom-trigger-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
 })
 export class SelectCustomTriggerExample {

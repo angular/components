@@ -9,7 +9,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'sidenav-mode-example',
   templateUrl: 'sidenav-mode-example.html',
   styleUrl: 'sidenav-mode-example.css',
-  standalone: true,
   imports: [MatSidenavModule, MatButtonModule, MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 export class SidenavModeExample {

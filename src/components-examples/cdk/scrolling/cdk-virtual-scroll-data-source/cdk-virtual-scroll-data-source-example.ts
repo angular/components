@@ -9,7 +9,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   styleUrl: 'cdk-virtual-scroll-data-source-example.css',
   templateUrl: 'cdk-virtual-scroll-data-source-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollDataSourceExample {

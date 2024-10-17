@@ -9,7 +9,6 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'table-reorderable-example',
   templateUrl: './table-reorderable-example.html',
   styleUrl: './table-reorderable-example.css',
-  standalone: true,
   imports: [MatTableModule, CdkDropList, CdkDrag],
 })
 export class TableReorderableExample {

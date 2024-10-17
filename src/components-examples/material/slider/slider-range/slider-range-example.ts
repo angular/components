@@ -8,7 +8,6 @@ import {MatSliderModule} from '@angular/material/slider';
   selector: 'slider-range-example',
   templateUrl: 'slider-range-example.html',
   styleUrl: 'slider-range-example.css',
-  standalone: true,
   imports: [MatSliderModule],
 })
 export class SliderRangeExample {}

@@ -6,7 +6,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'select-value-binding-example',
   templateUrl: 'select-value-binding-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule],
 })
 export class SelectValueBindingExample {

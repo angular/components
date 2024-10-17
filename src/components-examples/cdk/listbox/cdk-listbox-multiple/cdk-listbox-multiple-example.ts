@@ -7,7 +7,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
   exportAs: 'cdkListboxMultipleExample',
   templateUrl: 'cdk-listbox-multiple-example.html',
   styleUrl: 'cdk-listbox-multiple-example.css',
-  standalone: true,
   imports: [CdkListbox, CdkOption],
 })
 export class CdkListboxMultipleExample {}

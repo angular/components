@@ -10,7 +10,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'input-form-example',
   templateUrl: 'input-form-example.html',
   styleUrl: 'input-form-example.css',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule],
 })
 export class InputFormExample {}

@@ -38,7 +38,6 @@ export const MY_FORMATS = {
     // of our example generation script.
     provideMomentDateAdapter(MY_FORMATS),
   ],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

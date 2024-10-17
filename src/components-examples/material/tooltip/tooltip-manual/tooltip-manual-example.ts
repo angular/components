@@ -9,7 +9,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'tooltip-manual-example',
   templateUrl: 'tooltip-manual-example.html',
   styleUrl: 'tooltip-manual-example.css',
-  standalone: true,
   imports: [MatButtonModule, MatTooltipModule],
 })
 export class TooltipManualExample {}

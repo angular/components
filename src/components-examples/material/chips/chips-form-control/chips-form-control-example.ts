@@ -13,7 +13,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'chips-form-control-example',
   templateUrl: 'chips-form-control-example.html',
   styleUrl: 'chips-form-control-example.css',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatFormFieldModule,

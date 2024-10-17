@@ -8,7 +8,6 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
   selector: 'table-multiple-row-template-example',
   styleUrls: ['table-multiple-row-template-example.css'],
   templateUrl: 'table-multiple-row-template-example.html',
-  standalone: true,
   imports: [MatTableModule],
 })
 export class TableMultipleRowTemplateExample {

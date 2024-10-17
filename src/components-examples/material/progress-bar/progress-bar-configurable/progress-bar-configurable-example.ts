@@ -12,7 +12,6 @@ import {MatCardModule} from '@angular/material/card';
   selector: 'progress-bar-configurable-example',
   templateUrl: 'progress-bar-configurable-example.html',
   styleUrl: 'progress-bar-configurable-example.css',
-  standalone: true,
   imports: [MatCardModule, MatRadioModule, FormsModule, MatSliderModule, MatProgressBarModule],
 })
 export class ProgressBarConfigurableExample {

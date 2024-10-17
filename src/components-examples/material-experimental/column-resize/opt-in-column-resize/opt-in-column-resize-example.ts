@@ -47,7 +47,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'opt-in-column-resize-example',
   templateUrl: 'opt-in-column-resize-example.html',
   styleUrl: 'opt-in-column-resize-example.css',
-  standalone: true,
   imports: [MatTableModule, MatColumnResizeModule],
 })
 export class OptInColumnResizeExample {

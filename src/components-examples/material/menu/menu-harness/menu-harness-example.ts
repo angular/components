@@ -7,7 +7,6 @@ import {MatMenuModule} from '@angular/material/menu';
 @Component({
   selector: 'menu-harness-example',
   templateUrl: 'menu-harness-example.html',
-  standalone: true,
   imports: [MatMenuModule],
 })
 export class MenuHarnessExample {}

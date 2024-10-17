@@ -30,7 +30,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'cdk-table-recycle-rows-example',
   styleUrl: 'cdk-table-recycle-rows-example.css',
   templateUrl: 'cdk-table-recycle-rows-example.html',
-  standalone: true,
   imports: [CdkTableModule],
 })
 export class CdkTableRecycleRowsExample {

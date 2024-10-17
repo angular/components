@@ -10,7 +10,6 @@ import {merge} from 'rxjs';
   selector: 'form-field-error-example',
   templateUrl: 'form-field-error-example.html',
   styleUrl: 'form-field-error-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

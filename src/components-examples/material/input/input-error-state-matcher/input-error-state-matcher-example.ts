@@ -24,7 +24,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'input-error-state-matcher-example',
   templateUrl: './input-error-state-matcher-example.html',
   styleUrl: './input-error-state-matcher-example.css',
-  standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
 })
 export class InputErrorStateMatcherExample {

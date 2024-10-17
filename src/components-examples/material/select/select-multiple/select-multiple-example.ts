@@ -7,7 +7,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'select-multiple-example',
   templateUrl: 'select-multiple-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
 })
 export class SelectMultipleExample {

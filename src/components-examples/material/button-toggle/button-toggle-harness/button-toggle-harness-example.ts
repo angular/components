@@ -7,7 +7,6 @@ import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/materia
 @Component({
   selector: 'button-toggle-harness-example',
   templateUrl: 'button-toggle-harness-example.html',
-  standalone: true,
   imports: [MatButtonToggleModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

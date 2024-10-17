@@ -7,7 +7,6 @@ import {MatListModule} from '@angular/material/list';
 @Component({
   selector: 'list-overview-example',
   templateUrl: 'list-overview-example.html',
-  standalone: true,
   imports: [MatListModule],
 })
 export class ListOverviewExample {}

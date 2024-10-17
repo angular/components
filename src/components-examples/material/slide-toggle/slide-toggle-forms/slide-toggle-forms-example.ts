@@ -13,7 +13,6 @@ import {
   selector: 'slide-toggle-forms-example',
   templateUrl: './slide-toggle-forms-example.html',
   styleUrl: './slide-toggle-forms-example.css',
-  standalone: true,
   imports: [
     MatSlideToggleModule,
     FormsModule,

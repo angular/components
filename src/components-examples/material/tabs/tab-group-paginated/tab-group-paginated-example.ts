@@ -7,7 +7,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tab-group-paginated-example',
   templateUrl: 'tab-group-paginated-example.html',
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabGroupPaginatedExample {

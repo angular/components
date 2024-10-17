@@ -35,9 +35,8 @@ describe('RadioHarnessExample', () => {
   });
 
   it('should get label text of buttons', async () => {
-    const [firstRadio, secondRadio, thirdRadio] = await loader.getAllHarnesses(
-      MatRadioButtonHarness,
-    );
+    const [firstRadio, secondRadio, thirdRadio] =
+      await loader.getAllHarnesses(MatRadioButtonHarness);
     expect(await firstRadio.getLabelText()).toBe('Chocolate');
     expect(await secondRadio.getLabelText()).toBe('Vanilla');
     expect(await thirdRadio.getLabelText()).toBe('Strawberry');

@@ -7,7 +7,6 @@ import {MatListModule} from '@angular/material/list';
 @Component({
   selector: 'list-selection-example',
   templateUrl: 'list-selection-example.html',
-  standalone: true,
   imports: [MatListModule],
 })
 export class ListSelectionExample {

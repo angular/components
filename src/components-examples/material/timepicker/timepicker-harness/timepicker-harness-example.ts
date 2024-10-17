@@ -8,7 +8,6 @@ import {MatTimepickerModule} from '@angular/material/timepicker';
 @Component({
   selector: 'timepicker-harness-example',
   templateUrl: 'timepicker-harness-example.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [MatTimepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

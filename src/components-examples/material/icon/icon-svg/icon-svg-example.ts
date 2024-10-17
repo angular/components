@@ -18,7 +18,6 @@ const THUMBUP_ICON =
 @Component({
   selector: 'icon-svg-example',
   templateUrl: 'icon-svg-example.html',
-  standalone: true,
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

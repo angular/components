@@ -24,7 +24,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'select-error-state-matcher-example',
   templateUrl: 'select-error-state-matcher-example.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectErrorStateMatcherExample {

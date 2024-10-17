@@ -14,7 +14,6 @@ export interface Transaction {
   selector: 'table-sticky-footer-example',
   styleUrl: 'table-sticky-footer-example.css',
   templateUrl: 'table-sticky-footer-example.html',
-  standalone: true,
   imports: [MatTableModule, CurrencyPipe],
 })
 export class TableStickyFooterExample {

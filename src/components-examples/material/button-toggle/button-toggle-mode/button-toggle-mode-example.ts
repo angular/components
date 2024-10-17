@@ -8,7 +8,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'button-toggle-mode-example',
   templateUrl: 'button-toggle-mode-example.html',
-  standalone: true,
   imports: [MatButtonToggleModule, MatCheckboxModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

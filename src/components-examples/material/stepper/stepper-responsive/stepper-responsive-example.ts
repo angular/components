@@ -16,7 +16,6 @@ import {AsyncPipe} from '@angular/common';
   selector: 'stepper-responsive-example',
   templateUrl: 'stepper-responsive-example.html',
   styleUrl: 'stepper-responsive-example.css',
-  standalone: true,
   imports: [
     MatStepperModule,
     FormsModule,

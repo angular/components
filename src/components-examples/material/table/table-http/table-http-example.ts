@@ -15,7 +15,6 @@ import {DatePipe} from '@angular/common';
   selector: 'table-http-example',
   styleUrl: 'table-http-example.css',
   templateUrl: 'table-http-example.html',
-  standalone: true,
   imports: [MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe],
 })
 export class TableHttpExample implements AfterViewInit {

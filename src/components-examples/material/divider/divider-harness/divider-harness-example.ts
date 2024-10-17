@@ -7,7 +7,6 @@ import {MatDividerModule} from '@angular/material/divider';
 @Component({
   selector: 'divider-harness-example',
   templateUrl: 'divider-harness-example.html',
-  standalone: true,
   imports: [MatDividerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,7 +8,6 @@ import {MatSelectModule} from '@angular/material/select';
   selector: 'form-field-hint-example',
   templateUrl: 'form-field-hint-example.html',
   styleUrl: 'form-field-hint-example.css',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
