@@ -111,7 +111,6 @@ enum PlayerState {
   selector: 'youtube-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [YouTubePlayerPlaceholder],
   template: `
     @if (_shouldShowPlaceholder()) {

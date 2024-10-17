@@ -28,7 +28,6 @@ export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
       </svg>
     </button>
   `,
-  standalone: true,
   styleUrl: 'youtube-player-placeholder.css',
   host: {
     'class': 'youtube-player-placeholder',
