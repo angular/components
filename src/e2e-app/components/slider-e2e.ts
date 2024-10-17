@@ -26,7 +26,6 @@ import {MatSliderModule} from '@angular/material/slider';
     </mat-slider>
     `,
   styles: '.mat-mdc-slider { width: 148px; }',
-  standalone: true,
   imports: [MatSliderModule],
 })
 export class SliderE2e {}

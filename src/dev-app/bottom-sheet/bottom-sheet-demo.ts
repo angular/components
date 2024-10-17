@@ -29,7 +29,6 @@ const defaultConfig = new MatBottomSheetConfig();
   selector: 'bottom-sheet-demo',
   styleUrl: 'bottom-sheet-demo.css',
   templateUrl: 'bottom-sheet-demo.html',
-  standalone: true,
   imports: [
     FormsModule,
     MatBottomSheetModule,
@@ -77,7 +76,6 @@ export class BottomSheetDemo {
       }
     </mat-nav-list>
   `,
-  standalone: true,
   imports: [MatListModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

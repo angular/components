@@ -28,7 +28,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'tabs-demo',
   templateUrl: 'tabs-demo.html',
-  standalone: true,
   imports: [
     TabGroupInkBarExample,
     TabGroupInvertedExample,

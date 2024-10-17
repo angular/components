@@ -15,7 +15,6 @@ import {DevAppLayout} from './dev-app/dev-app-layout';
   selector: 'dev-app',
   template: '<dev-app-layout><router-outlet></router-outlet></dev-app-layout>',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [DevAppLayout, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

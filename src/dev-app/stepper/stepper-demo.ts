@@ -25,7 +25,6 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({
   selector: 'stepper-demo',
   templateUrl: 'stepper-demo.html',
-  standalone: true,
   imports: [
     FormsModule,
     MatButtonModule,

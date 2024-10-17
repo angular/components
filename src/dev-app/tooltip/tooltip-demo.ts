@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 @Component({
   selector: 'tooltip-demo',
   templateUrl: 'tooltip-demo.html',
-  standalone: true,
   imports: [
     TooltipAutoHideExample,
     TooltipCustomClassExample,

@@ -27,7 +27,6 @@ import {takeUntil} from 'rxjs/operators';
 @Component({
   selector: 'input-modality-detector-demo',
   templateUrl: 'input-modality-detector-demo.html',
-  standalone: true,
   imports: [
     A11yModule,
     MatButtonModule,

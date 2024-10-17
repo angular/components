@@ -23,7 +23,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   selector: 'timepicker-demo',
   templateUrl: 'timepicker-demo.html',
   styleUrl: 'timepicker-demo.css',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatTimepickerModule,

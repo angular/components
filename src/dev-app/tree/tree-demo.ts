@@ -40,7 +40,6 @@ import {MatTreeModule} from '@angular/material/tree';
   selector: 'tree-demo',
   templateUrl: 'tree-demo.html',
   styleUrl: 'tree-demo.css',
-  standalone: true,
   imports: [
     CdkTreeModule,
     CdkTreeCustomKeyManagerExample,

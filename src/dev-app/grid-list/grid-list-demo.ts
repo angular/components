@@ -17,7 +17,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'grid-list-demo',
   templateUrl: 'grid-list-demo.html',
   styleUrl: 'grid-list-demo.css',
-  standalone: true,
   imports: [FormsModule, MatButtonModule, MatCardModule, MatGridListModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

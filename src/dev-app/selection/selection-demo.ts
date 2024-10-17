@@ -31,7 +31,6 @@ import {FormsModule} from '@angular/forms';
     <h3>Mat selection column and Mat row selection with Mat table</h3>
     <mat-selection-column-example></mat-selection-column-example>
   `,
-  standalone: true,
   imports: [
     CdkSelectionColumnExample,
     CdkSelectionListExample,

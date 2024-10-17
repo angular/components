@@ -27,7 +27,6 @@ interface Shoes {
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
   styleUrl: 'list-demo.css',
-  standalone: true,
   imports: [
     JsonPipe,
     FormsModule,

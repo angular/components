@@ -34,7 +34,6 @@ type DisableDrinkOption = 'none' | 'first-middle-last' | 'all';
   selector: 'select-demo',
   templateUrl: 'select-demo.html',
   styleUrl: 'select-demo.css',
-  standalone: true,
   imports: [
     JsonPipe,
     FormsModule,

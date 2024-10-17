@@ -22,7 +22,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   selector: 'paginator-demo',
   templateUrl: 'paginator-demo.html',
   styleUrl: 'paginator-demo.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatCardModule,

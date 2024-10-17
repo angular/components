@@ -29,7 +29,6 @@ import {MatCheckbox} from '@angular/material/checkbox';
   styleUrl: 'drag-drop-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     DragDropModule,
     FormsModule,

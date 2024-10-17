@@ -28,7 +28,6 @@ import {MatMenuBarModule} from '@angular/material-experimental/menubar';
   ],
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenu extends CdkMenu {}
@@ -47,14 +46,12 @@ export class DemoMenu extends CdkMenu {}
   template: '<ng-content></ng-content>',
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenuItem extends CdkMenuItem {}
 
 @Component({
   templateUrl: 'mat-menubar-demo.html',
-  standalone: true,
   imports: [CdkMenuModule, MatMenuBarModule, DemoMenu, DemoMenuItem],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

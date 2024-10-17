@@ -87,7 +87,6 @@ export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D
 
 @Directive({
   selector: '[customRangeStrategy]',
-  standalone: true,
   providers: [
     {
       provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
@@ -103,7 +102,6 @@ export class CustomRangeStrategy {}
   templateUrl: 'custom-header.html',
   styleUrl: 'custom-header.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatIconModule, MatButtonModule],
 })
 export class CustomHeader<D> implements OnDestroy {
@@ -153,7 +151,6 @@ export class CustomHeader<D> implements OnDestroy {
         <button mat-button type="button" (click)="todayClicked()">TODAY</button>
       </mat-calendar-header>
     `,
-  standalone: true,
   imports: [MatDatepickerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -177,7 +174,6 @@ export class CustomHeaderNgContent<D> {
   styleUrl: 'datepicker-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     JsonPipe,
     FormsModule,

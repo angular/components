@@ -32,7 +32,6 @@ import {
   templateUrl: 'snack-bar-demo.html',
   styleUrl: 'snack-bar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

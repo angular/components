@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 @Component({
   templateUrl: 'cdk-menu-demo.html',
   styleUrl: 'cdk-menu-demo.css',
-  standalone: true,
   imports: [
     CdkMenuModule,
     CdkMenuStandaloneMenuExample,

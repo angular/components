@@ -17,7 +17,6 @@ import {Observable} from 'rxjs';
   selector: 'screen-type',
   templateUrl: 'screen-type-demo.html',
   styleUrl: 'screen-type-demo.css',
-  standalone: true,
   imports: [AsyncPipe, LayoutModule, MatGridListModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

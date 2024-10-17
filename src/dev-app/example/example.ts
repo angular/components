@@ -22,7 +22,6 @@ import {loadExample} from '@angular/components-examples/private';
 
 @Component({
   selector: 'material-example',
-  standalone: true,
   template: `
     @if (showLabel) {
       <div class="label">

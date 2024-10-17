@@ -13,7 +13,6 @@ import {ExampleList} from '../example/example-list';
 /** Renders all material examples listed in the generated EXAMPLE_COMPONENTS. */
 @Component({
   template: `<material-example-list [ids]="examples"></material-example-list>`,
-  standalone: true,
   imports: [ExampleList],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

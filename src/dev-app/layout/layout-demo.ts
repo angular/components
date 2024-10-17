@@ -13,7 +13,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'layout-demo',
   templateUrl: 'layout-demo.html',
   styleUrl: 'layout-demo.css',
-  standalone: true,
   imports: [BreakpointObserverOverviewExample],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

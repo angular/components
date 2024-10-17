@@ -19,7 +19,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'baseline-demo',
   templateUrl: 'baseline-demo.html',
   styleUrl: 'baseline-demo.css',
-  standalone: true,
   imports: [
     MatCardModule,
     MatCheckboxModule,

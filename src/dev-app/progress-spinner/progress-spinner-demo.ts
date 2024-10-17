@@ -18,7 +18,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   selector: 'progress-spinner-demo',
   templateUrl: 'progress-spinner-demo.html',
   styleUrl: 'progress-spinner-demo.css',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCheckboxModule,

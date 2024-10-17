@@ -17,7 +17,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'toolbar-demo',
   templateUrl: 'toolbar-demo.html',
   styleUrl: 'toolbar-demo.css',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

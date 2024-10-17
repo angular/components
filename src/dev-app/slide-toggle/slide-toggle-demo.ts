@@ -15,7 +15,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   selector: 'slide-toggle-demo',
   templateUrl: 'slide-toggle-demo.html',
   styleUrl: 'slide-toggle-demo.css',
-  standalone: true,
   imports: [FormsModule, MatButtonModule, MatSlideToggleModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -17,7 +17,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'menu-demo',
   templateUrl: 'menu-demo.html',
   styleUrl: 'menu-demo.css',
-  standalone: true,
   imports: [MatMenuModule, MatButtonModule, MatToolbarModule, MatIconModule, MatDividerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

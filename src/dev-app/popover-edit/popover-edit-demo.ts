@@ -45,7 +45,6 @@ import {FormsModule} from '@angular/forms';
     <h3 id="mat-popover-edit-tabout">Material popover-edit with mat-table and tab out</h3>
     <popover-edit-tab-out-mat-table-example></popover-edit-tab-out-mat-table-example>
   `,
-  standalone: true,
   imports: [
     CdkPopoverEditCdkTableFlexExample,
     CdkPopoverEditCdkTableExample,

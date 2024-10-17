@@ -36,7 +36,6 @@ import {MatRadioModule} from '@angular/material/radio';
   templateUrl: 'connected-overlay-demo.html',
   styleUrl: 'connected-overlay-demo.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     CdkOverlayBasicExample,
     FormsModule,

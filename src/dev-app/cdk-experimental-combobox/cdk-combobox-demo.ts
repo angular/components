@@ -11,7 +11,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
-  standalone: true,
   imports: [CdkComboboxModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

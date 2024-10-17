@@ -13,7 +13,6 @@ import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
   selector: 'focus-origin-demo',
   templateUrl: 'focus-origin-demo.html',
   styleUrl: 'focus-origin-demo.css',
-  standalone: true,
   imports: [A11yModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
