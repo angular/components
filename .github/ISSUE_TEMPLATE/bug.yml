@@ -29,7 +29,7 @@ body:
       label: Reproduction
       description: |
         Use StackBlitz to reproduce your issue:
-        - [Components StackBlitz starter](https://stackblitz.com/fork/components-issue)
+        - [Components StackBlitz starter](https://stackblitz.com/fork/components-issue-starter)
         - [Harnesses StackBlitz starter](https://stackblitz.com/fork/harness-issue)
 
         Issues that do not include a StackBlitz (or other REPL) reproduction link will be closed.
