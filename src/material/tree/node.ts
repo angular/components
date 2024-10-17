@@ -51,7 +51,6 @@ function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
     '(click)': '_focusItem()',
     '[tabindex]': '_getTabindexAttribute()',
   },
-  standalone: true,
 })
 export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
   /**
@@ -134,7 +133,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   selector: '[matTreeNodeDef]',
   inputs: [{name: 'when', alias: 'matTreeNodeDefWhen'}],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
-  standalone: true,
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
@@ -155,7 +153,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   host: {
     'class': 'mat-nested-tree-node',
   },
-  standalone: true,
 })
 export class MatNestedTreeNode<T, K = T>
   extends CdkNestedTreeNode<T, K>

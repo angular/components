@@ -23,7 +23,6 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   styleUrl: 'divider.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatDivider {
   /** Whether the divider is vertically aligned. */

@@ -44,7 +44,6 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
     // way for the harness to detect if multiple panel support is enabled.
     '[class.mat-accordion-multi]': 'this.multi',
   },
-  standalone: true,
 })
 export class MatAccordion
   extends CdkAccordion

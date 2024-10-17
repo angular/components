@@ -2122,6 +2122,7 @@ class DirectiveWithViewContainer {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
+  standalone: false,
 })
 class ComponentWithOnPushViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -2271,6 +2272,7 @@ class DialogWithoutFocusableElements {}
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: false,
 })
 class ShadowDomComponent {}
 

@@ -92,7 +92,6 @@ const BASE_STROKE_WIDTH = 10;
   styleUrl: 'progress-spinner.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [NgTemplateOutlet],
 })
 export class MatProgressSpinner {

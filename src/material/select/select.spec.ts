@@ -4654,6 +4654,7 @@ describe('MatSelect', () => {
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
+  standalone: false,
 })
 class BasicSelect {
   foods: any[] = [
@@ -4697,6 +4698,7 @@ class BasicSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class NgModelSelect {
   foods: any[] = [
@@ -4726,6 +4728,7 @@ class NgModelSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class ManySelects {}
 
@@ -4744,6 +4747,7 @@ class ManySelects {}
       </div>
     }
   `,
+  standalone: false,
 })
 class NgIfSelect {
   isShowing = false;
@@ -4768,6 +4772,7 @@ class NgIfSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithChangeEvent {
   foods: string[] = [
@@ -4795,6 +4800,7 @@ class SelectWithChangeEvent {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectInitWithoutOptions {
   foods: any[];
@@ -4822,6 +4828,7 @@ class SelectInitWithoutOptions {
       multi: true,
     },
   ],
+  standalone: false,
 })
 class CustomSelectAccessor implements ControlValueAccessor {
   @ViewChild(MatSelect) select: MatSelect;
@@ -4841,6 +4848,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
       multi: true,
     },
   ],
+  standalone: false,
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
@@ -4855,6 +4863,7 @@ class CompWithCustomSelect {
     </mat-form-field>
     <throws-error-on-init></throws-error-on-init>
   `,
+  standalone: false,
 })
 class SelectWithErrorSibling {
   value: string;
@@ -4863,6 +4872,7 @@ class SelectWithErrorSibling {
 @Component({
   selector: 'throws-error-on-init',
   template: '',
+  standalone: false,
 })
 class ThrowsErrorOnInit implements OnInit {
   ngOnInit() {
@@ -4882,6 +4892,7 @@ class ThrowsErrorOnInit implements OnInit {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectOnPush {
   foods: any[] = [
@@ -4904,6 +4915,7 @@ class BasicSelectOnPush {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectOnPushPreselected {
   @ViewChild(MatSelect) select: MatSelect;
@@ -4927,6 +4939,7 @@ class BasicSelectOnPushPreselected {
       </mat-select>
     </mat-form-field>
     `,
+  standalone: false,
 })
 class FloatLabelSelect {
   floatLabel: FloatLabelType | null = 'auto';
@@ -4953,6 +4966,7 @@ class FloatLabelSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MultiSelect {
   foods: any[] = [
@@ -4975,6 +4989,7 @@ class MultiSelect {
 @Component({
   selector: 'select-with-plain-tabindex',
   template: `<mat-form-field><mat-select tabindex="5"></mat-select></mat-form-field>`,
+  standalone: false,
 })
 class SelectWithPlainTabindex {}
 
@@ -4988,6 +5003,7 @@ class SelectWithPlainTabindex {}
       <div></div>
     }
   `,
+  standalone: false,
 })
 class SelectEarlyAccessSibling {}
 
@@ -5000,6 +5016,7 @@ class SelectEarlyAccessSibling {}
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectInitiallyHidden {
   isVisible = false;
@@ -5014,6 +5031,7 @@ class BasicSelectInitiallyHidden {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectNoPlaceholder {}
 
@@ -5027,6 +5045,7 @@ class BasicSelectNoPlaceholder {}
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectWithTheming {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5046,6 +5065,7 @@ class BasicSelectWithTheming {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class ResetValuesSelect {
   foods: any[] = [
@@ -5071,6 +5091,7 @@ class ResetValuesSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class FalsyValueSelect {
   foods: any[] = [
@@ -5097,6 +5118,7 @@ class FalsyValueSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithGroups {
   control = new FormControl('');
@@ -5154,6 +5176,7 @@ class SelectWithGroups {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithGroupsAndNgContainer {
   control = new FormControl('');
@@ -5173,6 +5196,7 @@ class SelectWithGroupsAndNgContainer {
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class InvalidSelectInForm {
   value: any;
@@ -5193,6 +5217,7 @@ class InvalidSelectInForm {
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class SelectInsideFormGroup {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
@@ -5217,6 +5242,7 @@ class SelectInsideFormGroup {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectWithoutForms {
   selectedFood: string | null;
@@ -5239,6 +5265,7 @@ class BasicSelectWithoutForms {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectWithoutFormsPreselected {
   selectedFood = 'pizza-1';
@@ -5260,6 +5287,7 @@ class BasicSelectWithoutFormsPreselected {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class BasicSelectWithoutFormsMultiple {
   selectedFoods: string[];
@@ -5286,6 +5314,7 @@ class BasicSelectWithoutFormsMultiple {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithCustomTrigger {
   foods: any[] = [
@@ -5307,6 +5336,7 @@ class SelectWithCustomTrigger {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class NgModelCompareWithSelect {
   foods: {value: string; viewValue: string}[] = [
@@ -5353,6 +5383,7 @@ class NgModelCompareWithSelect {
       }
     </mat-select>
   `,
+  standalone: false,
 })
 class CustomErrorBehaviorSelect {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5374,6 +5405,7 @@ class CustomErrorBehaviorSelect {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SingleSelectWithPreselectedArrayValues {
   foods: any[] = [
@@ -5399,6 +5431,7 @@ class SingleSelectWithPreselectedArrayValues {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithoutOptionCentering {
   foods: any[] = [
@@ -5427,6 +5460,7 @@ class SelectWithoutOptionCentering {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithFormFieldLabel {
   placeholder: string;
@@ -5443,6 +5477,7 @@ class SelectWithFormFieldLabel {
       }
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithNgIfAndLabel {
   showSelect = true;
@@ -5458,6 +5493,7 @@ class SelectWithNgIfAndLabel {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MultiSelectWithLotsOfOptions {
   items = new Array(100).fill(0).map((_, i) => i);
@@ -5484,6 +5520,7 @@ class MultiSelectWithLotsOfOptions {
       </mat-select>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectWithResetOptionAndFormControl {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5504,6 +5541,7 @@ class SelectWithResetOptionAndFormControl {
       }
     </mat-form-field>
   `,
+  standalone: false,
 })
 class SelectInNgContainer {}
 
@@ -5517,6 +5555,7 @@ class SelectInNgContainer {}
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class SelectInsideDynamicFormGroup {
   private _formBuilder = inject(FormBuilder);
@@ -5562,6 +5601,7 @@ class SelectInsideDynamicFormGroup {
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
+  standalone: false,
 })
 class BasicSelectWithFirstAndLastOptionDisabled {
   foods: any[] = [
@@ -5610,6 +5650,7 @@ class BasicSelectWithFirstAndLastOptionDisabled {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class SelectInsideAModal {
   foods = [

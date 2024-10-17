@@ -64,7 +64,6 @@ let nextUniqueId = 0;
     {provide: MatFormFieldControl, useExisting: MatDateRangeInput},
     {provide: MAT_DATE_RANGE_INPUT_PARENT, useExisting: MatDateRangeInput},
   ],
-  standalone: true,
   imports: [CdkMonitorFocus],
 })
 export class MatDateRangeInput<D>

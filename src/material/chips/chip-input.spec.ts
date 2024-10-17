@@ -263,6 +263,7 @@ describe('MatChipInput', () => {
       </mat-chip-grid>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class TestChipInput {
   @ViewChild(MatChipGrid) chipGridInstance: MatChipGrid;

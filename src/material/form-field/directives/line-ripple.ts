@@ -27,7 +27,6 @@ const DEACTIVATING_CLASS = 'mdc-line-ripple--deactivating';
   host: {
     'class': 'mdc-line-ripple',
   },
-  standalone: true,
 })
 export class MatFormFieldLineRipple implements OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

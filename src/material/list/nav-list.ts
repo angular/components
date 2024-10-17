@@ -28,7 +28,6 @@ export const MAT_NAV_LIST = new InjectionToken<MatNavList>('MatNavList');
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatNavList}],
-  standalone: true,
 })
 export class MatNavList extends MatListBase {
   // An navigation list is considered interactive, but does not extend the interactive list

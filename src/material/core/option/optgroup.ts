@@ -64,7 +64,6 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
     '[attr.aria-labelledby]': '_inert ? null : _labelId',
   },
   providers: [{provide: MAT_OPTGROUP, useExisting: MatOptgroup}],
-  standalone: true,
 })
 export class MatOptgroup {
   /** Label for the option group. */

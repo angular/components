@@ -41,7 +41,6 @@ import {CdkScrollable} from '@angular/cdk/scrolling';
       useExisting: MatSidenavContent,
     },
   ],
-  standalone: true,
 })
 export class MatSidenavContent extends MatDrawerContent {}
 
@@ -66,7 +65,6 @@ export class MatSidenavContent extends MatDrawerContent {}
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [CdkScrollable],
   providers: [{provide: MatDrawer, useExisting: MatSidenav}],
 })
@@ -129,7 +127,6 @@ export class MatSidenav extends MatDrawer {
       useExisting: MatSidenavContainer,
     },
   ],
-  standalone: true,
   imports: [MatSidenavContent],
 })
 export class MatSidenavContainer extends MatDrawerContainer {

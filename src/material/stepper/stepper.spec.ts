@@ -1830,6 +1830,7 @@ function createComponent<T>(
     </mat-stepper>
   </form>
   `,
+  standalone: false,
 })
 class MatHorizontalStepperWithErrorsApp {
   private readonly _formBuilder = inject(FormBuilder);
@@ -1871,6 +1872,7 @@ class MatHorizontalStepperWithErrorsApp {
       </mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class SimpleMatHorizontalStepperApp {
   inputLabel = 'Step 3';
@@ -1910,6 +1912,7 @@ class SimpleMatHorizontalStepperApp {
       </mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class SimpleMatVerticalStepperApp {
   inputLabel = signal('Step 3');
@@ -1981,6 +1984,7 @@ class LinearMatVerticalStepperApp {
       <mat-step label="Three"></mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class SimplePreselectedMatHorizontalStepperApp {
   index = 0;
@@ -1994,6 +1998,7 @@ class SimplePreselectedMatHorizontalStepperApp {
       }
     </mat-stepper>
   `,
+  standalone: false,
 })
 class SimpleStepperWithoutStepControl {
   steps = [
@@ -2014,6 +2019,7 @@ class SimpleStepperWithoutStepControl {
       }
     </mat-stepper>
   `,
+  standalone: false,
 })
 class SimpleStepperWithStepControlAndCompletedBinding {
   steps = [
@@ -2037,6 +2043,7 @@ class SimpleStepperWithStepControlAndCompletedBinding {
       <mat-step>Content 3</mat-step>
     </mat-stepper>
 `,
+  standalone: false,
 })
 class IconOverridesStepper {
   getRomanNumeral(value: number) {
@@ -2072,6 +2079,7 @@ class IconOverridesStepper {
       <mat-step>Content 3</mat-step>
     </mat-stepper>
 `,
+  standalone: false,
 })
 class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
 
@@ -2083,6 +2091,7 @@ class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
       <mat-step label="Step 3" [stepControl]="controls[2]"></mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl(''));
@@ -2095,6 +2104,7 @@ class LinearStepperWithValidOptionalStep {
       <mat-step [aria-label]="ariaLabel()" [aria-labelledby]="ariaLabelledby()" label="One"></mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithAriaInputs {
   ariaLabel = signal('');
@@ -2111,6 +2121,7 @@ class StepperWithAriaInputs {
       }
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithIndirectDescendantSteps {}
 
@@ -2128,6 +2139,7 @@ class StepperWithIndirectDescendantSteps {}
       }
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithNgIf {
   showStep2 = signal(false);
@@ -2146,6 +2158,7 @@ class StepperWithNgIf {
       </mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class NestedSteppers {
   @ViewChildren(MatStepper) steppers: QueryList<MatStepper>;
@@ -2159,6 +2172,7 @@ class NestedSteppers {
       <mat-step label="Step 3">Content 3</mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithStaticOutOfBoundsIndex {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2181,6 +2195,7 @@ class StepperWithStaticOutOfBoundsIndex {
       </mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithLazyContent {
   selectedIndex = signal(0);
@@ -2196,6 +2211,7 @@ class StepperWithLazyContent {
       <mat-step label="Step 3">Content 3</mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class HorizontalStepperWithDelayedStep {
   renderSecondStep = signal(false);
@@ -2209,6 +2225,7 @@ class HorizontalStepperWithDelayedStep {
       <mat-step label="Three"></mat-step>
     </mat-stepper>
   `,
+  standalone: false,
 })
 class StepperWithTwoWayBindingOnSelectedIndex {
   index: number = 0;

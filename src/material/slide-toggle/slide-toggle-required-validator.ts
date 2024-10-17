@@ -34,6 +34,5 @@ export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider = {
   selector: `mat-slide-toggle[required][formControlName],
              mat-slide-toggle[required][formControl], mat-slide-toggle[required][ngModel]`,
   providers: [MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR],
-  standalone: true,
 })
 export class MatSlideToggleRequiredValidator extends CheckboxRequiredValidator {}

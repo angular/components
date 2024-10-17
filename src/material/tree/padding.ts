@@ -14,7 +14,6 @@ import {Directive, Input, numberAttribute} from '@angular/core';
 @Directive({
   selector: '[matTreeNodePadding]',
   providers: [{provide: CdkTreeNodePadding, useExisting: MatTreeNodePadding}],
-  standalone: true,
 })
 export class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */

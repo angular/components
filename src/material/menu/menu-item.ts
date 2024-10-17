@@ -45,7 +45,6 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
-  standalone: true,
   imports: [MatRipple],
 })
 export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {

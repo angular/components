@@ -884,6 +884,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
       </mat-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class SimpleMatTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -933,6 +934,7 @@ const TREE_DATA: FoodNode[] = [
       </mat-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class MatTreeWithNullOrUndefinedChild {
   childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
@@ -953,6 +955,7 @@ class MatTreeWithNullOrUndefinedChild {
       </mat-nested-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class MatNestedTreeWithNullOrUndefinedChild {
   childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
@@ -975,6 +978,7 @@ class MatNestedTreeWithNullOrUndefinedChild {
       </mat-nested-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class NestedMatTreeApp {
   childrenAccessor = (node: TestData) => node.observableChildren;
@@ -1011,6 +1015,7 @@ class NestedMatTreeApp {
       </mat-nested-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class WhenNodeNestedMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;
@@ -1045,6 +1050,7 @@ class WhenNodeNestedMatTreeApp {
       </mat-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class MatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1073,6 +1079,7 @@ class MatTreeAppWithToggle {
       </mat-nested-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1105,6 +1112,7 @@ class NestedMatTreeAppWithToggle {
       </mat-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class WhenNodeMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;

@@ -19,7 +19,6 @@ export const MAT_SUFFIX = new InjectionToken<MatSuffix>('MatSuffix');
 @Directive({
   selector: '[matSuffix], [matIconSuffix], [matTextSuffix]',
   providers: [{provide: MAT_SUFFIX, useExisting: MatSuffix}],
-  standalone: true,
 })
 export class MatSuffix {
   @Input('matTextSuffix')

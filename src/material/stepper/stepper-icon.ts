@@ -24,7 +24,6 @@ export interface MatStepperIconContext {
  */
 @Directive({
   selector: 'ng-template[matStepperIcon]',
-  standalone: true,
 })
 export class MatStepperIcon {
   templateRef = inject<TemplateRef<MatStepperIconContext>>(TemplateRef);

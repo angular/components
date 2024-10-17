@@ -424,6 +424,7 @@ describe('Option Chips', () => {
         </div>
       }
     </mat-chip-listbox>`,
+  standalone: false,
 })
 class SingleChip {
   @ViewChild(MatChipListbox) chipList: MatChipListbox;

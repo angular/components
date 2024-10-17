@@ -656,6 +656,7 @@ describe('MatCalendar', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
+  standalone: false,
 })
 class StandardCalendar {
   selected: Date;
@@ -668,6 +669,7 @@ class StandardCalendar {
   template: `
     <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `,
+  standalone: false,
 })
 class CalendarWithMinMax {
   startAt: Date;
@@ -680,6 +682,7 @@ class CalendarWithMinMax {
     <mat-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
     </mat-calendar>
   `,
+  standalone: false,
 })
 class CalendarWithDateFilter {
   selected: Date;
@@ -699,6 +702,7 @@ class CalendarWithDateFilter {
       [minDate]="selected">
     </mat-calendar>
   `,
+  standalone: false,
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);

@@ -82,7 +82,6 @@ const ENABLE_BACKGROUND_INPUT = true;
     '[attr.mat-align-tabs]': 'alignTabs',
     '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
-  standalone: true,
   imports: [
     MatTabHeader,
     MatTabLabelWrapper,

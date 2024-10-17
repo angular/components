@@ -40,7 +40,6 @@ export const MAT_LIST = new InjectionToken<MatList>('MatList');
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatList}],
-  standalone: true,
 })
 export class MatList extends MatListBase {}
 
@@ -62,7 +61,6 @@ export class MatList extends MatListBase {}
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [CdkObserveContent],
 })
 export class MatListItem extends MatListItemBase {

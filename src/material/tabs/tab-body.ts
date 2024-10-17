@@ -35,7 +35,6 @@ import {matTabsAnimations} from './tabs-animations';
  */
 @Directive({
   selector: '[matTabBodyHost]',
-  standalone: true,
 })
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
   private _host = inject(MatTabBody);
@@ -110,7 +109,6 @@ export type MatTabBodyPositionState =
   host: {
     'class': 'mat-mdc-tab-body',
   },
-  standalone: true,
   imports: [MatTabBodyPortal, CdkScrollable],
 })
 export class MatTabBody implements OnInit, OnDestroy {

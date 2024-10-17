@@ -26,7 +26,6 @@ import {Subscription} from 'rxjs';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
 })
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
   dialog = inject(MatDialog);

@@ -907,6 +907,7 @@ describe('MatChipListbox', () => {
         </mat-chip-option>
       }
     </mat-chip-listbox>`,
+  standalone: false,
 })
 class StandardChipListbox {
   name: string = 'Test';
@@ -929,6 +930,7 @@ class StandardChipListbox {
         }
       </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class BasicChipListbox {
   foods: any[] = [
@@ -962,6 +964,7 @@ class BasicChipListbox {
         }
       </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class MultiSelectionChipListbox {
   foods: any[] = [
@@ -991,6 +994,7 @@ class MultiSelectionChipListbox {
         }
       </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class FalsyValueChipListbox {
   foods: any[] = [
@@ -1011,6 +1015,7 @@ class FalsyValueChipListbox {
       }
     </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class SelectedChipListbox {
   foods: any[] = [
@@ -1032,6 +1037,7 @@ class SelectedChipListbox {
         }
       </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class FalsyBasicChipListbox {
   foods: any[] = [
@@ -1062,6 +1068,7 @@ class FalsyBasicChipListbox {
       </mat-chip-listbox>
     </form>
   `,
+  standalone: false,
 })
 class IndividuallyDisabledChipInsideForm {
   @ViewChild(MatChipOption) chip: MatChipOption;

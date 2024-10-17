@@ -19,7 +19,6 @@ import {InkBarItem} from './ink-bar';
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[attr.aria-disabled]': '!!disabled',
   },
-  standalone: true,
 })
 export class MatTabLabelWrapper extends InkBarItem {
   elementRef = inject(ElementRef);

@@ -176,7 +176,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
   ],
-  standalone: true,
   imports: [
     MatFormFieldFloatingLabel,
     MatFormFieldNotchedOutline,

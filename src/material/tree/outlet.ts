@@ -20,7 +20,6 @@ import {Directive, ViewContainerRef, inject} from '@angular/core';
       useExisting: MatTreeNodeOutlet,
     },
   ],
-  standalone: true,
 })
 export class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
   viewContainer = inject(ViewContainerRef);

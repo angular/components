@@ -1364,6 +1364,7 @@ describe('MatIcon without HttpClientModule', () => {
 
   @Component({
     template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
+    standalone: false,
   })
   class IconFromSvgName {
     iconName: string | undefined = '';

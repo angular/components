@@ -36,7 +36,6 @@ import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
   styleUrl: 'grid-list.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatGridTile {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -80,7 +79,6 @@ export class MatGridTile {
   templateUrl: 'grid-tile-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
 })
 export class MatGridTileText implements AfterContentInit {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -102,7 +100,6 @@ export class MatGridTileText implements AfterContentInit {
 @Directive({
   selector: '[mat-grid-avatar], [matGridAvatar]',
   host: {'class': 'mat-grid-avatar'},
-  standalone: true,
 })
 export class MatGridAvatarCssMatStyler {}
 
@@ -113,7 +110,6 @@ export class MatGridAvatarCssMatStyler {}
 @Directive({
   selector: 'mat-grid-tile-header',
   host: {'class': 'mat-grid-tile-header'},
-  standalone: true,
 })
 export class MatGridTileHeaderCssMatStyler {}
 
@@ -124,6 +120,5 @@ export class MatGridTileHeaderCssMatStyler {}
 @Directive({
   selector: 'mat-grid-tile-footer',
   host: {'class': 'mat-grid-tile-footer'},
-  standalone: true,
 })
 export class MatGridTileFooterCssMatStyler {}

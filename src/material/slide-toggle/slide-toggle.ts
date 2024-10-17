@@ -94,7 +94,6 @@ let nextUniqueId = 0;
       multi: true,
     },
   ],
-  standalone: true,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatSlideToggle

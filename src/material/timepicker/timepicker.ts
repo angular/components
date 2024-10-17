@@ -75,7 +75,6 @@ export interface MatTimepickerSelected<D> {
   styleUrl: 'timepicker.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatOption],
   providers: [
     {

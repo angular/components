@@ -111,7 +111,6 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
       useExisting: MatDrawerContent,
     },
   ],
-  standalone: true,
 })
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -158,7 +157,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [CdkScrollable],
 })
 export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
@@ -669,7 +667,6 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
       useExisting: MatDrawerContainer,
     },
   ],
-  standalone: true,
   imports: [MatDrawerContent],
 })
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {

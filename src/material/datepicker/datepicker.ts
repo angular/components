@@ -24,6 +24,5 @@ import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
     MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
     {provide: MatDatepickerBase, useExisting: MatDatepicker},
   ],
-  standalone: true,
 })
 export class MatDatepicker<D> extends MatDatepickerBase<MatDatepickerControl<D>, D | null, D> {}

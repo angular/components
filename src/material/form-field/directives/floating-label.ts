@@ -45,7 +45,6 @@ export const FLOATING_LABEL_PARENT = new InjectionToken<FloatingLabelParent>('Fl
     'class': 'mdc-floating-label mat-mdc-floating-label',
     '[class.mdc-floating-label--float-above]': 'floating',
   },
-  standalone: true,
 })
 export class MatFormFieldFloatingLabel implements OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

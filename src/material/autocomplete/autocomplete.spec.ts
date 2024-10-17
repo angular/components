@@ -3962,7 +3962,7 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
   </mat-autocomplete>
 `;
 
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE})
+@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE, standalone: false})
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];
@@ -4018,7 +4018,11 @@ class SimpleAutocomplete implements OnDestroy {
   }
 }
 
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE, encapsulation: ViewEncapsulation.ShadowDom})
+@Component({
+  template: SIMPLE_AUTOCOMPLETE_TEMPLATE,
+  encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: false,
+})
 class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
 @Component({
@@ -4037,6 +4041,7 @@ class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class NgIfAutocomplete {
   optionCtrl = new FormControl('');
@@ -4074,6 +4079,7 @@ class NgIfAutocomplete {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithoutForms {
   filteredStates: any[];
@@ -4103,6 +4109,7 @@ class AutocompleteWithoutForms {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithNgModel {
   filteredStates: any[];
@@ -4134,6 +4141,7 @@ class AutocompleteWithNgModel {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithNumbers {
   selectedNumber: number;
@@ -4153,6 +4161,7 @@ class AutocompleteWithNumbers {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithOnPushDelay implements OnInit {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4175,6 +4184,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithNativeInput {
   optionCtrl = new FormControl('');
@@ -4198,6 +4208,7 @@ class AutocompleteWithNativeInput {
 
 @Component({
   template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`,
+  standalone: false,
 })
 class AutocompleteWithoutPanel {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4222,6 +4233,7 @@ class AutocompleteWithoutPanel {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithGroups {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4262,6 +4274,7 @@ class AutocompleteWithGroups {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
 
@@ -4279,6 +4292,7 @@ class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithSelectEvent {
   selectedState: string;
@@ -4294,6 +4308,7 @@ class AutocompleteWithSelectEvent {
     <input [formControl]="formControl" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
+  standalone: false,
 })
 class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl('');
@@ -4311,6 +4326,7 @@ class PlainAutocompleteInputWithFormControl {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithNumberInputAndNgModel {
   selectedValue: number;
@@ -4343,6 +4359,7 @@ class AutocompleteWithNumberInputAndNgModel {
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4357,6 +4374,7 @@ class AutocompleteWithDifferentOrigin {
     <input autocomplete="changed" [(ngModel)]="value" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithNativeAutocompleteAttribute {
   value: string;
@@ -4364,6 +4382,7 @@ class AutocompleteWithNativeAutocompleteAttribute {
 
 @Component({
   template: '<input [matAutocomplete]="null" matAutocompleteDisabled>',
+  standalone: false,
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -4379,6 +4398,7 @@ class InputWithoutAutocompleteAndDisabled {}
       }
     </mat-autocomplete>
   `,
+  standalone: false,
 })
 class AutocompleteWithActivatedEvent {
   states = ['California', 'West Virginia', 'Florida'];
@@ -4408,6 +4428,7 @@ class AutocompleteWithActivatedEvent {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class AutocompleteInsideAModal {
   foods = [

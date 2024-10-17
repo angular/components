@@ -177,7 +177,7 @@ export abstract class MatFormFieldControl<T> {
     readonly userAriaDescribedBy?: string;
     value: T | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFormFieldControl<any>, never, never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatFormFieldControl<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormFieldControl<any>, never>;
 }

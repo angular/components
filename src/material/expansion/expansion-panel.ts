@@ -91,7 +91,6 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
-  standalone: true,
   imports: [CdkPortalOutlet],
 })
 export class MatExpansionPanel
@@ -269,6 +268,5 @@ function isInitialAnimation(event: AnimationEvent): boolean {
   host: {
     class: 'mat-action-row',
   },
-  standalone: true,
 })
 export class MatExpansionPanelActionRow {}

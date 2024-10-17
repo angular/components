@@ -199,7 +199,6 @@ export class MatSelectChange {
     {provide: MatFormFieldControl, useExisting: MatSelect},
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
-  standalone: true,
   imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgClass],
 })
 export class MatSelect
@@ -1428,6 +1427,5 @@ export class MatSelect
 @Directive({
   selector: 'mat-select-trigger',
   providers: [{provide: MAT_SELECT_TRIGGER, useExisting: MatSelectTrigger}],
-  standalone: true,
 })
 export class MatSelectTrigger {}

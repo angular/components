@@ -121,7 +121,6 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
     'role': 'radiogroup',
     'class': 'mat-mdc-radio-group',
   },
-  standalone: true,
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
   private _changeDetector = inject(ChangeDetectorRef);
@@ -411,7 +410,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {

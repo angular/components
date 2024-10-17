@@ -81,7 +81,6 @@ export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
     MAT_SLIDER_THUMB_VALUE_ACCESSOR,
     {provide: MAT_SLIDER_THUMB, useExisting: MatSliderThumb},
   ],
-  standalone: true,
 })
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
   readonly _ngZone = inject(NgZone);
@@ -606,7 +605,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR,
     {provide: MAT_SLIDER_RANGE_THUMB, useExisting: MatSliderRangeThumb},
   ],
-  standalone: true,
 })
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
   override readonly _cdr = inject(ChangeDetectorRef);

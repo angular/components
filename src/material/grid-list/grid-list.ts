@@ -56,7 +56,6 @@ const MAT_FIT_MODE = 'fit';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
 })
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);

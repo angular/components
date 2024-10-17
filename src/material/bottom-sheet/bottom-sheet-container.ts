@@ -46,7 +46,6 @@ import {CdkPortalOutlet} from '@angular/cdk/portal';
     '(@state.start)': '_onAnimationStart($event)',
     '(@state.done)': '_onAnimationDone($event)',
   },
-  standalone: true,
   imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {

@@ -46,7 +46,6 @@ import {DOCUMENT} from '@angular/common';
  * Input that can be used to enter time and connect to a `mat-timepicker`.
  */
 @Directive({
-  standalone: true,
   selector: 'input[matTimepicker]',
   exportAs: 'matTimepickerInput',
   host: {

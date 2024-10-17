@@ -51,7 +51,6 @@ let uniqueId = 0;
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   animations: [matSnackBarAnimations.snackBarState],
-  standalone: true,
   imports: [CdkPortalOutlet],
   host: {
     'class': 'mdc-snackbar mat-mdc-snack-bar-container',

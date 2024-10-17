@@ -98,6 +98,7 @@ class MinimalTestData {
       </mat-tree-node>
     </mat-tree>
   `,
+  standalone: false,
 })
 class SimpleMatTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;
