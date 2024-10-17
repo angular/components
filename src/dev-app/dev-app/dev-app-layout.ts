@@ -35,7 +35,6 @@ import {DevAppDirectionality} from './dev-app-directionality';
   templateUrl: 'dev-app-layout.html',
   styleUrl: 'dev-app-layout.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

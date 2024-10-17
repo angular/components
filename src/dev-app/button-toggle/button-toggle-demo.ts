@@ -16,7 +16,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'button-toggle-demo',
   templateUrl: 'button-toggle-demo.html',
   styleUrl: 'button-toggle-demo.css',
-  standalone: true,
   imports: [FormsModule, MatButtonToggleModule, MatCheckboxModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

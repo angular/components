@@ -16,7 +16,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'badge-demo',
   templateUrl: 'badge-demo.html',
   styleUrl: 'badge-demo.css',
-  standalone: true,
   imports: [FormsModule, MatBadgeModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

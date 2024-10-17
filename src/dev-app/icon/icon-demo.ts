@@ -14,7 +14,6 @@ import {DomSanitizer} from '@angular/platform-browser';
   selector: 'mat-icon-demo',
   templateUrl: 'icon-demo.html',
   styleUrl: 'icon-demo.css',
-  standalone: true,
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

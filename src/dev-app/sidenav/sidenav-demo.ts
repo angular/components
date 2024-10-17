@@ -17,7 +17,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'sidenav-demo',
   templateUrl: 'sidenav-demo.html',
   styleUrl: 'sidenav-demo.css',
-  standalone: true,
   imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

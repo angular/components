@@ -23,21 +23,18 @@ export interface Task {
 @Directive({
   selector: '[clickActionNoop]',
   providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}],
-  standalone: true,
 })
 export class ClickActionNoop {}
 
 @Directive({
   selector: '[clickActionCheck]',
   providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}],
-  standalone: true,
 })
 export class ClickActionCheck {}
 
 @Directive({
   selector: '[animationsNoop]',
   providers: [{provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations'}],
-  standalone: true,
 })
 export class AnimationsNoop {}
 
@@ -49,7 +46,6 @@ export class AnimationsNoop {}
     }
   `,
   templateUrl: 'nested-checklist.html',
-  standalone: true,
   imports: [MatCheckboxModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -101,7 +97,6 @@ export class MatCheckboxDemoNestedChecklist {
   selector: 'checkbox-demo',
   templateUrl: 'checkbox-demo.html',
   styleUrl: 'checkbox-demo.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatCheckboxModule,

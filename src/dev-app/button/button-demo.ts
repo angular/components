@@ -26,7 +26,6 @@ import {MatTooltip} from '@angular/material/tooltip';
   selector: 'button-demo',
   templateUrl: 'button-demo.html',
   styleUrl: 'button-demo.css',
-  standalone: true,
   imports: [
     MatButton,
     MatAnchor,

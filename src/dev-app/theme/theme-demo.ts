@@ -39,7 +39,6 @@ interface Color {
     </div>
   `,
   styleUrl: 'theme-demo.css',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeDemoColors {
@@ -50,7 +49,6 @@ export class ThemeDemoColors {
   selector: 'theme-demo',
   templateUrl: 'theme-demo.html',
   styleUrl: 'theme-demo.css',
-  standalone: true,
   imports: [MatCardModule, MatExpansionModule, MatIconModule, ThemeDemoColors],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

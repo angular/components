@@ -31,7 +31,6 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
   selector: 'performance-demo',
   templateUrl: 'performance-demo.html',
   styleUrl: 'performance-demo.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatButtonModule,

@@ -19,7 +19,6 @@ import {
 @Component({
   selector: 'science-joke',
   template: `<p> 100 kilopascals go into a bar. </p>`,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScienceJoke {}
@@ -28,7 +27,6 @@ export class ScienceJoke {}
   selector: 'portal-demo',
   templateUrl: 'portal-demo.html',
   styleUrl: 'portal-demo.css',
-  standalone: true,
   imports: [PortalModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

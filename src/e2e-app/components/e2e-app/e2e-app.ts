@@ -6,7 +6,6 @@ import {RouterLink, RouterOutlet} from '@angular/router';
   selector: 'e2e-app',
   templateUrl: 'e2e-app.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatListModule, RouterLink, RouterOutlet],
 })
 export class E2eApp {

@@ -8,7 +8,6 @@ const itemSizeSample = [100, 25, 50, 50, 100, 200, 75, 100, 50, 250];
   selector: 'virtual-scroll-e2e',
   templateUrl: 'virtual-scroll-e2e.html',
   styleUrl: 'virtual-scroll-e2e.css',
-  standalone: true,
   imports: [ScrollingModule, ExperimentalScrollingModule],
 })
 export class VirtualScrollE2E {

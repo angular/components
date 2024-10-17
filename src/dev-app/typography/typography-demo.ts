@@ -15,7 +15,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: 'typography-demo.html',
   styleUrl: 'typography-demo.css',
   imports: [MatCheckboxModule, FormsModule],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypographyDemo {}

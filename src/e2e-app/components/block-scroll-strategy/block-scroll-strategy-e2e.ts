@@ -6,7 +6,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'block-scroll-strategy-e2e',
   templateUrl: 'block-scroll-strategy-e2e.html',
   styleUrl: 'block-scroll-strategy-e2e.css',
-  standalone: true,
   imports: [ScrollingModule],
 })
 export class BlockScrollStrategyE2E {

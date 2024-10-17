@@ -19,7 +19,6 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'table-scroll-container-demo',
   styleUrl: 'table-scroll-container-demo.css',
   templateUrl: 'table-scroll-container-demo.html',
-  standalone: true,
   imports: [CdkTableScrollContainerModule, MatButtonModule, MatButtonToggleModule, MatTableModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

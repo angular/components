@@ -84,14 +84,12 @@ export const AUTOMATED_KITCHEN_SINK = new InjectionToken<boolean>('AUTOMATED_KIT
 
 @Component({
   template: `<button>Do the thing</button>`,
-  standalone: true,
 })
 export class TestEntryComponent {}
 
 @Component({
   selector: 'kitchen-sink',
   templateUrl: './kitchen-sink.html',
-  standalone: true,
   providers: [provideNativeDateAdapter()],
   styles: `
     .universal-viewport {

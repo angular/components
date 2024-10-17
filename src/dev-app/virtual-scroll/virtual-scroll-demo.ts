@@ -32,7 +32,6 @@ type State = {
   styleUrl: 'virtual-scroll-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     AsyncPipe,
     ExperimentalScrollingModule,

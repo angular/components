@@ -24,7 +24,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 @Component({
   selector: 'slider-demo',
   templateUrl: 'slider-demo.html',
-  standalone: true,
   imports: [
     FormsModule,
     MatButtonModule,
@@ -128,7 +127,6 @@ export class SliderDemo {
     </mat-slider>
   </mat-dialog-content>
   `,
-  standalone: true,
   imports: [MatSliderModule, MatDialogTitle, MatDialogContent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

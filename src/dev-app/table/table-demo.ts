@@ -43,7 +43,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: './table-demo.html',
-  standalone: true,
   imports: [
     CdkTableFlexBasicExample,
     CdkTableBasicExample,

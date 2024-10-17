@@ -32,7 +32,6 @@ export interface DemoColor {
   selector: 'chips-demo',
   templateUrl: 'chips-demo.html',
   styleUrl: 'chips-demo.css',
-  standalone: true,
   imports: [
     FormsModule,
     MatButtonModule,

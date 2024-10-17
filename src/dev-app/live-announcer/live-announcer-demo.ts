@@ -14,7 +14,6 @@ import {MatDialog} from '@angular/material/dialog';
 @Component({
   selector: 'toolbar-demo',
   templateUrl: 'live-announcer-demo.html',
-  standalone: true,
   imports: [A11yModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

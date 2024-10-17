@@ -25,7 +25,6 @@ const defaultDialogConfig = new DialogConfig();
   templateUrl: 'dialog-demo.html',
   styleUrl: 'dialog-demo.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [DialogModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -109,7 +108,6 @@ export class DialogDemo {
       opacity: 0;
     }
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {

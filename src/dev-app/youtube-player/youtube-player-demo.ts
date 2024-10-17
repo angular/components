@@ -79,7 +79,6 @@ const VIDEOS: Video[] = [
   selector: 'youtube-player-demo',
   templateUrl: 'youtube-player-demo.html',
   styleUrl: 'youtube-player-demo.css',
-  standalone: true,
   imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

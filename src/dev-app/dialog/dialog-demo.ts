@@ -42,7 +42,6 @@ import {MatSelectModule} from '@angular/material/select';
   // View encapsulation is disabled since we add the legacy dialog padding
   // styles that need to target the dialog (not only the projected content).
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     JsonPipe,
     FormsModule,
@@ -177,7 +176,6 @@ export class DialogDemo {
   `,
   encapsulation: ViewEncapsulation.None,
   styles: `.hidden-dialog { opacity: 0; }`,
-  standalone: true,
   imports: [DragDropModule, MatInputModule, MatSelectModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -253,7 +251,6 @@ export class JazzDialog {
         Show in Dialog</button>
     </mat-dialog-actions>
   `,
-  standalone: true,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -290,7 +287,6 @@ export class ContentElementDialog {
         mat-dialog-close>Close</button>
     </mat-dialog-actions>
   `,
-  standalone: true,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

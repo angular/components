@@ -17,7 +17,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
   selector: 'progress-bar-demo',
   templateUrl: 'progress-bar-demo.html',
   styleUrl: 'progress-bar-demo.css',
-  standalone: true,
   imports: [FormsModule, MatProgressBarModule, MatButtonModule, MatButtonToggleModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

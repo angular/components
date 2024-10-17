@@ -17,7 +17,6 @@ import {RouterModule} from '@angular/router';
     <a mat-raised-button routerLink="/">Go back to the home page</a>
   `,
   host: {'class': 'mat-typography'},
-  standalone: true,
   imports: [MatButtonModule, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -26,7 +26,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   selector: 'expansion-demo',
   styleUrl: 'expansion-demo.css',
   templateUrl: 'expansion-demo.html',
-  standalone: true,
   imports: [
     CdkAccordionModule,
     FormsModule,

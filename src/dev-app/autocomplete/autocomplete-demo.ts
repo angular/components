@@ -34,7 +34,6 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
   styleUrl: 'autocomplete-demo.css',
-  standalone: true,
   imports: [
     JsonPipe,
     FormsModule,
@@ -245,7 +244,6 @@ export class AutocompleteDemo {
       align-items: flex-start;
     }
   `,
-  standalone: true,
   imports: [FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -66,7 +66,6 @@ let apiLoadingPromise: Promise<unknown> | null = null;
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
   styleUrl: 'google-map-demo.css',
-  standalone: true,
   imports: [
     GoogleMap,
     MapBicyclingLayer,

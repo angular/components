@@ -36,7 +36,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   template: '<ng-content></ng-content>',
   host: {'class': 'demo-focus-trap-shadow-root'},
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapShadowDomDemo {}
@@ -45,7 +44,6 @@ export class FocusTrapShadowDomDemo {}
   selector: 'focus-trap-demo',
   templateUrl: 'focus-trap-demo.html',
   styleUrl: 'focus-trap-demo.css',
-  standalone: true,
   imports: [A11yModule, MatButtonModule, MatCardModule, MatToolbarModule, FocusTrapShadowDomDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -95,7 +93,6 @@ let dialogCount = 0;
   selector: 'focus-trap-dialog-demo',
   styleUrl: 'focus-trap-dialog-demo.css',
   templateUrl: 'focus-trap-dialog-demo.html',
-  standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

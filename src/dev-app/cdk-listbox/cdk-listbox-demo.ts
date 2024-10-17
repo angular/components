@@ -24,7 +24,6 @@ import {
 
 @Component({
   templateUrl: 'cdk-listbox-demo.html',
-  standalone: true,
   imports: [
     CdkListboxActivedescendantExample,
     CdkListboxCompareWithExample,

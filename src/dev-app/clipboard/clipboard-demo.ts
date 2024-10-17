@@ -14,7 +14,6 @@ import {FormsModule} from '@angular/forms';
   selector: 'clipboard-demo',
   styleUrl: 'clipboard-demo.css',
   templateUrl: 'clipboard-demo.html',
-  standalone: true,
   imports: [ClipboardModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

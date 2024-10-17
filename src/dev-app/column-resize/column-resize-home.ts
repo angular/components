@@ -16,7 +16,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   templateUrl: 'column-resize-home.html',
-  standalone: true,
   imports: [
     MatExpansionModule,
     DefaultEnabledColumnResizeExample,

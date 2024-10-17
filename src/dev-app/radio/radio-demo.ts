@@ -17,7 +17,6 @@ import {MatTooltip} from '@angular/material/tooltip';
   selector: 'radio-demo',
   templateUrl: 'radio-demo.html',
   styleUrl: 'radio-demo.css',
-  standalone: true,
   imports: [MatRadioModule, FormsModule, MatButtonModule, MatCheckboxModule, MatTooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -15,7 +15,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   selector: 'drawer-demo',
   templateUrl: 'drawer-demo.html',
   styleUrl: 'drawer-demo.css',
-  standalone: true,
   imports: [MatButtonModule, MatListModule, MatSidenavModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

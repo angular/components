@@ -10,7 +10,6 @@ import {TestMainComponent} from '@angular/cdk/testing/tests';
       <test-main></test-main>
     }
   `,
-  standalone: true,
   imports: [TestMainComponent],
 })
 export class ComponentHarnessE2e {
