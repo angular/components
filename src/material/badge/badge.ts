@@ -49,7 +49,6 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
  * @docs-private
  */
 @Component({
-  standalone: true,
   styleUrl: 'badge.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
@@ -73,7 +72,6 @@ export class _MatBadgeStyleLoader {}
     '[class.mat-badge-hidden]': 'hidden || !content',
     '[class.mat-badge-disabled]': 'disabled',
   },
-  standalone: true,
 })
 export class MatBadge implements OnInit, OnDestroy {
   private _ngZone = inject(NgZone);

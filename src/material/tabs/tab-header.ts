@@ -46,7 +46,6 @@ import {MatRipple} from '@angular/material/core';
     '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-mdc-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   },
-  standalone: true,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabHeader

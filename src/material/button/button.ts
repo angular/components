@@ -29,7 +29,6 @@ import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatButton extends MatButtonBase {}
 
@@ -51,6 +50,5 @@ export class MatButton extends MatButtonBase {}
   styleUrls: ['button.css', 'button-high-contrast.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatAnchor extends MatAnchorBase {}

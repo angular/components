@@ -16,7 +16,6 @@ import {Directive} from '@angular/core';
     'class': 'mat-stepper-next',
     '[type]': 'type',
   },
-  standalone: true,
 })
 export class MatStepperNext extends CdkStepperNext {}
 
@@ -27,6 +26,5 @@ export class MatStepperNext extends CdkStepperNext {}
     'class': 'mat-stepper-previous',
     '[type]': 'type',
   },
-  standalone: true,
 })
 export class MatStepperPrevious extends CdkStepperPrevious {}

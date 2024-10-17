@@ -76,7 +76,6 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav
@@ -267,7 +266,6 @@ export class MatTabNav
     '(focus)': '_handleFocus()',
     '(keydown)': '_handleKeydown($event)',
   },
-  standalone: true,
   imports: [MatRipple],
 })
 export class MatTabLink
@@ -443,7 +441,6 @@ export class MatTabLink
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */

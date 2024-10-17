@@ -15,7 +15,6 @@ import {Directive, ElementRef, inject} from '@angular/core';
 @Directive({
   selector: '[matAutocompleteOrigin]',
   exportAs: 'matAutocompleteOrigin',
-  standalone: true,
 })
 export class MatAutocompleteOrigin {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

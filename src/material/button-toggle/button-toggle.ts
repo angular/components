@@ -134,7 +134,6 @@ export class MatButtonToggleChange {
     '[class.mat-button-toggle-group-appearance-standard]': 'appearance === "standard"',
   },
   exportAs: 'matButtonToggleGroup',
-  standalone: true,
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
   private _changeDetector = inject(ChangeDetectorRef);
@@ -557,7 +556,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     '(focus)': 'focus()',
     'role': 'presentation',
   },
-  standalone: true,
   imports: [MatRipple, MatPseudoCheckbox],
 })
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {

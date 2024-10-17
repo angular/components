@@ -65,7 +65,7 @@ export const MAT_DATE_RANGE_INPUT_PARENT = new InjectionToken<MatDateRangeInputP
 /**
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
  */
-@Directive({standalone: true})
+@Directive()
 abstract class MatDateRangeInputPartBase<D>
   extends MatDatepickerInputBase<DateRange<D>>
   implements OnInit, DoCheck
@@ -246,7 +246,6 @@ abstract class MatDateRangeInputPartBase<D>
   // These need to be specified explicitly, because some tooling doesn't
   // seem to pick them up from the base class. See #20932.
   outputs: ['dateChange', 'dateInput'],
-  standalone: true,
 })
 export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
   /** Validator that checks that the start date isn't after the end date. */
@@ -339,7 +338,6 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
   // These need to be specified explicitly, because some tooling doesn't
   // seem to pick them up from the base class. See #20932.
   outputs: ['dateChange', 'dateInput'],
-  standalone: true,
 })
 export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
   /** Validator that checks that the end date isn't before the start date. */

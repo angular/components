@@ -18,7 +18,6 @@ import {MatCommonModule} from '../common-behaviors/common-module';
 @Directive({
   selector: '[mat-line], [matLine]',
   host: {'class': 'mat-line'},
-  standalone: true,
 })
 export class MatLine {}
 

@@ -11,6 +11,5 @@ import {Directive} from '@angular/core';
 /** The floating label for a `mat-form-field`. */
 @Directive({
   selector: 'mat-label',
-  standalone: true,
 })
 export class MatLabel {}

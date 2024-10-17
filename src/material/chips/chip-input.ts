@@ -65,7 +65,6 @@ let nextUniqueId = 0;
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
   },
-  standalone: true,
 })
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   protected _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);

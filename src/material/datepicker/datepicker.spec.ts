@@ -2559,6 +2559,7 @@ const inputFixedWidthStyles = `
       [yPosition]="yPosition"></mat-datepicker>
   `,
   styles: inputFixedWidthStyles,
+  standalone: false,
 })
 class StandardDatepicker {
   opened = false;
@@ -2577,11 +2578,13 @@ class StandardDatepicker {
   template: `
     <input [matDatepicker]="d"><input [matDatepicker]="d"><mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class MultiInputDatepicker {}
 
 @Component({
   template: `<mat-datepicker #d></mat-datepicker>`,
+  standalone: false,
 })
 class NoInputDatepicker {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2592,6 +2595,7 @@ class NoInputDatepicker {
     <input [matDatepicker]="d" [value]="date">
     <mat-datepicker #d [startAt]="startDate"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithStartAt {
   date = new Date(2020, JAN, 1);
@@ -2604,6 +2608,7 @@ class DatepickerWithStartAt {
     <input [matDatepicker]="d" [value]="date">
     <mat-datepicker #d startView="year" (monthSelected)="onYearSelection()"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
@@ -2618,6 +2623,7 @@ class DatepickerWithStartViewYear {
     <mat-datepicker #d startView="multi-year"
         (yearSelected)="onMultiYearSelection()"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithStartViewMultiYear {
   date = new Date(2020, JAN, 1);
@@ -2631,6 +2637,7 @@ class DatepickerWithStartViewMultiYear {
     <input [(ngModel)]="selected" [matDatepicker]="d">
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithNgModel {
   selected: Date | null = null;
@@ -2644,6 +2651,7 @@ class DatepickerWithNgModel {
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithFormControl {
   formControl = new FormControl<Date | null>(null);
@@ -2658,6 +2666,7 @@ class DatepickerWithFormControl {
     <mat-datepicker-toggle [for]="d" [aria-label]="ariaLabel"></mat-datepicker-toggle>
     <mat-datepicker #d [touchUi]="touchUI" [restoreFocus]="restoreFocus"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithToggle {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2674,6 +2683,7 @@ class DatepickerWithToggle {
     <mat-datepicker-toggle [for]="d" [aria-label]="ariaLabel"></mat-datepicker-toggle>
     <mat-datepicker #d [touchUi]="touchUI" [restoreFocus]="restoreFocus"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
 
@@ -2685,6 +2695,7 @@ class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
     </mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithCustomIcon {}
 
@@ -2696,6 +2707,7 @@ class DatepickerWithCustomIcon {}
         <mat-datepicker #d></mat-datepicker>
       </mat-form-field>
   `,
+  standalone: false,
 })
 class FormFieldDatepicker {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2709,6 +2721,7 @@ class FormFieldDatepicker {
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithMinAndMaxValidation {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2724,6 +2737,7 @@ class DatepickerWithMinAndMaxValidation {
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
     <mat-datepicker #d [touchUi]="true"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithFilterAndValidation {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2738,6 +2752,7 @@ class DatepickerWithFilterAndValidation {
            (dateChange)="onDateChange()" (dateInput)="onDateInput()">
     <mat-datepicker #d [touchUi]="true"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithChangeAndInputEvents {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2756,6 +2771,7 @@ class DatepickerWithChangeAndInputEvents {
     <input [matDatepicker]="d" [(ngModel)]="date">
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithi18n {
   date: Date | null = new Date(2010, JAN, 1);
@@ -2768,6 +2784,7 @@ class DatepickerWithi18n {
     <input [matDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max">
     <mat-datepicker #d [startAt]="startAt"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithISOStrings {
   value = new Date(2017, JUN, 1).toISOString();
@@ -2783,6 +2800,7 @@ class DatepickerWithISOStrings {
     <input [(ngModel)]="selected" [matDatepicker]="d">
     <mat-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithEvents {
   selected: Date | null = null;
@@ -2796,6 +2814,7 @@ class DatepickerWithEvents {
     <input (focus)="d.open()" [matDatepicker]="d">
     <mat-datepicker #d="matDatepicker"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerOpeningOnFocus {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
@@ -2806,6 +2825,7 @@ class DatepickerOpeningOnFocus {
     <input [matDatepicker]="ch">
     <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
@@ -2817,6 +2837,7 @@ class DatepickerWithCustomHeader {
     <div class="custom-element">Custom element</div>
     <mat-calendar-header></mat-calendar-header>
   `,
+  standalone: false,
 })
 class CustomHeaderForDatepicker {}
 
@@ -2825,6 +2846,7 @@ class CustomHeaderForDatepicker {}
     <input [matDatepicker]="assignedDatepicker" [value]="date">
     <mat-datepicker #d [touchUi]="touch"></mat-datepicker>
   `,
+  standalone: false,
 })
 class DelayedDatepicker {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
@@ -2841,6 +2863,7 @@ class DelayedDatepicker {
     </mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerWithTabindexOnToggle {
   disabled = false;
@@ -2850,6 +2873,7 @@ class DatepickerWithTabindexOnToggle {
   template: `
     <mat-datepicker-toggle></mat-datepicker-toggle>
   `,
+  standalone: false,
 })
 class DatepickerToggleWithNoDatepicker {}
 
@@ -2857,6 +2881,7 @@ class DatepickerToggleWithNoDatepicker {}
   template: `
     <input [matDatepicker]="d">
   `,
+  standalone: false,
 })
 class DatepickerInputWithNoDatepicker {}
 
@@ -2869,6 +2894,7 @@ class DatepickerInputWithNoDatepicker {}
       multi: true,
     },
   ],
+  standalone: false,
 })
 class CustomValidator implements Validator {
   validate = jasmine.createSpy('validate spy').and.returnValue(null);
@@ -2879,6 +2905,7 @@ class CustomValidator implements Validator {
     <input [matDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max" customValidator>
     <mat-datepicker #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class DatepickerInputWithCustomValidator {
   @ViewChild(CustomValidator) validator: CustomValidator;
@@ -2892,6 +2919,7 @@ class DatepickerInputWithCustomValidator {
   <input [matDatepicker]="d" [value]="date">
   <mat-datepicker [panelClass]="panelClass" touchUi #d></mat-datepicker>
   `,
+  standalone: false,
 })
 class PanelClassDatepicker {
   date = new Date(0);

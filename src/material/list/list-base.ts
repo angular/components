@@ -43,7 +43,6 @@ import {MAT_LIST_CONFIG} from './tokens';
   host: {
     '[attr.aria-disabled]': 'disabled',
   },
-  standalone: true,
 })
 /** @docs-private */
 export abstract class MatListBase {
@@ -81,7 +80,6 @@ export abstract class MatListBase {
     '[attr.aria-disabled]': 'disabled',
     '[attr.disabled]': '(_isButtonElement && disabled) || null',
   },
-  standalone: true,
 })
 /** @docs-private */
 export abstract class MatListItemBase implements AfterViewInit, OnDestroy, RippleTarget {

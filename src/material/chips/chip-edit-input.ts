@@ -21,7 +21,6 @@ import {DOCUMENT} from '@angular/common';
     'tabindex': '-1',
     'contenteditable': 'true',
   },
-  standalone: true,
 })
 export class MatChipEditInput {
   private readonly _elementRef = inject(ElementRef);

@@ -105,7 +105,6 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
   styleUrl: 'progress-bar.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
 })
 export class MatProgressBar implements AfterViewInit, OnDestroy {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

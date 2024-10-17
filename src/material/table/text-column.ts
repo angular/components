@@ -39,7 +39,6 @@ import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell],
 })
 export class MatTextColumn<T> extends CdkTextColumn<T> {}

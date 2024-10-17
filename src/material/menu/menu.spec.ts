@@ -2769,6 +2769,7 @@ const SIMPLE_MENU_TEMPLATE = `
 
 @Component({
   template: SIMPLE_MENU_TEMPLATE,
+  standalone: false,
 })
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2785,7 +2786,11 @@ class SimpleMenu {
   ariaDescribedby: string;
 }
 
-@Component({template: SIMPLE_MENU_TEMPLATE, changeDetection: ChangeDetectionStrategy.OnPush})
+@Component({
+  template: SIMPLE_MENU_TEMPLATE,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
+})
 class SimpleMenuOnPush extends SimpleMenu {}
 
 @Component({
@@ -2795,6 +2800,7 @@ class SimpleMenuOnPush extends SimpleMenu {}
       <button mat-menu-item> Positioned Content </button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class PositionedMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2814,6 +2820,7 @@ interface TestableMenu {
       <button mat-menu-item> Not overlapped Content </button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class OverlapMenu implements TestableMenu {
   @Input() overlapTrigger: boolean;
@@ -2830,6 +2837,7 @@ class OverlapMenu implements TestableMenu {
     </ng-template>
   `,
   exportAs: 'matCustomMenu',
+  standalone: false,
 })
 class CustomMenuPanel implements MatMenuPanel {
   direction: Direction;
@@ -2852,6 +2860,7 @@ class CustomMenuPanel implements MatMenuPanel {
       <button mat-menu-item> Custom Content </button>
     </custom-menu>
   `,
+  standalone: false,
 })
 class CustomMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2903,6 +2912,7 @@ class CustomMenu {
       <button mat-menu-item>Twelve</button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class NestedMenu {
   @ViewChild('root') rootMenu: MatMenu;
@@ -2938,6 +2948,7 @@ class NestedMenu {
       <button mat-menu-item>Two</button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class NestedMenuCustomElevation {
   @ViewChild('rootTrigger') rootTrigger: MatMenuTrigger;
@@ -2961,6 +2972,7 @@ class NestedMenuCustomElevation {
       <button mat-menu-item>Five</button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class NestedMenuRepeater {
   @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef<HTMLElement>;
@@ -2981,6 +2993,7 @@ class NestedMenuRepeater {
       </mat-menu>
     </mat-menu>
   `,
+  standalone: false,
 })
 class SubmenuDeclaredInsideParentMenu {
   @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef;
@@ -2989,6 +3002,7 @@ class SubmenuDeclaredInsideParentMenu {
 @Component({
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
+  standalone: false,
 })
 class FakeIcon {}
 
@@ -3003,6 +3017,7 @@ class FakeIcon {}
       </ng-template>
     </mat-menu>
   `,
+  standalone: false,
 })
 class SimpleLazyMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -3028,6 +3043,7 @@ class SimpleLazyMenu {
       </ng-template>
     </mat-menu>
   `,
+  standalone: false,
 })
 class LazyMenuWithContext {
   @ViewChild('triggerOne') triggerOne: MatMenuTrigger;
@@ -3045,6 +3061,7 @@ class LazyMenuWithContext {
       <button mat-menu-item>Two</button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class DynamicPanelMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -3061,6 +3078,7 @@ class DynamicPanelMenu {
       <button mat-menu-item role="menuitemcheckbox" aria-checked="false">Not checked</button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class MenuWithCheckboxItems {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -3075,6 +3093,7 @@ class MenuWithCheckboxItems {
       }
     </mat-menu>
   `,
+  standalone: false,
 })
 class SimpleMenuWithRepeater {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -3097,6 +3116,7 @@ class SimpleMenuWithRepeater {
       </ng-template>
     </mat-menu>
   `,
+  standalone: false,
 })
 class SimpleMenuWithRepeaterInLazyContent {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -3124,6 +3144,7 @@ class SimpleMenuWithRepeaterInLazyContent {
     </mat-menu>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 class LazyMenuWithOnPush {
   @ViewChild('triggerEl', {read: ElementRef}) rootTrigger: ElementRef;
@@ -3136,21 +3157,25 @@ class LazyMenuWithOnPush {
       <button [matMenuTriggerFor]="menu"></button>
     </mat-menu>
   `,
+  standalone: false,
 })
 class InvalidRecursiveMenu {}
 
 @Component({
   template: '<mat-menu aria-label="label"></mat-menu>',
+  standalone: false,
 })
 class StaticAriaLabelMenu {}
 
 @Component({
   template: '<mat-menu aria-labelledby="some-element"></mat-menu>',
+  standalone: false,
 })
 class StaticAriaLabelledByMenu {}
 
 @Component({
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
+  standalone: false,
 })
 class StaticAriaDescribedbyMenu {}
 
@@ -3163,6 +3188,7 @@ class StaticAriaDescribedbyMenu {}
       }
     </mat-menu>
   `,
+  standalone: false,
 })
 class MenuWithRepeatedItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;

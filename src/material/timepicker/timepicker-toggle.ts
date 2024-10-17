@@ -36,7 +36,6 @@ import type {MatTimepicker} from './timepicker';
   exportAs: 'matTimepickerToggle',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatIconButton],
 })
 export class MatTimepickerToggle<D> {

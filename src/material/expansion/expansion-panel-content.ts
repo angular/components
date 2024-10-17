@@ -15,7 +15,6 @@ import {MAT_EXPANSION_PANEL, MatExpansionPanelBase} from './expansion-panel-base
  */
 @Directive({
   selector: 'ng-template[matExpansionPanelContent]',
-  standalone: true,
 })
 export class MatExpansionPanelContent {
   _template = inject<TemplateRef<any>>(TemplateRef);

@@ -38,7 +38,6 @@ const ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
     {name: 'columns', alias: 'matHeaderRowDef'},
     {name: 'sticky', alias: 'matHeaderRowDefSticky', transform: booleanAttribute},
   ],
-  standalone: true,
 })
 export class MatHeaderRowDef extends CdkHeaderRowDef {}
 
@@ -53,7 +52,6 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {}
     {name: 'columns', alias: 'matFooterRowDef'},
     {name: 'sticky', alias: 'matFooterRowDefSticky', transform: booleanAttribute},
   ],
-  standalone: true,
 })
 export class MatFooterRowDef extends CdkFooterRowDef {}
 
@@ -69,7 +67,6 @@ export class MatFooterRowDef extends CdkFooterRowDef {}
     {name: 'columns', alias: 'matRowDefColumns'},
     {name: 'when', alias: 'matRowDefWhen'},
   ],
-  standalone: true,
 })
 export class MatRowDef<T> extends CdkRowDef<T> {}
 
@@ -87,7 +84,6 @@ export class MatRowDef<T> extends CdkRowDef<T> {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matHeaderRow',
   providers: [{provide: CdkHeaderRow, useExisting: MatHeaderRow}],
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class MatHeaderRow extends CdkHeaderRow {}
@@ -106,7 +102,6 @@ export class MatHeaderRow extends CdkHeaderRow {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matFooterRow',
   providers: [{provide: CdkFooterRow, useExisting: MatFooterRow}],
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class MatFooterRow extends CdkFooterRow {}
@@ -125,7 +120,6 @@ export class MatFooterRow extends CdkFooterRow {}
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class MatRow extends CdkRow {}
@@ -134,7 +128,6 @@ export class MatRow extends CdkRow {}
 @Directive({
   selector: 'ng-template[matNoDataRow]',
   providers: [{provide: CdkNoDataRow, useExisting: MatNoDataRow}],
-  standalone: true,
 })
 export class MatNoDataRow extends CdkNoDataRow {
   override _contentClassName = 'mat-mdc-no-data-row';

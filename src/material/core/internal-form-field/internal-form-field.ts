@@ -16,7 +16,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 @Component({
   // Use a `div` selector to match the old markup closer.
   selector: 'div[mat-internal-form-field]',
-  standalone: true,
   template: '<ng-content></ng-content>',
   styleUrl: 'internal-form-field.css',
   encapsulation: ViewEncapsulation.None,

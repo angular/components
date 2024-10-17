@@ -26,7 +26,6 @@ import {MatTreeNodeOutlet} from './outlet';
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [{provide: CdkTree, useExisting: MatTree}],
-  standalone: true,
   imports: [MatTreeNodeOutlet],
 })
 export class MatTree<T, K = T> extends CdkTree<T, K> {

@@ -30,7 +30,6 @@ export interface TextOnlySnackBar {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
-  standalone: true,
   host: {
     'class': 'mat-mdc-simple-snack-bar',
   },

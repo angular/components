@@ -36,7 +36,6 @@ import {_StructuralStylesLoader} from '@angular/material/core';
     '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
   },
-  standalone: true,
 })
 export class MatChipAction {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

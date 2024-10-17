@@ -26,7 +26,6 @@ export const MAT_TAB = new InjectionToken<any>('MAT_TAB');
 @Directive({
   selector: '[mat-tab-label], [matTabLabel]',
   providers: [{provide: MAT_TAB_LABEL, useExisting: MatTabLabel}],
-  standalone: true,
 })
 export class MatTabLabel extends CdkPortal {
   _closestTab = inject(MAT_TAB, {optional: true});

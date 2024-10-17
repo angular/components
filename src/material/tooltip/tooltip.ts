@@ -185,7 +185,6 @@ const MAX_WIDTH = 200;
     'class': 'mat-mdc-tooltip-trigger',
     '[class.mat-mdc-tooltip-disabled]': 'disabled',
   },
-  standalone: true,
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
   private _overlay = inject(Overlay);
@@ -947,7 +946,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
   },
-  standalone: true,
   imports: [NgClass],
 })
 export class TooltipComponent implements OnDestroy {

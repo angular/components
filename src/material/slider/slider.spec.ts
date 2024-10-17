@@ -1555,6 +1555,7 @@ const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class StandardSlider {}
 
@@ -1566,6 +1567,7 @@ class StandardSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class StandardRangeSlider {}
 
@@ -1576,6 +1578,7 @@ class StandardRangeSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class DisabledSlider {}
 
@@ -1587,6 +1590,7 @@ class DisabledSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class DisabledRangeSlider {}
 
@@ -1597,6 +1601,7 @@ class DisabledRangeSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithMinAndMax {
   min = 25;
@@ -1611,6 +1616,7 @@ class SliderWithMinAndMax {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithMinAndMax {
   min = 25;
@@ -1624,6 +1630,7 @@ class RangeSliderWithMinAndMax {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithValue {}
 
@@ -1635,6 +1642,7 @@ class SliderWithValue {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithValue {}
 
@@ -1645,6 +1653,7 @@ class RangeSliderWithValue {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithStep {
   step = 25;
@@ -1658,6 +1667,7 @@ class SliderWithStep {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithStep {
   step = 25;
@@ -1670,6 +1680,7 @@ class RangeSliderWithStep {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1685,6 +1696,7 @@ class DiscreteSliderWithDisplayWith {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1699,6 +1711,7 @@ class DiscreteRangeSliderWithDisplayWith {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithOneWayBinding {
   value = 50;
@@ -1712,6 +1725,7 @@ class SliderWithOneWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithOneWayBinding {
   startValue = 25;
@@ -1725,6 +1739,7 @@ class RangeSliderWithOneWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1739,6 +1754,7 @@ class SliderWithNgModel {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1755,6 +1771,7 @@ class RangeSliderWithNgModel {
 
 `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithNgModelEdgeCase {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1768,6 +1785,7 @@ class RangeSliderWithNgModelEdgeCase {
     <input [formControl]="control" matSliderThumb>
   </mat-slider>`,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithFormControl {
   control = new FormControl(0);
@@ -1780,6 +1798,7 @@ class SliderWithFormControl {
     <input [formControl]="endInputControl" matSliderEndThumb>
   </mat-slider>`,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithFormControl {
   startInputControl = new FormControl(0);
@@ -1793,6 +1812,7 @@ class RangeSliderWithFormControl {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class SliderWithTwoWayBinding {
   value = 0;
@@ -1806,6 +1826,7 @@ class SliderWithTwoWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
+  standalone: false,
 })
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;

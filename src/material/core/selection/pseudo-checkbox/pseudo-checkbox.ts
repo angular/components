@@ -49,7 +49,6 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
     '[class.mat-pseudo-checkbox-full]': 'appearance === "full"',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
-  standalone: true,
 })
 export class MatPseudoCheckbox {
   _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});

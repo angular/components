@@ -47,7 +47,6 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatTab}],
-  standalone: true,
   host: {
     // This element will be rendered on the server in order to support hydration.
     // Hide it so it doesn't cause a layout shift when it's removed on the client.

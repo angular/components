@@ -306,6 +306,7 @@ describe('MatDatepickerActions', () => {
       </mat-datepicker>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class DatepickerWithActions {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;

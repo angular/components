@@ -13,7 +13,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
  * @docs-private
  */
 @Component({
-  standalone: true,
   selector: 'structural-styles',
   styleUrl: 'structural-styles.css',
   encapsulation: ViewEncapsulation.None,

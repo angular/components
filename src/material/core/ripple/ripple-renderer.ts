@@ -70,7 +70,6 @@ const pointerUpEvents = ['mouseup', 'mouseleave', 'touchend', 'touchcancel'];
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   styleUrl: 'ripple-structure.css',
   host: {'mat-ripple-style-loader': ''},
 })

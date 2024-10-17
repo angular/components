@@ -31,7 +31,6 @@ import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 /** Can be used to override the icon of a `matDatepickerToggle`. */
 @Directive({
   selector: '[matDatepickerToggleIcon]',
-  standalone: true,
 })
 export class MatDatepickerToggleIcon {}
 
@@ -55,7 +54,6 @@ export class MatDatepickerToggleIcon {}
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatIconButton],
 })
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {

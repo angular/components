@@ -76,7 +76,6 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
-  standalone: true,
   imports: [MatSliderVisualThumb],
 })
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {

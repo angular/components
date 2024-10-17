@@ -97,7 +97,6 @@ export interface SelectionList extends MatListBase {
     {provide: MatListItemBase, useExisting: MatListOption},
     {provide: LIST_OPTION, useExisting: MatListOption},
   ],
-  standalone: true,
   imports: [NgTemplateOutlet, CdkObserveContent],
 })
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {

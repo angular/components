@@ -1729,6 +1729,7 @@ class TooltipOnDraggableElement {
 @Component({
   selector: 'app',
   template: `<button #button [matTooltip]="message">Button</button>`,
+  standalone: false,
 })
 class TooltipDemoWithoutPositionBinding {
   message: any = initialTooltipMessage;
@@ -1739,6 +1740,7 @@ class TooltipDemoWithoutPositionBinding {
 @Component({
   selector: 'app',
   template: `<button #button [matTooltip]="message">Button</button>`,
+  standalone: false,
 })
 class TooltipDemoWithoutTooltipClassBinding {
   message = initialTooltipMessage;
@@ -1751,6 +1753,7 @@ class TooltipDemoWithoutTooltipClassBinding {
   template: `
     <button #button matTooltipClass="fixed-tooltip-class" [matTooltip]="message">Button</button>
   `,
+  standalone: false,
 })
 class TooltipDemoWithTooltipClassBinding {
   message: any = initialTooltipMessage;
@@ -1762,6 +1765,7 @@ class TooltipDemoWithTooltipClassBinding {
   selector: 'app',
   styles: `button { width: 500px; height: 500px; }`,
   template: `<button #button [matTooltip]="message">Button</button>`,
+  standalone: false,
 })
 class WideTooltipDemo {
   message = 'Test';

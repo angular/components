@@ -71,7 +71,6 @@ export const MAT_SORT_DEFAULT_OPTIONS = new InjectionToken<MatSortDefaultOptions
   host: {
     'class': 'mat-sort',
   },
-  standalone: true,
 })
 export class MatSort implements OnChanges, OnDestroy, OnInit {
   private _initializedStream = new ReplaySubject<void>(1);

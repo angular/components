@@ -94,7 +94,6 @@ export const MENU_PANEL_TOP_PADDING = 8;
     '(keydown)': '_handleKeydown($event)',
   },
   exportAs: 'matMenuTrigger',
-  standalone: true,
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _overlay = inject(Overlay);

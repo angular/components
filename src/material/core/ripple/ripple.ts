@@ -62,7 +62,6 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS = new InjectionToken<RippleGlobalOptions>
     'class': 'mat-ripple',
     '[class.mat-ripple-unbounded]': 'unbounded',
   },
-  standalone: true,
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

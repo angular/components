@@ -31,7 +31,6 @@ import {
 @Directive({
   selector: 'mat-table[recycleRows], table[mat-table][recycleRows]',
   providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
-  standalone: true,
 })
 export class MatRecycleRows {}
 
@@ -90,7 +89,6 @@ export class MatRecycleRows {}
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
 export class MatTable<T> extends CdkTable<T> {

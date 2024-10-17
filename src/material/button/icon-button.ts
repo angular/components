@@ -22,7 +22,6 @@ import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatIconButton extends MatButtonBase {
   constructor(...args: unknown[]);
@@ -46,6 +45,5 @@ export class MatIconButton extends MatButtonBase {
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatIconAnchor extends MatAnchorBase {}

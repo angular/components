@@ -30,7 +30,6 @@ let dialogElementUid = 0;
 @Directive({
   selector: '[mat-dialog-close], [matDialogClose]',
   exportAs: 'matDialogClose',
-  standalone: true,
   host: {
     '(click)': '_onButtonClick($event)',
     '[attr.aria-label]': 'ariaLabel || null',
@@ -88,7 +87,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   }
 }
 
-@Directive({standalone: true})
+@Directive()
 export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
   protected _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -132,7 +131,6 @@ export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
 @Directive({
   selector: '[mat-dialog-title], [matDialogTitle]',
   exportAs: 'matDialogTitle',
-  standalone: true,
   host: {
     'class': 'mat-mdc-dialog-title mdc-dialog__title',
     '[id]': 'id',
@@ -158,7 +156,6 @@ export class MatDialogTitle extends MatDialogLayoutSection {
 @Directive({
   selector: `[mat-dialog-content], mat-dialog-content, [matDialogContent]`,
   host: {'class': 'mat-mdc-dialog-content mdc-dialog__content'},
-  standalone: true,
   hostDirectives: [CdkScrollable],
 })
 export class MatDialogContent {}
@@ -169,7 +166,6 @@ export class MatDialogContent {}
  */
 @Directive({
   selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
-  standalone: true,
   host: {
     'class': 'mat-mdc-dialog-actions mdc-dialog__actions',
     '[class.mat-mdc-dialog-actions-align-start]': 'align === "start"',

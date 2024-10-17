@@ -112,7 +112,6 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox

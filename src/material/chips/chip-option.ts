@@ -77,7 +77,6 @@ export class MatChipSelectionChange {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatChipAction],
 })
 export class MatChipOption extends MatChip implements OnInit {

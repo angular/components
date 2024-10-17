@@ -1702,6 +1702,7 @@ function createComponent<T>(
       <mat-label>Label</mat-label>
       <input matNativeControl id="test-id" placeholder="test">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithId {
   floatLabel: 'always' | 'auto' = 'auto';
@@ -1713,6 +1714,7 @@ class MatInputWithId {
       <input matInput [disabled]="disabled" [disabledInteractive]="disabledInteractive">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithDisabled {
   disabled = false;
@@ -1721,6 +1723,7 @@ class MatInputWithDisabled {
 
 @Component({
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithRequired {
   required: boolean;
@@ -1728,6 +1731,7 @@ class MatInputWithRequired {
 
 @Component({
   template: `<mat-form-field><input matInput [type]="type"></mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithType {
   type: string;
@@ -1739,6 +1743,7 @@ class MatInputWithType {
       <mat-label>hello</mat-label>
       <input matInput required [disabled]="disabled">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputLabelRequiredTestComponent {
   hideRequiredMarker: boolean = false;
@@ -1750,6 +1755,7 @@ class MatInputLabelRequiredTestComponent {
     <mat-form-field>
       <input matInput placeholder="Hello" [formControl]="formControl">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithFormControl {
   formControl = new FormControl('');
@@ -1757,6 +1763,7 @@ class MatInputWithFormControl {
 
 @Component({
   template: `<mat-form-field><input matInput><mat-hint>{{label}}</mat-hint></mat-form-field>`,
+  standalone: false,
 })
 class MatInputHintLabel2TestController {
   label: string = '';
@@ -1767,6 +1774,7 @@ class MatInputHintLabel2TestController {
     <mat-form-field [hintLabel]="label">
       <input matInput aria-describedby="initial">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputHintLabelTestController {
   label: string = '';
@@ -1780,6 +1788,7 @@ class MatInputHintLabelTestController {
         <mat-error>Some error</mat-error>
       }
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithSubscriptAndAriaDescribedBy {
   label: string = '';
@@ -1788,7 +1797,10 @@ class MatInputWithSubscriptAndAriaDescribedBy {
   formControl = new FormControl('');
 }
 
-@Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
+@Component({
+  template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`,
+  standalone: false,
+})
 class MatInputInvalidTypeTestController {
   t = 'file';
 }
@@ -1799,6 +1811,7 @@ class MatInputInvalidTypeTestController {
       <input matInput>
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputInvalidHint2TestController {}
 
@@ -1809,6 +1822,7 @@ class MatInputInvalidHint2TestController {}
       <mat-hint>Hello</mat-hint>
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputInvalidHintTestController {}
 
@@ -1819,6 +1833,7 @@ class MatInputInvalidHintTestController {}
       <mat-hint align="start" [id]="startId">Hello</mat-hint>
       <mat-hint align="end" [id]="endId">World</mat-hint>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputMultipleHintTestController {
   startId: string;
@@ -1831,6 +1846,7 @@ class MatInputMultipleHintTestController {
       <input matInput>
       <mat-hint align="end">World</mat-hint>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputMultipleHintMixedTestController {}
 
@@ -1839,6 +1855,7 @@ class MatInputMultipleHintMixedTestController {}
     <mat-form-field>
       <input matInput type="date" placeholder="Placeholder">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputDateTestController {}
 
@@ -1853,6 +1870,7 @@ class MatInputDateTestController {}
         [disabled]="disabled"
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputTextTestController {
   disabled = false;
@@ -1864,6 +1882,7 @@ class MatInputTextTestController {
     <mat-form-field>
       <input matInput type="password" placeholder="Placeholder">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputPasswordTestController {}
 
@@ -1872,6 +1891,7 @@ class MatInputPasswordTestController {}
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputNumberTestController {}
 
@@ -1880,6 +1900,7 @@ class MatInputNumberTestController {}
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder" [(ngModel)]="value">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputZeroTestController {
   value = 0;
@@ -1890,6 +1911,7 @@ class MatInputZeroTestController {
     <mat-form-field>
       <input matInput placeholder="Label" [value]="value">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithValueBinding {
   value: string = 'Initial';
@@ -1901,6 +1923,7 @@ class MatInputWithValueBinding {
       <input matInput placeholder="Label">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithStaticLabel {}
 
@@ -1914,6 +1937,7 @@ class MatInputWithStaticLabel {}
         [disabled]="disabled"
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithDynamicLabel {
   shouldFloat: 'always' | 'auto' = 'always';
@@ -1927,6 +1951,7 @@ class MatInputWithDynamicLabel {
       <input matInput placeholder="Label">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithoutDefinedLabel {}
 
@@ -1938,6 +1963,7 @@ class MatInputWithoutDefinedLabel {}
       }
       <input matInput>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithCondictionalLabel {
   hasLabel = true;
@@ -1949,6 +1975,7 @@ class MatInputWithCondictionalLabel {
       <textarea matNativeControl [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
       </textarea>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputTextareaWithBindings {
   rows: number = 4;
@@ -1958,6 +1985,7 @@ class MatInputTextareaWithBindings {
 
 @Component({
   template: `<mat-form-field><input></mat-form-field>`,
+  standalone: false,
 })
 class MatInputMissingMatInputTestController {}
 
@@ -1973,6 +2001,7 @@ class MatInputMissingMatInputTestController {}
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class MatInputWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
@@ -1995,6 +2024,7 @@ class MatInputWithFormErrorMessages {
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class InputInFormGroup {
   formGroup = new FormGroup({
@@ -2018,6 +2048,7 @@ class InputInFormGroup {
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 class MatInputWithFormGroupErrorMessages {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
@@ -2036,6 +2067,7 @@ class MatInputWithFormGroupErrorMessages {
       <mat-icon matIconSuffix>favorite</mat-icon>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithPrefixAndSuffix {}
 
@@ -2047,6 +2079,7 @@ class MatInputWithPrefixAndSuffix {}
       }
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithNgIf {
   renderInput = true;
@@ -2060,6 +2093,7 @@ class MatInputWithNgIf {
       <input matInput [formControl]="formControl">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputOnPush {
   formControl = new FormControl('');
@@ -2072,6 +2106,7 @@ class MatInputOnPush {
       <input matInput>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithLabel {}
 
@@ -2082,6 +2117,7 @@ class MatInputWithLabel {}
       <input matInput placeholder="Placeholder">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel: FloatLabelType;
@@ -2095,6 +2131,7 @@ class MatInputWithLabelAndPlaceholder {
       <input matInput placeholder="Placeholder">
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
@@ -2108,6 +2145,7 @@ class MatInputWithAppearance {
       <input matInput placeholder="Placeholder" required>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithSubscriptSizing {
   @ViewChild(MatFormField) formField: MatFormField;
@@ -2120,6 +2158,7 @@ class MatInputWithSubscriptSizing {
       <input matInput>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputWithoutPlaceholder {}
 
@@ -2134,6 +2173,7 @@ class MatInputWithoutPlaceholder {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputSelect {
   disabled: boolean;
@@ -2151,6 +2191,7 @@ class MatInputSelect {
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputSelectWithNoLabelNoValue {}
 
@@ -2165,6 +2206,7 @@ class MatInputSelectWithNoLabelNoValue {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputSelectWithLabel {}
 
@@ -2179,6 +2221,7 @@ class MatInputSelectWithLabel {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputSelectWithInnerHtml {}
 
@@ -2187,6 +2230,7 @@ class MatInputSelectWithInnerHtml {}
     <mat-form-field>
       <input matInput customInputAccessor placeholder="Placeholder">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithCustomAccessor {}
 
@@ -2196,6 +2240,7 @@ class MatInputWithCustomAccessor {}
       <select matNativeControl>
       </select>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputSelectWithoutOptions {}
 
@@ -2208,6 +2253,7 @@ class MatInputSelectWithoutOptions {}
       useExisting: CustomMatInputAccessor,
     },
   ],
+  standalone: false,
 })
 class CustomMatInputAccessor {
   get value() {
@@ -2222,6 +2268,7 @@ class CustomMatInputAccessor {
     <mat-form-field [color]="color">
       <input matNativeControl>
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithColor {
   color: ThemePalette;
@@ -2235,6 +2282,7 @@ class MatInputWithColor {
 
     <input class="outside" matNativeControl>
   `,
+  standalone: false,
 })
 class MatInputInsideOutsideFormField {}
 
@@ -2244,6 +2292,7 @@ class MatInputInsideOutsideFormField {}
       <mat-label>Hello</mat-label>
       <input matInput [formControl]="formControl">
     </mat-form-field>`,
+  standalone: false,
 })
 class MatInputWithRequiredFormControl {
   formControl = new FormControl('', [Validators.required]);
@@ -2255,6 +2304,7 @@ class MatInputWithRequiredFormControl {
       <input matInput>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class MatInputSimple {}
 
@@ -2268,5 +2318,6 @@ class MatInputSimple {}
       <ng-container matIconSuffix>icon-suffix</ng-container>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class InputWithNgContainerPrefixAndSuffix {}

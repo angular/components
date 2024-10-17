@@ -1082,6 +1082,7 @@ describe('MatChipGrid', () => {
       }
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
+  standalone: false,
 })
 class StandardChipGrid {
   name: string = 'Test';
@@ -1103,6 +1104,7 @@ class StandardChipGrid {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class FormFieldChipGrid {
   chips = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1134,6 +1136,7 @@ class FormFieldChipGrid {
           (matChipInputTokenEnd)="add($event)"/>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class InputChipGrid {
   foods: any[] = [
@@ -1193,6 +1196,7 @@ class InputChipGrid {
   </mat-form-field>
 </form>
   `,
+  standalone: false,
 })
 class ChipGridWithFormErrorMessages {
   foods: any[] = [
@@ -1229,6 +1233,7 @@ class ChipGridWithFormErrorMessages {
       transition(':leave', [style({opacity: 0}), animate('500ms', style({opacity: 1}))]),
     ]),
   ],
+  standalone: false,
 })
 class StandardChipGridWithAnimations {
   numbers = [0, 1, 2, 3, 4];
@@ -1256,6 +1261,7 @@ class StandardChipGridWithAnimations {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
+  standalone: false,
 })
 class ChipGridWithRemove {
   chips = [0, 1, 2, 3, 4];

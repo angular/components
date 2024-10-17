@@ -71,7 +71,6 @@ export class MatSelectionListChange {
     {provide: SELECTION_LIST, useExisting: MatSelectionList},
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatSelectionList
   extends MatListBase

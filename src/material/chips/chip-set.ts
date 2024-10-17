@@ -48,7 +48,6 @@ import {MatChipAction} from './chip-action';
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class MatChipSet implements AfterViewInit, OnDestroy {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

@@ -35,7 +35,6 @@ import {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

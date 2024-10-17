@@ -91,7 +91,6 @@ export const MAT_INPUT_CONFIG = new InjectionToken<MatInputConfig>('MAT_INPUT_CO
     '(input)': '_onInput()',
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
-  standalone: true,
 })
 export class MatInput
   implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck
