@@ -21,7 +21,6 @@ import {GoogleMap} from '../google-map/google-map';
 @Directive({
   selector: 'map-transit-layer',
   exportAs: 'mapTransitLayer',
-  standalone: true,
 })
 export class MapTransitLayer implements OnInit, OnDestroy {
   private _map = inject(GoogleMap);

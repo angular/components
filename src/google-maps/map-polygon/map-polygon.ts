@@ -33,7 +33,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-polygon',
   exportAs: 'mapPolygon',
-  standalone: true,
 })
 export class MapPolygon implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

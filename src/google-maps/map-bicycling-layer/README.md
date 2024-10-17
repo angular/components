@@ -12,7 +12,6 @@ import {GoogleMap, MapBicyclingLayer} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
   imports: [GoogleMap, MapBicyclingLayer],
 })
 export class GoogleMapDemo {

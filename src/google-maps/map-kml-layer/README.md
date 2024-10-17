@@ -12,7 +12,6 @@ import {GoogleMap, MapKmlLayer} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
   imports: [GoogleMap, MapKmlLayer],
 })
 export class GoogleMapDemo {

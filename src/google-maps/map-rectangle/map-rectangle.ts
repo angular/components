@@ -33,7 +33,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-rectangle',
   exportAs: 'mapRectangle',
-  standalone: true,
 })
 export class MapRectangle implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

@@ -33,7 +33,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-kml-layer',
   exportAs: 'mapKmlLayer',
-  standalone: true,
 })
 export class MapKmlLayer implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

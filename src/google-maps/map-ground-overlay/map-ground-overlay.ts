@@ -33,7 +33,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-ground-overlay',
   exportAs: 'mapGroundOverlay',
-  standalone: true,
 })
 export class MapGroundOverlay implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

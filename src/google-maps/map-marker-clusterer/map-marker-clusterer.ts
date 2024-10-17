@@ -59,7 +59,6 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
   selector: 'map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
