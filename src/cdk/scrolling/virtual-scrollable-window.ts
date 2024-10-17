@@ -17,7 +17,6 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[scrollWindow]',
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
-  standalone: true,
 })
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
   protected override _elementScrolled: Observable<Event> = new Observable(

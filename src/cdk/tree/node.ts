@@ -34,7 +34,6 @@ export class CdkTreeNodeOutletContext<T> {
 @Directive({
   selector: '[cdkTreeNodeDef]',
   inputs: [{name: 'when', alias: 'cdkTreeNodeDefWhen'}],
-  standalone: true,
 })
 export class CdkTreeNodeDef<T> {
   /** @docs-private */

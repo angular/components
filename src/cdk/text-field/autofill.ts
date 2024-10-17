@@ -153,7 +153,6 @@ export class AutofillMonitor implements OnDestroy {
 /** A directive that can be used to monitor the autofill state of an input. */
 @Directive({
   selector: '[cdkAutofill]',
-  standalone: true,
 })
 export class CdkAutofill implements OnDestroy, OnInit {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

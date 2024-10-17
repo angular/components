@@ -29,7 +29,6 @@ export interface CellDef {
  */
 @Directive({
   selector: '[cdkCellDef]',
-  standalone: true,
 })
 export class CdkCellDef implements CellDef {
   /** @docs-private */
@@ -45,7 +44,6 @@ export class CdkCellDef implements CellDef {
  */
 @Directive({
   selector: '[cdkHeaderCellDef]',
-  standalone: true,
 })
 export class CdkHeaderCellDef implements CellDef {
   /** @docs-private */
@@ -61,7 +59,6 @@ export class CdkHeaderCellDef implements CellDef {
  */
 @Directive({
   selector: '[cdkFooterCellDef]',
-  standalone: true,
 })
 export class CdkFooterCellDef implements CellDef {
   /** @docs-private */
@@ -78,7 +75,6 @@ export class CdkFooterCellDef implements CellDef {
 @Directive({
   selector: '[cdkColumnDef]',
   providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
-  standalone: true,
 })
 export class CdkColumnDef implements CanStick {
   _table? = inject(CDK_TABLE, {optional: true});
@@ -204,7 +200,6 @@ export class BaseCdkCell {
     'class': 'cdk-header-cell',
     'role': 'columnheader',
   },
-  standalone: true,
 })
 export class CdkHeaderCell extends BaseCdkCell {
   constructor(...args: unknown[]);
@@ -220,7 +215,6 @@ export class CdkHeaderCell extends BaseCdkCell {
   host: {
     'class': 'cdk-footer-cell',
   },
-  standalone: true,
 })
 export class CdkFooterCell extends BaseCdkCell {
   constructor(...args: unknown[]);
@@ -244,7 +238,6 @@ export class CdkFooterCell extends BaseCdkCell {
   host: {
     'class': 'cdk-cell',
   },
-  standalone: true,
 })
 export class CdkCell extends BaseCdkCell {
   constructor(...args: unknown[]);

@@ -13,7 +13,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
  * @docs-private
  */
 @Component({
-  standalone: true,
   styleUrl: 'visually-hidden.css',
   exportAs: 'cdkVisuallyHidden',
   encapsulation: ViewEncapsulation.None,

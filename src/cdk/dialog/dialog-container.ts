@@ -56,7 +56,6 @@ export function throwDialogContentAlreadyAttachedError() {
   // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [CdkPortalOutlet],
   host: {
     'class': 'cdk-dialog-container',

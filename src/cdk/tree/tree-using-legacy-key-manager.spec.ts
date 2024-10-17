@@ -80,6 +80,7 @@ class MinimalTestData {
       </cdk-tree-node>
     </cdk-tree>
   `,
+  standalone: false,
 })
 class SimpleCdkTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;

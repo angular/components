@@ -92,7 +92,6 @@ import {CDK_TABLE} from './tokens';
 @Directive({
   selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]',
   providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
-  standalone: true,
 })
 export class CdkRecycleRows {}
 
@@ -110,7 +109,6 @@ export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observab
  */
 @Directive({
   selector: '[rowOutlet]',
-  standalone: true,
 })
 export class DataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
@@ -131,7 +129,6 @@ export class DataRowOutlet implements RowOutlet {
  */
 @Directive({
   selector: '[headerRowOutlet]',
-  standalone: true,
 })
 export class HeaderRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
@@ -152,7 +149,6 @@ export class HeaderRowOutlet implements RowOutlet {
  */
 @Directive({
   selector: '[footerRowOutlet]',
-  standalone: true,
 })
 export class FooterRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
@@ -174,7 +170,6 @@ export class FooterRowOutlet implements RowOutlet {
  */
 @Directive({
   selector: '[noDataRowOutlet]',
-  standalone: true,
 })
 export class NoDataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
@@ -289,7 +284,6 @@ export interface RenderRow<T> {
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
-  standalone: true,
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
 export class CdkTable<T>

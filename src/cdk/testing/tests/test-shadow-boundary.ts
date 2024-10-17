@@ -14,7 +14,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
 })
 export class TestSubShadowBoundary {}
 
@@ -27,7 +26,6 @@ export class TestSubShadowBoundary {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
   imports: [TestSubShadowBoundary],
 })
 export class TestShadowBoundary {}

@@ -20,7 +20,6 @@ export const CDK_TREE_NODE_OUTLET_NODE = new InjectionToken<{}>('CDK_TREE_NODE_O
  */
 @Directive({
   selector: '[cdkTreeNodeOutlet]',
-  standalone: true,
 })
 export class CdkTreeNodeOutlet {
   viewContainer = inject(ViewContainerRef);

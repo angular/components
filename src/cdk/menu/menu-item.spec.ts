@@ -148,6 +148,7 @@ describe('MenuItem', () => {
 
 @Component({
   template: `<button cdkMenuItem>Click me!</button>`,
+  standalone: false,
 })
 class SingleMenuItem {}
 
@@ -158,6 +159,7 @@ class SingleMenuItem {}
       Click me!
     </button>
   `,
+  standalone: false,
 })
 class MenuItemWithIcon {
   typeahead: string;
@@ -170,6 +172,7 @@ class MenuItemWithIcon {
       Click me!
     </button>
   `,
+  standalone: false,
 })
 class MenuItemWithIconClass {
   typeahead: string;
@@ -177,6 +180,7 @@ class MenuItemWithIconClass {
 
 @Component({
   template: ` <button cdkMenuItem><strong>Click</strong> me!</button> `,
+  standalone: false,
 })
 class MenuItemWithBoldElement {}
 
@@ -193,6 +197,7 @@ class MenuItemWithBoldElement {}
       </div>
     </button>
   `,
+  standalone: false,
 })
 class MenuItemWithMultipleNestings {
   typeahead: string;

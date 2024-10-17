@@ -403,7 +403,6 @@ export class FocusTrapFactory {
 @Directive({
   selector: '[cdkTrapFocus]',
   exportAs: 'cdkTrapFocus',
-  standalone: true,
 })
 export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

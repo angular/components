@@ -89,7 +89,6 @@ export abstract class BaseRowDef implements OnChanges {
 @Directive({
   selector: '[cdkHeaderRowDef]',
   inputs: [{name: 'columns', alias: 'cdkHeaderRowDef'}],
-  standalone: true,
 })
 export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
   _table? = inject(CDK_TABLE, {optional: true});
@@ -141,7 +140,6 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
 @Directive({
   selector: '[cdkFooterRowDef]',
   inputs: [{name: 'columns', alias: 'cdkFooterRowDef'}],
-  standalone: true,
 })
 export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
   _table? = inject(CDK_TABLE, {optional: true});
@@ -197,7 +195,6 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
     {name: 'columns', alias: 'cdkRowDefColumns'},
     {name: 'when', alias: 'cdkRowDefWhen'},
   ],
-  standalone: true,
 })
 export class CdkRowDef<T> extends BaseRowDef {
   _table? = inject(CDK_TABLE, {optional: true});
@@ -280,7 +277,6 @@ export interface CdkCellOutletMultiRowContext<T> {
  */
 @Directive({
   selector: '[cdkCellOutlet]',
-  standalone: true,
 })
 export class CdkCellOutlet implements OnDestroy {
   _viewContainer = inject(ViewContainerRef);
@@ -327,7 +323,6 @@ export class CdkCellOutlet implements OnDestroy {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class CdkHeaderRow {}
@@ -344,7 +339,6 @@ export class CdkHeaderRow {}
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class CdkFooterRow {}
@@ -361,7 +355,6 @@ export class CdkFooterRow {}
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [CdkCellOutlet],
 })
 export class CdkRow {}
@@ -369,7 +362,6 @@ export class CdkRow {}
 /** Row that can be used to display a message when no data is shown in the table. */
 @Directive({
   selector: 'ng-template[cdkNoDataRow]',
-  standalone: true,
 })
 export class CdkNoDataRow {
   templateRef = inject<TemplateRef<any>>(TemplateRef);

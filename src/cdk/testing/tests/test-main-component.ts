@@ -28,7 +28,6 @@ import {TestSubComponent} from './test-sub-component';
   templateUrl: 'test-main-component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [TestShadowBoundary, TestSubComponent, FormsModule, ReactiveFormsModule],
 })
 export class TestMainComponent implements OnDestroy {

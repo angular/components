@@ -66,7 +66,6 @@ const SCROLL_SCHEDULER =
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   providers: [
     {
       provide: CdkScrollable,

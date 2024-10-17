@@ -178,7 +178,6 @@ export class ContentObserver implements OnDestroy {
 @Directive({
   selector: '[cdkObserveContent]',
   exportAs: 'cdkObserveContent',
-  standalone: true,
 })
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
   private _contentObserver = inject(ContentObserver);

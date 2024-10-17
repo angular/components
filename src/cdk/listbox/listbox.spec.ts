@@ -1012,6 +1012,7 @@ describe('CdkOption and CdkListbox', () => {
       <div cdkOption="peach">Peach</div>
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithOptions {
   changedOption: CdkOption | null;
@@ -1037,6 +1038,7 @@ class ListboxWithOptions {
 
 @Component({
   template: `<div cdkListbox></div>`,
+  standalone: false,
 })
 class ListboxWithNoOptions {}
 
@@ -1052,6 +1054,7 @@ class ListboxWithNoOptions {}
       <div cdkOption="peach">Peach</div>
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithFormControl {
   formControl = new FormControl();
@@ -1067,6 +1070,7 @@ class ListboxWithFormControl {
       }
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1081,6 +1085,7 @@ class ListboxWithPreselectedFormControl {
       }
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithInvalidPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1096,6 +1101,7 @@ class ListboxWithInvalidPreselectedFormControl {
       <li cdkOption="peach" cdkOptionTypeaheadLabel="peach">🍑</li>
     </ul>
   `,
+  standalone: false,
 })
 class ListboxWithCustomTypeahead {}
 
@@ -1109,6 +1115,7 @@ class ListboxWithCustomTypeahead {}
       <div cdkOption="peach">Peach</div>
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithBoundValue {
   value = ['banana'];
@@ -1125,6 +1132,7 @@ class ListboxWithBoundValue {
       <div cdkOption="peach">Peach</div>
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithMultipleBoundValues {
   value = ['apple', 'banana'];
@@ -1138,6 +1146,7 @@ class ListboxWithMultipleBoundValues {
       }
     </div>
   `,
+  standalone: false,
 })
 class ListboxWithObjectValues {
   fruits = [{name: 'Apple'}, {name: 'Orange'}, {name: 'Banana'}, {name: 'Peach'}];

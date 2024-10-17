@@ -2086,6 +2086,7 @@ class BooleanDataSource extends DataSource<boolean> {
       <div *cdkNoDataRow>No data</div>
     </cdk-table>
   `,
+  standalone: false,
 })
 class SimpleCdkTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -2117,6 +2118,7 @@ class SimpleCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class CdkTableWithDifferentDataInputsApp {
   dataSource: DataSource<TestData> | Observable<TestData[]> | TestData[] | any = null;
@@ -2137,6 +2139,7 @@ class CdkTableWithDifferentDataInputsApp {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class BooleanRowCdkTableApp {
   dataSource = new BooleanDataSource();
@@ -2155,6 +2158,7 @@ class BooleanRowCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class NullDataCdkTableApp {
   dataSource = observableOf(null);
@@ -2186,6 +2190,7 @@ class NullDataCdkTableApp {
       <tr cdk-footer-row *cdkFooterRowDef="['second-footer']"></tr>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MultipleHeaderFooterRowsCdkTableApp {}
 
@@ -2238,6 +2243,7 @@ class MultipleHeaderFooterRowsCdkTableApp {}
       <cdk-row *cdkRowDef="let row; columns: columnsForHasC3Row; when: hasC3"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class WhenRowCdkTableApp {
   multiTemplateDataRows = false;
@@ -2313,6 +2319,7 @@ class WhenRowCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsForHasC3Row; when: hasC3"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class CoercedMultiTemplateDataRows extends WhenRowCdkTableApp {}
 
@@ -2349,6 +2356,7 @@ class CoercedMultiTemplateDataRows extends WhenRowCdkTableApp {}
       <cdk-row *cdkRowDef="let row; columns: ['c3Column']; when: hasC3"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class WhenRowWithoutDefaultCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2393,6 +2401,7 @@ class WhenRowWithoutDefaultCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: ['c3Column']; when: hasC3"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class WhenRowMultipleDefaultsCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2414,6 +2423,7 @@ class WhenRowMultipleDefaultsCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class DynamicDataSourceCdkTableApp {
   dataSource: FakeDataSource | undefined;
@@ -2439,6 +2449,7 @@ class DynamicDataSourceCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class TrackByCdkTableApp {
   trackByStrategy: 'reference' | 'propertyA' | 'index' = 'reference';
@@ -2523,6 +2534,7 @@ class StickyPositioningListenerTest implements StickyPositioningListener {
     }
   `,
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyFlexLayoutCdkTableApp}],
+  standalone: false,
 })
 class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2579,6 +2591,7 @@ class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
     }
   `,
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyNativeLayoutCdkTableApp}],
+  standalone: false,
 })
 class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2610,6 +2623,7 @@ class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {
       <cdk-row *cdkRowDef="let row; columns: dynamicColumns;"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class DynamicColumnDefinitionsCdkTableApp {
   dynamicColumns: any[] = [];
@@ -2630,6 +2644,7 @@ class DynamicColumnDefinitionsCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class CustomRoleCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2650,6 +2665,7 @@ class CustomRoleCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class CrazyColumnNameCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2675,6 +2691,7 @@ class CrazyColumnNameCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class DuplicateColumnDefNameCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2692,6 +2709,7 @@ class DuplicateColumnDefNameCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingColumnDefCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2709,6 +2727,7 @@ class MissingColumnDefCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
   dataSource: FakeDataSource | null = null;
@@ -2732,6 +2751,7 @@ class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
       </ng-container>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingAllRowDefsCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2750,6 +2770,7 @@ class MissingAllRowDefsCdkTableApp {
       <cdk-footer-row *cdkFooterRowDef="['column_a']"></cdk-footer-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingHeaderRowDefCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2768,6 +2789,7 @@ class MissingHeaderRowDefCdkTableApp {
       <cdk-footer-row *cdkFooterRowDef="['column_a']"></cdk-footer-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingRowDefCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2786,6 +2808,7 @@ class MissingRowDefCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class MissingFooterRowDefCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2803,6 +2826,7 @@ class MissingFooterRowDefCdkTableApp {
       <cdk-row *cdkRowDef="let row; columns: undefinedColumns"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class UndefinedColumnsCdkTableApp {
   undefinedColumns: string[];
@@ -2837,6 +2861,7 @@ class UndefinedColumnsCdkTableApp {
       </cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class RowContextCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2862,6 +2887,7 @@ class RowContextCdkTableApp {
       <div *cdkNoDataRow>No data</div>
     </cdk-table>
   `,
+  standalone: false,
 })
 class WrapperCdkTableApp<T> implements AfterContentInit {
   @ContentChildren(CdkColumnDef) columnDefs: QueryList<CdkColumnDef>;
@@ -2905,6 +2931,7 @@ class WrapperCdkTableApp<T> implements AfterContentInit {
       </cdk-row>
     </wrapper-table>
   `,
+  standalone: false,
 })
 class OuterTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
@@ -2943,6 +2970,7 @@ class OuterTableApp {
       </tr>
     </table>
   `,
+  standalone: false,
 })
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -2993,6 +3021,7 @@ class NativeHtmlTableApp {
       <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
     </table>
   `,
+  standalone: false,
 })
 class NestedHtmlTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -3020,6 +3049,7 @@ class NestedHtmlTableApp {
       <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
     </table>
   `,
+  standalone: false,
 })
 class NativeTableWithNoHeaderOrFooterRows {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -3041,6 +3071,7 @@ class NativeTableWithNoHeaderOrFooterRows {
       <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
     </table>
   `,
+  standalone: false,
 })
 class NativeHtmlTableWithCaptionApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -3069,6 +3100,7 @@ class NativeHtmlTableWithCaptionApp {
       <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
     </table>
   `,
+  standalone: false,
 })
 class NativeHtmlTableWithColgroupAndCol {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
@@ -3092,6 +3124,7 @@ class NativeHtmlTableWithColgroupAndCol {
       <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
     </cdk-table>
   `,
+  standalone: false,
 })
 class TableWithIndirectDescendantDefs {
   dataSource = new FakeDataSource();
@@ -3124,6 +3157,7 @@ class TableWithIndirectDescendantDefs {
     </table>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 class NativeHtmlTableAppOnPush {
   @Input() dataSource: Observable<TestData[]> | null = null;
@@ -3134,6 +3168,7 @@ class NativeHtmlTableAppOnPush {
   template: `
     <cdk-table-change-detection-on-push [dataSource]="dataSource"></cdk-table-change-detection-on-push>
   `,
+  standalone: false,
 })
 class WrapNativeHtmlTableAppOnPush {
   dataSource: FakeDataSource = new FakeDataSource();

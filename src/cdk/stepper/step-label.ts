@@ -10,7 +10,6 @@ import {Directive, TemplateRef, inject} from '@angular/core';
 
 @Directive({
   selector: '[cdkStepLabel]',
-  standalone: true,
 })
 export class CdkStepLabel {
   template = inject<TemplateRef<any>>(TemplateRef);

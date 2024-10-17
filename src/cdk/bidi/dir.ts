@@ -21,7 +21,6 @@ import {Direction, Directionality, _resolveDirectionality} from './directionalit
   providers: [{provide: Directionality, useExisting: Dir}],
   host: {'[attr.dir]': '_rawDir'},
   exportAs: 'dir',
-  standalone: true,
 })
 export class Dir implements Directionality, AfterContentInit, OnDestroy {
   /** Normalized direction that accounts for invalid/unsupported values. */
