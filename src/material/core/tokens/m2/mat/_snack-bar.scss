@@ -16,8 +16,12 @@ $prefix: (mat, snack-bar);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    button-color: if(
-        $is-dark, rgba(0, 0, 0, 0.87), inspection.get-theme-color($theme, accent, text))
+    button-color:
+      if(
+        $is-dark,
+        inspection.get-theme-color($theme, primary, 500),
+        inspection.get-theme-color($theme, primary, 100)
+      )
   );
 }
 
