@@ -66,9 +66,8 @@ describe('ProtractorHarnessEnvironment', () => {
 
     describe('shadow DOM interaction', () => {
       it('should not pierce shadow boundary by default', async () => {
-        const harness = await ProtractorHarnessEnvironment.loader().getHarness(
-          MainComponentHarness,
-        );
+        const harness =
+          await ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness);
         expect(await harness.shadows()).toEqual([]);
       });
 

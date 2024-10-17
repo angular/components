@@ -15,7 +15,6 @@ import {CdkMenuItem} from './menu-item';
     '[attr.aria-checked]': '!!checked',
     '[attr.aria-disabled]': 'disabled || null',
   },
-  standalone: true,
 })
 export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   /** Whether the element is checked */

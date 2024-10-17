@@ -34,7 +34,6 @@ export const CDK_ACCORDION = new InjectionToken<CdkAccordion>('CdkAccordion');
   selector: 'cdk-accordion, [cdkAccordion]',
   exportAs: 'cdkAccordion',
   providers: [{provide: CDK_ACCORDION, useExisting: CdkAccordion}],
-  standalone: true,
 })
 export class CdkAccordion implements OnDestroy, OnChanges {
   /** Emits when the state of the accordion changes */

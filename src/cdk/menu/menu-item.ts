@@ -37,7 +37,6 @@ import {eventDispatchesNativeClick} from './event-detection';
 @Directive({
   selector: '[cdkMenuItem]',
   exportAs: 'cdkMenuItem',
-  standalone: true,
   host: {
     'role': 'menuitem',
     'class': 'cdk-menu-item',

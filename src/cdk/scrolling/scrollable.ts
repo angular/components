@@ -43,7 +43,6 @@ export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
  */
 @Directive({
   selector: '[cdk-scrollable], [cdkScrollable]',
-  standalone: true,
 })
 export class CdkScrollable implements OnInit, OnDestroy {
   protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

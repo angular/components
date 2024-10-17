@@ -21,7 +21,6 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
  */
 @Directive({
   selector: '[cdkTreeNodePadding]',
-  standalone: true,
 })
 export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   private _treeNode = inject<CdkTreeNode<T, K>>(CdkTreeNode);

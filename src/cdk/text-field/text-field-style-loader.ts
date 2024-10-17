@@ -14,7 +14,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrl: 'text-field-prebuilt.css',
-  standalone: true,
   host: {'cdk-text-field-style-loader': ''},
 })
 export class _CdkTextFieldStyleLoader {}

@@ -36,7 +36,6 @@ import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
     'rows': '1',
     '(input)': '_noopInputHandler()',
   },
-  standalone: true,
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

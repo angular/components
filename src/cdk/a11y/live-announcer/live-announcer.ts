@@ -210,7 +210,6 @@ export class LiveAnnouncer implements OnDestroy {
 @Directive({
   selector: '[cdkAriaLive]',
   exportAs: 'cdkAriaLive',
-  standalone: true,
 })
 export class CdkAriaLive implements OnDestroy {
   private _elementRef = inject(ElementRef);

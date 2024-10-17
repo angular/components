@@ -571,6 +571,7 @@ describe('MenuTrigger', () => {
     <div cdkMenuBar><button cdkMenuItem [cdkMenuTriggerFor]="noop">Click me!</button></div>
     <ng-template #noop><div cdkMenu></div></ng-template>
   `,
+  standalone: false,
 })
 class TriggerForEmptyMenu {
   @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
@@ -595,6 +596,7 @@ class TriggerForEmptyMenu {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class MenuBarWithNestedSubMenus {
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
@@ -621,6 +623,7 @@ class MenuBarWithNestedSubMenus {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class TriggersWithSameMenuDifferentMenuBars {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -643,6 +646,7 @@ class TriggersWithSameMenuDifferentMenuBars {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class TriggersWithSameMenuSameMenuBar {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -661,6 +665,7 @@ class TriggersWithSameMenuSameMenuBar {
       </div>
     </ng-template>
   `,
+  standalone: false,
 })
 class TriggerOpensItsMenu {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -681,6 +686,7 @@ class TriggerOpensItsMenu {
       <button #inline_item cdkMenuItem></button>
     </div>
   `,
+  standalone: false,
 })
 class StandaloneTriggerWithInlineMenu {
   @ViewChild(CdkMenuItem, {read: ElementRef}) nativeTrigger: ElementRef<HTMLElement>;
@@ -699,6 +705,7 @@ class StandaloneTriggerWithInlineMenu {
       <div cdkMenu class="test-menu">{{message}}</div>
     </ng-template>
   `,
+  standalone: false,
 })
 class TriggerWithData {
   menuData: unknown;
@@ -708,6 +715,7 @@ class TriggerWithData {
   template: `
     <button [cdkMenuTriggerFor]="null">First</button>
   `,
+  standalone: false,
 })
 class TriggerWithNullValue {
   @ViewChild(CdkMenuTrigger, {static: true})

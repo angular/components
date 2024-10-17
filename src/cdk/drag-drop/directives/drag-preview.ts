@@ -30,7 +30,6 @@ export const CDK_DRAG_PREVIEW = new InjectionToken<CdkDragPreview>('CdkDragPrevi
  */
 @Directive({
   selector: 'ng-template[cdkDragPreview]',
-  standalone: true,
   providers: [{provide: CDK_DRAG_PREVIEW, useExisting: CdkDragPreview}],
 })
 export class CdkDragPreview<T = any> implements OnDestroy {

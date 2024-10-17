@@ -113,7 +113,6 @@ type RenderingData<T> =
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
@@ -1165,7 +1164,6 @@ export class CdkTree<T, K = T>
     '(click)': '_setActiveItem()',
     '(focus)': '_focusItem()',
   },
-  standalone: true,
 })
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

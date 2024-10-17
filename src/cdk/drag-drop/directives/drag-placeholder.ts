@@ -22,7 +22,6 @@ export const CDK_DRAG_PLACEHOLDER = new InjectionToken<CdkDragPlaceholder>('CdkD
  */
 @Directive({
   selector: 'ng-template[cdkDragPlaceholder]',
-  standalone: true,
   providers: [{provide: CDK_DRAG_PLACEHOLDER, useExisting: CdkDragPlaceholder}],
 })
 export class CdkDragPlaceholder<T = any> implements OnDestroy {

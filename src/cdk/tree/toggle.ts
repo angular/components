@@ -21,7 +21,6 @@ import {CdkTree, CdkTreeNode} from './tree';
     '(keydown.Space)': '_toggle(); $event.preventDefault();',
     'tabindex': '-1',
   },
-  standalone: true,
 })
 export class CdkTreeNodeToggle<T, K = T> {
   protected _tree = inject<CdkTree<T, K>>(CdkTree);

@@ -35,7 +35,6 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
  * @docs-private
  */
 @Component({
-  standalone: true,
   styleUrl: 'resets.css',
   encapsulation: ViewEncapsulation.None,
   template: '',

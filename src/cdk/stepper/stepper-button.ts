@@ -17,7 +17,6 @@ import {CdkStepper} from './stepper';
     '[type]': 'type',
     '(click)': '_stepper.next()',
   },
-  standalone: true,
 })
 export class CdkStepperNext {
   _stepper = inject(CdkStepper);
@@ -36,7 +35,6 @@ export class CdkStepperNext {
     '[type]': 'type',
     '(click)': '_stepper.previous()',
   },
-  standalone: true,
 })
 export class CdkStepperPrevious {
   _stepper = inject(CdkStepper);

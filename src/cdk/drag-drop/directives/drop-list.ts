@@ -38,7 +38,6 @@ let _uniqueIdCounter = 0;
 @Directive({
   selector: '[cdkDropList], cdk-drop-list',
   exportAs: 'cdkDropList',
-  standalone: true,
   providers: [
     // Prevent child drop lists from picking up the same group as their parent.
     {provide: CDK_DROP_LIST_GROUP, useValue: undefined},

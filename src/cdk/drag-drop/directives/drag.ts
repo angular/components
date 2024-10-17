@@ -62,7 +62,6 @@ export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
 @Directive({
   selector: '[cdkDrag]',
   exportAs: 'cdkDrag',
-  standalone: true,
   host: {
     'class': DRAG_HOST_CLASS,
     '[class.cdk-drag-disabled]': 'disabled',

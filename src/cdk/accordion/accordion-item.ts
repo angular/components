@@ -36,7 +36,6 @@ let nextId = 0;
     // registering to the same accordion.
     {provide: CDK_ACCORDION, useValue: undefined},
   ],
-  standalone: true,
 })
 export class CdkAccordionItem implements OnInit, OnDestroy {
   accordion = inject<CdkAccordion>(CDK_ACCORDION, {optional: true, skipSelf: true})!;

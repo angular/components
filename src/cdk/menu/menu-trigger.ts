@@ -45,7 +45,6 @@ import {eventDispatchesNativeClick} from './event-detection';
 @Directive({
   selector: '[cdkMenuTriggerFor]',
   exportAs: 'cdkMenuTriggerFor',
-  standalone: true,
   host: {
     'class': 'cdk-menu-trigger',
     '[attr.aria-haspopup]': 'menuTemplateRef ? "menu" : null',

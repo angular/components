@@ -31,7 +31,6 @@ import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} fr
 @Directive({
   selector: '[cdkPortal]',
   exportAs: 'cdkPortal',
-  standalone: true,
 })
 export class CdkPortal extends TemplatePortal {
   constructor(...args: unknown[]);
@@ -57,7 +56,6 @@ export class CdkPortal extends TemplatePortal {
       useExisting: TemplatePortalDirective,
     },
   ],
-  standalone: true,
 })
 export class TemplatePortalDirective extends CdkPortal {}
 
@@ -76,7 +74,6 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 @Directive({
   selector: '[cdkPortalOutlet]',
   exportAs: 'cdkPortalOutlet',
-  standalone: true,
 })
 export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestroy {
   private _moduleRef = inject(NgModuleRef, {optional: true});
@@ -250,7 +247,6 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
       useExisting: PortalHostDirective,
     },
   ],
-  standalone: true,
 })
 export class PortalHostDirective extends CdkPortalOutlet {}
 

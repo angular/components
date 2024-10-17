@@ -39,7 +39,6 @@ export const CDK_COPY_TO_CLIPBOARD_CONFIG = new InjectionToken<CdkCopyToClipboar
   host: {
     '(click)': 'copy()',
   },
-  standalone: true,
 })
 export class CdkCopyToClipboard implements OnDestroy {
   private _clipboard = inject(Clipboard);

@@ -53,7 +53,6 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCellDef, CdkCell],
 })
 export class CdkTextColumn<T> implements OnDestroy, OnInit {

@@ -22,7 +22,6 @@ let nextId = 0;
 @Directive({
   selector: '[cdkMenuItemRadio]',
   exportAs: 'cdkMenuItemRadio',
-  standalone: true,
   host: {
     'role': 'menuitemradio',
     '[class.cdk-menu-item-radio]': 'true',
