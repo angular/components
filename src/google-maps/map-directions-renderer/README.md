@@ -27,8 +27,7 @@ import {GoogleMap, MapDirectionsRenderer, MapDirectionsService} from '@angular/g
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
-  imports: [GoogleMap, MapDirectionsRenderer],
+    imports: [GoogleMap, MapDirectionsRenderer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};

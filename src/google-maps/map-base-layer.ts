@@ -16,7 +16,6 @@ import {GoogleMap} from './google-map/google-map';
 @Directive({
   selector: 'map-base-layer',
   exportAs: 'mapBaseLayer',
-  standalone: true,
 })
 export class MapBaseLayer implements OnInit, OnDestroy {
   protected readonly _map = inject(GoogleMap);

@@ -32,7 +32,6 @@ import {GoogleMap} from '../google-map/google-map';
 @Directive({
   selector: 'map-traffic-layer',
   exportAs: 'mapTrafficLayer',
-  standalone: true,
 })
 export class MapTrafficLayer implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

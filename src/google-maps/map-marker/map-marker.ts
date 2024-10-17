@@ -44,7 +44,6 @@ export const DEFAULT_MARKER_OPTIONS = {
 @Directive({
   selector: 'map-marker',
   exportAs: 'mapMarker',
-  standalone: true,
 })
 export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   private readonly _googleMap = inject(GoogleMap);

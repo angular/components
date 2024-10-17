@@ -15,7 +15,6 @@ import {GoogleMap, MapHeatmapLayer} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
   imports: [GoogleMap, MapHeatmapLayer],
 })
 export class GoogleMapDemo {

@@ -12,7 +12,6 @@ import {GoogleMap, MapTransitLayer} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
   imports: [GoogleMap, MapTransitLayer],
 })
 export class GoogleMapDemo {

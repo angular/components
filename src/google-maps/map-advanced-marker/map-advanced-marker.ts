@@ -43,7 +43,6 @@ export const DEFAULT_MARKER_OPTIONS = {
 @Directive({
   selector: 'map-advanced-marker',
   exportAs: 'mapAdvancedMarker',
-  standalone: true,
 })
 export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
   private readonly _googleMap = inject(GoogleMap);

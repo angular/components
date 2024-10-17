@@ -21,7 +21,6 @@ import {GoogleMap} from '../google-map/google-map';
 @Directive({
   selector: 'map-bicycling-layer',
   exportAs: 'mapBicyclingLayer',
-  standalone: true,
 })
 export class MapBicyclingLayer implements OnInit, OnDestroy {
   private _map = inject(GoogleMap);

@@ -12,7 +12,6 @@ import {GoogleMap} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
   imports: [GoogleMap],
 })
 export class GoogleMapDemo {
@@ -33,7 +32,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map 
+<google-map
   height="400px"
   width="750px"
   [center]="center"

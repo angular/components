@@ -12,8 +12,7 @@ import {GoogleMap, MapCircle} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
-  imports: [GoogleMap, MapCircle],
+    imports: [GoogleMap, MapCircle],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -28,5 +27,5 @@ export class GoogleMapDemo {
 <!-- google-maps-demo.component.html -->
 <google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
   <map-circle [center]="circleCenter" [radius]="radius" />
-</google-map> 
+</google-map>
 ```

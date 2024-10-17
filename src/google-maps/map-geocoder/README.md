@@ -30,7 +30,6 @@ import {MapGeocoder} from '@angular/google-maps';
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  standalone: true,
 })
 export class GoogleMapDemo {
   constructor(geocoder: MapGeocoder) {

@@ -34,7 +34,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-directions-renderer',
   exportAs: 'mapDirectionsRenderer',
-  standalone: true,
 })
 export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   private readonly _googleMap = inject(GoogleMap);

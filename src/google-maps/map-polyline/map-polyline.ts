@@ -33,7 +33,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-polyline',
   exportAs: 'mapPolyline',
-  standalone: true,
 })
 export class MapPolyline implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);

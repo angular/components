@@ -39,7 +39,6 @@ export type HeatmapData =
 @Directive({
   selector: 'map-heatmap-layer',
   exportAs: 'mapHeatmapLayer',
-  standalone: true,
 })
 export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   private readonly _googleMap = inject(GoogleMap);

@@ -32,7 +32,6 @@ import {MapEventManager} from '../map-event-manager';
 @Directive({
   selector: 'map-circle',
   exportAs: 'mapCircle',
-  standalone: true,
 })
 export class MapCircle implements OnInit, OnDestroy {
   private readonly _map = inject(GoogleMap);
