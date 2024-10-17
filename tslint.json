@@ -106,7 +106,7 @@
             "argument": 0,
             "properties": {
               "changeDetection": "\\.OnPush$",
-              "standalone": "^true$"
+              "!standalone": ".*"
             }
           }
         ],
@@ -122,7 +122,7 @@
           {
             "argument": 0,
             "properties": {
-              "standalone": "^true$"
+              "!standalone": ".*"
             }
           }
         ],
