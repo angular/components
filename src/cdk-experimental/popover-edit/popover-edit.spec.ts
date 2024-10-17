@@ -220,6 +220,7 @@ abstract class BaseTestComponent {
     }
   </table>
   `,
+  standalone: false,
 })
 class VanillaTableOutOfCell extends BaseTestComponent {
   elements: ChemicalElement[];
@@ -256,6 +257,7 @@ class VanillaTableOutOfCell extends BaseTestComponent {
     }
   </table>
   `,
+  standalone: false,
 })
 class VanillaTableInCell extends BaseTestComponent {
   elements: ChemicalElement[];
@@ -318,6 +320,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
     </cdk-table>
   </div>
   `,
+  standalone: false,
 })
 class CdkFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -369,6 +372,7 @@ class CdkFlexTableInCell extends BaseTestComponent {
     </table>
   <div>
   `,
+  standalone: false,
 })
 class CdkTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];

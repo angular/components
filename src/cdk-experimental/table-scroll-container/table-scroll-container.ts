@@ -36,7 +36,6 @@ let nextId = 0;
     'class': 'cdk-table-scroll-container',
   },
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: CdkTableScrollContainer}],
-  standalone: true,
 })
 export class CdkTableScrollContainer implements StickyPositioningListener, OnDestroy, OnInit {
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

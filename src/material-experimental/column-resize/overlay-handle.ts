@@ -41,7 +41,6 @@ import {AbstractMatColumnResize} from './column-resize-directives/common';
   encapsulation: ViewEncapsulation.None,
   host: {'class': 'mat-column-resize-overlay-thumb'},
   template: '<div #top class="mat-column-resize-overlay-thumb-top"></div>',
-  standalone: true,
 })
 export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
   protected readonly columnDef = inject(CdkColumnDef);

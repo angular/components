@@ -36,7 +36,6 @@ export type PopoverEditClickOutBehavior = 'close' | 'submit' | 'noop';
     '(document:click)': 'handlePossibleClickOut($event)',
     '(keydown)': '_handleKeydown($event)',
   },
-  standalone: true,
 })
 export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
   protected readonly elementRef = inject(ElementRef);
@@ -145,7 +144,6 @@ export class CdkEditControl<FormValue> implements OnDestroy, OnInit {
     'type': 'button',
     '(click)': 'revertEdit()',
   },
-  standalone: true,
 })
 export class CdkEditRevert<FormValue> {
   protected readonly editRef = inject<EditRef<FormValue>>(EditRef);
@@ -166,7 +164,6 @@ export class CdkEditRevert<FormValue> {
     '(keydown.enter)': 'closeEdit()',
     '(keydown.space)': 'closeEdit()',
   },
-  standalone: true,
 })
 export class CdkEditClose<FormValue> {
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

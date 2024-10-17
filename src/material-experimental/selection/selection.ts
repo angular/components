@@ -20,7 +20,6 @@ import {Directive, Input, Output, EventEmitter} from '@angular/core';
   selector: '[matSelection]',
   exportAs: 'matSelection',
   providers: [{provide: CdkSelection, useExisting: MatSelection}],
-  standalone: true,
 })
 // tslint:disable-next-line: coercion-types
 export class MatSelection<T> extends CdkSelection<T> {

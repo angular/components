@@ -21,7 +21,6 @@ import {TABLE_PROVIDERS} from './constants';
 @Directive({
   selector: 'table[cdk-table][columnResize]',
   providers: [...TABLE_PROVIDERS, {provide: ColumnResize, useExisting: CdkColumnResize}],
-  standalone: true,
 })
 export class CdkColumnResize extends ColumnResize {
   readonly columnResizeNotifier = inject(ColumnResizeNotifier);

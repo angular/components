@@ -24,7 +24,6 @@ import {Directive, Input} from '@angular/core';
   exportAs: 'matSelectionToggle',
   inputs: [{name: 'index', alias: 'matSelectionToggleIndex'}],
   providers: [{provide: CdkSelectionToggle, useExisting: MatSelectionToggle}],
-  standalone: true,
 })
 export class MatSelectionToggle<T> extends CdkSelectionToggle<T> {
   /** The value that is associated with the toggle */

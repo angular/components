@@ -230,6 +230,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
       margin: 16px;
     }
   `,
+  standalone: false,
 })
 class MatFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -281,6 +282,7 @@ class MatFlexTableInCell extends BaseTestComponent {
       margin: 16px;
     }
   `,
+  standalone: false,
 })
 class MatTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];

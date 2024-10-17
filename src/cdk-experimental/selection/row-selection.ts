@@ -24,7 +24,6 @@ import {CdkSelection} from './selection';
     '[class.cdk-selected]': '_selection.isSelected(this.value, this.index)',
     '[attr.aria-selected]': '_selection.isSelected(this.value, this.index)',
   },
-  standalone: true,
 })
 export class CdkRowSelection<T> {
   readonly _selection = inject<CdkSelection<T>>(CdkSelection);

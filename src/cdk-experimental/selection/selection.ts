@@ -32,7 +32,6 @@ import {SelectableWithIndex, SelectionChange, SelectionSet} from './selection-se
 @Directive({
   selector: '[cdkSelection]',
   exportAs: 'cdkSelection',
-  standalone: true,
 })
 export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionViewer, OnDestroy {
   viewChange: Observable<ListRange>;
