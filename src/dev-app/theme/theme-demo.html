@@ -24,18 +24,18 @@
   colors and follow their uses to add theme colors to your application's custom components.
 </p>
 <p>
-  Note that variables starting with "mat-app-on-*" are designed to be used for text or icons
-  placed on top of its paired parent color. For example, <span class="demo-surface-variable">--mat-app-on-primary</span>
-  is used for text and icons in elements filled with the <span class="demo-surface-variable">--mat-app-primary</span> color.
+  Note that variables starting with "--mat-sys-on-*" are designed to be used for text or icons
+  placed on top of its paired parent color. For example, <span class="demo-surface-variable">--mat-sys-on-primary</span>
+  is used for text and icons in elements filled with the <span class="demo-surface-variable">--mat-sys-primary</span> color.
 </p>
 
 <div class="demo-group">
   <div class="demo-color-container">
     <div class="demo-heading"
-         [style.background-color]="'var(--mat-app-primary)'"
-         [style.color]="'var(--mat-app-on-primary)'">
+         [style.background-color]="'var(--mat-sys-primary)'"
+         [style.color]="'var(--mat-sys-on-primary)'">
       <div class="demo-name"> Primary</div>
-      <div class="demo-variable demo-code"> --mat-app-primary</div>
+      <div class="demo-variable demo-code"> --mat-sys-primary</div>
     </div>
     <div class="demo-description">
       <p>
@@ -48,7 +48,7 @@
         outline color of form fields.
       </p>
       <p>
-        Use the color <span class="demo-surface-variable">--mat-app-on-primary</span> for
+        Use the color <span class="demo-surface-variable">--mat-sys-on-primary</span> for
         icons, text, and other visual elements placed on a primary background. This
         color is calculated to be optimal for accessibility and legibility.
       </p>
@@ -57,10 +57,10 @@
 
   <div class="demo-color-container">
     <div class="demo-heading"
-         [style.background-color]="'var(--mat-app-surface)'"
-         [style.color]="'var(--mat-app-on-surface)'">
+         [style.background-color]="'var(--mat-sys-surface)'"
+         [style.color]="'var(--mat-sys-on-surface)'">
       <div class="demo-name"> Surface</div>
-      <div class="demo-variable code"> --mat-app-surface</div>
+      <div class="demo-variable code"> --mat-sys-surface</div>
     </div>
     <div class="demo-description">
       <p>
@@ -72,7 +72,7 @@
         components such as the dialog, card, table, and more.
       </p>
       <p>
-        Use the color <span class="demo-surface-variable">--mat-app-on-surface</span> for
+        Use the color <span class="demo-surface-variable">--mat-sys-on-surface</span> for
         icons, text, and other visual elements placed on a surface background. This
         color is calculated to be optimal for accessibility and legibility.
       </p>
@@ -81,10 +81,10 @@
 
   <div class="demo-color-container">
     <div class="demo-heading"
-         [style.background-color]="'var(--mat-app-error)'"
-         [style.color]="'var(--mat-app-on-error)'">
+         [style.background-color]="'var(--mat-sys-error)'"
+         [style.color]="'var(--mat-sys-on-error)'">
       <div class="demo-name"> Error</div>
-      <div class="demo-variable demo-code"> --mat-app-error</div>
+      <div class="demo-variable demo-code"> --mat-sys-error</div>
     </div>
     <div class="demo-description">
       <p>
@@ -95,7 +95,7 @@
         form fields inputs.
       </p>
       <p>
-        Use the color <span class="demo-surface-variable">--mat-app-on-error</span> for
+        Use the color <span class="demo-surface-variable">--mat-sys-on-error</span> for
         icons, text, and other visual elements placed on an error background. This
         color is calculated to be optimal for accessibility and legibility.
       </p>
@@ -104,10 +104,10 @@
 
   <div class="demo-color-container">
     <div class="demo-heading"
-         [style.background-color]="'var(--mat-app-outline)'"
-         [style.color]="'var(--mat-app-surface)'">
+         [style.background-color]="'var(--mat-sys-outline)'"
+         [style.color]="'var(--mat-sys-surface)'">
       <div class="demo-name"> Outline</div>
-      <div class="demo-variable demo-code"> --mat-app-outline </div>
+      <div class="demo-variable demo-code"> --mat-sys-outline </div>
     </div>
     <div class="demo-description">
       <p>
@@ -119,7 +119,7 @@
         form field.
       </p>
       <p>
-        Use the color <span class="demo-surface-variable">--mat-app-outline-variant</span> for a less
+        Use the color <span class="demo-surface-variable">--mat-sys-outline-variant</span> for a less
         prominent outline.
       </p>
     </div>
@@ -135,7 +135,7 @@
     to components.
   </p>
   <p>
-    Colors may be paired with a <span class="demo-surface-variable">--mat-app-on-</span> variable
+    Colors may be paired with a <span class="demo-surface-variable">--mat-sys-on-</span> variable
     that should be used for text and icons placed within a filled container.
   </p>
 
@@ -152,7 +152,7 @@
 
   <p>
     Containers filled with a surface color should apply the
-    <span class="demo-surface-variable">--mat-app-on-surface</span> color to text
+    <span class="demo-surface-variable">--mat-sys-on-surface</span> color to text
     and icons placed within.
   </p>
 
@@ -188,9 +188,9 @@
     @for (size of ['small', 'medium', 'large']; track $index) {
       <div class="demo-typography-example">
         <div class="demo-typography-variable">
-          <div class="demo-surface-variable">--mat-app-{{category}}-{{size}}</div>
+          <div class="demo-surface-variable">--mat-sys-{{category}}-{{size}}</div>
         </div>
-        <div class="demo-typography-text" [style.font]="'var(--mat-app-' + category + '-' + size + ')'">Lorem ipsum dolor</div>
+        <div class="demo-typography-text" [style.font]="'var(--mat-sys-' + category + '-' + size + ')'">Lorem ipsum dolor</div>
       </div>
     }
   </div>
@@ -204,12 +204,12 @@
   For example, the values for medium body text may be defined as follows:
 </p>
 <pre class="demo-code-block">
---mat-app-body-medium: 400 0.875rem / 1.25rem Roboto, sans-serif;
---mat-app-body-medium-font: Roboto, sans-serif;
---mat-app-body-medium-line-height: 1.25rem;
---mat-app-body-medium-size: 0.875rem;
---mat-app-body-medium-tracking: 0.016rem;
---mat-app-body-medium-weight: 400;
+--mat-sys-body-medium: 400 0.875rem / 1.25rem Roboto, sans-serif;
+--mat-sys-body-medium-font: Roboto, sans-serif;
+--mat-sys-body-medium-line-height: 1.25rem;
+--mat-sys-body-medium-size: 0.875rem;
+--mat-sys-body-medium-tracking: 0.016rem;
+--mat-sys-body-medium-weight: 400;
 </pre>
 
 <h1>Elevation</h1>
@@ -225,8 +225,8 @@
 </p>
 
 @for (level of [0, 1, 2, 3, 4, 5]; track $index) {
-<div class="demo-elevation code" [style.box-shadow]="'var(--mat-app-level' + level + ')'">
-box-shadow: var(--mat-app-level{{level}})
+<div class="demo-elevation code" [style.box-shadow]="'var(--mat-sys-level' + level + ')'">
+box-shadow: var(--mat-sys-level{{level}})
 </div>
 }
 

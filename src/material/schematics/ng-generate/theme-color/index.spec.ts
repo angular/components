@@ -234,20 +234,20 @@ describe('material-theme-color-schematic', () => {
     const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
 
     // Check a system variable from each color palette for their high contrast light theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #45212d`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #4d1f00`);
-    expect(generatedCSS).toContain(`--mat-app-error: #600004`);
-    expect(generatedCSS).toContain(`--mat-app-surface: #fff8f8`);
-    expect(generatedCSS).toContain(`--mat-app-outline: #37282c`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #45212d`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #4d1f00`);
+    expect(generatedCSS).toContain(`--mat-sys-error: #600004`);
+    expect(generatedCSS).toContain(`--mat-sys-surface: #fff8f8`);
+    expect(generatedCSS).toContain(`--mat-sys-outline: #37282c`);
 
     // Check a system variable from each color palette for their high contrast dark theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #ffece4`);
-    expect(generatedCSS).toContain(`--mat-app-error: #ffece9`);
-    expect(generatedCSS).toContain(`--mat-app-surface: #191113`);
-    expect(generatedCSS).toContain(`--mat-app-outline: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffece4`);
+    expect(generatedCSS).toContain(`--mat-sys-error: #ffece9`);
+    expect(generatedCSS).toContain(`--mat-sys-surface: #191113`);
+    expect(generatedCSS).toContain(`--mat-sys-outline: #ffebef`);
   });
 
   it('should be able to generate high contrast themes overrides when provided a primary and secondary color', async () => {
@@ -260,12 +260,12 @@ describe('material-theme-color-schematic', () => {
     const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
 
     // Check a system variable from each color palette for their high contrast light theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #580b2f`);
 
     // Check a system variable from each color palette for their high contrast dark theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
   });
 
   it('should be able to generate high contrast themes overrides when provided primary, secondary, and tertiary color', async () => {
@@ -279,14 +279,14 @@ describe('material-theme-color-schematic', () => {
     const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
 
     // Check a system variable from each color palette for their high contrast light theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #580b2f`);
 
     // Check a system variable from each color palette for their high contrast dark theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffebef`);
   });
 
   it('should be able to generate high contrast themes overrides when provided primary, secondary, tertiary, and neutral color', async () => {
@@ -301,16 +301,16 @@ describe('material-theme-color-schematic', () => {
     const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
 
     // Check a system variable from each color palette for their high contrast light theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #580b2f`);
-    expect(generatedCSS).toContain(`--mat-app-surface-bright: #f9f9f9`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #580b2f`);
+    expect(generatedCSS).toContain(`--mat-sys-surface-bright: #f9f9f9`);
 
     // Check a system variable from each color palette for their high contrast dark theme value
-    expect(generatedCSS).toContain(`--mat-app-primary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-secondary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-tertiary: #ffebef`);
-    expect(generatedCSS).toContain(`--mat-app-surface-bright: #4f5051`);
+    expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffebef`);
+    expect(generatedCSS).toContain(`--mat-sys-surface-bright: #4f5051`);
   });
 });
 
