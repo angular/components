@@ -60,7 +60,6 @@ import {MatSelectAll} from './select-all';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: 'selection-column.css',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     MatColumnDef,
     MatHeaderCellDef,

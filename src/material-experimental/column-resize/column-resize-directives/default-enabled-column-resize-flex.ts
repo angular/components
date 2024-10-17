@@ -27,7 +27,6 @@ import {AbstractMatColumnResize, FLEX_HOST_BINDINGS, FLEX_PROVIDERS} from './com
     ...FLEX_PROVIDERS,
     {provide: ColumnResize, useExisting: MatDefaultEnabledColumnResizeFlex},
   ],
-  standalone: true,
 })
 export class MatDefaultEnabledColumnResizeFlex extends AbstractMatColumnResize {
   readonly columnResizeNotifier = inject(ColumnResizeNotifier);

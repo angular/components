@@ -56,7 +56,6 @@ import {CdkSelectAll} from './select-all';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     CdkColumnDef,
     CdkHeaderCellDef,

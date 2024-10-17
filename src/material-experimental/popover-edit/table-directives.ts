@@ -45,7 +45,6 @@ const MAT_ROW_HOVER_CELL_CLASS = MAT_ROW_HOVER_CLASS + '-host-cell';
   selector: '[matPopoverEdit]:not([matPopoverEditTabOut])',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
-  standalone: true,
 })
 export class MatPopoverEdit<C> extends CdkPopoverEdit<C> {
   protected override panelClass(): string {
@@ -62,7 +61,6 @@ export class MatPopoverEdit<C> extends CdkPopoverEdit<C> {
   selector: '[matPopoverEdit][matPopoverEditTabOut]',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
-  standalone: true,
 })
 export class MatPopoverEditTabOut<C> extends CdkPopoverEditTabOut<C> {
   protected override panelClass(): string {
@@ -76,7 +74,6 @@ export class MatPopoverEditTabOut<C> extends CdkPopoverEditTabOut<C> {
  */
 @Directive({
   selector: '[matRowHoverContent]',
-  standalone: true,
 })
 export class MatRowHoverContent extends CdkRowHoverContent {
   protected override initElement(element: HTMLElement) {
@@ -114,6 +111,5 @@ export class MatRowHoverContent extends CdkRowHoverContent {
  */
 @Directive({
   selector: '[matEditOpen]',
-  standalone: true,
 })
 export class MatEditOpen extends CdkEditOpen {}

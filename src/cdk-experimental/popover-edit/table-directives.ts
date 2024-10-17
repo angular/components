@@ -66,7 +66,6 @@ const MOUSE_MOVE_THROTTLE_TIME_MS = 10;
 @Directive({
   selector: 'table[editable], cdk-table[editable], mat-table[editable]',
   providers: [EditEventDispatcher, EditServices],
-  standalone: true,
 })
 export class CdkEditable implements AfterViewInit, OnDestroy {
   protected readonly elementRef = inject(ElementRef);
@@ -190,7 +189,6 @@ const POPOVER_EDIT_INPUTS = [
   selector: '[cdkPopoverEdit]:not([cdkPopoverEditTabOut])',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
-  standalone: true,
 })
 export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   protected readonly services = inject(EditServices);
@@ -415,7 +413,6 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   selector: '[cdkPopoverEdit][cdkPopoverEditTabOut]',
   host: POPOVER_EDIT_HOST_BINDINGS,
   inputs: POPOVER_EDIT_INPUTS,
-  standalone: true,
 })
 export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
   protected readonly focusEscapeNotifierFactory = inject(FocusEscapeNotifierFactory);
@@ -446,7 +443,6 @@ export class CdkPopoverEditTabOut<C> extends CdkPopoverEdit<C> {
  */
 @Directive({
   selector: '[cdkRowHoverContent]',
-  standalone: true,
 })
 export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
   protected readonly services = inject(EditServices);
@@ -541,7 +537,6 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
   host: {
     '(click)': 'openEdit($event)',
   },
-  standalone: true,
 })
 export class CdkEditOpen {
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
