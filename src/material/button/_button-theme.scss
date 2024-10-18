@@ -361,9 +361,8 @@
   }
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
   $mdc-filled-button-tokens: tokens-mdc-filled-button.get-token-slots();
   $mat-filled-button-tokens: tokens-mat-filled-button.get-token-slots();
   $mdc-outlined-button-tokens: tokens-mdc-outlined-button.get-token-slots();
@@ -373,8 +372,7 @@
   $mdc-text-button-tokens: tokens-mdc-text-button.get-token-slots();
   $mat-text-button-tokens: tokens-mat-text-button.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
-    $tokens,
+  @return (
     (
       namespace: tokens-mdc-filled-button.$prefix,
       tokens: $mdc-filled-button-tokens,
@@ -414,8 +412,14 @@
       namespace: tokens-mat-text-button.$prefix,
       tokens: $mat-text-button-tokens,
       prefix: 'text-',
-    )
+    ),
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button.

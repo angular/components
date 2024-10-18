@@ -113,11 +113,9 @@
   }
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
-    $tokens,
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
     (
       namespace: tokens-mdc-radio.$prefix,
       tokens: tokens-mdc-radio.get-token-slots(),
@@ -125,8 +123,14 @@
     (
       namespace: tokens-mat-radio.$prefix,
       tokens: tokens-mat-radio.get-token-slots(),
-    )
+    ),
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-radio.

@@ -126,15 +126,13 @@
   }
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
   $filled-text-field-tokens: tokens-mdc-filled-text-field.get-token-slots();
   $outlined-text-field-tokens: tokens-mdc-outlined-text-field.get-token-slots();
   $form-field-tokens: tokens-mat-form-field.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
-    $tokens,
+  @return (
     (
       namespace: tokens-mdc-filled-text-field.$prefix,
       tokens: $filled-text-field-tokens,
@@ -150,6 +148,12 @@
       tokens: $form-field-tokens,
     )
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-form-field.
