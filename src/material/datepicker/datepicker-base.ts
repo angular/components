@@ -74,6 +74,7 @@ import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn} from './datepicker-input-base';
 import {MatDatepickerIntl} from './datepicker-intl';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -201,6 +202,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     const intl = inject(MatDatepickerIntl);
 
     this._closeButtonText = intl.closeCalendarLabel;

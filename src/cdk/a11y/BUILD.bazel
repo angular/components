@@ -24,6 +24,7 @@ ng_module(
         "//src/cdk/layout",
         "//src/cdk/observers",
         "//src/cdk/platform",
+        "//src/cdk/private",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],

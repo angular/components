@@ -40,6 +40,7 @@ import {MatYearView} from './year-view';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 import {MatIconButton, MatButton} from '@angular/material/button';
 import {CdkMonitorFocus} from '@angular/cdk/a11y';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 let calendarHeaderId = 1;
 
@@ -67,6 +68,7 @@ export class MatCalendarHeader<D> {
   constructor(...args: unknown[]);
 
   constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     const changeDetectorRef = inject(ChangeDetectorRef);
     this.calendar.stateChanges.subscribe(() => changeDetectorRef.markForCheck());
   }

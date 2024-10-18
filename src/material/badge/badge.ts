@@ -24,7 +24,7 @@ import {
   ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 let nextId = 0;
 
@@ -156,6 +156,7 @@ export class MatBadge implements OnInit, OnDestroy {
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_MatBadgeStyleLoader);
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = this._elementRef.nativeElement;
