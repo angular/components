@@ -87,13 +87,12 @@
   }
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
   $legacy-tokens: tokens-mat-legacy-button-toggle.get-token-slots();
   $standard-tokens: tokens-mat-standard-button-toggle.get-token-slots();
-  @include token-utils.batch-create-token-values(
-    $tokens,
+
+  @return (
     (
       namespace: tokens-mat-legacy-button-toggle.$prefix,
       tokens: $legacy-tokens,
@@ -102,8 +101,14 @@
     (
       namespace: tokens-mat-standard-button-toggle.$prefix,
       tokens: $standard-tokens,
-    )
+    ),
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button-toggle.

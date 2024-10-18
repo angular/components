@@ -93,9 +93,9 @@
   }
 }
 
-@mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
-    $tokens,
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
     (
       namespace: tokens-mat-card.$prefix,
       tokens: tokens-mat-card.get-token-slots(),
@@ -109,8 +109,12 @@
       namespace: tokens-mdc-outlined-card.$prefix,
       tokens: tokens-mdc-outlined-card.get-token-slots(),
       prefix: 'outlined-',
-    )
+    ),
   );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 @mixin theme($theme) {

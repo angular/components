@@ -55,11 +55,9 @@
 @mixin density($theme) {
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
-    $tokens,
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
     (
       namespace: tokens-mdc-snack-bar.$prefix,
       tokens: tokens-mdc-snack-bar.get-token-slots(),
@@ -67,8 +65,14 @@
     (
       namespace: tokens-mat-snack-bar.$prefix,
       tokens: tokens-mat-snack-bar.get-token-slots(),
-    )
+    ),
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 @mixin theme($theme) {

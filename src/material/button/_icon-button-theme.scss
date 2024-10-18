@@ -121,9 +121,9 @@
   }
 }
 
-@mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values(
-    $tokens,
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
     (
       namespace: tokens-mdc-icon-button.$prefix,
       tokens: tokens-mdc-icon-button.get-token-slots(),
@@ -131,8 +131,12 @@
     (
       namespace: tokens-mat-icon-button.$prefix,
       tokens: tokens-mat-icon-button.get-token-slots(),
-    )
+    ),
   );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-icon-button.

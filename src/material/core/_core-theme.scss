@@ -71,12 +71,7 @@
   }
 }
 
-// This theme is a special case where not all of the imported tokens are supported in `overrides`.
-// To aid the docs token extraction, we have to pull the `overrides` token config out into a
-// separate function.
-// !!!Important!!! renaming or removal of this function requires the `extract-tokens.ts` script to
-// be updated as well.
-@function _get-supported-overrides-tokens() {
+@function _define-overrides() {
   $app-tokens: tokens-mat-app.get-token-slots();
   $ripple-tokens: tokens-mat-ripple.get-token-slots();
   $option-tokens: tokens-mat-option.get-token-slots();
@@ -101,7 +96,7 @@
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _get-supported-overrides-tokens()...);
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 // Mixin that renders all of the core styles that depend on the theme.

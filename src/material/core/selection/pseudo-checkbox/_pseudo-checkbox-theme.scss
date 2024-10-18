@@ -49,14 +49,12 @@
 @mixin base($theme) {
 }
 
-/// Outputs the CSS variable values for the given tokens.
-/// @param {Map} $tokens The token values to emit.
-@mixin overrides($tokens: ()) {
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
   $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
   $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
 
-  @include token-utils.batch-create-token-values(
-    $tokens,
+  @return (
     (
       namespace: tokens-mat-full-pseudo-checkbox.$prefix,
       tokens: $full-pseudo-checkbox-tokens,
@@ -66,8 +64,14 @@
       namespace: tokens-mat-minimal-pseudo-checkbox.$prefix,
       tokens: $minimal-pseudo-checkbox-tokens,
       prefix: 'minimal-',
-    )
+    ),
   );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
 }
 
 /// Outputs color theme styles for the mat-pseudo-checkbox.
