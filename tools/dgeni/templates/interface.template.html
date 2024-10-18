@@ -10,9 +10,7 @@
 {%- endif -%}
 
 {%- if interface.isDeprecated -%}
-<div class="docs-api-interface-deprecated-marker" {$ macros.deprecationTitle(interface) $}>
-  Deprecated
-</div>
+<div class="docs-api-interface-deprecated-marker" {$ macros.deprecationTitle(interface, "Deprecated") $}></div>
 {%- endif -%}
 
 {$ propertyList(interface.properties) $}
