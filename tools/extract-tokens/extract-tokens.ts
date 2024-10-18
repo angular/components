@@ -1,27 +1,35 @@
 import {readFileSync, writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
-import {relative, basename, join, dirname} from 'path';
+import {relative, join, dirname} from 'path';
 import {compileString} from 'sass';
 
-/** Extracted data for a single token. */
+/** Information extracted for a single token from the theme. */
+interface ExtractedToken {
+  /** Name of the token. */
+  name: string;
+  /** Full prefix of the token. */
+  prefix: string;
+  /** Type of the token (color, typography etc.) */
+  type: string;
+  /** Value of the token. */
+  value: string | number;
+  /** Name under which the token can be referred to inside the `overrides` mixin. */
+  overridesName: string;
+}
+
+/** Information that will be generated about a token in the final output. */
 interface Token {
   /** Name of the token. */
   name: string;
+  /** Full prefix of the token. */
+  prefix: string;
   /** Type of the token (color, typography etc.) */
   type: string;
-  /** Places from which the token with the specific name can originate. */
-  sources: {
-    /** Prefix of the source. */
-    prefix: string;
-    /** System-level token from which the source dervies its value. */
-    derivedFrom?: string;
-  }[];
+  /** Name under which the token can be referred to inside the `overrides` mixin. */
+  overridesName: string;
+  /** Name of the system-level token that this token was derived from. */
+  derivedFrom?: string;
 }
-
-/** Extracted map of tokens from the source Sass files. */
-type ExtractedTokenMap = {
-  [prefix: string]: Record<string, unknown>;
-};
 
 // Script that extracts the tokens from a specific Bazel target.
 if (require.main === module) {
@@ -66,24 +74,12 @@ if (require.main === module) {
  */
 function extractTokens(themePath: string): Token[] {
   const content = readFileSync(themePath, 'utf8');
-  const useStatements = content.match(/@use\s+.+;/g);
-
-  if (useStatements === null) {
-    return [];
-  }
-
   const startMarker = '/*! extract tokens start */';
   const endMarker = '/*! extract tokens end */';
   const root = process.cwd();
   const absoluteThemePath = join(root, themePath);
   const srcPath = join(root, 'src');
-  const {prepend, append} = getTokenExtractionCode(
-    srcPath,
-    themePath,
-    startMarker,
-    endMarker,
-    useStatements,
-  );
+  const {prepend, append} = getTokenExtractionCode(srcPath, themePath, startMarker, endMarker);
   const toCompile = [prepend, content, append].join('\n\n');
   const data: string[] = [];
 
@@ -124,68 +120,21 @@ function extractTokens(themePath: string): Token[] {
     throw new Error(`Cannot extract more than one component's tokens per file.`);
   }
 
-  const rawTokens = JSON.parse(data[0]) as {
-    color: ExtractedTokenMap;
-    typography: ExtractedTokenMap;
-    density: ExtractedTokenMap;
-    base: ExtractedTokenMap;
-  };
+  const parsedTokens = JSON.parse(data[0]) as ExtractedToken[];
 
-  return [
-    ...createTokens('color', rawTokens.color),
-    ...createTokens('typography', rawTokens.typography),
-    ...createTokens('density', rawTokens.density),
-    ...createTokens('base', rawTokens.base),
-  ];
-}
+  return parsedTokens.map(token => {
+    const value = token.value;
+    const derivedFrom = typeof value === 'string' ? textBetween(value, 'var(', ')') : null;
 
-/**
- * Creates the token objects from a token map.
- * @param type Type of tokens being extracted (color, typography etc.).
- * @param groups Extracted data from the Sass file.
- */
-function createTokens(type: string, groups: ExtractedTokenMap): Token[] {
-  const data: Map<string, Map<string, string | null>> = new Map();
-
-  // First step is to go through the whole data and group the tokens by their name. We need to
-  // group the tokens, because the same name can be used by different prefixes (e.g. both
-  // `mdc-filled-text-field` and `mdc-outlined-text-field` have a `label-text-color` token).
-  Object.keys(groups).forEach(prefix => {
-    const tokens = groups[prefix];
-
-    // The token data for some components may be null.
-    if (tokens) {
-      Object.keys(tokens).forEach(name => {
-        let tokenData = data.get(name);
-
-        if (!tokenData) {
-          tokenData = new Map();
-          data.set(name, tokenData);
-        }
-
-        const value = tokens[name];
-        const derivedFrom = typeof value === 'string' ? textBetween(value, 'var(', ')') : null;
-        tokenData.set(prefix, derivedFrom ? derivedFrom.replace('--sys-', '') : null);
-      });
-    }
+    return {
+      name: token.name,
+      prefix: token.prefix,
+      type: token.type,
+      overridesName: token.overridesName,
+      // Set to `undefined` so the key gets dropped from the JSON if there's no value.
+      derivedFrom: derivedFrom || undefined,
+    };
   });
-
-  // After the tokens have been grouped, we can create the `Token` object for each one.
-  const result: Token[] = [];
-
-  data.forEach((tokenData, name) => {
-    const token: Token = {name, type, sources: []};
-
-    tokenData.forEach((derivedFrom, prefix) => {
-      // Set `derivedFrom` to `undefined` if it hasn't been set so it doesn't show up in the JSON.
-      token.sources.push({prefix, derivedFrom: derivedFrom || undefined});
-    });
-
-    result.push(token);
-  });
-
-  // Sort the tokens by name so they're easier to scan.
-  return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
@@ -201,14 +150,16 @@ function getTokenExtractionCode(
   absoluteThemePath: string,
   startMarker: string,
   endMarker: string,
-  useStatements: string[],
 ) {
   const meta = '__privateSassMeta';
   const map = '__privateSassMap';
   const list = '__privateSassList';
   const math = '__privateSassMath';
+  const str = '__privateSassString';
+  const stringJoin = '__privateStringJoin';
   const m3Tokens = '___privateM3Tokens';
   const palettes = '___privatePalettes';
+  const defineOverrides = '_define-overrides';
   const corePath = relative(dirname(absoluteThemePath), join(srcPath, 'material/core')) || '.';
 
   const prepend = `
@@ -216,6 +167,7 @@ function getTokenExtractionCode(
     @use 'sass:map' as ${map};
     @use 'sass:list' as ${list};
     @use 'sass:math' as ${math};
+    @use 'sass:string' as ${str};
     @use '${join(corePath, 'tokens/m3-tokens')}' as ${m3Tokens};
     @use '${join(corePath, 'theming/palettes')}' as ${palettes};
     @use '${join(corePath, 'style/sass-utils')}' as __privateSassUtils;
@@ -226,35 +178,9 @@ function getTokenExtractionCode(
     __privateSassUtils.$use-system-typography-variables: true;
   `;
 
-  // Goes through all the available namespaces looking for a `$prefix` variable. This allows us to
-  // determine the prefixes that are used within the theme. Once we know the prefixes we can use
-  // them to extract only the tokens we care about from the full token set. Note: `core-theme`
-  // is a special case where not all of the imported tokens are supported in the `overrides`
-  // mixin. Such cases will expose a `_get-supported-overrides-tokens` private function that
-  // can be used to determine the exact set of prefixes that are used.
-  // After the tokens are extracted, we log them out using `@debug` and then intercept the log
-  // in order to get the raw data. We have to go through `@debug`, because there's no way to
-  // output a Sass map to CSS.
-  // The tokens are encoded as JSON so we don't have to implement parsing of Sass maps in TS.
   const append = `
-    $__prefixes: ();
-
-    @if ${meta}.function-exists('_get-supported-overrides-tokens') {
-      $__configs: _get-supported-overrides-tokens();
-
-      @each $config in $__configs {
-        $__prefixes: ${list}.append($__prefixes, ${map}.get($config, prefix));
-      }
-    } @else {
-      $__namespaces: (${useStatements.map(stmt => `"${extractNamespace(stmt)}"`).join(', ')});
-
-      @each $name in $__namespaces {
-        $prefix: ${map}.get(${meta}.module-variables($name), prefix);
-
-        @if ($prefix) {
-          $__prefixes: ${list}.append($__prefixes, $prefix);
-        }
-      }
+    @if not ${meta}.function-exists('${defineOverrides}') {
+      @error 'File must define a ${defineOverrides} function for docs extraction purposes';
     }
 
     $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
@@ -262,27 +188,70 @@ function getTokenExtractionCode(
     $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'sys');
     $__all-density: ${m3Tokens}.generate-density-tokens(0);
     $__all-base: ${m3Tokens}.generate-base-tokens();
-    $__color: ();
-    $__typography: ();
-    $__density: ();
-    $__base: ();
+    $__results: ();
+    $__override-tokens: ${defineOverrides}();
+    $__override-type: ${meta}.type-of($__override-tokens);
 
-    @each $prefix in $__prefixes {
-      $__color: ${map}.set($__color, $prefix, ${map}.get($__all-color, $prefix));
-      $__typography: ${map}.set($__typography, $prefix, ${map}.get($__all-typography, $prefix));
-      $__density: ${map}.set($__density, $prefix, ${map}.get($__all-density, $prefix));
-      $__base: ${map}.set($__base, $prefix, ${map}.get($__all-base, $prefix));
+    @if $__override-type != 'list' {
+      @error 'Expected override to be a list but got ' + $__override-type;
+    }
+
+    @function ${stringJoin}($value, $separator) {
+      $result: '';
+      @each $part in $value {
+        $result: if($result == '', $part, '#{$result}#{$separator}#{$part}');
+      }
+      @return $result;
+    }
+
+    @each $map in $__override-tokens {
+      $namespace: ${map}.get($map, namespace);
+      $tokens: ${map}.get($map, tokens);
+      $prefix: ${map}.get($map, prefix) or '';
+      $color: ${map}.get($__all-color, $namespace) or ();
+      $base: ${map}.get($__all-base, $namespace) or ();
+      $typography: ${map}.get($__all-typography, $namespace) or ();
+      $density: ${map}.get($__all-density, $namespace) or ();
+
+      @each $name, $_ in $tokens {
+        $color-value: ${map}.get($color, $name);
+        $base-value: ${map}.get($base, $name);
+        $typography-value: ${map}.get($typography, $name);
+        $density-value: ${map}.get($density, $name);
+
+        $type: '';
+        $value: null;
+
+        @if ($base-value) {
+          $type: base;
+          $value: $base-value;
+        } @else if ($typography-value) {
+          $type: typography;
+          $value: $typography-value;
+        } @else if ($density-value) {
+          $type: density;
+          $value: $density-value;
+        } @else {
+          $type: color;
+          $value: $color-value;
+        }
+
+        @if ($value) {
+          $__results: ${list}.append($__results, (
+            name: ${str}.unquote($name),
+            value: $value,
+            type: $type,
+            prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
+            overridesName: ${str}.unquote($prefix + $name),
+          )) !global;
+        }
+      }
     }
 
     // Define our JSON.stringify implementation so it can be used below.
-    ${jsonStringifyImplementation('__json-stringify', {meta, list, math})}
+    ${jsonStringifyImplementation('__json-stringify', {meta, math, stringJoin})}
 
-    @debug '${startMarker}' + __json-stringify((
-      color: $__color,
-      typography: $__typography,
-      density: $__density,
-      base: $__base
-    )) + '${endMarker}';
+    @debug '${startMarker}' + __json-stringify($__results) + '${endMarker}';
   `;
 
   return {prepend, append};
@@ -295,9 +264,9 @@ function getTokenExtractionCode(
  */
 function jsonStringifyImplementation(
   name: string,
-  locals: {meta: string; list: string; math: string},
+  locals: {meta: string; math: string; stringJoin: string},
 ) {
-  const {meta, list, math} = locals;
+  const {meta, math, stringJoin} = locals;
 
   return `
     @function ${name}($value) {
@@ -306,16 +275,18 @@ function jsonStringifyImplementation(
       @if ($type == 'map') {
         $current: '';
 
-        @each $key, $value in $value {
-          $pair: if($current == '', '', ', ') + '#{__serialize-key($key)}:#{${name}($value)}';
+        @each $key, $inner in $value {
+          $pair: if($current == '', '', ', ') + '"#{${stringJoin}($key, '-')}":#{${name}($inner)}';
           $current: $current + $pair;
         }
 
         @return '{#{$current}}';
-      } @else if ($type == 'list' and ${list}.length($value) == 0) {
-        // A result of '()' can be either a list or a map.
-        // In a token context we treat it as an empty map.
-        @return '{}';
+      } @else if ($type == 'list') {
+        $current: '';
+        @each $inner in $value {
+          $current: $current + (if($current == '', '', ', ') + ${name}($inner));
+        }
+        @return '[#{$current}]';
       } @else if (($type == 'number' and ${math}.is-unitless($value)) or $type == 'bool' or $type == 'null') {
         // Primitive values should be preserved verbatim so they have the correct type when we
         // parse the JSON. Note: Sass considers both 10 and 10px as numbers. We only want to
@@ -326,55 +297,7 @@ function jsonStringifyImplementation(
         @return '"' + ${meta}.inspect($value) + '"';
       }
     }
-
-    // Keys are joined with using '-' as a separator.
-    @function __serialize-key($value) {
-      $result: '';
-      @each $part in $value {
-        $result: if($result == '', $part, '#{$result}-#{$part}');
-      }
-      @return '"' + $result + '"';
-    }
   `;
-}
-
-/** Gets the namespace from an `@use` statement. */
-function extractNamespace(statement: string): string | null {
-  const openQuoteIndex = Math.max(statement.indexOf(`"`), statement.indexOf(`'`));
-  const closeQuoteIndex = Math.max(
-    statement.indexOf(`"`, openQuoteIndex + 1),
-    statement.indexOf(`'`, openQuoteIndex + 1),
-  );
-  const semicolonIndex = statement.lastIndexOf(';');
-
-  if (openQuoteIndex === -1 || closeQuoteIndex === -1 || semicolonIndex === -1) {
-    throw new Error(`Could not parse namespace from ${statement}.`);
-  }
-
-  const asExpression = 'as ';
-  const asIndex = statement.indexOf(asExpression, closeQuoteIndex);
-  const withIndex = statement.indexOf(' with', asIndex);
-
-  // If we found an ` as ` expression, we consider the rest of the text as the namespace.
-  if (asIndex > -1) {
-    return withIndex == -1
-      ? statement.slice(asIndex + asExpression.length, semicolonIndex).trim()
-      : statement.slice(asIndex + asExpression.length, withIndex).trim();
-  }
-
-  const importPath = statement
-    .slice(openQuoteIndex + 1, closeQuoteIndex)
-    // Sass allows for leading underscores to be omitted and it technically supports .scss.
-    .replace(/^_|\.scss$/g, '');
-
-  // Built-in Sass imports look like `sass:map`.
-  if (importPath.startsWith('sass:')) {
-    return importPath.split('sass:')[1];
-  }
-
-  // Sass ignores `/index` and infers the namespace as the next segment in the path.
-  const fileName = basename(importPath);
-  return fileName === 'index' ? basename(join(fileName, '..')) : fileName;
 }
 
 /**
