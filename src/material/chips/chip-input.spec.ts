@@ -1,7 +1,11 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {
+  createKeyboardEvent,
+  dispatchKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -248,6 +252,20 @@ describe('MatChipInput', () => {
 
       expect(inputNativeElement.getAttribute('aria-describedby')).toBeNull();
     }));
+
+    it('should not emit chipEnd if the key is repeated', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [COMMA];
+      fixture.detectChanges();
+
+      const event = createKeyboardEvent('keydown', COMMA);
+      Object.defineProperty(event, 'repeat', {get: () => true});
+      dispatchEvent(inputNativeElement, event);
+      fixture.detectChanges();
+
+      expect(testChipInput.add).not.toHaveBeenCalled();
+    });
   });
 });
 
