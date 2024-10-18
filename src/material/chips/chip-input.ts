@@ -182,7 +182,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
-    if (!event || this._isSeparatorKey(event)) {
+    if (!event || (this._isSeparatorKey(event) && !event.repeat)) {
       this.chipEnd.emit({
         input: this.inputElement,
         value: this.inputElement.value,
