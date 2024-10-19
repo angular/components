@@ -295,9 +295,11 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
+    const currentSortDirection = this._sort.getCurrentSortDirection(this.id);
+
     return (
-      this._sort.active == this.id &&
-      (this._sort.direction === 'asc' || this._sort.direction === 'desc')
+      this._sort.isActive(this.id) &&
+      (currentSortDirection === 'asc' || currentSortDirection === 'desc')
     );
   }
 
@@ -323,7 +325,9 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection = this._isSorted() ? this._sort.direction : this.start || this._sort.start;
+    this._arrowDirection = this._isSorted()
+      ? this._sort.getCurrentSortDirection(this.id)
+      : this.start || this._sort.start;
   }
 
   _isDisabled() {
@@ -341,7 +345,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
       return 'none';
     }
 
-    return this._sort.direction == 'asc' ? 'ascending' : 'descending';
+    return this._sort.getCurrentSortDirection(this.id) == 'asc' ? 'ascending' : 'descending';
   }
 
   /** Whether the arrow inside the sort header should be rendered. */

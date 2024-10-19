@@ -1,25 +1,106 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {AfterViewInit, Component, ViewChild, inject} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+export interface EmployeeData {
+  firstName: string;
+  lastName: string;
+  position: string;
+  office: string;
+  salary: number;
 }
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+
+const EMPLOYEE_DATA: EmployeeData[] = [
+  {
+    firstName: 'Garrett',
+    lastName: 'Winters',
+    position: 'Accountant',
+    office: 'Tokyo',
+    salary: 170750,
+  },
+  {firstName: 'Airi', lastName: 'Satou', position: 'Accountant', office: 'Tokyo', salary: 162700},
+  {
+    firstName: 'Donna',
+    lastName: 'Snider',
+    position: 'Customer Support',
+    office: 'New York',
+    salary: 112000,
+  },
+  {
+    firstName: 'Serge',
+    lastName: 'Baldwin',
+    position: 'Data Coordinator',
+    office: 'Singapore',
+    salary: 138575,
+  },
+  {firstName: 'Thor', lastName: 'Walton', position: 'Developer', office: 'New York', salary: 98540},
+  {
+    firstName: 'Gavin',
+    lastName: 'Joyce',
+    position: 'Developer',
+    office: 'Edinburgh',
+    salary: 92575,
+  },
+  {firstName: 'Suki', lastName: 'Burks', position: 'Developer', office: 'London', salary: 114500},
+  {
+    firstName: 'Jonas',
+    lastName: 'Alexander',
+    position: 'Developer',
+    office: 'San Francisco',
+    salary: 86500,
+  },
+  {
+    firstName: 'Jackson',
+    lastName: 'Bradshaw',
+    position: 'Director',
+    office: 'New York',
+    salary: 645750,
+  },
+  {
+    firstName: 'Brielle',
+    lastName: 'Williamson',
+    position: 'Integration Specialist',
+    office: 'New York',
+    salary: 372000,
+  },
+  {
+    firstName: 'Michelle',
+    lastName: 'House',
+    position: 'Integration Specialist',
+    office: 'Sydney',
+    salary: 95400,
+  },
+  {
+    firstName: 'Michael',
+    lastName: 'Bruce',
+    position: 'Javascript Developer',
+    office: 'Singapore',
+    salary: 183000,
+  },
+  {
+    firstName: 'Ashton',
+    lastName: 'Cox',
+    position: 'Junior Technical Author',
+    office: 'San Francisco',
+    salary: 86000,
+  },
+  {
+    firstName: 'Michael',
+    lastName: 'Silva',
+    position: 'Marketing Designer',
+    office: 'London',
+    salary: 198500,
+  },
+  {
+    firstName: 'Timothy',
+    lastName: 'Mooney',
+    position: 'Office Manager',
+    office: 'London',
+    salary: 136200,
+  },
 ];
 /**
  * @title Table with sorting
@@ -28,13 +109,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'table-sorting-example',
   styleUrl: 'table-sorting-example.css',
   templateUrl: 'table-sorting-example.html',
-  imports: [MatTableModule, MatSortModule],
+  imports: [MatTableModule, MatSortModule, FormsModule, MatButtonToggleModule],
 })
 export class TableSortingExample implements AfterViewInit {
   private _liveAnnouncer = inject(LiveAnnouncer);
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  multiSortEnabled = false;
+  displayedColumns: string[] = ['firstName', 'lastName', 'position', 'office', 'salary'];
+  dataSource = new MatTableDataSource(EMPLOYEE_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
 
