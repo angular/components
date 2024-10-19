@@ -171,6 +171,7 @@ const MIN_VIEWPORT_TOOLTIP_THRESHOLD = 8;
 const UNBOUNDED_ANCHOR_GAP = 8;
 const MIN_HEIGHT = 24;
 const MAX_WIDTH = 200;
+let uniqueId = 0;
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -184,6 +185,8 @@ const MAX_WIDTH = 200;
   host: {
     'class': 'mat-mdc-tooltip-trigger',
     '[class.mat-mdc-tooltip-disabled]': 'disabled',
+    // Used by harnesses to match the trigger to its tooltip.
+    '[attr.data-mat-tooltip]': '_panelId',
   },
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
@@ -217,6 +220,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _currentPosition: TooltipPosition;
   private readonly _cssClassPrefix: string = 'mat-mdc';
   private _ariaDescriptionPending: boolean;
+  protected readonly _panelId = `mat-tooltip-panel-${uniqueId++}`;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -466,6 +470,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     const instance = (this._tooltipInstance = overlayRef.attach(this._portal).instance);
     instance._triggerElement = this._elementRef.nativeElement;
     instance._mouseLeaveHideDelay = this._hideDelay;
+    instance._id = this._panelId;
     instance
       .afterHidden()
       .pipe(takeUntil(this._destroyed))
@@ -945,6 +950,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   host: {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
+    '[id]': '_id',
   },
   imports: [NgClass],
 })
@@ -972,6 +978,9 @@ export class TooltipComponent implements OnDestroy {
 
   /** Amount of milliseconds to delay the closing sequence. */
   _mouseLeaveHideDelay: number;
+
+  /** Unique ID for the panel. Assigned by the trigger. */
+  _id: string | undefined;
 
   /** Whether animations are currently disabled. */
   private _animationsDisabled: boolean;
