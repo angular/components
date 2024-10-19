@@ -6,9 +6,7 @@
 </h4>
 
 {%- if constant.isDeprecated -%}
-<div class="docs-api-constant-deprecated-marker" {$ macros.deprecationTitle(constant) $}>
-  Deprecated
-</div>
+<div class="docs-api-constant-deprecated-marker" {$ macros.deprecationTitle(constant, "Deprecated") $}></div>
 {%- endif -%}
 
 {%- if constant.description -%}

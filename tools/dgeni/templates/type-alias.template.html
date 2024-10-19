@@ -6,9 +6,7 @@
 </h4>
 
 {%- if alias.isDeprecated -%}
-<div class="docs-api-type-alias-deprecated-marker" {$ macros.deprecationTitle(alias) $}>
-  Deprecated
-</div>
+<div class="docs-api-type-alias-deprecated-marker" {$ macros.deprecationTitle(alias, "Deprecated") $}></div>
 {%- endif -%}
 
 {%- if alias.description -%}

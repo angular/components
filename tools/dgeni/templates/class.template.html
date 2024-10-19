@@ -1,8 +1,13 @@
 {% import "macros.html" as macros %}
 
 <h4 id="{$ class.name $}" class="docs-header-link docs-api-h4 docs-api-class-name">
+  {%- if class.isDeprecated -%}
+  <span header-link="{$ class.name $}"></span>
+  <code class="docs-api-class-deprecated-marker" {$ macros.deprecationTitle(class, class.name) $}></code>
+  {% else %}
   <span header-link="{$ class.name $}"></span>
   <code>{$ class.name $}</code>
+  {%- endif -%}
   {% if class.extendedDoc %}
   <span class="docs-api-class-extends-clauses">
     <span class="docs-api-class-extends-label">extends</span>
@@ -29,12 +34,6 @@
 {%- if class.directiveExportAs -%}
 <span class="docs-api-class-export-label">Exported as:</span>
 <span class="docs-api-class-export-name">{$ class.directiveExportAs $}</span>
-{%- endif -%}
-
-{%- if class.isDeprecated -%}
-<div class="docs-api-class-deprecated-marker" {$ macros.deprecationTitle(class) $}>
-  Deprecated
-</div>
 {%- endif -%}
 
 {$ propertyList(class.properties) $}
