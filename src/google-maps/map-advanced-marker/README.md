@@ -1,8 +1,8 @@
 # MapAdvancedMarker
 
-The `MapAdvancedMarker` component wraps the [`google.maps.marker.AdvancedMarkerElement` class](https://developers.google.com/maps/documentation/javascript/reference/advanced-markers) from the Google Maps JavaScript API. The `MapAdvancedMarker` component displays a marker on the map when it is a content child of a `GoogleMap` component. Like `GoogleMap`, this component offers an `options` input as well as convenience inputs for `title`, `position`, `content`, `gmpDraggable` and `zIndex`, and supports all `google.maps.marker.AdvancedMarkerElement` events as outputs.
+The `MapAdvancedMarker` component wraps the [`google.maps.marker.AdvancedMarkerElement` class](https://developers.google.com/maps/documentation/javascript/reference/advanced-markers) from the Google Maps JavaScript API. The `MapAdvancedMarker` component displays a marker on the map when it is a content child of a `GoogleMap` component. Like `GoogleMap`, this component offers an `options` input and supports all `google.maps.marker.AdvancedMarkerElement` events as outputs.
 
-**Note:** Use of `map-advanced-marker` requires a `google-map` whth a valid `mapId`.
+**Note:** Use of `map-advanced-marker` requires a `google-map` with a valid `mapId`.
 
 ## Example
 
