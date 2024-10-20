@@ -380,6 +380,11 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
             this._indexToSelect = this._selectedIndex = i;
             this._lastFocusedTabIndex = null;
             selectedTab = tabs[i];
+            // Since we don't fire a changed event, we need to emit the `selectedIndexChange`
+            // here to maintain a correct selected index
+            Promise.resolve().then(() => {
+              this.selectedIndexChange.emit(i);
+            });
             break;
           }
         }
