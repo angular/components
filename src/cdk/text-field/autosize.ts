@@ -201,9 +201,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     textareaClone.style.visibility = 'hidden';
     textareaClone.style.border = 'none';
     textareaClone.style.padding = '0';
-    textareaClone.style.height = '';
-    textareaClone.style.minHeight = '';
-    textareaClone.style.maxHeight = '';
+    textareaClone.style.height = 'initial';
+    textareaClone.style.minHeight = 'initial';
+    textareaClone.style.maxHeight = 'initial';
 
     // In Firefox it happens that textarea elements are always bigger than the specified amount
     // of rows. This is because Firefox tries to add extra space for the horizontal scrollbar.
