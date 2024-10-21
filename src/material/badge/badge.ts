@@ -163,20 +163,6 @@ export class MatBadge implements OnInit, OnDestroy {
       if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
         throw Error('matBadge must be attached to an element node.');
       }
-
-      // Heads-up for developers to avoid putting matBadge on <mat-icon>
-      // as it is aria-hidden by default docs mention this at:
-      // https://material.angular.io/components/badge/overview#accessibility
-      if (
-        nativeElement.tagName.toLowerCase() === 'mat-icon' &&
-        nativeElement.getAttribute('aria-hidden') === 'true'
-      ) {
-        console.warn(
-          `Detected a matBadge on an "aria-hidden" "<mat-icon>". ` +
-            `Consider setting aria-hidden="false" in order to surface the information assistive technology.` +
-            `\n${nativeElement.outerHTML}`,
-        );
-      }
     }
   }
 
@@ -309,6 +295,9 @@ export class MatBadge implements OnInit, OnDestroy {
   }
 
   private _updateInlineDescription() {
+    // We do not need to need empty description element for non interactive elements.
+    if (!this.description) return;
+
     // Create the inline description element if it doesn't exist
     if (!this._inlineBadgeDescription) {
       this._inlineBadgeDescription = this._document.createElement('span');
@@ -316,7 +305,13 @@ export class MatBadge implements OnInit, OnDestroy {
     }
 
     this._inlineBadgeDescription.textContent = this.description;
-    this._badgeElement?.appendChild(this._inlineBadgeDescription);
+    // We want to add the inline description element right after the not interactive element that
+    // badge is on therefore we can't use appendChild here as they will keep getting stacked in
+    // last.
+    this._elementRef.nativeElement.parentNode?.insertBefore(
+      this._inlineBadgeDescription,
+      this._elementRef.nativeElement.nextSibling,
+    );
   }
 
   private _removeInlineDescription() {
