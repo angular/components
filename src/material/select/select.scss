@@ -41,6 +41,13 @@ $scale: 0.75 !default;
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
     @include token-utils.create-token-slot(color, disabled-trigger-text-color);
   }
+
+  .mat-mdc-select-placeholder {
+    @include token-utils.use-tokens(
+      tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+      @include token-utils.create-token-slot(color, disabled-trigger-text-color);
+    }
+  }
 }
 
 .mat-mdc-select-trigger {
