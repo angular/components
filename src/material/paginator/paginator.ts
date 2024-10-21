@@ -105,6 +105,7 @@ let nextUniqueId = 0;
   host: {
     'class': 'mat-mdc-paginator',
     'role': 'group',
+    '(keydown)': '_focusPreviousOrNextIfDisabled($event)',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -116,6 +117,12 @@ export class MatPaginator implements OnInit, OnDestroy {
 
   /** ID for the DOM node containing the paginator's items per page label. */
   readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
+
+  /** MDC class names of paginator buttons. */
+  readonly _pageNext = 'mat-mdc-paginator-navigation-next';
+  readonly _pagePrevious = 'mat-mdc-paginator-navigation-previous';
+  readonly _pageFirst = 'mat-mdc-paginator-navigation-first';
+  readonly _pageLast = 'mat-mdc-paginator-navigation-last';
 
   private _intlChanges: Subscription;
   private _isInitialized = false;
@@ -303,6 +310,43 @@ export class MatPaginator implements OnInit, OnDestroy {
     }
 
     return Math.ceil(this.length / this.pageSize);
+  }
+
+  /**
+   * Handle keyboard Enter event for the Paginator. Keeps focus on appropriate paginator button
+   * whenever next, previous, first, or last button becomes disabled.
+   * @param event The keyboard event to be handled.
+   */
+  _focusPreviousOrNextIfDisabled(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      const currentElement = event.target as HTMLButtonElement;
+
+      /**
+       * setTimeout is used to give DOM time to update currentElement (paginator buttons)
+       * to see if it's disabled or not.
+       */
+      setTimeout(() => {
+        event.preventDefault();
+        if (currentElement.disabled && currentElement.classList.contains(this._pageNext)) {
+          const previousElement = currentElement.previousElementSibling as HTMLButtonElement;
+          previousElement?.focus();
+        } else if (
+          currentElement.disabled &&
+          currentElement.classList.contains(this._pagePrevious)
+        ) {
+          const nextElement = currentElement.nextElementSibling as HTMLButtonElement;
+          nextElement?.focus();
+        } else if (currentElement.disabled && currentElement.classList.contains(this._pageFirst)) {
+          const nextElement = currentElement.nextElementSibling
+            ?.nextElementSibling as HTMLButtonElement;
+          nextElement?.focus();
+        } else if (currentElement.disabled && currentElement.classList.contains(this._pageLast)) {
+          const previousElement = currentElement.previousElementSibling
+            ?.previousElementSibling as HTMLButtonElement;
+          previousElement?.focus();
+        }
+      }, 100);
+    }
   }
 
   /**
