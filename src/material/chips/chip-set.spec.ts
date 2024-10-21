@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {Component, DebugElement, QueryList} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -7,7 +6,7 @@ import {MatChip, MatChipSet, MatChipsModule} from './index';
 describe('MatChipSet', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule, CommonModule, BasicChipSet, IndirectDescendantsChipSet],
+      imports: [MatChipsModule, BasicChipSet, IndirectDescendantsChipSet],
     });
   }));
 
@@ -117,7 +116,7 @@ describe('MatChipSet', () => {
       </mat-chip-set>
   `,
   standalone: true,
-  imports: [MatChipsModule, CommonModule],
+  imports: [MatChipsModule],
 })
 class BasicChipSet {
   name: string = 'Test';
@@ -135,6 +134,6 @@ class BasicChipSet {
     </mat-chip-set>
   `,
   standalone: true,
-  imports: [MatChipsModule, CommonModule],
+  imports: [MatChipsModule],
 })
 class IndirectDescendantsChipSet extends BasicChipSet {}

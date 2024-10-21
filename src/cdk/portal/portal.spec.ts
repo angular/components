@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {
   AfterViewInit,
   ApplicationRef,
@@ -24,7 +23,6 @@ describe('Portals', () => {
     TestBed.configureTestingModule({
       imports: [
         PortalModule,
-        CommonModule,
         PortalTestApp,
         UnboundPortalTestApp,
         ArbitraryViewContainerRefComponent,
@@ -728,7 +726,7 @@ class ChocolateInjector {
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
   standalone: true,
-  imports: [PortalModule, CommonModule],
+  imports: [PortalModule],
 })
 class PizzaMsg {
   snack = inject(Chocolate, {optional: true});

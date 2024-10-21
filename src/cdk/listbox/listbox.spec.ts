@@ -9,7 +9,6 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {CommonModule} from '@angular/common';
 import {Component, Type, signal} from '@angular/core';
 import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -532,7 +531,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should allow custom function to compare option values', () => {
       const {fixture, listbox, options} = setupComponent<ListboxWithObjectValues, {name: string}>(
         ListboxWithObjectValues,
-        [CommonModule],
       );
       listbox.value = [{name: 'Banana'}];
       fixture.detectChanges();
