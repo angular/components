@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {Component, ElementRef, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -14,7 +13,6 @@ describe('MatDatepickerActions', () => {
     TestBed.configureTestingModule({
       declarations: [component],
       imports: [
-        CommonModule,
         FormsModule,
         MatDatepickerModule,
         MatFormFieldModule,

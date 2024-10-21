@@ -1,6 +1,5 @@
 import {DataSource} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {CommonModule} from '@angular/common';
 import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
@@ -302,7 +301,7 @@ describe('Material Popover Edit', () => {
 
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-          imports: [MatTableModule, MatPopoverEditModule, CommonModule, FormsModule],
+          imports: [MatTableModule, MatPopoverEditModule, FormsModule],
           declarations: [componentClass],
         });
         fixture = TestBed.createComponent(componentClass);
