@@ -451,11 +451,21 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     }
 
     if (this.startValue === value && this.endValue === value) {
-      return `${this._startDateLabelId} ${this._endDateLabelId}`;
+      return `${this._startDateLabelId}-${this._endDateLabelId}`;
     } else if (this.startValue === value) {
       return this._startDateLabelId;
     } else if (this.endValue === value) {
       return this._endDateLabelId;
+    }
+
+    if (this.comparisonStart !== null && this.comparisonEnd !== null) {
+      if (value === this.comparisonStart && value === this.comparisonEnd) {
+        return `${this._comparisonStartLabelId}-${this._comparisonEndLabelId}`;
+      } else if (value === this.comparisonStart) {
+        return this._comparisonStartLabelId;
+      } else if (value === this.comparisonEnd) {
+        return this._comparisonEndLabelId;
+      }
     }
     return null;
   }
@@ -603,6 +613,10 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   _startDateLabelId = `${this._id}-start-date`;
 
   _endDateLabelId = `${this._id}-end-date`;
+
+  _comparisonStartLabelId = `${this._id}-comparison-start-date`;
+
+  _comparisonEndLabelId = `${this._id}-comparison-end-date`;
 }
 
 /** Checks whether a node is a table cell element. */
