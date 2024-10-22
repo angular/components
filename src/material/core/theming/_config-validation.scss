@@ -29,7 +29,7 @@
 /// Validates that the given object is an M3 palette.
 /// @param {*} $palette The object to test
 /// @return {Boolean|null} null if it is a valid M3 palette, else true.
-@function _validate-palette($palette) {
+@function validate-palette($palette) {
   @if not meta.type-of($palette) == 'map' {
     @return true;
   }
@@ -108,7 +108,7 @@
   }
   @each $palette in (primary, secondary, tertiary) {
     @if $config and map.has-key($config, $palette) {
-      $err: _validate-palette(map.get($config, $palette));
+      $err: validate-palette(map.get($config, $palette));
       @if $err {
         @return (
           #{'Expected $config.#{$palette} to be a valid M3 palette. Got:'}
