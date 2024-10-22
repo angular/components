@@ -8,8 +8,6 @@ $theme: mat.m2-define-light-theme((
   density: 0
 ));
 
-@include mat.core();
-
 @include mat.all-component-themes($theme);
 
 html,

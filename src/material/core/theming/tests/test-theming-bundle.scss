@@ -29,7 +29,6 @@ $rem-typography: mat.m2-define-rem-typography-config();
 @include mat.all-component-densities($theme);
 
 // Core mixins.
-@include mat.core();
 @include mat.strong-focus-indicators();
 @include mat.strong-focus-indicators-theme($theme);
 
