@@ -14,11 +14,6 @@ export function createCustomTheme(name: string = 'app') {
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
 // Define the theme object.
 $${name}-theme: mat.define-theme((
   color: (

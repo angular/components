@@ -30,11 +30,6 @@ $light-theme: create-theme($type: light);
 // Create our dark theme.
 $dark-theme: create-theme($type: dark);
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// **Be sure that you only ever include this mixin once!**
-@include mat.core();
-
 // Include the default theme styles.
 html {
   body:not(.demo-experimental-theme) {

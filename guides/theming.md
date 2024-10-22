@@ -28,19 +28,6 @@ familiarity with CSS and Sass basics, including variables, functions, and mixins
 A **theme file** is a Sass file that calls Angular Material Sass mixins to output color,
 typography, and density CSS styles.
 
-#### The `core` mixin
-
-Angular Material defines a mixin named `core` that includes prerequisite styles for common
-features used by multiple components, such as ripples. The `core` mixin must be included exactly
-once for your application, even if you define multiple themes. Including the `core` mixin multiple
-times will result in duplicate CSS in your application.
-
-```scss
-@use '@angular/material' as mat;
-
-@include mat.core();
-```
-
 #### Defining a theme
 
 Angular Material represents a theme as a Sass map that contains your color, typography, and density
@@ -218,8 +205,6 @@ theme Sass mixins.
 ```scss
 @use '@angular/material' as mat;
 
-@include mat.core();
-
 $my-theme: mat.define-theme((
  color: (
     theme-type: light,
@@ -249,8 +234,6 @@ uses every single component, this will produce unnecessary CSS.
 
 ```scss
 @use '@angular/material' as mat;
-
-@include mat.core();
 
 $my-theme: mat.define-theme((
  color: (
@@ -334,8 +317,6 @@ CSS rule declaration. See the [documentation for Sass mixins][sass-mixins] for f
 
 ```scss
 @use '@angular/material' as mat;
-
-@include mat.core();
 
 // Define a dark theme
 $dark-theme: mat.define-theme((
@@ -500,7 +481,6 @@ the custom theme API.
 ```scss
 @use '@angular/material' as mat;
 
-@include mat.core();
 @include mat.strong-focus-indicators();
 
 $my-theme: mat.define-theme((
@@ -531,7 +511,6 @@ of the custom theme API.
 ```scss
 @use '@angular/material' as mat;
 
-@include mat.core();
 @include mat.strong-focus-indicators((
   border-style: dotted,
   border-width: 4px,

@@ -229,8 +229,6 @@ the other theme mixins in your application.
 @use '@angular/material' as mat;
 @use './path/to/carousel-theme' as carousel;
 
-@include mat.core();
-
 $my-theme: mat.define-theme((
   color: (
     theme-type: light,
