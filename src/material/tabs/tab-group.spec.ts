@@ -1,6 +1,6 @@
 import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -27,7 +27,6 @@ describe('MatTabGroup', () => {
     TestBed.configureTestingModule({
       imports: [
         MatTabsModule,
-        CommonModule,
         NoopAnimationsModule,
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,
@@ -1303,7 +1302,7 @@ describe('MatTabGroup labels aligned with a config', () => {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class SimpleTabsTestApp {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1341,7 +1340,7 @@ class SimpleTabsTestApp {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class SimpleDynamicTabsTestApp {
   tabs = [
@@ -1370,7 +1369,7 @@ class SimpleDynamicTabsTestApp {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class BindedTabsTestApp {
   tabs = [
@@ -1406,7 +1405,7 @@ class BindedTabsTestApp {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class DisabledTabsTestApp {
   @ViewChildren(MatTab) tabs: QueryList<MatTab>;
@@ -1425,7 +1424,7 @@ class DisabledTabsTestApp {
    </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule, AsyncPipe],
 })
 class AsyncTabsTestApp implements OnInit {
   private _tabs = [
@@ -1453,7 +1452,7 @@ class AsyncTabsTestApp implements OnInit {
   </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabGroupWithSimpleApi {
   preserveContent = false;
@@ -1476,7 +1475,7 @@ class TabGroupWithSimpleApi {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class NestedTabs {
   @ViewChildren(MatTabGroup) groups: QueryList<MatTabGroup>;
@@ -1496,7 +1495,7 @@ class NestedTabs {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TemplateTabs {}
 
@@ -1507,7 +1506,7 @@ class TemplateTabs {}
   </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabGroupWithAriaInputs {
   ariaLabel: string;
@@ -1526,7 +1525,7 @@ class TabGroupWithAriaInputs {
     }
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabGroupWithIsActiveBinding {}
 
@@ -1552,7 +1551,7 @@ class TabsWithCustomAnimationDuration {}
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabGroupWithIndirectDescendantTabs {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1589,7 +1588,7 @@ class TabGroupWithInkBarFitToContent {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabGroupWithSpaceAbove {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
@@ -1613,7 +1612,7 @@ class TabGroupWithSpaceAbove {
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class NestedTabGroupWithLabel {}
 
@@ -1630,7 +1629,7 @@ class NestedTabGroupWithLabel {}
     </mat-tab-group>
   `,
   standalone: true,
-  imports: [MatTabsModule, CommonModule],
+  imports: [MatTabsModule],
 })
 class TabsWithClassesTestApp {
   labelClassList?: string | string[];

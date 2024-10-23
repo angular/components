@@ -1,5 +1,4 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
@@ -19,7 +18,6 @@ describe('MatButtonToggle with forms', () => {
         MatButtonToggleModule,
         FormsModule,
         ReactiveFormsModule,
-        CommonModule,
         ButtonToggleGroupWithNgModel,
         ButtonToggleGroupWithFormControl,
         ButtonToggleGroupWithIndirectDescendantToggles,
@@ -1112,7 +1110,7 @@ class ButtonTogglesInsideButtonToggleGroup {
   </mat-button-toggle-group>
   `,
   standalone: true,
-  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
 class ButtonToggleGroupWithNgModel {
   groupName = 'group-name';
@@ -1191,7 +1189,7 @@ class ButtonToggleGroupWithInitialValue {
   </mat-button-toggle-group>
   `,
   standalone: true,
-  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
 class ButtonToggleGroupWithFormControl {
   control = new FormControl('');
@@ -1209,7 +1207,7 @@ class ButtonToggleGroupWithFormControl {
     </mat-button-toggle-group>
   `,
   standalone: true,
-  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
 class ButtonToggleGroupWithIndirectDescendantToggles {
   control = new FormControl('');
@@ -1297,7 +1295,7 @@ class ButtonToggleWithStaticAriaAttributes {}
   </mat-button-toggle-group>
   `,
   standalone: true,
-  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
 class ButtonToggleGroupWithFormControlAndDynamicButtons {
   @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;

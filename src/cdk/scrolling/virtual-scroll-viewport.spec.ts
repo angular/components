@@ -6,7 +6,6 @@ import {
   ScrollDispatcher,
   ScrollingModule,
 } from '@angular/cdk/scrolling';
-import {CommonModule} from '@angular/common';
 import {
   ApplicationRef,
   Component,
@@ -1004,7 +1003,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule, CommonModule, DelayedInitializationVirtualScroll],
+        imports: [ScrollingModule, DelayedInitializationVirtualScroll],
       });
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
       testComponent = fixture.componentInstance;
@@ -1034,7 +1033,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule, CommonModule, VirtualScrollWithAppendOnly],
+        imports: [ScrollingModule, VirtualScrollWithAppendOnly],
       });
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);
       testComponent = fixture.componentInstance;
@@ -1441,7 +1440,7 @@ class VirtualScrollWithItemInjectingViewContainer {
   `,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [ScrollingModule, CommonModule],
+  imports: [ScrollingModule],
 })
 class DelayedInitializationVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
@@ -1480,7 +1479,7 @@ class DelayedInitializationVirtualScroll {
   `,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [ScrollingModule, CommonModule],
+  imports: [ScrollingModule],
 })
 class VirtualScrollWithAppendOnly {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
