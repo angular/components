@@ -18,6 +18,7 @@
       [(ngModel)]="currentFruit"
       [matChipInputFor]="chipGrid"
       [matAutocomplete]="auto"
+      updateNativeInput
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)"
     />
