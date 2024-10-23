@@ -33,9 +33,9 @@ describe('material-theme-color-schematic', () => {
             ),
           ));
 
-          @if mixin-exists(high-contrast-light-theme-overrides) {
+          @if mixin-exists(high-contrast-overrides) {
             & {
-              @include high-contrast-light-theme-overrides();
+              @include high-contrast-overrides(light);
             }
           }
 
@@ -48,9 +48,9 @@ describe('material-theme-color-schematic', () => {
               ),
             ));
 
-            @if mixin-exists(high-contrast-dark-theme-overrides) {
+            @if mixin-exists(high-contrast-overrides) {
               & {
-                @include high-contrast-dark-theme-overrides();
+                @include high-contrast-overrides(dark);
               }
             }
           }
@@ -213,7 +213,7 @@ describe('material-theme-color-schematic', () => {
     expect(transpileTheme(generatedSCSS)).toBe(transpileTheme(testSCSS));
   });
 
-  it('should be able to generate high contrast theme mixins', async () => {
+  it('should be able to generate high contrast overrides mixin', async () => {
     const tree = await runM3ThemeSchematic(runner, {
       primaryColor: '#984061',
       includeHighContrast: true,
@@ -221,8 +221,7 @@ describe('material-theme-color-schematic', () => {
 
     const generatedSCSS = tree.readText('_theme-colors.scss');
 
-    expect(generatedSCSS).toContain(`@mixin high-contrast-light-theme-overrides`);
-    expect(generatedSCSS).toContain(`@mixin high-contrast-dark-theme-overrides`);
+    expect(generatedSCSS).toContain(`@mixin high-contrast-overrides`);
   });
 
   it('should be able to generate high contrast themes overrides when provided a primary color', async () => {
