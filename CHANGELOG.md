@@ -1,3 +1,13 @@
+<a name="18.2.10"></a>
+# 18.2.10 "plastic-monkey" (2024-10-23)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [501faa9a54](https://github.com/angular/components/commit/501faa9a547c043e8abef5cb75acca930f31fa2e) | fix | **chips:** emitting end event multiple times when holding down key ([#29894](https://github.com/angular/components/pull/29894)) |
+| [4a0397a1c7](https://github.com/angular/components/commit/4a0397a1c7527b1e56a1aedebe5dfc262327e134) | fix | **tabs:** remove IE animation workaround ([#29899](https://github.com/angular/components/pull/29899)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.9"></a>
 # 18.2.9 "curite-castle" (2024-10-17)
 ### material
