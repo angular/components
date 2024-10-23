@@ -1,3 +1,23 @@
+<a name="19.0.0-next.10"></a>
+# 19.0.0-next.10 "plastic-moose" (2024-10-23)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b519b4785b](https://github.com/angular/components/commit/b519b4785b1da26becdb88e3810d606b9bddedfc) | feat | **core:** default to color-scheme theme type ([#29907](https://github.com/angular/components/pull/29907)) |
+| [ea0d1ba7b7](https://github.com/angular/components/commit/ea0d1ba7b776e021ecfa27b80c921a22b98e3c40) | feat | **core:** deprecate the core mixin ([#29906](https://github.com/angular/components/pull/29906)) |
+| [4b49d73542](https://github.com/angular/components/commit/4b49d73542a4b10c8d5bd67a7258bfdd44a8e329) | feat | **core:** switch system prefix from sys to mat-sys ([#29908](https://github.com/angular/components/pull/29908)) |
+| [3fc1f9a1b0](https://github.com/angular/components/commit/3fc1f9a1b026b9cd0ec666bc623169d1ba5a9532) | feat | **schematics:** Update custom theme schematic to work with light-dark and use theme-overrides mixin ([#29911](https://github.com/angular/components/pull/29911)) |
+| [5153a5cd4b](https://github.com/angular/components/commit/5153a5cd4bdd69649f07ba6596cad56bfd9eb2b1) | fix | **chips:** emitting end event multiple times when holding down key ([#29894](https://github.com/angular/components/pull/29894)) |
+| [5ad133d073](https://github.com/angular/components/commit/5ad133d07341fa8647e81277e7f1b9f54b15059a) | fix | **core:** allow optgroup overrides through core-overrides ([#29897](https://github.com/angular/components/pull/29897)) |
+| [a8e40ec341](https://github.com/angular/components/commit/a8e40ec341103a4f3fa84bd446067dd37cbf6d50) | fix | **core:** correctly identify color input ([#29909](https://github.com/angular/components/pull/29909)) |
+| [0064b4218b](https://github.com/angular/components/commit/0064b4218b375b30b65bf1c13530d8620f20d980) | fix | **tabs:** remove IE animation workaround ([#29899](https://github.com/angular/components/pull/29899)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a6709497fc](https://github.com/angular/components/commit/a6709497fc6e5eca110db5374f7d6ca4b2ca5a58) | fix | expose all clusterer types ([#29905](https://github.com/angular/components/pull/29905)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.10"></a>
 # 18.2.10 "plastic-monkey" (2024-10-23)
 ### material
