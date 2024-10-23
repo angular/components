@@ -1,5 +1,6 @@
 @use '../style/elevation';
 @use '../style/sass-utils';
+@use '../theming/config-validation';
 @use '../theming/definition';
 @use './m3/definitions';
 @use 'sass:map';
@@ -44,14 +45,17 @@ $_system-level-prefix: sys;
   $color: map.get($config, color);
   $color-config: null;
   @if ($color) {
+    // validate-palette returns null if it is a valid M3 palette
+    $is-palette: config-validation.validate-palette($color) == null;
+
     // Default to "color-scheme" theme type if the config's color does not provide one.
-    @if (meta.type-of($color) == 'map' and not map.has-key($color, theme-type)) {
+    @if (not $is-palette and not map.has-key($color, theme-type)) {
       $color: map.set($color, theme-type, color-scheme);
     }
 
-    $color-config: if(meta.type-of($color) == 'map',
-      definition.define-colors($color),
-      definition.define-colors((primary: $color, theme-type: color-scheme)));
+    $color-config: if($is-palette,
+            definition.define-colors((primary: $color, theme-type: color-scheme)),
+            definition.define-colors($color));
     @include system-level-colors($color-config, $overrides, $_system-fallback-prefix);
     @include system-level-elevation($color-config, $overrides, $_system-fallback-prefix);
   }
