@@ -100,9 +100,9 @@
     );
   }
   @if $config and map.has-key($config, theme-type) and
-      not list.index((light, dark), map.get($config, theme-type)) {
+      not list.index((light, dark, color-scheme), map.get($config, theme-type)) {
     @return (
-      #{'Expected $config.theme-type to be one of: light, dark. Got:'}
+      #{'Expected $config.theme-type to be one of: light, dark, color-scheme. Got:'}
       map.get($config, theme-type)
     );
   }
