@@ -49,7 +49,7 @@ import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
 export class ComponentViewer implements OnDestroy {
   componentDocItem = new ReplaySubject<DocItem>(1);
   sections: Set<string> = new Set(['overview', 'api']);
-  private _destroyed = new Subject();
+  private _destroyed = new Subject<void>();
 
   constructor(_route: ActivatedRoute, private router: Router,
               public _componentPageTitle: ComponentPageTitle,
@@ -98,7 +98,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   readonly viewers = viewChildren(DocViewer);
 
   showToc: Observable<boolean>;
-  private _destroyed = new Subject();
+  private _destroyed = new Subject<void>();
 
   constructor(
     public componentViewer: ComponentViewer,
