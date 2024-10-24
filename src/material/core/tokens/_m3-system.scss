@@ -83,7 +83,6 @@
   }
 
   @include system-level-shape($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
-  @include system-level-motion($overrides:$overrides, $prefix: definition.$system-fallback-prefix);
   @include system-level-state($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
 }
 
@@ -216,14 +215,6 @@
 @mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   & {
     @each $name, $value in definitions.md-sys-state-values() {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
-    }
-  }
-}
-
-@mixin system-level-motion($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
-  & {
-    @each $name, $value in definitions.md-sys-motion-values() {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
