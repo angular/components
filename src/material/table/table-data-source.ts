@@ -171,50 +171,63 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * @param sort The connected MatSort that holds the current sort state.
    */
   sortData: (data: T[], sort: MatSort) => T[] = (data: T[], sort: MatSort): T[] => {
-    const active = sort.active;
-    const direction = sort.direction;
-    if (!active || direction == '') {
+    const sortState = Array.from(sort.sortState.values());
+
+    if (!sortState.length) {
       return data;
     }
 
     return data.sort((a, b) => {
-      let valueA = this.sortingDataAccessor(a, active);
-      let valueB = this.sortingDataAccessor(b, active);
+      return (
+        sortState
+          // skip unsorted columns
+          .filter(it => it.direction !== '')
 
-      // If there are data in the column that can be converted to a number,
-      // it must be ensured that the rest of the data
-      // is of the same type so as not to order incorrectly.
-      const valueAType = typeof valueA;
-      const valueBType = typeof valueB;
+          // Apply sorting to each 'sorted' column, consider next column only if previous sort == 0
+          .reduce((previous, state) => {
+            if (previous !== 0) {
+              return previous;
+            }
 
-      if (valueAType !== valueBType) {
-        if (valueAType === 'number') {
-          valueA += '';
-        }
-        if (valueBType === 'number') {
-          valueB += '';
-        }
-      }
+            let valueA = this.sortingDataAccessor(a, state.active);
+            let valueB = this.sortingDataAccessor(b, state.active);
 
-      // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
-      // one value exists while the other doesn't. In this case, existing value should come last.
-      // This avoids inconsistent results when comparing values to undefined/null.
-      // If neither value exists, return 0 (equal).
-      let comparatorResult = 0;
-      if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
-        }
-      } else if (valueA != null) {
-        comparatorResult = 1;
-      } else if (valueB != null) {
-        comparatorResult = -1;
-      }
+            // If there are data in the column that can be converted to a number,
+            // it must be ensured that the rest of the data
+            // is of the same type so as not to order incorrectly.
+            const valueAType = typeof valueA;
+            const valueBType = typeof valueB;
 
-      return comparatorResult * (direction == 'asc' ? 1 : -1);
+            if (valueAType !== valueBType) {
+              if (valueAType === 'number') {
+                valueA += '';
+              }
+              if (valueBType === 'number') {
+                valueB += '';
+              }
+            }
+
+            // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
+            // one value exists while the other doesn't. In this case, existing value should come last.
+            // This avoids inconsistent results when comparing values to undefined/null.
+            // If neither value exists, return 0 (equal).
+            let comparatorResult = 0;
+            if (valueA != null && valueB != null) {
+              // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
+              if (valueA > valueB) {
+                comparatorResult = 1;
+              } else if (valueA < valueB) {
+                comparatorResult = -1;
+              }
+            } else if (valueA != null) {
+              comparatorResult = 1;
+            } else if (valueB != null) {
+              comparatorResult = -1;
+            }
+
+            return comparatorResult * (state.direction === 'asc' ? 1 : -1);
+          }, 0)
+      );
     });
   };
 
