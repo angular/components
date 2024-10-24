@@ -13,6 +13,16 @@
 }
 
 .docs-toc-container {
+  border-left: solid 4px var(--mat-sys-primary-container);
+
+  .docs-link {
+    color: var(--mat-sys-on-surface);
+
+    &:hover,
+    &.docs-active {
+      color: var(--mat-sys-primary);
+    }
+  }
   width: 100%;
   padding: 8px 0 8px 16px;
   box-sizing: border-box;

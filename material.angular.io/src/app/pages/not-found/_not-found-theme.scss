@@ -1,7 +1,0 @@
-@use '@angular/material' as mat;
-
-@mixin theme($theme) {
-  app-not-found {
-    color: mat.get-theme-color($theme, on-primary-container);
-  }
-}

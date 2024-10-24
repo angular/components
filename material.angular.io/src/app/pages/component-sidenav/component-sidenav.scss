@@ -36,6 +36,7 @@ app-component-sidenav {
   top: 0;
 
   .docs-component-viewer-nav-content {
+    border-right: 1px solid var(--mat-sys-outline-variant);
     width: constants.$sidenav-width;
     padding: 16px 8px;
     height: calc(100vh - 75px);
@@ -45,6 +46,10 @@ app-component-sidenav {
     &::-webkit-scrollbar {
       height: 4px;
       width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .26);
     }
 
     ul {

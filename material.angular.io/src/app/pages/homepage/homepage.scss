@@ -6,6 +6,7 @@ $margin-promotion-sections-small: 15px;
   overflow: hidden;
   position: relative;
   height: 420px;
+  background: var(--mat-sys-primary-container);
 }
 
 .docs-homepage-logo {
@@ -30,7 +31,17 @@ $margin-promotion-sections-small: 15px;
   transform: translate(-50%, -50%);
 }
 
+.docs-homepage-row,
+.docs-homepage-carousel-row h2,
+a.docs-featured-components-carousel-item,
+.docs-homepage-guides-card,
+a.docs-link:hover {
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .docs-header-headline {
+  color: var(--mat-sys-on-primary-container);
+
   h1 {
     font-size: 56px;
     font-weight: 500;
@@ -239,5 +250,14 @@ $margin-promotion-sections-small: 15px;
 
   .docs-homepage-row, .docs-homepage-carousel-row {
     margin: $margin-promotion-sections-small 0;
+  }
+}
+
+[carousel-item]:hover,
+[carousel-item]:focus {
+  outline: none;
+
+  .docs-homepage-guides-card {
+    background: var(--mat-sys-surface-dim);
   }
 }

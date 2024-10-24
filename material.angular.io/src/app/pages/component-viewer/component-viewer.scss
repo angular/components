@@ -1,5 +1,10 @@
 @use '../../../styles/constants';
 
+guide-viewer,
+app-component-viewer {
+  color: var(--mat-sys-on-surface);
+}
+
 app-component-viewer {
   font-weight: 400;
   width: calc(100% - #{constants.$sidenav-width + 1} - #{constants.$content-padding-sidenav * 2});

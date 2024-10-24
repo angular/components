@@ -24,6 +24,15 @@
   }
 }
 
+.docs-component-category-list-summary a {
+  color: var(--mat-sys-primary);
+}
+
+.docs-component-category-list-card-title,
+.docs-component-category-list-card-summary  {
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .docs-component-category-list {
   display: flex;
   flex-wrap: wrap;
@@ -53,10 +62,17 @@
 .docs-component-category-list-card {
   overflow: hidden;
   transition: background 0.3s ease;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+
+  &:hover {
+    background: var(--mat-sys-surface-dim);
+  }
 }
 
 .docs-component-category-list-card-image-wrapper {
   height: 156px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
 
 .docs-component-category-list-card-summary {

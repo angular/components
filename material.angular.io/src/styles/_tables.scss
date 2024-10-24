@@ -2,6 +2,7 @@
 
 .docs-api table,
 .docs-markdown > table {
+  color: var(--mat-sys-on-surface);
   border-collapse: collapse;
   border-spacing: 0;
   margin: 0 0 32px;
@@ -22,10 +23,10 @@
 
 .docs-api th,
 .docs-markdown > table th {
-  font-weight: 400;
   max-width: 100px;
   padding: 14px 16px;
   text-align: left;
+  font-weight: 500;
 }
 
 .docs-api td,
@@ -44,6 +45,11 @@
   }
 }
 
+.docs-api tr,
+.docs-markdown > table tr {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  height: 56px;
+}
 
 @media (max-width: constants.$small-breakpoint-width) {
   .docs-api table,

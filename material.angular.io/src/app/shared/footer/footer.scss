@@ -3,6 +3,10 @@
   margin-top: 100px;
 }
 
+footer {
+  border-top: solid 1px var(--mat-sys-outline-variant);
+}
+
 .docs-footer {
   padding: 12px;
   font-size: 12px;
@@ -58,8 +62,8 @@ app-logo {
 }
 
 a {
+  color: var(--mat-sys-on-surface-variant);
   text-decoration: none;
-  color: inherit;
 
   &:hover,
   &:focus {

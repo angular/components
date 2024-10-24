@@ -1,7 +1,0 @@
-@use '@angular/material' as mat;
-
-@mixin theme($theme) {
-  .docs-component-page-header {
-    background: mat.get-theme-color($theme, primary-container);
-  }
-}
