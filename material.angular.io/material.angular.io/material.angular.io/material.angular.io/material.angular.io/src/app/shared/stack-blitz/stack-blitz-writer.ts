@@ -1,8 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
 import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
-import {Observable} from 'rxjs';
-import {shareReplay, take} from 'rxjs/operators';
+import {Observable, firstValueFrom} from 'rxjs';
+import {shareReplay} from 'rxjs/operators';
 
 import stackblitz from '@stackblitz/sdk';
 
@@ -169,8 +169,7 @@ export class StackBlitzWriter {
       this._fileCache.set(fileUrl, stream);
     }
 
-    // The `take(1)` is necessary, because the Promise from `toPromise` resolves on complete.
-    return stream.pipe(take(1)).toPromise();
+    return firstValueFrom(stream);
   }
 
   /**
