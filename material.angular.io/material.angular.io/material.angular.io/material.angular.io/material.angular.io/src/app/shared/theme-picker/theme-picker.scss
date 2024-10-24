@@ -11,6 +11,7 @@ button.docs-theme-picker-trigger {
       width: 24px;
       height: 24px;
       border-radius: 4px;
+      border: solid 1px color-mix(in srgb, var(--mat-sys-outline-variant) 50%, transparent);
 
       svg {
         vertical-align: middle;

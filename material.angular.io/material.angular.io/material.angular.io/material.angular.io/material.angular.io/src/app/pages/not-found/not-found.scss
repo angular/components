@@ -1,6 +1,10 @@
 $vertical-spacing: 64px;
 $horizontal-spacing: 32px;
 
+:host {
+  color: var(--mat-sys-on-primary-container);
+}
+
 main {
   min-height: 100vh;
   font-size: 1.25rem;

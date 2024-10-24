@@ -15,9 +15,19 @@
 }
 
 .docs-guide-item {
+  color: var(--mat-sys-on-surface-variant);
   text-decoration: none;
   display: flex;
   margin: 16px;
+
+  &:focus,
+  &:hover {
+    outline: none;
+
+    .docs-guide-card {
+      background: var(--mat-sys-surface-dim);
+    }
+  }
 }
 
 .docs-guide-card.mat-mdc-card {

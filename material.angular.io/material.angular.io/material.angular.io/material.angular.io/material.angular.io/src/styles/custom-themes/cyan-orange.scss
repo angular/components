@@ -1,18 +1,14 @@
 @use '@angular/material' as mat;
-@use '../../app-theme';
 @use '../../highlightjs/material-dark';
 
-$theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$cyan-palette,
-    tertiary: mat.$orange-palette
-  )
-));
-
-@include mat.color-variants-backwards-compatibility($theme);
-@include app-theme.theme($theme);
-
-:root {
-  @include mat.all-component-themes($theme);
+html {
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 }

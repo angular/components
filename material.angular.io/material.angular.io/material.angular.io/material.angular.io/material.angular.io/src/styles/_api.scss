@@ -4,6 +4,36 @@
   max-width: 100%;
 }
 
+.docs-api-method-name-cell,
+.docs-api-method-returns-type,
+.docs-api-method-parameter-type,
+.docs-api a {
+  color: var(--mat-sys-primary);
+}
+
+.docs-api-modifier-method-marker {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+// Force the top-level API docs header to be hidden, since this is already
+// captured in the top nav-bar.
+.docs-api-h1 {
+  display: none !important;
+}
+
+// Prevent p tags from not breaking, causing x axis overflows.
+.docs-api > p {
+  word-break: break-word;
+}
+
+.docs-api-class-name,
+.docs-api-module-import,
+.docs-api-class-selector-name,
+.docs-api-class-export-name {
+  background: color-mix(in srgb, var(--mat-sys-primary-container) 25%, transparent);
+}
+
 // Top header, e.g., "API documentation for dialog".
 .docs-api-h2 {
   font-size: 30px;
@@ -14,6 +44,7 @@
   font-size: 24px;
   font-weight: 400;
   margin-top: 45px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant)
 }
 
 .docs-api-h4 {

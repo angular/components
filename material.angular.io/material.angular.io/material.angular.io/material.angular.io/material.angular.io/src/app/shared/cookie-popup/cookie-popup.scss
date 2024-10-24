@@ -1,11 +1,12 @@
 @use 'sass:math';
 @use '@angular/cdk' as cdk;
-@use '@angular/material' as mat;
 
 $_inner-spacing: 16px;
 
 .popup {
-  @include mat.elevation(2);
+  box-shadow: var(--mat-app-elevation-shadow-level-2);
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface);
   position: fixed;
   bottom: 0;
   left: 0;

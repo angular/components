@@ -1,20 +1,14 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-@include mat.core();
-
-$theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$red-palette,
-  ),
-  typography: (
-    brand-family: 'Roboto',
-  ),
-));
-
 html {
   font-family: 'Roboto';
-  @include mat.all-component-themes($theme);
-  @include mat.icon-color($theme, $color-variant: primary);
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$red-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 }

@@ -1,23 +1,20 @@
 @use '@angular/material' as mat;
-@use './app-theme';
+@use '@angular/cdk';
 @use './styles/api';
 @use './styles/markdown';
 @use './styles/tables';
 @use './styles/general';
 
-$theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  )
-));
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 
-// Include material core styles.
-@include mat.core();
-@include mat.color-variants-backwards-compatibility($theme);
-@include app-theme.theme($theme);
-
-:root {
-  @include mat.all-component-themes($theme);
+  @include cdk.a11y-visually-hidden();
 }

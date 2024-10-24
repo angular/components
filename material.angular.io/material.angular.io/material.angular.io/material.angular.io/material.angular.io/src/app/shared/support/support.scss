@@ -1,7 +1,12 @@
 .docs-help-support {
+  color: var(--mat-sys-on-surface);
   width: 75%;
   margin: auto;
   padding: 20px 0;
+}
+
+.docs-help-support a {
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .docs-help-support ul {
