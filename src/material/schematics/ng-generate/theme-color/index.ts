@@ -236,7 +236,6 @@ function getHighContrastOverides(
   overrides.set('surface-dim', hexFromArgb(scheme.surfaceDim));
   overrides.set('surface-bright', hexFromArgb(scheme.surfaceBright));
   overrides.set('surface-container-lowest', hexFromArgb(scheme.surfaceContainerLowest));
-  overrides.set('surface-container-lowest', hexFromArgb(scheme.surfaceContainerLow));
   overrides.set('surface-container', hexFromArgb(scheme.surfaceContainer));
   overrides.set('surface-container-high', hexFromArgb(scheme.surfaceContainerHigh));
   overrides.set('surface-container-highest', hexFromArgb(scheme.surfaceContainerHighest));
@@ -278,22 +277,56 @@ function generateHighContrastOverrideMixinsSCSS(
   neutralPalette: TonalPalette,
   neutralVariantPalette: TonalPalette,
 ): string {
+  const lightOverrides = getHighContrastOverides(
+    primaryPalette,
+    secondaryPalette,
+    tertiaryPalette,
+    neutralPalette,
+    neutralVariantPalette,
+    /** isDark **/ false,
+  );
+
+  const darkOverrides = getHighContrastOverides(
+    primaryPalette,
+    secondaryPalette,
+    tertiaryPalette,
+    neutralPalette,
+    neutralVariantPalette,
+    /** isDark **/ true,
+  );
+
+  // Create private function to grab correct values based on theme-type
   let scss = '\n';
-  for (const themeType of ['light', 'dark']) {
-    const overrides = getHighContrastOverides(
-      primaryPalette,
-      secondaryPalette,
-      tertiaryPalette,
-      neutralPalette,
-      neutralVariantPalette,
-      themeType === 'dark',
-    );
-    scss += '\n@mixin high-contrast-' + themeType + '-theme-overrides {\n';
-    for (const [key, value] of overrides!.entries()) {
-      scss += '  --mat-sys-' + key + ': ' + value + ';\n';
-    }
-    scss += '};\n';
+  scss += '\n@function _high-contrast-value($light, $dark, $theme-type) {\n';
+  scss += '  @if ($theme-type == light) {\n';
+  scss += '    @return $light;\n';
+  scss += '  }\n';
+  scss += '  @if ($theme-type == dark) {\n';
+  scss += '    @return $dark;\n';
+  scss += '  }\n';
+  scss += '  @if ($theme-type == color-scheme) {\n';
+  scss += '    @return light-dark(#{$light}, #{$dark});\n';
+  scss += '  }\n';
+  scss +=
+    "  \n  @error 'Unknown theme-type #{$theme-type}. Expected light, dark, or color-scheme';\n";
+  scss += '}\n';
+
+  // Create high contrast mixin with theme-type input that can be light, dark, or color-scheme.
+  scss += '\n@mixin high-contrast-overrides($theme-type) {\n';
+  scss += '  @include mat.theme-overrides((\n';
+  for (const [key, value] of lightOverrides!.entries()) {
+    scss +=
+      '    ' +
+      key +
+      ': _high-contrast-value(' +
+      value +
+      ', ' +
+      darkOverrides.get(key) +
+      ', $theme-type),\n';
   }
+  scss += '  ))\n';
+  scss += ' }\n';
+
   return scss;
 }
 

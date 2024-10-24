@@ -30,13 +30,9 @@ $light-theme: create-theme($type: light);
 // Create our dark theme.
 $dark-theme: create-theme($type: dark);
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// **Be sure that you only ever include this mixin once!**
-@include mat.core();
-
 // Include the default theme styles.
 html {
+  color-scheme: light;
   body:not(.demo-experimental-theme) {
     @include mat.all-component-themes($light-theme);
     @include mat.system-level-colors($light-theme);
@@ -49,7 +45,6 @@ html {
   body.demo-experimental-theme {
     @include mat.theme((
       color: (
-        theme-type: light,
         primary: $primary,
         tertiary: $tertiary,
       ),
@@ -73,6 +68,7 @@ html {
 // `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
 // default theme.
 body.demo-unicorn-dark-theme {
+  color-scheme: dark;
   &:not(.demo-experimental-theme) {
     // Include the dark theme color styles.
     @include mat.all-component-colors($dark-theme);
@@ -80,16 +76,6 @@ body.demo-unicorn-dark-theme {
     // TODO(mmalerba): Support M3 for experimental components.
     // @include matx.column-resize-color($dark-theme);
     // @include matx.popover-edit-color($dark-theme);
-  }
-
-  &.demo-experimental-theme {
-    @include mat.theme((
-      color: (
-        theme-type: dark,
-        primary: $primary,
-        tertiary: $tertiary,
-      ),
-    ));
   }
 
   // Include the dark theme colors for focus indicators.

@@ -3,8 +3,6 @@
 @use '../../m2';
 @use '../../typography/typography';
 
-// Include non-theme styles for core.
-@include core.core();
 @include core.app-background();
 @include core.elevation-classes();
 

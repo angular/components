@@ -3,7 +3,6 @@ import {DataSource} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -399,7 +398,7 @@ describe('CDK Popover Edit', () => {
 
       beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-          imports: [CdkTableModule, CdkPopoverEditModule, CommonModule, FormsModule, BidiModule],
+          imports: [CdkTableModule, CdkPopoverEditModule, FormsModule, BidiModule],
           declarations: [componentClass],
         });
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);

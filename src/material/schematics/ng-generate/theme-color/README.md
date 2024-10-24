@@ -34,10 +34,46 @@ html {
 }
 ```
 
-High contrast override theme mixins are also generated in the file if specified
-(`high-contrast-light-theme-overrides` and `high-contrast-dark-theme-overrides`). These mixins
+## High contrast override mixins
+High contrast override theme mixins are also generated in the file if specified. These mixins
 override the system level variables with high contrast equivalent values from your theme. This is
 helpful for users who prefer more contrastful colors for either preference or accessibility reasons.
+
+### Creating one theme for light and dark mode
+As of v19, the `theme` mixin can create one theme that detects and adapts to a user if they have
+light or dark theme with the [`light-dark` function](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark).
+
+Apply the `high-contrast-overrides(color-scheme)` mixin wrapped inside `@media (prefers-contrast: more)`.
+
+```scss
+@use '@angular/material';
+@use './path/to/my-theme'; // location of generated file
+
+html {
+  // Must specify color-scheme for theme mixin to automatically work
+  color-scheme: light;
+
+  // Create one theme that works automatically for light and dark theme
+  @include material.theme((
+    color: (
+      primary: my-theme.$primary-palette,
+      tertiary: my-theme.$tertiary-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+  // Use high contrast values when users prefer contrast
+  @media (prefers-contrast: more) {
+    @include my-theme.high-contrast-overrides(color-scheme);
+  }
+}
+```
+
+### Creating separate themes for light and dark mode
+You can manually define the light theme and dark theme separately. This is recommended if you need
+granular control over when to show each specific theme in your application. Prior to v19, this was
+the only way to create light and dark themes.
 
 ```scss
 @use '@angular/material';
@@ -49,6 +85,7 @@ html {
     color: (
       primary: my-theme.$primary-palette,
       tertiary: my-theme.$tertiary-palette,
+      theme-type: light,
     ),
     typography: Roboto,
     density: 0,
@@ -56,7 +93,7 @@ html {
 
   // Use high contrast light theme colors when users prefer contrast
   @media (prefers-contrast: more) {
-    @include my-theme.high-contrast-light-theme-overrides();
+    @include my-theme.high-contrast-overrides(light);
   }
 
   // Apply dark theme when users prefer a dark color scheme
@@ -71,7 +108,7 @@ html {
 
     // Use high contrast dark theme colors when users prefers a dark color scheme and contrast
     @media (prefers-contrast: more) {
-      @include my-theme.high-contrast-dark-theme-overrides();
+      @include my-theme.high-contrast-overrides(dark);
     }
   }
 }

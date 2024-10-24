@@ -1,7 +1,6 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {CommonModule} from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -26,7 +25,6 @@ describe('MatTabBody', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         PortalModule,
         MatRippleModule,
         NoopAnimationsModule,
@@ -195,7 +193,6 @@ describe('MatTabBody', () => {
   it('should mark the tab body content as a scrollable container', () => {
     TestBed.resetTestingModule().configureTestingModule({
       imports: [
-        CommonModule,
         PortalModule,
         MatRippleModule,
         NoopAnimationsModule,
@@ -219,7 +216,7 @@ describe('MatTabBody', () => {
     <mat-tab-body [content]="content()" [position]="position" [origin]="origin"></mat-tab-body>
   `,
   standalone: true,
-  imports: [CommonModule, PortalModule, MatRippleModule, MatTabBody],
+  imports: [PortalModule, MatRippleModule, MatTabBody],
 })
 class SimpleTabBodyApp implements AfterViewInit {
   content = signal<TemplatePortal | undefined>(undefined);

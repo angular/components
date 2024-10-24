@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -11,7 +10,6 @@ describe('MatSidenav', () => {
       imports: [
         MatSidenavModule,
         NoopAnimationsModule,
-        CommonModule,
         SidenavWithFixedPosition,
         IndirectDescendantSidenav,
         NestedSidenavContainers,
@@ -104,7 +102,7 @@ describe('MatSidenav', () => {
       </mat-sidenav-content>
     </mat-sidenav-container>`,
   standalone: true,
-  imports: [MatSidenavModule, CommonModule],
+  imports: [MatSidenavModule],
 })
 class SidenavWithFixedPosition {
   fixed = true;
@@ -123,7 +121,7 @@ class SidenavWithFixedPosition {
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
   standalone: true,
-  imports: [MatSidenavModule, CommonModule],
+  imports: [MatSidenavModule],
 })
 class IndirectDescendantSidenav {
   @ViewChild('container') container: MatSidenavContainer;
@@ -142,7 +140,7 @@ class IndirectDescendantSidenav {
     </mat-sidenav-container>
   `,
   standalone: true,
-  imports: [MatSidenavModule, CommonModule],
+  imports: [MatSidenavModule],
 })
 class NestedSidenavContainers {
   @ViewChild('outerContainer') outerContainer: MatSidenavContainer;
