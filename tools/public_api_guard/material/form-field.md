@@ -13,8 +13,7 @@ import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/observers';
+import * as i2 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -198,7 +197,7 @@ export class MatFormFieldModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatFormFieldModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i3.ObserversModule, typeof i4.MatFormField, typeof i5.MatLabel, typeof i6.MatError, typeof i7.MatHint, typeof i8.MatPrefix, typeof i9.MatSuffix], [typeof i4.MatFormField, typeof i5.MatLabel, typeof i7.MatHint, typeof i6.MatError, typeof i8.MatPrefix, typeof i9.MatSuffix, typeof i1.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, never, [typeof i1.MatCommonModule, typeof i2.ObserversModule, typeof i3.MatFormField, typeof i4.MatLabel, typeof i5.MatError, typeof i6.MatHint, typeof i7.MatPrefix, typeof i8.MatSuffix], [typeof i3.MatFormField, typeof i4.MatLabel, typeof i6.MatHint, typeof i5.MatError, typeof i7.MatPrefix, typeof i8.MatSuffix, typeof i1.MatCommonModule]>;
 }
 
 // @public

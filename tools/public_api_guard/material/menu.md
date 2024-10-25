@@ -13,10 +13,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
-import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/cdk/overlay';
-import * as i8 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/cdk/overlay';
+import * as i7 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -192,7 +191,7 @@ export class MatMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof i1.CommonModule, typeof i2.MatRippleModule, typeof i2.MatCommonModule, typeof i3.OverlayModule, typeof i4.MatMenu, typeof i5.MatMenuItem, typeof i6.MatMenuContent, typeof i7.MatMenuTrigger], [typeof i8.CdkScrollableModule, typeof i4.MatMenu, typeof i2.MatCommonModule, typeof i5.MatMenuItem, typeof i6.MatMenuContent, typeof i7.MatMenuTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof i1.MatRippleModule, typeof i1.MatCommonModule, typeof i2.OverlayModule, typeof i3.MatMenu, typeof i4.MatMenuItem, typeof i5.MatMenuContent, typeof i6.MatMenuTrigger], [typeof i7.CdkScrollableModule, typeof i3.MatMenu, typeof i1.MatCommonModule, typeof i4.MatMenuItem, typeof i5.MatMenuContent, typeof i6.MatMenuTrigger]>;
 }
 
 // @public

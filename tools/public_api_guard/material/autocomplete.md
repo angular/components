@@ -14,8 +14,7 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/common';
-import * as i7 from '@angular/cdk/scrolling';
+import * as i6 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { MatOptgroup } from '@angular/material/core';
 import { MatOption } from '@angular/material/core';
@@ -142,7 +141,7 @@ export class MatAutocompleteModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i3.CommonModule, typeof i4.MatAutocomplete, typeof i5.MatAutocompleteTrigger, typeof i6.MatAutocompleteOrigin], [typeof i7.CdkScrollableModule, typeof i4.MatAutocomplete, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i5.MatAutocompleteTrigger, typeof i6.MatAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i3.MatAutocomplete, typeof i4.MatAutocompleteTrigger, typeof i5.MatAutocompleteOrigin], [typeof i6.CdkScrollableModule, typeof i3.MatAutocomplete, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i4.MatAutocompleteTrigger, typeof i5.MatAutocompleteOrigin]>;
 }
 
 // @public

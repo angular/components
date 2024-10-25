@@ -23,13 +23,12 @@ import { FactoryProvider } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
-import * as i2 from '@angular/material/button';
-import * as i20 from '@angular/cdk/scrolling';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@angular/cdk/a11y';
-import * as i5 from '@angular/cdk/portal';
-import * as i6 from '@angular/material/core';
+import * as i1 from '@angular/material/button';
+import * as i19 from '@angular/cdk/scrolling';
+import * as i2 from '@angular/cdk/overlay';
+import * as i3 from '@angular/cdk/a11y';
+import * as i4 from '@angular/cdk/portal';
+import * as i5 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -511,7 +510,7 @@ export class MatDatepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDatepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, never, [typeof i1.CommonModule, typeof i2.MatButtonModule, typeof i3.OverlayModule, typeof i4.A11yModule, typeof i5.PortalModule, typeof i6.MatCommonModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply], [typeof i20.CdkScrollableModule, typeof i7.MatCalendar, typeof i8.MatCalendarBody, typeof i9.MatDatepicker, typeof i10.MatDatepickerContent, typeof i11.MatDatepickerInput, typeof i12.MatDatepickerToggle, typeof i12.MatDatepickerToggleIcon, typeof i13.MatMonthView, typeof i14.MatYearView, typeof i15.MatMultiYearView, typeof i7.MatCalendarHeader, typeof i16.MatDateRangeInput, typeof i17.MatStartDate, typeof i17.MatEndDate, typeof i18.MatDateRangePicker, typeof i19.MatDatepickerActions, typeof i19.MatDatepickerCancel, typeof i19.MatDatepickerApply]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDatepickerModule, never, [typeof i1.MatButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.MatCommonModule, typeof i6.MatCalendar, typeof i7.MatCalendarBody, typeof i8.MatDatepicker, typeof i9.MatDatepickerContent, typeof i10.MatDatepickerInput, typeof i11.MatDatepickerToggle, typeof i11.MatDatepickerToggleIcon, typeof i12.MatMonthView, typeof i13.MatYearView, typeof i14.MatMultiYearView, typeof i6.MatCalendarHeader, typeof i15.MatDateRangeInput, typeof i16.MatStartDate, typeof i16.MatEndDate, typeof i17.MatDateRangePicker, typeof i18.MatDatepickerActions, typeof i18.MatDatepickerCancel, typeof i18.MatDatepickerApply], [typeof i19.CdkScrollableModule, typeof i6.MatCalendar, typeof i7.MatCalendarBody, typeof i8.MatDatepicker, typeof i9.MatDatepickerContent, typeof i10.MatDatepickerInput, typeof i11.MatDatepickerToggle, typeof i11.MatDatepickerToggleIcon, typeof i12.MatMonthView, typeof i13.MatYearView, typeof i14.MatMultiYearView, typeof i6.MatCalendarHeader, typeof i15.MatDateRangeInput, typeof i16.MatStartDate, typeof i16.MatEndDate, typeof i17.MatDateRangePicker, typeof i18.MatDatepickerActions, typeof i18.MatDatepickerCancel, typeof i18.MatDatepickerApply]>;
 }
 
 // @public
