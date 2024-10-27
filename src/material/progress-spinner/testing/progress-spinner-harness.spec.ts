@@ -43,7 +43,7 @@ describe('MatProgressSpinnerHarness', () => {
 
   it('should get the diameter', async () => {
     const withAttributs =
-      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-diameter'}));
     expect(await withAttributs.getDiameter()).toBe(30);
     fixture.componentInstance.diameter.set(20);
     expect(await withAttributs.getDiameter()).toBe(20);
@@ -51,7 +51,7 @@ describe('MatProgressSpinnerHarness', () => {
 
   it('should get the strokeWidth', async () => {
     const withAttributs =
-      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-strokeWidth'}));
     expect(await withAttributs.getStrokeWidth()).toBe(3);
     fixture.componentInstance.strokeWidth.set(5);
     expect(await withAttributs.getStrokeWidth()).toBe(5);
@@ -59,7 +59,7 @@ describe('MatProgressSpinnerHarness', () => {
 
   it('should get the strokeWidth when undefined', async () => {
     const withAttributs =
-      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-strokeWidth'}));
     expect(await withAttributs.getStrokeWidth()).toBe(3);
     fixture.componentInstance.diameter.set(20);
     expect(await withAttributs.getStrokeWidth()).toBe(2);
@@ -70,8 +70,7 @@ describe('MatProgressSpinnerHarness', () => {
   template: `
     <mat-progress-spinner mode="determinate" [value]="value()"></mat-progress-spinner>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    <mat-spinner></mat-spinner>
-    <mat-spinner class="with-attributs" [diameter]="diameter()" [strokeWidth]="strokeWidth()"></mat-spinner>
+    <mat-spinner class="with-diameter with-strokeWidth" [diameter]="diameter()" [strokeWidth]="strokeWidth()"></mat-spinner>
   `,
   standalone: true,
   imports: [MatProgressSpinnerModule],
