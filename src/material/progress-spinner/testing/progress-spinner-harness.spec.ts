@@ -71,7 +71,7 @@ describe('MatProgressSpinnerHarness', () => {
     <mat-progress-spinner mode="determinate" [value]="value()"></mat-progress-spinner>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     <mat-spinner></mat-spinner>
-    <mat-spinner class="with-attributs" [diameter]="diameter()" [strokeWidth]="strokeWidth()"></mat-spinner> 
+    <mat-spinner class="with-attributs" [diameter]="diameter()" [strokeWidth]="strokeWidth()"></mat-spinner>
   `,
   standalone: true,
   imports: [MatProgressSpinnerModule],
