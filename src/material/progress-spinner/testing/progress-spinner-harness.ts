@@ -50,16 +50,14 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
     /** Gets the progress spinner's diameter. */
   async getDiameter(): Promise<number | null> {
     const host = await this.host();
-    const diameterAttr =
-      await host.getAttribute('data-mat-progress-spinner-diameter');
+    const diameterAttr = await host.getAttribute('data-mat-progress-spinner-diameter');
     return diameterAttr ? coerceNumberProperty(diameterAttr) : null;
   }
 
   /** Gets the progress spinner's strokeWidth. */
   async getStrokeWidth(): Promise<number | null> {
     const host = await this.host();
-    const strokeWidthAttr =
-      await host.getAttribute('data-mat-progress-spinner-strokeWidth');
+    const strokeWidthAttr = await host.getAttribute('data-mat-progress-spinner-strokeWidth');
     return strokeWidthAttr ? coerceNumberProperty(strokeWidthAttr) : null;
   }
 }
