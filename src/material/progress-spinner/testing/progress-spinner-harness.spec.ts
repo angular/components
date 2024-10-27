@@ -40,6 +40,30 @@ describe('MatProgressSpinnerHarness', () => {
     expect(await indeterminate.getMode()).toBe('indeterminate');
     expect(await impliedIndeterminate.getMode()).toBe('indeterminate');
   });
+
+  it('should get the diameter', async () => {
+    const withAttributs =
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+    expect(await withAttributs.getDiameter()).toBe(30);
+    fixture.componentInstance.diameter.set(20);
+    expect(await withAttributs.getDiameter()).toBe(20);
+  });
+
+  it('should get the strokeWidth', async () => {
+    const withAttributs =
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+    expect(await withAttributs.getStrokeWidth()).toBe(3);
+    fixture.componentInstance.strokeWidth.set(5);
+    expect(await withAttributs.getStrokeWidth()).toBe(5);
+  });
+
+  it('should get the strokeWidth when undefined', async () => {
+    const withAttributs =
+      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-attributs'}));
+    expect(await withAttributs.getStrokeWidth()).toBe(3);
+    fixture.componentInstance.diameter.set(20);
+    expect(await withAttributs.getStrokeWidth()).toBe(2);
+  });
 });
 
 @Component({
@@ -47,10 +71,13 @@ describe('MatProgressSpinnerHarness', () => {
     <mat-progress-spinner mode="determinate" [value]="value()"></mat-progress-spinner>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     <mat-spinner></mat-spinner>
+    <mat-spinner class="with-attributs" [diameter]="diameter()" [strokeWidth]="strokeWidth()"></mat-spinner> 
   `,
   standalone: true,
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerHarnessTest {
   value = signal(0);
+  diameter = signal(30);
+  strokeWidth = signal(3);
 }
