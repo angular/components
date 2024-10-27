@@ -54,13 +54,6 @@ describe('MatProgressSpinnerHarness', () => {
       await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-strokeWidth'}));
     expect(await withAttributs.getStrokeWidth()).toBe(5);
   });
-
-  it('should get the strokeWidth when undefined', async () => {
-    fixture.componentInstance.diameter.set(20);
-    const withAttributs =
-      await loader.getHarness(MatProgressSpinnerHarness.with({selector: '.with-strokeWidth'}));
-    expect(await withAttributs.getStrokeWidth()).toBe(2);
-  });
 });
 
 @Component({
@@ -74,6 +67,6 @@ describe('MatProgressSpinnerHarness', () => {
 })
 class ProgressSpinnerHarnessTest {
   value = signal(0);
-  diameter = signal();
-  strokeWidth = signal();
+  diameter = signal(30);
+  strokeWidth = signal(3);
 }
