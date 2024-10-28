@@ -573,7 +573,7 @@ export class StickyStyler {
     _getStickyStartColumnPositions(widths: number[], stickyStates: boolean[]): number[];
     _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]): void;
     stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom'): void;
-    updateStickyColumns(rows: HTMLElement[], stickyStartStates: boolean[], stickyEndStates: boolean[], recalculateCellWidths?: boolean): void;
+    updateStickyColumns(rows: HTMLElement[], stickyStartStates: boolean[], stickyEndStates: boolean[], recalculateCellWidths?: boolean, replay?: boolean): void;
     updateStickyFooterContainer(tableElement: Element, stickyStates: boolean[]): void;
 }
 
