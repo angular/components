@@ -984,7 +984,7 @@ describe('CdkTable', () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         expectStickyStyles(headerRows[0], '100', {top: '0px'});
         expectStickyBorderClass(headerRows[0]);
@@ -1013,7 +1013,9 @@ describe('CdkTable', () => {
         component.stickyHeaders = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
+        await sleep();
+
         expectNoStickyStyles(headerRows);
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
           sizes: [],
@@ -1033,7 +1035,7 @@ describe('CdkTable', () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         expectStickyStyles(footerRows[0], '10', {
           bottom: footerRows[1].getBoundingClientRect().height + 'px',
@@ -1062,7 +1064,7 @@ describe('CdkTable', () => {
         component.stickyFooters = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectNoStickyStyles(footerRows);
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
           sizes: [],
@@ -1082,7 +1084,7 @@ describe('CdkTable', () => {
         component.stickyFooters = ['footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
         expectStickyBorderClass(footerRows[2], {bottom: true});
@@ -1093,7 +1095,7 @@ describe('CdkTable', () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => {
           let cells = getHeaderCells(row);
@@ -1119,6 +1121,7 @@ describe('CdkTable', () => {
           expectStickyBorderClass(cells[2], {left: true});
           expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
         });
+
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
           sizes: [],
           offsets: [],
@@ -1141,7 +1144,7 @@ describe('CdkTable', () => {
         component.stickyStartColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
@@ -1163,7 +1166,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => {
           let cells = getHeaderCells(row);
@@ -1189,6 +1192,7 @@ describe('CdkTable', () => {
           expectStickyBorderClass(cells[3], {right: true});
           expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
         });
+
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
           sizes: [],
           offsets: [],
@@ -1211,7 +1215,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
@@ -1235,7 +1239,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = ['column-5', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         const firstColumnWidth = getHeaderCells(headerRows[0])[0].getBoundingClientRect().width;
         const lastColumnWidth = getHeaderCells(headerRows[0])[5].getBoundingClientRect().width;
@@ -1280,7 +1284,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = ['column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         let headerCells = getHeaderCells(headerRows[0]);
         expectStickyStyles(headerRows[0], '100', {top: '0px'});
@@ -1334,7 +1338,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
         dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
@@ -1372,7 +1376,7 @@ describe('CdkTable', () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         getHeaderCells(headerRows[0]).forEach(cell => {
           expectStickyStyles(cell, '100', {top: '0px'});
@@ -1405,7 +1409,7 @@ describe('CdkTable', () => {
         component.stickyHeaders = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectNoStickyStyles(headerRows); // No sticky styles on rows for native table
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
@@ -1426,7 +1430,7 @@ describe('CdkTable', () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         getFooterCells(footerRows[2]).forEach(cell => {
           expectStickyStyles(cell, '10', {bottom: '0px'});
@@ -1459,7 +1463,7 @@ describe('CdkTable', () => {
         component.stickyFooters = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectNoStickyStyles(footerRows); // No sticky styles on rows for native table
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
         expect(component.mostRecentStickyHeaderRowsUpdate).toEqual({
@@ -1481,20 +1485,20 @@ describe('CdkTable', () => {
         component.stickyFooters = ['footer-1'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectNoStickyStyles([tfoot]);
 
         component.stickyFooters = ['footer-1', 'footer-2', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectStickyStyles(tfoot, '10', {bottom: '0px'});
         expectStickyBorderClass(tfoot);
 
         component.stickyFooters = ['footer-1', 'footer-2'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         expectNoStickyStyles([tfoot]);
       }));
 
@@ -1502,7 +1506,7 @@ describe('CdkTable', () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => {
           let cells = getHeaderCells(row);
@@ -1550,7 +1554,7 @@ describe('CdkTable', () => {
         component.stickyStartColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
@@ -1572,7 +1576,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => {
           let cells = getHeaderCells(row);
@@ -1620,7 +1624,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
@@ -1645,7 +1649,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = ['column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         const headerCells = getHeaderCells(headerRows[0]);
         expectStickyStyles(headerCells[0], '101', {top: '0px', left: '0px'});
@@ -1709,7 +1713,7 @@ describe('CdkTable', () => {
         component.stickyEndColumns = [];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await new Promise(r => setTimeout(r));
+        await sleep();
 
         headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
         dataRows.forEach(row => expectNoStickyStyles([row, ...getCells(row)]));
@@ -3273,4 +3277,11 @@ export function expectTableToMatchContent(tableElement: Element, expected: any[]
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));
   }
+}
+
+/** async wrapper for setTimeout. */
+async function sleep(ms = 20) {
+  // setTimeout does not actually return void.
+  // tslint:disable-next-line:g3-no-void-expression
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

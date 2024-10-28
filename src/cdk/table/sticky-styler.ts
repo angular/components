@@ -22,6 +22,12 @@ interface UpdateStickyColumnsParams {
   stickyEndStates: boolean[];
 }
 
+interface UpdateStickRowsParams {
+  rowsToStick: HTMLElement[];
+  stickyStates: boolean[];
+  position: 'top' | 'bottom';
+}
+
 /**
  * List of all possible directions that can be used for sticky positioning.
  * @docs-private
@@ -38,7 +44,10 @@ export class StickyStyler {
     ? new globalThis.ResizeObserver(entries => this._updateCachedSizes(entries))
     : null;
   private _updatedStickyColumnsParamsToReplay: UpdateStickyColumnsParams[] = [];
-  private _stickyColumnsReplayTimeout: number | null = null;
+  private _updatedStickRowsParamsToReplay: UpdateStickRowsParams[] = [];
+  private _stickyReplayTimeout: number | null = null;
+  private _readSizeQueue: HTMLElement[] = [];
+  private _readSizeTimeout: number | null = null;
   private _cachedCellWidths: number[] = [];
   private readonly _borderCellCss: Readonly<{[d in StickyDirection]: string}>;
 
@@ -206,12 +215,25 @@ export class StickyStyler {
    *     should be stuck in the particular top or bottom position.
    * @param position The position direction in which the row should be stuck if that row should be
    *     sticky.
-   *
+   * @param replay Whether to enqueue this call for replay after a ResizeObserver update.
    */
-  stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom') {
+  stickRows(
+    rowsToStick: HTMLElement[],
+    stickyStates: boolean[],
+    position: 'top' | 'bottom',
+    replay = true,
+  ) {
     // Since we can't measure the rows on the server, we can't stick the rows properly.
     if (!this._isBrowser) {
       return;
+    }
+
+    if (replay) {
+      this._updateStickRowsReplayQueue({
+        rowsToStick: [...rowsToStick],
+        stickyStates: [...stickyStates],
+        position,
+      });
     }
 
     // Coalesce with other sticky row updates (top/bottom), sticky columns updates
@@ -440,24 +462,55 @@ export class StickyStyler {
 
   /**
    * Retreives the most recently observed size of the specified element from the cache, or
-   * meaures it directly if not yet cached.
+   * schedules it to be measured directly if not yet cached.
    */
   private _retrieveElementSize(element: HTMLElement): {width: number; height: number} {
     const cachedSize = this._elemSizeCache.get(element);
-    if (cachedSize) {
+    if (cachedSize != null) {
       return cachedSize;
     }
-
-    const clientRect = element.getBoundingClientRect();
-    const size = {width: clientRect.width, height: clientRect.height};
-
     if (!this._resizeObserver) {
-      return size;
+      return this._retrieveElementSizeImmediate(element);
     }
 
-    this._elemSizeCache.set(element, size);
     this._resizeObserver.observe(element, {box: 'border-box'});
-    return size;
+    this._enqueueReadSize(element);
+
+    return {width: 0, height: 0};
+  }
+
+  private _enqueueReadSize(element: HTMLElement): void {
+    this._readSizeQueue.push(element);
+
+    if (!this._readSizeTimeout) {
+      this._readSizeTimeout = setTimeout(() => {
+        this._readSizeTimeout = null;
+
+        let needsReplay = false;
+        for (const e of this._readSizeQueue) {
+          if (this._elemSizeCache.get(e) != null) {
+            continue;
+          }
+
+          const size = this._retrieveElementSizeImmediate(e);
+          this._elemSizeCache.set(e, size);
+          needsReplay = true;
+        }
+        this._readSizeQueue = [];
+
+        if (needsReplay && !this._stickyReplayTimeout) {
+          this._scheduleStickReplay();
+        }
+      }, 10);
+    }
+  }
+
+  /**
+   * Returns the size of the specified element by direct measurement.
+   */
+  private _retrieveElementSizeImmediate(element: HTMLElement): {width: number; height: number} {
+    const clientRect = element.getBoundingClientRect();
+    return {width: clientRect.width, height: clientRect.height};
   }
 
   /**
@@ -468,7 +521,7 @@ export class StickyStyler {
     this._removeFromStickyColumnReplayQueue(params.rows);
 
     // No need to replay if a flush is pending.
-    if (this._stickyColumnsReplayTimeout) {
+    if (this._stickyReplayTimeout) {
       return;
     }
 
@@ -486,9 +539,22 @@ export class StickyStyler {
     );
   }
 
+  private _updateStickRowsReplayQueue(params: UpdateStickRowsParams) {
+    // No need to replay if a flush is pending.
+    if (this._stickyReplayTimeout) {
+      return;
+    }
+
+    this._updatedStickRowsParamsToReplay = this._updatedStickRowsParamsToReplay.filter(
+      entry => entry.position !== params.position,
+    );
+
+    this._updatedStickRowsParamsToReplay.push(params);
+  }
+
   /** Update _elemSizeCache with the observed sizes. */
   private _updateCachedSizes(entries: ResizeObserverEntry[]) {
-    let needsColumnUpdate = false;
+    let needsUpdate = false;
     for (const entry of entries) {
       const newEntry = entry.borderBoxSize?.length
         ? {
@@ -496,44 +562,67 @@ export class StickyStyler {
             height: entry.borderBoxSize[0].blockSize,
           }
         : {
-            width: entry.contentRect.width,
-            height: entry.contentRect.height,
+            width: (entry.target as HTMLElement).offsetWidth,
+            height: (entry.target as HTMLElement).offsetHeight,
           };
 
+      const cachedSize = this._elemSizeCache.get(entry.target as HTMLElement);
       if (
-        newEntry.width !== this._elemSizeCache.get(entry.target as HTMLElement)?.width &&
-        isCell(entry.target)
+        (newEntry.width !== cachedSize?.width && isCell(entry.target)) ||
+        (newEntry.height !== cachedSize?.height && isRow(entry.target))
       ) {
-        needsColumnUpdate = true;
+        needsUpdate = true;
       }
 
       this._elemSizeCache.set(entry.target as HTMLElement, newEntry);
     }
 
-    if (needsColumnUpdate && this._updatedStickyColumnsParamsToReplay.length) {
-      if (this._stickyColumnsReplayTimeout) {
-        clearTimeout(this._stickyColumnsReplayTimeout);
-      }
-
-      this._stickyColumnsReplayTimeout = setTimeout(() => {
-        for (const update of this._updatedStickyColumnsParamsToReplay) {
-          this.updateStickyColumns(
-            update.rows,
-            update.stickyStartStates,
-            update.stickyEndStates,
-            true,
-            false,
-          );
-        }
-        this._updatedStickyColumnsParamsToReplay = [];
-        this._stickyColumnsReplayTimeout = null;
-      }, 0);
+    if (needsUpdate) {
+      this._scheduleStickReplay();
     }
+  }
+
+  /** Schedule a defered replay of enqueued sticky column operations. */
+  private _scheduleStickReplay() {
+    if (
+      !this._updatedStickyColumnsParamsToReplay.length &&
+      !this._updatedStickRowsParamsToReplay.length
+    ) {
+      return;
+    }
+
+    if (this._stickyReplayTimeout) {
+      clearTimeout(this._stickyReplayTimeout);
+    }
+
+    this._stickyReplayTimeout = setTimeout(() => {
+      for (const update of this._updatedStickyColumnsParamsToReplay) {
+        this.updateStickyColumns(
+          update.rows,
+          update.stickyStartStates,
+          update.stickyEndStates,
+          true,
+          false,
+        );
+      }
+      for (const update of this._updatedStickRowsParamsToReplay) {
+        this.stickRows(update.rowsToStick, update.stickyStates, update.position, false);
+      }
+      this._updatedStickyColumnsParamsToReplay = [];
+      this._updatedStickRowsParamsToReplay = [];
+      this._stickyReplayTimeout = null;
+    }, 0);
   }
 }
 
 function isCell(element: Element) {
   return ['cdk-cell', 'cdk-header-cell', 'cdk-footer-cell'].some(klass =>
+    element.classList.contains(klass),
+  );
+}
+
+function isRow(element: Element) {
+  return ['cdk-row', 'cdk-header-row', 'cdk-footer-row'].some(klass =>
     element.classList.contains(klass),
   );
 }

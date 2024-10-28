@@ -39,7 +39,7 @@ describe('CdkTableScrollContainer', () => {
   }
 
   async function waitForLayout(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve));
+    await new Promise(resolve => setTimeout(resolve, 50));
 
     // In newer versions of Chrome (change was noticed between 114 and 124), the computed
     // style of `::-webkit-scrollbar-track` doesn't update until the styles of the container
