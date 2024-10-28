@@ -151,7 +151,7 @@ html {
 }
 ```
 
-Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md).
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/18.2.x/src/material/schematics/ng-generate/m3-theme/README.md).
 
 <!-- TODO(mmalerba): Illustrate palettes with example. -->
 
