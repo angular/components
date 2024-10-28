@@ -17,11 +17,10 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
-import * as i2 from '@angular/cdk/overlay';
-import * as i3 from '@angular/material/core';
-import * as i5 from '@angular/cdk/scrolling';
-import * as i6 from '@angular/material/form-field';
+import * as i1 from '@angular/cdk/overlay';
+import * as i2 from '@angular/material/core';
+import * as i4 from '@angular/cdk/scrolling';
+import * as i5 from '@angular/material/form-field';
 import { InjectionToken } from '@angular/core';
 import { MatError } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
@@ -246,7 +245,7 @@ export class MatSelectModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSelectModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i1.CommonModule, typeof i2.OverlayModule, typeof i3.MatOptionModule, typeof i3.MatCommonModule, typeof i4.MatSelect, typeof i4.MatSelectTrigger], [typeof i5.CdkScrollableModule, typeof i6.MatFormFieldModule, typeof i4.MatSelect, typeof i4.MatSelectTrigger, typeof i3.MatOptionModule, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i3.MatSelect, typeof i3.MatSelectTrigger], [typeof i4.CdkScrollableModule, typeof i5.MatFormFieldModule, typeof i3.MatSelect, typeof i3.MatSelectTrigger, typeof i2.MatOptionModule, typeof i2.MatCommonModule]>;
 }
 
 // @public
