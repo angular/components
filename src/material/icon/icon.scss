@@ -43,7 +43,6 @@ mat-icon {
   &.mat-ligature-font[fontIcon]::before {
     content: attr(fontIcon);
   }
-
 }
 
 // Icons that will be mirrored in RTL.
