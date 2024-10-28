@@ -28,6 +28,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {NgClass} from '@angular/common';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '@angular/material/core';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
@@ -99,6 +100,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
+  private _intl = inject(MatDatepickerIntl);
 
   /**
    * Used to skip the next focus event when rendering the preview range.
@@ -203,6 +205,8 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   private _didDragSinceMouseDown = false;
 
   private _injector = inject(Injector);
+
+  comparisonDateAccessibleName = this._intl.comparisonDateLabel;
 
   /**
    * Tracking function for rows based on their identity. Ideally we would use some sort of

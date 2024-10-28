@@ -65,6 +65,12 @@ export class MatDatepickerIntl {
    */
   endDateLabel = 'End date';
 
+  /**
+   * A label used to indicate that the date is part of a selected comparison
+   * sub range of dates (used by screen readers).
+   */
+  comparisonDateLabel = 'Sub range';
+
   /** Formats a range of years (used for visuals). */
   formatYearRange(start: string, end: string): string {
     return `${start} \u2013 ${end}`;
