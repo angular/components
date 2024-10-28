@@ -49,16 +49,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  map,
-  mapTo,
-  startWith,
-  take,
-  takeUntil,
-} from 'rxjs/operators';
+import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
 import {matDrawerAnimations} from './drawer-animations';
 
 /**
@@ -367,24 +358,16 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
         );
     });
 
-    // We need a Subject with distinctUntilChanged, because the `done` event
-    // fires twice on some browsers. See https://github.com/angular/angular/issues/24084
-    this._animationEnd
-      .pipe(
-        distinctUntilChanged((x, y) => {
-          return x.fromState === y.fromState && x.toState === y.toState;
-        }),
-      )
-      .subscribe((event: AnimationEvent) => {
-        const {fromState, toState} = event;
+    this._animationEnd.subscribe((event: AnimationEvent) => {
+      const {fromState, toState} = event;
 
-        if (
-          (toState.indexOf('open') === 0 && fromState === 'void') ||
-          (toState === 'void' && fromState.indexOf('open') === 0)
-        ) {
-          this.openedChange.emit(this._opened);
-        }
-      });
+      if (
+        (toState.indexOf('open') === 0 && fromState === 'void') ||
+        (toState === 'void' && fromState.indexOf('open') === 0)
+      ) {
+        this.openedChange.emit(this._opened);
+      }
+    });
   }
 
   /**
