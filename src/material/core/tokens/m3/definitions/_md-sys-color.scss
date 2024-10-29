@@ -80,7 +80,7 @@ $_default-light: (
     'inverse-surface': map.get($deps, 'md-ref-palette', 'neutral20'),
     'on-background': map.get($deps, 'md-ref-palette', 'neutral10'),
     'on-error': map.get($deps, 'md-ref-palette', 'error100'),
-    'on-error-container': map.get($deps, 'md-ref-palette', 'error10'),
+    'on-error-container': map.get($deps, 'md-ref-palette', 'error30'),
     'on-primary': map.get($deps, 'md-ref-palette', 'primary100'),
     'on-primary-container': map.get($deps, 'md-ref-palette', 'primary10'),
     'on-primary-fixed': map.get($deps, 'md-ref-palette', 'primary10'),
