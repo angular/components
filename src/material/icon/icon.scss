@@ -67,5 +67,5 @@ mat-icon {
 .mat-mdc-button-base .mat-icon {
   flex-shrink: 0;
   // stylelint-disable material/no-prefixes
-  height: min-content;
+  min-height: min-content;
 }
