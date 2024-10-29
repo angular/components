@@ -403,6 +403,7 @@ describe('CDK Popover Edit', () => {
         });
         fixture = TestBed.createComponent<BaseTestComponent>(componentClass);
         component = fixture.componentInstance;
+        component.renderData();
         fixture.detectChanges();
         tick(10);
         fixture.detectChanges();

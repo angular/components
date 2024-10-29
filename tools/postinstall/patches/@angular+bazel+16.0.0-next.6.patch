@@ -1,5 +1,5 @@
 diff --git a/node_modules/@angular/bazel/src/ng_module/ng_module.bzl b/node_modules/@angular/bazel/src/ng_module/ng_module.bzl
-index 99d7f6d..3ea60ea 100755
+index 5e82bcb..3c239f8 100755
 --- a/node_modules/@angular/bazel/src/ng_module/ng_module.bzl
 +++ b/node_modules/@angular/bazel/src/ng_module/ng_module.bzl
 @@ -18,6 +18,7 @@ load(
@@ -22,7 +22,7 @@ index 99d7f6d..3ea60ea 100755
 
      if not ctx.attr.type_check and ctx.attr.strict_templates:
          fail("Cannot set type_check = False and strict_templates = True for ng_module()")
-@@ -359,11 +360,11 @@ def _compile_action(
+@@ -355,11 +356,11 @@ def _compile_action(
 
  def _prodmode_compile_action(ctx, inputs, outputs, tsconfig_file, node_opts):
      outs = _expected_outs(ctx)
@@ -36,7 +36,7 @@ index 99d7f6d..3ea60ea 100755
      _compile_action(ctx, inputs, compile_action_outputs, tsconfig_file, node_opts, "devmode")
 
  # Note: We need to define `label` and `srcs_files` as `tsc_wrapped` passes
-@@ -417,9 +418,13 @@ def _ng_module_impl(ctx):
+@@ -413,9 +414,13 @@ def _ng_module_impl(ctx):
      # and issue https://github.com/bazelbuild/rules_nodejs/issues/57 for more details.
      ts_providers["providers"].extend([
          js_module_info(
@@ -51,7 +51,7 @@ index 99d7f6d..3ea60ea 100755
          js_ecma_script_module_info(
              sources = ts_providers["typescript"]["es6_sources"],
              deps = ctx.attr.deps,
-@@ -435,7 +440,7 @@ def _ng_module_impl(ctx):
+@@ -431,7 +436,7 @@ def _ng_module_impl(ctx):
              package_name = ctx.attr.package_name,
              package_path = ctx.attr.package_path,
              path = path,
@@ -61,7 +61,7 @@ index 99d7f6d..3ea60ea 100755
 
      return ts_providers_dict_to_struct(ts_providers)
 diff --git a/node_modules/@angular/bazel/src/ng_package/packager.mjs b/node_modules/@angular/bazel/src/ng_package/packager.mjs
-index 12d5f0c..8868e27 100755
+index 7184fd9..ef3e508 100755
 --- a/node_modules/@angular/bazel/src/ng_package/packager.mjs
 +++ b/node_modules/@angular/bazel/src/ng_package/packager.mjs
 @@ -7,7 +7,7 @@
@@ -74,7 +74,7 @@ index 12d5f0c..8868e27 100755
   * List of known `package.json` fields which provide information about
   * supported package formats and their associated entry paths.
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
-index 09deff8..00d24be 100755
+index def2972..3de33ba 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/index.mjs
 @@ -12,7 +12,7 @@ import tscw from '@bazel/concatjs/internal/tsc_wrapped/index.js';
@@ -86,7 +86,7 @@ index 09deff8..00d24be 100755
  // FIXME: we should be able to add the assets to the tsconfig so FileLoader
  // knows about them
  const NGC_ASSETS = /\.(css|html)$/;
-@@ -348,6 +348,12 @@ function gatherDiagnosticsForInputsOnly(options, bazelOpts, ngProgram) {
+@@ -349,6 +349,12 @@ function gatherDiagnosticsForInputsOnly(options, bazelOpts, ngProgram) {
      }
      return diagnostics;
  }
@@ -100,12 +100,12 @@ index 09deff8..00d24be 100755
   * @deprecated
   * Kept here just for compatibility with 1P tools. To be removed soon after 1P update.
 diff --git a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
-index ccf82d2..daaa783 100755
+index 8efba56..d420348 100755
 --- a/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 +++ b/node_modules/@angular/bazel/src/ngc-wrapped/ngc-wrapped-main.mjs
 @@ -5,7 +5,7 @@
   * Use of this source code is governed by an MIT-style license that can be
-  * found in the LICENSE file at https://angular.io/license
+  * found in the LICENSE file at https://angular.dev/license
   */
 -import { main } from './index';
 +import { main } from './index.mjs';
