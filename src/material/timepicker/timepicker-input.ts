@@ -93,7 +93,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   private _localeSubscription: Subscription;
   private _timepickerSubscription: OutputRefSubscription | undefined;
   private _validator: ValidatorFn;
-  private _lastValueValid = false;
+  private _lastValueValid = true;
   private _lastValidDate: D | null = null;
 
   /** Value of the `aria-activedescendant` attribute. */
