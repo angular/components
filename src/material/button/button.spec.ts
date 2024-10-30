@@ -405,13 +405,15 @@ describe('MatButton', () => {
   describe('interactive disabled buttons', () => {
     let fixture: ComponentFixture<TestApp>;
     let button: HTMLButtonElement;
+    let anchor: HTMLAnchorElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestApp);
       fixture.componentInstance.isDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      button = fixture.debugElement.query(By.css('button'))!.nativeElement;
+      button = fixture.nativeElement.querySelector('button');
+      anchor = fixture.nativeElement.querySelector('a');
     });
 
     it('should set a class when allowing disabled interactivity', () => {
@@ -442,6 +444,29 @@ describe('MatButton', () => {
       fixture.detectChanges();
 
       expect(button.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('should set aria-disabled on anchor when disabledInteractive is enabled', () => {
+      fixture.componentInstance.isDisabled = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(anchor.hasAttribute('aria-disabled')).toBe(false);
+      expect(anchor.hasAttribute('disabled')).toBe(false);
+      expect(anchor.classList).not.toContain('mat-mdc-button-disabled-interactive');
+
+      fixture.componentInstance.isDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(anchor.getAttribute('aria-disabled')).toBe('true');
+      expect(anchor.hasAttribute('disabled')).toBe(true);
+      expect(anchor.classList).not.toContain('mat-mdc-button-disabled-interactive');
+
+      fixture.componentInstance.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(anchor.getAttribute('aria-disabled')).toBe('true');
+      expect(anchor.hasAttribute('disabled')).toBe(false);
+      expect(anchor.classList).toContain('mat-mdc-button-disabled-interactive');
     });
   });
 });
