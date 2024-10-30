@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+table {
+  table-layout: fixed;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #fdfbff;
+  z-index: 1;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.filters mat-form-field {
+  margin-right: 16px;
+}
+
+.name-field {
+  width: 380px;
+  max-width: 100%;
+}
+
+.type-header {
+  width: 10%;
+}
+
+.system-header {
+  width: 30%;
+}

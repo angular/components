@@ -1,0 +1,34 @@
+@let item = docItem | async;
+@let data = dataStream | async;
+@let example = exampleStream | async;
+@let hasData = hasDataStream | async;
+
+@if (!item || !data) {
+  Loading...
+} @else if (!hasData) {
+  This component does not support style overrides
+} @else {
+  <h2 class="cdk-visually-hidden" tabindex="-1">How to style {{item.id}}</h2>
+  Styles from the <code>{{item.packageName}}/{{item.id}}</code> package can be customized using
+  @if (data.length === 1) {
+    the <code>{{data[0].overridesMixin}}</code> mixin.
+  } @else {
+    the @for (current of data; track current.name) {{{$last ? ' and ' : ($first ? '' : ', ')}}<code>{{current.overridesMixin}}</code>} mixins.
+  }
+  {{data.length === 1 ? 'This mixin accepts' : 'These mixins accept'}} a set of tokens that control how the components will look, either for the entire app or under a specific selector. {{example ? 'For example:' : ''}}
+
+  @if (example) {
+    <div class="docs-markdown">
+      <pre>{{example}}</pre>
+    </div>
+  }
+
+  You can find the full list of supported mixins and tokens below.
+
+  <div class="docs-markdown">
+    @for (current of data; track current.name) {
+      <h3>Tokens supported by <code>{{current.overridesMixin}}</code></h3>
+      <token-table [tokens]="current.tokens"/>
+    }
+  </div>
+}

@@ -51,6 +51,7 @@ import {
   ComponentViewer,
   ComponentViewerModule
 } from '../component-viewer/component-viewer';
+import {ComponentStyling} from '../component-viewer/component-styling';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
 // way. This includes hiding the sidenav, defaulting it to open, changing the mode from over to
@@ -165,7 +166,8 @@ const routes: Routes = [{
         {path: '', redirectTo: 'overview', pathMatch: 'full'},
         {path: 'overview', component: ComponentOverview, pathMatch: 'full'},
         {path: 'api', component: ComponentApi, pathMatch: 'full'},
-        {path: 'examples', component: ComponentExamples, pathMatch: 'full'}
+        {path: 'styling', component: ComponentStyling, pathMatch: 'full'},
+        {path: 'examples', component: ComponentExamples, pathMatch: 'full'},
       ],
     },
     {path: '**', redirectTo: '/404'}

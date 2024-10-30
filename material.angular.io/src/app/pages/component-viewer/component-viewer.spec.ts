@@ -44,7 +44,7 @@ describe('ComponentViewer', () => {
       throw Error(`Unable to find DocItem: '${docItemsId}' in section: 'material'.`);
     }
     const expected = `${docItem.name}`;
-    expect(component._componentPageTitle.title).toEqual(expected);
+    expect(component.componentPageTitle.title).toEqual(expected);
   });
 });
 

@@ -51,32 +51,47 @@ export class ComponentViewer implements OnDestroy {
   sections: Set<string> = new Set(['overview', 'api']);
   private _destroyed = new Subject<void>();
 
-  constructor(_route: ActivatedRoute, private router: Router,
-              public _componentPageTitle: ComponentPageTitle,
-              public docItems: DocumentationItems) {
-    const routeAndParentParams = [_route.params];
-    if (_route.parent) {
-      routeAndParentParams.push(_route.parent.params);
+  constructor(
+    route: ActivatedRoute,
+    private router: Router,
+    public componentPageTitle: ComponentPageTitle,
+    readonly docItems: DocumentationItems) {
+    const routeAndParentParams = [route.params];
+    if (route.parent) {
+      routeAndParentParams.push(route.parent.params);
     }
     // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
     // parent route for the section (material/cdk).
     combineLatest(routeAndParentParams).pipe(
-      map((params: Params[]) => ({id: params[0]['id'], section: params[1]['section']})),
-      map((docIdAndSection: {id: string, section: string}) =>
-          ({doc: docItems.getItemById(docIdAndSection.id, docIdAndSection.section),
-            section: docIdAndSection.section}), takeUntil(this._destroyed))
-    ).subscribe((docItemAndSection: {doc: DocItem | undefined, section: string}) => {
-      if (docItemAndSection.doc !== undefined) {
-        this.componentDocItem.next(docItemAndSection.doc);
-        this._componentPageTitle.title = `${docItemAndSection.doc.name}`;
+      map((params: Params[]) => {
+        const id = params[0]['id'];
+        const section = params[1]['section'];
 
-        if (docItemAndSection.doc.examples && docItemAndSection.doc.examples.length) {
-          this.sections.add('examples');
-        } else {
-          this.sections.delete('examples');
-        }
+        return ({
+          doc: docItems.getItemById(id, section),
+          section: section
+        });
+      },
+      takeUntil(this._destroyed))
+    ).subscribe(({doc, section}) => {
+      if (!doc) {
+        this.router.navigate(['/' + section]);
+        return;
+      }
+
+      this.componentDocItem.next(doc);
+      componentPageTitle.title = `${doc.name}`;
+
+      if (doc.hasStyling) {
+        this.sections.add('styling');
       } else {
-        this.router.navigate(['/' + docItemAndSection.section]);
+        this.sections.delete('styling');
+      }
+
+      if (doc.examples && doc.examples.length) {
+        this.sections.add('examples');
+      } else {
+        this.sections.delete('examples');
       }
     });
   }
@@ -159,14 +174,6 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   ],
 })
 export class ComponentOverview extends ComponentBaseView {
-  constructor(
-    componentViewer: ComponentViewer,
-    breakpointObserver: BreakpointObserver,
-    changeDetectorRef: ChangeDetectorRef
-  ) {
-    super(componentViewer, breakpointObserver, changeDetectorRef);
-  }
-
   getOverviewDocumentUrl(doc: DocItem) {
     // Use the explicit overview path if specified. Otherwise, compute an overview path based
     // on the package name and doc item id. Overviews for components are commonly stored in a
@@ -191,14 +198,6 @@ export class ComponentOverview extends ComponentBaseView {
   ],
 })
 export class ComponentApi extends ComponentBaseView {
-  constructor(
-    componentViewer: ComponentViewer,
-    breakpointObserver: BreakpointObserver,
-    changeDetectorRef: ChangeDetectorRef
-  ) {
-    super(componentViewer, breakpointObserver, changeDetectorRef);
-  }
-
   getApiDocumentUrl(doc: DocItem) {
     const apiDocId = doc.apiDocId || `${doc.packageName}-${doc.id}`;
     return `/docs-content/api-docs/${apiDocId}.html`;
@@ -215,15 +214,7 @@ export class ComponentApi extends ComponentBaseView {
     AsyncPipe,
   ],
 })
-export class ComponentExamples extends ComponentBaseView {
-  constructor(
-    componentViewer: ComponentViewer,
-    breakpointObserver: BreakpointObserver,
-    changeDetectorRef: ChangeDetectorRef
-  ) {
-    super(componentViewer, breakpointObserver, changeDetectorRef);
-  }
-}
+export class ComponentExamples extends ComponentBaseView {}
 
 @NgModule({
   imports: [

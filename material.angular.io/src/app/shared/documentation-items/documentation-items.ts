@@ -30,6 +30,8 @@ export interface DocItem {
   overviewPath?: string;
   /** List of additional API docs. */
   additionalApiDocs?: AdditionalApiDoc[];
+  /** Whether the doc item can display styling information. */
+  hasStyling?: boolean;
 }
 
 export interface DocSection {
@@ -596,6 +598,7 @@ export class DocumentationItems {
 function processDocs(packageName: string, docs: DocItem[]): DocItem[] {
   for (const doc of docs) {
     doc.packageName = packageName;
+    doc.hasStyling = packageName === 'material';
     doc.examples = exampleNames.filter(key =>
       key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
       !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0));
