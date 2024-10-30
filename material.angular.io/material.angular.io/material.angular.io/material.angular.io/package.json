@@ -37,7 +37,7 @@
     "@angular/cdk-experimental": "^19.0.0-next.9",
     "@angular/common": "^19.0.0-next.10",
     "@angular/compiler": "^19.0.0-next.10",
-    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#4334c0c112b4a55c7257a5837ac94f5464938764",
+    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#3e3187172e1edc005a6669fa214e7b4bdc6a230b",
     "@angular/core": "^19.0.0-next.10",
     "@angular/forms": "^19.0.0-next.10",
     "@angular/google-maps": "^19.0.0-next.9",
