@@ -215,6 +215,8 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
 /** Shared host configuration for buttons using the `<a>` tag. */
 export const MAT_ANCHOR_HOST = {
+  // Note that this is basically a noop on anchors,
+  // but it appears that some internal apps depend on it.
   '[attr.disabled]': '_getDisabledAttribute()',
   '[class.mat-mdc-button-disabled]': 'disabled',
   '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
@@ -224,7 +226,7 @@ export const MAT_ANCHOR_HOST = {
   // consistency with the `mat-button` applied on native buttons where even
   // though they have an index, they're not tabbable.
   '[attr.tabindex]': 'disabled && !disabledInteractive ? -1 : tabIndex',
-  '[attr.aria-disabled]': '_getDisabledAttribute()',
+  '[attr.aria-disabled]': '_getAriaDisabled()',
   // MDC automatically applies the primary theme color to the button, but we want to support
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
   // select and style this "theme".
@@ -267,6 +269,9 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
   };
 
   protected override _getAriaDisabled() {
-    return this.ariaDisabled == null ? this.disabled : this.ariaDisabled;
+    if (this.ariaDisabled != null) {
+      return this.ariaDisabled;
+    }
+    return this.disabled || null;
   }
 }
