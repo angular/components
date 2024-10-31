@@ -38,11 +38,11 @@ export class TokenTable {
   protected typeFilter = signal<TokenType | null>(null);
   protected types: TokenType[] = ['base', 'color', 'typography', 'density'];
   protected filteredTokens = computed(() => {
-    const name = this.nameFilter().trim();
+    const name = this.nameFilter().trim().toLowerCase();
     const typeFilter = this.typeFilter();
 
     return this.tokens().filter(token =>
-      (!name || token.overridesName.includes(name)) &&
+      (!name || token.overridesName.toLowerCase().includes(name)) &&
       (!typeFilter || token.type === typeFilter));
   });
 
