@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   Component,
@@ -33,12 +33,6 @@ import {MatRipple} from '../ripple/ripple';
 import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
 import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-
-/**
- * Option IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let _uniqueIdCounter = 0;
 
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange<T = any> {
@@ -110,7 +104,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   @Input() value: T;
 
   /** The unique ID of the option. */
-  @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-option-');
 
   /** Whether the option is disabled. */
   @Input({transform: booleanAttribute})
