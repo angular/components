@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusableOption} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
 import {
   ANIMATION_MODULE_TYPE,
   AfterViewInit,
@@ -76,9 +76,6 @@ export class MatCheckboxChange {
   /** The new `checked` value of the checkbox. */
   checked: boolean;
 }
-
-// Increasing integer for generating unique ids for checkbox components.
-let nextUniqueId = 0;
 
 // Default checkbox configuration.
 const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
@@ -255,7 +252,7 @@ export class MatCheckbox
     this._options = this._options || defaults;
     this.color = this._options.color || defaults.color;
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
-    this.id = this._uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
+    this.id = this._uniqueId = inject(_IdGenerator).getId('mat-mdc-checkbox-');
     this.disabledInteractive = this._options?.disabledInteractive ?? false;
   }
 
