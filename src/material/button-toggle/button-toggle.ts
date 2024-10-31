@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, SPACE, ENTER} from '@angular/cdk/keycodes';
 import {
@@ -104,9 +104,6 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
   multi: true,
 };
 
-// Counter used to generate unique IDs.
-let uniqueIdCounter = 0;
-
 /** Change event object emitted by button toggle. */
 export class MatButtonToggleChange {
   constructor(
@@ -181,7 +178,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._name = value;
     this._markButtonsForCheck();
   }
-  private _name = `mat-button-toggle-group-${uniqueIdCounter++}`;
+  private _name = inject(_IdGenerator).getId('mat-button-toggle-group-');
 
   /** Whether the toggle group is vertical. */
   @Input({transform: booleanAttribute}) vertical: boolean;
@@ -562,6 +559,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
+  private _idGenerator = inject(_IdGenerator);
 
   private _checked = false;
 
@@ -685,7 +683,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const group = this.buttonToggleGroup;
-    this.id = this.id || `mat-button-toggle-${uniqueIdCounter++}`;
+    this.id = this.id || this._idGenerator.getId('mat-button-toggle-');
 
     if (group) {
       if (group._isPrechecked(this)) {
