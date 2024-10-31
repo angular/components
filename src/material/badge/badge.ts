@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
+import {_IdGenerator, AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {
   booleanAttribute,
@@ -25,8 +25,6 @@ import {
 } from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-
-let nextId = 0;
 
 /** Allowed position options for matBadgePosition */
 export type MatBadgePosition =
@@ -79,6 +77,7 @@ export class MatBadge implements OnInit, OnDestroy {
   private _ariaDescriber = inject(AriaDescriber);
   private _renderer = inject(Renderer2);
   private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _idGenerator = inject(_IdGenerator);
 
   /**
    * Theme color of the badge. This API is supported in M2 themes only, it
@@ -134,9 +133,6 @@ export class MatBadge implements OnInit, OnDestroy {
 
   /** Whether the badge is hidden. */
   @Input({alias: 'matBadgeHidden', transform: booleanAttribute}) hidden: boolean;
-
-  /** Unique id for the badge */
-  _id: number = nextId++;
 
   /** Visible badge element. */
   private _badgeElement: HTMLElement | undefined;
@@ -236,7 +232,7 @@ export class MatBadge implements OnInit, OnDestroy {
     const badgeElement = this._renderer.createElement('span');
     const activeClass = 'mat-badge-active';
 
-    badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
+    badgeElement.setAttribute('id', this._idGenerator.getId('mat-badge-content-'));
 
     // The badge is aria-hidden because we don't want it to appear in the page's navigation
     // flow. Instead, we use the badge to describe the decorated element with aria-describedby.
