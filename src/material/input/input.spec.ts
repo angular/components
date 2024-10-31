@@ -607,7 +607,7 @@ describe('MatMdcInput without forms', () => {
     fixture.componentInstance.formControl.markAsTouched();
     fixture.componentInstance.formControl.setErrors({invalid: true});
     fixture.detectChanges();
-    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-mdc-error-\d+$/);
+    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-mdc-error-\w+\d+$/);
 
     fixture.componentInstance.label = '';
     fixture.componentInstance.userDescribedByValue = '';
