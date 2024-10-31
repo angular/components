@@ -22,6 +22,7 @@ import {MatDialogRef} from './dialog-ref';
 import {defer, Observable, Subject} from 'rxjs';
 import {Dialog, DialogConfig} from '@angular/cdk/dialog';
 import {startWith} from 'rxjs/operators';
+import {_IdGenerator} from '@angular/cdk/a11y';
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatMdcDialogData');
@@ -65,9 +66,6 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 
-// Counter for unique dialog ids.
-let uniqueId = 0;
-
 /**
  * Service to open Material Design modal dialogs.
  */
@@ -77,6 +75,7 @@ export class MatDialog implements OnDestroy {
   private _defaultOptions = inject<MatDialogConfig>(MAT_DIALOG_DEFAULT_OPTIONS, {optional: true});
   private _scrollStrategy = inject(MAT_DIALOG_SCROLL_STRATEGY);
   private _parentDialog = inject(MatDialog, {optional: true, skipSelf: true});
+  private _idGenerator = inject(_IdGenerator);
   protected _dialog = inject(Dialog);
 
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
@@ -154,7 +153,7 @@ export class MatDialog implements OnDestroy {
   ): MatDialogRef<T, R> {
     let dialogRef: MatDialogRef<T, R>;
     config = {...(this._defaultOptions || new MatDialogConfig()), ...config};
-    config.id = config.id || `mat-mdc-dialog-${uniqueId++}`;
+    config.id = config.id || this._idGenerator.getId('mat-mdc-dialog-');
     config.scrollStrategy = config.scrollStrategy || this._scrollStrategy();
 
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {
