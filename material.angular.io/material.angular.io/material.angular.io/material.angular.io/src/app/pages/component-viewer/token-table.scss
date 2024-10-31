@@ -10,7 +10,7 @@ thead {
   position: sticky;
   top: 0;
   left: 0;
-  background: #fdfbff;
+  background: var(--mat-sys-surface);
   z-index: 1;
 }
 
@@ -19,10 +19,8 @@ thead {
   align-items: center;
   margin: 24px 0;
   width: 100%;
-}
-
-.filters mat-form-field {
-  margin-right: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .name-field {
