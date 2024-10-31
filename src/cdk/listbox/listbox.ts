@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
+import {
+  _IdGenerator,
+  ActiveDescendantKeyManager,
+  Highlightable,
+  ListKeyManagerOption,
+} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceArray} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -41,9 +46,6 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
-
-/** The next id to use for creating unique DOM IDs. */
-let nextId = 0;
 
 /**
  * An implementation of SelectionModel that internally always represents the selection as a
@@ -104,7 +106,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     this._id = value;
   }
   private _id: string;
-  private _generatedId = `cdk-option-${nextId++}`;
+  private _generatedId = inject(_IdGenerator).getId('cdk-option-');
 
   /** The value of this option. */
   @Input('cdkOption') value: T;
@@ -262,7 +264,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     this._id = value;
   }
   private _id: string;
-  private _generatedId = `cdk-listbox-${nextId++}`;
+  private _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
 
   /** The tabindex to use when the listbox is enabled. */
   @Input('tabindex')
