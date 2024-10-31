@@ -25,6 +25,7 @@ import {
   OnDestroy,
   WritableSignal,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
@@ -44,8 +45,6 @@ const MAT_INPUT_INVALID_TYPES = [
   'reset',
   'submit',
 ];
-
-let nextUniqueId = 0;
 
 /** Object that can be used to configure the default options for the input. */
 export interface MatInputConfig {
@@ -103,7 +102,7 @@ export class MatInput
   private _ngZone = inject(NgZone);
   protected _formField? = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
 
-  protected _uid = `mat-input-${nextUniqueId++}`;
+  protected _uid = inject(_IdGenerator).getId('mat-input-');
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
   private _signalBasedValueAccessor?: {value: WritableSignal<any>};
