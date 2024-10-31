@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {
@@ -44,7 +43,7 @@ const CARD_DIRECTIVES = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, CommonModule, ...CARD_DIRECTIVES],
+  imports: [MatCommonModule, ...CARD_DIRECTIVES],
   exports: [CARD_DIRECTIVES, MatCommonModule],
 })
 export class MatCardModule {}

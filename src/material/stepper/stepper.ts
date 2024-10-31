@@ -30,7 +30,7 @@ import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {Subject, Subscription} from 'rxjs';
-import {takeUntil, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
+import {takeUntil, map, startWith, switchMap} from 'rxjs/operators';
 
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
@@ -226,19 +226,11 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
       this._stateChanged();
     });
 
-    this._animationDone
-      .pipe(
-        // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice due
-        // to a bug in animations where the `.done` callback gets invoked twice on some browsers.
-        // See https://github.com/angular/angular/issues/24084
-        distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
-        takeUntil(this._destroyed),
-      )
-      .subscribe(event => {
-        if ((event.toState as StepContentPositionState) === 'current') {
-          this.animationDone.emit();
-        }
-      });
+    this._animationDone.pipe(takeUntil(this._destroyed)).subscribe(event => {
+      if ((event.toState as StepContentPositionState) === 'current') {
+        this.animationDone.emit();
+      }
+    });
   }
 
   _stepIsNavigable(index: number, step: MatStep): boolean {

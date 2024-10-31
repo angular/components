@@ -21,10 +21,9 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
-import * as i2 from '@angular/common';
-import * as i3 from '@angular/cdk/portal';
-import * as i4 from '@angular/cdk/stepper';
-import * as i5 from '@angular/material/icon';
+import * as i2 from '@angular/cdk/portal';
+import * as i3 from '@angular/cdk/stepper';
+import * as i4 from '@angular/material/icon';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
@@ -189,7 +188,7 @@ export class MatStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i3.PortalModule, typeof i4.CdkStepperModule, typeof i5.MatIconModule, typeof i1.MatRippleModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent], [typeof i1.MatCommonModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i1.MatCommonModule, typeof i2.PortalModule, typeof i3.CdkStepperModule, typeof i4.MatIconModule, typeof i1.MatRippleModule, typeof i5.MatStep, typeof i6.MatStepLabel, typeof i5.MatStepper, typeof i7.MatStepperNext, typeof i7.MatStepperPrevious, typeof i8.MatStepHeader, typeof i9.MatStepperIcon, typeof i10.MatStepContent], [typeof i1.MatCommonModule, typeof i5.MatStep, typeof i6.MatStepLabel, typeof i5.MatStepper, typeof i7.MatStepperNext, typeof i7.MatStepperPrevious, typeof i8.MatStepHeader, typeof i9.MatStepperIcon, typeof i10.MatStepContent]>;
 }
 
 // @public

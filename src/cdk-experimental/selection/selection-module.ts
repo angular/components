@@ -7,7 +7,6 @@
  */
 
 import {CdkTableModule} from '@angular/cdk/table';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
 import {CdkRowSelection} from './row-selection';
@@ -18,7 +17,6 @@ import {CdkSelectionToggle} from './selection-toggle';
 
 @NgModule({
   imports: [
-    CommonModule,
     CdkTableModule,
     CdkSelection,
     CdkSelectionToggle,

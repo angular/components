@@ -7,7 +7,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
@@ -19,7 +18,7 @@ import {
 } from './tooltip';
 
 @NgModule({
-  imports: [A11yModule, CommonModule, OverlayModule, MatCommonModule, MatTooltip, TooltipComponent],
+  imports: [A11yModule, OverlayModule, MatCommonModule, MatTooltip, TooltipComponent],
   exports: [MatTooltip, TooltipComponent, MatCommonModule, CdkScrollableModule],
   providers: [MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })

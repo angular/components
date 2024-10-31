@@ -7,7 +7,6 @@
  */
 
 import {ObserversModule} from '@angular/cdk/observers';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {MatError} from './directives/error';
@@ -20,7 +19,6 @@ import {MatFormField} from './form-field';
 @NgModule({
   imports: [
     MatCommonModule,
-    CommonModule,
     ObserversModule,
     MatFormField,
     MatLabel,

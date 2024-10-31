@@ -6,8 +6,7 @@
 
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
-import * as i3 from '@angular/material/core';
+import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
@@ -65,7 +64,7 @@ export class MatProgressSpinnerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressSpinnerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, never, [typeof i1.CommonModule, typeof i2.MatProgressSpinner, typeof i2.MatProgressSpinner], [typeof i2.MatProgressSpinner, typeof i2.MatProgressSpinner, typeof i3.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, never, [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner], [typeof i1.MatProgressSpinner, typeof i1.MatProgressSpinner, typeof i2.MatCommonModule]>;
 }
 
 // @public @deprecated (undocumented)
