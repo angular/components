@@ -1,3 +1,19 @@
+<a name="18.2.11"></a>
+# 18.2.11 "limonite-lemon" (2024-10-31)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5d1bc76430](https://github.com/angular/components/commit/5d1bc764302e4bebcc50fb0fa3dee86470148cdf) | fix | **tree:** only handle keyboard events directly from the node |
+| [a3449dc851](https://github.com/angular/components/commit/a3449dc851b7fbb0451dca57da4d29ab8f41e5a9) | perf | **table:** Use ResizeObservers instead of dom measurement to reduce layout thrashing (where possible) ([#29814](https://github.com/angular/components/pull/29814)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a98c886163](https://github.com/angular/components/commit/a98c886163312f591c3bc8539aa8686b94459566) | fix | **button:** anchor not handling disabledInteractive correctly ([#29938](https://github.com/angular/components/pull/29938)) |
+| [810040e8fc](https://github.com/angular/components/commit/810040e8fc88d31a734eb8a584891208ae088572) | fix | **sidenav:** remove IE animation workaround ([#29929](https://github.com/angular/components/pull/29929)) |
+| [197747e2bd](https://github.com/angular/components/commit/197747e2bd1cbc43534b6e3f5fc37040647c8a4f) | fix | **stepper:** remove IE animation workaround ([#29916](https://github.com/angular/components/pull/29916)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.10"></a>
 # 19.0.0-next.10 "plastic-moose" (2024-10-23)
 ### material
