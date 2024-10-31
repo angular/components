@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
+import {inject, Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
 
@@ -58,9 +59,6 @@ export interface MenuStackCloseEvent {
   focusParentTrigger?: boolean;
 }
 
-/** The next available menu stack ID. */
-let nextId = 0;
-
 /**
  * MenuStack allows subscribers to listen for close events (when a MenuStackItem is popped off
  * of the stack) in order to perform closing actions. Upon the MenuStack being empty it emits
@@ -70,7 +68,7 @@ let nextId = 0;
 @Injectable()
 export class MenuStack {
   /** The ID of this menu stack. */
-  readonly id = `${nextId++}`;
+  readonly id = inject(_IdGenerator).getId('cdk-menu-stack-');
 
   /** All MenuStackItems tracked by this MenuStack. */
   private readonly _elements: MenuStackItem[] = [];
