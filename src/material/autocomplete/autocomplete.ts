@@ -33,16 +33,10 @@ import {
   MatOption,
   ThemePalette,
 } from '@angular/material/core';
-import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
-
-/**
- * Autocomplete IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let _uniqueAutocompleteIdCounter = 0;
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
@@ -247,7 +241,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   }
 
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
-  id: string = `mat-autocomplete-${_uniqueAutocompleteIdCounter++}`;
+  id: string = inject(_IdGenerator).getId('mat-autocomplete-');
 
   /**
    * Tells any descendant `mat-optgroup` to use the inert a11y pattern.
