@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -45,8 +45,6 @@ import {MatChipAction} from './chip-action';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-
-let uid = 0;
 
 /** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
@@ -142,7 +140,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   }
 
   /** A unique id for the chip. If none is supplied, it will be auto-generated. */
-  @Input() id: string = `mat-mdc-chip-${uid++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-mdc-chip-');
 
   // TODO(#26104): Consider deprecating and using `_computeAriaAccessibleName` instead.
   // `ariaLabel` may be unnecessary, and `_computeAriaAccessibleName` only supports

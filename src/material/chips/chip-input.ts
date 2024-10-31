@@ -18,6 +18,7 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 import {MatChipGrid} from './chip-grid';
@@ -38,9 +39,6 @@ export interface MatChipInputEvent {
   /** Reference to the chip input that emitted the event. */
   chipInput: MatChipInput;
 }
-
-// Increasing integer for generating unique ids.
-let nextUniqueId = 0;
 
 /**
  * Directive that adds chip-specific behaviors to an input element inside `<mat-form-field>`.
@@ -107,7 +105,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   @Input() placeholder: string = '';
 
   /** Unique id for the input. */
-  @Input() id: string = `mat-mdc-chip-list-input-${nextUniqueId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-mdc-chip-list-input-');
 
   /** Whether the input is disabled. */
   @Input({transform: booleanAttribute})
