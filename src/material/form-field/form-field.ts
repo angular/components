@@ -34,6 +34,7 @@ import {
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
@@ -104,8 +105,6 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDefaultOptions>(
   'MAT_FORM_FIELD_DEFAULT_OPTIONS',
 );
-
-let nextUniqueId = 0;
 
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
@@ -191,6 +190,7 @@ export class MatFormField
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _dir = inject(Directionality);
   private _platform = inject(Platform);
+  private _idGenerator = inject(_IdGenerator);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -305,10 +305,10 @@ export class MatFormField
   _hasTextSuffix = false;
 
   // Unique id for the internal form field label.
-  readonly _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
+  readonly _labelId = this._idGenerator.getId('mat-mdc-form-field-label-');
 
   // Unique id for the hint label.
-  readonly _hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
+  readonly _hintLabelId = this._idGenerator.getId('mat-mdc-hint-');
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
