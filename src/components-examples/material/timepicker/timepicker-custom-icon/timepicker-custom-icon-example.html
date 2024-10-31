@@ -1,8 +1,8 @@
 <mat-form-field>
   <mat-label>Pick a time</mat-label>
-<!-- #docregion minimum-setup -->
   <input matInput [matTimepicker]="picker">
-  <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+  <mat-timepicker-toggle matIconSuffix [for]="picker">
+    <mat-icon matTimepickerToggleIcon>globe</mat-icon>
+  </mat-timepicker-toggle>
   <mat-timepicker #picker/>
-<!-- #enddocregion minimum-setup -->
 </mat-form-field>
