@@ -24,6 +24,7 @@ import {
   afterNextRender,
   Injector,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {NgClass} from '@angular/common';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '@angular/material/core';
@@ -62,8 +63,6 @@ export interface MatCalendarUserEvent<D> {
   value: D;
   event: Event;
 }
-
-let calendarBodyId = 1;
 
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
@@ -195,6 +194,12 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   /** Width of an individual cell. */
   _cellWidth: string;
 
+  /** ID for the start date label. */
+  _startDateLabelId: string;
+
+  /** ID for the end date label. */
+  _endDateLabelId: string;
+
   private _didDragSinceMouseDown = false;
 
   private _injector = inject(Injector);
@@ -209,7 +214,12 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   constructor(...args: unknown[]);
 
   constructor() {
+    const idGenerator = inject(_IdGenerator);
+    this._startDateLabelId = idGenerator.getId('mat-calendar-body-start-');
+    this._endDateLabelId = idGenerator.getId('mat-calendar-body-start-');
+
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+
     this._ngZone.runOutsideAngular(() => {
       const element = this._elementRef.nativeElement;
 
@@ -597,12 +607,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
     return null;
   }
-
-  private _id = `mat-calendar-body-${calendarBodyId++}`;
-
-  _startDateLabelId = `${this._id}-start-date`;
-
-  _endDateLabelId = `${this._id}-end-date`;
 }
 
 /** Checks whether a node is a table cell element. */

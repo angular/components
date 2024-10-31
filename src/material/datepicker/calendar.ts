@@ -39,10 +39,8 @@ import {
 import {MatYearView} from './year-view';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 import {MatIconButton, MatButton} from '@angular/material/button';
-import {CdkMonitorFocus} from '@angular/cdk/a11y';
+import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-
-let calendarHeaderId = 1;
 
 /**
  * Possible views for the calendar.
@@ -222,9 +220,7 @@ export class MatCalendarHeader<D> {
     return [minYearLabel, maxYearLabel];
   }
 
-  private _id = `mat-calendar-header-${calendarHeaderId++}`;
-
-  _periodButtonLabelId = `${this._id}-period-label`;
+  _periodButtonLabelId = inject(_IdGenerator).getId('mat-calendar-period-label-');
 }
 
 /** A calendar that is used as part of the datepicker. */
