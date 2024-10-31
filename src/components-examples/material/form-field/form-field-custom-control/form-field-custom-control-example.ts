@@ -175,6 +175,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
       this._placeholder();
       this._required();
       this._disabled();
+      this._focused();
       // Propagate state changes.
       untracked(() => this.stateChanges.next());
     });
