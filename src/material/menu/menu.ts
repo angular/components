@@ -31,7 +31,7 @@ import {
   Injector,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {
   ESCAPE,
@@ -49,8 +49,6 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {matMenuAnimations} from './menu-animations';
-
-let menuPanelUid = 0;
 
 /** Reason why the menu was closed. */
 export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -270,7 +268,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    */
   @Output() readonly close: EventEmitter<MenuCloseReason> = this.closed;
 
-  readonly panelId = `mat-menu-panel-${menuPanelUid++}`;
+  readonly panelId: string = inject(_IdGenerator).getId('mat-menu-panel-');
 
   private _injector = inject(Injector);
 
