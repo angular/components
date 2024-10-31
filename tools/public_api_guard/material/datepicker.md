@@ -203,7 +203,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     // (undocumented)
     _emitActiveDateChange(cell: MatCalendarCell, event: FocusEvent): void;
     endDateAccessibleName: string | null;
-    // (undocumented)
     _endDateLabelId: string;
     endValue: number;
     _firstRowOffset: number;
@@ -240,7 +239,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     _scheduleFocusActiveCellAfterViewChecked(): void;
     readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     startDateAccessibleName: string | null;
-    // (undocumented)
     _startDateLabelId: string;
     startValue: number;
     todayValue: number;

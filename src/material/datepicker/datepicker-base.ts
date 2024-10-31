@@ -7,7 +7,7 @@
  */
 
 import {AnimationEvent} from '@angular/animations';
-import {CdkTrapFocus} from '@angular/cdk/a11y';
+import {_IdGenerator, CdkTrapFocus} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceStringArray} from '@angular/cdk/coercion';
 import {
@@ -75,9 +75,6 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn} from './datepicker-input-base';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-
-/** Used to generate a unique ID for each datepicker instance. */
-let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -497,7 +494,7 @@ export abstract class MatDatepickerBase<
   private _opened = false;
 
   /** The id for the datepicker calendar. */
-  id: string = `mat-datepicker-${datepickerUid++}`;
+  id: string = inject(_IdGenerator).getId('mat-datepicker-');
 
   /** The minimum selectable date. */
   _getMinDate(): D | null {
