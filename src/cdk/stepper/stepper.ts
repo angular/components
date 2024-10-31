@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
@@ -45,9 +45,6 @@ import {startWith, takeUntil} from 'rxjs/operators';
 
 import {CdkStepHeader} from './step-header';
 import {CdkStepLabel} from './step-label';
-
-/** Used to generate unique ID for each stepper component. */
-let nextId = 0;
 
 /**
  * Position state of the content of each step in stepper that is used for transitioning
@@ -324,7 +321,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
   /** Used to track unique ID for each stepper component. */
-  _groupId = nextId++;
+  private _groupId = inject(_IdGenerator).getId('cdk-stepper-');
 
   /** Orientation of the stepper. */
   @Input()
@@ -434,12 +431,12 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
 
   /** Returns a unique id for each step label element. */
   _getStepLabelId(i: number): string {
-    return `cdk-step-label-${this._groupId}-${i}`;
+    return `${this._groupId}-label-${i}`;
   }
 
   /** Returns unique id for each step content element. */
   _getStepContentId(i: number): string {
-    return `cdk-step-content-${this._groupId}-${i}`;
+    return `${this._groupId}-content-${i}`;
   }
 
   /** Marks the component to be change detected. */
