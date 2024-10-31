@@ -32,14 +32,11 @@ import {ThemePalette, MatRipple} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
-import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
-
-/** Used to generate unique ID's for each tab component */
-let nextId = 0;
 
 /** @docs-private */
 export interface MatTabGroupBaseHeader {
@@ -268,7 +265,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   @Output() readonly selectedTabChange: EventEmitter<MatTabChangeEvent> =
     new EventEmitter<MatTabChangeEvent>(true);
 
-  private _groupId: number;
+  private _groupId: string;
 
   /** Whether the tab group is rendered on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
@@ -278,7 +275,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
   constructor() {
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
 
-    this._groupId = nextId++;
+    this._groupId = inject(_IdGenerator).getId('mat-tab-group-');
     this.animationDuration =
       defaultConfig && defaultConfig.animationDuration ? defaultConfig.animationDuration : '500ms';
     this.disablePagination =
@@ -492,12 +489,12 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
 
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string {
-    return `mat-tab-label-${this._groupId}-${i}`;
+    return `${this._groupId}-label-${i}`;
   }
 
   /** Returns a unique id for each tab content element */
   _getTabContentId(i: number): string {
-    return `mat-tab-content-${this._groupId}-${i}`;
+    return `${this._groupId}-content-${i}`;
   }
 
   /**
