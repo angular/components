@@ -220,7 +220,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
           expect(select.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
-          expect(select.getAttribute('aria-describedby')).toMatch(/^mat-mdc-hint-\d+$/);
+          expect(select.getAttribute('aria-describedby')).toMatch(/^mat-mdc-hint-\w+\d+$/);
         });
 
         it('should support user binding to `aria-describedby`', () => {
