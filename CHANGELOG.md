@@ -1,3 +1,23 @@
+<a name="19.0.0-rc.0"></a>
+# 19.0.0-rc.0 "magnetite-mango" (2024-10-31)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a40b5a7998](https://github.com/angular/components/commit/a40b5a7998c33f8dce5ec1f4ee9609a1974bbe10) | perf | **table:** Use ResizeObservers instead of dom measurement to reduce layout thrashing (where possible) ([#29814](https://github.com/angular/components/pull/29814)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [95ef66c8c1](https://github.com/angular/components/commit/95ef66c8c10f2c9c8ad96c44fa3af167fb3feb21) | fix | **button:** anchor not handling disabledInteractive correctly ([#29938](https://github.com/angular/components/pull/29938)) |
+| [5403b4b074](https://github.com/angular/components/commit/5403b4b074d0a694bdba5b145f43ce61b1145ad1) | fix | **core:** remove unused motion system vars ([#29920](https://github.com/angular/components/pull/29920)) |
+| [d28e99c035](https://github.com/angular/components/commit/d28e99c0354a96d02b05e711b8d8b49e1a5fe540) | fix | **sidenav:** remove IE animation workaround ([#29929](https://github.com/angular/components/pull/29929)) |
+| [8f775465c9](https://github.com/angular/components/commit/8f775465c9304a7b95a6b2de2a48127c340513bb) | fix | **stepper:** remove IE animation workaround ([#29916](https://github.com/angular/components/pull/29916)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [74c2a081f9](https://github.com/angular/components/commit/74c2a081f9c4c2221cab62efee3db81789bf6efa) | fix | resolve CLI errors in ng update schematic ([#29947](https://github.com/angular/components/pull/29947)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-next.10"></a>
 # 19.0.0-next.10 "plastic-moose" (2024-10-23)
 ### material
