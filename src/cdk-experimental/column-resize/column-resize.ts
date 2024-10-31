@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterViewInit, Directive, ElementRef, NgZone, OnDestroy} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {fromEvent, merge, Subject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
@@ -19,14 +20,13 @@ import {HeaderRowEventDispatcher} from './event-dispatcher';
 const HOVER_OR_ACTIVE_CLASS = 'cdk-column-resize-hover-or-active';
 const WITH_RESIZED_COLUMN_CLASS = 'cdk-column-resize-with-resized-column';
 
-let nextId = 0;
-
 /**
  * Base class for ColumnResize directives which attach to mat-table elements to
  * provide common events and services for column resizing.
  */
 @Directive()
 export abstract class ColumnResize implements AfterViewInit, OnDestroy {
+  private _idGenerator = inject(_IdGenerator);
   protected readonly destroyed = new Subject<void>();
 
   /* Publicly accessible interface for triggering and being notified of resizes. */
@@ -40,7 +40,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   protected abstract readonly notifier: ColumnResizeNotifierSource;
 
   /** Unique ID for this table instance. */
-  protected readonly selectorId = `${++nextId}`;
+  protected readonly selectorId = this._idGenerator.getId('cdk-column-resize-');
 
   /** The id attribute of the table, if specified. */
   id?: string;
@@ -60,7 +60,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
 
   /** Gets the unique CSS class name for this table instance. */
   getUniqueCssClass() {
-    return `cdk-column-resize-${this.selectorId}`;
+    return this.selectorId;
   }
 
   /** Called when a column in the table is resized. Applies a css class to the table element. */
