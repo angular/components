@@ -56,7 +56,7 @@ export interface MatButtonToggleDefaultOptions {
    * setting an appearance on a button toggle or group.
    */
   appearance?: MatButtonToggleAppearance;
-  /** Whetehr icon indicators should be hidden for single-selection button toggle groups. */
+  /** Whether icon indicators should be hidden for single-selection button toggle groups. */
   hideSingleSelectionIndicator?: boolean;
   /** Whether icon indicators should be hidden for multiple-selection button toggle groups. */
   hideMultipleSelectionIndicator?: boolean;
