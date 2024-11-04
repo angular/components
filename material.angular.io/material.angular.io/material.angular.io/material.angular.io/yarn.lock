@@ -482,22 +482,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/components-examples@https://github.com/angular/material2-docs-content.git#3743b2eee49ff4637ad5233f93049e1472ac1c36":
-  version: 19.1.0-next.0+sha-ade32c6
-  resolution: "@angular/components-examples@https://github.com/angular/material2-docs-content.git#commit=3743b2eee49ff4637ad5233f93049e1472ac1c36"
+"@angular/components-examples@https://github.com/angular/material2-docs-content.git#63dd3f7fdbbf85440aa18742c24646b9f9676750":
+  version: 19.1.0-next.0+sha-bd75077
+  resolution: "@angular/components-examples@https://github.com/angular/material2-docs-content.git#commit=63dd3f7fdbbf85440aa18742c24646b9f9676750"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/cdk": 19.1.0-next.0+sha-ade32c6
-    "@angular/cdk-experimental": 19.1.0-next.0+sha-ade32c6
+    "@angular/cdk": 19.1.0-next.0+sha-bd75077
+    "@angular/cdk-experimental": 19.1.0-next.0+sha-bd75077
     "@angular/common": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
     "@angular/core": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
-    "@angular/material": 19.1.0-next.0+sha-ade32c6
-    "@angular/material-date-fns-adapter": 19.1.0-next.0+sha-ade32c6
-    "@angular/material-experimental": 19.1.0-next.0+sha-ade32c6
-    "@angular/material-luxon-adapter": 19.1.0-next.0+sha-ade32c6
-    "@angular/material-moment-adapter": 19.1.0-next.0+sha-ade32c6
-  checksum: 10c0/b74c8fd617232c7b2f1e2f185682068fb0e1ea29adafa310c304cf4459c0da7d285d1295eeb89b59385b25e9cd04b331ae2340c9f2ab4f3526c39f1c0dde2a1d
+    "@angular/material": 19.1.0-next.0+sha-bd75077
+    "@angular/material-date-fns-adapter": 19.1.0-next.0+sha-bd75077
+    "@angular/material-experimental": 19.1.0-next.0+sha-bd75077
+    "@angular/material-luxon-adapter": 19.1.0-next.0+sha-bd75077
+    "@angular/material-moment-adapter": 19.1.0-next.0+sha-bd75077
+  checksum: 10c0/66097a5a29dcd141882898d80611c299868d8d6e0818de6a1b9d822680ec8a6556c5427b7d0eee1be505602580d5597501cd6d2949a778080d6a8adfb91ce9dd
   languageName: node
   linkType: hard
 
@@ -12776,7 +12776,7 @@ __metadata:
     "@angular/common": "npm:^19.0.0-rc.0"
     "@angular/compiler": "npm:^19.0.0-rc.0"
     "@angular/compiler-cli": "npm:^19.0.0-rc.0"
-    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#3743b2eee49ff4637ad5233f93049e1472ac1c36"
+    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#63dd3f7fdbbf85440aa18742c24646b9f9676750"
     "@angular/core": "npm:^19.0.0-rc.0"
     "@angular/forms": "npm:^19.0.0-rc.0"
     "@angular/google-maps": "npm:^19.0.0-rc.0"
