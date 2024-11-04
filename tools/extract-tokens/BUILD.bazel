@@ -10,6 +10,7 @@ ts_library(
     devmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
+        "//tools/highlight-files:sources",
         "@npm//@types/node",
         "@npm//sass",
     ],
@@ -19,6 +20,7 @@ nodejs_binary(
     name = "extract-tokens",
     data = [
         ":extract_tokens_lib",
+        "@npm//highlight.js",
         "@npm//sass",
     ],
     entry_point = ":extract-tokens.ts",
