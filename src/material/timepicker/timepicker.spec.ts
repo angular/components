@@ -73,7 +73,7 @@ describe('MatTimepicker', () => {
 
       expect(getPanel()).toBeFalsy();
       expect(input.value).toBe('12:30 AM');
-      expect(fixture.componentInstance.input.value()).toEqual(createTime(0, 30));
+      expectSameTime(fixture.componentInstance.input.value(), createTime(0, 30));
       expect(fixture.componentInstance.selectedSpy).toHaveBeenCalledTimes(1);
       expect(fixture.componentInstance.selectedSpy).toHaveBeenCalledWith(
         jasmine.objectContaining({
@@ -91,7 +91,7 @@ describe('MatTimepicker', () => {
 
       // Initial value
       expect(fixture.componentInstance.value).toBeTruthy();
-      expect(inputInstance.value()).toEqual(fixture.componentInstance.value());
+      expectSameTime(inputInstance.value(), fixture.componentInstance.value());
 
       // Propagation from input back to host
       clearElement(input);
@@ -100,7 +100,7 @@ describe('MatTimepicker', () => {
       let value = inputInstance.value()!;
       expect(adapter.getHours(value)).toBe(11);
       expect(adapter.getMinutes(value)).toBe(15);
-      expect(fixture.componentInstance.value()).toEqual(value);
+      expectSameTime(fixture.componentInstance.value(), value);
 
       // Propagation from host down to input
       fixture.componentInstance.value.set(createTime(13, 37));
@@ -109,7 +109,7 @@ describe('MatTimepicker', () => {
       value = inputInstance.value()!;
       expect(adapter.getHours(value)).toBe(13);
       expect(adapter.getMinutes(value)).toBe(37);
-      expect(value).toEqual(fixture.componentInstance.value());
+      expectSameTime(fixture.componentInstance.value(), value);
     }));
 
     it('should emit the `selected` event if the option being clicked was selected already', fakeAsync(() => {
@@ -169,7 +169,7 @@ describe('MatTimepicker', () => {
 
       // The user's value shouldn't be overwritten.
       expect(input.value).toBe('13:37');
-      expect(fixture.componentInstance.input.value()).toEqual(createTime(13, 37));
+      expectSameTime(fixture.componentInstance.input.value(), createTime(13, 37));
     });
 
     it('should parse invalid time string', () => {
@@ -251,14 +251,14 @@ describe('MatTimepicker', () => {
       typeInElement(input, '2:10 PM');
       fixture.detectChanges();
       expect(input.value).toBe('2:10 PM');
-      expect(inputInstance.value()).toEqual(new Date(...dateParts, 14, 10, 0));
+      expectSameTime(inputInstance.value(), new Date(...dateParts, 14, 10, 0));
     });
 
     it('should not accept an invalid `min` value', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.min.set(createTime(13, 45));
       fixture.detectChanges();
-      expect(fixture.componentInstance.input.min()).toEqual(createTime(13, 45));
+      expectSameTime(fixture.componentInstance.input.min(), createTime(13, 45));
 
       fixture.componentInstance.min.set(adapter.invalid());
       fixture.detectChanges();
@@ -269,7 +269,7 @@ describe('MatTimepicker', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.max.set(createTime(13, 45));
       fixture.detectChanges();
-      expect(fixture.componentInstance.input.max()).toEqual(createTime(13, 45));
+      expectSameTime(fixture.componentInstance.input.max(), createTime(13, 45));
 
       fixture.componentInstance.max.set(adapter.invalid());
       fixture.detectChanges();
@@ -280,14 +280,14 @@ describe('MatTimepicker', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.min.set('1:45 PM');
       fixture.detectChanges();
-      expect(fixture.componentInstance.input.min()).toEqual(createTime(13, 45));
+      expectSameTime(fixture.componentInstance.input.min(), createTime(13, 45));
     });
 
     it('should accept a valid time string as the `max`', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.max.set('1:45 PM');
       fixture.detectChanges();
-      expect(fixture.componentInstance.input.max()).toEqual(createTime(13, 45));
+      expectSameTime(fixture.componentInstance.input.max(), createTime(13, 45));
     });
 
     it('should throw if multiple inputs are associated with a timepicker', () => {
@@ -788,7 +788,7 @@ describe('MatTimepicker', () => {
       flush();
 
       expect(input.value).toBe('1:30 AM');
-      expect(fixture.componentInstance.input.value()).toEqual(createTime(1, 30));
+      expectSameTime(fixture.componentInstance.input.value(), createTime(1, 30));
       expect(getPanel()).toBeFalsy();
       expect(event.defaultPrevented).toBeTrue();
       expect(fixture.componentInstance.selectedSpy).toHaveBeenCalledTimes(1);
@@ -868,7 +868,7 @@ describe('MatTimepicker', () => {
 
       typeInElement(input, '1:37 PM');
       fixture.detectChanges();
-      expect(control.value).toEqual(createTime(13, 37));
+      expectSameTime(control.value, createTime(13, 37));
       expect(control.dirty).toBe(true);
       expect(control.touched).toBe(false);
 
@@ -890,7 +890,7 @@ describe('MatTimepicker', () => {
       getOptions()[5].click();
       fixture.detectChanges();
 
-      expect(control.value).toEqual(createTime(2, 30));
+      expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(true);
     });
 
@@ -930,7 +930,7 @@ describe('MatTimepicker', () => {
       getOptions()[5].click();
       fixture.detectChanges();
 
-      expect(control.value).toEqual(createTime(2, 30));
+      expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(false);
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
@@ -946,7 +946,7 @@ describe('MatTimepicker', () => {
       fixture.componentInstance.input.value.set(createTime(12, 0));
       fixture.detectChanges();
 
-      expect(control.value).toEqual(createTime(13, 37));
+      expectSameTime(control.value, createTime(13, 37));
       expect(control.dirty).toBe(false);
     });
 
@@ -1002,7 +1002,7 @@ describe('MatTimepicker', () => {
       typeInElement(input, '10:10 AM');
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerParse']).toBeFalsy();
-      expect(control.value).toEqual(createTime(10, 10));
+      expectSameTime(control.value, createTime(10, 10));
 
       clearElement(input);
       typeInElement(input, 'not a valid date');
@@ -1034,7 +1034,7 @@ describe('MatTimepicker', () => {
       typeInElement(input, '12:10 PM');
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerParse']).toBeFalsy();
-      expect(control.value).toEqual(createTime(12, 10));
+      expectSameTime(control.value, createTime(12, 10));
     }));
 
     it('should set an error if the user enters a time earlier than the minimum', fakeAsync(() => {
@@ -1052,7 +1052,7 @@ describe('MatTimepicker', () => {
       typeInElement(input, '11:59 AM');
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerMin']).toBeTruthy();
-      expect(control.value).toEqual(createTime(11, 59));
+      expectSameTime(control.value, createTime(11, 59));
 
       // Change the minimum so the value becomes valid.
       fixture.componentInstance.min.set(createTime(11, 0));
@@ -1075,7 +1075,7 @@ describe('MatTimepicker', () => {
       typeInElement(input, '12:01 PM');
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerMax']).toBeTruthy();
-      expect(control.value).toEqual(createTime(12, 1));
+      expectSameTime(control.value, createTime(12, 1));
 
       // Change the maximum so the value becomes valid.
       fixture.componentInstance.max.set(createTime(13, 0));
@@ -1196,6 +1196,12 @@ describe('MatTimepicker', () => {
       expect(fixture.componentInstance.toggle.disableRipple()).toBe(true);
     });
   });
+
+  function expectSameTime(one: Date | null, two: Date | null): void {
+    expect(adapter.sameTime(one, two))
+      .withContext(`Expected ${one} to be same time as ${two}`)
+      .toBe(true);
+  }
 
   function configureTestingModule(additionalProviders: Provider[] = []): void {
     TestBed.configureTestingModule({
