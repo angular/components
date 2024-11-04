@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use 'sass:list';
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -34,8 +33,8 @@ $prefix: (mdc, filled-text-field);
   );
 
   @return token-definition.namespace-tokens($prefix, (
-    _fix-tokens($mdc-tokens),
-    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
+    _fix-tokens($mdc-tokens, $systems),
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens), $systems)
   ), $token-slots);
 }
 
@@ -43,8 +42,9 @@ $prefix: (mdc, filled-text-field);
 /// Fixes inconsistent values in the filled text field tokens so that they can produce valid
 /// styles.
 /// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
+/// @param {Map} $systems The MDC system tokens
 /// @return {Map} The given tokens, with the invalid values replaced with valid ones.
-@function _fix-tokens($initial-tokens) {
+@function _fix-tokens($initial-tokens, $systems) {
   // Need to get the hardcoded values, because they include opacities that are used for the disabled
   // state.
   $hardcoded-tokens: token-definition.get-mdc-tokens('filled-text-field', (), false);
@@ -80,13 +80,11 @@ $prefix: (mdc, filled-text-field);
     )
   ));
 
-  $container-shape: map.get($tokens, container-shape);
-
-  // The M2 token slots define a single `container-shape` slot while the M3 tokens provide a list
-  // of shapes (e.g. top/bottom/left/right). Extract the first value so it matches the expected
-  // token slot in M2.
-  @if meta.type-of($container-shape) == 'list' {
-    $tokens: map.set($tokens, container-shape, list.nth($container-shape, 1));
+  // The system tokens have this set as `corner-extra-small-top` which assumes that the value will
+  // be set as a `border-radius`, however we set it as `border-top-left-radius` and
+  // `border-top-right-radius`. Changing it at this point will be breaking so instead we remap it.
+  @if (map.get($tokens, container-shape)) {
+    $tokens: map.set($tokens, container-shape, map.get($systems, md-sys-shape, corner-extra-small));
   }
 
   @return $tokens;
