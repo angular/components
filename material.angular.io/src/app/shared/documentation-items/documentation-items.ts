@@ -358,6 +358,15 @@ const DOCS: { [key: string]: DocItem[] } = {
       additionalApiDocs: [{name: 'Testing', path: 'material-tabs-testing.html'}],
     },
     {
+      id: 'timepicker',
+      name: 'Timepicker',
+      summary: 'Allows the user to select a time of the day.',
+      exampleSpecs: {
+        prefix: 'time',
+      },
+      additionalApiDocs: [{name: 'Testing', path: 'material-timepicker-testing.html'}],
+    },
+    {
       id: 'toolbar',
       name: 'Toolbar',
       summary: 'A container for top-level titles and controls.',
