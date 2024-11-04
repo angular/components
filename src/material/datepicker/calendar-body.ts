@@ -474,7 +474,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
     if (this.comparisonStart !== null && this.comparisonEnd !== null) {
       if (value === this.comparisonStart && value === this.comparisonEnd) {
-        return `${this._comparisonStartLabelId} ${this._comparisonEndLabelId}`;
+        return `${this._comparisonStartLabelId}-${this._comparisonEndLabelId}`;
       } else if (value === this.comparisonStart) {
         return this._comparisonStartLabelId;
       } else if (value === this.comparisonEnd) {
