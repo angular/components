@@ -1,9 +1,9 @@
 :host {
   color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary-container);
 }
 
 .docs-navbar-header {
-  background: var(--mat-sys-primary-container);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
