@@ -33,6 +33,7 @@ import {SortScene} from './scenes/sort/sort-scene';
 import {StepperScene} from './scenes/stepper/stepper-scene';
 import {TableScene} from './scenes/table/table-scene';
 import {TabsScene} from './scenes/tabs/tabs-scene';
+import {TimepickerScene} from './scenes/timepicker/timepicker-scene';
 import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
 import {TooltipScene} from './scenes/tooltip/tooltip-scene';
 import {TreeScene} from './scenes/tree/tree-scene';
@@ -87,6 +88,7 @@ export const routes: SceneViewerRoute[] = [
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
   {path: 'tabs', component: SceneViewer, data: {scene: TabsScene}},
+  {path: 'timepicker', component: SceneViewer, data: {scene: TimepickerScene}},
   {path: 'toolbar', component: SceneViewer, data: {scene: ToolbarScene}},
   {path: 'tooltip', component: SceneViewer, data: {scene: TooltipScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
