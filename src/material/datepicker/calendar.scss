@@ -1,6 +1,5 @@
 @use '@angular/cdk';
 
-@use '../core/style/layout-common';
 @use '../core/focus-indicators/private';
 @use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
 @use '../core/tokens/token-utils';
@@ -16,12 +15,6 @@ $calendar-controls-side-margin: calc(33% / 7 - 16px);
 $calendar-arrow-size: 5px !default;
 $calendar-arrow-disabled-opacity: 0.5 !default;
 
-// Values chosen to approximate https://material.io/icons/#ic_navigate_before and
-// https://material.io/icons/#ic_navigate_next as closely as possible.
-$calendar-prev-next-icon-border-width: 2px;
-$calendar-prev-next-icon-margin: 15.5px;
-$calendar-prev-icon-transform: translateX(2px) rotate(-45deg);
-$calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
 
 .mat-calendar {
@@ -94,8 +87,6 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
 
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
-  position: relative;
-
   @include token-utils.use-tokens($_tokens...) {
     // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
     .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
@@ -103,27 +94,9 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
     }
   }
 
-  &::after {
-    @include layout-common.fill;
-    content: '';
-    margin: $calendar-prev-next-icon-margin;
-    border: 0 solid currentColor;
-    border-top-width: $calendar-prev-next-icon-border-width;
-  }
-
   [dir='rtl'] & {
     transform: rotate(180deg);
   }
-}
-
-.mat-calendar-previous-button::after {
-  border-left-width: $calendar-prev-next-icon-border-width;
-  transform: $calendar-prev-icon-transform;
-}
-
-.mat-calendar-next-button::after {
-  border-right-width: $calendar-prev-next-icon-border-width;
-  transform: $calendar-next-icon-transform;
 }
 
 .mat-calendar-table {
