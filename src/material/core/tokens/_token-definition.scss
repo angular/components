@@ -124,11 +124,12 @@ $_system-fallbacks: null;
 /// Maps the values in a map to new values using the given mapping function
 /// @param {Map} $map The maps whose values will be mapped to new values.
 /// @param {Function} $fn The value mapping function.
-/// @param {Map} A new map with its values updated using the mapping function.
-@function map-values($map, $fn) {
+/// @param {ArgList} $args Additional arguments to pass to the mapping function.
+/// @return {Map} A new map with its values updated using the mapping function.
+@function map-values($map, $fn, $args...) {
   $result: ();
   @each $key, $value in $map {
-    $result: map.set($result, $key, meta.call($fn, $value));
+    $result: map.set($result, $key, meta.call($fn, $value, $args...));
   }
   @return $result;
 }
