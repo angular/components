@@ -12,3 +12,8 @@ html {
     density: 0,
   ));
 }
+
+body {
+  // The margin can throw off positioning since the overlay container is within the body.
+  margin: 0;
+}
