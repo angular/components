@@ -1,6 +1,5 @@
 import {
   Component,
-  ComponentFactoryResolver,
   HostBinding,
   Input,
   OnInit,
@@ -46,8 +45,7 @@ export class SceneViewer implements OnInit {
 
   readonly scene = viewChild.required('scene', { read: ViewContainerRef });
 
-  constructor(private readonly componentFactoryResolver: ComponentFactoryResolver,
-              private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
               private sanitizer: DomSanitizer) {
     this.hueRotation = this.route.snapshot.data['hueRotate'];
     this.component = this.route.snapshot.data['scene'];
@@ -55,8 +53,7 @@ export class SceneViewer implements OnInit {
   }
 
   ngOnInit() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.component);
-    this.scene().createComponent(componentFactory);
+    this.scene().createComponent(this.component);
     const container = document.querySelector('#scene-content-container') as HTMLElement;
     container.style.transform = `scale(${this.scale})`;
     container.style.transformOrigin = 'center';
