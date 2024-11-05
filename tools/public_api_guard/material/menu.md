@@ -102,7 +102,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     removeItem(_item: MatMenuItem): void;
     resetActiveItem(): void;
     _resetAnimation(): void;
-    setElevation(depth: number): void;
+    // @deprecated (undocumented)
+    setElevation(_depth: number): void;
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
     _startAnimation(): void;
     templateRef: TemplateRef<any>;
@@ -222,7 +223,7 @@ export interface MatMenuPanel<T = any> {
     removeItem?: (item: T) => void;
     // (undocumented)
     resetActiveItem: () => void;
-    // (undocumented)
+    // @deprecated (undocumented)
     setElevation?(depth: number): void;
     // (undocumented)
     setPositionClasses?: (x: MenuPositionX, y: MenuPositionY) => void;

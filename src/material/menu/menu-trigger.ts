@@ -382,24 +382,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _initMenu(menu: MatMenuPanel): void {
     menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
     menu.direction = this.dir;
-    this._setMenuElevation(menu);
     menu.focusFirstItem(this._openedBy || 'program');
     this._setIsMenuOpen(true);
-  }
-
-  /** Updates the menu elevation based on the amount of parent menus that it has. */
-  private _setMenuElevation(menu: MatMenuPanel): void {
-    if (menu.setElevation) {
-      let depth = 0;
-      let parentMenu = menu.parentMenu;
-
-      while (parentMenu) {
-        depth++;
-        parentMenu = parentMenu.parentMenu;
-      }
-
-      menu.setElevation(depth);
-    }
   }
 
   // set state rather than toggle to support triggers sharing a menu
