@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
+@use '../../../style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, menu);
@@ -35,9 +36,11 @@ $prefix: (mat, menu);
       item-with-icon-leading-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
       item-with-icon-trailing-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
       container-color: map.get($systems, md-sys-color, surface-container),
-      // Note that this uses a value, rather than a computed box-shadow, because we use
-      // the value at runtime to determine which shadow to set based on the menu's depth.
-      base-elevation-level: token-definition.hardcode(2, $exclude-hardcoded),
+      container-elevation-shadow: token-definition.hardcode(
+        elevation.get-box-shadow(2), $exclude-hardcoded),
+
+      // Unused
+      base-elevation-level: null,
     )
   );
 
