@@ -1,3 +1,19 @@
+<a name="19.0.0-rc.1"></a>
+# 19.0.0-rc.1 "lolite-lollipop" (2024-11-06)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d8dedc9b7](https://github.com/angular/components/commit/d8dedc9b7d1ea85e9e3b7a1256a6ad60d4a8a36b) | fix | **datepicker:** use SVG icons for calendar ([#29957](https://github.com/angular/components/pull/29957)) |
+| [a2cd04902](https://github.com/angular/components/commit/a2cd0490260e99ec0a9a23d0837177f99fc81425) | fix | **form-field:** incorrect form field border radius with system-level themes ([#29966](https://github.com/angular/components/pull/29966)) |
+| [de5e57ad1](https://github.com/angular/components/commit/de5e57ad1d9a76922091ca3adbab35bb9843b5fd) | fix | **menu:** use static elevation ([#29968](https://github.com/angular/components/pull/29968)) |
+| [9b5ee9d55](https://github.com/angular/components/commit/9b5ee9d551f09f606cb0e92f6288cf3edd76a1da) | fix | **timepicker:** value considered as invalid by default |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d1d53f51a](https://github.com/angular/components/commit/d1d53f51ad9c565275c4916cf8e107dd994b7fc3) | fix | remove usages of Sass globals ([#29972](https://github.com/angular/components/pull/29972)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-rc.0"></a>
 # 19.0.0-rc.0 "magnetite-mango" (2024-10-31)
 ### cdk
