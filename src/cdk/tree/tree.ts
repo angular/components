@@ -633,15 +633,7 @@ export class CdkTree<T, K = T>
       }
     });
 
-    // Note: we only `detectChanges` from a top-level call, otherwise we risk overflowing
-    // the call stack since this method is called recursively (see #29733.)
-    // TODO: change to `this._changeDetectorRef.markForCheck()`,
-    // or just switch this component to use signals.
-    if (parentData) {
-      this._changeDetectorRef.markForCheck();
-    } else {
-      this._changeDetectorRef.detectChanges();
-    }
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -1480,7 +1472,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
     this._tabindex.set(0);
-    this._changeDetectorRef.detectChanges();
     if (this._shouldFocus) {
       this._elementRef.nativeElement.focus();
     }
@@ -1489,7 +1480,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Defocus this data node. */
   unfocus(): void {
     this._tabindex.set(-1);
-    this._changeDetectorRef.detectChanges();
   }
 
   /** Emits an activation event. Implemented for TreeKeyManagerItem. */
@@ -1517,7 +1507,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   /** Makes the node focusable. Implemented for TreeKeyManagerItem. */
   makeFocusable(): void {
     this._tabindex.set(0);
-    this._changeDetectorRef.detectChanges();
   }
 
   _focusItem() {

@@ -1247,6 +1247,7 @@ describe('CdkTree', () => {
         fixture.destroy();
 
         fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -1273,7 +1274,6 @@ describe('CdkTree', () => {
       it('the tree does not have a tabindex when an element is active', () => {
         // activate the second child by clicking on it
         nodes[1].click();
-        fixture.detectChanges();
 
         expect(treeElement.hasAttribute('tabindex')).toBeFalse();
       });

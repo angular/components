@@ -298,6 +298,12 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     if (newIndex > -1 && newIndex !== this._activeItemIndex) {
       this._activeItemIndex = newIndex;
       this._typeahead?.setCurrentSelectedItemIndex(newIndex);
+    } else if (newIndex === -1) {
+      // if there's no new matching element, then we reset the state of this
+      // key manager
+      this._activeItem = null;
+      this._activeItemIndex = -1;
+      this._hasInitialFocused = false;
     }
   }
 
