@@ -26,7 +26,7 @@ $prefix: (mat, sort);
   // when mixing the colors together. Otherwise, if it resolves to something different
   // (e.g. it resolves to a CSS variable), we use the color directly.
   @if (meta.type-of($table-background) == color and meta.type-of($text-color) == color) {
-    $text-opacity: opacity($text-color);
+    $text-opacity: color.opacity($text-color);
     $arrow-color: color.mix($table-background, rgba($text-color, 1), (1 - $text-opacity) * 100%);
   }
   @else {

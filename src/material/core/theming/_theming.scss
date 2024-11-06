@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:meta';
+@use 'sass:color';
 
 // Whether to enable compatibility with legacy methods for accessing theme information.
 $theme-legacy-inspection-api-compatibility: true !default;
@@ -332,7 +333,7 @@ $private-internal-name: _mat-theming-internals-do-not-access;
   // We convert the rgba color into a solid one by taking the opacity from the rgba
   // value and using it to determine the percentage of the background to put
   // into foreground when mixing the colors together.
-  @return mix($background-color, rgba($color, 1), (1 - opacity($color)) * 100%);
+  @return color.mix($background-color, rgba($color, 1), (1 - color.opacity($color)) * 100%);
 }
 
 // Clamps the density scale to a number between the given min and max.
