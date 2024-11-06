@@ -1,3 +1,12 @@
+<a name="18.2.12"></a>
+# 18.2.12 "galaxite-galaxy" (2024-11-06)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3fc968a59](https://github.com/angular/components/commit/3fc968a59048c752e4ad7961e9badeed1253b3d7) | fix | **datepicker:** use SVG icons for calendar ([#29957](https://github.com/angular/components/pull/29957)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-rc.1"></a>
 # 19.0.0-rc.1 "lolite-lollipop" (2024-11-06)
 ### material
