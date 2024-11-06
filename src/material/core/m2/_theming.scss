@@ -1,6 +1,7 @@
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:color';
 @use '../theming/theming';
 @use './palette';
 
@@ -82,7 +83,7 @@
     @return $color;
   }
 
-  @return rgba($color, if($opacity == null, opacity($color), $opacity));
+  @return rgba($color, if($opacity == null, color.opacity($color), $opacity));
 }
 
 // Validates the specified theme by ensuring that the optional color config defines
