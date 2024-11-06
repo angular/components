@@ -301,12 +301,28 @@ export class CdkTree<T, K = T>
    * relative to the function to know if a node should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  readonly trackBy = input<TrackByFunction<T>>();
+  @Input()
+  set trackBy(trackBy: TrackByFunction<T>) {
+    this._trackBy.set(trackBy);
+  }
+  get trackBy(): TrackByFunction<T>|undefined {
+    return this._trackBy();
+  }
 
   /**
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
-  readonly expansionKey = input<(dataNode: T) => K>();
+  @Input()
+  set expansionKey(expansionKey: (dataNode: T) => K) {
+    this._expansionKey.set(expansionKey);
+  }
+  get expansionKey(): ((dataNode: T) => K)|undefined {
+    return this._expansionKey();
+  }
+
+  private readonly _trackBy = signal<TrackByFunction<T>|undefined>(undefined);
+
+  private readonly _expansionKey = signal<((dataNode: T) => K)|undefined>(undefined);
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
@@ -357,10 +373,10 @@ export class CdkTree<T, K = T>
     // - if an expansionKey is provided, TS will infer the type of K to be
     //   the return type.
     // - if it's not, then K will be defaulted to T.
-    return this.expansionKey() ?? ((item: T) => item as unknown as K);
+    return this._expansionKey() ?? ((item: T) => item as unknown as K);
   });
   readonly _trackByFn = computed(() => {
-    const trackBy = this.trackBy();
+    const trackBy = this._trackBy();
     if (trackBy) return trackBy;
     const expansionKey = this._expansionKeyFn();
     // Provide a default trackBy based on `_ExpansionKey` if one isn't provided.
