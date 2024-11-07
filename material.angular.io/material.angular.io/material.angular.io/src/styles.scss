@@ -6,6 +6,9 @@
 @use './styles/general';
 
 html {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+
   @include mat.theme((
     color: (
       theme-type: light,

@@ -130,7 +130,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
         id: header.id,
         active: false
       };
-    });
+    }).filter(link => link.id);
 
     this._linkSections[sectionIndex] = {name: sectionName, links};
     this._links.push(...links);

@@ -9,14 +9,14 @@
   same container so that they display one after another.
   -->
   <div class="docs-component-api">
-    <doc-viewer [documentUrl]="getApiDocumentUrl(docItem)"
+    <doc-viewer [document]="getApiDocumentUrl(docItem)"
       class="docs-component-view-text-content"
       (contentRendered)="updateTableOfContents(docItem.name, $event)">
     </doc-viewer>
 
     @for (additionalApiDoc of docItem.additionalApiDocs; track additionalApiDoc) {
       <doc-viewer
-        documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
+        document="/docs-content/api-docs/{{additionalApiDoc.path}}"
         class="docs-component-view-text-content"
         (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, $index + 1)"/>
     }
