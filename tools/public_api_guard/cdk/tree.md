@@ -90,9 +90,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     expand(dataNode: T): void;
     expandAll(): void;
     expandDescendants(dataNode: T): void;
-    set expansionKey(expansionKey: (dataNode: T) => K);
-    // (undocumented)
     get expansionKey(): ((dataNode: T) => K) | undefined;
+    set expansionKey(expansionKey: (dataNode: T) => K);
     _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
     _getDirectChildren(dataNode: T): Observable<T[]>;
     // (undocumented)
@@ -127,9 +126,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _setNodeTypeIfUnset(newType: 'flat' | 'nested'): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
-    set trackBy(trackBy: TrackByFunction<T>);
-    // (undocumented)
     get trackBy(): TrackByFunction<T> | undefined;
+    set trackBy(trackBy: TrackByFunction<T>);
     // (undocumented)
     readonly _trackByFn: Signal<TrackByFunction<T>>;
     // @deprecated
