@@ -33,6 +33,15 @@ describe('DocViewer', () => {
     expect(docViewer.nativeElement.innerHTML).toBe('<div>my docs page</div>');
   });
 
+  it('should load component', () => {
+    const fixture = TestBed.createComponent(DocViewerWithCompTestComponent);
+    fixture.detectChanges();
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer).not.toBeNull();
+    expect(docViewer.nativeElement.innerHTML).toContain(`TEST_COMPONENT_GUIDE`);
+  });
+
   it('should save textContent of the doc', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
     fixture.detectChanges();
@@ -145,7 +154,7 @@ describe('DocViewer', () => {
 
 @Component({
   selector: 'test',
-  template: `<doc-viewer [documentUrl]="documentUrl"></doc-viewer>`,
+  template: `<doc-viewer [document]="documentUrl"></doc-viewer>`,
   standalone: true,
   imports: [DocViewerModule, DocsAppTestingModule],
 })
@@ -170,3 +179,19 @@ const FAKE_DOCS: {[key: string]: string} = {
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
+
+@Component({
+  template: `TEST_COMPONENT_GUIDE`,
+  standalone: true,
+})
+class TestComponent {}
+
+@Component({
+  selector: 'test',
+  template: `<doc-viewer [document]="component"></doc-viewer>`,
+  standalone: true,
+  imports: [DocViewerModule, DocsAppTestingModule, TestComponent],
+})
+class DocViewerWithCompTestComponent {
+  component = TestComponent;
+}

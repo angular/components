@@ -1,4 +1,10 @@
-import {ComponentPortal, DomPortalOutlet} from '@angular/cdk/portal';
+import {
+  ComponentType,
+  ComponentPortal,
+  DomPortalOutlet,
+  Portal,
+  PortalModule
+} from '@angular/cdk/portal';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
@@ -40,20 +46,37 @@ class DocFetcher {
 
 @Component({
   selector: 'doc-viewer',
-  template: 'Loading document...',
+  template: `
+    @if (portal) {
+      <ng-template [cdkPortalOutlet]="portal"></ng-template>
+    } @else {
+      Loading document...
+    }
+  `,
   standalone: true,
+  imports: [PortalModule]
 })
 export class DocViewer implements OnDestroy {
   private _portalHosts: DomPortalOutlet[] = [];
   private _documentFetchSubscription: Subscription | undefined;
+  protected portal: Portal<any> | undefined;
 
   readonly name = input<string>();
 
-  /** The URL of the document to display. */
+  /** The document to display, either as a URL to a markdown file or a component to create. */
   @Input()
-  set documentUrl(url: string | undefined) {
-    if (url !== undefined) {
-      this._fetchDocument(url);
+  set document(document: string | ComponentType<any> | undefined) {
+    if (typeof document === 'string') {
+      this._fetchDocument(document);
+    } else if (document) {
+      this.portal = new ComponentPortal(document);
+
+      // Resolving and creating components dynamically in Angular happens synchronously, but since
+      // we want to emit the output if the components are actually rendered completely, we wait
+      // until the Angular zone becomes stable.
+      this._ngZone.onStable
+        .pipe(take(1))
+        .subscribe(() => this.contentRendered.next(this._elementRef.nativeElement));
     }
   }
 

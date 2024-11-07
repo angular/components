@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
+import {SystemVariables} from '../../pages/system-variables';
+import {ComponentType} from '@angular/cdk/portal';
 
 export interface GuideItem {
   id: string;
   name: string;
-  document: string;
   overview: string;
+  document: string | ComponentType<any>;
 }
 
-const GUIDES = [
+const GUIDES: GuideItem[] = [
   {
     id: 'getting-started',
     name: 'Getting started',
@@ -25,6 +27,12 @@ const GUIDES = [
     name: 'Theming Angular Material',
     document: '/docs-content/guides/theming.html',
     overview: 'Customize your application with Angular Material\'s theming system.'
+  },
+  {
+    id: 'system-variables',
+    name: 'System Variables',
+    document: SystemVariables,
+    overview: 'Understand the system variables available to use in your application.'
   },
   {
     id: 'theming-your-components',
