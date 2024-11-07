@@ -90,7 +90,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     expand(dataNode: T): void;
     expandAll(): void;
     expandDescendants(dataNode: T): void;
-    readonly expansionKey: InputSignal<((dataNode: T) => K) | undefined>;
+    set expansionKey(expansionKey: (dataNode: T) => K);
+    // (undocumented)
+    get expansionKey(): ((dataNode: T) => K) | undefined;
     _getChildrenAccessor(): ((dataNode: T) => T[] | Observable<T[]> | null | undefined) | undefined;
     _getDirectChildren(dataNode: T): Observable<T[]>;
     // (undocumented)
@@ -125,7 +127,9 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _setNodeTypeIfUnset(newType: 'flat' | 'nested'): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
-    readonly trackBy: InputSignal<TrackByFunction<T> | undefined>;
+    set trackBy(trackBy: TrackByFunction<T>);
+    // (undocumented)
+    get trackBy(): TrackByFunction<T> | undefined;
     // (undocumented)
     readonly _trackByFn: Signal<TrackByFunction<T>>;
     // @deprecated
@@ -136,7 +140,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
         end: number;
     }>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "expansionKey": { "alias": "expansionKey"; "required": false; "isSignal": true; }; }, {}, ["_nodeDefs"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTree<any, any>, "cdk-tree", ["cdkTree"], { "dataSource": { "alias": "dataSource"; "required": false; }; "treeControl": { "alias": "treeControl"; "required": false; }; "levelAccessor": { "alias": "levelAccessor"; "required": false; }; "childrenAccessor": { "alias": "childrenAccessor"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; }; "expansionKey": { "alias": "expansionKey"; "required": false; }; }, {}, ["_nodeDefs"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTree<any, any>, never>;
 }

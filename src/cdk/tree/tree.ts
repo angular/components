@@ -119,7 +119,6 @@ class NodeOutletTemplateContext<T, K> {
 /** @docs-private */
 @Directive({
   selector: '[cdkTreeNodeRenderer]',
-  standalone: true,
   hostDirectives: [
     {
       directive: NgTemplateOutlet,
@@ -156,7 +155,6 @@ export class CdkTreeNodeRenderer<T, K> implements OnInit {
       }
     </ng-template>
   `,
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTreeNodeRenderer],
@@ -189,7 +187,6 @@ export class CdkTreeNodeOutletTemplate<T, K> {
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
@@ -302,22 +299,22 @@ export class CdkTree<T, K = T>
    * Accepts a function that takes two parameters, `index` and `item`.
    */
   @Input()
-  set trackBy(trackBy: TrackByFunction<T>) {
-    this._trackBy.set(trackBy);
-  }
   get trackBy(): TrackByFunction<T>|undefined {
     return this._trackBy();
+  }
+  set trackBy(trackBy: TrackByFunction<T>) {
+    this._trackBy.set(trackBy);
   }
 
   /**
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
   @Input()
-  set expansionKey(expansionKey: (dataNode: T) => K) {
-    this._expansionKey.set(expansionKey);
-  }
   get expansionKey(): ((dataNode: T) => K)|undefined {
     return this._expansionKey();
+  }
+  set expansionKey(expansionKey: (dataNode: T) => K) {
+    this._expansionKey.set(expansionKey);
   }
 
   private readonly _trackBy = signal<TrackByFunction<T>|undefined>(undefined);
