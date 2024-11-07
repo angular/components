@@ -26,21 +26,21 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-option.$prefix,
         tokens-mat-option.get-color-tokens($theme)
       );
     }
 
     .mat-accent {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-option.$prefix,
         tokens-mat-option.get-color-tokens($theme, accent)
       );
     }
 
     .mat-warn {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-option.$prefix,
         tokens-mat-option.get-color-tokens($theme, warn)
       );
@@ -55,7 +55,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-option.$prefix,
         tokens-mat-option.get-typography-tokens($theme)
       );

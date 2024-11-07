@@ -26,8 +26,8 @@
     tokens-mat-text-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values(tokens-mdc-text-button.$prefix, $mdc-tokens);
-  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mdc-text-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-text-button.$prefix, $mat-tokens);
 }
 
 @mixin _filled-button-variant($theme, $palette) {
@@ -43,8 +43,8 @@
     tokens-mat-filled-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values(tokens-mdc-filled-button.$prefix, $mdc-tokens);
-  @include token-utils.create-token-values(tokens-mat-filled-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mdc-filled-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-filled-button.$prefix, $mat-tokens);
 }
 
 @mixin _protected-button-variant($theme, $palette) {
@@ -60,8 +60,8 @@
     tokens-mat-protected-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values(tokens-mdc-protected-button.$prefix, $mdc-tokens);
-  @include token-utils.create-token-values(tokens-mat-protected-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mdc-protected-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-protected-button.$prefix, $mat-tokens);
 }
 
 @mixin _outlined-button-variant($theme, $palette) {
@@ -77,8 +77,8 @@
     tokens-mat-outlined-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values(tokens-mdc-outlined-button.$prefix, $mdc-tokens);
-  @include token-utils.create-token-values(tokens-mat-outlined-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mdc-outlined-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-outlined-button.$prefix, $mat-tokens);
 }
 
 @mixin _theme-from-tokens($tokens, $options...) {
@@ -162,36 +162,36 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-text-button.$prefix,
         tokens-mdc-text-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-filled-button.$prefix,
         tokens-mdc-filled-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-protected-button.$prefix,
         tokens-mdc-protected-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-button.$prefix,
         tokens-mdc-outlined-button.get-unthemable-tokens()
       );
 
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-text-button.$prefix,
         tokens-mat-text-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-filled-button.$prefix,
         tokens-mat-filled-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-protected-button.$prefix,
         tokens-mat-protected-button.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-outlined-button.$prefix,
         tokens-mat-outlined-button.get-unthemable-tokens()
       );
@@ -280,36 +280,36 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-text-button.$prefix,
         tokens-mdc-text-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-filled-button.$prefix,
         tokens-mdc-filled-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-protected-button.$prefix,
         tokens-mdc-protected-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-button.$prefix,
         tokens-mdc-outlined-button.get-typography-tokens($theme)
       );
 
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-text-button.$prefix,
         tokens-mat-text-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-filled-button.$prefix,
         tokens-mat-filled-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-protected-button.$prefix,
         tokens-mat-protected-button.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-outlined-button.$prefix,
         tokens-mat-outlined-button.get-typography-tokens($theme)
       );
@@ -324,36 +324,36 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-text-button.$prefix,
         tokens-mdc-text-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-filled-button.$prefix,
         tokens-mdc-filled-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-protected-button.$prefix,
         tokens-mdc-protected-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-button.$prefix,
         tokens-mdc-outlined-button.get-density-tokens($theme)
       );
 
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-text-button.$prefix,
         tokens-mat-text-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-filled-button.$prefix,
         tokens-mat-filled-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-protected-button.$prefix,
         tokens-mat-protected-button.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-outlined-button.$prefix,
         tokens-mat-outlined-button.get-density-tokens($theme)
       );

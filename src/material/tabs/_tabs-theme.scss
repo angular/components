@@ -17,19 +17,19 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-secondary-navigation-tab.$prefix,
         tokens-mdc-secondary-navigation-tab.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-tab-indicator.$prefix,
         tokens-mdc-tab-indicator.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header-with-background.$prefix,
         tokens-mat-tab-header-with-background.get-unthemable-tokens()
       );
@@ -74,22 +74,22 @@
 }
 
 @mixin _background-styles($theme, $palette-name) {
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mat-tab-header-with-background.$prefix,
     tokens-mat-tab-header-with-background.get-color-tokens($theme, $palette-name)
   );
 }
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mdc-secondary-navigation-tab.$prefix,
     tokens-mdc-secondary-navigation-tab.get-color-tokens($theme, $palette-name)
   );
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mdc-tab-indicator.$prefix,
     tokens-mdc-tab-indicator.get-color-tokens($theme, $palette-name)
   );
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mat-tab-header.$prefix,
     tokens-mat-tab-header.get-color-tokens($theme, $palette-name)
   );
@@ -102,19 +102,19 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-secondary-navigation-tab.$prefix,
         tokens-mdc-secondary-navigation-tab.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-tab-indicator.$prefix,
         tokens-mdc-tab-indicator.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header-with-background.$prefix,
         tokens-mat-tab-header-with-background.get-typography-tokens($theme)
       );
@@ -129,19 +129,19 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-secondary-navigation-tab.$prefix,
         tokens-mdc-secondary-navigation-tab.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-tab-indicator.$prefix,
         tokens-mdc-tab-indicator.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header.$prefix,
         tokens-mat-tab-header.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-tab-header-with-background.$prefix,
         tokens-mat-tab-header-with-background.get-density-tokens($theme)
       );

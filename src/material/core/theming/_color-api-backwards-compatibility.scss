@@ -23,7 +23,7 @@
 // from the bundle.
 $_overrides-only: true;
 
-@mixin color-variant-styles($theme, $color-variant) {
+@mixin _color-variant-styles($theme, $color-variant) {
   $primary-options: (color-variant: $color-variant, emit-overrides-only: $_overrides-only);
 
   // Some components use the secondary color rather than primary color for `.mat-primary`.
@@ -33,10 +33,21 @@ $_overrides-only: true;
     emit-overrides-only: $_overrides-only
   );
 
-  @include option-theme.color($theme, $secondary-options...);
-  @include progress-spinner-theme.color($theme, $primary-options...);
-  @include pseudo-checkbox-theme.color($theme, $primary-options...);
-  @include stepper-theme.color($theme, $primary-options...);
+  & {
+    @include option-theme.color($theme, $secondary-options...);
+  }
+
+  & {
+    @include progress-spinner-theme.color($theme, $primary-options...);
+  }
+
+  & {
+    @include pseudo-checkbox-theme.color($theme, $primary-options...);
+  }
+
+  & {
+    @include stepper-theme.color($theme, $primary-options...);
+  }
 
   &.mat-icon {
     @include icon-theme.color($theme, $primary-options...);
@@ -105,7 +116,7 @@ $_overrides-only: true;
 
 @mixin color-variants-backwards-compatibility($theme) {
   .mat-primary {
-    @include color-variant-styles($theme, primary);
+    @include _color-variant-styles($theme, primary);
   }
   .mat-badge {
     @include badge-theme.color($theme, $color-variant: primary,
@@ -113,7 +124,7 @@ $_overrides-only: true;
   }
 
   .mat-accent {
-    @include color-variant-styles($theme, tertiary);
+    @include _color-variant-styles($theme, tertiary);
   }
   .mat-badge-accent {
     @include badge-theme.color($theme, $color-variant: tertiary,
@@ -121,7 +132,7 @@ $_overrides-only: true;
   }
 
   .mat-warn {
-    @include color-variant-styles($theme, error);
+    @include _color-variant-styles($theme, error);
   }
   .mat-badge-warn {
     @include badge-theme.color($theme, $color-variant: error,

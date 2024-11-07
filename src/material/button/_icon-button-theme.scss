@@ -14,7 +14,7 @@
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-icon-button.$prefix,
         tokens-mdc-icon-button.get-unthemable-tokens()
       );
@@ -35,8 +35,8 @@
     tokens-mat-icon-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix, $mdc-tokens);
-  @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mdc-icon-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-icon-button.$prefix, $mat-tokens);
 }
 
 /// Outputs color theme styles for the mat-icon-button.
@@ -72,7 +72,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-icon-button.$prefix,
         tokens-mat-icon-button.get-typography-tokens($theme)
       );
@@ -97,7 +97,7 @@
     $calculated-size: map.get($size-map, $density-scale);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-icon-button.$prefix,
         tokens-mat-icon-button.get-density-tokens($theme)
       );

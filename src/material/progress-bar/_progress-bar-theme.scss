@@ -14,7 +14,7 @@
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-linear-progress.$prefix,
         tokens-mdc-linear-progress.get-unthemable-tokens()
       );
@@ -23,7 +23,7 @@
 }
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mdc-linear-progress.$prefix,
     tokens-mdc-linear-progress.get-color-tokens($theme, $palette-name)
   );

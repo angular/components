@@ -116,7 +116,7 @@ $_side-padding: 8px;
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, (
+  @include token-utils.create-token-values-mixed(tokens-mat-text-button.$prefix, (
     state-layer-color: currentColor,
     ripple-color: currentColor,
   ));
