@@ -6,20 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EffectRef, Injector, QueryList, Signal, effect, isSignal} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
 import {
-  UP_ARROW,
   DOWN_ARROW,
+  END,
+  HOME,
   LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
   RIGHT_ARROW,
   TAB,
+  UP_ARROW,
   hasModifierKey,
-  HOME,
-  END,
-  PAGE_UP,
-  PAGE_DOWN,
 } from '@angular/cdk/keycodes';
+import {EffectRef, Injector, QueryList, Signal, effect, isSignal, signal} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
 import {Typeahead} from './typeahead';
 
 /** This interface is for items that can be passed to a ListKeyManager. */
@@ -40,7 +40,7 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
-  private _activeItem: T | null = null;
+  private _activeItem = signal<T | null>(null);
   private _wrap = false;
   private _typeaheadSubscription = Subscription.EMPTY;
   private _itemChangesSubscription?: Subscription;
@@ -204,11 +204,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   setActiveItem(item: T): void;
 
   setActiveItem(item: any): void {
-    const previousActiveItem = this._activeItem;
+    const previousActiveItem = this._activeItem();
 
     this.updateActiveItem(item);
 
-    if (this._activeItem !== previousActiveItem) {
+    if (this._activeItem() !== previousActiveItem) {
       this.change.next(this._activeItemIndex);
     }
   }
@@ -317,7 +317,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** The active item. */
   get activeItem(): T | null {
-    return this._activeItem;
+    return this._activeItem();
   }
 
   /** Gets whether the user is currently typing into the manager using the typeahead feature. */
@@ -365,7 +365,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     const activeItem = itemArray[index];
 
     // Explicitly check for `null` and `undefined` because other falsy values are valid.
-    this._activeItem = activeItem == null ? null : activeItem;
+    this._activeItem.set(activeItem == null ? null : activeItem);
     this._activeItemIndex = index;
     this._typeahead?.setCurrentSelectedItemIndex(index);
   }
@@ -452,8 +452,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   /** Callback for when the items have changed. */
   private _itemsChanged(newItems: T[] | readonly T[]) {
     this._typeahead?.setItems(newItems);
-    if (this._activeItem) {
-      const newIndex = newItems.indexOf(this._activeItem);
+    const activeItem = this._activeItem();
+    if (activeItem) {
+      const newIndex = newItems.indexOf(activeItem);
 
       if (newIndex > -1 && newIndex !== this._activeItemIndex) {
         this._activeItemIndex = newIndex;
