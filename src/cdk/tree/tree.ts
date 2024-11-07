@@ -299,7 +299,7 @@ export class CdkTree<T, K = T>
    * Accepts a function that takes two parameters, `index` and `item`.
    */
   @Input()
-  get trackBy(): TrackByFunction<T>|undefined {
+  get trackBy(): TrackByFunction<T> | undefined {
     return this._trackBy();
   }
   set trackBy(trackBy: TrackByFunction<T>) {
@@ -310,16 +310,16 @@ export class CdkTree<T, K = T>
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
   @Input()
-  get expansionKey(): ((dataNode: T) => K)|undefined {
+  get expansionKey(): ((dataNode: T) => K) | undefined {
     return this._expansionKey();
   }
   set expansionKey(expansionKey: (dataNode: T) => K) {
     this._expansionKey.set(expansionKey);
   }
 
-  private readonly _trackBy = signal<TrackByFunction<T>|undefined>(undefined);
+  private readonly _trackBy = signal<TrackByFunction<T> | undefined>(undefined);
 
-  private readonly _expansionKey = signal<((dataNode: T) => K)|undefined>(undefined);
+  private readonly _expansionKey = signal<((dataNode: T) => K) | undefined>(undefined);
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
