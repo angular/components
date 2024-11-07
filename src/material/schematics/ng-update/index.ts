@@ -15,8 +15,12 @@ import {
 
 import {materialUpgradeData} from './upgrade-data';
 import {MatCoreMigration} from './migrations/mat-core-removal';
+import {ExplicitSystemVariablePrefixMigration} from './migrations/explicit-system-variable-prefix';
 
-const materialMigrations: NullableDevkitMigration[] = [MatCoreMigration];
+const materialMigrations: NullableDevkitMigration[] = [
+  MatCoreMigration,
+  ExplicitSystemVariablePrefixMigration,
+];
 
 /** Entry point for the migration schematics with target of Angular Material v19 */
 export function updateToV19(): Rule {
