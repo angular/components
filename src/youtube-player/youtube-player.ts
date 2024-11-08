@@ -29,6 +29,7 @@ import {
   CSP_NONCE,
   ChangeDetectorRef,
   AfterViewInit,
+  EventEmitter,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPattern} from 'rxjs';
@@ -218,22 +219,29 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
    */
   @Input() placeholderImageQuality: PlaceholderImageQuality;
 
-  /** Outputs are direct proxies from the player itself. */
-  @Output() readonly ready: Observable<YT.PlayerEvent> =
-    this._getLazyEmitter<YT.PlayerEvent>('onReady');
+  // Note: ready event can't go through the lazy emitter, because it
+  // happens before the `_playerChanges` stream emits the new player.
 
+  /** Emits when the player is initialized. */
+  @Output() readonly ready: Observable<YT.PlayerEvent> = new EventEmitter<YT.PlayerEvent>();
+
+  /** Emits when the state of the player has changed. */
   @Output() readonly stateChange: Observable<YT.OnStateChangeEvent> =
     this._getLazyEmitter<YT.OnStateChangeEvent>('onStateChange');
 
+  /** Emits when there's an error while initializing the player. */
   @Output() readonly error: Observable<YT.OnErrorEvent> =
     this._getLazyEmitter<YT.OnErrorEvent>('onError');
 
+  /** Emits when the underlying API of the player has changed. */
   @Output() readonly apiChange: Observable<YT.PlayerEvent> =
     this._getLazyEmitter<YT.PlayerEvent>('onApiChange');
 
+  /** Emits when the playback quality has changed. */
   @Output() readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent> =
     this._getLazyEmitter<YT.OnPlaybackQualityChangeEvent>('onPlaybackQualityChange');
 
+  /** Emits when the playback rate has changed. */
   @Output() readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent> =
     this._getLazyEmitter<YT.OnPlaybackRateChangeEvent>('onPlaybackRateChange');
 
@@ -575,7 +583,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         }),
     );
 
-    const whenReady = () => {
+    const whenReady = (event: YT.PlayerEvent) => {
       // Only assign the player once it's ready, otherwise YouTube doesn't expose some APIs.
       this._ngZone.run(() => {
         this._isLoading = false;
@@ -584,6 +592,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         this._pendingPlayer = undefined;
         player.removeEventListener('onReady', whenReady);
         this._playerChanges.next(player);
+        (this.ready as EventEmitter<YT.PlayerEvent>).emit(event);
         this._setSize();
         this._setQuality();
 
