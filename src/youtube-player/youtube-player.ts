@@ -597,6 +597,12 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         const state = player.getPlayerState();
         if (state === PlayerState.UNSTARTED || state === PlayerState.CUED || state == null) {
           this._cuePlayer();
+        } else if (playVideo && this.startSeconds && this.startSeconds > 0) {
+          // We have to use `seekTo` when `startSeconds` are specified to simulate it playing from
+          // a specific time. The "proper" way to do it would be to either go through `cueVideoById`
+          // or `playerVars.start`, but at the time of writing both end up resetting the video
+          // to the state as if the user hasn't interacted with it.
+          player.seekTo(this.startSeconds, true);
         }
 
         this._changeDetectorRef.markForCheck();
