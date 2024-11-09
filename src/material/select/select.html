@@ -1,9 +1,10 @@
-<div cdk-overlay-origin
-     class="mat-mdc-select-trigger"
-     (click)="open()"
-     #fallbackOverlayOrigin="cdkOverlayOrigin"
-     #trigger>
-
+<div
+  cdk-overlay-origin
+  class="mat-mdc-select-trigger"
+  (click)="open()"
+  #fallbackOverlayOrigin="cdkOverlayOrigin"
+  #trigger
+>
   <div class="mat-mdc-select-value" [attr.id]="_valueId">
     @if (empty) {
       <span class="mat-mdc-select-placeholder mat-mdc-select-min-line">{{placeholder}}</span>
@@ -21,8 +22,15 @@
   <div class="mat-mdc-select-arrow-wrapper">
     <div class="mat-mdc-select-arrow">
       <!-- Use an inline SVG, because it works better than a CSS triangle in high contrast mode. -->
-      <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
-        <path d="M7 10l5 5 5-5z"/>
+      <svg
+        viewBox="0 0 24 24"
+        width="24px"
+        height="24px"
+        focusable="false"
+        aria-hidden="true"
+        [ngClass]="{'mat-mdc-select-svg-opened': panelOpen}"
+      >
+        <path d="M7 10l5 5 5-5z" />
       </svg>
     </div>
   </div>
@@ -41,7 +49,8 @@
   [cdkConnectedOverlayWidth]="_overlayWidth"
   (backdropClick)="close()"
   (attach)="_onAttached()"
-  (detach)="close()">
+  (detach)="close()"
+>
   <div
     #panel
     role="listbox"
@@ -54,7 +63,8 @@
     [ngClass]="panelClass"
     [@transformPanel]="'showing'"
     (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
-    (keydown)="_handleKeydown($event)">
+    (keydown)="_handleKeydown($event)"
+  >
     <ng-content></ng-content>
   </div>
 </ng-template>
