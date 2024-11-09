@@ -93,6 +93,7 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
     'class': 'mat-drawer-content',
     '[style.margin-left.px]': '_container._contentMargins.left',
     '[style.margin-right.px]': '_container._contentMargins.right',
+    '[class.mat-drawer-content-hidden]': '_shouldBeHidden()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -104,6 +105,7 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
   ],
 })
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
+  private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   _container = inject(MatDrawerContainer);
 
@@ -121,6 +123,24 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     this._container._contentMarginChanges.subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  /** Determines whether the content element should be hidden from the user. */
+  protected _shouldBeHidden(): boolean {
+    // In some modes the content is pushed based on the width of the opened sidenavs, however on
+    // the server we can't measure the sidenav so the margin is always zero. This can cause the
+    // content to jump around when it's rendered on the server and hydrated on the client. We
+    // avoid it by hiding the content on the initial render and then showing it once the sidenav
+    // has been measured on the client.
+    if (this._platform.isBrowser) {
+      return false;
+    }
+
+    const {start, end} = this._container;
+    return (
+      (start != null && start.mode !== 'over' && start.opened) ||
+      (end != null && end.mode !== 'over' && end.opened)
+    );
   }
 }
 
