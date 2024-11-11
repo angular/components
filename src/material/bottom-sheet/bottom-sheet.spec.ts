@@ -461,6 +461,24 @@ describe('MatBottomSheet', () => {
     expect(scrollStrategy.enable).toHaveBeenCalled();
   });
 
+  it('should contain the height style properties on overlay pane', () => {
+    bottomSheet.open(PizzaMsg, {
+      panelClass: 'height--pane',
+      height: '300px',
+      maxHeight: 400, // this is converted into pixels
+      minHeight: 200, // this is converted into pixels
+    });
+
+    viewContainerFixture.detectChanges();
+
+    const paneElement = overlayContainerElement.querySelector('.height--pane') as HTMLElement;
+
+    expect(paneElement).toBeTruthy();
+    expect(paneElement.style.height).toBe('300px');
+    expect(paneElement.style.maxHeight).toBe('400px');
+    expect(paneElement.style.minHeight).toBe('200px');
+  });
+
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       const config = {
