@@ -2,9 +2,9 @@
   <!-- This is the tree node template for leaf nodes -->
   <!-- There is inline padding applied to this node using styles.
     This padding value depends on the mat-icon-button width. -->
-  <mat-tree-node *matTreeNodeDef="let node">
+  <mat-nested-tree-node *matTreeNodeDef="let node">
     {{node.name}}
-  </mat-tree-node>
+  </mat-nested-tree-node>
   <!-- This is the tree node template for expandable nodes -->
   <mat-nested-tree-node
       *matTreeNodeDef="let node; when: hasChild"
