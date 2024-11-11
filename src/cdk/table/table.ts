@@ -445,11 +445,12 @@ export class CdkTable<T>
 
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
+    // Perform this lazily in case the table's role was updated by a directive after construction.
     if (this._cellRoleInternal === undefined) {
-      // Perform this lazily in case the table's role was updated by a directive after construction.
-      const role = this._elementRef.nativeElement.getAttribute('role');
-      const cellRole = role === 'grid' || role === 'treegrid' ? 'gridcell' : 'cell';
-      this._cellRoleInternal = this._isNativeHtmlTable && cellRole === 'cell' ? null : cellRole;
+      // Note that we set `role="cell"` even on native `td` elements,
+      // because some browsers seem to require it. See #29784.
+      const tableRole = this._elementRef.nativeElement.getAttribute('role');
+      return tableRole === 'grid' || tableRole === 'treegrid' ? 'gridcell' : 'cell';
     }
 
     return this._cellRoleInternal;
