@@ -899,9 +899,9 @@ describe('MatChipGrid', () => {
       expect(errorTestComponent.formControl.untouched)
         .withContext('Expected untouched form control')
         .toBe(true);
-      expect(containerEl.querySelectorAll('mat-error').length)
+      expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
         .withContext('Expected no error message')
-        .toBe(0);
+        .toBe(1);
       expect(chipGridEl.getAttribute('aria-invalid'))
         .withContext('Expected aria-invalid to be set to "false".')
         .toBe('false');
@@ -911,9 +911,9 @@ describe('MatChipGrid', () => {
       expect(errorTestComponent.formControl.invalid)
         .withContext('Expected form control to be invalid')
         .toBe(true);
-      expect(containerEl.querySelectorAll('mat-error').length)
+      expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
         .withContext('Expected no error message')
-        .toBe(0);
+        .toBe(1);
 
       errorTestComponent.formControl.markAsTouched();
       fixture.detectChanges();
@@ -922,9 +922,9 @@ describe('MatChipGrid', () => {
       expect(containerEl.classList)
         .withContext('Expected container to have the invalid CSS class.')
         .toContain('mat-form-field-invalid');
-      expect(containerEl.querySelectorAll('mat-error').length)
+      expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
         .withContext('Expected one error message to have been rendered.')
-        .toBe(1);
+        .toBe(0);
       expect(chipGridEl.getAttribute('aria-invalid'))
         .withContext('Expected aria-invalid to be set to "true".')
         .toBe('true');
@@ -937,9 +937,9 @@ describe('MatChipGrid', () => {
       expect(errorTestComponent.formControl.invalid)
         .withContext('Expected form control to be invalid')
         .toBe(true);
-      expect(containerEl.querySelectorAll('mat-error').length)
+      expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
         .withContext('Expected no error message')
-        .toBe(0);
+        .toBe(1);
 
       dispatchFakeEvent(fixture.debugElement.query(By.css('form'))!.nativeElement, 'submit');
       flush();
@@ -952,9 +952,9 @@ describe('MatChipGrid', () => {
         expect(containerEl.classList)
           .withContext('Expected container to have the invalid CSS class.')
           .toContain('mat-form-field-invalid');
-        expect(containerEl.querySelectorAll('mat-error').length)
+        expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
           .withContext('Expected one error message to have been rendered.')
-          .toBe(1);
+          .toBe(0);
         expect(chipGridEl.getAttribute('aria-invalid'))
           .withContext('Expected aria-invalid to be set to "true".')
           .toBe('true');
@@ -971,12 +971,12 @@ describe('MatChipGrid', () => {
         expect(containerEl.classList)
           .withContext('Expected container to have the invalid CSS class.')
           .toContain('mat-form-field-invalid');
-        expect(containerEl.querySelectorAll('mat-error').length)
+        expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
           .withContext('Expected one error message to have been rendered.')
-          .toBe(1);
-        expect(containerEl.querySelectorAll('mat-hint').length)
-          .withContext('Expected no hints to be shown.')
           .toBe(0);
+        expect(containerEl.querySelectorAll('.mat-mdc-form-field-hint-wrapper--hidden').length)
+          .withContext('Expected no hints to be shown.')
+          .toBe(1);
 
         errorTestComponent.formControl.setValue('something');
         flush();
@@ -987,9 +987,9 @@ describe('MatChipGrid', () => {
             'mat-form-field-invalid',
             'Expected container not to have the invalid class when valid.',
           );
-          expect(containerEl.querySelectorAll('mat-error').length)
+          expect(containerEl.querySelectorAll('.mat-mdc-form-field-error-wrapper--hidden').length)
             .withContext('Expected no error messages when the input is valid.')
-            .toBe(0);
+            .toBe(1);
           expect(containerEl.querySelectorAll('mat-hint').length)
             .withContext('Expected one hint to be shown once the input is valid.')
             .toBe(1);
