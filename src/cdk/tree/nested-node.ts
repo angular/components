@@ -12,7 +12,6 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
-  OnInit,
   QueryList,
   inject,
 } from '@angular/core';
@@ -40,8 +39,9 @@ import {CdkTreeNode} from './tree';
 })
 export class CdkNestedTreeNode<T, K = T>
   extends CdkTreeNode<T, K>
-  implements AfterContentInit, OnDestroy, OnInit
+  implements AfterContentInit, OnDestroy
 {
+  protected override _type: 'flat' | 'nested' = 'nested';
   protected _differs = inject(IterableDiffers);
 
   /** Differ used to find the changes in the data provided by the data source. */
@@ -73,13 +73,6 @@ export class CdkNestedTreeNode<T, K = T>
     this.nodeOutlet.changes
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.updateChildrenNodes());
-  }
-
-  // This is a workaround for https://github.com/angular/angular/issues/23091
-  // In aot mode, the lifecycle hooks from parent class are not called.
-  override ngOnInit() {
-    this._tree._setNodeTypeIfUnset('nested');
-    super.ngOnInit();
   }
 
   override ngOnDestroy() {
