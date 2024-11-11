@@ -109,6 +109,10 @@ $drawer-over-drawer-z-index: 4;
   height: 100%;
   overflow: auto;
 
+  &.mat-drawer-content-hidden {
+    opacity: 0;
+  }
+
   .mat-drawer-transition & {
     transition: {
       duration: variables.$swift-ease-out-duration;
