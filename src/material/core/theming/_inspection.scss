@@ -62,10 +62,17 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
 }
 
-/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
-/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
-/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
-/// third is treated as the palette hue (10, 50, etc.)
+/// Gets a color from a theme object. This function take a different amount of arguments depending
+/// on if it's working with an M2 or M3 theme:
+/// - With an M3 theme it accepts either 2 or 3 arguments. If 2 arguments are passed, the second
+/// argument is treated as the name of a color role. If 3 arguments are passed, the second argument
+/// is treated as the name of a color palette (primary, secondary, etc.) and the third is treated
+/// as the palette hue (10, 50, etc.).
+/// - With an M2 theme theme it accepts between 2 and 4 arguments, or the equivalent of calling
+/// the `m2-get-theme-color` function. The first argument is the theme, the second one is the
+/// palette from which to extract the color, the third one is the hue within the palette and the
+/// fourth is the opacity of the returned color.
+/// the second one is the
 /// @param {Map} $theme The theme
 /// @param {String} $color-role-or-palette-name The name of the color role to get, or the name of a
 ///   color palette.
@@ -74,25 +81,29 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @return {Color} The requested theme color.
 @function get-theme-color($theme, $args...) {
   $version: get-theme-version($theme);
-  $args-count: list.length($args);
-  @if $args-count != 1 and $args-count != 2 and $args-count != 3 {
-    @error #{'Expected between 2 and 4 arguments. Got:'} $args-count + 1;
-  }
+  $args-count: list.length($args) + 1;
 
+  // M2 theme
   @if $version == 0 {
+    @if $args-count < 2 or $args-count > 4 {
+      @error 'Expected between 2 and 4 arguments when working with an M2 theme. ' +
+             'Got: #{$args-count}';
+    }
     @return m2-inspection.get-theme-color($theme, $args...);
   }
-  @else if $version == 1 {
-    @if $args-count == 1 {
-      @return _get-theme-role-color($theme, $args...);
+
+  // M3 theme
+  @if $version == 1 {
+    @if $args-count < 2 or $args-count > 3 {
+      @error 'Expected either 2 or 3 arguments when working with an M3 theme. Got: #{$args-count}';
     }
-    @else if $args-count == 2 {
-      @return _get-theme-palette-color($theme, $args...);
-    }
+    @return if($args-count == 2,
+      _get-theme-role-color($theme, $args...),
+      _get-theme-palette-color($theme, $args...)
+    );
   }
-  @else {
-    @error #{'Unrecognized theme version:'} $version;
-  }
+
+  @error 'Unrecognized theme version: #{$version}';
 }
 
 /// Gets a role color from a theme object.
