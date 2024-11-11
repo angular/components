@@ -323,9 +323,17 @@ export class CdkTree<T, K = T>
    * This will be called by the first node that's rendered in order for the tree
    * to determine what data transformations are required.
    */
-  _setNodeTypeIfUnset(nodeType: 'flat' | 'nested') {
-    if (this._nodeType.value === null) {
-      this._nodeType.next(nodeType);
+  _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
+    const currentType = this._nodeType.value;
+
+    if (currentType === null) {
+      this._nodeType.next(newType);
+    } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
+      console.warn(
+        `Tree is using conflicting node types which can cause unexpected behavior. ` +
+          `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
+          `Current node type: "${currentType}", new node type "${newType}".`,
+      );
     }
   }
 
@@ -1169,6 +1177,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _tree = inject<CdkTree<T, K>>(CdkTree);
   protected _tabindex: number | null = -1;
+  protected readonly _type: 'flat' | 'nested' = 'flat';
 
   /**
    * The role of the tree node.
@@ -1368,10 +1377,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
         map(() => this.isExpanded),
         distinctUntilChanged(),
       )
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
-    this._tree._setNodeTypeIfUnset('flat');
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+    this._tree._setNodeTypeIfUnset(this._type);
     this._tree._registerNode(this);
   }
 
