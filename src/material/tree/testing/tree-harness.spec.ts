@@ -235,9 +235,9 @@ interface ExampleFlatNode {
     </mat-tree>
     <mat-tree [dataSource]="nestedTreeDataSource" [treeControl]="nestedTreeControl">
       <!-- This is the tree node template for leaf nodes -->
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+      <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         {{node.name}}
-      </mat-tree-node>
+      </mat-nested-tree-node>
       <!-- This is the tree node template for expandable nodes -->
       <mat-nested-tree-node *matTreeNodeDef="let node; when: nestedTreeHasChild" isExpandable>
         <button matTreeNodeToggle>
