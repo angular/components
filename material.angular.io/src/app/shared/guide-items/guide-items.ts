@@ -35,34 +35,10 @@ const GUIDES: GuideItem[] = [
     overview: 'Understand the system variables available to use in your application.'
   },
   {
-    id: 'theming-your-components',
-    name: 'Theming your own components',
-    document: '/docs-content/guides/theming-your-components.html',
-    overview: 'Use Angular Material\'s theming system in your own custom components.'
-  },
-  {
-    id: 'typography',
-    name: 'Customizing Typography',
-    document: '/docs-content/guides/typography.html',
-    overview: 'Configure the typography settings for Angular Material components.'
-  },
-  {
-    id: 'customizing-component-styles',
-    name: 'Customizing component styles',
-    document: '/docs-content/guides/customizing-component-styles.html',
-    overview: 'Understand how to approach style customization with Angular Material components.'
-  },
-  {
     id: 'creating-a-custom-form-field-control',
     name: 'Custom form field control',
     document: '/docs-content/guides/creating-a-custom-form-field-control.html',
     overview: 'Build a custom control that integrates with `<mat-form-field>`.'
-  },
-  {
-    id: 'elevation',
-    name: 'Elevation helpers',
-    document: '/docs-content/guides/elevation.html',
-    overview: 'Enhance your components with elevation and depth.'
   },
   {
     id: 'creating-a-custom-stepper-using-the-cdk-stepper',
@@ -75,12 +51,6 @@ const GUIDES: GuideItem[] = [
     name: 'Testing with component harnesses',
     document: '/docs-content/guides/using-component-harnesses.html',
     overview: 'Write tests with component harnesses for convenience and meaningful results.'
-  },
-  {
-    id: 'duplicate-theming-styles',
-    name: 'Duplicate theming styles',
-    document: '/docs-content/guides/duplicate-theming-styles.html',
-    overview: 'Learn about our new color mixins for Sass that avoid duplicating theming styles.'
   },
   {
     id: 'material-2-theming',
