@@ -28,13 +28,14 @@ $drawer-over-drawer-z-index: 4;
   @include drawer-stacking-context();
 
   @include token-utils.use-tokens(
-    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
     @include token-utils.create-token-slot(color, content-text-color);
     @include token-utils.create-token-slot(background-color, content-background-color);
   }
 
   box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
 
   // Need this to take up space in the layout.
   display: block;
@@ -58,8 +59,10 @@ $drawer-over-drawer-z-index: 4;
   }
 
   // Note that the `NoopAnimationsModule` is being handled inside of the component code.
-  &.ng-animate-disabled, .ng-animate-disabled & {
-    .mat-drawer-backdrop, .mat-drawer-content {
+  &.ng-animate-disabled,
+  .ng-animate-disabled & {
+    .mat-drawer-backdrop,
+    .mat-drawer-content {
       transition: none;
     }
   }
@@ -84,7 +87,9 @@ $drawer-over-drawer-z-index: 4;
     visibility: visible;
 
     @include token-utils.use-tokens(
-      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
       @include token-utils.create-token-slot(background-color, scrim-color);
     }
   }
@@ -128,7 +133,9 @@ $drawer-over-drawer-z-index: 4;
   @include drawer-stacking-context($drawer-over-drawer-z-index);
 
   @include token-utils.use-tokens(
-    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
     @include token-utils.create-token-slot(color, container-text-color);
     @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
     @include token-utils.create-token-slot(background-color, container-background-color);
@@ -147,14 +154,15 @@ $drawer-over-drawer-z-index: 4;
   overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
   transform: translate3d(-100%, 0, 0);
 
-
-  &, [dir='rtl'] &.mat-drawer-end {
+  &,
+  [dir='rtl'] &.mat-drawer-end {
     @include cdk.high-contrast {
       border-right: $high-contrast-border;
     }
   }
 
-  [dir='rtl'] &, &.mat-drawer-end {
+  [dir='rtl'] &,
+  &.mat-drawer-end {
     @include cdk.high-contrast {
       border-left: $high-contrast-border;
       border-right: none;
@@ -170,7 +178,9 @@ $drawer-over-drawer-z-index: 4;
     transform: translate3d(100%, 0, 0);
 
     @include token-utils.use-tokens(
-      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
       @include token-utils.create-token-slot(border-top-left-radius, container-shape);
       @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
       border-top-right-radius: 0;
@@ -180,7 +190,9 @@ $drawer-over-drawer-z-index: 4;
 
   [dir='rtl'] & {
     @include token-utils.use-tokens(
-      tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
       @include token-utils.create-token-slot(border-top-left-radius, container-shape);
       @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
       border-top-right-radius: 0;
@@ -215,7 +227,9 @@ $drawer-over-drawer-z-index: 4;
   box-shadow: none;
 
   @include token-utils.use-tokens(
-    tokens-mat-sidenav.$prefix, tokens-mat-sidenav.get-token-slots()) {
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
     @include token-utils.create-token-slot(border-right-color, container-divider-color);
     border-right-width: 1px;
     border-right-style: solid;
@@ -251,7 +265,6 @@ $drawer-over-drawer-z-index: 4;
   width: 100%;
   height: 100%;
   overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .mat-sidenav-fixed {
