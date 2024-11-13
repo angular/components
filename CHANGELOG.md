@@ -1,3 +1,30 @@
+<a name="19.0.0-rc.2"></a>
+# 19.0.0-rc.2 "barium-binoculars" (2024-11-13)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8141e45a8](https://github.com/angular/components/commit/8141e45a892a9f5bb6643a3ce606845d9a302251) | fix | **listbox:** make tabindex zoneless compatible ([#29970](https://github.com/angular/components/pull/29970)) |
+| [a78f47551](https://github.com/angular/components/commit/a78f475510b49aa6ddd9052ef6fdfc1e0c0c15d4) | fix | **table:** set explicit role on all cells ([#29987](https://github.com/angular/components/pull/29987)) |
+| [fda61f565](https://github.com/angular/components/commit/fda61f565093cb9f8de5b3339de01ac92cc6926f) | fix | **testing:** allow use of `plaintext-only` for `contenteditable` ([#29999](https://github.com/angular/components/pull/29999)) |
+| [f6066c23f](https://github.com/angular/components/commit/f6066c23feee5a23d870104860f1e18bb9f3db83) | fix | **tree:** warn if mixed node types are used within the same tree |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [de6c20686](https://github.com/angular/components/commit/de6c20686c441ff39b872b69c725c3c46b1f3a93) | fix | **bottom-sheet:** add `height` `minHeight` `maxHeight` to config ([#29794](https://github.com/angular/components/pull/29794)) |
+| [d0d59b784](https://github.com/angular/components/commit/d0d59b784abdde79bebaf9cff6d316c952228fa7) | fix | **core:** change ng-add to use mat.theme ([#29990](https://github.com/angular/components/pull/29990)) |
+| [b7f509c5b](https://github.com/angular/components/commit/b7f509c5bf943c2b3bc11f72183b90545f6571a7) | fix | **core:** incorrect validation in get-theme-color ([#29994](https://github.com/angular/components/pull/29994)) |
+| [d55ec612c](https://github.com/angular/components/commit/d55ec612cc66b42971c9da2677bc6e54017dd271) | fix | **core:** update prebuilt themes to use mat.theme ([#29989](https://github.com/angular/components/pull/29989)) |
+| [482009bac](https://github.com/angular/components/commit/482009bac173bd4453d20dfec283e3cab23d2af0) | fix | **schematics:** add explicit system variable prefix schematic ([#29980](https://github.com/angular/components/pull/29980)) |
+| [75631fb0b](https://github.com/angular/components/commit/75631fb0b305891ea22e422f8bd9d9d991c1d6ef) | fix | **sidenav:** prevent the content from jumping when hydrated ([#29991](https://github.com/angular/components/pull/29991)) |
+| [bb66db738](https://github.com/angular/components/commit/bb66db73867df02f55feed8fca4daf7cb9d8dc83) | fix | **snack-bar:** prevent override of snack bar action button color ([#27511](https://github.com/angular/components/pull/27511)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [09da06b42](https://github.com/angular/components/commit/09da06b42e2aad668bbdeb9adecdad401b0d8df6) | fix | ready event not emitting |
+| [288598750](https://github.com/angular/components/commit/2885987500f9005fbdf981c700b516096896868b) | fix | startSeconds not applied when using placeholder |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-rc.1"></a>
 # 19.0.0-rc.1 "lolite-lollipop" (2024-11-06)
 ### material
