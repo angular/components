@@ -1,3 +1,19 @@
+<a name="18.2.13"></a>
+# 18.2.13 "strontium-sauce" (2024-11-13)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1ea3ba383](https://github.com/angular/components/commit/1ea3ba38337d8b59518c073c95e0ca64e6fd5db3) | fix | **listbox:** make tabindex zoneless compatible ([#29970](https://github.com/angular/components/pull/29970)) |
+| [890036064](https://github.com/angular/components/commit/890036064a825ddc44068d4b6fc71edfd7ddb43c) | fix | **table:** set explicit role on all cells ([#29987](https://github.com/angular/components/pull/29987)) |
+| [3c7de8400](https://github.com/angular/components/commit/3c7de8400b60558b1c39d13278d7a325ade2be1a) | fix | **testing:** allow use of `plaintext-only` for `contenteditable` ([#29999](https://github.com/angular/components/pull/29999)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c643f04ef](https://github.com/angular/components/commit/c643f04ef042eb16606c8b490854db79e413a34d) | fix | **core:** incorrect validation in get-theme-color ([#29994](https://github.com/angular/components/pull/29994)) |
+| [aed9094f9](https://github.com/angular/components/commit/aed9094f9c33bbb2134ae9551f8c5d4db4b24356) | fix | **snack-bar:** prevent override of snack bar action button color ([#27511](https://github.com/angular/components/pull/27511)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="18.2.12"></a>
 # 18.2.12 "galaxite-galaxy" (2024-11-06)
 ### material
