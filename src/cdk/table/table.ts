@@ -1086,6 +1086,8 @@ export class CdkTable<T>
    */
   private _renderUpdatedColumns(): boolean {
     const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => {
+      // The differ should be run for every column, even if `acc` is already
+      // true (see #29922)
       const diff = !!def.getColumnsDiff();
       return acc || diff;
     };
