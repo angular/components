@@ -643,6 +643,18 @@ describe('MatMdcInput without forms', () => {
     expect(input.getAttribute('aria-describedby')).toBe('start end');
   }));
 
+  it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+    const fixture = createComponent(MatInputHintLabel2TestController);
+    const input = fixture.nativeElement.querySelector('input');
+    input.setAttribute('aria-describedby', 'custom');
+    fixture.componentInstance.label = 'label';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const hint = fixture.nativeElement.querySelector('.mat-mdc-form-field-hint');
+
+    expect(input.getAttribute('aria-describedby')).toBe(`${hint.getAttribute('id')} custom`);
+  }));
+
   it('should set a class on the hint element based on its alignment', fakeAsync(() => {
     const fixture = createComponent(MatInputMultipleHintTestController);
 
