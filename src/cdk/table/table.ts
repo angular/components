@@ -1085,7 +1085,12 @@ export class CdkTable<T>
    * re-render that section.
    */
   private _renderUpdatedColumns(): boolean {
-    const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
+    const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => {
+      // The differ should be run for every column, even if `acc` is already
+      // true (see #29922)
+      const diff = !!def.getColumnsDiff();
+      return acc || diff;
+    };
 
     // Force re-render data rows if the list of column definitions have changed.
     const dataColumnsChanged = this._rowDefs.reduce(columnsDiffReducer, false);
