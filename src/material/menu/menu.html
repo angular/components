@@ -3,7 +3,6 @@
     class="mat-mdc-menu-panel"
     [id]="panelId"
     [class]="_classList"
-    (keydown)="_handleKeydown($event)"
     (click)="closed.emit('click')"
     [@transformMenu]="_panelAnimationState"
     (@transformMenu.start)="_onAnimationStart($event)"
