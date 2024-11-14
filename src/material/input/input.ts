@@ -551,10 +551,12 @@ export class MatInput
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
+    const element = this._elementRef.nativeElement;
+
     if (ids.length) {
-      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+      element.setAttribute('aria-describedby', ids.join(' '));
     } else {
-      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+      element.removeAttribute('aria-describedby');
     }
   }
 
