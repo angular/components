@@ -1,3 +1,18 @@
+<a name="19.0.0-rc.3"></a>
+# 19.0.0-rc.3 "frozen-feast" (2024-11-15)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [05c78afcd](https://github.com/angular/components/commit/05c78afcd73896eb907bfeca9e6bc83874134092) | fix | **table:** run differ for all columns ([#30012](https://github.com/angular/components/pull/30012)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5ba97925b](https://github.com/angular/components/commit/5ba97925b64a23cdaabfea514dda964c79f4a5f1) | fix | **form-field:** avoid touching the DOM on each state change |
+| [5345a875f](https://github.com/angular/components/commit/5345a875f68526191493e8220d4ed91c72d0e5eb) | fix | **input:** preserve aria-describedby set externally |
+| [dbcb921d5](https://github.com/angular/components/commit/dbcb921d54608adc95dc124635d2973312928687) | fix | **menu:** handle keyboard events through dispatcher ([#29997](https://github.com/angular/components/pull/29997)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-rc.2"></a>
 # 19.0.0-rc.2 "barium-binoculars" (2024-11-13)
 ### cdk
