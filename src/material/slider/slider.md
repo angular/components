@@ -77,3 +77,8 @@ The slider has the following keyboard bindings:
 
 `MatSlider` uses an internal `<input type="range">` to provide an accessible experience. The input
 receives focus and it can be labelled using `aria-label` or `aria-labelledby`.
+
+Make sure the colors of the active and inactive track of the `MatSlider` meet 
+at least a 3:1 contrast ratio with the background. This can be achieved through 
+changing the active or inactive track colors or showing tick marks on the
+track that have at least a 3:1 color contrast ratio with the background.
