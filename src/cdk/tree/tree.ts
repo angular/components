@@ -484,17 +484,17 @@ export class CdkTree<T, K = T>
    * This will be called by the first node that's rendered in order for the tree
    * to determine what data transformations are required.
    */
-   _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
-     const currentType = this._nodeType.value;
+  _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
+    const currentType = this._nodeType.value;
 
-     if (currentType === null) {
-       this._nodeType.next(newType);
-     } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
-       console.warn(
-         `Tree is using conflicting node types which can cause unexpected behavior. ` +
-           `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
-           `Current node type: "${currentType}", new node type "${newType}".`,
-       );
+    if (currentType === null) {
+      this._nodeType.next(newType);
+    } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
+      console.warn(
+        `Tree is using conflicting node types which can cause unexpected behavior. ` +
+          `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
+          `Current node type: "${currentType}", new node type "${newType}".`,
+      );
     }
   }
 
