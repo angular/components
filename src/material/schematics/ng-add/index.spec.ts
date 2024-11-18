@@ -162,7 +162,7 @@ describe('ng-add schematic', () => {
       // the created links properly align with the existing HTML. Default CLI projects use an
       // indentation of two columns.
       expect(htmlContent).toContain(
-        '  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"',
+        '  <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"',
       );
       expect(htmlContent).toContain(
         '  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@' +
