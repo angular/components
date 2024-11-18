@@ -486,7 +486,7 @@ export class CdkTree<T, K = T>
    */
    _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
      const currentType = this._nodeType.value;
- 
+
      if (currentType === null) {
        this._nodeType.next(newType);
      } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
