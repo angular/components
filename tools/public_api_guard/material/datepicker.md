@@ -196,8 +196,12 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
     _cellPadding: string;
     _cellWidth: string;
+    // (undocumented)
+    comparisonDateAccessibleName: string;
     comparisonEnd: number | null;
+    _comparisonEndDateLabelId: string;
     comparisonStart: number | null;
+    _comparisonStartDateLabelId: string;
     readonly dragEnded: EventEmitter<MatCalendarUserEvent<D | null>>;
     readonly dragStarted: EventEmitter<MatCalendarUserEvent<D>>;
     // (undocumented)
@@ -480,6 +484,7 @@ export class MatDatepickerIntl {
     calendarLabel: string;
     readonly changes: Subject<void>;
     closeCalendarLabel: string;
+    comparisonDateLabel: string;
     // @deprecated
     endDateLabel: string;
     formatYearRange(start: string, end: string): string;
