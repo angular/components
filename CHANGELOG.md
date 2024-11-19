@@ -1,3 +1,12 @@
+<a name="18.2.14"></a>
+# 18.2.14 "osmium-oracle" (2024-11-19)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3bd89ecd5](https://github.com/angular/components/commit/3bd89ecd5a89d830652b38d7841dbb8f33057a59) | fix | **table:** run differ for all columns ([#30012](https://github.com/angular/components/pull/30012)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0-rc.3"></a>
 # 19.0.0-rc.3 "frozen-feast" (2024-11-15)
 ### cdk
