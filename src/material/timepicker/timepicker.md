@@ -90,7 +90,7 @@ import {MAT_TIMEPICKER_CONFIG} from '@angular/material/timepicker';
 ```
 
 If your app requires more fine-grained control over the options, you can pass in an array of
-options into `mat-timepicker` instead. Note that the options need to match the `MatTimepickerOption`
+options into `mat-timepicker` instead. Note that the options need to match the `MatTimepickerConfig`
 interface.
 
 <!-- example(timepicker-options) -->
