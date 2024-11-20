@@ -31,6 +31,7 @@ import {
   booleanAttribute,
   inject,
   HostAttributeToken,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -560,7 +561,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
   private _idGenerator = inject(_IdGenerator);
-
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _checked = false;
 
   /**
@@ -699,6 +700,14 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // This serves two purposes:
+    // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
+    //    delay adding the class until the view is rendered.
+    // 2. We don't want animation if the `NoopAnimationsModule` is provided.
+    if (this._animationMode !== 'NoopAnimations') {
+      this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
+    }
+
     this._focusMonitor.monitor(this._elementRef, true);
   }
 
