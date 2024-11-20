@@ -7,9 +7,11 @@
 @use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
 @use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
 
-$standard-padding: 0 12px !default;
-$legacy-padding: 0 16px !default;
-$checkmark-padding: 12px !default;
+$standard-padding: 12px !default;
+$legacy-padding: 16px !default;
+$_checkmark-size: 18px !default;
+$_checkmark-margin: 12px;
+$_checkmark-transition: 150ms 45ms cubic-bezier(0.4, 0, 0.2, 1);
 
 // TODO(crisbeto): these variables aren't used anymore and should be removed.
 $legacy-height: 36px !default;
@@ -104,13 +106,51 @@ $_standard-tokens: (
   .mat-icon svg {
     vertical-align: top;
   }
+}
 
-  .mat-pseudo-checkbox {
-    margin-right: $checkmark-padding;
-    [dir='rtl'] & {
-      margin-right: 0;
-      margin-left: $checkmark-padding;
-    }
+.mat-button-toggle-checkbox-wrapper {
+  display: inline-block;
+  justify-content: flex-start;
+  align-items: center;
+  width: 0;
+  height: $_checkmark-size;
+  line-height: $_checkmark-size;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: $legacy-padding;
+
+  // Uses a 3d transform, because otherwise Safari has some some of rendering
+  // artifact that adds a small gap between the two parts of the checkmark.
+  transform: translate3d(0, -50%, 0);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: $legacy-padding;
+  }
+
+  .mat-button-toggle-appearance-standard & {
+    left: $standard-padding;
+  }
+
+  [dir='rtl'] .mat-button-toggle-appearance-standard & {
+    left: auto;
+    right: $standard-padding;
+  }
+
+  .mat-button-toggle-checked & {
+    width: $_checkmark-size;
+  }
+
+  .mat-button-toggle-animations-enabled & {
+    transition: width $_checkmark-transition;
+  }
+
+  // Disable the transition in vertical mode since it looks weird.
+  // There should be a limited amount of usages anyway.
+  .mat-button-toggle-vertical & {
+    transition: none;
   }
 }
 
@@ -219,7 +259,7 @@ $_standard-tokens: (
 .mat-button-toggle-label-content {
   @include vendor-prefixes.user-select(none);
   display: inline-block;
-  padding: $legacy-padding;
+  padding: 0 $legacy-padding;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
     @include token-utils.create-token-slot(line-height, height);
@@ -229,7 +269,7 @@ $_standard-tokens: (
   position: relative;
 
   .mat-button-toggle-appearance-standard & {
-    padding: $standard-padding;
+    padding: 0 $standard-padding;
 
     @include token-utils.use-tokens($_standard-tokens...) {
       @include token-utils.create-token-slot(line-height, height);
@@ -292,6 +332,7 @@ $_standard-tokens: (
 }
 
 .mat-button-toggle-button {
+  $checkmark-spacing: $_checkmark-size + $_checkmark-margin;
   border: 0;
   background: none;
   color: inherit;
@@ -302,6 +343,16 @@ $_standard-tokens: (
   width: 100%; // Stretch the button in case the consumer set a custom width.
   cursor: pointer;
 
+  .mat-button-toggle-animations-enabled & {
+    transition: padding $_checkmark-transition;
+  }
+
+  // Disable the transition in vertical mode since it looks weird.
+  // There should be a limited amount of usages anyway.
+  .mat-button-toggle-vertical & {
+    transition: none;
+  }
+
   .mat-button-toggle-disabled & {
     cursor: default;
   }
@@ -310,6 +361,22 @@ $_standard-tokens: (
   &::-moz-focus-inner {
     border: 0;
   }
+
+  // Note that we use padding and `position: absolute` to show/hide the checkmark, instead of
+  // just transitioning it between `width: 18px` and `width: 0`, because it was being shown/hidden
+  // with `@if` before the transition was added and leaving it in the DOM while hidden can break
+  // some pre-existing layouts.
+  &:has(.mat-button-toggle-checkbox-wrapper) {
+    .mat-button-toggle-checked & {
+      padding-left: $checkmark-spacing;
+    }
+
+    [dir='rtl'] .mat-button-toggle-checked & {
+      padding-left: 0;
+      padding-right: $checkmark-spacing;
+    }
+  }
+
 }
 
 // Change the border-radius of the focus indicator to match the

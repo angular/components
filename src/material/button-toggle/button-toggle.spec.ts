@@ -598,7 +598,11 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleLabelElements[0].click();
       fixture.detectChanges();
 
-      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(1);
+      expect(
+        fixture.nativeElement.querySelectorAll(
+          '.mat-button-toggle-checked .mat-button-toggle-checkbox-wrapper',
+        ).length,
+      ).toBe(1);
     });
   });
 
@@ -763,7 +767,11 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleLabelElements[1].click();
       fixture.detectChanges();
 
-      expect(document.querySelectorAll('.mat-pseudo-checkbox').length).toBe(2);
+      expect(
+        fixture.nativeElement.querySelectorAll(
+          '.mat-button-toggle-checked .mat-button-toggle-checkbox-wrapper',
+        ).length,
+      ).toBe(2);
     });
   });
 
