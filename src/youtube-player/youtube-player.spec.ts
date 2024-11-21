@@ -725,16 +725,11 @@ describe('YoutubePlayer', () => {
 
     const player = noEventsApp.componentInstance.player;
     const subscriptions: Subscription[] = [];
-    const readySpy = jasmine.createSpy('ready spy');
     const stateChangeSpy = jasmine.createSpy('stateChange spy');
     const playbackQualityChangeSpy = jasmine.createSpy('playbackQualityChange spy');
     const playbackRateChangeSpy = jasmine.createSpy('playbackRateChange spy');
     const errorSpy = jasmine.createSpy('error spy');
     const apiChangeSpy = jasmine.createSpy('apiChange spy');
-
-    subscriptions.push(player.ready.subscribe(readySpy));
-    events.onReady({target: playerSpy});
-    expect(readySpy).toHaveBeenCalledWith({target: playerSpy});
 
     subscriptions.push(player.stateChange.subscribe(stateChangeSpy));
     events.onStateChange({target: playerSpy, data: 5});

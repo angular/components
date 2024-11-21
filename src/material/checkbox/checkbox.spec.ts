@@ -298,7 +298,7 @@ describe('MatCheckbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\d+/);
+      expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\w+\d+/);
       expect(inputElement.id).toBe(checkboxInstance.inputId);
     }));
 
@@ -965,8 +965,8 @@ describe('MatCheckbox', () => {
         .queryAll(By.directive(MatCheckbox))
         .map(debugElement => debugElement.nativeElement.querySelector('input').id);
 
-      expect(firstId).toMatch(/mat-mdc-checkbox-\d+-input/);
-      expect(secondId).toMatch(/mat-mdc-checkbox-\d+-input/);
+      expect(firstId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
+      expect(secondId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
       expect(firstId).not.toEqual(secondId);
     }));
   });

@@ -39,6 +39,7 @@ mat-menu {
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     @include token-utils.create-token-slot(border-radius, container-shape);
     @include token-utils.create-token-slot(background-color, container-color);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
   }
 
   // TODO(crisbeto): we don't need this for anything, but it was there when

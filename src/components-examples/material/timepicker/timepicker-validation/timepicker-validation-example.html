@@ -1,0 +1,26 @@
+<mat-form-field>
+  <mat-label>Pick a time</mat-label>
+  <input
+    matInput
+    [formControl]="formControl"
+    [matTimepicker]="picker"
+    matTimepickerMin="12:30"
+    matTimepickerMax="17:30">
+  <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+  <mat-timepicker #picker/>
+
+  @if (formControl.errors?.['matTimepickerParse']) {
+    <mat-error>Value isn't a valid time</mat-error>
+  }
+
+  @if (formControl.errors?.['matTimepickerMin']) {
+    <mat-error>Value is too early</mat-error>
+  }
+
+  @if (formControl.errors?.['matTimepickerMax']) {
+    <mat-error>Value is too late</mat-error>
+  }
+</mat-form-field>
+
+<p>Enter a value before 12:30 PM or after 5:30 PM to see the errors</p>
+<p>Errors: {{formControl.errors | json}}</p>

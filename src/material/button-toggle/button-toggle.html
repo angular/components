@@ -11,25 +11,20 @@
         [attr.aria-labelledby]="ariaLabelledby"
         [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
         (click)="_onButtonClick()">
+  @if (buttonToggleGroup && (
+    !buttonToggleGroup.multiple && !buttonToggleGroup.hideSingleSelectionIndicator ||
+    buttonToggleGroup.multiple && !buttonToggleGroup.hideMultipleSelectionIndicator)
+  ) {
+    <div class="mat-button-toggle-checkbox-wrapper">
+      <mat-pseudo-checkbox
+        [disabled]="disabled"
+        state="checked"
+        aria-hidden="true"
+        appearance="minimal"/>
+    </div>
+  }
+
   <span class="mat-button-toggle-label-content">
-    <!-- Render checkmark at the beginning for single-selection. -->
-    @if (buttonToggleGroup && checked && !buttonToggleGroup.multiple && !buttonToggleGroup.hideSingleSelectionIndicator) {
-      <mat-pseudo-checkbox
-          class="mat-mdc-option-pseudo-checkbox"
-          [disabled]="disabled"
-          state="checked"
-          aria-hidden="true"
-          appearance="minimal"></mat-pseudo-checkbox>
-    }
-    <!-- Render checkmark at the beginning for multiple-selection. -->
-    @if (buttonToggleGroup && checked && buttonToggleGroup.multiple && !buttonToggleGroup.hideMultipleSelectionIndicator) {
-      <mat-pseudo-checkbox
-          class="mat-mdc-option-pseudo-checkbox"
-          [disabled]="disabled"
-          state="checked"
-          aria-hidden="true"
-          appearance="minimal"></mat-pseudo-checkbox>
-    }
     <ng-content></ng-content>
   </span>
 </button>

@@ -382,24 +382,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _initMenu(menu: MatMenuPanel): void {
     menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
     menu.direction = this.dir;
-    this._setMenuElevation(menu);
     menu.focusFirstItem(this._openedBy || 'program');
     this._setIsMenuOpen(true);
-  }
-
-  /** Updates the menu elevation based on the amount of parent menus that it has. */
-  private _setMenuElevation(menu: MatMenuPanel): void {
-    if (menu.setElevation) {
-      let depth = 0;
-      let parentMenu = menu.parentMenu;
-
-      while (parentMenu) {
-        depth++;
-        parentMenu = parentMenu.parentMenu;
-      }
-
-      menu.setElevation(depth);
-    }
   }
 
   // set state rather than toggle to support triggers sharing a menu
@@ -428,11 +412,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         config.positionStrategy as FlexibleConnectedPositionStrategy,
       );
       this._overlayRef = this._overlay.create(config);
-
-      // Consume the `keydownEvents` in order to prevent them from going to another overlay.
-      // Ideally we'd also have our keyboard event logic in here, however doing so will
-      // break anybody that may have implemented the `MatMenuPanel` themselves.
-      this._overlayRef.keydownEvents().subscribe();
+      this._overlayRef.keydownEvents().subscribe(event => {
+        if (this.menu instanceof MatMenu) {
+          this.menu._handleKeydown(event);
+        }
+      });
     }
 
     return this._overlayRef;

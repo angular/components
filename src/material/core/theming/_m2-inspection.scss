@@ -102,14 +102,14 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @return if(map.get($colors, is-dark), dark, light);
 }
 
-/// Gets a color from a theme object. This function can take 2 or 3 arguments. If 2 arguments are
-/// passed, the second argument is treated as the name of a color role. If 3 arguments are passed,
-/// the second argument is treated as the name of a color palette (primary, secondary, etc.) and the
-/// third is treated as the palette hue (10, 50, etc.)
+/// Gets a color from a theme object. This function can take between 2 and 4 arguments. The first
+/// argument is the theme, the second one is the palette from which to extract the color, the third
+/// one is the hue within the palette and the fourth is the opacity of the returned color.
 /// @param {Map} $theme The theme
 /// @param {String} $palette-name The name of a color palette.
 /// @param {Number} $hue The palette hue to get (passing this argument means the second argument is
 ///   interpreted as a palette name).
+/// @param {Number} $opacity The alpha channel value for the color.
 /// @return {Color} The requested theme color.
 @function get-theme-color($theme, $palette-name, $args...) {
   $theme: _get-m2-config($theme);

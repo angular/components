@@ -7,6 +7,7 @@
  */
 
 import {
+  _IdGenerator,
   ActiveDescendantKeyManager,
   addAriaReferencedId,
   LiveAnnouncer,
@@ -95,8 +96,6 @@ import {
   getMatSelectNonFunctionValueError,
 } from './select-errors';
 import {NgClass} from '@angular/common';
-
-let nextUniqueId = 0;
 
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -215,6 +214,7 @@ export class MatSelect
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   readonly _elementRef = inject(ElementRef);
   private _dir = inject(Directionality, {optional: true});
+  private _idGenerator = inject(_IdGenerator);
   protected _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
@@ -312,7 +312,7 @@ export class MatSelect
   private _compareWith = (o1: any, o2: any) => o1 === o2;
 
   /** Unique id for this input. */
-  private _uid = `mat-select-${nextUniqueId++}`;
+  private _uid = this._idGenerator.getId('mat-select-');
 
   /** Current `aria-labelledby` value for the select trigger. */
   private _triggerAriaLabelledBy: string | null = null;
@@ -367,7 +367,7 @@ export class MatSelect
   _onTouched = () => {};
 
   /** ID for the DOM node containing the select's value. */
-  _valueId = `mat-select-value-${nextUniqueId++}`;
+  _valueId = this._idGenerator.getId('mat-select-value-');
 
   /** Emits when the panel element is finished transforming in. */
   readonly _panelDoneAnimatingStream = new Subject<string>();

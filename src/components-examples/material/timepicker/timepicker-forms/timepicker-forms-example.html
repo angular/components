@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label>Pick a time</mat-label>
+  <input matInput [formControl]="formControl" [matTimepicker]="picker">
+  <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+  <mat-timepicker #picker/>
+</mat-form-field>
+
+<p>Value: {{formControl.value}}</p>
+<p>Touched: {{formControl.touched}}</p>
+<p>Dirty: {{formControl.dirty}}</p>

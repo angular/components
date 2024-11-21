@@ -29,12 +29,10 @@ import {
   TemplatePortal,
 } from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
-import {AriaLivePoliteness} from '@angular/cdk/a11y';
+import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {AnimationEvent} from '@angular/animations';
 import {MatSnackBarConfig} from './snack-bar-config';
-
-let uniqueId = 0;
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -109,7 +107,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   _role?: 'status' | 'alert';
 
   /** Unique ID of the aria-live element. */
-  readonly _liveElementId = `mat-snack-bar-container-live-${uniqueId++}`;
+  readonly _liveElementId = inject(_IdGenerator).getId('mat-snack-bar-container-live-');
 
   constructor(...args: unknown[]);
 

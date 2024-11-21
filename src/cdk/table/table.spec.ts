@@ -563,8 +563,7 @@ describe('CdkTable', () => {
     getRows(tableElement).forEach(row => {
       expect(row.getAttribute('role')).toBe('row');
       getCells(row).forEach(cell => {
-        // Native role of TD elements is row.
-        expect(cell.getAttribute('role')).toBe(null);
+        expect(cell.getAttribute('role')).toBe('cell');
       });
     });
   });

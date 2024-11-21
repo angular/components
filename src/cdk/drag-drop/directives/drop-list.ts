@@ -19,6 +19,7 @@ import {
   inject,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {CDK_DROP_LIST, CdkDrag} from './drag';
 import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
@@ -30,9 +31,6 @@ import {DropListOrientation, DragAxis, DragDropConfig, CDK_DRAG_CONFIG} from './
 import {merge, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {assertElementNode} from './assertions';
-
-/** Counter used to generate unique ids for drop zones. */
-let _uniqueIdCounter = 0;
 
 /** Container that wraps a set of draggable items. */
 @Directive({
@@ -91,7 +89,7 @@ export class CdkDropList<T = any> implements OnDestroy {
    * Unique ID for the drop zone. Can be used as a reference
    * in the `connectedTo` of another `CdkDropList`.
    */
-  @Input() id: string = `cdk-drop-list-${_uniqueIdCounter++}`;
+  @Input() id: string = inject(_IdGenerator).getId('cdk-drop-list-');
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
   @Input('cdkDropListLockAxis') lockAxis: DragAxis;

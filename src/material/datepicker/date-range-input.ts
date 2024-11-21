@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -38,8 +38,6 @@ import {DateRange, MatDateSelectionModel} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datepicker-input-base';
-
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mat-date-range-input',
@@ -90,7 +88,7 @@ export class MatDateRangeInput<D>
   }
 
   /** Unique ID for the group. */
-  id = `mat-date-range-input-${nextUniqueId++}`;
+  id: string = inject(_IdGenerator).getId('mat-date-range-input-');
 
   /** Whether the control is focused. */
   focused = false;

@@ -35,7 +35,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
@@ -62,9 +62,6 @@ export class MatSlideToggleChange {
     public checked: boolean,
   ) {}
 }
-
-// Increasing integer for generating unique ids for slide-toggle components.
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mat-slide-toggle',
@@ -220,7 +217,7 @@ export class MatSlideToggle
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.color = defaults.color || 'accent';
     this._noopAnimations = animationMode === 'NoopAnimations';
-    this.id = this._uniqueId = `mat-mdc-slide-toggle-${++nextUniqueId}`;
+    this.id = this._uniqueId = inject(_IdGenerator).getId('mat-mdc-slide-toggle-');
     this.hideIcon = defaults.hideIcon ?? false;
     this.disabledInteractive = defaults.disabledInteractive ?? false;
     this._labelId = this._uniqueId + '-label';

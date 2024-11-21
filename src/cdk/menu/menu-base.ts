@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   AfterContentInit,
@@ -29,9 +29,6 @@ import {Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
 import {MENU_STACK, MenuStack, MenuStackItem} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
-
-/** Counter used to create unique IDs for menus. */
-let nextId = 0;
 
 /**
  * Abstract directive that implements shared logic common to all menus.
@@ -70,7 +67,7 @@ export abstract class CdkMenuBase
   protected readonly dir = inject(Directionality, {optional: true});
 
   /** The id of the menu's host element. */
-  @Input() id = `cdk-menu-${nextId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('cdk-menu-');
 
   /** All child MenuItem elements nested in this Menu. */
   @ContentChildren(CdkMenuItem, {descendants: true})

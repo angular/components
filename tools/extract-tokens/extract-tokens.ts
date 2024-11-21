@@ -2,6 +2,7 @@ import {readFileSync, writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
 import {relative, join, dirname} from 'path';
 import {compileString} from 'sass';
+import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
 
 /** Information extracted for a single token from the theme. */
 interface ExtractedToken {
@@ -31,6 +32,16 @@ interface Token {
   derivedFrom?: string;
 }
 
+/** Information extracted from a theme file. */
+interface ThemeData {
+  /** Name of the theme file. */
+  name: string;
+  /** Name of the `overrides` mixin within the file. */
+  overridesMixin: string;
+  /** Tokens that can be used in the `overrides` mixin. */
+  tokens: Token[];
+}
+
 // Script that extracts the tokens from a specific Bazel target.
 if (require.main === module) {
   const [packagePath, outputPath, ...inputFiles] = process.argv.slice(2);
@@ -52,20 +63,19 @@ if (require.main === module) {
     throw new Error(`Could not find theme files in ${packagePath}`);
   }
 
-  const themes: {name: string; overridesMixin: string; tokens: Token[]}[] = [];
+  const themes: ThemeData[] = [];
 
   themeFiles.forEach(theme => {
-    const tokens = extractTokens(theme.filePath);
     themes.push({
       name: theme.mixinPrefix,
       // This can be derived from the `name` already, but we want the source
       // of truth to be in this repo, instead of whatever page consumes the data.
       overridesMixin: `${theme.mixinPrefix}-overrides`,
-      tokens,
+      tokens: extractTokens(theme.filePath),
     });
   });
 
-  writeFileSync(outputPath, JSON.stringify(themes));
+  writeFileSync(outputPath, JSON.stringify({example: getUsageExample(themes), themes}));
 }
 
 /**
@@ -135,6 +145,41 @@ function extractTokens(themePath: string): Token[] {
       derivedFrom: derivedFrom || undefined,
     };
   });
+}
+
+/**
+ * Generates a highlighted code snippet that illustrates how an overrides mixin can be used.
+ * @param themes Themes that were extracted from a specific entrypoint. One of these themes will
+ *   be used as an example.
+ */
+function getUsageExample(themes: ThemeData[]): string | null {
+  const mixin = themes.find(theme => theme.tokens.length > 0);
+
+  if (!mixin) {
+    return null;
+  }
+
+  // Pick out a couple of color tokens to show as examples.
+  const firstToken = mixin.tokens.find(token => token.type === 'color');
+  const secondToken = mixin.tokens.find(token => token.type === 'color' && token !== firstToken);
+
+  if (!firstToken) {
+    return null;
+  }
+
+  const lines = [
+    `@use '@angular/material' as mat;`,
+    ``,
+    `// Customize the entire app. Change :root to your selector if you want to scope the styles.`,
+    `:root {`,
+    `  @include mat.${mixin.overridesMixin}((`,
+    `    ${firstToken.overridesName}: orange,`,
+    ...(secondToken ? [`    ${secondToken.overridesName}: red,`] : []),
+    `  ));`,
+    `}`,
+  ];
+
+  return highlightCodeBlock(lines.join('\n'), 'scss');
 }
 
 /**

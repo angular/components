@@ -100,7 +100,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     _getIndicatorType(index: number, state?: StepState): StepState;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
-    _groupId: number;
     linear: boolean;
     next(): void;
     // (undocumented)

@@ -54,7 +54,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 export const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
 // @public
-export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
+export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, OnDestroy {
     constructor(...args: unknown[]);
     protected _children: T[];
     protected _clear(): void;
@@ -64,9 +64,9 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     nodeOutlet: QueryList<CdkTreeNodeOutlet>;
+    // (undocumented)
+    protected _type: 'flat' | 'nested';
     protected updateChildrenNodes(children?: T[]): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkNestedTreeNode<any, any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"], never, true, never>;
@@ -118,7 +118,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit,
     _registerNode(node: CdkTreeNode<T, K>): void;
     renderNodeChanges(data: readonly T[], dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     protected _sendKeydownToKeyManager(event: KeyboardEvent): void;
-    _setNodeTypeIfUnset(nodeType: 'flat' | 'nested'): void;
+    _setNodeTypeIfUnset(newType: 'flat' | 'nested'): void;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
     trackBy: TrackByFunction<T>;
@@ -205,6 +205,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
     protected _tabindex: number | null;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
+    // (undocumented)
+    protected readonly _type: 'flat' | 'nested';
     typeaheadLabel: string | null;
     unfocus(): void;
     // (undocumented)

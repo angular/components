@@ -20,8 +20,10 @@ import {
   Output,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   numberAttribute,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {MatOption, ThemePalette} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {MatIconButton} from '@angular/material/button';
@@ -90,8 +92,6 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
   'MAT_PAGINATOR_DEFAULT_OPTIONS',
 );
 
-let nextUniqueId = 0;
-
 /**
  * Component to provide navigation between paged information. Displays the size of the current
  * page, user-selectable options to change that size, what items are being shown, and
@@ -115,7 +115,7 @@ export class MatPaginator implements OnInit, OnDestroy {
   _formFieldAppearance?: MatFormFieldAppearance;
 
   /** ID for the DOM node containing the paginator's items per page label. */
-  readonly _pageSizeLabelId = `mat-paginator-page-size-label-${nextUniqueId++}`;
+  readonly _pageSizeLabelId = inject(_IdGenerator).getId('mat-paginator-page-size-label-');
 
   private _intlChanges: Subscription;
   private _isInitialized = false;

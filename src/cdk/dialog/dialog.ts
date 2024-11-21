@@ -21,6 +21,7 @@ import {of as observableOf, Observable, Subject, defer} from 'rxjs';
 import {DialogRef} from './dialog-ref';
 import {DialogConfig} from './dialog-config';
 import {Directionality} from '@angular/cdk/bidi';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {
   ComponentType,
   Overlay,
@@ -33,9 +34,6 @@ import {startWith} from 'rxjs/operators';
 import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
 import {CdkDialogContainer} from './dialog-container';
 
-/** Unique id for the created dialog. */
-let uniqueId = 0;
-
 @Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
   private _overlay = inject(Overlay);
@@ -43,6 +41,7 @@ export class Dialog implements OnDestroy {
   private _defaultOptions = inject<DialogConfig>(DEFAULT_DIALOG_CONFIG, {optional: true});
   private _parentDialog = inject(Dialog, {optional: true, skipSelf: true});
   private _overlayContainer = inject(OverlayContainer);
+  private _idGenerator = inject(_IdGenerator);
 
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
@@ -110,7 +109,7 @@ export class Dialog implements OnDestroy {
       DialogRef<R, C>
     >;
     config = {...defaults, ...config};
-    config.id = config.id || `cdk-dialog-${uniqueId++}`;
+    config.id = config.id || this._idGenerator.getId('cdk-dialog-');
 
     if (
       config.id &&

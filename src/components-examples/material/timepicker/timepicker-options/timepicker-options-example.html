@@ -1,0 +1,30 @@
+<h3>Interval examples</h3>
+
+<div>
+  <mat-form-field>
+    <mat-label>Every 45 minutes</mat-label>
+    <input matInput [matTimepicker]="minutesPicker">
+    <mat-timepicker-toggle matIconSuffix [for]="minutesPicker"/>
+    <mat-timepicker interval="45min" #minutesPicker/>
+  </mat-form-field>
+</div>
+
+<div>
+  <mat-form-field>
+    <mat-label>Every 3.5 hours</mat-label>
+    <input matInput [matTimepicker]="hoursPicker">
+    <mat-timepicker-toggle matIconSuffix [for]="hoursPicker"/>
+    <mat-timepicker interval="3.5h" #hoursPicker/>
+  </mat-form-field>
+</div>
+
+<h3>Custom list of options</h3>
+
+<div>
+  <mat-form-field>
+    <mat-label>Pick a time of day</mat-label>
+    <input matInput [matTimepicker]="customPicker">
+    <mat-timepicker-toggle matIconSuffix [for]="customPicker"/>
+    <mat-timepicker [options]="customOptions" #customPicker/>
+  </mat-form-field>
+</div>

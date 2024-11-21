@@ -31,7 +31,7 @@ import {
   Injector,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
-import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {
   ESCAPE,
@@ -49,8 +49,6 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {matMenuAnimations} from './menu-animations';
-
-let menuPanelUid = 0;
 
 /** Reason why the menu was closed. */
 export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -118,9 +116,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
   private _firstItemFocusRef?: AfterRenderRef;
-  private _previousElevation: string;
-  private _elevationPrefix = 'mat-elevation-z';
-  private _baseElevation: number | null = null;
 
   /** All items inside the menu. Includes items nested inside another menu. */
   @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
@@ -270,7 +265,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    */
   @Output() readonly close: EventEmitter<MenuCloseReason> = this.closed;
 
-  readonly panelId = `mat-menu-panel-${menuPanelUid++}`;
+  readonly panelId: string = inject(_IdGenerator).getId('mat-menu-panel-');
 
   private _injector = inject(Injector);
 
@@ -390,10 +385,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
         manager.onKeydown(event);
         return;
     }
-
-    // Don't allow the event to propagate if we've already handled it, or it may
-    // end up reaching other overlays that were opened earlier (see #22694).
-    event.stopPropagation();
   }
 
   /**
@@ -441,41 +432,10 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   }
 
   /**
-   * Sets the menu panel elevation.
-   * @param depth Number of parent menus that come before the menu.
+   * @deprecated No longer used and will be removed.
+   * @breaking-change 21.0.0
    */
-  setElevation(depth: number): void {
-    // The base elevation depends on which version of the spec
-    // we're running so we have to resolve it at runtime.
-    if (this._baseElevation === null) {
-      const styles =
-        typeof getComputedStyle === 'function'
-          ? getComputedStyle(this._elementRef.nativeElement)
-          : null;
-      const value = styles?.getPropertyValue('--mat-menu-base-elevation-level') || '8';
-      this._baseElevation = parseInt(value);
-    }
-
-    // The elevation starts at the base and increases by one for each level.
-    // Capped at 24 because that's the maximum elevation defined in the Material design spec.
-    const elevation = Math.min(this._baseElevation + depth, 24);
-    const newElevation = `${this._elevationPrefix}${elevation}`;
-    const customElevation = Object.keys(this._classList).find(className => {
-      return className.startsWith(this._elevationPrefix);
-    });
-
-    if (!customElevation || customElevation === this._previousElevation) {
-      const newClassList = {...this._classList};
-
-      if (this._previousElevation) {
-        newClassList[this._previousElevation] = false;
-      }
-
-      newClassList[newElevation] = true;
-      this._previousElevation = newElevation;
-      this._classList = newClassList;
-    }
-  }
+  setElevation(_depth: number): void {}
 
   /**
    * Adds classes to the menu panel based on its position. Can be used by

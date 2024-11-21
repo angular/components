@@ -7,9 +7,8 @@
  */
 
 import {Directive, ElementRef, Input, OnInit, inject} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {AriaHasPopupValue, CDK_COMBOBOX, CdkCombobox} from './combobox';
-
-let nextId = 0;
 
 @Directive({
   selector: '[cdkComboboxPopup]',
@@ -44,7 +43,7 @@ export class CdkComboboxPopup<T = unknown> implements OnInit {
   }
   private _firstFocusElement: HTMLElement;
 
-  @Input() id = `cdk-combobox-popup-${nextId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('cdk-combobox-popup-');
 
   ngOnInit() {
     this.registerWithPanel();

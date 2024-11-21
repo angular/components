@@ -94,6 +94,7 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   videoHeight: number | undefined;
   disableCookies = false;
   disablePlaceholder = false;
+  startAt30s = false;
   placeholderQuality: PlaceholderImageQuality;
 
   constructor() {

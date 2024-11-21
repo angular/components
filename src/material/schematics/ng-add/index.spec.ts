@@ -124,7 +124,7 @@ describe('ng-add schematic', () => {
     const themeContent = buffer!.toString();
 
     expect(themeContent).toContain(`@use '@angular/material' as mat;`);
-    expect(themeContent).toContain(`$material-theme: mat.define-theme((`);
+    expect(themeContent).toContain(`@include mat.theme((`);
   });
 
   it('should create a custom theme file if no SCSS file could be found', async () => {

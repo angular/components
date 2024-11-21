@@ -1,27 +1,14 @@
-@use '../../theming/definition';
-@use '../../theming/color-api-backwards-compatibility';
 @use '../../theming/palettes';
-@use '../all-theme';
-@use '../../core';
-@use '../../typography/typography';
-
-@include core.app-background();
-@include core.elevation-classes();
-
-$theme: definition.define-theme((
-  color: (
-    theme-type: light,
-    primary: palettes.$rose-palette,
-    tertiary: palettes.$red-palette,
-  ),
-  density: (
-    scale: 0,
-  )
-));
+@use '../../../core/tokens/m3-system';
 
 html {
-  @include all-theme.all-component-themes($theme);
+  @include m3-system.theme((
+    color: (
+      theme-type: light,
+      primary: palettes.$rose-palette,
+      tertiary: palettes.$red-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 }
-
-@include color-api-backwards-compatibility.color-variants-backwards-compatibility($theme);
-@include typography.typography-hierarchy($theme);

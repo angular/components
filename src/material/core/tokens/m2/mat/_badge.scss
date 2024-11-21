@@ -56,7 +56,7 @@ $prefix: (mat, badge);
   // the value to determine the percentage of the background to put into foreground when
   // mixing the colors together.
   @if (meta.type-of($disabled-background) == color and meta.type-of($app-background) == color) {
-    $badge-opacity: opacity($disabled-background);
+    $badge-opacity: color.opacity($disabled-background);
     $disabled-background: color.mix($app-background,
       rgba($disabled-background, 1), (1 - $badge-opacity) * 100%);
   }

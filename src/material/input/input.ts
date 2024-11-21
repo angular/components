@@ -25,6 +25,7 @@ import {
   OnDestroy,
   WritableSignal,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
@@ -44,8 +45,6 @@ const MAT_INPUT_INVALID_TYPES = [
   'reset',
   'submit',
 ];
-
-let nextUniqueId = 0;
 
 /** Object that can be used to configure the default options for the input. */
 export interface MatInputConfig {
@@ -103,7 +102,7 @@ export class MatInput
   private _ngZone = inject(NgZone);
   protected _formField? = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
 
-  protected _uid = `mat-input-${nextUniqueId++}`;
+  protected _uid = inject(_IdGenerator).getId('mat-input-');
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
   private _signalBasedValueAccessor?: {value: WritableSignal<any>};
@@ -111,6 +110,9 @@ export class MatInput
   private _errorStateTracker: _ErrorStateTracker;
   private _webkitBlinkWheelListenerAttached = false;
   private _config = inject(MAT_INPUT_CONFIG, {optional: true});
+
+  /** `aria-describedby` IDs assigned by the form field. */
+  private _formFieldDescribedBy: string[] | undefined;
 
   /** Whether the component is being rendered on the server. */
   readonly _isServer: boolean;
@@ -552,10 +554,29 @@ export class MatInput
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
-    if (ids.length) {
-      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+    const element = this._elementRef.nativeElement;
+    const existingDescribedBy = element.getAttribute('aria-describedby');
+    let toAssign: string[];
+
+    // In some cases there might be some `aria-describedby` IDs that were assigned directly,
+    // like by the `AriaDescriber` (see #30011). Attempt to preserve them by taking the previous
+    // attribute value and filtering out the IDs that came from the previous `setDescribedByIds`
+    // call. Note the `|| ids` here allows us to avoid duplicating IDs on the first render.
+    if (existingDescribedBy) {
+      const exclude = this._formFieldDescribedBy || ids;
+      toAssign = ids.concat(
+        existingDescribedBy.split(' ').filter(id => id && !exclude.includes(id)),
+      );
     } else {
-      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+      toAssign = ids;
+    }
+
+    this._formFieldDescribedBy = ids;
+
+    if (toAssign.length) {
+      element.setAttribute('aria-describedby', toAssign.join(' '));
+    } else {
+      element.removeAttribute('aria-describedby');
     }
   }
 

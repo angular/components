@@ -64,6 +64,9 @@ export class MatBottomSheetConfig<D = any> {
     direction?: Direction;
     disableClose?: boolean;
     hasBackdrop?: boolean;
+    height?: string;
+    maxHeight?: number | string;
+    minHeight?: number | string;
     panelClass?: string | string[];
     restoreFocus?: boolean;
     scrollStrategy?: ScrollStrategy;

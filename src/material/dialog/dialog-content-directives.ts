@@ -16,13 +16,11 @@ import {
   SimpleChanges,
   inject,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 
 import {MatDialog} from './dialog';
 import {_closeDialogVia, MatDialogRef} from './dialog-ref';
-
-/** Counter used to generate unique IDs for dialog elements. */
-let dialogElementUid = 0;
 
 /**
  * Button that will close the current dialog.
@@ -137,7 +135,7 @@ export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
   },
 })
 export class MatDialogTitle extends MatDialogLayoutSection {
-  @Input() id: string = `mat-mdc-dialog-title-${dialogElementUid++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-mdc-dialog-title-');
 
   protected _onAdd() {
     // Note: we null check the queue, because there are some internal

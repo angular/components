@@ -24,12 +24,10 @@ export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
-    // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
     disableCookies: boolean;
     disablePlaceholder: boolean;
     endSeconds: number | undefined;
-    // (undocumented)
     readonly error: Observable<YT.OnErrorEvent>;
     getAvailablePlaybackRates(): number[];
     getAvailableQualityLevels(): YT.SuggestedVideoQuality[];
@@ -77,9 +75,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     pauseVideo(): void;
     placeholderButtonLabel: string;
     placeholderImageQuality: PlaceholderImageQuality;
-    // (undocumented)
     readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
-    // (undocumented)
     readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
     playerVars: YT.PlayerVars | undefined;
     playVideo(): void;
@@ -90,7 +86,6 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     protected _shouldShowPlaceholder(): boolean;
     showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
-    // (undocumented)
     readonly stateChange: Observable<YT.OnStateChangeEvent>;
     stopVideo(): void;
     suggestedQuality: YT.SuggestedVideoQuality | undefined;

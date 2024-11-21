@@ -129,6 +129,7 @@ export class MatChipGrid
   override set disabled(value: boolean) {
     this._disabled = value;
     this._syncChipsState();
+    this.stateChanges.next();
   }
 
   /**

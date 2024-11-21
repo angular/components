@@ -7,6 +7,7 @@
  */
 
 import {CSP_NONCE, Directive, ElementRef, OnDestroy, OnInit, inject} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
 import {_getShadowRoot} from '@angular/cdk/platform';
@@ -16,8 +17,6 @@ import {
   StickySize,
   StickyUpdate,
 } from '@angular/cdk/table';
-
-let nextId = 0;
 
 /**
  * Applies styles to the host element that make its scrollbars match up with
@@ -43,7 +42,7 @@ export class CdkTableScrollContainer implements StickyPositioningListener, OnDes
   private readonly _directionality = inject(Directionality, {optional: true});
   private readonly _nonce = inject(CSP_NONCE, {optional: true});
 
-  private readonly _uniqueClassName = `cdk-table-scroll-container-${++nextId}`;
+  private readonly _uniqueClassName = inject(_IdGenerator).getId('cdk-table-scroll-container-');
   private _styleRoot!: Node;
   private _styleElement?: HTMLStyleElement;
 

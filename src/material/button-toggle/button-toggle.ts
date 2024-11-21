@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, SPACE, ENTER} from '@angular/cdk/keycodes';
 import {
@@ -31,6 +31,7 @@ import {
   booleanAttribute,
   inject,
   HostAttributeToken,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -56,7 +57,7 @@ export interface MatButtonToggleDefaultOptions {
    * setting an appearance on a button toggle or group.
    */
   appearance?: MatButtonToggleAppearance;
-  /** Whetehr icon indicators should be hidden for single-selection button toggle groups. */
+  /** Whether icon indicators should be hidden for single-selection button toggle groups. */
   hideSingleSelectionIndicator?: boolean;
   /** Whether icon indicators should be hidden for multiple-selection button toggle groups. */
   hideMultipleSelectionIndicator?: boolean;
@@ -103,9 +104,6 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => MatButtonToggleGroup),
   multi: true,
 };
-
-// Counter used to generate unique IDs.
-let uniqueIdCounter = 0;
 
 /** Change event object emitted by button toggle. */
 export class MatButtonToggleChange {
@@ -181,7 +179,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._name = value;
     this._markButtonsForCheck();
   }
-  private _name = `mat-button-toggle-group-${uniqueIdCounter++}`;
+  private _name = inject(_IdGenerator).getId('mat-button-toggle-group-');
 
   /** Whether the toggle group is vertical. */
   @Input({transform: booleanAttribute}) vertical: boolean;
@@ -562,7 +560,8 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
-
+  private _idGenerator = inject(_IdGenerator);
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _checked = false;
 
   /**
@@ -685,7 +684,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const group = this.buttonToggleGroup;
-    this.id = this.id || `mat-button-toggle-${uniqueIdCounter++}`;
+    this.id = this.id || this._idGenerator.getId('mat-button-toggle-');
 
     if (group) {
       if (group._isPrechecked(this)) {
@@ -701,6 +700,14 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // This serves two purposes:
+    // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
+    //    delay adding the class until the view is rendered.
+    // 2. We don't want animation if the `NoopAnimationsModule` is provided.
+    if (this._animationMode !== 'NoopAnimations') {
+      this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
+    }
+
     this._focusMonitor.monitor(this._elementRef, true);
   }
 

@@ -60,7 +60,7 @@ $private-default-overlap-color: #a8dab5;
   // for a solid border, but because we're using a dashed border for the
   // preview range, we need to bump its opacity to ensure that it's visible.
   @if meta.type-of($preview-outline-color) == color {
-    $preview-outline-opacity: math.min(opacity($preview-outline-color) * 2, 1);
+    $preview-outline-opacity: math.min(color.opacity($preview-outline-color) * 2, 1);
     $preview-outline-color: rgba($preview-outline-color, $preview-outline-opacity);
   }
 

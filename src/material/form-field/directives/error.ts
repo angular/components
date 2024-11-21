@@ -14,8 +14,7 @@ import {
   HostAttributeToken,
   inject,
 } from '@angular/core';
-
-let nextUniqueId = 0;
+import {_IdGenerator} from '@angular/cdk/a11y';
 
 /**
  * Injection token that can be used to reference instances of `MatError`. It serves as
@@ -35,7 +34,7 @@ export const MAT_ERROR = new InjectionToken<MatError>('MatError');
   providers: [{provide: MAT_ERROR, useExisting: MatError}],
 })
 export class MatError {
-  @Input() id: string = `mat-mdc-error-${nextUniqueId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-mdc-error-');
 
   constructor(...args: unknown[]);
 

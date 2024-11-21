@@ -1,0 +1,8 @@
+<mat-form-field>
+  <mat-label>Pick a time</mat-label>
+  <input matInput [(ngModel)]="value" [matTimepicker]="picker">
+  <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+  <mat-timepicker #picker/>
+</mat-form-field>
+
+<button mat-button (click)="switchLocale()">Dynamically switch to Bulgarian</button>

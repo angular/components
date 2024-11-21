@@ -44,7 +44,7 @@ import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {ENTER, ESCAPE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
-import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import type {MatTimepickerInput} from './timepicker-input';
 import {
   generateOptions,
@@ -54,9 +54,6 @@ import {
   validateAdapter,
 } from './util';
 import {Subscription} from 'rxjs';
-
-/** Counter used to generate unique IDs. */
-let uniqueId = 0;
 
 /** Event emitted when a value is selected in the timepicker. */
 export interface MatTimepickerSelected<D> {
@@ -157,7 +154,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   readonly activeDescendant: Signal<string | null> = this._activeDescendant.asReadonly();
 
   /** Unique ID of the timepicker's panel */
-  readonly panelId = `mat-timepicker-panel-${uniqueId++}`;
+  readonly panelId: string = inject(_IdGenerator).getId('mat-timepicker-panel-');
 
   /** Whether ripples within the timepicker should be disabled. */
   readonly disableRipple: InputSignalWithTransform<boolean, unknown> = input(

@@ -17,12 +17,10 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CDK_ACCORDION, CdkAccordion} from './accordion';
 import {Subscription} from 'rxjs';
-
-/** Used to generate unique ID for each accordion item. */
-let nextId = 0;
 
 /**
  * A basic directive expected to be extended and decorated as a component.  Sets up all
@@ -59,7 +57,7 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
   @Output() readonly expandedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The unique AccordionItem id. */
-  readonly id: string = `cdk-accordion-child-${nextId++}`;
+  readonly id: string = inject(_IdGenerator).getId('cdk-accordion-child-');
 
   /** Whether the AccordionItem is expanded. */
   @Input({transform: booleanAttribute})
