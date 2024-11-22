@@ -144,8 +144,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     () => this.disabledInput() || this._accessorDisabled(),
   );
 
-  /** Whether the input should be disabled through the template. */
-  protected readonly disabledInput: InputSignalWithTransform<boolean, unknown> = input(false, {
+  /**
+   * Whether the input should be disabled through the template.
+   * @docs-private
+   */
+  readonly disabledInput: InputSignalWithTransform<boolean, unknown> = input(false, {
     transform: booleanAttribute,
     alias: 'disabled',
   });

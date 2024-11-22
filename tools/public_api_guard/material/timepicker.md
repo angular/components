@@ -71,7 +71,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     protected readonly _ariaControls: Signal<string | null>;
     protected readonly _ariaExpanded: Signal<string>;
     readonly disabled: Signal<boolean>;
-    protected readonly disabledInput: InputSignalWithTransform<boolean, unknown>;
+    readonly disabledInput: InputSignalWithTransform<boolean, unknown>;
     focus(): void;
     _getLabelId(): string | null;
     getOverlayOrigin(): ElementRef<HTMLElement>;
