@@ -11,7 +11,7 @@ The following Angular Material components are designed to work inside a `<mat-fo
 - [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.io/components/input/overview)
 - [`<select matNativeControl>`](https://material.angular.io/components/select/overview)
 - [`<mat-select>`](https://material.angular.io/components/select/overview)
-- [`<mat-chip-list>`](https://material.angular.io/components/chips/overview)
+- [`<mat-chip-set>`](https://material.angular.io/components/chips/overview)
 
 <!-- example(form-field-overview) -->
 
