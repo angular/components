@@ -168,7 +168,7 @@ To add a meta icon to your list item, use the `matListItemMeta` directive. This 
   @for (message of messages; track message) {
     <mat-list-item>
       <div matListItemMeta>
-      <mat-icon>folder</mat-icon>
+        <mat-icon>folder</mat-icon>
       </div>
       <h3 matListItemTitle>{{message.from}}</h3>
       <p matListItemLine>
