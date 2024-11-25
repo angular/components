@@ -29,7 +29,7 @@ export class LiveAnnouncer implements OnDestroy {
 
   private _liveElement: HTMLElement;
   private _document = inject(DOCUMENT);
-  private _previousTimeout: number;
+  private _previousTimeout: ReturnType<typeof setTimeout>;
   private _currentPromise: Promise<void> | undefined;
   private _currentResolve: (() => void) | undefined;
 
