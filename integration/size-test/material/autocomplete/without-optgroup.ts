@@ -6,6 +6,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
  * autocomplete like `MatOptgroup` are not used and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <input [matAutocomplete]="myAutocomplete">
     <mat-autocomplete #myAutocomplete>
