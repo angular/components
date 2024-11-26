@@ -204,6 +204,8 @@ function getTokenExtractionCode(
   const stringJoin = '__privateStringJoin';
   const m3Tokens = '___privateM3Tokens';
   const palettes = '___privatePalettes';
+  const sassUtils = '__privateSassUtils';
+  const inferTokenType = '__privateInferFromValue';
   const defineOverrides = '_define-overrides';
   const corePath = relative(dirname(absoluteThemePath), join(srcPath, 'material/core')) || '.';
 
@@ -215,12 +217,12 @@ function getTokenExtractionCode(
     @use 'sass:string' as ${str};
     @use '${join(corePath, 'tokens/m3-tokens')}' as ${m3Tokens};
     @use '${join(corePath, 'theming/palettes')}' as ${palettes};
-    @use '${join(corePath, 'style/sass-utils')}' as __privateSassUtils;
+    @use '${join(corePath, 'style/sass-utils')}' as ${sassUtils};
 
     // The 'generate-*' functions don't have the ability to enable
     // system tokens so we have to do it by setting a variable.
-    __privateSassUtils.$use-system-color-variables: true;
-    __privateSassUtils.$use-system-typography-variables: true;
+    ${sassUtils}.$use-system-color-variables: true;
+    ${sassUtils}.$use-system-typography-variables: true;
   `;
 
   const append = `
@@ -241,12 +243,44 @@ function getTokenExtractionCode(
       @error 'Expected override to be a list but got ' + $__override-type;
     }
 
+    // Joins all the strings in a list with a separator.
     @function ${stringJoin}($value, $separator) {
       $result: '';
       @each $part in $value {
         $result: if($result == '', $part, '#{$result}#{$separator}#{$part}');
       }
       @return $result;
+    }
+
+    // Uses some simple heuristics to determine the type of a token based on its name or value.
+    @function ${inferTokenType}($name, $value) {
+      @if ($value == null) {
+        @return null;
+      }
+
+      $type: ${meta}.type-of($value);
+      $inferred-type: null;
+
+      // Note: Sass' string.index returns a 1-based index or null (if the value can't be found)
+      // so it's safe to just null check it in the conditions below.
+      @if ($type == 'color' or ${str}.index($name, 'shadow') or ${str}.index($name, 'opacity')) {
+        $inferred-type: color;
+      } @else if (
+        ${str}.index($name, 'font') or
+        ${str}.index($name, 'line-height') or
+        ${str}.index($name, 'tracking') or
+        ${str}.index($name, 'weight') or
+        (${str}.index($name, 'text') and ${str}.index($name, 'size')) or
+        (${str}.index($name, 'text') and ${str}.index($name, 'transform'))
+      ) {
+        $inferred-type: typography;
+      } @else if (${str}.index($name, 'width') or ${str}.index($name, 'height')) {
+        $inferred-type: density;
+      } @else if ($type == 'string' or ${str}.index($name, 'shape')) {
+        $inferred-type: base;
+      }
+
+      @return $inferred-type;
     }
 
     @each $map in $__override-tokens {
@@ -258,7 +292,7 @@ function getTokenExtractionCode(
       $typography: ${map}.get($__all-typography, $namespace) or ();
       $density: ${map}.get($__all-density, $namespace) or ();
 
-      @each $name, $_ in $tokens {
+      @each $name, $resolved-value in $tokens {
         $color-value: ${map}.get($color, $name);
         $base-value: ${map}.get($base, $name);
         $typography-value: ${map}.get($typography, $name);
@@ -279,6 +313,19 @@ function getTokenExtractionCode(
         } @else {
           $type: color;
           $value: $color-value;
+        }
+
+        // If the token has a value, but could not be found in the token maps, try to infer its type
+        // from the name and value. This is fairly rare, but can happen for some hardcoded tokens.
+        @if ($value == null and $resolved-value) {
+          $fallback-type: ${inferTokenType}($name, $resolved-value);
+
+          @if ($fallback-type == null) {
+            @error 'Cannot determine type of token "#{$name}". Token extraction script needs to be updated.';
+          }
+
+          $type: $fallback-type;
+          $value: $resolved-value;
         }
 
         @if ($value) {
