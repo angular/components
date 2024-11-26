@@ -157,7 +157,7 @@ html {
   @include mat.theme((
     color: mat.$violet-palette,
     typography: (
-      plain-family: Roboto
+      plain-family: Roboto,
       brand-family: Open Sans,
       bold-weight: 900,
       medium-weight: 500,
