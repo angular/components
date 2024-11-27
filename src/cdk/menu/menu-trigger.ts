@@ -259,7 +259,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
       .position()
       .flexibleConnectedTo(this._elementRef)
       .withLockedPosition()
-      .withGrowAfterOpen()
+      .withFlexibleDimensions(false)
       .withPositions(this._getOverlayPositions());
   }
 
