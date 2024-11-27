@@ -6,6 +6,7 @@ import {MatChipsModule} from '@angular/material/chips';
  * chip module such as `MatChipRemove` are not used and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-chip-listbox>
       <mat-chip-option>First</mat-chip-option>

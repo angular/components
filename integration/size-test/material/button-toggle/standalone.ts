@@ -6,6 +6,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
  * module such as `MatButtonToggleGroup` are not used and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-button-toggle>Center text</mat-button-toggle>
   `,

@@ -6,6 +6,7 @@ import {MatTabsModule} from '@angular/material/tabs';
  * lazy `MatTabContent` and `MatTabLabel`.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-tab-group>
       <mat-tab>

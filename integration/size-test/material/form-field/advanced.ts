@@ -7,6 +7,7 @@ import {MatInputModule} from '@angular/material/input';
  * directives such as `MatError`, `MatHint`, `MatPrefix` or `MatSuffix`.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-form-field>
       <div matSuffix></div>
