@@ -16,11 +16,12 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
 import { Subject } from 'rxjs';
+import { WritableSignal } from '@angular/core';
 
-// @public
+// @public @deprecated
 export type ArrowViewState = SortDirection | 'hint' | 'active';
 
-// @public
+// @public @deprecated
 export interface ArrowViewStateTransition {
     // (undocumented)
     fromState?: ArrowViewState;
@@ -81,7 +82,7 @@ export interface MatSortable {
     start: SortDirection;
 }
 
-// @public
+// @public @deprecated
 export const matSortAnimations: {
     readonly indicator: AnimationTriggerMetadata;
     readonly leftPointer: AnimationTriggerMetadata;
@@ -100,18 +101,14 @@ export interface MatSortDefaultOptions {
 // @public
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
     constructor(...args: unknown[]);
-    _arrowDirection: SortDirection;
+    // (undocumented)
+    protected _animationModule: "NoopAnimations" | "BrowserAnimations" | null;
     arrowPosition: SortHeaderArrowPosition;
     // (undocumented)
     _columnDef: MatSortHeaderColumnDef | null;
     disableClear: boolean;
     disabled: boolean;
-    _disableViewStateAnimation: boolean;
     _getAriaSortAttribute(): "none" | "ascending" | "descending";
-    _getArrowDirectionState(): string;
-    _getArrowViewState(): string;
-    // (undocumented)
-    _handleClick(): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
     id: string;
@@ -130,18 +127,14 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    protected _recentlyCleared: WritableSignal<SortDirection | null>;
     _renderArrow(): boolean;
-    _setAnimationTransitionState(viewState: ArrowViewStateTransition): void;
-    _setIndicatorHintVisible(visible: boolean): void;
-    _showIndicatorHint: boolean;
     // (undocumented)
     _sort: MatSort;
     get sortActionDescription(): string;
     set sortActionDescription(value: string);
     start: SortDirection;
     _toggleOnInteraction(): void;
-    _updateArrowDirection(): void;
-    _viewState: ArrowViewStateTransition;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "id": { "alias": "mat-sort-header"; "required": false; }; "arrowPosition": { "alias": "arrowPosition"; "required": false; }; "start": { "alias": "start"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "sortActionDescription": { "alias": "sortActionDescription"; "required": false; }; "disableClear": { "alias": "disableClear"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
