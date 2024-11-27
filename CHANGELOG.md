@@ -1,3 +1,24 @@
+<a name="19.0.1"></a>
+# 19.0.1 "mercury-mailbox" (2024-11-27)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2d7e078bb](https://github.com/angular/components/commit/2d7e078bb46d665f21a6ef3ff1b76fec336862bc) | fix | **button-toggle:** animate checkbox ([#30025](https://github.com/angular/components/pull/30025)) |
+| [edac40645](https://github.com/angular/components/commit/edac40645f5130a9b85eaefa2479792a93d62396) | fix | **chips:** emit state changes when chip grid is disabled ([#30033](https://github.com/angular/components/pull/30033)) |
+| [18f7f4bb9](https://github.com/angular/components/commit/18f7f4bb9e3b9cae8563f3134aadede818140e9d) | fix | **datepicker:** adds comparison ids and aria-describedby spans ([#30040](https://github.com/angular/components/pull/30040)) |
+| [375435497](https://github.com/angular/components/commit/375435497fa42446ea51d11f72c32853fb337933) | fix | **slider:** update documentation ([#30029](https://github.com/angular/components/pull/30029)) |
+| [a31201475](https://github.com/angular/components/commit/a3120147523da86bc0e8d9531344d3c531c4795b) | fix | **timepicker:** make disabled input public ([#30063](https://github.com/angular/components/pull/30063)) |
+### docs
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f9d9d2c81](https://github.com/angular/components/commit/f9d9d2c8115da469c234768c220205feb2a58eb1) | fix | update errorState example to cover handle missing state ([#30059](https://github.com/angular/components/pull/30059)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [59b7f436a](https://github.com/angular/components/commit/59b7f436acc5c4b2e732ec09ac44e031e8b422bf) | fix | use cross-compatible type for setTimeout ([#30073](https://github.com/angular/components/pull/30073)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.0"></a>
 # 19.0.0 "hafnium-hippo" (2024-11-19)
 ## Breaking Changes
