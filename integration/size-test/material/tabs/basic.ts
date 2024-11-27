@@ -7,6 +7,7 @@ import {MatTabsModule} from '@angular/material/tabs';
  * be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-tab-group>
       <mat-tab label="Hello">Content</mat-tab>

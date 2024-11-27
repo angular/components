@@ -7,6 +7,7 @@ import {MatListModule} from '@angular/material/list';
  * and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-nav-list>
       <mat-list-item>

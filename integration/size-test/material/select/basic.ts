@@ -7,6 +7,7 @@ import {MatSelectModule} from '@angular/material/select';
  * tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-select>
       <mat-option value="First">First</mat-option>

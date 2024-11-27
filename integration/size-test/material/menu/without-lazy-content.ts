@@ -6,6 +6,7 @@ import {MatMenuModule} from '@angular/material/menu';
  * specified, so it should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <button [matMenuTriggerFor]="menu">Open</button>
     <mat-menu #menu="matMenu"></mat-menu>

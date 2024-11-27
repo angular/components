@@ -8,6 +8,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
  * should be omitted.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-date-range-input [rangePicker]="picker">
       <input matStartDate>

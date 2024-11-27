@@ -6,6 +6,7 @@ import {MatRadioModule} from '@angular/material/radio';
  * should be tree-shaken away properly.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-radio-button value="hello"></mat-radio-button>
   `,
