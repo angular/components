@@ -1,3 +1,16 @@
+<a name="19.1.0-next.0"></a>
+# 19.1.0-next.0 "hassium-ham" (2024-11-27)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f47f5f9a1](https://github.com/angular/components/commit/f47f5f9a1ed294ecd8d1dac5dee3019a80a932d6) | feat | **schematics:** Add CSS output to custom theme schematic ([#30004](https://github.com/angular/components/pull/30004)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3a7724e95](https://github.com/angular/components/commit/3a7724e9580c64dd4a9f4d3eb7b3cad2182cea2f) | fix | remove webkit-overflow-scrolling ([#30003](https://github.com/angular/components/pull/30003)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.1"></a>
 # 19.0.1 "mercury-mailbox" (2024-11-27)
 ### material
