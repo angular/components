@@ -272,6 +272,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       name: 'Ripples',
       overviewPath: 'material/core/ripple/ripple.html',
       summary: 'Directive for adding Material Design ripple effects',
+      hasStyling: false, // Ripple styling is documented through `core`.
       exampleSpecs: {
         prefix: 'ripple-',
       },
@@ -607,7 +608,7 @@ export class DocumentationItems {
 function processDocs(packageName: string, docs: DocItem[]): DocItem[] {
   for (const doc of docs) {
     doc.packageName = packageName;
-    doc.hasStyling = packageName === 'material';
+    doc.hasStyling ??= packageName === 'material';
     doc.examples = exampleNames.filter(key =>
       key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
       !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0));
