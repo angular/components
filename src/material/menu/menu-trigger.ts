@@ -295,7 +295,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._initMenu(menu);
 
     if (menu instanceof MatMenu) {
-      menu._startAnimation();
+      menu._setIsOpen(true);
       menu._directDescendantItems.changes.pipe(takeUntil(menu.close)).subscribe(() => {
         // Re-adjust the position without locking when the amount of items
         // changes so that the overlay is allowed to pick a new optimal position.
@@ -337,7 +337,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     const menu = this.menu;
     this._closingActionsSubscription.unsubscribe();
-    this._overlayRef.detach();
 
     // Always restore focus if the user is navigating using the keyboard or the menu was opened
     // programmatically. We don't restore for non-root triggers, because it can prevent focus
@@ -350,28 +349,30 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._openedBy = undefined;
 
     if (menu instanceof MatMenu) {
-      menu._resetAnimation();
+      const attachCount = menu.lazyContent ? menu.lazyContent._attachCount : 0;
 
-      if (menu.lazyContent) {
-        // Wait for the exit animation to finish before detaching the content.
-        menu._animationDone
-          .pipe(
-            filter(event => event.toState === 'void'),
-            take(1),
-            // Interrupt if the content got re-attached.
-            takeUntil(menu.lazyContent._attached),
-          )
-          .subscribe({
-            next: () => menu.lazyContent!.detach(),
-            // No matter whether the content got re-attached, reset the menu.
-            complete: () => this._setIsMenuOpen(false),
-          });
-      } else {
-        this._setIsMenuOpen(false);
-      }
+      menu._animationDone
+        .pipe(
+          filter(state => state === 'void'),
+          take(1),
+        )
+        .subscribe({
+          complete: () => {
+            // Don't detach the lazy content if it got re-attached while the animation
+            // was running. It may have been attached to a different DOM node.
+            if (menu.lazyContent && menu.lazyContent._attachCount === attachCount) {
+              menu.lazyContent.detach();
+            }
+            this._overlayRef?.detach();
+          },
+        });
+
+      this._setIsMenuOpen(false);
+      menu._setIsOpen(false);
     } else {
       this._setIsMenuOpen(false);
       menu?.lazyContent?.detach();
+      this._overlayRef.detach();
     }
   }
 
@@ -386,7 +387,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._setIsMenuOpen(true);
   }
 
-  // set state rather than toggle to support triggers sharing a menu
+  /** Sets the current menu state. */
   private _setIsMenuOpen(isOpen: boolean): void {
     if (isOpen !== this._menuOpen) {
       this._menuOpen = isOpen;

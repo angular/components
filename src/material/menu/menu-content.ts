@@ -19,7 +19,6 @@ import {
   ViewContainerRef,
   inject,
 } from '@angular/core';
-import {Subject} from 'rxjs';
 
 /**
  * Injection token that can be used to reference instances of `MatMenuContent`. It serves
@@ -41,11 +40,11 @@ export class MatMenuContent implements OnDestroy {
   private _document = inject(DOCUMENT);
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  private _portal: TemplatePortal<any>;
+  private _portal: TemplatePortal<any> | undefined;
   private _outlet: DomPortalOutlet;
 
-  /** Emits when the menu content has been attached. */
-  readonly _attached = new Subject<void>();
+  /** Number of times the content was attached. */
+  _attachCount = 0;
 
   constructor(...args: unknown[]);
 
@@ -85,7 +84,7 @@ export class MatMenuContent implements OnDestroy {
     // it needs to check for new menu items and update the `@ContentChild` in `MatMenu`.
     this._changeDetectorRef.markForCheck();
     this._portal.attach(this._outlet, context);
-    this._attached.next();
+    this._attachCount++;
   }
 
   /**
@@ -93,7 +92,7 @@ export class MatMenuContent implements OnDestroy {
    * @docs-private
    */
   detach() {
-    if (this._portal.isAttached) {
+    if (this._portal?.isAttached) {
       this._portal.detach();
     }
   }
