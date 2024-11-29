@@ -14,8 +14,14 @@
 
 .example-accordion-item-header {
   display: flex;
-  align-content: center;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px;
+  text-align: left;
+
 }
 
 .example-accordion-item-description {
@@ -23,7 +29,6 @@
   color: #999;
 }
 
-.example-accordion-item-header,
 .example-accordion-item-body {
   padding: 16px;
 }
