@@ -1,12 +1,12 @@
 {
-  "SAUCELABS_IOS15": {
+  "SAUCELABS_IOS18": {
     "base": "SauceLabs",
-    "appiumVersion": "1.22.0",
+    "appiumVersion": "2.4.1",
     "deviceOrientation": "portrait",
     "browserName": "Safari",
-    "platformVersion": "15.0",
+    "platformVersion": "18.0",
     "platformName": "iOS",
-    "deviceName": "iPhone 13 Pro Max Simulator"
+    "deviceName": "iPhone 15 Pro Max Simulator"
   },
   "BROWSERSTACK_SAFARI16": {
     "base": "BrowserStack",
