@@ -6,7 +6,7 @@ import {MIGRATION_PATH} from '../../paths';
 const PROJECT_ROOT_DIR = '/projects/cdk-testing';
 const THEME_FILE_PATH = join(PROJECT_ROOT_DIR, 'src/theme.scss');
 
-describe('v15 legacy components migration', () => {
+describe('v19 mat.core migration', () => {
   let tree: UnitTestTree;
 
   /** Writes multiple lines to a file. */
@@ -71,6 +71,13 @@ describe('v15 legacy components migration', () => {
           `	 	@include material.elevation-classes();`,
           `	 	@include material.app-background();	 	  `,
         ],
+      });
+    });
+
+    it('should not break if there is an invalid syntax', async () => {
+      await runSassMigrationTest('', {
+        old: [`@use '@angular/material' as mat;`, `.foo { content: '; }`],
+        new: [`@use '@angular/material' as mat;`, `.foo { content: '; }`],
       });
     });
   });

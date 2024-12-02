@@ -25,16 +25,23 @@ export class MatCoreMigration extends Migration<UpgradeData, DevkitContext> {
   }
 
   override visitStylesheet(stylesheet: ResolvedResource): void {
-    const processor = new postcss.Processor([
-      {
-        postcssPlugin: 'mat-core-removal-v19-plugin',
-        AtRule: {
-          use: node => this._getNamespace(node),
-          include: node => this._handleAtInclude(node, stylesheet.filePath),
+    try {
+      const processor = new postcss.Processor([
+        {
+          postcssPlugin: 'mat-core-removal-v19-plugin',
+          AtRule: {
+            use: node => this._getNamespace(node),
+            include: node => this._handleAtInclude(node, stylesheet.filePath),
+          },
         },
-      },
-    ]);
-    processor.process(stylesheet.content, {syntax: scss}).sync();
+      ]);
+      processor.process(stylesheet.content, {syntax: scss}).sync();
+    } catch (e) {
+      this.logger.warn(
+        `Failed to migrate usages of mat.core in ${stylesheet.filePath} due to error:`,
+      );
+      this.logger.warn(e + '');
+    }
   }
 
   /** Handles updating the at-include rules of uses of the core mixin. */
