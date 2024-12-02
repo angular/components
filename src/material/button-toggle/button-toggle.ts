@@ -473,16 +473,28 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
       return;
     }
 
+    const toggles = this._buttonToggles.toArray();
+
     if (this.multiple && value) {
       if (!Array.isArray(value) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error('Value must be an array in multiple-selection mode.');
       }
 
       this._clearSelection();
-      value.forEach((currentValue: any) => this._selectValue(currentValue));
+      value.forEach((currentValue: any) => this._selectValue(currentValue, toggles));
     } else {
       this._clearSelection();
-      this._selectValue(value);
+      this._selectValue(value, toggles);
+    }
+
+    // In single selection mode we need at least one enabled toggle to always be focusable.
+    if (!this.multiple && toggles.every(toggle => toggle.tabIndex === -1)) {
+      for (const toggle of toggles) {
+        if (!toggle.disabled) {
+          toggle.tabIndex = 0;
+          break;
+        }
+      }
     }
   }
 
@@ -499,17 +511,16 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
 
   /** Selects a value if there's a toggle that corresponds to it. */
-  private _selectValue(value: any) {
-    const correspondingOption = this._buttonToggles.find(toggle => {
-      return toggle.value != null && toggle.value === value;
-    });
-
-    if (correspondingOption) {
-      correspondingOption.checked = true;
-      this._selectionModel.select(correspondingOption);
-      if (!this.multiple) {
-        // If the button toggle is in single select mode, reset the tabIndex.
-        correspondingOption.tabIndex = 0;
+  private _selectValue(value: any, toggles: MatButtonToggle[]) {
+    for (const toggle of toggles) {
+      if (toggle.value != null && toggle.value === value) {
+        toggle.checked = true;
+        this._selectionModel.select(toggle);
+        if (!this.multiple) {
+          // If the button toggle is in single select mode, reset the tabIndex.
+          toggle.tabIndex = 0;
+        }
+        break;
       }
     }
   }
@@ -601,8 +612,10 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     return this._tabIndex;
   }
   set tabIndex(value: number | null) {
-    this._tabIndex = value;
-    this._markForCheck();
+    if (value !== this._tabIndex) {
+      this._tabIndex = value;
+      this._markForCheck();
+    }
   }
   private _tabIndex: number | null;
 
@@ -668,14 +681,13 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const toggleGroup = inject<MatButtonToggleGroup>(MAT_BUTTON_TOGGLE_GROUP, {optional: true})!;
-    const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true}) || '';
     const defaultOptions = inject<MatButtonToggleDefaultOptions>(
       MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
       {optional: true},
     );
 
-    const parsedTabIndex = Number(defaultTabIndex);
-    this.tabIndex = parsedTabIndex || parsedTabIndex === 0 ? parsedTabIndex : null;
+    this._tabIndex = parseInt(defaultTabIndex) || 0;
     this.buttonToggleGroup = toggleGroup;
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
