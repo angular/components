@@ -16,6 +16,8 @@ import {
   WorkspacePath,
 } from '@angular/cdk/schematics';
 
+const MATERIAL_IMPORT_PATH = '@angular/material';
+
 export class MatCoreMigration extends Migration<UpgradeData, DevkitContext> {
   override enabled = true;
   private _namespace: string | undefined;
@@ -25,6 +27,11 @@ export class MatCoreMigration extends Migration<UpgradeData, DevkitContext> {
   }
 
   override visitStylesheet(stylesheet: ResolvedResource): void {
+    // Avoid parsing the template Material isn't used.
+    if (!stylesheet.content.includes(MATERIAL_IMPORT_PATH)) {
+      return;
+    }
+
     try {
       const processor = new postcss.Processor([
         {
@@ -77,7 +84,7 @@ export class MatCoreMigration extends Migration<UpgradeData, DevkitContext> {
 
   /** Sets the namespace if the given at-rule if it is importing from @angular/material. */
   private _getNamespace(node: postcss.AtRule): void {
-    if (!this._namespace && node.params.startsWith('@angular/material', 1)) {
+    if (!this._namespace && node.params.startsWith(MATERIAL_IMPORT_PATH, 1)) {
       this._namespace = node.params.split(/\s+/)[2] || 'material';
     }
   }
