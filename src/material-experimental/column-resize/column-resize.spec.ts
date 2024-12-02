@@ -436,7 +436,7 @@ describe('Material Popover Edit', () => {
         expect(component.getOverlayThumbElement(0)).toBeUndefined();
       }));
 
-      it('resizes the target column via mouse input', fakeAsync(() => {
+      it('resizes the target column via mouse input (live updates)', fakeAsync(() => {
         const initialTableWidth = component.getTableWidth();
         const initialColumnWidth = component.getColumnWidth(1);
         const initialColumnPosition = component.getColumnOriginPosition(1);
@@ -479,6 +479,44 @@ describe('Material Popover Edit', () => {
         component.completeResizeWithMouseInProgress(1);
         flush();
 
+        (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
+
+        component.endHoverState();
+        fixture.detectChanges();
+      }));
+
+      it('resizes the target column via mouse input (no live update)', fakeAsync(() => {
+        const initialTableWidth = component.getTableWidth();
+        const initialColumnWidth = component.getColumnWidth(1);
+
+        component.columnResize.liveResizeUpdates = false;
+
+        component.triggerHoverState();
+        fixture.detectChanges();
+        component.beginColumnResizeWithMouse(1);
+
+        const initialThumbPosition = component.getOverlayThumbPosition(1);
+        component.updateResizeWithMouseInProgress(5);
+        fixture.detectChanges();
+        flush();
+
+        let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
+        (expect(thumbPositionDelta) as any).isApproximately(5);
+        (expect(component.getColumnWidth(1)) as any).toBe(initialColumnWidth);
+
+        component.updateResizeWithMouseInProgress(1);
+        fixture.detectChanges();
+        flush();
+
+        thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
+
+        (expect(component.getTableWidth()) as any).toBe(initialTableWidth);
+        (expect(component.getColumnWidth(1)) as any).toBe(initialColumnWidth);
+
+        component.completeResizeWithMouseInProgress(1);
+        flush();
+
+        (expect(component.getTableWidth()) as any).isApproximately(initialTableWidth + 1);
         (expect(component.getColumnWidth(1)) as any).isApproximately(initialColumnWidth + 1);
 
         component.endHoverState();

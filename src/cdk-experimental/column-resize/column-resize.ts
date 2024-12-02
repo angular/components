@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterViewInit, Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  inject,
+  InjectionToken,
+  Input,
+  NgZone,
+  OnDestroy,
+} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {fromEvent, merge, Subject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
@@ -19,6 +28,15 @@ import {HeaderRowEventDispatcher} from './event-dispatcher';
 
 const HOVER_OR_ACTIVE_CLASS = 'cdk-column-resize-hover-or-active';
 const WITH_RESIZED_COLUMN_CLASS = 'cdk-column-resize-with-resized-column';
+
+/** Configurable options for column resize. */
+export interface ColumnResizeOptions {
+  liveResizeUpdates?: boolean; // Defaults to true.
+}
+
+export const COLUMN_RESIZE_OPTIONS = new InjectionToken<ColumnResizeOptions>(
+  'CdkColumnResizeOptions',
+);
 
 /**
  * Base class for ColumnResize directives which attach to mat-table elements to
@@ -44,6 +62,13 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
 
   /** The id attribute of the table, if specified. */
   id?: string;
+
+  /**
+   * Whether to update the column's width continuously as the mouse position
+   * changes, or to wait until mouseup to apply the new size.
+   */
+  @Input() liveResizeUpdates =
+    inject(COLUMN_RESIZE_OPTIONS, {optional: true})?.liveResizeUpdates ?? true;
 
   ngAfterViewInit() {
     this.elementRef.nativeElement!.classList.add(this.getUniqueCssClass());
