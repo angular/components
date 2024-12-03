@@ -357,6 +357,28 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
   });
 
+  it('should re-show the ink bar if the same tab is cleared and re-activated', fakeAsync(() => {
+    const getInkBars = () =>
+      fixture.nativeElement.querySelectorAll('.mdc-tab-indicator--active').length;
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.componentInstance.activeIndex = 0;
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(1);
+
+    fixture.componentInstance.activeIndex = -1;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(0);
+
+    fixture.componentInstance.activeIndex = 0;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(1);
+  }));
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
