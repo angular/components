@@ -49,6 +49,8 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
   protected abstract readonly resizeRef: ResizeRef;
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
 
+  private _cumulativeDeltaX = 0;
+
   ngAfterViewInit() {
     this._listenForMouseEvents();
   }
@@ -101,6 +103,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     let originOffset = this._getOriginOffset();
     let size = initialSize;
     let overshot = 0;
+    this._cumulativeDeltaX = 0;
 
     this.updateResizeActive(true);
 
@@ -125,6 +128,14 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       .subscribe(([prevX, currX]) => {
         let deltaX = currX - prevX;
 
+        if (!this.resizeRef.liveUpdates) {
+          this._cumulativeDeltaX += deltaX;
+          const sizeDelta = this._computeNewSize(size, this._cumulativeDeltaX) - size;
+          this._updateOverlayOffset(sizeDelta);
+
+          return;
+        }
+
         // If the mouse moved further than the resize was able to match, limit the
         // movement of the overlay to match the actual size and position of the origin.
         if (overshot !== 0) {
@@ -143,18 +154,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
           }
         }
 
-        let computedNewSize: number = size + (this._isLtr() ? deltaX : -deltaX);
-        computedNewSize = Math.min(
-          Math.max(computedNewSize, this.resizeRef.minWidthPx, 0),
-          this.resizeRef.maxWidthPx,
-        );
-
-        this.resizeNotifier.triggerResize.next({
-          columnId: this.columnDef.name,
-          size: computedNewSize,
-          previousSize: size,
-          isStickyColumn: this.columnDef.sticky || this.columnDef.stickyEnd,
-        });
+        this._triggerResize(size, deltaX);
 
         this.styleScheduler.scheduleEnd(() => {
           const originNewSize = this._getOriginWidth();
@@ -176,6 +176,24 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     this.eventDispatcher.overlayHandleActiveForCell.next(
       active ? this.resizeRef.origin.nativeElement! : null,
     );
+  }
+
+  private _triggerResize(startSize: number, deltaX: number): void {
+    this.resizeNotifier.triggerResize.next({
+      columnId: this.columnDef.name,
+      size: this._computeNewSize(startSize, deltaX),
+      previousSize: startSize,
+      isStickyColumn: this.columnDef.sticky || this.columnDef.stickyEnd,
+    });
+  }
+
+  private _computeNewSize(startSize: number, deltaX: number): number {
+    let computedNewSize: number = startSize + (this._isLtr() ? deltaX : -deltaX);
+    computedNewSize = Math.min(
+      Math.max(computedNewSize, this.resizeRef.minWidthPx, 0),
+      this.resizeRef.maxWidthPx,
+    );
+    return computedNewSize;
   }
 
   private _getOriginWidth(): number {
@@ -202,6 +220,10 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     this.ngZone.run(() => {
       const sizeMessage = {columnId: this.columnDef.name, size};
       if (completedSuccessfully) {
+        if (!this.resizeRef.liveUpdates) {
+          this._triggerResize(size, this._cumulativeDeltaX);
+        }
+
         this.resizeNotifier.resizeCompleted.next(sizeMessage);
       } else {
         this.resizeNotifier.resizeCanceled.next(sizeMessage);

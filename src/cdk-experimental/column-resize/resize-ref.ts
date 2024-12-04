@@ -16,5 +16,6 @@ export class ResizeRef {
     readonly overlayRef: OverlayRef,
     readonly minWidthPx: number,
     readonly maxWidthPx: number,
+    readonly liveUpdates = true,
   ) {}
 }

@@ -230,6 +230,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
             this.overlayRef!,
             this.minWidthPx,
             this.maxWidthPx,
+            this.columnResize.liveResizeUpdates,
           ),
         },
       ],
