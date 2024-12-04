@@ -1,3 +1,30 @@
+<a name="19.1.0-next.1"></a>
+# 19.1.0-next.1 "plastic-monkey" (2024-12-04)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [de6c491892](https://github.com/angular/components/commit/de6c49189254289ebe5a1a51c7cb1f432c2e77c5) | fix | **accordion:** improve accessibility in example code ([#30087](https://github.com/angular/components/pull/30087)) |
+| [85d26391e4](https://github.com/angular/components/commit/85d26391e4a3ea7228b7d5104c697ac9ab4d40d8) | fix | **menu:** disable flexible dimensions ([#30086](https://github.com/angular/components/pull/30086)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f0a767ca0f](https://github.com/angular/components/commit/f0a767ca0f5497670d61f5f0bd28159333840a1e) | fix | **button-toggle:** unable to tab into ngModel-based group on first render ([#30103](https://github.com/angular/components/pull/30103)) |
+| [6962c85837](https://github.com/angular/components/commit/6962c858378b52e0a90f7e2cada0f71c297840ed) | fix | **core:** optgroup label color not inferred correctly ([#30085](https://github.com/angular/components/pull/30085)) |
+| [4ef3baaf08](https://github.com/angular/components/commit/4ef3baaf088420f5eef9961c9df75bd4f24c04d4) | fix | **schematics:** avoid parsing stylesheets that don't include Material |
+| [c89192639c](https://github.com/angular/components/commit/c89192639c7917f560d06024c702debc4af1d2cf) | fix | **schematics:** error if stylesheet contains syntax errors |
+| [a08eeebf6b](https://github.com/angular/components/commit/a08eeebf6b334e00a491496829e3838d0616258a) | fix | **sort:** simplify animations ([#30057](https://github.com/angular/components/pull/30057)) |
+| [a028b5d842](https://github.com/angular/components/commit/a028b5d8421f1e0094381f30c37f8ec3c02e2c46) | fix | **tabs:** ink bar not showing when same tab is re-selected ([#30121](https://github.com/angular/components/pull/30121)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8a55d9a09e](https://github.com/angular/components/commit/8a55d9a09e35130f07bf63f9dbdff440434a1f33) | fix | update to latest typings ([#30126](https://github.com/angular/components/pull/30126)) |
+### docs
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d7fc560140](https://github.com/angular/components/commit/d7fc5601405f83e5418121382b7647d4dcc7793c) | fix | add example for adding icon in meta section using matListI… ([#30068](https://github.com/angular/components/pull/30068)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.2"></a>
 # 19.0.2 "plastic-rhino" (2024-12-04)
 ### cdk
