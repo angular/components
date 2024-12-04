@@ -5,7 +5,7 @@
  *   - `saucelabs`: Launches the browser within Saucelabs
  */
 const browserConfig = {
-  'iOS15': {unitTest: {target: 'saucelabs'}},
+  'iOS18': {unitTest: {target: 'saucelabs'}},
   'Safari16': {unitTest: {target: 'browserstack'}},
 };
 

@@ -131,3 +131,20 @@ load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "
 esbuild_repositories(
     npm_repository = "npm",
 )
+
+
+http_archive(
+    name = "sauce_connect_linux_amd64",
+    build_file_content = """exports_files(["bin/sc"], visibility = ["//visibility:public"])""",
+    sha256 = "26b9c3630f441b47854b6032f7eca6f1d88d3f62e50ee44c27015d71a5155c36",
+    strip_prefix = "sc-4.8.2-linux",
+    url = "https://saucelabs.com/downloads/sc-4.8.2-linux.tar.gz",
+)
+
+http_archive(
+    name = "sauce_connect_mac",
+    build_file_content = """exports_files(["bin/sc"], visibility = ["//visibility:public"])""",
+    sha256 = "28277ce81ef9ab84f5b87b526258920a8ead44789a5034346e872629bbf38089",
+    strip_prefix = "sc-4.8.2-osx",
+    url = "https://saucelabs.com/downloads/sc-4.8.2-osx.zip",
+)
