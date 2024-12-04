@@ -1,3 +1,26 @@
+<a name="19.0.2"></a>
+# 19.0.2 "plastic-rhino" (2024-12-04)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [460f971b27](https://github.com/angular/components/commit/460f971b27239d0102061a9b976e86af513065a7) | fix | **accordion:** improve accessibility in example code ([#30087](https://github.com/angular/components/pull/30087)) |
+| [6306a12c12](https://github.com/angular/components/commit/6306a12c12ee0c255e20dfb9be78076f880120bf) | fix | **menu:** disable flexible dimensions ([#30086](https://github.com/angular/components/pull/30086)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0ed9869529](https://github.com/angular/components/commit/0ed9869529b4c7a2d008f8125f252d49e913228c) | fix | **button-toggle:** unable to tab into ngModel-based group on first render ([#30103](https://github.com/angular/components/pull/30103)) |
+| [72ff6fcce3](https://github.com/angular/components/commit/72ff6fcce323c1f44b57b3fa2dec92a13a5dbcd3) | fix | **core:** optgroup label color not inferred correctly ([#30085](https://github.com/angular/components/pull/30085)) |
+| [c395585446](https://github.com/angular/components/commit/c3955854469db7bc07dbfc511391bbcd00ae7666) | fix | **schematics:** avoid parsing stylesheets that don't include Material |
+| [5b3350a60e](https://github.com/angular/components/commit/5b3350a60eb9c0dfcf483bacc3c782c1308f180e) | fix | **schematics:** error if stylesheet contains syntax errors |
+| [1235ad28bc](https://github.com/angular/components/commit/1235ad28bcf7f950510f6c0e548268e125298f62) | fix | **sort:** simplify animations ([#30057](https://github.com/angular/components/pull/30057)) |
+| [5b165067e8](https://github.com/angular/components/commit/5b165067e8f12587db4fa15f30069651164c3e4e) | fix | **tabs:** ink bar not showing when same tab is re-selected ([#30121](https://github.com/angular/components/pull/30121)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1d3905a208](https://github.com/angular/components/commit/1d3905a2086954cbeec2b17aa8b11378d48311f3) | fix | update to latest typings ([#30126](https://github.com/angular/components/pull/30126)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.1"></a>
 # 19.0.1 "mercury-mailbox" (2024-11-27)
 ### material
