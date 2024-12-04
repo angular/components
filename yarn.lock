@@ -4242,10 +4242,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/youtube@^0.0.50":
-  version "0.0.50"
-  resolved "https://registry.yarnpkg.com/@types/youtube/-/youtube-0.0.50.tgz#c28cefde8e3f17ac3564bd83952eacf806d96eea"
-  integrity sha512-d4GpH4uPYp9W07kc487tiq6V/EUHl18vZWFMbQoe4Sk9LXEWzFi/BMf9x7TI4m7/j7gU3KeX8H6M8aPBgykeLw==
+"@types/youtube@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@types/youtube/-/youtube-0.1.0.tgz#0e116bd0a8ddb93daf1372fb5e07f576cf9fe5cc"
+  integrity sha512-Pg33m3X2mFgdmhtvzOlAfUfgOa3341N3/2JCrVY/mXVxb4hagcqqEG6w4vGCfB64StQNWHSj/T8Eotb1Rko/FQ==
 
 "@typescript-eslint/types@4.33.0":
   version "4.33.0"
