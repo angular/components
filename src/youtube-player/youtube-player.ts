@@ -689,10 +689,10 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       switchMap(player => {
         return player
           ? fromEventPattern<T>(
-              (listener: (event: T) => void) => {
+              listener => {
                 player.addEventListener(name, listener);
               },
-              (listener: (event: T) => void) => {
+              listener => {
                 // The API seems to throw when we try to unbind from a destroyed player and it doesn't
                 // expose whether the player has been destroyed so we have to wrap it in a try/catch to
                 // prevent the entire stream from erroring out.
