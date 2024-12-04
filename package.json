@@ -63,7 +63,7 @@
     "@angular/forms": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
     "@types/google.maps": "^3.54.10",
-    "@types/youtube": "^0.0.50",
+    "@types/youtube": "^0.1.0",
     "rxjs": "^6.6.7",
     "rxjs-tslint-rules": "^4.34.8",
     "tslib": "^2.3.1",
