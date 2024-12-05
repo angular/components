@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AnimationEvent} from '@angular/animations';
 import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
@@ -31,12 +30,12 @@ import {
   booleanAttribute,
   ANIMATION_MODULE_TYPE,
   inject,
+  NgZone,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
 import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
-import {matExpansionAnimations} from './expansion-animations';
 import {MAT_EXPANSION_PANEL} from './expansion-panel-base';
 import {MatExpansionPanelContent} from './expansion-panel-content';
 
@@ -76,7 +75,6 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [matExpansionAnimations.bodyExpansion],
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
     // to the same accordion.
@@ -86,7 +84,6 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
-    '[class._mat-animation-noopable]': '_animationsDisabled',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
   imports: [CdkPortalOutlet],
@@ -96,10 +93,11 @@ export class MatExpansionPanel
   implements AfterContentInit, OnChanges, OnDestroy
 {
   private _viewContainerRef = inject(ViewContainerRef);
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
-
-  protected _animationsDisabled: boolean;
+  private readonly _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _document = inject(DOCUMENT);
+  private _ngZone = inject(NgZone);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** Whether the toggle indicator should be hidden. */
   @Input({transform: booleanAttribute})
@@ -139,6 +137,10 @@ export class MatExpansionPanel
   /** Element containing the panel's user-provided content. */
   @ViewChild('body') _body: ElementRef<HTMLElement>;
 
+  /** Element wrapping the panel body. */
+  @ViewChild('bodyWrapper')
+  protected _bodyWrapper: ElementRef<HTMLElement> | undefined;
+
   /** Portal holding the user's content. */
   _portal: TemplatePortal;
 
@@ -156,7 +158,6 @@ export class MatExpansionPanel
     );
 
     this._expansionDispatcher = inject(UniqueSelectionDispatcher);
-    this._animationsDisabled = this._animationMode === 'NoopAnimations';
 
     if (defaultOptions) {
       this.hideToggle = defaultOptions.hideToggle;
@@ -204,6 +205,8 @@ export class MatExpansionPanel
           this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
         });
     }
+
+    this._setupAnimationEvents();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -212,6 +215,10 @@ export class MatExpansionPanel
 
   override ngOnDestroy() {
     super.ngOnDestroy();
+    this._bodyWrapper?.nativeElement.removeEventListener(
+      'transitionend',
+      this._transitionEndListener,
+    );
     this._inputChanges.complete();
   }
 
@@ -226,36 +233,34 @@ export class MatExpansionPanel
     return false;
   }
 
-  /** Called when the expansion animation has started. */
-  protected _animationStarted(event: AnimationEvent) {
-    if (!isInitialAnimation(event) && !this._animationsDisabled && this._body) {
-      // Prevent the user from tabbing into the content while it's animating.
-      // TODO(crisbeto): maybe use `inert` to prevent focus from entering while closed as well
-      // instead of `visibility`? Will allow us to clean up some code but needs more testing.
-      this._body?.nativeElement.setAttribute('inert', '');
+  private _transitionEndListener = ({target, propertyName}: TransitionEvent) => {
+    if (target === this._bodyWrapper?.nativeElement && propertyName === 'grid-template-rows') {
+      this._ngZone.run(() => {
+        if (this.expanded) {
+          this.afterExpand.emit();
+        } else {
+          this.afterCollapse.emit();
+        }
+      });
     }
-  }
+  };
 
-  /** Called when the expansion animation has finished. */
-  protected _animationDone(event: AnimationEvent) {
-    if (!isInitialAnimation(event)) {
-      if (event.toState === 'expanded') {
-        this.afterExpand.emit();
-      } else if (event.toState === 'collapsed') {
-        this.afterCollapse.emit();
+  protected _setupAnimationEvents() {
+    // This method is defined separately, because we need to
+    // disable this logic in some internal components.
+    this._ngZone.runOutsideAngular(() => {
+      if (this._animationsDisabled) {
+        this.opened.subscribe(() => this._ngZone.run(() => this.afterExpand.emit()));
+        this.closed.subscribe(() => this._ngZone.run(() => this.afterCollapse.emit()));
+      } else {
+        setTimeout(() => {
+          const element = this._elementRef.nativeElement;
+          element.addEventListener('transitionend', this._transitionEndListener);
+          element.classList.add('mat-expansion-panel-animations-enabled');
+        }, 200);
       }
-
-      // Re-enable tabbing once the animation is finished.
-      if (!this._animationsDisabled && this._body) {
-        this._body.nativeElement.removeAttribute('inert');
-      }
-    }
+    });
   }
-}
-
-/** Checks whether an animation is the initial setup animation. */
-function isInitialAnimation(event: AnimationEvent): boolean {
-  return event.fromState === 'void';
 }
 
 /**

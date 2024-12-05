@@ -9,7 +9,10 @@
   align-items: center;
   padding: 0 24px;
   border-radius: inherit;
-  transition: height expansion-variables.$header-transition;
+
+  .mat-expansion-panel-animations-enabled & {
+    transition: height expansion-variables.$header-transition;
+  }
 
   @include token-utils.use-tokens(
     tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
@@ -141,6 +144,14 @@
 // Creates the expansion indicator arrow. Done using ::after
 // rather than having additional nodes in the template.
 .mat-expansion-indicator {
+  .mat-expansion-panel-animations-enabled & {
+    transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mat-expansion-panel-header.mat-expanded & {
+    transform: rotate(180deg);
+  }
+
   &::after {
     border-style: solid;
     border-width: 0 2px 2px 0;
