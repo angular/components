@@ -1,15 +1,14 @@
 <ng-content select="mat-expansion-panel-header"></ng-content>
-<div class="mat-expansion-panel-content"
-     role="region"
-     [@bodyExpansion]="_getExpandedState()"
-     (@bodyExpansion.start)="_animationStarted($event)"
-     (@bodyExpansion.done)="_animationDone($event)"
-     [attr.aria-labelledby]="_headerId"
-     [id]="id"
-     #body>
-  <div class="mat-expansion-panel-body">
-    <ng-content></ng-content>
-    <ng-template [cdkPortalOutlet]="_portal"></ng-template>
+<div class="mat-expansion-panel-content-wrapper" [attr.inert]="expanded ? null : ''" #bodyWrapper>
+  <div class="mat-expansion-panel-content"
+       role="region"
+       [attr.aria-labelledby]="_headerId"
+       [id]="id"
+       #body>
+    <div class="mat-expansion-panel-body">
+      <ng-content></ng-content>
+      <ng-template [cdkPortalOutlet]="_portal"></ng-template>
+    </div>
+    <ng-content select="mat-action-row"></ng-content>
   </div>
-  <ng-content select="mat-action-row"></ng-content>
 </div>
