@@ -66,7 +66,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     ngOnDestroy(): void;
     protected readonly ngZone: NgZone;
     protected options: QueryList<CdkOption<T>>;
-    get orientation(): 'horizontal' | 'vertical';
+    get orientation(): "horizontal" | "vertical";
     set orientation(value: 'horizontal' | 'vertical');
     registerOnChange(fn: (value: readonly T[]) => void): void;
     registerOnTouched(fn: () => {}): void;

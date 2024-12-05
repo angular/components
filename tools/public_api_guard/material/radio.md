@@ -56,7 +56,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // (undocumented)
     _isRippleDisabled(): boolean;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(value: 'before' | 'after');
+    set labelPosition(value: "before" | "after");
     _markForCheck(): void;
     name: string;
     // (undocumented)
@@ -125,7 +125,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     set disabledInteractive(value: boolean);
     _emitChangeEvent(): void;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(v: 'before' | 'after');
+    set labelPosition(v: "before" | "after");
     // (undocumented)
     _markRadiosForCheck(): void;
     get name(): string;

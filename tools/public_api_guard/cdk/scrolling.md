@@ -200,7 +200,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    get orientation(): 'horizontal' | 'vertical';
+    get orientation(): "horizontal" | "vertical";
     set orientation(orientation: 'horizontal' | 'vertical');
     readonly renderedRangeStream: Observable<ListRange>;
     // (undocumented)
