@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Directive,
   ElementRef,
+  inject,
   Injector,
   NgZone,
   OnDestroy,
@@ -22,7 +23,7 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
 import {merge, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
@@ -30,6 +31,7 @@ import {HEADER_ROW_SELECTOR} from './selectors';
 import {ResizeOverlayHandle} from './overlay-handle';
 import {ColumnResize} from './column-resize';
 import {ColumnSizeAction, ColumnResizeNotifierSource} from './column-resize-notifier';
+import {ColumnSizeStore} from './column-size-store';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
 import {ResizeStrategy} from './resize-strategy';
@@ -65,6 +67,8 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
   protected abstract readonly viewContainerRef: ViewContainerRef;
   protected abstract readonly changeDetectorRef: ChangeDetectorRef;
+
+  protected readonly columnSizeStore = inject(ColumnSizeStore, {optional: true});
 
   private _viewInitialized = false;
   private _isDestroyed = false;
@@ -105,6 +109,15 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
       this._viewInitialized = true;
       this._applyMinWidthPx();
       this._applyMaxWidthPx();
+      this.columnSizeStore
+        ?.getSize(this.columnResize.getTableId(), this.columnDef.name)
+        ?.pipe(take(1), takeUntil(this.destroyed))
+        .subscribe(size => {
+          if (size == null) {
+            return;
+          }
+          this._applySize(size);
+        });
     });
   }
 
@@ -194,6 +207,20 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
       .pipe(takeUntilDestroyed)
       .subscribe(columnSize => {
         this._cleanUpAfterResize(columnSize);
+      });
+
+    this.resizeNotifier.resizeCompleted
+      .pipe(
+        filter(sizeUpdate => sizeUpdate.columnId === this.columnDef.name),
+        distinctUntilChanged((a, b) => a.size === b.size),
+        takeUntil(this.destroyed),
+      )
+      .subscribe(sizeUpdate => {
+        this.columnSizeStore?.setSize(
+          this.columnResize.getTableId(),
+          this.columnDef.name,
+          sizeUpdate.size,
+        );
       });
   }
 

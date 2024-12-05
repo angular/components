@@ -1,13 +1,20 @@
 import {BidiModule} from '@angular/cdk/bidi';
 import {DataSource} from '@angular/cdk/collections';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {ChangeDetectionStrategy, Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  ElementRef,
+  Injectable,
+  ViewChild,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, ReplaySubject} from 'rxjs';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 
-import {ColumnSize} from '@angular/cdk-experimental/column-resize';
+import {ColumnSize, ColumnSizeStore} from '@angular/cdk-experimental/column-resize';
 import {AbstractMatColumnResize} from './column-resize-directives/common';
 import {
   MatColumnResize,
@@ -52,7 +59,7 @@ function getTableTemplate(defaultEnabled: boolean) {
         }
       </style>
       <div #table [dir]="direction">
-        <table ${directives.table} mat-table [dataSource]="dataSource"
+        <table ${directives.table} mat-table [dataSource]="dataSource" id="theTable"
             style="table-layout: fixed;">
           <!-- Position Column -->
           <ng-container matColumnDef="position" sticky>
@@ -109,7 +116,7 @@ function getFlexTemplate(defaultEnabled: boolean) {
         }
       </style>
       <div #table [dir]="direction">
-        <mat-table ${directives.table} [dataSource]="dataSource">
+        <mat-table ${directives.table} [dataSource]="dataSource" id="theTable">
           <!-- Position Column -->
           <ng-container matColumnDef="position" sticky>
             <mat-header-cell *matHeaderCellDef
@@ -628,6 +635,63 @@ describe('Material Popover Edit', () => {
       }));
     });
   }
+
+  describe('ColumnSizeStore (persistance)', () => {
+    let component: BaseTestComponent;
+    let fixture: ComponentFixture<BaseTestComponent>;
+    let columnSizeStore: FakeColumnSizeStore;
+
+    beforeEach(fakeAsync(() => {
+      jasmine.addMatchers(approximateMatcher);
+
+      TestBed.configureTestingModule({
+        imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+        providers: [
+          FakeColumnSizeStore,
+          {provide: ColumnSizeStore, useExisting: FakeColumnSizeStore},
+        ],
+        declarations: [MatResizeOnPushTest],
+      });
+      fixture = TestBed.createComponent(MatResizeOnPushTest);
+      component = fixture.componentInstance;
+      columnSizeStore = TestBed.inject(FakeColumnSizeStore);
+      fixture.detectChanges();
+      flush();
+    }));
+
+    it('applies the persisted size', fakeAsync(() => {
+      (expect(component.getColumnWidth(1)).not as any).isApproximately(300);
+
+      columnSizeStore.emitSize('theTable', 'name', 300);
+
+      flush();
+
+      (expect(component.getColumnWidth(1)) as any).isApproximately(300);
+    }));
+
+    it('persists the user-triggered size update', fakeAsync(() => {
+      const initialColumnWidth = component.getColumnWidth(1);
+
+      component.triggerHoverState();
+      fixture.detectChanges();
+
+      component.resizeColumnWithMouse(1, 5);
+      fixture.detectChanges();
+      flush();
+
+      component.completeResizeWithMouseInProgress(1);
+      flush();
+
+      component.endHoverState();
+      fixture.detectChanges();
+
+      expect(columnSizeStore.setSizeCalls.length).toBe(1);
+      const {tableId, columnId, sizePx} = columnSizeStore.setSizeCalls[0];
+      expect(tableId).toBe('theTable');
+      expect(columnId).toBe('name');
+      (expect(sizePx) as any).isApproximately(initialColumnWidth + 5);
+    }));
+  });
 });
 
 function createElementData() {
@@ -638,4 +702,39 @@ function createElementData() {
     {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
     {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
   ];
+}
+
+@Injectable()
+class FakeColumnSizeStore extends ColumnSizeStore {
+  readonly emitStore = new Map<string, ReplaySubject<number>>();
+  readonly setSizeCalls: {tableId: string; columnId: string; sizePx: number}[] = [];
+
+  /** Returns an observable that will emit values from emitSize(). */
+  override getSize(tableId: string, columnId: string): Observable<number> | null {
+    return this._getOrAdd(tableId, columnId);
+  }
+
+  /**
+   * Adds an entry to setSizeCalls.
+   * Note: Does not affect values returned from getSize.
+   */
+  override setSize(tableId: string, columnId: string, sizePx: number): void {
+    this.setSizeCalls.push({tableId, columnId, sizePx});
+  }
+
+  /** Call this in test code to simulate persisted column sizes. */
+  emitSize(tableId: string, columnId: string, sizePx: number) {
+    const stored = this._getOrAdd(tableId, columnId);
+    stored.next(sizePx);
+  }
+
+  private _getOrAdd(tableId: string, columnId: string): ReplaySubject<number> {
+    const key = `tableId----columnId`;
+    let stored = this.emitStore.get(key);
+    if (!stored) {
+      stored = new ReplaySubject<number>(1);
+      this.emitStore.set(key, stored);
+    }
+    return stored;
+  }
 }
