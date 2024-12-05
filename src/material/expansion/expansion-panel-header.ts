@@ -19,14 +19,12 @@ import {
   numberAttribute,
   OnDestroy,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
   inject,
   HostAttributeToken,
 } from '@angular/core';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {MatAccordionTogglePosition} from './accordion-base';
-import {matExpansionAnimations} from './expansion-animations';
 import {
   MatExpansionPanel,
   MatExpansionPanelDefaultOptions,
@@ -44,7 +42,6 @@ import {_StructuralStylesLoader} from '@angular/material/core';
   templateUrl: 'expansion-panel-header.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [matExpansionAnimations.indicatorRotate],
   host: {
     'class': 'mat-expansion-panel-header mat-focus-indicator',
     'role': 'button',
@@ -56,7 +53,6 @@ import {_StructuralStylesLoader} from '@angular/material/core';
     '[class.mat-expanded]': '_isExpanded()',
     '[class.mat-expansion-toggle-indicator-after]': `_getTogglePosition() === 'after'`,
     '[class.mat-expansion-toggle-indicator-before]': `_getTogglePosition() === 'before'`,
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[style.height]': '_getHeaderHeight()',
     '(click)': '_toggle()',
     '(keydown)': '_keydown($event)',
@@ -67,7 +63,6 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   private _element = inject(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   private _parentChangeSubscription = Subscription.EMPTY;
 

@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkAccordion } from '@angular/cdk/accordion';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
@@ -75,7 +74,7 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
 // @public
 export type MatAccordionTogglePosition = 'before' | 'after';
 
-// @public
+// @public @deprecated
 export const matExpansionAnimations: {
     readonly indicatorRotate: AnimationTriggerMetadata;
     readonly bodyExpansion: AnimationTriggerMetadata;
@@ -97,13 +96,8 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     accordion: MatAccordionBase;
     readonly afterCollapse: EventEmitter<void>;
     readonly afterExpand: EventEmitter<void>;
-    protected _animationDone(event: AnimationEvent_2): void;
-    // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
-    // (undocumented)
-    protected _animationsDisabled: boolean;
-    protected _animationStarted(event: AnimationEvent_2): void;
     _body: ElementRef<HTMLElement>;
+    protected _bodyWrapper: ElementRef<HTMLElement> | undefined;
     close(): void;
     _containsFocus(): boolean;
     _getExpandedState(): MatExpansionPanelState;
@@ -123,6 +117,8 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     ngOnDestroy(): void;
     open(): void;
     _portal: TemplatePortal;
+    // (undocumented)
+    protected _setupAnimationEvents(): void;
     toggle(): void;
     get togglePosition(): MatAccordionTogglePosition;
     set togglePosition(value: MatAccordionTogglePosition);
@@ -171,8 +167,6 @@ export class MatExpansionPanelDescription {
 // @public
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
     constructor(...args: unknown[]);
-    // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
     collapsedHeight: string;
     get disabled(): boolean;
     expandedHeight: string;
