@@ -35,7 +35,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "5.6.2"
+    "typescript": "5.7.2"
   },
   "resolutions": {
     "string-width": "4.2.3",

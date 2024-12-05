@@ -158,14 +158,14 @@ export class ConnectionPositionPair {
     constructor(origin: OriginConnectionPosition, overlay: OverlayConnectionPosition,
     offsetX?: number | undefined,
     offsetY?: number | undefined,
-    panelClass?: (string | string[]) | undefined);
+    panelClass?: string | string[] | undefined);
     offsetX?: number | undefined;
     offsetY?: number | undefined;
     originX: HorizontalConnectionPos;
     originY: VerticalConnectionPos;
     overlayX: HorizontalConnectionPos;
     overlayY: VerticalConnectionPos;
-    panelClass?: (string | string[]) | undefined;
+    panelClass?: string | string[] | undefined;
 }
 
 // @public
