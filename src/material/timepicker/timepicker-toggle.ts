@@ -10,6 +10,7 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
+  computed,
   HostAttributeToken,
   inject,
   input,
@@ -46,6 +47,11 @@ export class MatTimepickerToggle<D> {
     return isNaN(parsed) ? null : parsed;
   })();
 
+  protected _isDisabled = computed(() => {
+    const timepicker = this.timepicker();
+    return this.disabled() || timepicker.disabled();
+  });
+
   /** Timepicker instance that the button will toggle. */
   readonly timepicker: InputSignal<MatTimepicker<D>> = input.required<MatTimepicker<D>>({
     alias: 'for',
@@ -73,7 +79,7 @@ export class MatTimepickerToggle<D> {
 
   /** Opens the connected timepicker. */
   protected _open(event: Event): void {
-    if (this.timepicker() && !this.disabled()) {
+    if (this.timepicker() && !this._isDisabled()) {
       this.timepicker().open();
       event.stopPropagation();
     }

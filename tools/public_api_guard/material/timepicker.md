@@ -33,6 +33,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly ariaLabelledby: InputSignal<string | null>;
     close(): void;
     readonly closed: OutputEmitterRef<void>;
+    readonly disabled: Signal<boolean>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
     protected _getAriaLabelledby(): string | null;
     readonly interval: InputSignalWithTransform<number | null, number | string | null>;
@@ -125,6 +126,8 @@ export class MatTimepickerToggle<D> {
     readonly ariaLabel: InputSignal<string | undefined>;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    protected _isDisabled: Signal<boolean>;
     protected _open(event: Event): void;
     readonly tabIndex: InputSignal<number | null>;
     readonly timepicker: InputSignal<MatTimepicker<D>>;

@@ -12,6 +12,7 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -104,7 +105,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);
 
-  private _input: MatTimepickerInput<D>;
+  private _input = signal<MatTimepickerInput<D> | null>(null);
   private _overlayRef: OverlayRef | null = null;
   private _portal: TemplatePortal<unknown> | null = null;
   private _optionsCacheKey: string | null = null;
@@ -174,6 +175,9 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     alias: 'aria-labelledby',
   });
 
+  /** Whether the timepicker is currently disabled. */
+  readonly disabled: Signal<boolean> = computed(() => !!this._input()?.disabled());
+
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       validateAdapter(this._dateAdapter, this._dateFormats);
@@ -204,14 +208,16 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   /** Opens the timepicker. */
   open(): void {
-    if (!this._input) {
+    const input = this._input();
+
+    if (!input) {
       return;
     }
 
     // Focus should already be on the input, but this call is in case the timepicker is opened
     // programmatically. We need to call this even if the timepicker is already open, because
     // the user might be clicking the toggle.
-    this._input.focus();
+    input.focus();
 
     if (this._isOpen()) {
       return;
@@ -220,14 +226,14 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     this._isOpen.set(true);
     this._generateOptions();
     const overlayRef = this._getOverlayRef();
-    overlayRef.updateSize({width: this._input.getOverlayOrigin().nativeElement.offsetWidth});
+    overlayRef.updateSize({width: input.getOverlayOrigin().nativeElement.offsetWidth});
     this._portal ??= new TemplatePortal(this._panelTemplate(), this._viewContainerRef);
     overlayRef.attach(this._portal);
     this._onOpenRender?.destroy();
     this._onOpenRender = afterNextRender(
       () => {
         const options = this._options();
-        this._syncSelectedState(this._input.value(), options, options[0]);
+        this._syncSelectedState(input.value(), options, options[0]);
         this._onOpenRender = null;
       },
       {injector: this._injector},
@@ -247,11 +253,13 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   /** Registers an input with the timepicker. */
   registerInput(input: MatTimepickerInput<D>): void {
-    if (this._input && input !== this._input && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    const currentInput = this._input();
+
+    if (currentInput && input !== currentInput && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw new Error('MatTimepicker can only be registered with one input at a time');
     }
 
-    this._input = input;
+    this._input.set(input);
   }
 
   ngOnDestroy(): void {
@@ -265,7 +273,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   protected _selectValue(value: D) {
     this.close();
     this.selected.emit({value, source: this});
-    this._input.focus();
+    this._input()?.focus();
   }
 
   /** Gets the value of the `aria-labelledby` attribute. */
@@ -273,7 +281,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     if (this.ariaLabel()) {
       return null;
     }
-    return this.ariaLabelledby() || this._input?._getLabelId() || null;
+    return this.ariaLabelledby() || this._input()?._getLabelId() || null;
   }
 
   /** Creates an overlay reference for the timepicker panel. */
@@ -284,7 +292,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
     const positionStrategy = this._overlay
       .position()
-      .flexibleConnectedTo(this._input.getOverlayOrigin())
+      .flexibleConnectedTo(this._input()!.getOverlayOrigin())
       .withFlexibleDimensions(false)
       .withPush(false)
       .withTransformOriginOn('.mat-timepicker-panel')
@@ -317,9 +325,9 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
     this._overlayRef.outsidePointerEvents().subscribe(event => {
       const target = _getEventTarget(event) as HTMLElement;
-      const origin = this._input.getOverlayOrigin().nativeElement;
+      const origin = this._input()?.getOverlayOrigin().nativeElement;
 
-      if (target && target !== origin && !origin.contains(target)) {
+      if (target && origin && target !== origin && !origin.contains(target)) {
         this.close();
       }
     });
@@ -336,10 +344,11 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     if (options !== null) {
       this._timeOptions = options;
     } else {
+      const input = this._input();
       const adapter = this._dateAdapter;
       const timeFormat = this._dateFormats.display.timeInput;
-      const min = this._input.min() || adapter.setTime(adapter.today(), 0, 0, 0);
-      const max = this._input.max() || adapter.setTime(adapter.today(), 23, 59, 0);
+      const min = input?.min() || adapter.setTime(adapter.today(), 0, 0, 0);
+      const max = input?.max() || adapter.setTime(adapter.today(), 23, 59, 0);
       const cacheKey =
         interval + '/' + adapter.format(min, timeFormat) + '/' + adapter.format(max, timeFormat);
 
@@ -432,11 +441,11 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
    */
   private _handleInputStateChanges(): void {
     effect(() => {
-      const value = this._input?.value();
+      const input = this._input();
       const options = this._options();
 
-      if (this._isOpen()) {
-        this._syncSelectedState(value, options, null);
+      if (this._isOpen() && input) {
+        this._syncSelectedState(input.value(), options, null);
       }
     });
   }

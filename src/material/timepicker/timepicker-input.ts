@@ -244,7 +244,9 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /** Handles clicks on the input or the containing form field. */
   private _handleClick = (): void => {
-    this.timepicker().open();
+    if (!this.disabled()) {
+      this.timepicker().open();
+    }
   };
 
   /** Handles the `input` event. */
@@ -278,7 +280,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   /** Handles the `keydown` event. */
   protected _handleKeydown(event: KeyboardEvent) {
     // All keyboard events while open are handled through the timepicker.
-    if (this.timepicker().isOpen()) {
+    if (this.timepicker().isOpen() || this.disabled()) {
       return;
     }
 
@@ -286,7 +288,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       event.preventDefault();
       this.value.set(null);
       this._formatValue(null);
-    } else if ((event.keyCode === DOWN_ARROW || event.keyCode === UP_ARROW) && !this.disabled()) {
+    } else if (event.keyCode === DOWN_ARROW || event.keyCode === UP_ARROW) {
       event.preventDefault();
       this.timepicker().open();
     }
