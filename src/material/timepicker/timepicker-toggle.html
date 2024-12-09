@@ -4,8 +4,8 @@
   aria-haspopup="listbox"
   [attr.aria-label]="ariaLabel()"
   [attr.aria-expanded]="timepicker().isOpen()"
-  [attr.tabindex]="disabled() ? -1 : tabIndex()"
-  [disabled]="disabled()"
+  [attr.tabindex]="_isDisabled() ? -1 : tabIndex()"
+  [disabled]="_isDisabled()"
   [disableRipple]="disableRipple()">
 
   <ng-content select="[matTimepickerToggleIcon]">
