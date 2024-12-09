@@ -14,9 +14,9 @@ import {createMigrationSchematicRule, NullableDevkitMigration} from './devkit-mi
 const cdkMigrations: NullableDevkitMigration[] = [];
 
 /** Entry point for the migration schematics with target of Angular CDK 18.0.0 */
-export function updateToV19(): Rule {
+export function updateToV20(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V19,
+    TargetVersion.V20,
     cdkMigrations,
     cdkUpgradeData,
     onMigrationComplete,

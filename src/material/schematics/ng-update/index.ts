@@ -14,18 +14,13 @@ import {
 } from '@angular/cdk/schematics';
 
 import {materialUpgradeData} from './upgrade-data';
-import {MatCoreMigration} from './migrations/mat-core-removal';
-import {ExplicitSystemVariablePrefixMigration} from './migrations/explicit-system-variable-prefix';
 
-const materialMigrations: NullableDevkitMigration[] = [
-  MatCoreMigration,
-  ExplicitSystemVariablePrefixMigration,
-];
+const materialMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular Material v19 */
-export function updateToV19(): Rule {
+/** Entry point for the migration schematics with target of Angular Material v20 */
+export function updateToV20(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V19,
+    TargetVersion.V20,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,
