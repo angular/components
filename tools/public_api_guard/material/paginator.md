@@ -35,6 +35,7 @@ export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl
 // @public
 export class MatPaginator implements OnInit, OnDestroy {
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
+    protected _buttonClicked(targetIndex: number, isDisabled: boolean): void;
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
     disabled: boolean;
