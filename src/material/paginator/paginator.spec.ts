@@ -1,4 +1,3 @@
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {ChangeDetectorRef, Component, Provider, Type, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {ThemePalette} from '@angular/material/core';
@@ -135,7 +134,7 @@ describe('MatPaginator', () => {
       const paginator = component.paginator;
       expect(paginator.pageIndex).toBe(0);
 
-      dispatchMouseEvent(getNextButton(fixture), 'click');
+      getNextButton(fixture).click();
 
       expect(paginator.pageIndex).toBe(1);
       expect(component.pageEvent).toHaveBeenCalledWith(
@@ -154,7 +153,7 @@ describe('MatPaginator', () => {
       fixture.detectChanges();
       expect(paginator.pageIndex).toBe(1);
 
-      dispatchMouseEvent(getPreviousButton(fixture), 'click');
+      getPreviousButton(fixture).click();
 
       expect(paginator.pageIndex).toBe(0);
       expect(component.pageEvent).toHaveBeenCalledWith(
@@ -164,12 +163,37 @@ describe('MatPaginator', () => {
         }),
       );
     });
+
+    it('should not navigate to the next page when the paginator is disabled', () => {
+      const fixture = createComponent(MatPaginatorApp);
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(0);
+
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      getNextButton(fixture).click();
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(0);
+    });
+
+    it('should not navigate to the previous page when the paginator is disabled', () => {
+      const fixture = createComponent(MatPaginatorApp);
+      fixture.componentInstance.pageIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(1);
+
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      getPreviousButton(fixture).click();
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(1);
+    });
   });
 
   it('should be able to show the first/last buttons', () => {
     const fixture = createComponent(MatPaginatorApp);
     expect(getFirstButton(fixture)).withContext('Expected first button to not exist.').toBeNull();
-
     expect(getLastButton(fixture)).withContext('Expected last button to not exist.').toBeNull();
 
     fixture.componentInstance.showFirstLastButtons = true;
@@ -271,7 +295,7 @@ describe('MatPaginator', () => {
     it('should be able to go to the last page via the last page button', () => {
       expect(paginator.pageIndex).toBe(0);
 
-      dispatchMouseEvent(getLastButton(fixture), 'click');
+      getLastButton(fixture).click();
 
       expect(paginator.pageIndex).toBe(9);
       expect(component.pageEvent).toHaveBeenCalledWith(
@@ -287,7 +311,7 @@ describe('MatPaginator', () => {
       fixture.detectChanges();
       expect(paginator.pageIndex).toBe(3);
 
-      dispatchMouseEvent(getFirstButton(fixture), 'click');
+      getFirstButton(fixture).click();
 
       expect(paginator.pageIndex).toBe(0);
       expect(component.pageEvent).toHaveBeenCalledWith(
@@ -305,7 +329,7 @@ describe('MatPaginator', () => {
       expect(paginator.hasNextPage()).toBe(false);
 
       component.pageEvent.calls.reset();
-      dispatchMouseEvent(getNextButton(fixture), 'click');
+      getNextButton(fixture).click();
 
       expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(9);
@@ -316,10 +340,34 @@ describe('MatPaginator', () => {
       expect(paginator.hasPreviousPage()).toBe(false);
 
       component.pageEvent.calls.reset();
-      dispatchMouseEvent(getPreviousButton(fixture), 'click');
+      getPreviousButton(fixture).click();
 
       expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(0);
+    });
+
+    it('should not navigate to the last page when the paginator is disabled', () => {
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(0);
+
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      getLastButton(fixture).click();
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(0);
+    });
+
+    it('should not navigate to the first page when the paginator is disabled', () => {
+      fixture.componentInstance.pageIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(1);
+
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      getFirstButton(fixture).click();
+      expect(fixture.componentInstance.paginator.pageIndex).toBe(1);
     });
   });
 
@@ -569,19 +617,19 @@ describe('MatPaginator', () => {
   });
 });
 
-function getPreviousButton(fixture: ComponentFixture<any>) {
+function getPreviousButton(fixture: ComponentFixture<any>): HTMLButtonElement {
   return fixture.nativeElement.querySelector('.mat-mdc-paginator-navigation-previous');
 }
 
-function getNextButton(fixture: ComponentFixture<any>) {
+function getNextButton(fixture: ComponentFixture<any>): HTMLButtonElement {
   return fixture.nativeElement.querySelector('.mat-mdc-paginator-navigation-next');
 }
 
-function getFirstButton(fixture: ComponentFixture<any>) {
+function getFirstButton(fixture: ComponentFixture<any>): HTMLButtonElement {
   return fixture.nativeElement.querySelector('.mat-mdc-paginator-navigation-first');
 }
 
-function getLastButton(fixture: ComponentFixture<any>) {
+function getLastButton(fixture: ComponentFixture<any>): HTMLButtonElement {
   return fixture.nativeElement.querySelector('.mat-mdc-paginator-navigation-last');
 }
 
