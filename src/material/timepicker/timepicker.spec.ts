@@ -1164,6 +1164,19 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(getPanel()).toBeFalsy();
     });
+
+    it('should disable the toggle when the timepicker is disabled', () => {
+      const fixture = TestBed.createComponent(StandaloneTimepicker);
+      const toggle = getToggle(fixture);
+      fixture.detectChanges();
+      expect(toggle.disabled).toBe(false);
+      expect(toggle.getAttribute('tabindex')).toBe('0');
+
+      fixture.componentInstance.disabled.set(true);
+      fixture.detectChanges();
+      expect(toggle.disabled).toBe(true);
+      expect(toggle.getAttribute('tabindex')).toBe('-1');
+    });
   });
 
   describe('global defaults', () => {
