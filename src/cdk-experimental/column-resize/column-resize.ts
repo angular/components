@@ -44,7 +44,6 @@ export const COLUMN_RESIZE_OPTIONS = new InjectionToken<ColumnResizeOptions>(
  */
 @Directive()
 export abstract class ColumnResize implements AfterViewInit, OnDestroy {
-  private _idGenerator = inject(_IdGenerator);
   protected readonly destroyed = new Subject<void>();
 
   /* Publicly accessible interface for triggering and being notified of resizes. */
@@ -58,7 +57,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   protected abstract readonly notifier: ColumnResizeNotifierSource;
 
   /** Unique ID for this table instance. */
-  protected readonly selectorId = this._idGenerator.getId('cdk-column-resize-');
+  protected readonly selectorId = inject(_IdGenerator).getId('cdk-column-resize-');
 
   /** The id attribute of the table, if specified. */
   id?: string;
@@ -86,6 +85,11 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   /** Gets the unique CSS class name for this table instance. */
   getUniqueCssClass() {
     return this.selectorId;
+  }
+
+  /** Gets the ID for this table used for column size persistance. */
+  getTableId(): string {
+    return String(this.elementRef.nativeElement.id);
   }
 
   /** Called when a column in the table is resized. Applies a css class to the table element. */
