@@ -178,7 +178,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
    * @docs-private
    */
   writeValue(value: any): void {
-    this.value.set(this._dateAdapter.getValidDateOrNull(value));
+    // Note that we need to deserialize here, rather than depend on the value change effect,
+    // because `getValidDateOrNull` will clobber the value if it's parseable, but not created by
+    // the current adapter (see #30140).
+    const deserialized = this._dateAdapter.deserialize(value);
+    this.value.set(this._dateAdapter.getValidDateOrNull(deserialized));
   }
 
   /**
