@@ -1,0 +1,19 @@
+<h4>mat-select allowing selection of nullable options</h4>
+<mat-form-field>
+  <mat-label>State</mat-label>
+  <mat-select [(ngModel)]="value" canSelectNullableOptions>
+    @for (option of options; track option) {
+      <mat-option [value]="option.value">{{option.label}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<h4>mat-select with default configuration</h4>
+<mat-form-field>
+  <mat-label>State</mat-label>
+  <mat-select [(ngModel)]="value">
+    @for (option of options; track option) {
+      <mat-option [value]="option.value">{{option.label}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

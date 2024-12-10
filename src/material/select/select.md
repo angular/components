@@ -66,6 +66,15 @@ If you want one of your options to reset the select's value, you can omit specif
 
 <!-- example(select-reset) -->
 
+### Allowing nullable options to be selected
+
+By default any options with a `null` or `undefined` value will reset the select's value. If instead
+you want the nullable options to be selectable, you can enable the `canSelectNullableOptions` input.
+The default value for the input can be controlled application-wide through the `MAT_SELECT_CONFIG`
+injection token.
+
+<!-- example(select-selectable-null) -->
+
 ### Creating groups of options
 
 The `<mat-optgroup>` element can be used to group common options under a subheading. The name of the
