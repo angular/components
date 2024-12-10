@@ -218,7 +218,10 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     this.updateResizeActive(false);
 
     this.ngZone.run(() => {
-      const sizeMessage = {columnId: this.columnDef.name, size};
+      const sizeMessage = {
+        columnId: this.columnDef.name,
+        size: this._computeNewSize(size, this._cumulativeDeltaX),
+      };
       if (completedSuccessfully) {
         if (!this.resizeRef.liveUpdates) {
           this._triggerResize(size, this._cumulativeDeltaX);
