@@ -143,7 +143,6 @@
     "karma-jasmine": "^4.0.1",
     "karma-parallel": "^0.3.1",
     "karma-requirejs": "^1.1.0",
-    "karma-sauce-launcher": "^4.3.6",
     "karma-sourcemap-loader": "^0.3.8",
     "luxon": "^3.0.0",
     "madge": "^4.0.0",
