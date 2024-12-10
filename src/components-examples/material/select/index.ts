@@ -12,4 +12,5 @@ export {SelectResetExample} from './select-reset/select-reset-example';
 export {SelectValueBindingExample} from './select-value-binding/select-value-binding-example';
 export {SelectReactiveFormExample} from './select-reactive-form/select-reactive-form-example';
 export {SelectInitialValueExample} from './select-initial-value/select-initial-value-example';
+export {SelectSelectableNullExample} from './select-selectable-null/select-selectable-null-example';
 export {SelectHarnessExample} from './select-harness/select-harness-example';
