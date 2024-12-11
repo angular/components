@@ -1,3 +1,17 @@
+<a name="19.0.3"></a>
+# 19.0.3 "polonium-popsicle" (2024-12-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7b64c451e6](https://github.com/angular/components/commit/7b64c451e6fa72f1cd34dc661d7790047a9c0951) | fix | **expansion:** switch away from animations module ([#30119](https://github.com/angular/components/pull/30119)) |
+| [d18c3395d8](https://github.com/angular/components/commit/d18c3395d82791bbf12bec72f36303fb4115ac2c) | fix | **menu:** decouple menu lifecycle from animations ([#30148](https://github.com/angular/components/pull/30148)) |
+| [3ea8cf5c31](https://github.com/angular/components/commit/3ea8cf5c31f4b619504b7bffd69606534e919057) | fix | **paginator:** ignore clicks on disabled buttons ([#30138](https://github.com/angular/components/pull/30138)) |
+| [fbaf286f9c](https://github.com/angular/components/commit/fbaf286f9cde16fb5cecf5994eb28555b03ea32a) | fix | **select:** add opt-in input that allows selection of nullable options ([#30142](https://github.com/angular/components/pull/30142)) |
+| [600a8b04f9](https://github.com/angular/components/commit/600a8b04f9c5cc8dc06b6f5d5d4ddc5a13287692) | fix | **timepicker:** deserialize ControlValueAccessor values correctly ([#30149](https://github.com/angular/components/pull/30149)) |
+| [4b69162998](https://github.com/angular/components/commit/4b6916299826101c4c8a12c9c4aa77ae0e49db71) | fix | **timepicker:** disable toggle if timepicker is disabled ([#30137](https://github.com/angular/components/pull/30137)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.0-next.1"></a>
 # 19.1.0-next.1 "plastic-monkey" (2024-12-04)
 ### cdk
