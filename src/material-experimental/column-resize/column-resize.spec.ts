@@ -691,6 +691,31 @@ describe('Material Popover Edit', () => {
       expect(columnId).toBe('name');
       (expect(sizePx) as any).isApproximately(initialColumnWidth + 5);
     }));
+
+    it('persists the user-triggered size update (live updates off)', fakeAsync(() => {
+      const initialColumnWidth = component.getColumnWidth(1);
+
+      component.columnResize.liveResizeUpdates = false;
+
+      component.triggerHoverState();
+      fixture.detectChanges();
+
+      component.resizeColumnWithMouse(1, 5);
+      fixture.detectChanges();
+      flush();
+
+      component.completeResizeWithMouseInProgress(1);
+      flush();
+
+      component.endHoverState();
+      fixture.detectChanges();
+
+      expect(columnSizeStore.setSizeCalls.length).toBe(1);
+      const {tableId, columnId, sizePx} = columnSizeStore.setSizeCalls[0];
+      expect(tableId).toBe('theTable');
+      expect(columnId).toBe('name');
+      (expect(sizePx) as any).isApproximately(initialColumnWidth + 5);
+    }));
   });
 });
 
