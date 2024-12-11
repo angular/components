@@ -1,3 +1,25 @@
+<a name="19.1.0-next.2"></a>
+# 19.1.0-next.2 "rhodium-rhubarb" (2024-12-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aafa151e78](https://github.com/angular/components/commit/aafa151e78994a70d7e4509e49e040412fd5adf3) | fix | **expansion:** switch away from animations module ([#30119](https://github.com/angular/components/pull/30119)) |
+| [77393153fd](https://github.com/angular/components/commit/77393153fd4f6acad65fad6b8f0eefeb8dcd4b06) | fix | **menu:** decouple menu lifecycle from animations ([#30148](https://github.com/angular/components/pull/30148)) |
+| [8d3bca5eb0](https://github.com/angular/components/commit/8d3bca5eb0cc304075c85aa56ecdd6785e7e2a2d) | fix | **paginator:** ignore clicks on disabled buttons ([#30138](https://github.com/angular/components/pull/30138)) |
+| [02967137f3](https://github.com/angular/components/commit/02967137f3aba759811e81bc7be5acc6cc6ebc6d) | fix | **select:** add opt-in input that allows selection of nullable options ([#30142](https://github.com/angular/components/pull/30142)) |
+| [f7d787b1e8](https://github.com/angular/components/commit/f7d787b1e8b770f571621d35d31889d1bc7892d3) | fix | **timepicker:** deserialize ControlValueAccessor values correctly ([#30149](https://github.com/angular/components/pull/30149)) |
+| [db8f6c0a9f](https://github.com/angular/components/commit/db8f6c0a9f3102056eead1197a6926a34cb89cbd) | fix | **timepicker:** disable toggle if timepicker is disabled ([#30137](https://github.com/angular/components/pull/30137)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [75c8aa8767](https://github.com/angular/components/commit/75c8aa8767d1bb5e2e5f29ea0434a5876a2c5a21) | feat | **column-resize:** Support column size persistance hooks ([#30136](https://github.com/angular/components/pull/30136)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8685c01a92](https://github.com/angular/components/commit/8685c01a92e057b20d502e5163561391dcc7fb21) | feat | **column-resize:** Add support for "lazy" rather than live updating during resizing. ([#30120](https://github.com/angular/components/pull/30120)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.3"></a>
 # 19.0.3 "polonium-popsicle" (2024-12-11)
 ### material
