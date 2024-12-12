@@ -150,7 +150,7 @@ export interface CdkDragExit<T = any, I = T> {
 }
 
 // @public
-export class CdkDragHandle implements OnDestroy {
+export class CdkDragHandle implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -158,6 +158,8 @@ export class CdkDragHandle implements OnDestroy {
     element: ElementRef<HTMLElement>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly _stateChanges: Subject<CdkDragHandle>;
