@@ -351,13 +351,16 @@ export class DragDropModule {
 // @public
 export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     constructor(...args: unknown[]);
+    getDragDirectiveForNode(node: Node): CdkDrag | null;
     isDragging(drag: DragRef): boolean;
     // (undocumented)
     ngOnDestroy(): void;
     readonly pointerMove: Subject<TouchEvent | MouseEvent>;
     readonly pointerUp: Subject<TouchEvent | MouseEvent>;
+    registerDirectiveNode(node: Node, dragRef: CdkDrag): void;
     registerDragItem(drag: DragRef): void;
     registerDropContainer(drop: DropListRef): void;
+    removeDirectiveNode(node: Node): void;
     removeDragItem(drag: DragRef): void;
     removeDropContainer(drop: DropListRef): void;
     // @deprecated

@@ -23,6 +23,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
 import type {DragRef} from './drag-ref';
+import type {CdkDrag} from './directives/drag';
 
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
@@ -78,6 +79,13 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
    * because it'll be called a lot and we don't want to create a new function every time.
    */
   private _draggingPredicate = (item: DragRef) => item.isDragging();
+
+  /**
+   * Map tracking DOM nodes and their corresponding drag directives. Note that this is different
+   * from looking through the `_dragInstances` and getting their root node, because the root node
+   * isn't necessarily the node that the directive is set on.
+   */
+  private _domNodesToDirectives: WeakMap<Node, CdkDrag> | null = null;
 
   /**
    * Emits the `touchmove` or `mousemove` events that are dispatched
@@ -262,9 +270,36 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     return merge(...streams);
   }
 
+  /**
+   * Tracks the DOM node which has a draggable directive.
+   * @param node Node to track.
+   * @param dragRef Drag directive set on the node.
+   */
+  registerDirectiveNode(node: Node, dragRef: CdkDrag): void {
+    this._domNodesToDirectives ??= new WeakMap();
+    this._domNodesToDirectives.set(node, dragRef);
+  }
+
+  /**
+   * Stops tracking a draggable directive node.
+   * @param node Node to stop tracking.
+   */
+  removeDirectiveNode(node: Node): void {
+    this._domNodesToDirectives?.delete(node);
+  }
+
+  /**
+   * Gets the drag directive corresponding to a specific DOM node, if any.
+   * @param node Node for which to do the lookup.
+   */
+  getDragDirectiveForNode(node: Node): CdkDrag | null {
+    return this._domNodesToDirectives?.get(node) || null;
+  }
+
   ngOnDestroy() {
     this._dragInstances.forEach(instance => this.removeDragItem(instance));
     this._dropInstances.forEach(instance => this.removeDropContainer(instance));
+    this._domNodesToDirectives = null;
     this._clearGlobalListeners();
     this.pointerMove.complete();
     this.pointerUp.complete();

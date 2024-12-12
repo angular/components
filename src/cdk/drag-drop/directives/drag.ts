@@ -48,8 +48,7 @@ import type {CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
 import {CDK_DRAG_CONFIG, DragDropConfig, DragStartDelay, DragAxis} from './config';
 import {assertElementNode} from './assertions';
-
-const DRAG_HOST_CLASS = 'cdk-drag';
+import {DragDropRegistry} from '../drag-drop-registry';
 
 /**
  * Injection token that can be used to reference instances of `CdkDropList`. It serves as
@@ -63,7 +62,7 @@ export const CDK_DROP_LIST = new InjectionToken<CdkDropList>('CdkDropList');
   selector: '[cdkDrag]',
   exportAs: 'cdkDrag',
   host: {
-    'class': DRAG_HOST_CLASS,
+    'class': 'cdk-drag',
     '[class.cdk-drag-disabled]': 'disabled',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
@@ -78,9 +77,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _selfHandle = inject<CdkDragHandle>(CDK_DRAG_HANDLE, {optional: true, self: true});
   private _parentDrag = inject<CdkDrag>(CDK_DRAG_PARENT, {optional: true, skipSelf: true});
+  private _dragDropRegistry = inject(DragDropRegistry);
 
   private readonly _destroyed = new Subject<void>();
-  private static _dragInstances: CdkDrag[] = [];
   private _handles = new BehaviorSubject<CdkDragHandle[]>([]);
   private _previewTemplate: CdkDragPreview | null;
   private _placeholderTemplate: CdkDragPlaceholder | null;
@@ -240,11 +239,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       zIndex: config?.zIndex,
     });
     this._dragRef.data = this;
-
-    // We have to keep track of the drag instances in order to be able to match an element to
-    // a drag instance. We can't go through the global registry of `DragRef`, because the root
-    // element could be different.
-    CdkDrag._dragInstances.push(this);
+    this._dragDropRegistry.registerDirectiveNode(this.element.nativeElement, this);
 
     if (config) {
       this._assignDefaults(config);
@@ -348,10 +343,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       this.dropContainer.removeItem(this);
     }
 
-    const index = CdkDrag._dragInstances.indexOf(this);
-    if (index > -1) {
-      CdkDrag._dragInstances.splice(index, 1);
-    }
+    this._dragDropRegistry.removeDirectiveNode(this.element.nativeElement);
 
     // Unnecessary in most cases, but used to avoid extra change detections with `zone-paths-rxjs`.
     this._ngZone.runOutsideAngular(() => {
@@ -487,12 +479,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       // the item was projected into another item by something like `ngTemplateOutlet`.
       let parent = this.element.nativeElement.parentElement;
       while (parent) {
-        if (parent.classList.contains(DRAG_HOST_CLASS)) {
-          ref.withParent(
-            CdkDrag._dragInstances.find(drag => {
-              return drag.element.nativeElement === parent;
-            })?._dragRef || null,
-          );
+        const parentDrag = this._dragDropRegistry.getDragDirectiveForNode(parent);
+        if (parentDrag) {
+          ref.withParent(parentDrag._dragRef);
           break;
         }
         parent = parent.parentElement;
