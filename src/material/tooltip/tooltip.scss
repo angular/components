@@ -98,9 +98,14 @@
   }
 }
 
-// We need the additional specificity here, because it can be overridden by `.cdk-overlay-panel`.
-.mat-mdc-tooltip-panel.mat-mdc-tooltip-panel-non-interactive {
-  pointer-events: none;
+.mat-mdc-tooltip-panel {
+  // The line height inherited from the body can throw off the tooltip gap (see #30132).
+  line-height: normal;
+
+  // We need the additional specificity here, because it can be overridden by `.cdk-overlay-panel`.
+  &.mat-mdc-tooltip-panel-non-interactive {
+    pointer-events: none;
+  }
 }
 
 @keyframes mat-mdc-tooltip-show {
