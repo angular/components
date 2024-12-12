@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   signal,
 } from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {fakeAsync, flush, tick} from '@angular/core/testing';
 import {
   dispatchEvent,
@@ -1631,6 +1632,25 @@ describe('Standalone CdkDrag', () => {
         .toBe('translate3d(50px, 100px, 0px)');
     }));
 
+    it('should be able to drag with a handle that is defined in a separate embedded view', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggableWithExternalTemplateHandle);
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+      const handle = fixture.nativeElement.querySelector('.handle');
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 50, 100);
+
+      expect(dragElement.style.transform)
+        .withContext('Expected not to be able to drag the element by itself.')
+        .toBeFalsy();
+
+      dragElementViaMouse(fixture, handle, 50, 100);
+      expect(dragElement.style.transform)
+        .withContext('Expected to drag the element by its handle.')
+        .toBe('translate3d(50px, 100px, 0px)');
+    }));
+
     it('should disable the tap highlight while dragging via the handle', fakeAsync(() => {
       // This test is irrelevant if the browser doesn't support styling the tap highlight color.
       if (!('webkitTapHighlightColor' in document.body.style)) {
@@ -2009,4 +2029,22 @@ class DraggableNgContainerWithAlternateRoot {
 })
 class PlainStandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
+}
+
+@Component({
+  template: `
+    <div #dragElement cdkDrag
+      style="width: 100px; height: 100px; background: red; position: relative">
+      <ng-container [ngTemplateOutlet]="template"/>
+    </div>
+
+    <ng-template #template>
+      <div cdkDragHandle class="handle" style="width: 10px; height: 10px; background: green;"></div>
+    </ng-template>
+  `,
+  standalone: true,
+  imports: [CdkDrag, CdkDragHandle, NgTemplateOutlet],
+})
+class StandaloneDraggableWithExternalTemplateHandle {
+  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
 }
