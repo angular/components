@@ -244,6 +244,12 @@ export class MatAutocompleteTrigger
   @Input({alias: 'matAutocompleteDisabled', transform: booleanAttribute})
   autocompleteDisabled: boolean;
 
+  /**
+   * Whether the autocomplete should update the native input element only.
+   * When true the autocomplete will not update the value via the form field control.
+   */
+  @Input({transform: booleanAttribute}) updateNativeInput: boolean;
+
   private _initialized = new Subject();
 
   private _injector = inject(Injector);
@@ -704,7 +710,7 @@ export class MatAutocompleteTrigger
   private _updateNativeInputValue(value: string): void {
     // If it's used within a `MatFormField`, we should set it through the property so it can go
     // through change detection.
-    if (this._formField) {
+    if (this._formField && !this.updateNativeInput) {
       this._formField._control.value = value;
     } else {
       this._element.nativeElement.value = value;
