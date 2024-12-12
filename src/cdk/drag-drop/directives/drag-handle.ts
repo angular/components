@@ -7,6 +7,7 @@
  */
 
 import {
+  AfterViewInit,
   Directive,
   ElementRef,
   InjectionToken,
@@ -19,6 +20,7 @@ import {Subject} from 'rxjs';
 import type {CdkDrag} from './drag';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {assertElementNode} from './assertions';
+import {DragDropRegistry} from '../drag-drop-registry';
 
 /**
  * Injection token that can be used to reference instances of `CdkDragHandle`. It serves as
@@ -35,10 +37,11 @@ export const CDK_DRAG_HANDLE = new InjectionToken<CdkDragHandle>('CdkDragHandle'
   },
   providers: [{provide: CDK_DRAG_HANDLE, useExisting: CdkDragHandle}],
 })
-export class CdkDragHandle implements OnDestroy {
+export class CdkDragHandle implements AfterViewInit, OnDestroy {
   element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   private _parentDrag = inject<CdkDrag>(CDK_DRAG_PARENT, {optional: true, skipSelf: true});
+  private _dragDropRegistry = inject(DragDropRegistry);
 
   /** Emits when the state of the handle has changed. */
   readonly _stateChanges = new Subject<CdkDragHandle>();
@@ -62,6 +65,21 @@ export class CdkDragHandle implements OnDestroy {
     }
 
     this._parentDrag?._addHandle(this);
+  }
+
+  ngAfterViewInit() {
+    if (!this._parentDrag) {
+      let parent = this.element.nativeElement.parentElement;
+      while (parent) {
+        const ref = this._dragDropRegistry.getDragDirectiveForNode(parent);
+        if (ref) {
+          this._parentDrag = ref;
+          ref._addHandle(this);
+          break;
+        }
+        parent = parent.parentElement;
+      }
+    }
   }
 
   ngOnDestroy() {
