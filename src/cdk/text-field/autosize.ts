@@ -17,6 +17,7 @@ import {
   NgZone,
   booleanAttribute,
   inject,
+  Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
@@ -41,11 +42,13 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
+  private _renderer = inject(Renderer2);
 
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue?: string;
   private _initialHeight: string | undefined;
   private readonly _destroyed = new Subject<void>();
+  private _listenerCleanups: (() => void)[] | undefined;
 
   private _minRows: number;
   private _maxRows: number;
@@ -162,8 +165,10 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
           .pipe(auditTime(16), takeUntil(this._destroyed))
           .subscribe(() => this.resizeToFitContent(true));
 
-        this._textareaElement.addEventListener('focus', this._handleFocusEvent);
-        this._textareaElement.addEventListener('blur', this._handleFocusEvent);
+        this._listenerCleanups = [
+          this._renderer.listen(this._textareaElement, 'focus', this._handleFocusEvent),
+          this._renderer.listen(this._textareaElement, 'blur', this._handleFocusEvent),
+        ];
       });
 
       this._isViewInited = true;
@@ -172,8 +177,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._textareaElement.removeEventListener('focus', this._handleFocusEvent);
-    this._textareaElement.removeEventListener('blur', this._handleFocusEvent);
+    this._listenerCleanups?.forEach(cleanup => cleanup());
     this._destroyed.next();
     this._destroyed.complete();
   }

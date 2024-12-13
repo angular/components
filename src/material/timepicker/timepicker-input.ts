@@ -20,6 +20,7 @@ import {
   ModelSignal,
   OnDestroy,
   OutputRefSubscription,
+  Renderer2,
   Signal,
   signal,
 } from '@angular/core';
@@ -89,6 +90,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   private _onChange: ((value: any) => void) | undefined;
   private _onTouched: (() => void) | undefined;
   private _validatorOnChange: (() => void) | undefined;
+  private _cleanupClick: () => void;
   private _accessorDisabled = signal(false);
   private _localeSubscription: Subscription;
   private _timepickerSubscription: OutputRefSubscription | undefined;
@@ -158,6 +160,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       validateAdapter(this._dateAdapter, this._dateFormats);
     }
 
+    const renderer = inject(Renderer2);
     this._validator = this._getValidator();
     this._respondToValueChanges();
     this._respondToMinMaxChanges();
@@ -170,7 +173,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
     // Bind the click listener manually to the overlay origin, because we want the entire
     // form field to be clickable, if the timepicker is used in `mat-form-field`.
-    this.getOverlayOrigin().nativeElement.addEventListener('click', this._handleClick);
+    this._cleanupClick = renderer.listen(
+      this.getOverlayOrigin().nativeElement,
+      'click',
+      this._handleClick,
+    );
   }
 
   /**
@@ -236,7 +243,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   }
 
   ngOnDestroy(): void {
-    this.getOverlayOrigin().nativeElement.removeEventListener('click', this._handleClick);
+    this._cleanupClick();
     this._timepickerSubscription?.unsubscribe();
     this._localeSubscription.unsubscribe();
   }

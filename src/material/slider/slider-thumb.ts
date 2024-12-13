@@ -15,6 +15,7 @@ import {
   Input,
   NgZone,
   OnDestroy,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   inject,
@@ -53,6 +54,8 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   readonly _cdr = inject(ChangeDetectorRef);
   private readonly _ngZone = inject(NgZone);
   private _slider = inject<_MatSlider>(MAT_SLIDER);
+  private _renderer = inject(Renderer2);
+  private _listenerCleanups: (() => void)[] | undefined;
 
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
   @Input() discrete: boolean;
@@ -122,26 +125,20 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
     // of the NgZone to prevent Angular from needlessly running change detection.
     this._ngZone.runOutsideAngular(() => {
       const input = this._sliderInputEl!;
-      input.addEventListener('pointermove', this._onPointerMove);
-      input.addEventListener('pointerdown', this._onDragStart);
-      input.addEventListener('pointerup', this._onDragEnd);
-      input.addEventListener('pointerleave', this._onMouseLeave);
-      input.addEventListener('focus', this._onFocus);
-      input.addEventListener('blur', this._onBlur);
+      const renderer = this._renderer;
+      this._listenerCleanups = [
+        renderer.listen(input, 'pointermove', this._onPointerMove),
+        renderer.listen(input, 'pointerdown', this._onDragStart),
+        renderer.listen(input, 'pointerup', this._onDragEnd),
+        renderer.listen(input, 'pointerleave', this._onMouseLeave),
+        renderer.listen(input, 'focus', this._onFocus),
+        renderer.listen(input, 'blur', this._onBlur),
+      ];
     });
   }
 
   ngOnDestroy() {
-    const input = this._sliderInputEl;
-
-    if (input) {
-      input.removeEventListener('pointermove', this._onPointerMove);
-      input.removeEventListener('pointerdown', this._onDragStart);
-      input.removeEventListener('pointerup', this._onDragEnd);
-      input.removeEventListener('pointerleave', this._onMouseLeave);
-      input.removeEventListener('focus', this._onFocus);
-      input.removeEventListener('blur', this._onBlur);
-    }
+    this._listenerCleanups?.forEach(cleanup => cleanup());
   }
 
   private _onPointerMove = (event: PointerEvent): void => {

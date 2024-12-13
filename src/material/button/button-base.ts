@@ -21,6 +21,7 @@ import {
   numberAttribute,
   OnDestroy,
   OnInit,
+  Renderer2,
 } from '@angular/core';
 import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
@@ -242,6 +243,9 @@ export const MAT_ANCHOR_HOST = {
  */
 @Directive()
 export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
+  private _renderer = inject(Renderer2);
+  private _cleanupClick: () => void;
+
   @Input({
     transform: (value: unknown) => {
       return value == null ? undefined : numberAttribute(value);
@@ -251,13 +255,17 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+      this._cleanupClick = this._renderer.listen(
+        this._elementRef.nativeElement,
+        'click',
+        this._haltDisabledEvents,
+      );
     });
   }
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+    this._cleanupClick?.();
   }
 
   _haltDisabledEvents = (event: Event): void => {

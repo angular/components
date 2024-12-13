@@ -33,6 +33,7 @@ import {
   Injector,
   NgZone,
   OnDestroy,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   afterNextRender,
@@ -79,6 +80,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   protected _ngZone = inject(NgZone);
   private _overlayRef = inject(OverlayRef);
   private _focusMonitor = inject(FocusMonitor);
+  private _renderer = inject(Renderer2);
 
   private _platform = inject(Platform);
   protected _document = inject(DOCUMENT, {optional: true})!;
@@ -223,13 +225,13 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
       // The tabindex attribute should be removed to avoid navigating to that element again
       this._ngZone.runOutsideAngular(() => {
         const callback = () => {
-          element.removeEventListener('blur', callback);
-          element.removeEventListener('mousedown', callback);
+          deregisterBlur();
+          deregisterMousedown();
           element.removeAttribute('tabindex');
         };
 
-        element.addEventListener('blur', callback);
-        element.addEventListener('mousedown', callback);
+        const deregisterBlur = this._renderer.listen(element, 'blur', callback);
+        const deregisterMousedown = this._renderer.listen(element, 'mousedown', callback);
       });
     }
     element.focus(options);
