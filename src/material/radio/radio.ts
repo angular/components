@@ -36,6 +36,7 @@ import {
   inject,
   numberAttribute,
   HostAttributeToken,
+  Renderer2,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -419,7 +420,9 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   });
 
   private _ngZone = inject(NgZone);
-  private _uniqueId: string = inject(_IdGenerator).getId('mat-radio-');
+  private _renderer = inject(Renderer2);
+  private _uniqueId = inject(_IdGenerator).getId('mat-radio-');
+  private _cleanupClick: (() => void) | undefined;
 
   /** The unique ID for the radio button. */
   @Input() id: string = this._uniqueId;
@@ -673,13 +676,16 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // 1. Its logic is completely DOM-related so we can avoid some change detections.
     // 2. There appear to be some internal tests that break when this triggers a change detection.
     this._ngZone.runOutsideAngular(() => {
-      this._inputElement.nativeElement.addEventListener('click', this._onInputClick);
+      this._cleanupClick = this._renderer.listen(
+        this._inputElement.nativeElement,
+        'click',
+        this._onInputClick,
+      );
     });
   }
 
   ngOnDestroy() {
-    // We need to null check in case the button was destroyed before `ngAfterViewInit`.
-    this._inputElement?.nativeElement.removeEventListener('click', this._onInputClick);
+    this._cleanupClick?.();
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._removeUniqueSelectionListener();
   }

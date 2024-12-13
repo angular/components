@@ -19,6 +19,7 @@ import {
   numberAttribute,
   OnDestroy,
   Output,
+  Renderer2,
   signal,
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -87,6 +88,8 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   readonly _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   readonly _cdr = inject(ChangeDetectorRef);
   protected _slider = inject<_MatSlider>(MAT_SLIDER);
+  private _platform = inject(Platform);
+  private _listenerCleanups: (() => void)[];
 
   @Input({transform: numberAttribute})
   get value(): number {
@@ -275,22 +278,22 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   protected _isControlInitialized = false;
 
-  private _platform = inject(Platform);
-
   constructor(...args: unknown[]);
 
   constructor() {
+    const renderer = inject(Renderer2);
+
     this._ngZone.runOutsideAngular(() => {
-      this._hostElement.addEventListener('pointerdown', this._onPointerDown.bind(this));
-      this._hostElement.addEventListener('pointermove', this._onPointerMove.bind(this));
-      this._hostElement.addEventListener('pointerup', this._onPointerUp.bind(this));
+      this._listenerCleanups = [
+        renderer.listen(this._hostElement, 'pointerdown', this._onPointerDown.bind(this)),
+        renderer.listen(this._hostElement, 'pointermove', this._onPointerMove.bind(this)),
+        renderer.listen(this._hostElement, 'pointerup', this._onPointerUp.bind(this)),
+      ];
     });
   }
 
   ngOnDestroy(): void {
-    this._hostElement.removeEventListener('pointerdown', this._onPointerDown);
-    this._hostElement.removeEventListener('pointermove', this._onPointerMove);
-    this._hostElement.removeEventListener('pointerup', this._onPointerUp);
+    this._listenerCleanups.forEach(cleanup => cleanup());
     this._destroyed.next();
     this._destroyed.complete();
     this.dragStart.complete();

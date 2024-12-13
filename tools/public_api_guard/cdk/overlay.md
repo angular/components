@@ -27,6 +27,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { PortalOutlet } from '@angular/cdk/portal';
+import { Renderer2 } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -356,7 +357,7 @@ export class OverlayPositionBuilder {
 
 // @public
 export class OverlayRef implements PortalOutlet {
-    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsDisabled: boolean | undefined, _injector: EnvironmentInjector);
+    constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location: Location_2, _outsideClickDispatcher: OverlayOutsideClickDispatcher, _animationsDisabled: boolean | undefined, _injector: EnvironmentInjector, _renderer: Renderer2);
     addPanelClass(classes: string | string[]): void;
     // (undocumented)
     attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;

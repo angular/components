@@ -23,6 +23,7 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
+  Renderer2,
   WritableSignal,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
@@ -101,6 +102,7 @@ export class MatInput
   private _autofillMonitor = inject(AutofillMonitor);
   private _ngZone = inject(NgZone);
   protected _formField? = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
+  private _renderer = inject(Renderer2);
 
   protected _uid = inject(_IdGenerator).getId('mat-input-');
   protected _previousNativeValue: any;
@@ -108,8 +110,9 @@ export class MatInput
   private _signalBasedValueAccessor?: {value: WritableSignal<any>};
   private _previousPlaceholder: string | null;
   private _errorStateTracker: _ErrorStateTracker;
-  private _webkitBlinkWheelListenerAttached = false;
   private _config = inject(MAT_INPUT_CONFIG, {optional: true});
+  private _cleanupIosKeyup: (() => void) | undefined;
+  private _cleanupWebkitWheel: (() => void) | undefined;
 
   /** `aria-describedby` IDs assigned by the form field. */
   private _formFieldDescribedBy: string[] | undefined;
@@ -214,6 +217,7 @@ export class MatInput
     return this._type;
   }
   set type(value: string) {
+    const prevType = this._type;
     this._type = value || 'text';
     this._validateType();
 
@@ -224,7 +228,9 @@ export class MatInput
       (this._elementRef.nativeElement as HTMLInputElement).type = this._type;
     }
 
-    this._ensureWheelDefaultBehavior();
+    if (this._type !== prevType) {
+      this._ensureWheelDefaultBehavior();
+    }
   }
   protected _type = 'text';
 
@@ -329,7 +335,7 @@ export class MatInput
     // exists on iOS, we only bother to install the listener on iOS.
     if (this._platform.IOS) {
       this._ngZone.runOutsideAngular(() => {
-        element.addEventListener('keyup', this._iOSKeyupListener);
+        this._cleanupIosKeyup = this._renderer.listen(element, 'keyup', this._iOSKeyupListener);
       });
     }
 
@@ -381,13 +387,8 @@ export class MatInput
       this._autofillMonitor.stopMonitoring(this._elementRef.nativeElement);
     }
 
-    if (this._platform.IOS) {
-      this._elementRef.nativeElement.removeEventListener('keyup', this._iOSKeyupListener);
-    }
-
-    if (this._webkitBlinkWheelListenerAttached) {
-      this._elementRef.nativeElement.removeEventListener('wheel', this._webkitBlinkWheelListener);
-    }
+    this._cleanupIosKeyup?.();
+    this._cleanupWebkitWheel?.();
   }
 
   ngDoCheck() {
@@ -626,27 +627,22 @@ export class MatInput
 
   /**
    * In blink and webkit browsers a focused number input does not increment or decrement its value
-   * on mouse wheel interaction unless a wheel event listener is attached to it or one of its ancestors or a passive wheel listener is attached somewhere in the DOM.
-   * For example: Hitting a tooltip once enables the mouse wheel input for all number inputs as long as it exists.
-   * In order to get reliable and intuitive behavior we apply a wheel event on our own
-   * thus making sure increment and decrement by mouse wheel works every time.
+   * on mouse wheel interaction unless a wheel event listener is attached to it or one of its
+   * ancestors or a passive wheel listener is attached somewhere in the DOM. For example: Hitting
+   * a tooltip once enables the mouse wheel input for all number inputs as long as it exists. In
+   * order to get reliable and intuitive behavior we apply a wheel event on our own thus making
+   * sure increment and decrement by mouse wheel works every time.
    * @docs-private
    */
   private _ensureWheelDefaultBehavior(): void {
-    if (
-      !this._webkitBlinkWheelListenerAttached &&
-      this._type === 'number' &&
-      (this._platform.BLINK || this._platform.WEBKIT)
-    ) {
-      this._ngZone.runOutsideAngular(() => {
-        this._elementRef.nativeElement.addEventListener('wheel', this._webkitBlinkWheelListener);
-      });
-      this._webkitBlinkWheelListenerAttached = true;
-    }
+    this._cleanupWebkitWheel?.();
 
-    if (this._webkitBlinkWheelListenerAttached && this._type !== 'number') {
-      this._elementRef.nativeElement.removeEventListener('wheel', this._webkitBlinkWheelListener);
-      this._webkitBlinkWheelListenerAttached = true;
+    if (this._type === 'number' && (this._platform.BLINK || this._platform.WEBKIT)) {
+      this._cleanupWebkitWheel = this._renderer.listen(
+        this._elementRef.nativeElement,
+        'wheel',
+        this._webkitBlinkWheelListener,
+      );
     }
   }
 

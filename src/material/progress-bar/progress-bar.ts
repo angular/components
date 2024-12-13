@@ -22,6 +22,7 @@ import {
   inject,
   numberAttribute,
   ANIMATION_MODULE_TYPE,
+  Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ThemePalette} from '@angular/material/core';
@@ -110,6 +111,8 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _renderer = inject(Renderer2);
+  private _cleanupTransitionEnd: (() => void) | undefined;
   _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   constructor(...args: unknown[]);
@@ -203,12 +206,16 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
     // Run outside angular so change detection didn't get triggered on every transition end
     // instead only on the animation that we care about (primary value bar's transitionend)
     this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener('transitionend', this._transitionendHandler);
+      this._cleanupTransitionEnd = this._renderer.listen(
+        this._elementRef.nativeElement,
+        'transitionend',
+        this._transitionendHandler,
+      );
     });
   }
 
   ngOnDestroy() {
-    this._elementRef.nativeElement.removeEventListener('transitionend', this._transitionendHandler);
+    this._cleanupTransitionEnd?.();
   }
 
   /** Gets the transform style that should be applied to the primary bar. */

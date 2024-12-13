@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {inject, Injectable, NgZone, OnDestroy} from '@angular/core';
+import {inject, Injectable, NgZone, OnDestroy, RendererFactory2} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {filter, shareReplay, takeUntil} from 'rxjs/operators';
 
@@ -98,6 +98,8 @@ class SingleBoxSharedResizeObserver {
   providedIn: 'root',
 })
 export class SharedResizeObserver implements OnDestroy {
+  private _cleanupErrorListener: (() => void) | undefined;
+
   /** Map of box type to shared resize observer. */
   private _observers = new Map<ResizeObserverBoxOptions, SingleBoxSharedResizeObserver>();
 
@@ -107,7 +109,12 @@ export class SharedResizeObserver implements OnDestroy {
   constructor() {
     if (typeof ResizeObserver !== 'undefined' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       this._ngZone.runOutsideAngular(() => {
-        window.addEventListener('error', loopLimitExceededErrorHandler);
+        const renderer = inject(RendererFactory2).createRenderer(null, null);
+        this._cleanupErrorListener = renderer.listen(
+          'window',
+          'error',
+          loopLimitExceededErrorHandler,
+        );
       });
     }
   }
@@ -117,9 +124,7 @@ export class SharedResizeObserver implements OnDestroy {
       observer.destroy();
     }
     this._observers.clear();
-    if (typeof ResizeObserver !== 'undefined' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      window.removeEventListener('error', loopLimitExceededErrorHandler);
-    }
+    this._cleanupErrorListener?.();
   }
 
   /**
