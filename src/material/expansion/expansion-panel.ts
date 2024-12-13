@@ -31,6 +31,7 @@ import {
   ANIMATION_MODULE_TYPE,
   inject,
   NgZone,
+  Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
@@ -98,6 +99,8 @@ export class MatExpansionPanel
   private _document = inject(DOCUMENT);
   private _ngZone = inject(NgZone);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _renderer = inject(Renderer2);
+  private _cleanupTransitionEnd: (() => void) | undefined;
 
   /** Whether the toggle indicator should be hidden. */
   @Input({transform: booleanAttribute})
@@ -215,10 +218,7 @@ export class MatExpansionPanel
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-    this._bodyWrapper?.nativeElement.removeEventListener(
-      'transitionend',
-      this._transitionEndListener,
-    );
+    this._cleanupTransitionEnd?.();
     this._inputChanges.complete();
   }
 
@@ -255,7 +255,11 @@ export class MatExpansionPanel
       } else {
         setTimeout(() => {
           const element = this._elementRef.nativeElement;
-          element.addEventListener('transitionend', this._transitionEndListener);
+          this._cleanupTransitionEnd = this._renderer.listen(
+            element,
+            'transitionend',
+            this._transitionEndListener,
+          );
           element.classList.add('mat-expansion-panel-animations-enabled');
         }, 200);
       }

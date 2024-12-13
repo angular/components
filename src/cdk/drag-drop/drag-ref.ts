@@ -19,6 +19,7 @@ import {
   ElementRef,
   EmbeddedViewRef,
   NgZone,
+  Renderer2,
   TemplateRef,
   ViewContainerRef,
   signal,
@@ -378,6 +379,7 @@ export class DragRef<T = any> {
     private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler,
     private _dragDropRegistry: DragDropRegistry,
+    private _renderer: Renderer2,
   ) {
     this.withRootElement(element).withParent(_config.parentDragRef || null);
     this._parentPositions = new ParentPositionTracker(_document);
@@ -853,6 +855,7 @@ export class DragRef<T = any> {
         this._pickupPositionOnPage,
         this._initialTransform,
         this._config.zIndex || 1000,
+        this._renderer,
       );
       this._preview.attach(this._getPreviewInsertionPoint(parent, shadowRoot));
 
@@ -1106,24 +1109,24 @@ export class DragRef<T = any> {
 
     return this._ngZone.runOutsideAngular(() => {
       return new Promise(resolve => {
-        const handler = ((event: TransitionEvent) => {
+        const handler = (event: TransitionEvent) => {
           if (
             !event ||
             (this._preview &&
               _getEventTarget(event) === this._preview.element &&
               event.propertyName === 'transform')
           ) {
-            this._preview?.removeEventListener('transitionend', handler);
+            cleanupListener();
             resolve();
             clearTimeout(timeout);
           }
-        }) as EventListenerOrEventListenerObject;
+        };
 
         // If a transition is short enough, the browser might not fire the `transitionend` event.
         // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
         // fire if the transition hasn't completed when it was supposed to.
         const timeout = setTimeout(handler as Function, duration * 1.5);
-        this._preview!.addEventListener('transitionend', handler);
+        const cleanupListener = this._preview!.addEventListener('transitionend', handler);
       });
     });
   }

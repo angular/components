@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EmbeddedViewRef, TemplateRef, ViewContainerRef} from '@angular/core';
+import {EmbeddedViewRef, Renderer2, TemplateRef, ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {
   extendStyles,
@@ -56,6 +56,7 @@ export class PreviewRef {
     },
     private _initialTransform: string | null,
     private _zIndex: number,
+    private _renderer: Renderer2,
   ) {}
 
   attach(parent: HTMLElement): void {
@@ -91,12 +92,8 @@ export class PreviewRef {
     return getTransformTransitionDurationInMs(this._preview);
   }
 
-  addEventListener(name: string, handler: EventListenerOrEventListenerObject) {
-    this._preview.addEventListener(name, handler);
-  }
-
-  removeEventListener(name: string, handler: EventListenerOrEventListenerObject) {
-    this._preview.removeEventListener(name, handler);
+  addEventListener(name: string, handler: (event: any) => void): () => void {
+    return this._renderer.listen(this._preview, name, handler);
   }
 
   private _createPreview(): HTMLElement {

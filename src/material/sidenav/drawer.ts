@@ -42,6 +42,7 @@ import {
   OnDestroy,
   Output,
   QueryList,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -176,6 +177,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
   private _focusMonitor = inject(FocusMonitor);
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
+  private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
   private _doc = inject(DOCUMENT, {optional: true})!;
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
@@ -401,13 +403,13 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
       // The tabindex attribute should be removed to avoid navigating to that element again
       this._ngZone.runOutsideAngular(() => {
         const callback = () => {
-          element.removeEventListener('blur', callback);
-          element.removeEventListener('mousedown', callback);
+          cleanupBlur();
+          cleanupMousedown();
           element.removeAttribute('tabindex');
         };
 
-        element.addEventListener('blur', callback);
-        element.addEventListener('mousedown', callback);
+        const cleanupBlur = this._renderer.listen(element, 'blur', callback);
+        const cleanupMousedown = this._renderer.listen(element, 'mousedown', callback);
       });
     }
     element.focus(options);

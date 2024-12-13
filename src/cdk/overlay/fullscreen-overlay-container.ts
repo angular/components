@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy} from '@angular/core';
+import {inject, Injectable, OnDestroy, RendererFactory2} from '@angular/core';
 import {OverlayContainer} from './overlay-container';
 
 /**
@@ -18,8 +18,9 @@ import {OverlayContainer} from './overlay-container';
  */
 @Injectable({providedIn: 'root'})
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _fullScreenEventName: string | undefined;
-  private _fullScreenListener: () => void;
+  private _cleanupFullScreenListener: (() => void) | undefined;
 
   constructor(...args: unknown[]);
 
@@ -29,38 +30,27 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-
-    if (this._fullScreenEventName && this._fullScreenListener) {
-      this._document.removeEventListener(this._fullScreenEventName, this._fullScreenListener);
-    }
+    this._cleanupFullScreenListener?.();
   }
 
   protected override _createContainer(): void {
+    const eventName = this._getEventName();
     super._createContainer();
     this._adjustParentForFullscreenChange();
-    this._addFullscreenChangeListener(() => this._adjustParentForFullscreenChange());
+
+    if (eventName) {
+      this._cleanupFullScreenListener?.();
+      this._cleanupFullScreenListener = this._renderer.listen('document', eventName, () => {
+        this._adjustParentForFullscreenChange();
+      });
+    }
   }
 
   private _adjustParentForFullscreenChange(): void {
-    if (!this._containerElement) {
-      return;
-    }
-
-    const fullscreenElement = this.getFullscreenElement();
-    const parent = fullscreenElement || this._document.body;
-    parent.appendChild(this._containerElement);
-  }
-
-  private _addFullscreenChangeListener(fn: () => void) {
-    const eventName = this._getEventName();
-
-    if (eventName) {
-      if (this._fullScreenListener) {
-        this._document.removeEventListener(eventName, this._fullScreenListener);
-      }
-
-      this._document.addEventListener(eventName, fn);
-      this._fullScreenListener = fn;
+    if (this._containerElement) {
+      const fullscreenElement = this.getFullscreenElement();
+      const parent = fullscreenElement || this._document.body;
+      parent.appendChild(this._containerElement);
     }
   }
 
