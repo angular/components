@@ -43,8 +43,9 @@ export function dispatchKeyboardEvent(
   keyCode?: number,
   key?: string,
   modifiers?: ModifierKeys,
+  code?: string,
 ): KeyboardEvent {
-  return dispatchEvent(node, createKeyboardEvent(type, keyCode, key, modifiers));
+  return dispatchEvent(node, createKeyboardEvent(type, keyCode, key, modifiers, code));
 }
 
 /**
