@@ -363,7 +363,7 @@ describe('MatSelectionList without forms', () => {
       expect(event.defaultPrevented).toBe(true);
     });
 
-    it('should select all items using ctrl + a', () => {
+    it('should select and deselect all items using ctrl + a', () => {
       listOptions.forEach(option => (option.componentInstance.disabled = false));
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -375,6 +375,29 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
+    });
+
+    it('should select and deselect all items using meta + a', () => {
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(listOptions.some(option => option.componentInstance.selected)).toBe(false);
+
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {meta: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {meta: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
     });
 
     it('should not select disabled items when pressing ctrl + a', () => {
