@@ -1248,7 +1248,6 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class FixedSizeVirtualScroll {
@@ -1314,7 +1313,6 @@ class FixedSizeVirtualScroll {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class FixedSizeVirtualScrollWithRtlDirection {
@@ -1359,7 +1357,6 @@ class FixedSizeVirtualScrollWithRtlDirection {
       border: 1px dashed #ccc;
     }
   `,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollWithNoStrategy {
@@ -1368,7 +1365,6 @@ class VirtualScrollWithNoStrategy {
 
 @Directive({
   selector: '[injects-view-container]',
-  standalone: true,
 })
 class InjectsViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -1400,7 +1396,6 @@ class InjectsViewContainer {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollWithItemInjectingViewContainer {
@@ -1439,7 +1434,6 @@ class VirtualScrollWithItemInjectingViewContainer {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class DelayedInitializationVirtualScroll {
@@ -1478,7 +1472,6 @@ class DelayedInitializationVirtualScroll {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollWithAppendOnly {
@@ -1521,7 +1514,6 @@ class VirtualScrollWithAppendOnly {
         }
     `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollWithCustomScrollingElement {
@@ -1563,7 +1555,6 @@ class VirtualScrollWithCustomScrollingElement {
         }
     `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollWithScrollableWindow {
@@ -1576,7 +1567,6 @@ class VirtualScrollWithScrollableWindow {
 
 @Component({
   template: '<cdk-virtual-scroll-viewport itemSize="50"></cdk-virtual-scroll-viewport>',
-  standalone: true,
   imports: [ScrollingModule],
 })
 class VirtualScrollableQuery {

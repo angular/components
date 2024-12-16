@@ -167,7 +167,6 @@ interface TestData {
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
   `,
-  standalone: true,
   imports: [CdkTableModule],
 })
 class BasicTextColumnApp {
@@ -187,7 +186,6 @@ class BasicTextColumnApp {
   template: `
     <cdk-text-column name="column-a"></cdk-text-column>
   `,
-  standalone: true,
   imports: [CdkTableModule],
 })
 class MissingTableApp {}
@@ -201,7 +199,6 @@ class MissingTableApp {}
       <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
     </cdk-table>
   `,
-  standalone: true,
   imports: [CdkTableModule],
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {}

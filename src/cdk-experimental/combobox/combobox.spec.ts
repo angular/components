@@ -385,7 +385,6 @@ describe('Combobox', () => {
       <button id="applyButton" (click)="toggleCombobox.updateAndClose(input.value)">Apply</button>
     </div>
   </ng-template>`,
-  standalone: true,
   imports: [CdkComboboxModule],
 })
 class ComboboxToggle {

@@ -75,7 +75,6 @@ describe('Overlay directives Zone.js integration', () => {
               [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector">
       <p>Menu content</p>
     </ng-template>`,
-  standalone: true,
   imports: [OverlayModule],
 })
 class ConnectedOverlayDirectiveTest {
@@ -117,7 +116,6 @@ class ConnectedOverlayDirectiveTest {
   template: `
     <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
     <ng-template cdk-connected-overlay>Menu content</ng-template>`,
-  standalone: true,
   imports: [OverlayModule],
 })
 class ConnectedOverlayPropertyInitOrder {

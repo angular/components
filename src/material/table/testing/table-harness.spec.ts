@@ -214,7 +214,6 @@ describe('MatTableHarness', () => {
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule],
 })
 class TableHarnessTest {

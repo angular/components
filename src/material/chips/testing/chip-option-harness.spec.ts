@@ -88,7 +88,6 @@ describe('MatChipOptionHarness', () => {
       </mat-chip-option>
     </mat-chip-listbox>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class ChipOptionHarnessTest {}

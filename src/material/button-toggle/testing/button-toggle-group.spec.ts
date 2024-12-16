@@ -85,7 +85,6 @@ describe('MatButtonToggleGroupHarness', () => {
       <mat-button-toggle value="2">Two</mat-button-toggle>
     </mat-button-toggle-group>
   `,
-  standalone: true,
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleGroupHarnessTest {

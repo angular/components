@@ -74,7 +74,6 @@ describe('MatTooltip Zone.js integration', () => {
                 [matTooltipPosition]="position">Button</button>
         }
       </div>`,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {

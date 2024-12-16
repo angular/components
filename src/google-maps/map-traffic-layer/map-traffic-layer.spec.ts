@@ -44,7 +44,6 @@ describe('MapTrafficLayer', () => {
       <map-traffic-layer [autoRefresh]="autoRefresh" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapTrafficLayer],
 })
 class TestApp {

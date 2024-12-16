@@ -452,7 +452,6 @@ describe('cdkSelectionColumn with multiple = false', () => {
         </li>
       }
     </ul>`,
-  standalone: true,
   imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithMultiSelection {
@@ -517,7 +516,6 @@ class ListWithMultiSelection {
         </li>
       }
     </ul>`,
-  standalone: true,
   imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithSingleSelection {
@@ -559,7 +557,6 @@ class ListWithSingleSelection {
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
     `,
-  standalone: true,
   imports: [CdkSelectionModule, CdkTableModule],
 })
 class MultiSelectTableWithSelectionColumn {
@@ -627,7 +624,6 @@ class MultiSelectTableWithSelectionColumn {
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
     `,
-  standalone: true,
   imports: [CdkSelectionModule, CdkTableModule],
 })
 class SingleSelectTableWithSelectionColumn {

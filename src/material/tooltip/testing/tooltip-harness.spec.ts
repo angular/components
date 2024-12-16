@@ -72,7 +72,6 @@ describe('MatTooltipHarness', () => {
     <button matTooltip='Static message' id='two'>Trigger 2</button>
     <button matTooltip='Disabled Tooltip' [matTooltipDisabled]='true' id='three'>Trigger 3</button>
   `,
-  standalone: true,
   imports: [MatTooltipModule],
 })
 class TooltipHarnessTest {

@@ -94,7 +94,6 @@ describe('MenuItemRadio', () => {
 
 @Component({
   template: `<button cdkMenuItemRadio>Click me!</button>`,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class SimpleRadioButton {}

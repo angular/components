@@ -170,7 +170,6 @@ describe('MatTimepickerInputHarness', () => {
     <input [matTimepicker]="basicPicker" id="basic" placeholder="Select a time">
     <mat-timepicker #basicPicker/>
   `,
-  standalone: true,
   imports: [MatTimepickerInput, MatTimepicker],
 })
 class TimepickerInputHarnessTest {

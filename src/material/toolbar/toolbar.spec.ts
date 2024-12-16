@@ -104,7 +104,6 @@ describe('MatToolbar', () => {
       <span>First Row</span>
     </mat-toolbar>
   `,
-  standalone: true,
   imports: [MatToolbarModule],
 })
 class ToolbarSingleRow {
@@ -118,7 +117,6 @@ class ToolbarSingleRow {
       <mat-toolbar-row>Second Row</mat-toolbar-row>
     </mat-toolbar>
   `,
-  standalone: true,
   imports: [MatToolbarModule],
 })
 class ToolbarMultipleRows {}
@@ -132,7 +130,6 @@ class ToolbarMultipleRows {}
       }
     </mat-toolbar>
   `,
-  standalone: true,
   imports: [MatToolbarModule],
 })
 class ToolbarMixedRowModes {
@@ -149,7 +146,6 @@ class ToolbarMixedRowModes {
       }
     </mat-toolbar>
   `,
-  standalone: true,
   imports: [MatToolbarModule],
 })
 class ToolbarMultipleIndirectRows {}

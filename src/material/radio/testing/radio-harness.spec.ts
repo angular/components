@@ -312,7 +312,6 @@ describe('radio harness', () => {
       <mat-radio-button [value]="false" [name]="thirdGroupButtonName"></mat-radio-button>
     </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, ReactiveFormsModule],
 })
 class MultipleRadioButtonsHarnessTest {

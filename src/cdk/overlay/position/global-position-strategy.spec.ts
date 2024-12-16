@@ -457,7 +457,6 @@ describe('GlobalPositonStrategy', () => {
 
 @Component({
   template: '',
-  standalone: true,
   imports: [OverlayModule, PortalModule],
 })
 class BlankPortal {}

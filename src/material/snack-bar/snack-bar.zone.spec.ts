@@ -64,7 +64,6 @@ describe('MatSnackBar Zone.js integration', () => {
 
 @Directive({
   selector: 'dir-with-view-container',
-  standalone: true,
 })
 class DirectiveWithViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -73,7 +72,6 @@ class DirectiveWithViewContainer {
 @Component({
   selector: 'arbitrary-component',
   template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
-  standalone: true,
   imports: [DirectiveWithViewContainer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

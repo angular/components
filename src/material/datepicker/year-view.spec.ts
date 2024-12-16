@@ -397,7 +397,6 @@ describe('MatYearView', () => {
   template: `
     <mat-year-view [(activeDate)]="date" [(selected)]="selected"
                    (monthSelected)="selectedMonth=$event"></mat-year-view>`,
-  standalone: true,
   imports: [MatYearView],
 })
 class StandardYearView {
@@ -415,7 +414,6 @@ class StandardYearView {
       [dateFilter]="dateFilter"
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-year-view>`,
-  standalone: true,
   imports: [MatYearView],
 })
 class YearViewWithDateFilter {
@@ -435,7 +433,6 @@ class YearViewWithDateFilter {
 
 @Component({
   template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`,
-  standalone: true,
   imports: [MatYearView],
 })
 class YearViewWithDateClass {

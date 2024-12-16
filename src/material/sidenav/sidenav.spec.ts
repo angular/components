@@ -101,7 +101,6 @@ describe('MatSidenav', () => {
         Some content.
       </mat-sidenav-content>
     </mat-sidenav-container>`,
-  standalone: true,
   imports: [MatSidenavModule],
 })
 class SidenavWithFixedPosition {
@@ -120,7 +119,6 @@ class SidenavWithFixedPosition {
       }
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
-  standalone: true,
   imports: [MatSidenavModule],
 })
 class IndirectDescendantSidenav {
@@ -139,7 +137,6 @@ class IndirectDescendantSidenav {
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule],
 })
 class NestedSidenavContainers {

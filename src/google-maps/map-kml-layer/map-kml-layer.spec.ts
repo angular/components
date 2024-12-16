@@ -154,7 +154,6 @@ describe('MapKmlLayer', () => {
         (statusChanged)="handleStatusChange()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapKmlLayer],
 })
 class TestApp {

@@ -392,7 +392,6 @@ function getLiveElement(): Element {
 
 @Component({
   template: `<button (click)="announceText('Test')">Announce</button>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class TestApp {
@@ -406,7 +405,6 @@ class TestApp {
 @Component({
   template: '',
   host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'},
-  standalone: true,
   imports: [A11yModule],
 })
 class TestModal {
@@ -418,7 +416,6 @@ class TestModal {
     <div
       [cdkAriaLive]="politeness ? politeness : null"
       [cdkAriaLiveDuration]="duration">{{content}}</div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class DivWithCdkAriaLive {

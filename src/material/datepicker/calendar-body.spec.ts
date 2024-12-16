@@ -726,7 +726,6 @@ describe('MatCalendarBody', () => {
           [activeCell]="10"
           (selectedValueChange)="onSelect($event)">
     </table>`,
-  standalone: true,
   imports: [MatCalendarBody],
 })
 class StandardCalendarBody {
@@ -759,7 +758,6 @@ class StandardCalendarBody {
           (dragEnded)="dragEnded($event)"
           >
     </table>`,
-  standalone: true,
   imports: [MatCalendarBody],
 })
 class RangeCalendarBody {

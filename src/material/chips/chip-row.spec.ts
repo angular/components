@@ -424,7 +424,6 @@ describe('Row Chips', () => {
         </div>
       }
     </mat-chip-grid>`,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class SingleChip {

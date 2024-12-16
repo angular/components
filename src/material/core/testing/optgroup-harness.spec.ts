@@ -72,7 +72,6 @@ describe('MatOptgroupHarness', () => {
       <mat-option>Disabled option 1</mat-option>
     </mat-optgroup>
   `,
-  standalone: true,
   imports: [MatOptionModule],
 })
 class OptgroupHarnessTest {}

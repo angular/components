@@ -1116,7 +1116,6 @@ describe('MenuBar', () => {
       </li>
     </ul>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuBarRadioGroup {}
@@ -1152,7 +1151,6 @@ class MenuBarRadioGroup {}
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MultiMenuWithSubmenu {
@@ -1179,7 +1177,6 @@ class MultiMenuWithSubmenu {
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuWithCheckboxes {
@@ -1207,7 +1204,6 @@ class MenuWithCheckboxes {
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuWithRadioButtons {
@@ -1241,7 +1237,6 @@ class MenuWithRadioButtons {
       <button #inline_menu_item cdkMenuItem></button>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuBarWithMenusAndInlineMenu {

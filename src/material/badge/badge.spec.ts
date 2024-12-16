@@ -291,7 +291,6 @@ describe('MatBadge', () => {
       home
     </button>
   `,
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class BadgeOnInteractiveElement {
@@ -308,7 +307,6 @@ class BadgeOnInteractiveElement {
 
 @Component({
   template: '<span matBadge="7" [matBadgeDescription]="description()">Hello</span>',
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class BadgeOnNonInteractiveElement {
@@ -322,7 +320,6 @@ class BadgeOnNonInteractiveElement {
       <div class="mat-badge-content">Pre-existing badge</div>
     </span>
   `,
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class PreExistingBadge {}
@@ -334,7 +331,6 @@ class PreExistingBadge {}
       <span matBadge="Hi">Something</span>
     </span>
   `,
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class NestedBadge {}
@@ -342,7 +338,6 @@ class NestedBadge {}
 @Component({
   template: `
     <ng-template matBadge="1">Notifications</ng-template>`,
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class BadgeOnTemplate {}

@@ -204,7 +204,6 @@ describe('cdkAutofill', () => {
     <input #input2>
     <input #input3>
   `,
-  standalone: true,
   imports: [TextFieldModule],
 })
 class Inputs {
@@ -216,7 +215,6 @@ class Inputs {
 
 @Component({
   template: `<input #input cdkAutofill>`,
-  standalone: true,
   imports: [TextFieldModule],
 })
 class InputWithCdkAutofilled {

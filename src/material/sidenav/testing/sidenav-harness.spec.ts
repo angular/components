@@ -176,7 +176,6 @@ describe('MatSidenavHarness', () => {
       <mat-drawer-content>Content</mat-drawer-content>
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule],
 })
 class DrawerHarnessTest {
@@ -196,7 +195,6 @@ class DrawerHarnessTest {
       <mat-sidenav-content>Content</mat-sidenav-content>
     </mat-sidenav-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule],
 })
 class SidenavHarnessTest {}

@@ -1604,7 +1604,6 @@ describe('MatTooltip', () => {
         [matTooltipTouchGestures]="touchGestures"
         [matTooltipDisabled]="tooltipDisabled">Button</button>
     }`,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class BasicTooltipDemo {
@@ -1629,7 +1628,6 @@ class BasicTooltipDemo {
               [matTooltipPosition]="position">Button</button>
       }
     </div>`,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {
@@ -1658,7 +1656,6 @@ class ScrollableTooltipDemo {
       Button
     </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class OnPushTooltipDemo {
@@ -1673,7 +1670,6 @@ class OnPushTooltipDemo {
       <button [matTooltip]="tooltip">Button {{tooltip}}</button>
     }
   `,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class DynamicTooltipsDemo {
@@ -1682,7 +1678,6 @@ class DynamicTooltipsDemo {
 
 @Component({
   template: `<button [matTooltip]="message" [attr.aria-label]="message">Click me</button>`,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class DataBoundAriaLabelTooltip {
@@ -1701,7 +1696,6 @@ class DataBoundAriaLabelTooltip {
       matTooltip="Another thing"
       [matTooltipTouchGestures]="touchGestures"></textarea>
   `,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnTextFields {
@@ -1718,7 +1712,6 @@ class TooltipOnTextFields {
       matTooltip="Drag me"
       [matTooltipTouchGestures]="touchGestures"></button>
   `,
-  standalone: true,
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnDraggableElement {

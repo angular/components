@@ -199,7 +199,6 @@ describe('OverlayKeyboardDispatcher', () => {
 
 @Component({
   template: 'Hello',
-  standalone: true,
   imports: [OverlayModule],
 })
 class TestComponent {}

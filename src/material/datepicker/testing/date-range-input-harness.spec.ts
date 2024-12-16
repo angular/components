@@ -269,7 +269,6 @@ describe('matDateRangeInputHarness', () => {
       <input matEndDate>
     </mat-date-range-input>
   `,
-  standalone: true,
   imports: [
     MatNativeDateModule,
     MatDateRangeInput,
