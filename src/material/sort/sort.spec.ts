@@ -510,7 +510,6 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
       </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class SimpleMatSortApp {
@@ -569,7 +568,6 @@ class FakeDataSource extends DataSource<any> {
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class CdkTableMatSortApp {
@@ -601,7 +599,6 @@ class CdkTableMatSortApp {
       <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
     </mat-table>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatTableMatSortApp {
@@ -613,7 +610,6 @@ class MatTableMatSortApp {
 
 @Component({
   template: `<div mat-sort-header="a"> A </div>`,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortHeaderMissingMatSortApp {}
@@ -625,7 +621,6 @@ class MatSortHeaderMissingMatSortApp {}
       <div mat-sort-header="duplicateId"> A </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortDuplicateMatSortableIdsApp {}
@@ -636,7 +631,6 @@ class MatSortDuplicateMatSortableIdsApp {}
       <div mat-sort-header> A </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortableMissingIdApp {}
@@ -647,7 +641,6 @@ class MatSortableMissingIdApp {}
       <div mat-sort-header="a"> A </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortableInvalidDirection {}
@@ -663,7 +656,6 @@ class MatSortableInvalidDirection {}
       </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutExplicitInputs {
@@ -696,7 +688,6 @@ class MatSortWithoutExplicitInputs {
       </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithArrowPosition {
@@ -717,7 +708,6 @@ class MatSortWithArrowPosition {
       </div>
     </div>
   `,
-  standalone: true,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutInputs {

@@ -190,7 +190,6 @@ describe('MatSlideToggleHarness', () => {
       </mat-slide-toggle>
       <span id="second-label">Second slide-toggle</span>
   `,
-  standalone: true,
   imports: [MatSlideToggleModule, ReactiveFormsModule],
 })
 class SlideToggleHarnessTest {

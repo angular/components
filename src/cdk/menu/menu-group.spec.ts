@@ -103,7 +103,6 @@ describe('MenuGroup', () => {
       </ul>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class CheckboxMenu {
@@ -148,7 +147,6 @@ class CheckboxMenu {
       </ul>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuWithMultipleRadioGroups {

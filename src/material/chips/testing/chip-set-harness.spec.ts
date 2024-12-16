@@ -39,7 +39,6 @@ describe('MatChipSetHarness', () => {
       <mat-chip> Chip C </mat-chip>
     </mat-chip-set>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class ChipSetHarnessTest {}

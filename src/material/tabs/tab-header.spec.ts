@@ -754,7 +754,6 @@ interface Tab {
       width: 130px;
     }
   `,
-  standalone: true,
   imports: [Dir, MatTabHeader, MatTabLabelWrapper],
 })
 class SimpleTabHeaderApp {

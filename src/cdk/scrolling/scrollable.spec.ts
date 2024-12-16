@@ -246,7 +246,6 @@ describe('CdkScrollable', () => {
       height: 100px;
     }
   `,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class ScrollableViewport {

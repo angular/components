@@ -176,7 +176,6 @@ describe('MatAutocompleteHarness', () => {
     <input id="prefilled" [matAutocomplete]="autocomplete" value="Prefilled value">
     <input id="grouped" [matAutocomplete]="groupedAutocomplete">
   `,
-  standalone: true,
   imports: [MatAutocompleteModule],
 })
 class AutocompleteHarnessTest {

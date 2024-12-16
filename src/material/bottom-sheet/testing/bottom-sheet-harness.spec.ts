@@ -54,7 +54,6 @@ describe('MatBottomSheetHarness', () => {
       Hello from the bottom sheet!
     </ng-template>
   `,
-  standalone: true,
   imports: [MatBottomSheetModule],
 })
 class BottomSheetHarnessTest {

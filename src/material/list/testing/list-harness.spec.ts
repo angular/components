@@ -541,7 +541,6 @@ describe('MatSelectionListHarness', () => {
 
       <mat-list class="test-empty"></mat-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListHarnessTest {
@@ -582,7 +581,6 @@ class ListHarnessTest {
 
       <mat-action-list class="test-empty"></mat-action-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class ActionListHarnessTest {
@@ -625,7 +623,6 @@ class ActionListHarnessTest {
 
       <mat-nav-list class="test-empty"></mat-nav-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class NavListHarnessTest {
@@ -669,7 +666,6 @@ class NavListHarnessTest {
 
     <mat-selection-list class="test-empty" disabled></mat-selection-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListHarnessTest {

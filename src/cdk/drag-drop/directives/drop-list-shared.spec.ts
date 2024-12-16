@@ -4886,7 +4886,6 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     encapsulation: ViewEncapsulation.None,
     styles: HORIZONTAL_FIXTURE_STYLES,
     template: HORIZONTAL_FIXTURE_TEMPLATE,
-    standalone: true,
     imports: [CdkDropList, CdkDrag],
   })
   class DraggableInHorizontalDropZone implements AfterViewInit {
@@ -4918,7 +4917,6 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
   }
 
   @Component({
-    standalone: true,
     imports: [CdkDropList, CdkDrag],
     template: HORIZONTAL_FIXTURE_TEMPLATE,
 
@@ -4973,7 +4971,6 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
         }
       </div>
     `,
-    standalone: true,
     imports: [CdkDropList, CdkDrag, CdkDragPreview],
   })
   class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
@@ -5019,7 +5016,6 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
 
 @Component({
   template: DROP_ZONE_FIXTURE_TEMPLATE,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 export class DraggableInDropZone implements AfterViewInit {
@@ -5059,7 +5055,6 @@ export class DraggableInDropZone implements AfterViewInit {
   selector: 'draggable-in-on-push-zone',
   template: DROP_ZONE_FIXTURE_TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
@@ -5071,7 +5066,6 @@ class DraggableInOnPushDropZone extends DraggableInDropZone {}
       <draggable-in-on-push-zone></draggable-in-on-push-zone>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropListGroup, DraggableInOnPushDropZone],
 })
 class ConnectedDropListsInOnPush {}
@@ -5088,7 +5082,6 @@ class ConnectedDropListsInOnPush {}
       margin: 10vw 0 0 10vw;
     }
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 export class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
@@ -5117,7 +5110,6 @@ export class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
       margin: 10vw 0 0 10vw;
     }
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor, CdkScrollable],
 })
 class DraggableInScrollableParentContainer extends DraggableInDropZone implements AfterViewInit {
@@ -5165,7 +5157,6 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
         }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
@@ -5196,7 +5187,6 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPreview, NgIf],
 })
 class DraggableInDropZoneWithCustomPreview {
@@ -5231,7 +5221,6 @@ class DraggableInDropZoneWithCustomPreview {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })
 class DraggableInDropZoneWithCustomTextOnlyPreview {
@@ -5254,7 +5243,6 @@ class DraggableInDropZoneWithCustomTextOnlyPreview {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })
 class DraggableInDropZoneWithCustomMultiNodePreview {
@@ -5287,7 +5275,6 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
       height: ${ITEM_HEIGHT * 3}px;
     }
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, NgClass],
 })
 class DraggableInDropZoneWithCustomPlaceholder {
@@ -5309,7 +5296,6 @@ class DraggableInDropZoneWithCustomPlaceholder {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
@@ -5331,7 +5317,6 @@ class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 class DraggableInDropZoneWithCustomMultiNodePlaceholder {
@@ -5407,7 +5392,6 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
   encapsulation: ViewEncapsulation.None,
   styles: CONNECTED_DROP_ZONES_STYLES,
   template: CONNECTED_DROP_ZONES_TEMPLATE,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 export class ConnectedDropZones implements AfterViewInit {
@@ -5442,7 +5426,6 @@ export class ConnectedDropZones implements AfterViewInit {
   encapsulation: ViewEncapsulation.ShadowDom,
   styles: CONNECTED_DROP_ZONES_STYLES,
   template: `@if (true) {${CONNECTED_DROP_ZONES_TEMPLATE}}`,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
@@ -5484,7 +5467,6 @@ class ConnectedDropZonesInsideShadowRootWithNgIf extends ConnectedDropZones {}
       </div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag, CdkDropListGroup],
 })
 class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {
@@ -5524,7 +5506,6 @@ class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {
       <div cdkDrag>Two</div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class ConnectedDropZonesWithSingleItems {
@@ -5545,7 +5526,6 @@ class ConnectedDropZonesWithSingleItems {
       <div cdkDropList #listTwo="cdkDropList"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDropListGroup],
 })
 class NestedDropListGroups {
@@ -5558,14 +5538,12 @@ class NestedDropListGroups {
   template: `
     <ng-container cdkDropList></ng-container>
   `,
-  standalone: true,
   imports: [CdkDropList],
 })
 class DropListOnNgContainer {}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
@@ -5599,7 +5577,6 @@ class DraggableInDropZoneWithoutEvents {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -5629,7 +5606,6 @@ class WrappedDropContainerComponent {
       <wrapped-drop-container [items]="done"></wrapped-drop-container>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropListGroup, WrappedDropContainerComponent],
 })
 class ConnectedWrappedDropZones {
@@ -5660,7 +5636,6 @@ class ConnectedWrappedDropZones {
         }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithCanvasInDropZone extends DraggableInDropZone implements AfterViewInit {
@@ -5702,7 +5677,6 @@ class DraggableWithCanvasInDropZone extends DraggableInDropZone implements After
         }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithInvalidCanvasInDropZone extends DraggableInDropZone {}
@@ -5742,7 +5716,6 @@ class DraggableWithInvalidCanvasInDropZone extends DraggableInDropZone {}
         (cdkDragReleased)="itemDragReleasedSpy($event)">
       </div>
     </div>`,
-  standalone: true,
   imports: [CdkDrag],
 })
 class NestedDragsComponent {
@@ -5797,7 +5770,6 @@ class NestedDragsComponent {
       </div>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkDrag, NgTemplateOutlet],
 })
 class NestedDragsThroughTemplate {
@@ -5823,7 +5795,6 @@ class NestedDragsThroughTemplate {
       </div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class NestedDropZones {
@@ -5835,7 +5806,6 @@ class NestedDropZones {
 
 @Component({
   template: `<div cdkDropList></div>`,
-  standalone: true,
   imports: [CdkDropList],
 })
 class PlainStandaloneDropList {
@@ -5878,7 +5848,6 @@ class PlainStandaloneDropList {
       </div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class ConnectedDropZonesWithIntermediateSibling extends ConnectedDropZones {}
@@ -5911,7 +5880,6 @@ class ConnectedDropZonesWithIntermediateSibling extends ConnectedDropZones {}
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithInputsInDropZone extends DraggableInDropZone {
@@ -5934,7 +5902,6 @@ class DraggableWithInputsInDropZone extends DraggableInDropZone {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithRadioInputsInDropZone {
@@ -5986,7 +5953,6 @@ class DraggableWithRadioInputsInDropZone {
       </div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class ConnectedDropZonesWithAlternateContainer extends ConnectedDropZones {
@@ -6009,7 +5975,6 @@ class ConnectedDropZonesWithAlternateContainer extends ConnectedDropZones {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithInvalidAlternateContainer {
@@ -6032,7 +5997,6 @@ class DraggableWithInvalidAlternateContainer {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithMissingAlternateContainer {

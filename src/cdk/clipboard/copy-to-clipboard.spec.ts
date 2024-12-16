@@ -14,7 +14,6 @@ const COPY_CONTENT = 'copy content';
     [cdkCopyToClipboard]="content"
     [cdkCopyToClipboardAttempts]="attempts"
     (cdkCopyToClipboardCopied)="copied($event)"></button>`,
-  standalone: true,
   imports: [ClipboardModule],
 })
 class CopyToClipboardHost {

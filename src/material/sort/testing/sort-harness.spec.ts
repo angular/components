@@ -137,7 +137,6 @@ describe('MatSortHarness', () => {
       }
     </table>
   `,
-  standalone: true,
   imports: [MatSortModule],
 })
 class SortHarnessTest {

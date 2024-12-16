@@ -1176,7 +1176,6 @@ describe('MatDateRangeInput', () => {
         #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [
     MatDateRangeInput,
     MatStartDate,
@@ -1219,7 +1218,6 @@ class StandardRangePicker {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoStart {}
@@ -1234,7 +1232,6 @@ class RangePickerNoStart {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoEnd {}
@@ -1250,7 +1247,6 @@ class RangePickerNoEnd {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [
     MatDateRangeInput,
     MatStartDate,
@@ -1297,7 +1293,6 @@ class RangePickerNgModel {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoLabel {
@@ -1314,7 +1309,6 @@ class RangePickerNoLabel {
       multi: true,
     },
   ],
-  standalone: true,
 })
 class CustomValidator implements Validator {
   validate = jasmine.createSpy('validate spy').and.returnValue(null);
@@ -1331,7 +1325,6 @@ class CustomValidator implements Validator {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [
     MatDateRangeInput,
     MatStartDate,
@@ -1361,7 +1354,6 @@ class RangePickerWithCustomValidator {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerErrorStateMatcher {

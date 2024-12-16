@@ -163,7 +163,6 @@ describe('MatMenuHarness', () => {
         <menu mat-menu-item>Account</menu>
       </mat-menu>
   `,
-  standalone: true,
   imports: [MatMenuModule],
 })
 class MenuHarnessTest {}
@@ -190,7 +189,6 @@ class MenuHarnessTest {}
         <button mat-menu-item (click)="lastClickedLeaf = 3">Leaf Item 3</button>
       </mat-menu>
   `,
-  standalone: true,
   imports: [MatMenuModule],
 })
 class NestedMenuHarnessTest {

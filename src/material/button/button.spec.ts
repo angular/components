@@ -292,7 +292,6 @@ describe('MatButton', () => {
   it('should be able to configure the default color of buttons', () => {
     @Component({
       template: `<button mat-button>Click me</button>`,
-      standalone: true,
       imports: [MatButtonModule],
     })
     class ConfigTestApp {}
@@ -424,7 +423,6 @@ describe('MatFabDefaultOptions', () => {
     <button mat-fab [extended]="extended" class="extended-fab-test">Extended</button>
     <button mat-mini-fab>Mini Fab Button</button>
   `,
-  standalone: true,
   imports: [MatButtonModule],
 })
 class TestApp {

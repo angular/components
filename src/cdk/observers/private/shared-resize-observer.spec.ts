@@ -138,7 +138,6 @@ describe('SharedResizeObserver', () => {
     <div #el1></div>
     <div #el2></div>
   `,
-  standalone: true,
 })
 export class TestComponent {
   @ViewChild('el1') el1: ElementRef<Element>;

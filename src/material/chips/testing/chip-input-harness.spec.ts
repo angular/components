@@ -94,7 +94,6 @@ describe('MatChipInputHarness', () => {
       <input [matChipInputFor]="grid2" disabled />
     </mat-chip-grid>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class ChipInputHarnessTest {

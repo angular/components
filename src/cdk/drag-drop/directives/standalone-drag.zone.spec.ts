@@ -51,7 +51,6 @@ describe('Standalone CdkDrag Zone.js integration', () => {
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class StandaloneDraggable {

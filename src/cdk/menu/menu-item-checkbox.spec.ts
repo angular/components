@@ -100,7 +100,6 @@ describe('MenuItemCheckbox', () => {
 
 @Component({
   template: `<button cdkMenuItemCheckbox>Click me!</button>`,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class SingleCheckboxButton {}

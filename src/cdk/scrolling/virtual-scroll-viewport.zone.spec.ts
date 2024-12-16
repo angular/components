@@ -112,7 +112,6 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
       }
     `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule],
 })
 class FixedSizeVirtualScroll {

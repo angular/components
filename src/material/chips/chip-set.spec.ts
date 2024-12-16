@@ -115,7 +115,6 @@ describe('MatChipSet', () => {
         }
       </mat-chip-set>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class BasicChipSet {
@@ -133,7 +132,6 @@ class BasicChipSet {
       }
     </mat-chip-set>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class IndirectDescendantsChipSet extends BasicChipSet {}

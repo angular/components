@@ -122,7 +122,6 @@ describe('MatDialogHarness', () => {
     </div>
   </ng-template>
   `,
-  standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions],
 })
 class DialogHarnessTest {

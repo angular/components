@@ -151,7 +151,6 @@ describe('MapRectangle', () => {
         (rectangleRightclick)="handleRightclick()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapRectangle],
 })
 class TestApp {

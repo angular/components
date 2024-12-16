@@ -401,7 +401,6 @@ describe('MatMultiYearView', () => {
   template: `
     <mat-multi-year-view [(activeDate)]="date" [(selected)]="selected"
                          (yearSelected)="selectedYear=$event"></mat-multi-year-view>`,
-  standalone: true,
   imports: [MatMultiYearView],
 })
 class StandardMultiYearView {
@@ -420,7 +419,6 @@ class StandardMultiYearView {
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-multi-year-view>
     `,
-  standalone: true,
   imports: [MatMultiYearView],
 })
 class MultiYearViewWithDateFilter {
@@ -437,7 +435,6 @@ class MultiYearViewWithDateFilter {
     <mat-multi-year-view [(activeDate)]="activeDate" [minDate]="minDate" [maxDate]="maxDate">
     </mat-multi-year-view>
     `,
-  standalone: true,
   imports: [MatMultiYearView],
 })
 class MultiYearViewWithMinMaxDate {
@@ -450,7 +447,6 @@ class MultiYearViewWithMinMaxDate {
   template: `
     <mat-multi-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-multi-year-view>
   `,
-  standalone: true,
   imports: [MatMultiYearView],
 })
 class MultiYearViewWithDateClass {

@@ -115,7 +115,6 @@ function createComponent<T>(
       <button>SAVE</button>
     </div>
   `,
-  standalone: true,
 })
 class SimpleFocusTrap implements AfterViewInit {
   private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);

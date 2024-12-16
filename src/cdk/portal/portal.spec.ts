@@ -725,7 +725,6 @@ class ChocolateInjector {
 @Component({
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
-  standalone: true,
   imports: [PortalModule],
 })
 class PizzaMsg {
@@ -738,7 +737,6 @@ class PizzaMsg {
  */
 @Directive({
   selector: '[savesParentNodeOnInit]',
-  standalone: true,
 })
 class SaveParentNodeOnInit implements AfterViewInit {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -760,7 +758,6 @@ class SaveParentNodeOnInit implements AfterViewInit {
       <div savesParentNodeOnInit></div>
     </ng-template>
   `,
-  standalone: true,
   imports: [SaveParentNodeOnInit],
 })
 class ArbitraryViewContainerRefComponent {
@@ -802,7 +799,6 @@ class ArbitraryViewContainerRefComponent {
     </div>
   </div>
   `,
-  standalone: true,
   imports: [CdkPortal, CdkPortalOutlet, PizzaMsg],
 })
 class PortalTestApp {
@@ -845,7 +841,6 @@ class PortalTestApp {
       <ng-template cdkPortalOutlet></ng-template>
     </div>
   `,
-  standalone: true,
   imports: [CdkPortalOutlet],
 })
 class UnboundPortalTestApp {

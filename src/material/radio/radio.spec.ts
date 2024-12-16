@@ -1089,7 +1089,6 @@ describe('MatRadioDefaultOverrides', () => {
     </mat-radio-button>
   </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadiosInsideRadioGroup {
@@ -1112,7 +1111,6 @@ class RadiosInsideRadioGroup {
     <mat-radio-button value="leaf" checked>Bulbasaur</mat-radio-button>
   </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadiosInsidePreCheckedRadioGroup {}
@@ -1138,7 +1136,6 @@ class RadiosInsidePreCheckedRadioGroup {}
     <mat-radio-button name="fruit" value="raspberry">Raspberry</mat-radio-button>
     <mat-radio-button id="nameless" value="no-name">No name</mat-radio-button>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class StandaloneRadioButtons {
@@ -1155,7 +1152,6 @@ class StandaloneRadioButtons {
     }
   </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioGroupWithNgModel {
@@ -1174,7 +1170,6 @@ class RadioGroupWithNgModel {
     <mat-radio-button
       [disabled]="disabled"
       [disabledInteractive]="disabledInteractive">One</mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class DisableableRadioButton {
@@ -1191,7 +1186,6 @@ class DisableableRadioButton {
       <mat-radio-button value="2">Two</mat-radio-button>
     </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioGroupWithFormControl {
@@ -1201,7 +1195,6 @@ class RadioGroupWithFormControl {
 
 @Component({
   template: `<mat-radio-button [disabled]="disabled" [tabIndex]="tabIndex"></mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class FocusableRadioButton {
@@ -1214,7 +1207,6 @@ class FocusableRadioButton {
   template: `
     <div><ng-content></ng-content></div>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class TranscludingWrapper {}
@@ -1229,7 +1221,6 @@ class TranscludingWrapper {}
     }
   </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule, TranscludingWrapper],
 })
 class InterleavedRadioGroup {
@@ -1243,21 +1234,18 @@ class InterleavedRadioGroup {
 
 @Component({
   template: `<mat-radio-button tabindex="5"></mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioButtonWithPredefinedTabindex {}
 
 @Component({
   template: `<mat-radio-button></mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule],
 })
 class DefaultRadioButton {}
 
 @Component({
   template: `<mat-radio-button color="warn"></mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule],
 })
 class RadioButtonWithColorBinding {}
@@ -1268,7 +1256,6 @@ class RadioButtonWithColorBinding {}
       aria-label="Radio button"
       aria-describedby="something"
       aria-labelledby="something-else"></mat-radio-button>`,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioButtonWithPredefinedAriaAttributes {}
@@ -1289,7 +1276,6 @@ class RadioButtonWithPredefinedAriaAttributes {}
         }
     </mat-radio-group>
   `,
-  standalone: true,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class PreselectedRadioWithStaticValueAndNgIf {

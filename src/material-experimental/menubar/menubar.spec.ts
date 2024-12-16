@@ -55,7 +55,6 @@ describe('MatMenuBar', () => {
       <mat-menubar-item id="second"></mat-menubar-item>
     </mat-menubar>
   `,
-  standalone: true,
   imports: [MatMenuBarModule],
 })
 class SimpleMatMenuBar {

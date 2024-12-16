@@ -44,7 +44,6 @@ describe('MatProgressBarHarness', () => {
     <mat-progress-bar mode="determinate" [value]="value()"></mat-progress-bar>
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   `,
-  standalone: true,
   imports: [MatProgressBarModule],
 })
 class ProgressBarHarnessTest {

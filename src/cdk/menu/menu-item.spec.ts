@@ -206,7 +206,6 @@ class MenuItemWithMultipleNestings {
 @Component({
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MatIcon {}

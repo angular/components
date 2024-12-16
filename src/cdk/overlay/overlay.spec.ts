@@ -1101,14 +1101,12 @@ describe('Overlay', () => {
 @Component({
   selector: 'pizza',
   template: '<p>Pizza</p>',
-  standalone: true,
 })
 class PizzaMsg {}
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
   template: `<ng-template cdkPortal>Cake</ng-template>`,
-  standalone: true,
   imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {

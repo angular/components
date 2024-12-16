@@ -1923,7 +1923,6 @@ class SimpleMatVerticalStepperApp {
 }
 
 @Component({
-  standalone: true,
   template: `
     <mat-stepper orientation="vertical" linear>
       <mat-step [stepControl]="oneGroup">

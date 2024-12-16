@@ -41,7 +41,6 @@ describe('FocusMonitor observable stream Zone.js integration', () => {
 
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class PlainButton {}

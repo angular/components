@@ -1274,7 +1274,6 @@ describe('MatTimepicker', () => {
       [disabled]="toggleDisabled()"
       [tabIndex]="toggleTabIndex()"/>
   `,
-  standalone: true,
   imports: [MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
 })
 class StandaloneTimepicker {
@@ -1305,7 +1304,6 @@ class StandaloneTimepicker {
       <mat-timepicker-toggle [for]="picker" matSuffix/>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [
     MatTimepicker,
     MatTimepickerInput,
@@ -1326,7 +1324,6 @@ class TimepickerInFormField {
     <input [matTimepicker]="picker" [(value)]="value"/>
     <mat-timepicker #picker/>
   `,
-  standalone: true,
   imports: [MatTimepicker, MatTimepickerInput],
 })
 class TimepickerTwoWayBinding {
@@ -1343,7 +1340,6 @@ class TimepickerTwoWayBinding {
       [matTimepickerMax]="max()"/>
     <mat-timepicker #picker/>
   `,
-  standalone: true,
   imports: [MatTimepicker, MatTimepickerInput, ReactiveFormsModule],
 })
 class TimepickerWithForms {
@@ -1359,14 +1355,12 @@ class TimepickerWithForms {
     <input [matTimepicker]="picker"/>
     <mat-timepicker #picker/>
   `,
-  standalone: true,
   imports: [MatTimepicker, MatTimepickerInput],
 })
 class TimepickerWithMultipleInputs {}
 
 @Component({
   template: '<mat-timepicker/>',
-  standalone: true,
   imports: [MatTimepicker],
 })
 class TimepickerWithoutInput {

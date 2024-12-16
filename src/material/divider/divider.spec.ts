@@ -63,7 +63,6 @@ describe('MatDivider', () => {
 
 @Component({
   template: `<mat-divider [vertical]="vertical" [inset]="inset"></mat-divider>`,
-  standalone: true,
   imports: [MatDividerModule],
 })
 class MatDividerTestComponent {

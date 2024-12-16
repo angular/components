@@ -176,7 +176,6 @@ describe('MapAdvancedMarker', () => {
         [options]="options" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapAdvancedMarker],
 })
 class TestApp {

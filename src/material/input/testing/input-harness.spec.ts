@@ -279,7 +279,6 @@ describe('MatInputHarness', () => {
       <input matNativeControl placeholder="Color control" id="colorControl" type="color">
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatInputModule, FormsModule],
 })
 class InputHarnessTest {

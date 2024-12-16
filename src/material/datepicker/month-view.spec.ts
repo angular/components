@@ -858,7 +858,6 @@ describe('MatMonthView', () => {
       (dragEnded)="dragEnded($event)"
       [activeDrag]="activeDrag"></mat-month-view>
       `,
-  standalone: true,
   imports: [MatMonthView],
 })
 class StandardMonthView {
@@ -890,7 +889,6 @@ class StandardMonthView {
       [dateFilter]="dateFilter"
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-month-view>`,
-  standalone: true,
   imports: [MatMonthView],
 })
 class MonthViewWithDateFilter {
@@ -904,7 +902,6 @@ class MonthViewWithDateFilter {
 
 @Component({
   template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`,
-  standalone: true,
   imports: [MatMonthView],
 })
 class MonthViewWithDateClass {

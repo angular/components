@@ -43,7 +43,6 @@ describe('MapTransitLayer', () => {
       <map-transit-layer />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapTransitLayer],
 })
 class TestApp {}

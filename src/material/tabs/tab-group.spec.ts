@@ -1301,7 +1301,6 @@ describe('MatTabGroup labels aligned with a config', () => {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class SimpleTabsTestApp {
@@ -1339,7 +1338,6 @@ class SimpleTabsTestApp {
       }
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class SimpleDynamicTabsTestApp {
@@ -1368,7 +1366,6 @@ class SimpleDynamicTabsTestApp {
       }
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class BindedTabsTestApp {
@@ -1404,7 +1401,6 @@ class BindedTabsTestApp {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class DisabledTabsTestApp {
@@ -1423,7 +1419,6 @@ class DisabledTabsTestApp {
       }
    </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule, AsyncPipe],
 })
 class AsyncTabsTestApp implements OnInit {
@@ -1451,7 +1446,6 @@ class AsyncTabsTestApp implements OnInit {
     <mat-tab label="Legumes"> <p #legumes>Peanuts</p> </mat-tab>
   </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithSimpleApi {
@@ -1474,7 +1468,6 @@ class TabGroupWithSimpleApi {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class NestedTabs {
@@ -1494,7 +1487,6 @@ class NestedTabs {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TemplateTabs {}
@@ -1505,7 +1497,6 @@ class TemplateTabs {}
     <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
   </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithAriaInputs {
@@ -1524,7 +1515,6 @@ class TabGroupWithAriaInputs {
       <div>pizza is active</div>
     }
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithIsActiveBinding {}
@@ -1536,7 +1526,6 @@ class TabGroupWithIsActiveBinding {}
       <mat-tab label="Two">Tab two content</mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {}
@@ -1550,7 +1539,6 @@ class TabsWithCustomAnimationDuration {}
       }
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithIndirectDescendantTabs {
@@ -1564,7 +1552,6 @@ class TabGroupWithIndirectDescendantTabs {
       <mat-tab label="Two">Tab two content</mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithInkBarFitToContent {
@@ -1587,7 +1574,6 @@ class TabGroupWithInkBarFitToContent {
       </ng-container>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupWithSpaceAbove {
@@ -1611,7 +1597,6 @@ class TabGroupWithSpaceAbove {
       <mat-tab label="Parent 3">Parent 3</mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class NestedTabGroupWithLabel {}
@@ -1628,7 +1613,6 @@ class NestedTabGroupWithLabel {}
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithClassesTestApp {
@@ -1647,7 +1631,6 @@ class TabsWithClassesTestApp {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithAlignConfig {}
@@ -1663,7 +1646,6 @@ class TabsWithAlignConfig {}
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithAlignCenter {}

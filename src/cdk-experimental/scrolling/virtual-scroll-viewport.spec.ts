@@ -95,7 +95,6 @@ function finishInit(fixture: ComponentFixture<any>) {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ScrollingModule, ExperimentalScrollingModule],
 })
 class AutoSizeVirtualScroll {

@@ -520,7 +520,6 @@ describe('Menu', () => {
       </ul>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MenuCheckboxGroup {
@@ -534,7 +533,6 @@ class MenuCheckboxGroup {
       <button cdkMenuItem>Starred</button>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class InlineMenu {}
@@ -588,7 +586,6 @@ class InlineMenu {}
       </div>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class WithComplexNestedMenus {
@@ -649,7 +646,6 @@ class WithComplexNestedMenus {
       </div>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class WithComplexNestedMenusOnBottom {

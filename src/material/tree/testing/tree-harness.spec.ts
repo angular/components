@@ -250,7 +250,6 @@ interface ExampleFlatNode {
       </mat-nested-tree-node>
     </mat-tree>
   `,
-  standalone: true,
   imports: [MatTreeModule],
 })
 class TreeHarnessTest {

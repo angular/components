@@ -157,7 +157,6 @@ describe('MapPolygon', () => {
       </map-polygon>
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapPolygon],
 })
 class TestApp {

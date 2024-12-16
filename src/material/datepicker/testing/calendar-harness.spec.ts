@@ -329,7 +329,6 @@ describe('MatCalendarHarness', () => {
       [comparisonEnd]="comparisonEnd"
       (selectedChange)="rangeChanged($event)"></mat-calendar>
   `,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class CalendarHarnessTest {
