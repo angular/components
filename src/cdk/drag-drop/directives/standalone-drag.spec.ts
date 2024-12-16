@@ -364,6 +364,22 @@ describe('Standalone CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
     }));
+
+    it('should stop dragging on touchcancel', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+      const x = 50;
+      const y = 100;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      startDraggingViaTouch(fixture, dragElement);
+      continueDraggingViaTouch(fixture, x, y);
+      dispatchTouchEvent(document, 'touchcancel', x, y);
+      fixture.detectChanges();
+      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(fixture.componentInstance.endedSpy).toHaveBeenCalled();
+    }));
   });
 
   describe('mouse dragging when initial transform is none', () => {
