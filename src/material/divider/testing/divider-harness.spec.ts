@@ -42,7 +42,6 @@ describe('MatLegacyButtonHarness', () => {
     <mat-divider></mat-divider>
     <mat-divider inset vertical></mat-divider>
   `,
-  standalone: true,
   imports: [MatDividerModule],
 })
 class DividerHarnessTest {}

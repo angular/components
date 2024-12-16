@@ -174,7 +174,6 @@ describe('MatButtonHarness', () => {
     <a id="anchor-fab" mat-fab>Fab anchor</a>
     <a id="anchor-mini-fab" mat-mini-fab>Mini Fab anchor</a>
   `,
-  standalone: true,
   imports: [MatButtonModule, MatIconModule, PlatformModule],
 })
 class ButtonHarnessTest {

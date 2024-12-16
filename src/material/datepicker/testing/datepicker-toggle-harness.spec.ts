@@ -89,7 +89,6 @@ describe('MatDatepickerToggleHarness', () => {
 
     <mat-datepicker-toggle id="no-calendar"></mat-datepicker-toggle>
   `,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class DatepickerToggleHarnessTest {

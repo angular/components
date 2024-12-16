@@ -42,7 +42,6 @@ describe('MapBicyclingLayer', () => {
       <map-bicycling-layer />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapBicyclingLayer],
 })
 class TestApp {}

@@ -342,7 +342,6 @@ describe('DeprecatedMapMarkerClusterer', () => {
       </deprecated-map-marker-clusterer>
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapMarker, DeprecatedMapMarkerClusterer],
 })
 class TestApp {

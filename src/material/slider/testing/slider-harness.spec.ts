@@ -202,7 +202,6 @@ describe('MatSliderHarness', () => {
       <input [value]="rangeSliderEndValue" matSliderEndThumb>
     </mat-slider>
   `,
-  standalone: true,
   imports: [MatSliderModule],
 })
 class SliderHarnessTest {

@@ -384,7 +384,6 @@ describe('MatCalendarHeader', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class StandardCalendar {
@@ -402,7 +401,6 @@ class StandardCalendar {
       [maxDate]="maxDate">
     </mat-calendar>
   `,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class CalendarWithMinMaxDate {

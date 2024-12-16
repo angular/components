@@ -306,7 +306,6 @@ describe('MatSelectHarness', () => {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectHarnessTest {

@@ -215,7 +215,6 @@ describe('MatTabBody', () => {
     <ng-template>Tab Body Content</ng-template>
     <mat-tab-body [content]="content()" [position]="position" [origin]="origin"></mat-tab-body>
   `,
-  standalone: true,
   imports: [PortalModule, MatRippleModule, MatTabBody],
 })
 class SimpleTabBodyApp implements AfterViewInit {

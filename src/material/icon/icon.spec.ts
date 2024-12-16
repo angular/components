@@ -1464,7 +1464,6 @@ describe('MatIcon with default options', () => {
 
 @Component({
   template: `<mat-icon>{{iconName}}</mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithLigature {
@@ -1473,7 +1472,6 @@ class IconWithLigature {
 
 @Component({
   template: `<mat-icon [fontIcon]="iconName"></mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithLigatureByAttribute {
@@ -1482,7 +1480,6 @@ class IconWithLigatureByAttribute {
 
 @Component({
   template: `<mat-icon [color]="iconColor">{{iconName}}</mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithColor {
@@ -1492,7 +1489,6 @@ class IconWithColor {
 
 @Component({
   template: `<mat-icon [fontSet]="fontSet" [fontIcon]="fontIcon"></mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithCustomFontCss {
@@ -1502,7 +1498,6 @@ class IconWithCustomFontCss {
 
 @Component({
   template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconFromSvgName {
@@ -1511,14 +1506,12 @@ class IconFromSvgName {
 
 @Component({
   template: '<mat-icon aria-hidden="false">face</mat-icon>',
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithAriaHiddenFalse {}
 
 @Component({
   template: `@if (showIcon) {<mat-icon [svgIcon]="iconName">{{iconName}}</mat-icon>}`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithBindingAndNgIf {
@@ -1528,7 +1521,6 @@ class IconWithBindingAndNgIf {
 
 @Component({
   template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class InlineIcon {
@@ -1537,7 +1529,6 @@ class InlineIcon {
 
 @Component({
   template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class SvgIconWithUserContent {
@@ -1546,7 +1537,6 @@ class SvgIconWithUserContent {
 
 @Component({
   template: '<mat-icon [svgIcon]="iconName">house</mat-icon>',
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class IconWithLigatureAndSvgBinding {
@@ -1555,7 +1545,6 @@ class IconWithLigatureAndSvgBinding {
 
 @Component({
   template: `<mat-icon></mat-icon>`,
-  standalone: true,
   imports: [HttpClientTestingModule, MatIconModule],
 })
 class BlankIcon {

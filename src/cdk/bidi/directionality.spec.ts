@@ -162,7 +162,6 @@ describe('Directionality', () => {
 @Component({
   selector: 'injects-directionality',
   template: `<div></div>`,
-  standalone: true,
   imports: [BidiModule],
 })
 class InjectsDirectionality {
@@ -175,7 +174,6 @@ class InjectsDirectionality {
       <injects-directionality></injects-directionality>
     </div>
   `,
-  standalone: true,
   imports: [Dir, InjectsDirectionality],
 })
 class ElementWithDir {
@@ -186,7 +184,6 @@ class ElementWithDir {
 
 @Component({
   template: '<div dir="auto"></div>',
-  standalone: true,
   imports: [Dir],
 })
 class ElementWithPredefinedAutoDir {
@@ -195,7 +192,6 @@ class ElementWithPredefinedAutoDir {
 
 @Component({
   template: '<div dir="RTL"></div>',
-  standalone: true,
   imports: [Dir],
 })
 class ElementWithPredefinedUppercaseDir {

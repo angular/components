@@ -357,7 +357,6 @@ describe('MatFormFieldHarness', () => {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatNativeDateModule,

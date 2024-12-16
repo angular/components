@@ -561,7 +561,6 @@ describe('MatExpansionPanel', () => {
     <p>Some content</p>
     <button>I am a button</button>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithContent {
@@ -583,7 +582,6 @@ class PanelWithContent {
       </div>
     }
   `,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithContentInNgIf {
@@ -600,7 +598,6 @@ class PanelWithContentInNgIf {
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
     corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithCustomMargin {
@@ -617,7 +614,6 @@ class PanelWithCustomMargin {
       <button>I am a button</button>
     </ng-template>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class LazyPanelWithContent {
@@ -633,7 +629,6 @@ class LazyPanelWithContent {
       <p>Some content</p>
     </ng-template>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class LazyPanelOpenOnLoad {}
@@ -643,7 +638,6 @@ class LazyPanelOpenOnLoad {}
   <mat-expansion-panel [(expanded)]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithTwoWayBinding {
@@ -655,7 +649,6 @@ class PanelWithTwoWayBinding {
   <mat-expansion-panel>
     <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithHeaderTabindex {}
@@ -670,7 +663,6 @@ class PanelWithHeaderTabindex {}
       </mat-expansion-panel>
     </mat-expansion-panel>
   `,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class NestedLazyPanelWithContent {

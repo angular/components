@@ -1762,7 +1762,6 @@ describe('MatSelectionList with forms', () => {
       </mat-list-option>
     }
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithListOptions {
@@ -1791,7 +1790,6 @@ class SelectionListWithListOptions {
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithCheckboxPositionAfter {}
@@ -1812,7 +1810,6 @@ class SelectionListWithCheckboxPositionAfter {}
       Drafts
     </mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithListDisabled {
@@ -1825,7 +1822,6 @@ class SelectionListWithListDisabled {
     <mat-list-option [disabled]="disableItem">Item</mat-list-option>
   </mat-selection-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithDisabledOption {
@@ -1840,7 +1836,6 @@ class SelectionListWithDisabledOption {
     <mat-list-option [selected]="true">Pre-selected - Item #3</mat-list-option>
     <mat-list-option>Not selected - Item #4</mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithSelectedOption {}
@@ -1851,7 +1846,6 @@ class SelectionListWithSelectedOption {}
     <mat-list-option>Not selected - Item #1</mat-list-option>
     <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SingleSelectionListWithSelectedOption {}
@@ -1861,7 +1855,6 @@ class SingleSelectionListWithSelectedOption {}
   <mat-selection-list>
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithSelectedOptionAndValue {
@@ -1875,7 +1868,6 @@ class SelectionListWithSelectedOptionAndValue {
       Inbox
     </mat-list-option>
   </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithOnlyOneOption {}
@@ -1890,7 +1882,6 @@ class SelectionListWithOnlyOneOption {}
         <mat-list-option [value]="option">{{option}}</mat-list-option>
       }
     </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithModel {
@@ -1913,7 +1904,6 @@ class SelectionListWithModel {
       </mat-selection-list>
     }
   `,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithFormControl {
@@ -1928,7 +1918,6 @@ class SelectionListWithFormControl {
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOption {
@@ -1941,7 +1930,6 @@ class SelectionListWithPreselectedOption {
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOptionAndModel {
@@ -1957,7 +1945,6 @@ class SelectionListWithPreselectedOptionAndModel {
       }
     </mat-selection-list>
   `,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedFormControlOnPush {
@@ -1972,7 +1959,6 @@ class SelectionListWithPreselectedFormControlOnPush {
         <mat-list-option [value]="option">{{option.label}}</mat-list-option>
       }
     </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithCustomComparator {
@@ -1995,7 +1981,6 @@ class SelectionListWithCustomComparator {
       </mat-list-option>
     </mat-selection-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithAvatar {
@@ -2011,7 +1996,6 @@ class SelectionListWithAvatar {
       </mat-list-option>
     </mat-selection-list>
   `,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithIcon {
@@ -2027,7 +2011,6 @@ class SelectionListWithIcon {
         <mat-list-option [value]="2">Two</mat-list-option>
       }
     </mat-selection-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class SelectionListWithIndirectChildOptions {
@@ -2040,7 +2023,6 @@ class SelectionListWithIndirectChildOptions {
     <mat-list-option [(selected)]="selected">Item</mat-list-option>
   </mat-selection-list>
 `,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListOptionWithTwoWayBinding {

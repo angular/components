@@ -56,7 +56,6 @@ describe('MatTimepickerToggleHarness', () => {
     <mat-timepicker #twoPicker/>
     <mat-timepicker-toggle id="two" [for]="twoPicker" [disabled]="disabled()"/>
   `,
-  standalone: true,
   imports: [MatTimepickerInput, MatTimepicker, MatTimepickerToggle],
 })
 class TimepickerHarnessTest {

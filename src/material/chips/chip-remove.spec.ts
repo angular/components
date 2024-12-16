@@ -116,7 +116,6 @@ describe('Chip Remove', () => {
       </mat-chip>
     </mat-chip-set>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class TestChip {

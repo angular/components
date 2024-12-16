@@ -74,7 +74,6 @@ describe('MatToolbarHarness', () => {
       </mat-toolbar-row>
     </mat-toolbar>
   `,
-  standalone: true,
   imports: [MatToolbarModule],
 })
 class ToolbarHarnessTest {}

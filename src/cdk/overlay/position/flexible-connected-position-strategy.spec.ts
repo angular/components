@@ -2959,7 +2959,6 @@ function createOverflowContainerElement() {
       class="transform-origin"
       style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
   `,
-  standalone: true,
   imports: [ScrollingModule, OverlayModule, PortalModule],
 })
 class TestOverlay {}

@@ -720,7 +720,6 @@ class FakeDataSource extends DataSource<TestData> {
       <tr mat-footer-row *matFooterRowDef="columnsToRender"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableApp {
@@ -756,7 +755,6 @@ class MatTableApp {
       </tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NativeHtmlTableApp {
@@ -811,7 +809,6 @@ class NativeHtmlTableApp {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NestedTableApp {
@@ -831,7 +828,6 @@ class NestedTableApp {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class StickyTableApp {
@@ -860,7 +856,6 @@ class StickyTableApp {
       <tr mat-footer-row *matFooterRowDef="['column_a']"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithWhenRowApp {
@@ -899,7 +894,6 @@ class MatTableWithWhenRowApp {
 
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class ArrayDataSourceMatTableApp implements AfterViewInit {
@@ -953,7 +947,6 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithSortApp implements OnInit {
@@ -1006,7 +999,6 @@ class MatTableWithSortApp implements OnInit {
 
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableWithPaginatorApp implements OnInit {
@@ -1049,7 +1041,6 @@ class MatTableWithPaginatorApp implements OnInit {
       </ng-container>
     </table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class TableWithNgContainerRow {
@@ -1088,7 +1079,6 @@ class TableWithNgContainerRow {
       <mat-footer-row *matFooterRowDef="columnsToRender"></mat-footer-row>
     </mat-table>
   `,
-  standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatFlexTableApp {

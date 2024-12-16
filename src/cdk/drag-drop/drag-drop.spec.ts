@@ -35,7 +35,6 @@ describe('DragDrop', () => {
 
 @Component({
   template: '<div></div>',
-  standalone: true,
 })
 class TestComponent {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

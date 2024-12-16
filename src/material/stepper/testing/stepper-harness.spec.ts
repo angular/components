@@ -301,7 +301,6 @@ describe('MatStepperHarness', () => {
       </mat-step>
     </mat-stepper>
   `,
-  standalone: true,
   imports: [MatStepperModule, ReactiveFormsModule],
 })
 class StepperHarnessTest {

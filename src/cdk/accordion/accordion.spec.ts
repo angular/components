@@ -115,7 +115,6 @@ describe('CdkAccordion', () => {
     <cdk-accordion-item></cdk-accordion-item>
     <cdk-accordion-item></cdk-accordion-item>
   </cdk-accordion>`,
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 class SetOfItems {
@@ -131,7 +130,6 @@ class SetOfItems {
       <cdk-accordion-item #innerItem="cdkAccordionItem"></cdk-accordion-item>
     </cdk-accordion-item>
   </cdk-accordion>`,
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 class NestedItems {

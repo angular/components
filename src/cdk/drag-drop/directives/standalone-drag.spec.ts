@@ -1783,7 +1783,6 @@ describe('Standalone CdkDrag', () => {
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class StandaloneDraggable {
@@ -1811,7 +1810,6 @@ class StandaloneDraggable {
   template: `
     <div cdkDrag #dragElement style="width: 100px; height: 100px; background: red;"></div>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class StandaloneDraggableWithOnPush {
@@ -1826,7 +1824,6 @@ class StandaloneDraggableWithOnPush {
       <div #handleElement cdkDragHandle style="width: 10px; height: 10px; background: green;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithHandle {
@@ -1848,7 +1845,6 @@ class StandaloneDraggableWithHandle {
         style="width: 10px; height: 10px; background: green;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithPreDisabledHandle {
@@ -1869,7 +1865,6 @@ class StandaloneDraggableWithPreDisabledHandle {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithDelayedHandle {
@@ -1885,7 +1880,6 @@ class StandaloneDraggableWithDelayedHandle {
 @Component({
   selector: 'passthrough-component',
   template: '<ng-content></ng-content>',
-  standalone: true,
 })
 class PassthroughComponent {}
 
@@ -1902,7 +1896,6 @@ class PassthroughComponent {}
       </passthrough-component>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle, PassthroughComponent],
 })
 class StandaloneDraggableWithIndirectHandle {
@@ -1914,7 +1907,6 @@ class StandaloneDraggableWithIndirectHandle {
   selector: 'shadow-wrapper',
   template: '<ng-content></ng-content>',
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
 })
 class ShadowWrapper {}
 
@@ -1928,7 +1920,6 @@ class ShadowWrapper {}
       </div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle, ShadowWrapper],
 })
 class StandaloneDraggableWithShadowInsideHandle {
@@ -1954,7 +1945,6 @@ class StandaloneDraggableWithShadowInsideHandle {
       <div cdkDragHandle style="right: 0;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithMultipleHandles {
@@ -1972,7 +1962,6 @@ class StandaloneDraggableWithMultipleHandles {
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class DraggableWithAlternateRoot {
@@ -1986,7 +1975,6 @@ class DraggableWithAlternateRoot {
   template: `
     <ng-container cdkDrag></ng-container>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class DraggableOnNgContainer {}
@@ -1997,7 +1985,6 @@ class DraggableOnNgContainer {}
       <ng-container cdkDragHandle></ng-container>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class DragHandleOnNgContainer {}
@@ -2013,7 +2000,6 @@ class DragHandleOnNgContainer {}
         style="width: 100px; height: 100px; background: red;"></div>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle],
 })
 class DraggableWithAlternateRootAndSelfHandle {
@@ -2030,7 +2016,6 @@ class DraggableWithAlternateRootAndSelfHandle {
       </ng-container>
     </div>
   `,
-  standalone: true,
   imports: [CdkDrag],
 })
 class DraggableNgContainerWithAlternateRoot {
@@ -2040,7 +2025,6 @@ class DraggableNgContainerWithAlternateRoot {
 
 @Component({
   template: `<div cdkDrag></div>`,
-  standalone: true,
   imports: [CdkDrag],
 })
 class PlainStandaloneDraggable {
@@ -2058,7 +2042,6 @@ class PlainStandaloneDraggable {
       <div cdkDragHandle class="handle" style="width: 10px; height: 10px; background: green;"></div>
     </ng-template>
   `,
-  standalone: true,
   imports: [CdkDrag, CdkDragHandle, NgTemplateOutlet],
 })
 class StandaloneDraggableWithExternalTemplateHandle {

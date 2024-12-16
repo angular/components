@@ -320,7 +320,6 @@ describe('MatAccordion', () => {
       </mat-expansion-panel>
     }
   </mat-accordion>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class SetOfItems {
@@ -349,7 +348,6 @@ class SetOfItems {
       Content 1
     </mat-expansion-panel>
   </mat-accordion>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class NestedAccordions {
@@ -369,7 +367,6 @@ class NestedAccordions {
       </mat-expansion-panel>
     </mat-expansion-panel>
   </mat-accordion>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class NestedPanel {
@@ -385,7 +382,6 @@ class NestedPanel {
       <p>Content</p>
     </mat-expansion-panel>
   </mat-accordion>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class AccordionWithHideToggle {
@@ -400,7 +396,6 @@ class AccordionWithHideToggle {
       <p>Content</p>
     </mat-expansion-panel>
   </mat-accordion>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class AccordionWithTogglePosition {

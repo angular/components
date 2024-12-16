@@ -109,7 +109,7 @@ describe('Key managers', () => {
     it('should maintain the active item when the signal-based items change', () => {
       keyManager.destroy();
 
-      @Component({template: '', standalone: true})
+      @Component({template: ''})
       class App {}
 
       const fixture = TestBed.createComponent(App);

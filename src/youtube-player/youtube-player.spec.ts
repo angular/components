@@ -758,7 +758,6 @@ describe('YoutubePlayer', () => {
 /** Test component that contains a YouTubePlayer. */
 @Component({
   selector: 'test-app',
-  standalone: true,
   imports: [YouTubePlayer],
   template: `
     @if (visible) {
@@ -806,7 +805,6 @@ class TestApp {
 }
 
 @Component({
-  standalone: true,
   imports: [YouTubePlayer],
   template: `
     <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"/>
@@ -817,7 +815,6 @@ class StaticStartEndSecondsApp {
 }
 
 @Component({
-  standalone: true,
   imports: [YouTubePlayer],
   template: `<youtube-player [videoId]="videoId"/>`,
 })

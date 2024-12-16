@@ -131,7 +131,6 @@ function getSortedSiblings(item: Element) {
       }
     </div>
   `,
-  standalone: true,
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableInHorizontalWrappingDropZone {

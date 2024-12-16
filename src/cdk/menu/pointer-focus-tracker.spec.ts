@@ -99,7 +99,6 @@ describe('FocusMouseManger', () => {
 @Component({
   selector: 'wrapper',
   template: `<ng-content></ng-content>`,
-  standalone: true,
 })
 class MockWrapper implements FocusableElement {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -115,7 +114,6 @@ class MockWrapper implements FocusableElement {
       }
     </div>
   `,
-  standalone: true,
   imports: [MockWrapper],
 })
 class MultiElementWithConditionalComponent implements AfterViewInit {

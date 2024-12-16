@@ -157,7 +157,6 @@ describe('MapPolyline', () => {
         (polylineRightclick)="handleRightclick()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapPolyline],
 })
 class TestApp {

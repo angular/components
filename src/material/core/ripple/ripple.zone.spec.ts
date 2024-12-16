@@ -52,7 +52,6 @@ describe('MatRipple Zone.js integration', () => {
            style="position: relative; width:300px; height:200px;">
       </div>
     `,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class BasicRippleContainer {

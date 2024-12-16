@@ -1207,7 +1207,6 @@ describe('MatDrawerContainer', () => {
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */
 @Component({
   template: `<mat-drawer-container></mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerNoDrawerTestApp {}
@@ -1219,7 +1218,6 @@ class DrawerContainerNoDrawerTestApp {}
       <mat-drawer position="start"></mat-drawer>
       <mat-drawer position="end"></mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerTwoDrawerTestApp {
@@ -1248,7 +1246,6 @@ class DrawerContainerTwoDrawerTestApp {
         <circle cx="50" cy="50" r="50"/>
       </svg>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class BasicTestApp {
@@ -1294,7 +1291,6 @@ class BasicTestApp {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerSetToOpenedFalse {}
@@ -1306,7 +1302,6 @@ class DrawerSetToOpenedFalse {}
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerSetToOpenedTrue {
@@ -1320,7 +1315,6 @@ class DrawerSetToOpenedTrue {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerOpenBinding {
@@ -1333,7 +1327,6 @@ class DrawerOpenBinding {
       <mat-drawer #drawer1 [position]="drawer1Position"></mat-drawer>
       <mat-drawer #drawer2 [position]="drawer2Position"></mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDynamicPosition {
@@ -1351,7 +1344,6 @@ class DrawerDynamicPosition {
       </mat-drawer>
       <input type="text" class="input2"/>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerWithFocusableElements {
@@ -1366,7 +1358,6 @@ class DrawerWithFocusableElements {
         <button disabled>Not focusable</button>
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerWithoutFocusableElements {}
@@ -1379,7 +1370,6 @@ class DrawerWithoutFocusableElements {}
       }
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDelayed {
@@ -1394,7 +1384,6 @@ class DrawerDelayed {
         <mat-drawer [mode]="mode" style="width:100px"></mat-drawer>
       }
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerStateChangesTestApp {
@@ -1414,7 +1403,6 @@ class DrawerContainerStateChangesTestApp {
         <div [style.width.px]="fillerWidth" style="height: 200px; background: red;"></div>
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class AutosizeDrawer {
@@ -1430,7 +1418,6 @@ class AutosizeDrawer {
       <mat-drawer-content>Content</mat-drawer-content>
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerWithContent {
@@ -1446,7 +1433,6 @@ class DrawerContainerWithContent {
         <mat-drawer #drawer>Drawer</mat-drawer>
       }
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class IndirectDescendantDrawer {
@@ -1465,7 +1451,6 @@ class IndirectDescendantDrawer {
       </mat-drawer-content>
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class NestedDrawerContainers {

@@ -328,7 +328,6 @@ function getActiveElementTag() {
 
     <div class="test-content-harness">Outside of expansion panel</div>
   `,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class ExpansionHarnessTestComponent {

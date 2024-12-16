@@ -89,7 +89,6 @@ describe('OverlayContainer', () => {
 @Component({
   template: `<ng-template cdkPortal>Cake</ng-template>`,
   providers: [Overlay],
-  standalone: true,
   imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {

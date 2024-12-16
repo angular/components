@@ -114,7 +114,6 @@ describe('MatIconHarness', () => {
     <mat-icon>ligature_icon_with_additional_content <span class="fake-badge">Hello</span></mat-icon>
     <mat-icon><span>ligature_icon_with_indirect_name</span></mat-icon>
   `,
-  standalone: true,
   imports: [MatIconModule],
 })
 class IconHarnessTest {}

@@ -163,7 +163,6 @@ describe('MapHeatmapLayer', () => {
       <map-heatmap-layer [data]="data" [options]="options" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapHeatmapLayer],
 })
 class TestApp {

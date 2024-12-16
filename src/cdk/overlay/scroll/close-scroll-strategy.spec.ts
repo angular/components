@@ -135,7 +135,6 @@ describe('CloseScrollStrategy', () => {
 /** Simple component that we can attach to the overlay. */
 @Component({
   template: '<p>Mozarella</p>',
-  standalone: true,
   imports: [OverlayModule, PortalModule],
 })
 class MozarellaMsg {}

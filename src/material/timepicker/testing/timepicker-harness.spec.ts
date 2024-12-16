@@ -74,7 +74,6 @@ describe('MatTimepickerHarness', () => {
     <input id="two" [matTimepicker]="twoPicker">
     <mat-timepicker #twoPicker [interval]="interval()"/>
   `,
-  standalone: true,
   imports: [MatTimepickerInput, MatTimepicker],
 })
 class TimepickerHarnessTest {

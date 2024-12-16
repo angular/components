@@ -243,7 +243,6 @@ describe('MatOption component', () => {
 
 @Component({
   template: `<mat-option [id]="id()" [disabled]="disabled()"></mat-option>`,
-  standalone: true,
   imports: [MatOptionModule],
 })
 class BasicOption {
@@ -257,7 +256,6 @@ class BasicOption {
       <mat-option>Option</mat-option>
     </mat-optgroup>
   `,
-  standalone: true,
   imports: [MatOptionModule],
 })
 class InsideGroup {}

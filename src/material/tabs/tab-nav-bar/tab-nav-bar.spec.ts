@@ -573,7 +573,6 @@ describe('MatTabNavBar with enabled animations', () => {
     </nav>
     <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class SimpleTabNavBarTestApp {
@@ -599,7 +598,6 @@ class SimpleTabNavBarTestApp {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabLinkWithNgIf {
@@ -615,7 +613,6 @@ class TabLinkWithNgIf {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabBarWithInactiveTabsOnInit {
@@ -631,7 +628,6 @@ class TabBarWithInactiveTabsOnInit {
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {
