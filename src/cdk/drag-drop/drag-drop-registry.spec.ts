@@ -243,6 +243,19 @@ describe('DragDropRegistry', () => {
     subscription.unsubscribe();
   });
 
+  it('should dispatch `touchcancel` events if the drag was interrupted', () => {
+    const spy = jasmine.createSpy('pointerUp spy');
+    const subscription = registry.pointerUp.subscribe(spy);
+    const item = new DragItem() as unknown as DragRef;
+
+    registry.startDragging(item, createTouchEvent('touchstart') as TouchEvent);
+    const event = dispatchTouchEvent(document, 'touchcancel');
+
+    expect(spy).toHaveBeenCalledWith(event);
+
+    subscription.unsubscribe();
+  });
+
   class DragItem {
     isDragging() {
       return this.shouldBeDragging;
