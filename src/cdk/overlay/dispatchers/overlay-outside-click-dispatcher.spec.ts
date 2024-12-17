@@ -138,10 +138,18 @@ describe('OverlayOutsideClickDispatcher', () => {
     spyOn(body, 'removeEventListener');
 
     outsideClickDispatcher.add(overlayRef);
-    expect(body.addEventListener).toHaveBeenCalledWith('click', jasmine.any(Function), true);
+    expect(body.addEventListener).toHaveBeenCalledWith(
+      'click',
+      jasmine.any(Function),
+      jasmine.objectContaining({capture: true}),
+    );
 
     overlayRef.dispose();
-    expect(body.removeEventListener).toHaveBeenCalledWith('click', jasmine.any(Function), true);
+    expect(body.removeEventListener).toHaveBeenCalledWith(
+      'click',
+      jasmine.any(Function),
+      jasmine.objectContaining({capture: true}),
+    );
   });
 
   it('should not add the same overlay to the stack multiple times', () => {

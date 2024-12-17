@@ -19,8 +19,10 @@ import {
   TemplateRef,
   ViewContainerRef,
   inject,
+  Renderer2,
+  ListenerOptions,
 } from '@angular/core';
-import {fromEvent, fromEventPattern, merge, Subject} from 'rxjs';
+import {merge, Observable, Subject} from 'rxjs';
 import {
   debounceTime,
   filter,
@@ -44,6 +46,7 @@ import {
 } from './focus-escape-notifier';
 import {closest} from './polyfill';
 import {EditRef} from './edit-ref';
+import {_bindEventWithOptions} from '@angular/cdk/platform';
 
 /**
  * Describes the number of columns before and after the originating cell that the
@@ -73,6 +76,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
     inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);
   protected readonly focusDispatcher = inject(FocusDispatcher);
   protected readonly ngZone = inject(NgZone);
+  private readonly _renderer = inject(Renderer2);
 
   protected readonly destroyed = new Subject<void>();
 
@@ -94,6 +98,23 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
     this._rendered.complete();
   }
 
+  private _observableFromEvent<T extends Event>(
+    element: Element,
+    name: string,
+    options?: ListenerOptions,
+  ) {
+    return new Observable<T>(subscriber => {
+      const handler = (event: T) => subscriber.next(event);
+      const cleanup = options
+        ? _bindEventWithOptions(this._renderer, element, name, handler, options)
+        : this._renderer.listen(element, name, handler, options);
+      return () => {
+        cleanup();
+        subscriber.complete();
+      };
+    });
+  }
+
   private _listenForTableEvents(): void {
     const element = this.elementRef.nativeElement;
     const toClosest = (selector: string) =>
@@ -101,13 +122,13 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       // Track mouse movement over the table to hide/show hover content.
-      fromEvent<MouseEvent>(element, 'mouseover')
+      this._observableFromEvent<MouseEvent>(element, 'mouseover')
         .pipe(toClosest(ROW_SELECTOR), takeUntil(this.destroyed))
         .subscribe(this.editEventDispatcher.hovering);
-      fromEvent<MouseEvent>(element, 'mouseleave')
+      this._observableFromEvent<MouseEvent>(element, 'mouseleave')
         .pipe(mapTo(null), takeUntil(this.destroyed))
         .subscribe(this.editEventDispatcher.hovering);
-      fromEvent<MouseEvent>(element, 'mousemove')
+      this._observableFromEvent<MouseEvent>(element, 'mousemove')
         .pipe(
           throttleTime(MOUSE_MOVE_THROTTLE_TIME_MS),
           toClosest(ROW_SELECTOR),
@@ -116,19 +137,15 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
         .subscribe(this.editEventDispatcher.mouseMove);
 
       // Track focus within the table to hide/show/make focusable hover content.
-      fromEventPattern<FocusEvent>(
-        handler => element.addEventListener('focus', handler, true),
-        handler => element.removeEventListener('focus', handler, true),
-      )
+      this._observableFromEvent<FocusEvent>(element, 'focus', {capture: true})
         .pipe(toClosest(ROW_SELECTOR), share(), takeUntil(this.destroyed))
         .subscribe(this.editEventDispatcher.focused);
 
       merge(
-        fromEventPattern<FocusEvent>(
-          handler => element.addEventListener('blur', handler, true),
-          handler => element.removeEventListener('blur', handler, true),
+        this._observableFromEvent(element, 'blur', {capture: true}),
+        this._observableFromEvent<KeyboardEvent>(element, 'keydown').pipe(
+          filter(event => event.key === 'Escape'),
         ),
-        fromEvent<KeyboardEvent>(element, 'keydown').pipe(filter(event => event.key === 'Escape')),
       )
         .pipe(mapTo(null), share(), takeUntil(this.destroyed))
         .subscribe(this.editEventDispatcher.focused);
@@ -150,7 +167,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
         )
         .subscribe(this.editEventDispatcher.allRows);
 
-      fromEvent<KeyboardEvent>(element, 'keydown')
+      this._observableFromEvent<KeyboardEvent>(element, 'keydown')
         .pipe(
           filter(event => event.key === 'Enter'),
           toClosest(CELL_SELECTOR),
@@ -159,7 +176,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
         .subscribe(this.editEventDispatcher.editing);
 
       // Keydown must be used here or else key auto-repeat does not work properly on some platforms.
-      fromEvent<KeyboardEvent>(element, 'keydown')
+      this._observableFromEvent<KeyboardEvent>(element, 'keydown')
         .pipe(takeUntil(this.destroyed))
         .subscribe(this.focusDispatcher.keyObserver);
     });

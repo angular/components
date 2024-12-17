@@ -36,9 +36,10 @@ import {
   NgZone,
   OnDestroy,
   Output,
+  Renderer2,
   ViewContainerRef,
 } from '@angular/core';
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {_bindEventWithOptions} from '@angular/cdk/platform';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu, MenuCloseReason} from './menu';
@@ -72,7 +73,7 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 /** Options for binding a passive event listener. */
-const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
+const passiveEventListenerOptions = {passive: true};
 
 /**
  * Default top padding of the menu panel.
@@ -108,6 +109,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _scrollStrategy = inject(MAT_MENU_SCROLL_STRATEGY);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _cleanupTouchstart: () => void;
 
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
@@ -128,16 +130,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * Used to offset sub-menus to compensate for the padding.
    */
   private _parentInnerPadding: number | undefined;
-
-  /**
-   * Handles touch start events on the trigger.
-   * Needs to be an arrow function so we can easily use addEventListener and removeEventListener.
-   */
-  private _handleTouchStart = (event: TouchEvent) => {
-    if (!isFakeTouchstartFromScreenReader(event)) {
-      this._openedBy = 'touch';
-    }
-  };
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -223,12 +215,18 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   constructor() {
     const parentMenu = inject<MatMenuPanel>(MAT_MENU_PANEL, {optional: true});
+    const renderer = inject(Renderer2);
 
     this._parentMaterialMenu = parentMenu instanceof MatMenu ? parentMenu : undefined;
-
-    this._element.nativeElement.addEventListener(
+    this._cleanupTouchstart = _bindEventWithOptions(
+      renderer,
+      this._element.nativeElement,
       'touchstart',
-      this._handleTouchStart,
+      (event: TouchEvent) => {
+        if (!isFakeTouchstartFromScreenReader(event)) {
+          this._openedBy = 'touch';
+        }
+      },
       passiveEventListenerOptions,
     );
   }
@@ -242,12 +240,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       PANELS_TO_TRIGGERS.delete(this.menu);
     }
 
-    this._element.nativeElement.removeEventListener(
-      'touchstart',
-      this._handleTouchStart,
-      passiveEventListenerOptions,
-    );
-
+    this._cleanupTouchstart();
     this._pendingRemoval?.unsubscribe();
     this._menuCloseSubscription.unsubscribe();
     this._closingActionsSubscription.unsubscribe();

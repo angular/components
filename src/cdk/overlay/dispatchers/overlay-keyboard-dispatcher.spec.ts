@@ -142,12 +142,13 @@ describe('OverlayKeyboardDispatcher', () => {
     spyOn(body, 'removeEventListener');
 
     keyboardDispatcher.add(overlayRef);
-    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), false);
+    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), undefined);
 
     overlayRef.dispose();
     expect(document.body.removeEventListener).toHaveBeenCalledWith(
       'keydown',
       jasmine.any(Function),
+      undefined,
     );
   });
 
