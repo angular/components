@@ -5,6 +5,11 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { ListenerOptions } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+
+// @public
+export function _bindEventWithOptions(renderer: Renderer2, target: EventTarget, eventName: string, callback: (event: any) => boolean | void, options: ListenerOptions): () => void;
 
 // @public
 export function _getEventTarget<T extends EventTarget>(event: Event): T | null;
