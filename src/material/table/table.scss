@@ -102,6 +102,10 @@
     [dir='rtl'] & {
       text-align: right;
     }
+
+    .mdc-data-table__row:last-child > & {
+      border-bottom: none;
+    }
   }
 
   .mat-mdc-cell {
