@@ -46,7 +46,13 @@ import {CDK_DRAG_PARENT} from '../drag-parent';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import type {CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
-import {CDK_DRAG_CONFIG, DragDropConfig, DragStartDelay, DragAxis} from './config';
+import {
+  CDK_DRAG_CONFIG,
+  DragDropConfig,
+  DragStartDelay,
+  DragAxis,
+  DragStartPredicate,
+} from './config';
 import {assertElementNode} from './assertions';
 import {DragDropRegistry} from '../drag-drop-registry';
 
@@ -113,6 +119,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * pointer down before starting to drag the element.
    */
   @Input('cdkDragStartDelay') dragStartDelay: DragStartDelay;
+
+  /** Function that is used to determine whether a drag operation is allowed to start. */
+  @Input('cdkDragStartPredicate') dragStartPredicate?: DragStartPredicate;
 
   /**
    * Sets the position of a `CdkDrag` that is outside of a drop container.
@@ -430,6 +439,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       if (!ref.isDragging()) {
         const dir = this._dir;
         const dragStartDelay = this.dragStartDelay;
+        const dragStartPredicate = this.dragStartPredicate;
         const placeholder = this._placeholderTemplate
           ? {
               template: this._placeholderTemplate.templateRef,
@@ -453,6 +463,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           typeof dragStartDelay === 'object' && dragStartDelay
             ? dragStartDelay
             : coerceNumberProperty(dragStartDelay);
+        ref.dragStartPredicate = dragStartPredicate;
         ref.constrainPosition = this.constrainPosition;
         ref.previewClass = this.previewClass;
         ref

@@ -39,6 +39,7 @@ import {
 import {DragDropRegistry} from './drag-drop-registry';
 import type {DropListRef} from './drop-list-ref';
 import {DragPreviewTemplate, PreviewRef} from './preview-ref';
+import {DragStartPredicate} from './directives/config';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -285,6 +286,9 @@ export class DragRef<T = any> {
    * pointer down before starting to drag the element.
    */
   dragStartDelay: number | {touch: number; mouse: number} = 0;
+
+  /** Function that is used to determine whether a drag operation is allowed to start. */
+  dragStartPredicate: DragStartPredicate | undefined;
 
   /** Class to be added to the preview element. */
   previewClass: string | string[] | undefined;
@@ -903,6 +907,11 @@ export class DragRef<T = any> {
     const isFakeEvent = isTouchSequence
       ? isFakeTouchstartFromScreenReader(event as TouchEvent)
       : isFakeMousedownFromScreenReader(event as MouseEvent);
+
+    // Check the drag start predicate if one is provided
+    if (this.dragStartPredicate && !this.dragStartPredicate(event)) {
+      return;
+    }
 
     // If the event started from an element with the native HTML drag&drop, it'll interfere
     // with our own dragging (e.g. `img` tags do it by default). Prevent the default action

@@ -12,6 +12,9 @@ import {DragRefConfig, Point, DragRef} from '../drag-ref';
 /** Possible values that can be used to configure the drag start delay. */
 export type DragStartDelay = number | {touch: number; mouse: number};
 
+/** Function that is used to determine whether a drag operation is allowed to start. */
+export type DragStartPredicate = (event: MouseEvent | TouchEvent) => boolean;
+
 /** Possible axis along which dragging can be locked. */
 export type DragAxis = 'x' | 'y';
 
