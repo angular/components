@@ -4,6 +4,14 @@ workspace(
     managed_directories = {"@npm": ["node_modules"]},
 )
 
+# Point to the nested WORKSPACE we merged from https://github.com/angular/material.angular.io
+# NB: even though this isn't referenced anywhere, it's required for Bazel to know about the
+# nested workspace so that wildcard patterns like //... don't descend into it.
+local_repository(
+    name = "material_angular_io",
+    path = "./material.angular.io",
+)
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Add NodeJS rules
