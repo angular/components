@@ -6,6 +6,8 @@ import {
   Component,
   ElementRef,
   Injector,
+  Renderer2,
+  RendererFactory2,
   runInInjectionContext,
 } from '@angular/core';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
@@ -2500,6 +2502,10 @@ describe('FlexibleConnectedPositionStrategy', () => {
           {
             provide: ElementRef,
             useValue: new ElementRef<HTMLElement>(scrollable),
+          },
+          {
+            provide: Renderer2,
+            useValue: TestBed.inject(RendererFactory2).createRenderer(null, null),
           },
         ],
       });

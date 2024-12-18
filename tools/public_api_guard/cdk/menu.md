@@ -22,6 +22,7 @@ import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -97,6 +98,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
     protected ngZone: NgZone;
     orientation: 'horizontal' | 'vertical';
     protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
@@ -205,6 +207,8 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     close(): void;
     getMenu(): Menu | undefined;
     _handleClick(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     open(): void;
     _setHasFocus(hasFocus: boolean): void;
     toggle(): void;
@@ -363,8 +367,7 @@ export const PARENT_OR_NEW_MENU_STACK_PROVIDER: {
 
 // @public
 export class PointerFocusTracker<T extends FocusableElement> {
-    constructor(
-    _items: QueryList<T>);
+    constructor(_renderer: Renderer2, _items: QueryList<T>);
     activeElement?: T;
     destroy(): void;
     readonly entered: Observable<T>;

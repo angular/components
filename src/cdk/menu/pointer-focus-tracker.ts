@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ElementRef, QueryList} from '@angular/core';
-import {defer, fromEvent, Observable, Subject} from 'rxjs';
-import {mapTo, mergeAll, mergeMap, startWith, takeUntil} from 'rxjs/operators';
+import {ElementRef, QueryList, Renderer2} from '@angular/core';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 /** Item to track for mouse focus events. */
 export interface FocusableElement {
@@ -21,11 +21,14 @@ export interface FocusableElement {
  * observables which emit when the users mouse enters and leaves a tracked element.
  */
 export class PointerFocusTracker<T extends FocusableElement> {
+  private _eventCleanups: (() => void)[] | undefined;
+  private _itemsSubscription: Subscription | undefined;
+
   /** Emits when an element is moused into. */
-  readonly entered: Observable<T> = this._getItemPointerEntries();
+  readonly entered: Observable<T> = new Subject<T>();
 
   /** Emits when an element is moused out. */
-  readonly exited: Observable<T> = this._getItemPointerExits();
+  readonly exited: Observable<T> = new Subject<T>();
 
   /** The element currently under mouse focus. */
   activeElement?: T;
@@ -33,13 +36,11 @@ export class PointerFocusTracker<T extends FocusableElement> {
   /** The element previously under mouse focus. */
   previousElement?: T;
 
-  /** Emits when this is destroyed. */
-  private readonly _destroyed: Subject<void> = new Subject();
-
   constructor(
-    /** The list of items being tracked. */
+    private _renderer: Renderer2,
     private readonly _items: QueryList<T>,
   ) {
+    this._bindEvents();
     this.entered.subscribe(element => (this.activeElement = element));
     this.exited.subscribe(() => {
       this.previousElement = this.activeElement;
@@ -49,49 +50,33 @@ export class PointerFocusTracker<T extends FocusableElement> {
 
   /** Stop the managers listeners. */
   destroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
+    this._cleanupEvents();
+    this._itemsSubscription?.unsubscribe();
   }
 
-  /**
-   * Gets a stream of pointer (mouse) entries into the given items.
-   * This should typically run outside the Angular zone.
-   */
-  private _getItemPointerEntries(): Observable<T> {
-    return defer(() =>
-      this._items.changes.pipe(
-        startWith(this._items),
-        mergeMap((list: QueryList<T>) =>
-          list.map(element =>
-            fromEvent(element._elementRef.nativeElement, 'mouseenter').pipe(
-              mapTo(element),
-              takeUntil(this._items.changes),
-            ),
-          ),
-        ),
-        mergeAll(),
-      ),
-    );
+  /** Binds the enter/exit events on all the items. */
+  private _bindEvents() {
+    // TODO(crisbeto): this can probably be simplified by binding a single event on a parent node.
+    this._itemsSubscription = this._items.changes.pipe(startWith(this._items)).subscribe(() => {
+      this._cleanupEvents();
+      this._eventCleanups = [];
+      this._items.forEach(item => {
+        const element = item._elementRef.nativeElement;
+        this._eventCleanups!.push(
+          this._renderer.listen(element, 'mouseenter', () => {
+            (this.entered as Subject<T>).next(item);
+          }),
+          this._renderer.listen(element, 'mouseout', () => {
+            (this.exited as Subject<T>).next(item);
+          }),
+        );
+      });
+    });
   }
 
-  /**
-   * Gets a stream of pointer (mouse) exits out of the given items.
-   * This should typically run outside the Angular zone.
-   */
-  private _getItemPointerExits() {
-    return defer(() =>
-      this._items.changes.pipe(
-        startWith(this._items),
-        mergeMap((list: QueryList<T>) =>
-          list.map(element =>
-            fromEvent(element._elementRef.nativeElement, 'mouseout').pipe(
-              mapTo(element),
-              takeUntil(this._items.changes),
-            ),
-          ),
-        ),
-        mergeAll(),
-      ),
-    );
+  /** Cleans up the currently-bound events. */
+  private _cleanupEvents() {
+    this._eventCleanups?.forEach(cleanup => cleanup());
+    this._eventCleanups = undefined;
   }
 }

@@ -6,12 +6,20 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterViewInit, Directive, ElementRef, OnDestroy, NgZone} from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  NgZone,
+  Renderer2,
+  inject,
+} from '@angular/core';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
-import {fromEvent, Subject, merge} from 'rxjs';
+import {Subject, merge, Observable} from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -37,6 +45,7 @@ import {ResizeRef} from './resize-ref';
  */
 @Directive()
 export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
+  private _renderer = inject(Renderer2);
   protected readonly destroyed = new Subject<void>();
 
   protected abstract readonly columnDef: CdkColumnDef;
@@ -62,11 +71,11 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
 
   private _listenForMouseEvents() {
     this.ngZone.runOutsideAngular(() => {
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseenter')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseenter')
         .pipe(mapTo(this.resizeRef.origin.nativeElement!), takeUntil(this.destroyed))
         .subscribe(cell => this.eventDispatcher.headerCellHovered.next(cell));
 
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseleave')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseleave')
         .pipe(
           map(
             event =>
@@ -76,7 +85,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
         )
         .subscribe(cell => this.eventDispatcher.headerCellHovered.next(cell));
 
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mousedown')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mousedown')
         .pipe(takeUntil(this.destroyed))
         .subscribe(mousedownEvent => {
           this._dragStarted(mousedownEvent);
@@ -90,9 +99,9 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const mouseup = fromEvent<MouseEvent>(this.document, 'mouseup');
-    const mousemove = fromEvent<MouseEvent>(this.document, 'mousemove');
-    const escape = fromEvent<KeyboardEvent>(this.document, 'keyup').pipe(
+    const mouseup = this._observableFromEvent<MouseEvent>(this.document, 'mouseup');
+    const mousemove = this._observableFromEvent<MouseEvent>(this.document, 'mousemove');
+    const escape = this._observableFromEvent<KeyboardEvent>(this.document, 'keyup').pipe(
       filter(event => event.keyCode === ESCAPE),
     );
 
@@ -231,6 +240,17 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       } else {
         this.resizeNotifier.resizeCanceled.next(sizeMessage);
       }
+    });
+  }
+
+  private _observableFromEvent<T extends Event>(element: Element | Document, name: string) {
+    return new Observable<T>(subscriber => {
+      const handler = (event: T) => subscriber.next(event);
+      const cleanup = this._renderer.listen(element, name, handler);
+      return () => {
+        cleanup();
+        subscriber.complete();
+      };
     });
   }
 }
