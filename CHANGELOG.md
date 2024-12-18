@@ -1,3 +1,24 @@
+<a name="19.0.4"></a>
+# 19.0.4 "linen-lampshade" (2024-12-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [622057a146](https://github.com/angular/components/commit/622057a146df8acc8d77192dc4c2a8102dea7b56) | fix | **drag-drop:** resolve projected handles |
+| [1456074baa](https://github.com/angular/components/commit/1456074baae6ba1f2ff82f3bf27b1fd9bb1b9017) | fix | **drag-drop:** stop dragging on touchcancel ([#30184](https://github.com/angular/components/pull/30184)) |
+| [c92def439b](https://github.com/angular/components/commit/c92def439bef7287918536e0f53cd9061bc86f44) | fix | **testing:** add code to keyboard events ([#30188](https://github.com/angular/components/pull/30188)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [050b59b883](https://github.com/angular/components/commit/050b59b88399ffb37fef65db3bd726e64d13f3e4) | fix | **list:** enable MacOS select all with command+a ([#30183](https://github.com/angular/components/pull/30183)) |
+| [c3f22f3c9a](https://github.com/angular/components/commit/c3f22f3c9a31eef7810795b548e82c056320b151) | fix | **menu:** remove dependency on animations module ([#30163](https://github.com/angular/components/pull/30163)) |
+| [a9c569e13d](https://github.com/angular/components/commit/a9c569e13d1d3351fcd6a364cc93392453ab7a47) | fix | **sort:** avoid center align for sort header ([#30198](https://github.com/angular/components/pull/30198)) |
+| [f0ec675aaa](https://github.com/angular/components/commit/f0ec675aaa3a280379bbc90aa201040c0f48da8d) | fix | **table:** improve filter predicate efficiency ([#30172](https://github.com/angular/components/pull/30172)) |
+| [b724b0698c](https://github.com/angular/components/commit/b724b0698cf89230bbff9613d37d0090fbbb77e4) | fix | **table:** set border none for header cells on last row ([#30193](https://github.com/angular/components/pull/30193)) |
+| [125d867161](https://github.com/angular/components/commit/125d8671618aa91015b8a1dbe03ab002f1042451) | fix | **theming:** fix not found error in the guide duplicate theming styles document ([#30108](https://github.com/angular/components/pull/30108)) |
+| [8d3279fcd4](https://github.com/angular/components/commit/8d3279fcd465c4722b495c6a01d0d0bf92cb9ff0) | fix | **tooltip:** body line height affecting gap ([#30164](https://github.com/angular/components/pull/30164)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.3"></a>
 # 19.0.3 "polonium-popsicle" (2024-12-11)
 ### material
