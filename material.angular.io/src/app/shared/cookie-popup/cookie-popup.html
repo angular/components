@@ -1,0 +1,14 @@
+@if (!hasAccepted) {
+  <div class="popup">
+    This site uses cookies from Google to deliver its services and to analyze traffic.
+
+    <div class="buttons">
+      <a
+        href="https://policies.google.com/technologies/cookies"
+        mat-button
+        target="_blank"
+        rel="noopener">More details</a>
+      <button mat-button color="primary" (click)="accept()">Okay, got it</button>
+    </div>
+  </div>
+}

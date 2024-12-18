@@ -1,0 +1,96 @@
+<header focusOnNavigation class="docs-header-background"
+        aria-label="Get started" id="homepage-header">
+  <div class="docs-header-section">
+    <div class="docs-header-headline">
+      <h1 class="mat-h1">Angular Material</h1>
+      <h2>Material Design components for Angular</h2>
+    </div>
+    <div class="docs-header-start">
+      <a mat-raised-button class="docs-button" routerLink="/guide/getting-started">Get started</a>
+    </div>
+  </div>
+  <app-logo class="docs-homepage-logo"/>
+</header>
+
+<main class="docs-homepage-promo">
+  <div class="docs-homepage-row docs-introduction">
+    <div class="docs-homepage-row-column">
+      <h2>High quality</h2>
+      <p>
+        Internationalized and accessible components for everyone. Well tested to ensure performance and reliability.
+      </p>
+      <p>Straightforward APIs with consistent cross platform behaviour.</p>
+    </div>
+    <div class="docs-homepage-row-column">
+      <h2>Versatile</h2>
+      <p>
+        Provide tools that help developers build their own custom components with common interaction patterns.
+      </p>
+      <p>
+        Customizable within the bounds of the Material Design specification.
+      </p>
+    </div>
+    <div class="docs-homepage-row-column">
+      <h2>Frictionless</h2>
+      <p>
+        Built by the Angular team to integrate seamlessly with Angular.
+      </p>
+      <p>
+        Start from scratch or drop into your existing applications.
+      </p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="docs-homepage-featured-components docs-homepage-carousel-row">
+    <div class="docs-homepage-header">
+      <h2>Featured components</h2>
+
+      <a mat-button routerLink="/components">
+        View all components
+        <mat-icon matButtonIcon iconPositionEnd>chevron_right</mat-icon>
+      </a>
+    </div>
+    <app-carousel [aria-label]="'Featured components'">
+      @for (comp of getTopComponents(); track comp) {
+        <a carousel-item class="carousel-item docs-featured-components-carousel-item"
+           routerLink="/components/{{comp}}">
+          <div class="docs-homepage-img-container">
+            <img alt="" src="../../../assets/screenshots/{{comp}}.scene.png" role="presentation">
+          </div>
+          {{(comp[0].toUpperCase() + comp.slice(1)).replace('-', ' ')}}
+        </a>
+      }
+    </app-carousel>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="docs-homepage-guides docs-homepage-carousel-row">
+    <div class="docs-homepage-header">
+      <h2>Guides</h2>
+
+      <a mat-button routerLink="/guides">
+        View all guides
+        <mat-icon matButtonIcon iconPositionEnd>chevron_right</mat-icon>
+      </a>
+    </div>
+    <app-carousel aria-label="Guides">
+      @for (guide of guideItems.getAllItems(); track guide) {
+        <a carousel-item class="carousel-item docs-homepage-guides-carousel-item"
+           routerLink="/guide/{{guide.id}}"
+           matRipple>
+          <mat-card class="docs-homepage-guides-card" appearance="outlined">
+            <mat-card-title>{{guide.name}}</mat-card-title>
+            <mat-card-content class="docs-component-category-list-card-summary">{{guide.overview}}</mat-card-content>
+          </mat-card>
+        </a>
+      }
+    </app-carousel>
+  </div>
+
+</main>
+
+<app-support></app-support>
+<app-footer></app-footer>

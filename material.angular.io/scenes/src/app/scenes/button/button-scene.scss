@@ -1,0 +1,13 @@
+.scene-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.scene-buttons button {
+  margin: 16px;
+}
+
+div.scene-buttons .mat-mdc-icon-button {
+  margin: 0 25px;
+}

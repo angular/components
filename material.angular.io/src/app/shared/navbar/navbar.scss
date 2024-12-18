@@ -1,0 +1,85 @@
+:host {
+  color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary-container);
+}
+
+.docs-navbar-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 8px 16px;
+
+  > .mat-mdc-button {
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+
+  .docs-navbar-header-item-selected {
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  }
+}
+
+.mat-mdc-icon-button {
+  color: inherit;
+}
+
+.github-logo,
+app-logo {
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+}
+
+.flex-spacer {
+  flex-grow: 1;
+}
+
+.docs-navbar-link {
+  text-decoration: inherit;
+  flex: 1;
+}
+
+.docs-navbar {
+  display: none;
+}
+
+.docs-navbar-show-small {
+  display: none;
+}
+
+.skip-link-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}
+
+// Rules for when the device is detected to be a small screen.
+// Moves content two rows instead of one.
+@media (max-width: 720px) {
+  .docs-navbar-hide-small {
+    display: none;
+  }
+
+  .docs-navbar-show-small {
+    display: block;
+  }
+
+  .docs-navbar {
+    display: flex;
+  }
+
+  .github-logo {
+    margin: 0;
+  }
+}
+
+theme-picker {
+  display: none;
+
+  @media (min-width: 328px) {
+    display: block;
+  }
+}

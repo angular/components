@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$rose-palette,
+      tertiary: mat.$red-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}

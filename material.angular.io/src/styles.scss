@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+@use '@angular/cdk';
+@use './styles/api';
+@use './styles/markdown';
+@use './styles/tables';
+@use './styles/general';
+
+html {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+  @include cdk.a11y-visually-hidden();
+}
