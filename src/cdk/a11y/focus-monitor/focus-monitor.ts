@@ -8,9 +8,9 @@
 
 import {
   Platform,
+  normalizePassiveListenerOptions,
   _getShadowRoot,
   _getEventTarget,
-  _bindEventWithOptions,
 } from '@angular/cdk/platform';
 import {
   Directive,
@@ -23,7 +23,6 @@ import {
   Output,
   AfterViewInit,
   inject,
-  RendererFactory2,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -77,18 +76,16 @@ type MonitoredElementInfo = {
  * Event listener options that enable capturing and also
  * mark the listener as passive if the browser supports it.
  */
-const captureEventListenerOptions = {
+const captureEventListenerOptions = normalizePassiveListenerOptions({
   passive: true,
   capture: true,
-};
+});
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable({providedIn: 'root'})
 export class FocusMonitor implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
-  private _cleanupWindowFocus: (() => void) | undefined;
   private readonly _inputModalityDetector = inject(InputModalityDetector);
 
   /** The focus origin that the next focus event is a result of. */
@@ -124,13 +121,7 @@ export class FocusMonitor implements OnDestroy {
    * handlers differently from the rest of the events, because the browser won't emit events
    * to the document when focus moves inside of a shadow root.
    */
-  private _rootNodeFocusListeners = new Map<
-    HTMLElement | Document | ShadowRoot,
-    {
-      count: number;
-      cleanups: (() => void)[];
-    }
-  >();
+  private _rootNodeFocusListenerCount = new Map<HTMLElement | Document | ShadowRoot, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
@@ -316,6 +307,12 @@ export class FocusMonitor implements OnDestroy {
     return this._document || document;
   }
 
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
+  }
+
   private _getFocusOrigin(focusEventTarget: HTMLElement | null): FocusOrigin {
     if (this._origin) {
       // If the origin was realized via a touch interaction, we need to perform additional checks
@@ -471,45 +468,32 @@ export class FocusMonitor implements OnDestroy {
     }
 
     const rootNode = elementInfo.rootNode;
-    const listeners = this._rootNodeFocusListeners.get(rootNode);
+    const rootNodeFocusListeners = this._rootNodeFocusListenerCount.get(rootNode) || 0;
 
-    if (listeners) {
-      listeners.count++;
-    } else {
+    if (!rootNodeFocusListeners) {
       this._ngZone.runOutsideAngular(() => {
-        this._rootNodeFocusListeners.set(rootNode, {
-          count: 1,
-          cleanups: [
-            _bindEventWithOptions(
-              this._renderer,
-              rootNode,
-              'focus',
-              this._rootNodeFocusAndBlurListener,
-              captureEventListenerOptions,
-            ),
-            _bindEventWithOptions(
-              this._renderer,
-              rootNode,
-              'blur',
-              this._rootNodeFocusAndBlurListener,
-              captureEventListenerOptions,
-            ),
-          ],
-        });
+        rootNode.addEventListener(
+          'focus',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
+        rootNode.addEventListener(
+          'blur',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
       });
     }
+
+    this._rootNodeFocusListenerCount.set(rootNode, rootNodeFocusListeners + 1);
 
     // Register global listeners when first element is monitored.
     if (++this._monitoredElementCount === 1) {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
-        this._cleanupWindowFocus?.();
-        this._cleanupWindowFocus = this._renderer.listen(
-          'window',
-          'focus',
-          this._windowFocusListener,
-        );
+        const window = this._getWindow();
+        window.addEventListener('focus', this._windowFocusListener);
       });
 
       // The InputModalityDetector is also just a collection of global listeners.
@@ -522,20 +506,32 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _removeGlobalListeners(elementInfo: MonitoredElementInfo) {
-    const listeners = this._rootNodeFocusListeners.get(elementInfo.rootNode);
+    const rootNode = elementInfo.rootNode;
 
-    if (listeners) {
-      if (listeners.count > 1) {
-        listeners.count--;
+    if (this._rootNodeFocusListenerCount.has(rootNode)) {
+      const rootNodeFocusListeners = this._rootNodeFocusListenerCount.get(rootNode)!;
+
+      if (rootNodeFocusListeners > 1) {
+        this._rootNodeFocusListenerCount.set(rootNode, rootNodeFocusListeners - 1);
       } else {
-        listeners.cleanups.forEach(cleanup => cleanup());
-        this._rootNodeFocusListeners.delete(elementInfo.rootNode);
+        rootNode.removeEventListener(
+          'focus',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
+        rootNode.removeEventListener(
+          'blur',
+          this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions,
+        );
+        this._rootNodeFocusListenerCount.delete(rootNode);
       }
     }
 
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
-      this._cleanupWindowFocus?.();
+      const window = this._getWindow();
+      window.removeEventListener('focus', this._windowFocusListener);
 
       // Equivalently, stop our InputModalityDetector subscription.
       this._stopInputModalityDetector.next();

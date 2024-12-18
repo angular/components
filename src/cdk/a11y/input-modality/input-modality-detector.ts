@@ -7,15 +7,8 @@
  */
 
 import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
-import {
-  Injectable,
-  InjectionToken,
-  OnDestroy,
-  NgZone,
-  inject,
-  RendererFactory2,
-} from '@angular/core';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
+import {Injectable, InjectionToken, OnDestroy, NgZone, inject} from '@angular/core';
+import {normalizePassiveListenerOptions, Platform, _getEventTarget} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
@@ -76,10 +69,10 @@ export const TOUCH_BUFFER_MS = 650;
  * Event listener options that enable capturing and also mark the listener as passive if the browser
  * supports it.
  */
-const modalityEventListenerOptions = {
+const modalityEventListenerOptions = normalizePassiveListenerOptions({
   passive: true,
   capture: true,
-};
+});
 
 /**
  * Service that detects the user's input modality.
@@ -98,7 +91,6 @@ const modalityEventListenerOptions = {
 @Injectable({providedIn: 'root'})
 export class InputModalityDetector implements OnDestroy {
   private readonly _platform = inject(Platform);
-  private readonly _listenerCleanups: (() => void)[] | undefined;
 
   /** Emits whenever an input modality is detected. */
   readonly modalityDetected: Observable<InputModality>;
@@ -201,38 +193,21 @@ export class InputModalityDetector implements OnDestroy {
     // If we're not in a browser, this service should do nothing, as there's no relevant input
     // modality to detect.
     if (this._platform.isBrowser) {
-      const renderer = inject(RendererFactory2).createRenderer(null, null);
-
-      this._listenerCleanups = ngZone.runOutsideAngular(() => {
-        return [
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'keydown',
-            this._onKeydown,
-            modalityEventListenerOptions,
-          ),
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'mousedown',
-            this._onMousedown,
-            modalityEventListenerOptions,
-          ),
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'touchstart',
-            this._onTouchstart,
-            modalityEventListenerOptions,
-          ),
-        ];
+      ngZone.runOutsideAngular(() => {
+        document.addEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
+        document.addEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
+        document.addEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
       });
     }
   }
 
   ngOnDestroy() {
     this._modality.complete();
-    this._listenerCleanups?.forEach(cleanup => cleanup());
+
+    if (this._platform.isBrowser) {
+      document.removeEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
+      document.removeEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
+      document.removeEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
+    }
   }
 }
