@@ -23,14 +23,14 @@ palettes (`$primary-palette` and `$tertiary-palette`) can be provided to the `th
 @use './path/to/my-theme'; // location of generated file
 
 html {
-  @include mat.theme(
+  @include mat.theme((
     color: (
       primary: my-theme.$primary-palette,
       tertiary: my-theme.$tertiary-palette,
     ),
     typography: Roboto,
     density: 0,
-  )
+  ));
 }
 ```
 
