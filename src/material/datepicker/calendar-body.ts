@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
+import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,7 +23,6 @@ import {
   inject,
   afterNextRender,
   Injector,
-  Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {NgClass} from '@angular/common';
@@ -67,19 +66,19 @@ export interface MatCalendarUserEvent<D> {
 }
 
 /** Event options that can be used to bind an active, capturing event. */
-const activeCapturingEventOptions = {
+const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
   capture: true,
-};
+});
 
 /** Event options that can be used to bind a passive, capturing event. */
-const passiveCapturingEventOptions = {
+const passiveCapturingEventOptions = normalizePassiveListenerOptions({
   passive: true,
   capture: true,
-};
+});
 
 /** Event options that can be used to bind a passive, non-capturing event. */
-const passiveEventOptions = {passive: true};
+const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
 
 /**
  * An internal component used to display calendar data in a table.
@@ -102,7 +101,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
   private _intl = inject(MatDatepickerIntl);
-  private _eventCleanups: (() => void)[];
 
   /**
    * Used to skip the next focus event when rendering the preview range.
@@ -226,7 +224,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   constructor(...args: unknown[]);
 
   constructor() {
-    const renderer = inject(Renderer2);
     const idGenerator = inject(_IdGenerator);
     this._startDateLabelId = idGenerator.getId('mat-calendar-body-start-');
     this._endDateLabelId = idGenerator.getId('mat-calendar-body-end-');
@@ -237,67 +234,22 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
 
     this._ngZone.runOutsideAngular(() => {
       const element = this._elementRef.nativeElement;
-      const cleanups = [
-        // `touchmove` is active since we need to call `preventDefault`.
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'touchmove',
-          this._touchmoveHandler,
-          activeCapturingEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'mouseenter',
-          this._enterHandler,
-          passiveCapturingEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'focus',
-          this._enterHandler,
-          passiveCapturingEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'mouseleave',
-          this._leaveHandler,
-          passiveCapturingEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'blur',
-          this._leaveHandler,
-          passiveCapturingEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'mousedown',
-          this._mousedownHandler,
-          passiveEventOptions,
-        ),
-        _bindEventWithOptions(
-          renderer,
-          element,
-          'touchstart',
-          this._mousedownHandler,
-          passiveEventOptions,
-        ),
-      ];
+
+      // `touchmove` is active since we need to call `preventDefault`.
+      element.addEventListener('touchmove', this._touchmoveHandler, activeCapturingEventOptions);
+
+      element.addEventListener('mouseenter', this._enterHandler, passiveCapturingEventOptions);
+      element.addEventListener('focus', this._enterHandler, passiveCapturingEventOptions);
+      element.addEventListener('mouseleave', this._leaveHandler, passiveCapturingEventOptions);
+      element.addEventListener('blur', this._leaveHandler, passiveCapturingEventOptions);
+
+      element.addEventListener('mousedown', this._mousedownHandler, passiveEventOptions);
+      element.addEventListener('touchstart', this._mousedownHandler, passiveEventOptions);
 
       if (this._platform.isBrowser) {
-        cleanups.push(
-          renderer.listen('window', 'mouseup', this._mouseupHandler),
-          renderer.listen('window', 'touchend', this._touchendHandler),
-        );
+        window.addEventListener('mouseup', this._mouseupHandler);
+        window.addEventListener('touchend', this._touchendHandler);
       }
-
-      this._eventCleanups = cleanups;
     });
   }
 
@@ -343,7 +295,22 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
   }
 
   ngOnDestroy() {
-    this._eventCleanups.forEach(cleanup => cleanup());
+    const element = this._elementRef.nativeElement;
+
+    element.removeEventListener('touchmove', this._touchmoveHandler, activeCapturingEventOptions);
+
+    element.removeEventListener('mouseenter', this._enterHandler, passiveCapturingEventOptions);
+    element.removeEventListener('focus', this._enterHandler, passiveCapturingEventOptions);
+    element.removeEventListener('mouseleave', this._leaveHandler, passiveCapturingEventOptions);
+    element.removeEventListener('blur', this._leaveHandler, passiveCapturingEventOptions);
+
+    element.removeEventListener('mousedown', this._mousedownHandler, passiveEventOptions);
+    element.removeEventListener('touchstart', this._mousedownHandler, passiveEventOptions);
+
+    if (this._platform.isBrowser) {
+      window.removeEventListener('mouseup', this._mouseupHandler);
+      window.removeEventListener('touchend', this._touchendHandler);
+    }
   }
 
   /** Returns whether a cell is active. */

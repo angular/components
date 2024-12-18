@@ -10,33 +10,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injectable,
-  ListenerOptions,
   NgZone,
   OnDestroy,
-  RendererFactory2,
   ViewEncapsulation,
   WritableSignal,
   inject,
   signal,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {_bindEventWithOptions} from '@angular/cdk/platform';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
 import type {DragRef} from './drag-ref';
 import type {CdkDrag} from './directives/drag';
 
-/** Event options that can be used to bind a capturing event. */
-const capturingEventOptions = {
-  capture: true,
-};
-
 /** Event options that can be used to bind an active, capturing event. */
-const activeCapturingEventOptions = {
+const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
   capture: true,
-};
+});
 
 /**
  * Component used to load the drag&drop reset styles.
@@ -62,8 +55,6 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _document = inject(DOCUMENT);
   private _styleLoader = inject(_CdkPrivateStyleLoader);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
-  private _cleanupDocumentTouchmove: (() => void) | undefined;
 
   /** Registered drop container instances. */
   private _dropInstances = new Set<DropListRef>();
@@ -75,7 +66,13 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
   private _activeDragInstances: WritableSignal<DragRef[]> = signal([]);
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
-  private _globalListeners: (() => void)[] | undefined;
+  private _globalListeners = new Map<
+    string,
+    {
+      handler: (event: Event) => void;
+      options?: AddEventListenerOptions | boolean;
+    }
+  >();
 
   /**
    * Predicate function to check if an item is being dragged.  Moved out into a property,
@@ -130,10 +127,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       this._ngZone.runOutsideAngular(() => {
         // The event handler has to be explicitly active,
         // because newer browsers make it passive by default.
-        this._cleanupDocumentTouchmove?.();
-        this._cleanupDocumentTouchmove = _bindEventWithOptions(
-          this._renderer,
-          this._document,
+        this._document.addEventListener(
           'touchmove',
           this._persistentTouchmoveListener,
           activeCapturingEventOptions,
@@ -153,7 +147,11 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     this.stopDragging(drag);
 
     if (this._dragInstances.size === 0) {
-      this._cleanupDocumentTouchmove?.();
+      this._document.removeEventListener(
+        'touchmove',
+        this._persistentTouchmoveListener,
+        activeCapturingEventOptions,
+      );
     }
   }
 
@@ -176,43 +174,47 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
       const isTouchEvent = event.type.startsWith('touch');
-      const endEventHandler = (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent);
+      const endEventHandler = {
+        handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
+        options: true,
+      };
 
-      const toBind: [name: string, handler: (event: Event) => void, options: ListenerOptions][] = [
-        // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
-        // the document. See https://github.com/angular/components/issues/17144.
-        ['scroll', (e: Event) => this.scroll.next(e), capturingEventOptions],
+      if (isTouchEvent) {
+        this._globalListeners.set('touchend', endEventHandler);
+        this._globalListeners.set('touchcancel', endEventHandler);
+      } else {
+        this._globalListeners.set('mouseup', endEventHandler);
+      }
 
+      this._globalListeners
+        .set('scroll', {
+          handler: (e: Event) => this.scroll.next(e),
+          // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
+          // the document. See https://github.com/angular/components/issues/17144.
+          options: true,
+        })
         // Preventing the default action on `mousemove` isn't enough to disable text selection
         // on Safari so we need to prevent the selection event as well. Alternatively this can
         // be done by setting `user-select: none` on the `body`, however it has causes a style
         // recalculation which can be expensive on pages with a lot of elements.
-        ['selectstart', this._preventDefaultWhileDragging, activeCapturingEventOptions],
-      ];
-
-      if (isTouchEvent) {
-        toBind.push(
-          ['touchend', endEventHandler, capturingEventOptions],
-          ['touchcancel', endEventHandler, capturingEventOptions],
-        );
-      } else {
-        toBind.push(['mouseup', endEventHandler, capturingEventOptions]);
-      }
+        .set('selectstart', {
+          handler: this._preventDefaultWhileDragging,
+          options: activeCapturingEventOptions,
+        });
 
       // We don't have to bind a move event for touch drag sequences, because
       // we already have a persistent global one bound from `registerDragItem`.
       if (!isTouchEvent) {
-        toBind.push([
-          'mousemove',
-          (e: Event) => this.pointerMove.next(e as MouseEvent),
-          activeCapturingEventOptions,
-        ]);
+        this._globalListeners.set('mousemove', {
+          handler: (e: Event) => this.pointerMove.next(e as MouseEvent),
+          options: activeCapturingEventOptions,
+        });
       }
 
       this._ngZone.runOutsideAngular(() => {
-        this._globalListeners = toBind.map(([name, handler, options]) =>
-          _bindEventWithOptions(this._renderer, this._document, name, handler, options),
-        );
+        this._globalListeners.forEach((config, name) => {
+          this._document.addEventListener(name, config.handler, config.options);
+        });
       });
     }
   }
@@ -255,20 +257,17 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       streams.push(
         new Observable((observer: Observer<Event>) => {
           return this._ngZone.runOutsideAngular(() => {
-            const cleanup = _bindEventWithOptions(
-              this._renderer,
-              shadowRoot as ShadowRoot,
-              'scroll',
-              (event: Event) => {
-                if (this._activeDragInstances().length) {
-                  observer.next(event);
-                }
-              },
-              capturingEventOptions,
-            );
+            const eventOptions = true;
+            const callback = (event: Event) => {
+              if (this._activeDragInstances().length) {
+                observer.next(event);
+              }
+            };
+
+            (shadowRoot as ShadowRoot).addEventListener('scroll', callback, eventOptions);
 
             return () => {
-              cleanup();
+              (shadowRoot as ShadowRoot).removeEventListener('scroll', callback, eventOptions);
             };
           });
         }),
@@ -339,7 +338,10 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
 
   /** Clears out the global event listeners from the `document`. */
   private _clearGlobalListeners() {
-    this._globalListeners?.forEach(cleanup => cleanup());
-    this._globalListeners = undefined;
+    this._globalListeners.forEach((config, name) => {
+      this._document.removeEventListener(name, config.handler, config.options);
+    });
+
+    this._globalListeners.clear();
   }
 }

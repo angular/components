@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
+import {Injectable, NgZone, inject} from '@angular/core';
+import {Platform, _getEventTarget} from '@angular/cdk/platform';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 
@@ -19,13 +19,11 @@ import type {OverlayRef} from '../overlay-ref';
 @Injectable({providedIn: 'root'})
 export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   private _platform = inject(Platform);
-  private _ngZone = inject(NgZone);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _ngZone = inject(NgZone, {optional: true});
 
   private _cursorOriginalValue: string;
   private _cursorStyleIsSet = false;
   private _pointerDownEventTarget: HTMLElement | null;
-  private _cleanups: (() => void)[] | undefined;
 
   /** Add a new overlay to the list of attached overlay refs. */
   override add(overlayRef: OverlayRef): void {
@@ -39,26 +37,13 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     // https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html
     if (!this._isAttached) {
       const body = this._document.body;
-      const eventOptions = {capture: true};
 
-      this._cleanups = this._ngZone.runOutsideAngular(() => [
-        _bindEventWithOptions(
-          this._renderer,
-          body,
-          'pointerdown',
-          this._pointerDownListener,
-          eventOptions,
-        ),
-        _bindEventWithOptions(this._renderer, body, 'click', this._clickListener, eventOptions),
-        _bindEventWithOptions(this._renderer, body, 'auxclick', this._clickListener, eventOptions),
-        _bindEventWithOptions(
-          this._renderer,
-          body,
-          'contextmenu',
-          this._clickListener,
-          eventOptions,
-        ),
-      ]);
+      /** @breaking-change 14.0.0 _ngZone will be required. */
+      if (this._ngZone) {
+        this._ngZone.runOutsideAngular(() => this._addEventListeners(body));
+      } else {
+        this._addEventListeners(body);
+      }
 
       // click event is not fired on iOS. To make element "clickable" we are
       // setting the cursor to pointer
@@ -75,14 +60,24 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   /** Detaches the global keyboard event listener. */
   protected detach() {
     if (this._isAttached) {
-      this._cleanups?.forEach(cleanup => cleanup());
-      this._cleanups = undefined;
+      const body = this._document.body;
+      body.removeEventListener('pointerdown', this._pointerDownListener, true);
+      body.removeEventListener('click', this._clickListener, true);
+      body.removeEventListener('auxclick', this._clickListener, true);
+      body.removeEventListener('contextmenu', this._clickListener, true);
       if (this._platform.IOS && this._cursorStyleIsSet) {
-        this._document.body.style.cursor = this._cursorOriginalValue;
+        body.style.cursor = this._cursorOriginalValue;
         this._cursorStyleIsSet = false;
       }
       this._isAttached = false;
     }
+  }
+
+  private _addEventListeners(body: HTMLElement): void {
+    body.addEventListener('pointerdown', this._pointerDownListener, true);
+    body.addEventListener('click', this._clickListener, true);
+    body.addEventListener('auxclick', this._clickListener, true);
+    body.addEventListener('contextmenu', this._clickListener, true);
   }
 
   /** Store pointerdown event target to track origin of click. */
