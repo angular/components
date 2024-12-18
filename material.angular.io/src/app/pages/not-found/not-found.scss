@@ -1,0 +1,35 @@
+$vertical-spacing: 64px;
+$horizontal-spacing: 32px;
+
+:host {
+  color: var(--mat-sys-on-primary-container);
+}
+
+main {
+  min-height: 100vh;
+  font-size: 1.25rem;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $vertical-spacing;
+}
+
+.frown {
+  font-size: 150px;
+  width: 150px;
+  height: 150px;
+  max-width: 100%;
+  margin-right: $horizontal-spacing;
+
+  @media (max-width: 720px) {
+    display: none;
+  }
+}
+
+a + a {
+  margin-left: 16px;
+}
+

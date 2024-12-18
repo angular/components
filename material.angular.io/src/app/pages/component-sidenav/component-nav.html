@@ -1,0 +1,17 @@
+<div class="docs-component-viewer-nav">
+  @if ((params() | async)?.section; as section) {
+    <div class="docs-component-viewer-nav-content">
+        <mat-nav-list>
+          @for (component of docItems.getItems(section); track component) {
+            <a mat-list-item #link="routerLinkActive"
+               [routerLink]="'/' + section+ '/' + component.id"
+               [activated]="link.isActive"
+               routerLinkActive="docs-component-viewer-sidenav-item-selected"
+               [attr.aria-current]="currentItemId === component.id ? 'page': 'false'">
+              {{component.name}}
+            </a>
+          }
+        </mat-nav-list>
+    </div>
+  }
+</div>

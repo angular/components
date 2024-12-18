@@ -1,0 +1,37 @@
+app-carousel {
+  display: block;
+  position: relative;
+}
+
+.docs-carousel-content {
+  display: flex;
+  flex-direction: row;
+  outline: none;
+  transition: transform 0.5s ease-in-out;
+
+  .animations-disabled & {
+    transition: none;
+  }
+}
+
+.docs-carousel-content-wrapper {
+  overflow: hidden;
+}
+
+[carousel-item] {
+  flex-shrink: 0;
+}
+
+button.docs-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.docs-carousel-nav-prev {
+  left: -50px;
+}
+
+.docs-carousel-nav-next {
+  right: -50px;
+}

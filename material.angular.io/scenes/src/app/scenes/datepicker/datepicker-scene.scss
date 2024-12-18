@@ -1,0 +1,13 @@
+.calendar {
+  margin-top: 140px;
+  background: rgba(white, 0.8);
+}
+
+.calendar-wrapper {
+  display: flex;
+
+  mat-calendar {
+    width: 300px;
+    border-radius: 16px;
+  }
+}

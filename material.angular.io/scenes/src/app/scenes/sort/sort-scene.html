@@ -1,0 +1,13 @@
+<table matSort matSortActive="calories" matSortDirection="desc">
+  <tr>
+    <th mat-sort-header="name">Dessert (100g)</th>
+    <th mat-sort-header="calories">Calories</th>
+  </tr>
+
+  @for (dessert of desserts; track dessert) {
+    <tr>
+      <td>{{dessert.name}}</td>
+      <td>{{dessert.calories}}</td>
+    </tr>
+  }
+</table>

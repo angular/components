@@ -1,0 +1,20 @@
+.scene-inputs .scene-input-clear {
+  margin-bottom: -10px;
+}
+
+.scene-inputs {
+  margin-top: 15px;
+  width: 250px;
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    opacity: 0.5;
+  }
+}
+
+app-input-scene {
+  display: flex;
+}
+
+mat-form-field {
+  width: 100%;
+}
