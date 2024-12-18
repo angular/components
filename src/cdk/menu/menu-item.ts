@@ -16,12 +16,12 @@ import {
   NgZone,
   OnDestroy,
   Output,
+  Renderer2,
 } from '@angular/core';
 import {FocusableOption, InputModalityDetector} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {fromEvent, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CDK_MENU, Menu} from './menu-interface';
 import {FocusNext, MENU_STACK} from './menu-stack';
@@ -53,6 +53,8 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   protected _ngZone = inject(NgZone);
   private readonly _inputModalityDetector = inject(InputModalityDetector);
+  private readonly _renderer = inject(Renderer2);
+  private _cleanupMouseEnter: (() => void) | undefined;
 
   /** The menu aim service used by this menu. */
   private readonly _menuAim = inject(MENU_AIM, {optional: true});
@@ -108,6 +110,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   }
 
   ngOnDestroy() {
+    this._cleanupMouseEnter?.();
     this.destroyed.next();
     this.destroyed.complete();
   }
@@ -266,26 +269,21 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       const closeOpenSiblings = () =>
         this._ngZone.run(() => this._menuStack.closeSubMenuOf(this._parentMenu!));
 
-      this._ngZone.runOutsideAngular(() =>
-        fromEvent(this._elementRef.nativeElement, 'mouseenter')
-          .pipe(
-            filter(() => {
-              return (
-                // Skip fake `mouseenter` events dispatched by touch devices.
-                this._inputModalityDetector.mostRecentModality !== 'touch' &&
-                !this._menuStack.isEmpty() &&
-                !this.hasMenu
-              );
-            }),
-            takeUntil(this.destroyed),
-          )
-          .subscribe(() => {
+      this._cleanupMouseEnter = this._ngZone.runOutsideAngular(() =>
+        this._renderer.listen(this._elementRef.nativeElement, 'mouseenter', () => {
+          // Skip fake `mouseenter` events dispatched by touch devices.
+          if (
+            this._inputModalityDetector.mostRecentModality !== 'touch' &&
+            !this._menuStack.isEmpty() &&
+            !this.hasMenu
+          ) {
             if (this._menuAim) {
               this._menuAim.toggle(closeOpenSiblings);
             } else {
               closeOpenSiblings();
             }
-          }),
+          }
+        }),
       );
     }
   }

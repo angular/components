@@ -6,9 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, inject, Injectable, InjectionToken, NgZone, OnDestroy} from '@angular/core';
-import {fromEvent, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {
+  Directive,
+  inject,
+  Injectable,
+  InjectionToken,
+  NgZone,
+  OnDestroy,
+  RendererFactory2,
+} from '@angular/core';
+import {Subject} from 'rxjs';
 import {FocusableElement, PointerFocusTracker} from './pointer-focus-tracker';
 import {Menu} from './menu-interface';
 import {throwMissingMenuReference, throwMissingPointerFocusTracker} from './menu-errors';
@@ -102,8 +109,9 @@ function isWithinSubmenu(submenuPoints: DOMRect, m: number, b: number) {
  */
 @Injectable()
 export class TargetMenuAim implements MenuAim, OnDestroy {
-  /** The Angular zone. */
   private readonly _ngZone = inject(NgZone);
+  private readonly _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _cleanupMousemove: (() => void) | undefined;
 
   /** The last NUM_POINTS mouse move events. */
   private readonly _points: Point[] = [];
@@ -121,6 +129,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   private readonly _destroyed: Subject<void> = new Subject();
 
   ngOnDestroy() {
+    this._cleanupMousemove?.();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -231,18 +240,20 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 
   /** Subscribe to the root menus mouse move events and update the tracked mouse points. */
   private _subscribeToMouseMoves() {
-    this._ngZone.runOutsideAngular(() => {
-      fromEvent<MouseEvent>(this._menu.nativeElement, 'mousemove')
-        .pipe(
-          filter((_: MouseEvent, index: number) => index % MOUSE_MOVE_SAMPLE_FREQUENCY === 0),
-          takeUntil(this._destroyed),
-        )
-        .subscribe((event: MouseEvent) => {
+    this._cleanupMousemove?.();
+
+    this._cleanupMousemove = this._ngZone.runOutsideAngular(() => {
+      let eventIndex = 0;
+
+      return this._renderer.listen(this._menu.nativeElement, 'mousemove', (event: MouseEvent) => {
+        if (eventIndex % MOUSE_MOVE_SAMPLE_FREQUENCY === 0) {
           this._points.push({x: event.clientX, y: event.clientY});
           if (this._points.length > NUM_POINTS) {
             this._points.shift();
           }
-        });
+        }
+        eventIndex++;
+      });
     });
   }
 }

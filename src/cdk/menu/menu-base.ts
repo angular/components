@@ -17,6 +17,7 @@ import {
   NgZone,
   OnDestroy,
   QueryList,
+  Renderer2,
   computed,
   inject,
   signal,
@@ -51,11 +52,11 @@ export abstract class CdkMenuBase
   extends CdkMenuGroup
   implements Menu, AfterContentInit, OnDestroy
 {
+  protected ngZone = inject(NgZone);
+  private _renderer = inject(Renderer2);
+
   /** The menu's native DOM host element. */
   readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
-
-  /** The Angular zone. */
-  protected ngZone = inject(NgZone);
 
   /** The stack of menus this menu belongs to. */
   readonly menuStack: MenuStack = inject(MENU_STACK);
@@ -225,7 +226,7 @@ export abstract class CdkMenuBase
   private _setUpPointerTracker() {
     if (this.menuAim) {
       this.ngZone.runOutsideAngular(() => {
-        this.pointerTracker = new PointerFocusTracker(this.items);
+        this.pointerTracker = new PointerFocusTracker(this._renderer, this.items);
       });
       this.menuAim.initialize(this, this.pointerTracker!);
     }

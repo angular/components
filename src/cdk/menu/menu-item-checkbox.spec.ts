@@ -1,30 +1,16 @@
-import {Component, ElementRef} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
-import {CDK_MENU} from './menu-interface';
-import {CdkMenu} from './menu';
-import {MENU_STACK, MenuStack} from './menu-stack';
 
 describe('MenuItemCheckbox', () => {
   let fixture: ComponentFixture<SingleCheckboxButton>;
   let checkbox: CdkMenuItemCheckbox;
   let checkboxElement: HTMLButtonElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule, SingleCheckboxButton],
-      providers: [
-        {provide: CDK_MENU, useClass: CdkMenu},
-        {provide: MENU_STACK, useClass: MenuStack},
-        // View engine can't figure out the ElementRef to inject so we need to provide a fake
-        {provide: ElementRef, useValue: new ElementRef<null>(null)},
-      ],
-    });
-  }));
-
   beforeEach(() => {
+    TestBed.configureTestingModule({imports: [CdkMenuModule, SingleCheckboxButton]});
     fixture = TestBed.createComponent(SingleCheckboxButton);
     fixture.detectChanges();
 
@@ -99,7 +85,11 @@ describe('MenuItemCheckbox', () => {
 });
 
 @Component({
-  template: `<button cdkMenuItemCheckbox>Click me!</button>`,
+  template: `
+    <div cdkMenu>
+      <button cdkMenuItemCheckbox>Click me!</button>
+    </div>
+  `,
   imports: [CdkMenuModule],
 })
 class SingleCheckboxButton {}

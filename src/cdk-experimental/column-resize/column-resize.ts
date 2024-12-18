@@ -15,10 +15,11 @@ import {
   Input,
   NgZone,
   OnDestroy,
+  Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {fromEvent, merge, Subject} from 'rxjs';
-import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
+import {merge, Subject} from 'rxjs';
+import {mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
@@ -44,6 +45,8 @@ export const COLUMN_RESIZE_OPTIONS = new InjectionToken<ColumnResizeOptions>(
  */
 @Directive()
 export abstract class ColumnResize implements AfterViewInit, OnDestroy {
+  private _renderer = inject(Renderer2);
+  private _eventCleanups: (() => void)[] | undefined;
   protected readonly destroyed = new Subject<void>();
 
   /* Publicly accessible interface for triggering and being notified of resizes. */
@@ -78,6 +81,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._eventCleanups?.forEach(cleanup => cleanup());
     this.destroyed.next();
     this.destroyed.complete();
   }
@@ -99,25 +103,21 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
 
   private _listenForRowHoverEvents() {
     this.ngZone.runOutsideAngular(() => {
-      const element = this.elementRef.nativeElement!;
+      const element = this.elementRef.nativeElement;
 
-      fromEvent<MouseEvent>(element, 'mouseover')
-        .pipe(
-          map(event => _closest(event.target, HEADER_CELL_SELECTOR)),
-          takeUntil(this.destroyed),
-        )
-        .subscribe(this.eventDispatcher.headerCellHovered);
-      fromEvent<MouseEvent>(element, 'mouseleave')
-        .pipe(
-          filter(
-            event =>
-              !!event.relatedTarget &&
-              !(event.relatedTarget as Element).matches(RESIZE_OVERLAY_SELECTOR),
-          ),
-          mapTo(null),
-          takeUntil(this.destroyed),
-        )
-        .subscribe(this.eventDispatcher.headerCellHovered);
+      this._eventCleanups = [
+        this._renderer.listen(element, 'mouseover', (event: MouseEvent) => {
+          this.eventDispatcher.headerCellHovered.next(_closest(event.target, HEADER_CELL_SELECTOR));
+        }),
+        this._renderer.listen(element, 'mouseleave', (event: MouseEvent) => {
+          if (
+            event.relatedTarget &&
+            !(event.relatedTarget as Element).matches(RESIZE_OVERLAY_SELECTOR)
+          ) {
+            this.eventDispatcher.headerCellHovered.next(null);
+          }
+        }),
+      ];
     });
   }
 

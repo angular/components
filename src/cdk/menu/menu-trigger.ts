@@ -6,7 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectorRef, Directive, ElementRef, inject, NgZone, OnDestroy} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  inject,
+  NgZone,
+  OnDestroy,
+  Renderer2,
+} from '@angular/core';
 import {InputModalityDetector} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
@@ -27,8 +35,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {_getEventTarget} from '@angular/cdk/platform';
-import {fromEvent} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
 import {PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
 import {MENU_AIM} from './menu-aim';
@@ -72,6 +79,8 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
   private readonly _inputModalityDetector = inject(InputModalityDetector);
   private readonly _directionality = inject(Directionality, {optional: true});
+  private readonly _renderer = inject(Renderer2);
+  private _cleanupMouseenter: () => void;
 
   /** The parent menu this trigger belongs to. */
   private readonly _parentMenu = inject(CDK_MENU, {optional: true});
@@ -122,6 +131,11 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
    */
   getMenu(): Menu | undefined {
     return this.childMenu;
+  }
+
+  override ngOnDestroy(): void {
+    this._cleanupMouseenter();
+    super.ngOnDestroy();
   }
 
   /**
@@ -196,20 +210,14 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
    * into.
    */
   private _subscribeToMouseEnter() {
-    this._ngZone.runOutsideAngular(() => {
-      fromEvent(this._elementRef.nativeElement, 'mouseenter')
-        .pipe(
-          filter(() => {
-            return (
-              // Skip fake `mouseenter` events dispatched by touch devices.
-              this._inputModalityDetector.mostRecentModality !== 'touch' &&
-              !this.menuStack.isEmpty() &&
-              !this.isOpen()
-            );
-          }),
-          takeUntil(this.destroyed),
-        )
-        .subscribe(() => {
+    this._cleanupMouseenter = this._ngZone.runOutsideAngular(() => {
+      return this._renderer.listen(this._elementRef.nativeElement, 'mouseenter', () => {
+        if (
+          // Skip fake `mouseenter` events dispatched by touch devices.
+          this._inputModalityDetector.mostRecentModality !== 'touch' &&
+          !this.menuStack.isEmpty() &&
+          !this.isOpen()
+        ) {
           // Closes any sibling menu items and opens the menu associated with this trigger.
           const toggleMenus = () =>
             this._ngZone.run(() => {
@@ -222,7 +230,8 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
           } else {
             toggleMenus();
           }
-        });
+        }
+      });
     });
   }
 

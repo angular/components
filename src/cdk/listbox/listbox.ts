@@ -42,10 +42,11 @@ import {
   OnDestroy,
   Output,
   QueryList,
+  Renderer2,
   signal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
+import {defer, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 
 /**
@@ -256,6 +257,8 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   ],
 })
 export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
+  private _cleanupWindowBlur: (() => void) | undefined;
+
   /** The id of the option's host element. */
   @Input()
   get id() {
@@ -439,7 +442,16 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   constructor() {
     if (this._isBrowser) {
-      this._setPreviousActiveOptionAsActiveOptionOnWindowBlur();
+      const renderer = inject(Renderer2);
+
+      this._cleanupWindowBlur = this.ngZone.runOutsideAngular(() => {
+        return renderer.listen('window', 'blur', () => {
+          if (this.element.contains(document.activeElement) && this._previousActiveOption) {
+            this._setActiveOption(this._previousActiveOption);
+            this._previousActiveOption = null;
+          }
+        });
+      });
     }
   }
 
@@ -465,6 +477,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
 
   ngOnDestroy() {
+    this._cleanupWindowBlur?.();
     this.listKeyManager?.destroy();
     this.destroyed.next();
     this.destroyed.complete();
@@ -1034,23 +1047,6 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   private _getLastTriggeredIndex() {
     const index = this.options.toArray().indexOf(this._lastTriggered!);
     return index === -1 ? null : index;
-  }
-
-  /**
-   * Set previous active option as active option on window blur.
-   * This ensures that the `activeOption` matches the actual focused element when the user returns to the document.
-   */
-  private _setPreviousActiveOptionAsActiveOptionOnWindowBlur() {
-    this.ngZone.runOutsideAngular(() => {
-      fromEvent(window, 'blur')
-        .pipe(takeUntil(this.destroyed))
-        .subscribe(() => {
-          if (this.element.contains(document.activeElement) && this._previousActiveOption) {
-            this._setActiveOption(this._previousActiveOption);
-            this._previousActiveOption = null;
-          }
-        });
-    });
   }
 }
 
