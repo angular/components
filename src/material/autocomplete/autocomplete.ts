@@ -74,7 +74,7 @@ export interface MatAutocompleteDefaultOptions {
   /** Class or list of classes to be applied to the autocomplete's overlay panel. */
   overlayPanelClass?: string | string[];
 
-  /** Wheter icon indicators should be hidden for single-selection. */
+  /** Whether icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
 }
 
