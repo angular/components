@@ -63,14 +63,14 @@ provided to the `theme` mixin within your theme file to use the custom colors.
 @use './path/to/_theme-colors' as my-theme; // location of generated file
 
 html {
-  @include mat.theme(
+  @include mat.theme((
     color: (
       primary: my-theme.$primary-palette,
       tertiary: my-theme.$tertiary-palette,
     ),
     typography: Roboto,
     density: 0,
-  )
+  ));
 }
 ```
 
