@@ -1,3 +1,32 @@
+<a name="19.1.0-next.3"></a>
+# 19.1.0-next.3 "cotton-curtains" (2024-12-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [62a672af0d](https://github.com/angular/components/commit/62a672af0d6cb2195633a1cbf6c39472104767f9) | feat | **dialog:** expose cdk dialog docs ([#1144](https://github.com/angular/components/pull/1144)) |
+| [a0a16fc70e](https://github.com/angular/components/commit/a0a16fc70e1fed7fbb9177c83cf3f670022a321a) | feat | **menu:** expose cdk menu docs ([#1142](https://github.com/angular/components/pull/1142)) |
+| [a141c22e99](https://github.com/angular/components/commit/a141c22e99467174225f74b6ccac730df92c46c8) | fix | **drag-drop:** resolve projected handles |
+| [454d9f9c09](https://github.com/angular/components/commit/454d9f9c0937e9e70d018be13a7f452bec776620) | fix | **drag-drop:** stop dragging on touchcancel ([#30184](https://github.com/angular/components/pull/30184)) |
+| [d34d2a2ca3](https://github.com/angular/components/commit/d34d2a2ca33834a18ca169040f2d81e353c355c5) | fix | **testing:** add code to keyboard events ([#30188](https://github.com/angular/components/pull/30188)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [057ed370aa](https://github.com/angular/components/commit/057ed370aa1e5ec5c5ffde535d536a19c327e8ef) | fix | **api-theme:** fix nav items hover/focus contrast ([#1004](https://github.com/angular/components/pull/1004)) |
+| [3163040850](https://github.com/angular/components/commit/3163040850fbb23959dd3ef97de2242e779d5de3) | fix | **docs:** change twitter logo ([#1245](https://github.com/angular/components/pull/1245)) |
+| [4697d8e180](https://github.com/angular/components/commit/4697d8e18046540ed7b632bc8c94c74d980d7e02) | fix | **list:** enable MacOS select all with command+a ([#30183](https://github.com/angular/components/pull/30183)) |
+| [4620df14f7](https://github.com/angular/components/commit/4620df14f77d807fe444a11045e61e8de28b4c9b) | fix | **menu:** remove dependency on animations module ([#30163](https://github.com/angular/components/pull/30163)) |
+| [c12b73ee66](https://github.com/angular/components/commit/c12b73ee6648723fb900607ff8c8095163957e92) | fix | **table:** improve filter predicate efficiency ([#30172](https://github.com/angular/components/pull/30172)) |
+| [04a7652dca](https://github.com/angular/components/commit/04a7652dcaeffa36d27cb9f61d04bd9772fcab09) | fix | **table:** set border none for header cells on last row ([#30193](https://github.com/angular/components/pull/30193)) |
+| [a0b5546111](https://github.com/angular/components/commit/a0b5546111a2d28e45e1bc031c0a1b1edc109c23) | fix | **theme:** unselected theme picker |
+| [b924e869c5](https://github.com/angular/components/commit/b924e869c548850caf9d511a5fa56ab402d435bb) | fix | **theming:** fix not found error in the guide duplicate theming styles document ([#30108](https://github.com/angular/components/pull/30108)) |
+| [c04f84fd3b](https://github.com/angular/components/commit/c04f84fd3b81dbf5e1e76304845f51d16f365ab3) | fix | **tooltip:** body line height affecting gap ([#30164](https://github.com/angular/components/pull/30164)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [50d906b3e3](https://github.com/angular/components/commit/50d906b3e3bb841917bafc05bc65ae7c01a57705) | fix | **column-resize:** Previous size was being sent for persistance rather than newly updated size in non-live resize mode. ([#30161](https://github.com/angular/components/pull/30161)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.0-next.2"></a>
 # 19.1.0-next.2 "rhodium-rhubarb" (2024-12-11)
 ### material
@@ -125,9 +154,9 @@
 - * Since `cdk.high-contrast` targets a media query instead of a class, the specificity of the styles it emits is lower than before.
 - * The overlay stays are now loaded slightly later than before which can change their specificity. You may have to update any overlay style overrides.
 - * Virtual scrolling lists now have proper type checking which can reveal some previously-hidden compilation errors.
-  
+
   * fix(cdk/scrolling): adds ngTemplateContextGuard
-  
+
   implements ngTemplateContextGuard for CdkVirtualForOf directive
 ### material
 - * The ripples styles are now loaded slightly later than before which can change their specificity. You may have to update any ripple style overrides.
@@ -440,16 +469,16 @@
    * CdkTree#treeControl deprecated. Provide one of CdkTree#levelAccessor or CdkTree#childrenAccessor instead.
    * MatTreeFlattener deprecated. Use MatTree#childrenAccessor and MatTreeNode#isExpandable instead.
    * MatTreeFlatDataSource deprecated. Use one of levelAccessor or childrenAccessor instead of TreeControl.
-  
+
   Note when upgrading: isExpandable works differently on Trees using treeControl than trees using childrenAccessor or levelAccessor. Nodes on trees that have a treeControl are expandable by default. Nodes on trees using childrenAccessor or levelAccessor are *not* expandable by default. Provide isExpandable to override default behavior.
 - Setting tabindex of tree nodes deprecated. By default, Tree ignores tabindex passed to tree nodes.
    * MatTreeNode#tabIndex deprecated. MatTreeNode ignores Input tabIndex and manages its own focus behavior.
    * MatTreeNode#defaultTabIndex deprecated. MatTreeNode ignores defaultTabIndex and manages its own focus behavior.
    * MatNestedTreeNode#tabIndex deprecated. MatTreeNode ignores Input defaultTabIndex and manages its own focus behavior.
    * LegacyTreeKeyManager and LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER deprecated. Inject a TreeKeyManagerFactory to customize keyboard behavior.
-  
+
   Note when upgrading: an opt-out is available for keyboard functionality changes. Provide LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER to opt-out of Tree managing its own focus. When provided, Tree does not manage it’s own focus and respects tabindex passed to TreeNode. When provided, have the same focus behavior as before this commit is applied.
-  
+
   Add Legacy Keyboard Interface demo, which shows usage of LEGACY_TREE_KEY_MANAGER_FACTORY_PROVIDER. Add Custom Key Manager, which shows usage of injecting a TreeKeyManagerStrategy
 - disabled renamed to isDisabled.
    * CdkTreeNode#disabled deprecated and alias to CdkTreeNode#isDisabled
@@ -2008,7 +2037,7 @@ Kristiyan Kostadinov, RuoJia123 and Zach Arend
 <a name="15.2.1"></a>
 # 15.2.1 "silicone-soliloquy" (2023-03-01)
 ## Breaking Changes
-### 
+###
 - the description for body-1 and body-2 has changed
 ### material
 | Commit | Type | Description |
@@ -2020,7 +2049,7 @@ Kristiyan Kostadinov, RuoJia123 and Zach Arend
 | [a87735e4ba](https://github.com/angular/components/commit/a87735e4bacd5f6abc4c8933c8198ce984df0f33) | fix | **list:** add disabled attribute for mat-list-item buttons ([#26672](https://github.com/angular/components/pull/26672)) |
 | [54d157f3d2](https://github.com/angular/components/commit/54d157f3d2b629d6e025ab92edfd64172a81decd) | fix | **schematics:** migrate to mdc components selectively bug ([#26427](https://github.com/angular/components/pull/26427)) |
 | [4338e5ee57](https://github.com/angular/components/commit/4338e5ee5724a28a434f2d04d3e1f29d43c4a0b3) | fix | **snack-bar:** misaligned lines on safari for long messages ([#26692](https://github.com/angular/components/pull/26692)) |
-### 
+###
 | Commit | Type | Description |
 | -- | -- | -- |
 | [b71fa77f7d](https://github.com/angular/components/commit/b71fa77f7da620fa10dee32503c772758b15413f) | docs | reverse body-1 and body-2 typography description ([#26330](https://github.com/angular/components/pull/26330)) |
