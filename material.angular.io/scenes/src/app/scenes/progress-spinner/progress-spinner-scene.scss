@@ -1,0 +1,27 @@
+.scene-spinner {
+  position: relative;
+  margin: 0 19px;
+}
+
+.scene-spinner-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.scene-spinner-left {
+  transform: rotate(90deg);
+}
+
+.scene-spinner-right {
+  transform: rotate(-90deg);
+}
+
+.scene-spinner-label {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-color: pink;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 10px;
+}

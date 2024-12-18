@@ -1,0 +1,26 @@
+<div class="docs-component-category-list-summary"
+     id="category-summary"
+     focusOnNavigation>
+  <div [innerHTML]="_categoryListSummary"></div>
+</div>
+@if ((params | async)?.section; as section) {
+  <div class="docs-component-category-list">
+    @for (component of docItems.getItems(section); track component) {
+      <a class="docs-component-category-list-item"
+         [routerLink]="'/' + section + '/' + component.id">
+        <div class="docs-component-category-list-card" matRipple>
+          @if (section === 'components') {
+            <img class="docs-component-category-list-card-image-wrapper"
+                [src]="'../../../assets/screenshots/' + component.id + '.scene.png'"
+                loading="lazy"
+                alt=""
+                role="presentation"
+                aria-hidden="true">
+          }
+          <div class="docs-component-category-list-card-title">{{component.name}}</div>
+          <div class="docs-component-category-list-card-summary">{{component.summary}}</div>
+        </div>
+      </a>
+    }
+  </div>
+}

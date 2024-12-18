@@ -1,0 +1,48 @@
+:host,
+.docs-guide {
+  // Ensures that the footer is pushed to the bottom if the page is too short.
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.docs-guide-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  padding-top: 48px;
+}
+
+.docs-guide-item {
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  display: flex;
+  margin: 16px;
+
+  &:focus,
+  &:hover {
+    outline: none;
+
+    .docs-guide-card {
+      background: var(--mat-sys-surface-dim);
+    }
+  }
+}
+
+.docs-guide-card.mat-mdc-card {
+  text-align: center;
+  width: 300px;
+  height: 250px;
+  padding: 8px;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.docs-guide-card .mat-mdc-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}

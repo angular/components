@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  padding: 20px 0;
+}
+
+.docs-example-viewer-wrapper {
+  border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  h3 {
+    margin-top: 10px;
+  }
+}
+
+.docs-example-viewer-title {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 16px 16px 0 24px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.docs-example-viewer-source code-snippet {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.docs-example-viewer-title-spacer {
+  flex: 1 1 auto;
+}
+
+.docs-example-viewer-body {
+  padding: 16px 24px;
+}
+
+.button-bar {
+  float: right;
+  padding: 8px;
+}
+
+code-snippet {
+  padding: 20px;
+}
+
+.docs-example-source {
+  // TODO(annieyw): remove when standalone snippets are removed
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  overflow: auto;
+}

@@ -1,0 +1,125 @@
+@use '../../../styles/constants';
+
+app-component-sidenav {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  .docs-component-viewer-footer {
+    margin-top: 0;
+  }
+}
+
+.docs-component-viewer-sidenav-container {
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.docs-component-viewer-sidenav {
+  overflow: auto;
+}
+
+.docs-component-sidenav-inner-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.mat-drawer {
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+}
+
+.docs-component-viewer-nav {
+  position: sticky;
+  top: 0;
+
+  .docs-component-viewer-nav-content {
+    border-right: 1px solid var(--mat-sys-outline-variant);
+    width: constants.$sidenav-width;
+    padding: 16px 8px;
+    height: calc(100vh - 75px);
+    overflow: auto;
+    box-sizing: border-box;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .26);
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0 0 5px 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    li {
+      font-size: 13px;
+      line-height: 16px;
+      margin: 0;
+      padding: 5px 15px 5px 20px;
+    }
+  }
+}
+
+.docs-component-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.docs-component-sidenav-inner-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.docs-component-sidenav-body-content {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+div .mat-mdc-list-base {
+  padding-top: 0;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+div.docs-component-viewer-nav-content .mat-nav-list .mat-mdc-list-item .mat-list-item-content {
+  padding-left: 25px;
+}
+
+@media (max-width: constants.$small-breakpoint-width) {
+  // Add specific rule to prevent default rule conflict
+  .docs-component-viewer-sidenav-container .docs-component-viewer-sidenav {
+    // position right above the content
+    z-index: 4;
+  }
+
+  .docs-component-viewer-nav {
+    position: relative;
+    top: 0;
+
+    .docs-component-viewer-nav-content {
+      width: 100%;
+      border: none;
+      margin: 0;
+      max-height: initial;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .docs-component-viewer-sidenav-container {
+    flex: 1 0 auto;
+  }
+
+  .docs-component-sidenav-body-content {
+    flex-direction: column;
+  }
+}

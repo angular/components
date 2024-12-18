@@ -1,0 +1,68 @@
+.docs-help-support {
+  color: var(--mat-sys-on-surface);
+  width: 75%;
+  margin: auto;
+  padding: 20px 0;
+}
+
+.docs-help-support a {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.docs-help-support ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 18px 0;
+}
+
+.docs-help-support ul li {
+  text-align: center;
+  flex: 0 1 200px;
+  -moz-box-flex: 0;
+}
+
+.docs-help-support ul li a {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.docs-help-support ul li a:hover {
+  text-decoration: underline;
+}
+
+.docs-help-support ul li a img,
+app-logo {
+  display: block;
+  margin: 10px auto;
+  width: 50px;
+  height: 50px;
+}
+
+.docs-help-support-description {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+@media screen and (max-width: 884px) {
+  .docs-help-support {
+    padding-bottom: 20px;
+  }
+  .docs-help-support ul {
+    display: block;
+  }
+
+  .docs-help-support ul li a {
+    display: flex;
+    align-items: center;
+  }
+  .docs-help-support ul li a img,
+  app-logo {
+    margin: 10px;
+
+  }
+  .docs-help-support-description {
+    display: none;
+  }
+}

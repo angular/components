@@ -1,0 +1,25 @@
+<mat-sidenav-container class="docs-component-viewer-sidenav-container">
+  <!-- If on small screen, menu resides in drawer -->
+  @if (isScreenSmall | async) {
+    <mat-sidenav #sidenav class="docs-component-viewer-sidenav"
+                [opened]="(isScreenSmall | async) === false"
+                [mode]="(isScreenSmall | async) ? 'over' : 'side'"
+                [fixedInViewport]="(isScreenSmall | async)"
+                [fixedTopGap]="(isExtraScreenSmall | async) ? 92 : 56">
+      <app-component-nav [params]="params"></app-component-nav>
+    </mat-sidenav>
+  }
+  <div class="docs-component-sidenav-content">
+    <component-page-header (toggleSidenav)="toggleSidenav()"></component-page-header>
+    <div class="docs-component-sidenav-inner-content">
+      <main class="docs-component-sidenav-body-content">
+        <!-- If on large screen, menu resides to left of content -->
+        @if ((isScreenSmall | async) === false) {
+          <app-component-nav [params]="params"/>
+        }
+        <router-outlet></router-outlet>
+      </main>
+      <app-footer class="docs-component-viewer-footer"></app-footer>
+    </div>
+  </div>
+</mat-sidenav-container>

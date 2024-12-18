@@ -1,0 +1,69 @@
+@use './constants';
+
+.docs-api table,
+.docs-markdown > table {
+  color: var(--mat-sys-on-surface);
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0 0 32px;
+  width: 100%;
+}
+
+
+// Styles specific only to the table inside markdown.
+.docs-markdown > table {
+  font-size: 14px;
+
+  // Code tends to wrap inside tables which doesn't look great with the background color.
+  code {
+    background: transparent;
+  }
+}
+
+
+.docs-api th,
+.docs-markdown > table th {
+  max-width: 100px;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.docs-api td,
+.docs-markdown > table td {
+  font-weight: 400;
+  padding: 8px 16px;
+
+  @media (max-width: constants.$extra-small-breakpoint-width) {
+    &.docs-api-properties-name-cell,
+    &.docs-api-method-parameter-cell,
+    &.docs-api-method-returns-type-cell,
+    &.docs-api-method-description-cell {
+      min-width: 80px;
+      word-break: break-word;
+    }
+  }
+}
+
+.docs-api tr,
+.docs-markdown > table tr {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  height: 56px;
+}
+
+@media (max-width: constants.$small-breakpoint-width) {
+  .docs-api table,
+  .docs-markdown > table {
+    margin: 0 0 32px 0;
+  }
+
+  .docs-api th,
+  .docs-markdown > table th {
+    padding: 6px 16px;
+  }
+
+  .docs-api td,
+  .docs-markdown > table td {
+    padding: 4px 8px;
+  }
+}
