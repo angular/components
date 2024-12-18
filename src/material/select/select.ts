@@ -127,7 +127,7 @@ export interface MatSelectConfig {
   /** Class or list of classes to be applied to the menu's overlay panel. */
   overlayPanelClass?: string | string[];
 
-  /** Wheter icon indicators should be hidden for single-selection. */
+  /** Whether icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
 
   /**
