@@ -79,6 +79,8 @@
     @include token-utils.create-token-slot(color, arrow-color);
   }
 
+  .mat-sort-header.cdk-keyboard-focused &,
+  .mat-sort-header.cdk-program-focused &,
   .mat-sort-header:hover & {
     opacity: 0.54;
   }
