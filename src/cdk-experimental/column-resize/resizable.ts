@@ -13,6 +13,7 @@ import {
   Injector,
   NgZone,
   OnDestroy,
+  OnInit,
   Type,
   ViewContainerRef,
   ChangeDetectorRef,
@@ -42,7 +43,7 @@ const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
  */
 @Directive()
 export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
-  implements AfterViewInit, OnDestroy
+  implements AfterViewInit, OnDestroy, OnInit
 {
   protected minWidthPxInternal: number = 0;
   protected maxWidthPxInternal: number = Number.MAX_SAFE_INTEGER;
@@ -93,6 +94,10 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     if (this.elementRef.nativeElement && this._viewInitialized) {
       this._applyMaxWidthPx();
     }
+  }
+
+  ngOnInit() {
+    this.resizeStrategy.registerColumn(this.elementRef.nativeElement);
   }
 
   ngAfterViewInit() {
@@ -282,14 +287,13 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   }
 
   private _appendInlineHandle(): void {
-    this.styleScheduler.schedule(() => {
-      this.inlineHandle = this.document.createElement('div');
-      this.inlineHandle.tabIndex = 0;
-      this.inlineHandle.className = this.getInlineHandleCssClassName();
+    this.inlineHandle = this.document.createElement('div');
+    // TODO: re-apply tab index once this element has behavior.
+    // this.inlineHandle.tabIndex = 0;
+    this.inlineHandle.className = this.getInlineHandleCssClassName();
 
-      // TODO: Apply correct aria role (probably slider) after a11y spec questions resolved.
+    // TODO: Apply correct aria role (probably slider) after a11y spec questions resolved.
 
-      this.elementRef.nativeElement!.appendChild(this.inlineHandle);
-    });
+    this.elementRef.nativeElement!.appendChild(this.inlineHandle);
   }
 }
