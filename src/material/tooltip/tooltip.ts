@@ -217,6 +217,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _currentPosition: TooltipPosition;
   private readonly _cssClassPrefix: string = 'mat-mdc';
   private _ariaDescriptionPending: boolean;
+  private _dirSubscribed = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -396,12 +397,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       }
     }
 
-    this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      if (this._overlayRef) {
-        this._updatePosition(this._overlayRef);
-      }
-    });
-
     this._viewportMargin = MIN_VIEWPORT_TOOLTIP_THRESHOLD;
   }
 
@@ -569,6 +564,15 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     if (this._defaultOptions?.disableTooltipInteractivity) {
       this._overlayRef.addPanelClass(`${this._cssClassPrefix}-tooltip-panel-non-interactive`);
+    }
+
+    if (!this._dirSubscribed) {
+      this._dirSubscribed = true;
+      this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        if (this._overlayRef) {
+          this._updatePosition(this._overlayRef);
+        }
+      });
     }
 
     return this._overlayRef;
