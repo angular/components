@@ -716,10 +716,7 @@ export class CdkTree<T, K = T>
     if (this.treeControl) {
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
-      const expansionModel = this._expansionModel;
-      expansionModel.select(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      this._forEachExpansionKey(keys => this._expansionModel?.select(...keys));
     }
   }
 
@@ -728,10 +725,7 @@ export class CdkTree<T, K = T>
     if (this.treeControl) {
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
-      const expansionModel = this._expansionModel;
-      expansionModel.deselect(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      this._forEachExpansionKey(keys => this._expansionModel?.deselect(...keys));
     }
   }
 
@@ -776,13 +770,7 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          return this._findChildrenByLevel(
-            levelAccessor,
-            flattenedNodes,
-
-            dataNode,
-            1,
-          );
+          return this._findChildrenByLevel(levelAccessor, flattenedNodes, dataNode, 1);
         }),
       );
     }
@@ -1151,6 +1139,28 @@ export class CdkTree<T, K = T>
       const group = this._ariaSets.get(parentKey) ?? [];
       group.splice(index, 0, dataNode);
       this._ariaSets.set(parentKey, group);
+    }
+  }
+
+  /** Invokes a callback with all node expansion keys. */
+  private _forEachExpansionKey(callback: (keys: K[]) => void) {
+    const toToggle: K[] = [];
+    const observables: Observable<T[]>[] = [];
+
+    this._nodes.value.forEach(node => {
+      toToggle.push(this._getExpansionKey(node.data));
+      observables.push(this._getDescendants(node.data));
+    });
+
+    if (observables.length > 0) {
+      combineLatest(observables)
+        .pipe(take(1), takeUntil(this._onDestroy))
+        .subscribe(results => {
+          results.forEach(inner => inner.forEach(r => toToggle.push(this._getExpansionKey(r))));
+          callback(toToggle);
+        });
+    } else {
+      callback(toToggle);
     }
   }
 }
