@@ -1,4 +1,4 @@
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, QueryList, ViewChildren, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {CdkTreeModule} from './tree-module';
@@ -9,8 +9,7 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CdkTreeModule],
-      declarations: [SimpleCdkTreeApp],
+      imports: [SimpleCdkTreeApp],
       providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
     });
 
@@ -74,13 +73,14 @@ class MinimalTestData {
 
 @Component({
   template: `
-    <cdk-tree #tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
+    <cdk-tree [dataSource]="dataSource" [childrenAccessor]="getChildren">
       <cdk-tree-node #node *cdkTreeNodeDef="let node">
         {{node.name}}
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  standalone: true,
+  imports: [CdkTreeModule],
 })
 class SimpleCdkTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;
@@ -88,6 +88,5 @@ class SimpleCdkTreeApp {
 
   dataSource = of([new MinimalTestData('apple'), new MinimalTestData('banana')]);
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
   @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
 }

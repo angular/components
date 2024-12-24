@@ -23,6 +23,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { TreeControl } from '@angular/cdk/tree';
 import { ViewContainerRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
@@ -119,7 +120,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected _getTabindexAttribute(): number | null;
+    protected _getTabindexAttribute(): number | WritableSignal<number | null>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)

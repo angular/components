@@ -60,6 +60,7 @@ describe('MatTree', () => {
         // add a child to the first node
         const data = underlyingDataSource.data;
         underlyingDataSource.addChild(data[2]);
+        fixture.detectChanges();
         component.tree.expandAll();
         fixture.detectChanges();
 

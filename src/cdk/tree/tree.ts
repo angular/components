@@ -41,22 +41,28 @@ import {
   Output,
   QueryList,
   TrackByFunction,
+  input,
+  computed,
+  Signal,
+  signal,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   numberAttribute,
   inject,
   booleanAttribute,
+  TemplateRef,
 } from '@angular/core';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {coerceObservable} from '@angular/cdk/coercion/private';
 import {
   BehaviorSubject,
   combineLatest,
+  Subscriber,
   concat,
   EMPTY,
   Observable,
   Subject,
-  Subscription,
   isObservable,
   of as observableOf,
 } from 'rxjs';
@@ -69,6 +75,7 @@ import {
   switchMap,
   take,
   takeUntil,
+  shareReplay,
   tap,
 } from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
@@ -81,6 +88,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
 } from './tree-errors';
+import {NgTemplateOutlet} from '@angular/common';
 
 type RenderingData<T> =
   | {
@@ -93,6 +101,72 @@ type RenderingData<T> =
       nodeType: 'nested' | 'flat';
       renderNodes: readonly T[];
     };
+
+interface RenderNode<T, K> {
+  context: CdkTreeNodeOutletContext<T>;
+  template: TemplateRef<CdkTreeNodeOutletContext<T>>;
+  key: K;
+}
+
+class NodeOutletTemplateContext<T, K> {
+  $implicit: Signal<RenderNode<T, K>[]>;
+
+  constructor(nodes: Signal<RenderNode<T, K>[]>) {
+    this.$implicit = nodes;
+  }
+}
+
+/** @docs-private */
+@Directive({
+  selector: '[cdkTreeNodeRenderer]',
+  hostDirectives: [
+    {
+      directive: NgTemplateOutlet,
+      inputs: ['ngTemplateOutlet: template', 'ngTemplateOutletContext: context'],
+    },
+  ],
+})
+export class CdkTreeNodeRenderer<T, K> implements OnInit {
+  readonly node = input.required<RenderNode<T, K>>();
+
+  ngOnInit() {
+    if (CdkTreeNode.mostRecentTreeNode) {
+      CdkTreeNode.mostRecentTreeNode.data = this.node().context.$implicit;
+    }
+  }
+}
+
+/**
+ * Invisible component that holds a template to be rendered inside the CdkTreeNodeOutlet.
+ *
+ * @docs-private
+ */
+@Component({
+  selector: 'cdk-tree-node-outlet-template',
+  template: `
+    <ng-template #outletTemplate let-nodes>
+      @for (node of nodes(); track node.key) {
+        <ng-container
+            cdkTreeNodeRenderer
+            [node]="node"
+            [template]="node.template"
+            [context]="node.context"
+            />
+      }
+    </ng-template>
+  `,
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CdkTreeNodeRenderer],
+  host: {
+    'style': 'display: none;',
+  },
+})
+export class CdkTreeNodeOutletTemplate<T, K> {
+  @ViewChild('outletTemplate', {static: true, read: TemplateRef}) _nodeOutletTemplate: TemplateRef<
+    NodeOutletTemplateContext<T, K>
+  >;
+}
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -129,6 +203,7 @@ export class CdkTree<T, K = T>
   private _elementRef = inject(ElementRef);
 
   private _dir = inject(Directionality);
+  private _viewContainer = inject(ViewContainerRef);
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -138,9 +213,6 @@ export class CdkTree<T, K = T>
 
   /** Stores the node definition that does not have a when predicate. */
   private _defaultNodeDef: CdkTreeNodeDef<T> | null;
-
-  /** Data subscription */
-  private _dataSubscription: Subscription | null;
 
   /** Level of nodes */
   private _levels: Map<K, number> = new Map<K, number>();
@@ -165,14 +237,35 @@ export class CdkTree<T, K = T>
    */
   @Input()
   get dataSource(): DataSource<T> | Observable<T[]> | T[] {
-    return this._dataSource;
+    return this._dataSource.value;
   }
-  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-    if (this._dataSource !== dataSource) {
-      this._switchDataSource(dataSource);
+  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null) {
+    if (this._dataSource.value !== dataSource) {
+      this._dataSource.next(dataSource!);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  private readonly _dataSource = new BehaviorSubject<DataSource<T> | Observable<T[]> | T[]>([]);
+  private readonly _transformedDataSource = this._dataSource.pipe(
+    tap(dataSource => {
+      if (!dataSource) {
+        this._nodeOutlet.viewContainer.clear();
+      }
+    }),
+    switchMap(dataSource => {
+      if (isDataSource(dataSource)) {
+        return this._fromDataSource(dataSource);
+      } else if (isObservable(dataSource)) {
+        return dataSource;
+      } else if (Array.isArray(dataSource)) {
+        return observableOf(dataSource);
+      }
+
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw getTreeNoValidDataSourceError();
+      }
+      return EMPTY;
+    }),
+  );
 
   /**
    * The tree controller
@@ -205,12 +298,28 @@ export class CdkTree<T, K = T>
    * relative to the function to know if a node should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  @Input() trackBy: TrackByFunction<T>;
+  @Input()
+  get trackBy(): TrackByFunction<T> | undefined {
+    return this._trackBy();
+  }
+  set trackBy(trackBy: TrackByFunction<T>) {
+    this._trackBy.set(trackBy);
+  }
 
   /**
    * Given a data node, determines the key by which we determine whether or not this node is expanded.
    */
-  @Input() expansionKey?: (dataNode: T) => K;
+  @Input()
+  get expansionKey(): ((dataNode: T) => K) | undefined {
+    return this._expansionKey();
+  }
+  set expansionKey(expansionKey: (dataNode: T) => K) {
+    this._expansionKey.set(expansionKey);
+  }
+
+  private readonly _trackBy = signal<TrackByFunction<T> | undefined>(undefined);
+
+  private readonly _expansionKey = signal<((dataNode: T) => K) | undefined>(undefined);
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
@@ -222,6 +331,8 @@ export class CdkTree<T, K = T>
     descendants: true,
   })
   _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
+
+  private readonly _selection = new BehaviorSubject<readonly K[]>([]);
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -237,35 +348,89 @@ export class CdkTree<T, K = T>
   /** Keep track of which nodes are expanded. */
   private _expansionModel?: SelectionModel<K>;
 
-  /**
-   * Maintain a synchronous cache of flattened data nodes. This will only be
-   * populated after initial render, and in certain cases, will be delayed due to
-   * relying on Observable `getChildren` calls.
-   */
-  private _flattenedNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
-
   /** The automatically determined node type for the tree. */
-  private _nodeType: BehaviorSubject<'flat' | 'nested' | null> = new BehaviorSubject<
-    'flat' | 'nested' | null
-  >(null);
+  private _nodeType = new BehaviorSubject<'flat' | 'nested' | null>(null);
 
   /** The mapping between data and the node that is rendered. */
   private _nodes: BehaviorSubject<Map<K, CdkTreeNode<T, K>>> = new BehaviorSubject(
     new Map<K, CdkTreeNode<T, K>>(),
   );
 
-  /**
-   * Synchronous cache of nodes for the `TreeKeyManager`. This is separate
-   * from `_flattenedNodes` so they can be independently updated at different
-   * times.
-   */
-  private _keyManagerNodes: BehaviorSubject<readonly T[]> = new BehaviorSubject<readonly T[]>([]);
-
   private _keyManagerFactory = inject(TREE_KEY_MANAGER) as TreeKeyManagerFactory<CdkTreeNode<T, K>>;
 
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
   _keyManager: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
+
+  private readonly _expansionKeyFn = computed(() => {
+    // In the case that a key accessor function was not provided by the
+    // tree user, we'll default to using the node object itself as the key.
+    //
+    // This cast is safe since:
+    // - if an expansionKey is provided, TS will infer the type of K to be
+    //   the return type.
+    // - if it's not, then K will be defaulted to T.
+    return this._expansionKey() ?? ((item: T) => item as unknown as K);
+  });
+  readonly _trackByFn = computed(() => {
+    const trackBy = this._trackBy();
+    if (trackBy) return trackBy;
+    const expansionKey = this._expansionKeyFn();
+    // Provide a default trackBy based on `_ExpansionKey` if one isn't provided.
+    return (_index: number, item: T) => expansionKey(item);
+  });
+
+  private readonly _renderData = toSignal(
+    combineLatest([this._transformedDataSource, this._nodeType, this._selection]).pipe(
+      switchMap(([data, nodeType, expandedKeys]) =>
+        this._getRenderData(data, nodeType, expandedKeys),
+      ),
+    ),
+    {initialValue: null},
+  );
+  /**
+   * Maintain a synchronous cache of flattened data nodes. This will only be
+   * populated after initial render, and in certain cases, will be delayed due to
+   * relying on Observable `getChildren` calls.
+   */
+  private readonly _flattenedNodes = computed(() => {
+    return this._renderData()?.flattenedNodes ?? [];
+  });
+  private readonly _flatNodesObs = toObservable(this._flattenedNodes);
+  private readonly _renderNodes = computed((): RenderNode<T, K>[] => {
+    const nodes = this._renderData()?.renderNodes ?? [];
+    const levelAccessor = this._getLevelAccessor();
+    const trackBy = this._trackByFn();
+
+    return nodes.map((nodeData, index) => {
+      const node = this._getNodeDef(nodeData, index);
+      const key = this._getExpansionKey(nodeData);
+      const parentData = this._parents.get(key) ?? undefined;
+
+      const context = new CdkTreeNodeOutletContext<T>(nodeData);
+      // If the tree is flat tree, then use the `getLevel` function in flat tree control
+      // Otherwise, use the level of parent node.
+      if (levelAccessor) {
+        context.level = levelAccessor(nodeData);
+      } else if (parentData !== undefined && this._levels.has(this._getExpansionKey(parentData))) {
+        context.level = this._levels.get(this._getExpansionKey(parentData))! + 1;
+      } else {
+        context.level = 0;
+      }
+      this._levels.set(key, context.level);
+      return {
+        context,
+        template: node.template,
+        key: trackBy(index, nodeData),
+      };
+    });
+  });
+  /**
+   * Synchronous cache of nodes for the `TreeKeyManager`. This is separate
+   * from `_flattenedNodes` so they can be independently updated at different
+   * times.
+   */
+  private readonly _keyManagerNodes = toObservable(this._flattenedNodes);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -276,7 +441,6 @@ export class CdkTree<T, K = T>
 
   ngAfterContentChecked() {
     this._updateDefaultNodeDefinition();
-    this._subscribeToDataChanges();
   }
 
   ngOnDestroy() {
@@ -286,15 +450,6 @@ export class CdkTree<T, K = T>
     this._onDestroy.next();
     this._onDestroy.complete();
 
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
-    }
-
-    if (this._dataSubscription) {
-      this._dataSubscription.unsubscribe();
-      this._dataSubscription = null;
-    }
-
     // In certain tests, the tree might be destroyed before this is initialized
     // in `ngAfterContentInit`.
     this._keyManager?.destroy();
@@ -303,10 +458,16 @@ export class CdkTree<T, K = T>
   ngOnInit() {
     this._checkTreeControlUsage();
     this._initializeDataDiffer();
+    this._subscribeToExpansionChanges();
   }
 
   ngAfterViewInit() {
     this._viewInit = true;
+    const componentRef = this._viewContainer.createComponent(CdkTreeNodeOutletTemplate);
+    this._nodeOutlet.viewContainer.createEmbeddedView(
+      componentRef.instance._nodeOutletTemplate,
+      new NodeOutletTemplateContext(this._renderNodes),
+    );
   }
 
   private _updateDefaultNodeDefinition() {
@@ -337,30 +498,13 @@ export class CdkTree<T, K = T>
     }
   }
 
-  /**
-   * Switch to the provided data source by resetting the data and unsubscribing from the current
-   * render change subscription if one exists. If the data source is null, interpret this by
-   * clearing the node outlet. Otherwise start listening for new data.
-   */
-  private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
-    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
-      (this.dataSource as DataSource<T>).disconnect(this);
-    }
-
-    if (this._dataSubscription) {
-      this._dataSubscription.unsubscribe();
-      this._dataSubscription = null;
-    }
-
-    // Remove the all dataNodes if there is now no data source
-    if (!dataSource) {
-      this._nodeOutlet.viewContainer.clear();
-    }
-
-    this._dataSource = dataSource;
-    if (this._nodeDefs) {
-      this._subscribeToDataChanges();
-    }
+  private _subscribeToExpansionChanges() {
+    const model = this._getExpansionModel();
+    this._selection.next([...model.selected]);
+    model.changed.pipe(takeUntil(this._onDestroy)).subscribe(changes => {
+      this._emitExpansionChanges(changes);
+      this._selection.next([...model.selected]);
+    });
   }
 
   _getExpansionModel() {
@@ -371,76 +515,21 @@ export class CdkTree<T, K = T>
     return this.treeControl.expansionModel;
   }
 
-  /** Set up a subscription for the data provided by the data source. */
-  private _subscribeToDataChanges() {
-    if (this._dataSubscription) {
-      return;
-    }
-
-    let dataStream: Observable<readonly T[]> | undefined;
-
-    if (isDataSource(this._dataSource)) {
-      dataStream = this._dataSource.connect(this);
-    } else if (isObservable(this._dataSource)) {
-      dataStream = this._dataSource;
-    } else if (Array.isArray(this._dataSource)) {
-      dataStream = observableOf(this._dataSource);
-    }
-
-    if (!dataStream) {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        throw getTreeNoValidDataSourceError();
-      }
-      return;
-    }
-
-    this._dataSubscription = this._getRenderData(dataStream)
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe(renderingData => {
-        this._renderDataChanges(renderingData);
-      });
-  }
-
-  /** Given an Observable containing a stream of the raw data, returns an Observable containing the RenderingData */
-  private _getRenderData(dataStream: Observable<readonly T[]>): Observable<RenderingData<T>> {
-    const expansionModel = this._getExpansionModel();
-    return combineLatest([
-      dataStream,
-      this._nodeType,
-      // We don't use the expansion data directly, however we add it here to essentially
-      // trigger data rendering when expansion changes occur.
-      expansionModel.changed.pipe(
-        startWith(null),
-        tap(expansionChanges => {
-          this._emitExpansionChanges(expansionChanges);
-        }),
-      ),
-    ]).pipe(
-      switchMap(([data, nodeType]) => {
-        if (nodeType === null) {
-          return observableOf({renderNodes: data, flattenedNodes: null, nodeType} as const);
-        }
-
-        // If we're here, then we know what our node type is, and therefore can
-        // perform our usual rendering pipeline, which necessitates converting the data
-        return this._computeRenderingData(data, nodeType).pipe(
-          map(convertedData => ({...convertedData, nodeType}) as const),
-        );
-      }),
-    );
-  }
-
-  private _renderDataChanges(data: RenderingData<T>) {
-    if (data.nodeType === null) {
-      this.renderNodeChanges(data.renderNodes);
-      return;
+  /** Given the raw data, returns an Observable containing the RenderingData */
+  private _getRenderData(
+    data: readonly T[],
+    nodeType: 'flat' | 'nested' | null,
+    selection: readonly K[],
+  ): Observable<RenderingData<T>> {
+    if (nodeType === null) {
+      return observableOf({renderNodes: data, flattenedNodes: null, nodeType} as const);
     }
 
     // If we're here, then we know what our node type is, and therefore can
-    // perform our usual rendering pipeline.
-    this._updateCachedData(data.flattenedNodes);
-    this.renderNodeChanges(data.renderNodes);
-    this._updateKeyManagerItems(data.flattenedNodes);
+    // perform our usual rendering pipeline, which necessitates converting the data
+    return this._computeRenderingData(data, nodeType, selection).pipe(
+      map(convertedData => ({...convertedData, nodeType}) as const),
+    );
   }
 
   private _emitExpansionChanges(expansionChanges: SelectionChange<K> | null) {
@@ -483,9 +572,7 @@ export class CdkTree<T, K = T>
   }
 
   private _initializeDataDiffer() {
-    // Provide a default trackBy based on `_getExpansionKey` if one isn't provided.
-    const trackBy = this.trackBy ?? ((_index: number, item: T) => this._getExpansionKey(item));
-    this._dataDiffer = this._differs.find([]).create(trackBy);
+    this._dataDiffer = this._differs.find([]).create(this._trackByFn());
   }
 
   private _checkTreeControlUsage() {
@@ -559,15 +646,7 @@ export class CdkTree<T, K = T>
       }
     });
 
-    // Note: we only `detectChanges` from a top-level call, otherwise we risk overflowing
-    // the call stack since this method is called recursively (see #29733.)
-    // TODO: change to `this._changeDetectorRef.markForCheck()`,
-    // or just switch this component to use signals.
-    if (parentData) {
-      this._changeDetectorRef.markForCheck();
-    } else {
-      this._changeDetectorRef.detectChanges();
-    }
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -717,9 +796,7 @@ export class CdkTree<T, K = T>
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      expansionModel.select(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      expansionModel.select(...this._flattenedNodes().map(child => this._getExpansionKey(child)));
     }
   }
 
@@ -729,9 +806,7 @@ export class CdkTree<T, K = T>
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
       const expansionModel = this._expansionModel;
-      expansionModel.deselect(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      expansionModel.deselect(...this._flattenedNodes().map(child => this._getExpansionKey(child)));
     }
   }
 
@@ -771,18 +846,12 @@ export class CdkTree<T, K = T>
     );
 
     if (levelAccessor) {
-      return combineLatest([isExpanded, this._flattenedNodes]).pipe(
+      return combineLatest([isExpanded, this._flatNodesObs]).pipe(
         map(([expanded, flattenedNodes]) => {
           if (!expanded) {
             return [];
           }
-          return this._findChildrenByLevel(
-            levelAccessor,
-            flattenedNodes,
-
-            dataNode,
-            1,
-          );
+          return this._findChildrenByLevel(levelAccessor, flattenedNodes, dataNode, 1);
         }),
       );
     }
@@ -922,7 +991,7 @@ export class CdkTree<T, K = T>
     if (this.levelAccessor) {
       const results = this._findChildrenByLevel(
         this.levelAccessor,
-        this._flattenedNodes.value,
+        this._flattenedNodes(),
         dataNode,
         Infinity,
       );
@@ -965,14 +1034,7 @@ export class CdkTree<T, K = T>
   }
 
   private _getExpansionKey(dataNode: T): K {
-    // In the case that a key accessor function was not provided by the
-    // tree user, we'll default to using the node object itself as the key.
-    //
-    // This cast is safe since:
-    // - if an expansionKey is provided, TS will infer the type of K to be
-    //   the return type.
-    // - if it's not, then K will be defaulted to T.
-    return this.expansionKey?.(dataNode) ?? (dataNode as unknown as K);
+    return this._expansionKeyFn()(dataNode);
   }
 
   private _getAriaSet(node: T) {
@@ -1015,7 +1077,11 @@ export class CdkTree<T, K = T>
    * This will still traverse all nested children in order to build up our internal data
    * models, but will not include them in the returned array.
    */
-  private _flattenNestedNodesWithExpansion(nodes: readonly T[], level = 0): Observable<T[]> {
+  private _flattenNestedNodesWithExpansion(
+    nodes: readonly T[],
+    selection: readonly K[],
+    level = 0,
+  ): Observable<T[]> {
     const childrenAccessor = this._getChildrenAccessor();
     // If we're using a level accessor, we don't need to flatten anything.
     if (!childrenAccessor) {
@@ -1047,8 +1113,8 @@ export class CdkTree<T, K = T>
               if (!childNodes) {
                 return observableOf([]);
               }
-              return this._flattenNestedNodesWithExpansion(childNodes, level + 1).pipe(
-                map(nestedNodes => (this.isExpanded(node) ? nestedNodes : [])),
+              return this._flattenNestedNodesWithExpansion(childNodes, selection, level + 1).pipe(
+                map(nestedNodes => (selection.includes(parentKey) ? nestedNodes : [])),
               );
             }),
           ),
@@ -1069,6 +1135,7 @@ export class CdkTree<T, K = T>
   private _computeRenderingData(
     nodes: readonly T[],
     nodeType: 'flat' | 'nested',
+    selection: readonly K[],
   ): Observable<{
     renderNodes: readonly T[];
     flattenedNodes: readonly T[];
@@ -1080,7 +1147,7 @@ export class CdkTree<T, K = T>
     if (this.childrenAccessor && nodeType === 'flat') {
       // This flattens children into a single array.
       this._ariaSets.set(null, [...nodes]);
-      return this._flattenNestedNodesWithExpansion(nodes).pipe(
+      return this._flattenNestedNodesWithExpansion(nodes, selection).pipe(
         map(flattenedNodes => ({
           renderNodes: flattenedNodes,
           flattenedNodes,
@@ -1113,21 +1180,13 @@ export class CdkTree<T, K = T>
       // For nested nodes, we still need to perform the node flattening in order
       // to maintain our caches for various tree operations.
       this._ariaSets.set(null, [...nodes]);
-      return this._flattenNestedNodesWithExpansion(nodes).pipe(
+      return this._flattenNestedNodesWithExpansion(nodes, selection).pipe(
         map(flattenedNodes => ({
           renderNodes: nodes,
           flattenedNodes,
         })),
       );
     }
-  }
-
-  private _updateCachedData(flattenedNodes: readonly T[]) {
-    this._flattenedNodes.next(flattenedNodes);
-  }
-
-  private _updateKeyManagerItems(flattenedNodes: readonly T[]) {
-    this._keyManagerNodes.next(flattenedNodes);
   }
 
   /** Traverse the flattened node data and compute parents, levels, and group data. */
@@ -1153,6 +1212,27 @@ export class CdkTree<T, K = T>
       this._ariaSets.set(parentKey, group);
     }
   }
+
+  private _fromDataSource(dataSource: DataSource<T>): Observable<readonly T[]> {
+    return new Observable((subscriber: Subscriber<readonly T[]>) => {
+      const subscription = dataSource.connect(this).subscribe({
+        next(val) {
+          subscriber.next(val);
+        },
+        error(err) {
+          subscriber.next(err);
+        },
+        complete() {
+          subscriber.complete();
+        },
+      });
+
+      return () => {
+        dataSource.disconnect(this);
+        subscription.unsubscribe();
+      };
+    }).pipe(shareReplay({bufferSize: 1, refCount: true}));
+  }
 }
 
 /**
@@ -1167,7 +1247,7 @@ export class CdkTree<T, K = T>
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
     '[attr.aria-setsize]': '_getSetSize()',
-    '[tabindex]': '_tabindex',
+    '[tabindex]': '_tabindex()',
     'role': 'treeitem',
     '(click)': '_setActiveItem()',
     '(focus)': '_focusItem()',
@@ -1176,7 +1256,7 @@ export class CdkTree<T, K = T>
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _tree = inject<CdkTree<T, K>>(CdkTree);
-  protected _tabindex: number | null = -1;
+  protected readonly _tabindex = signal<number | null>(-1);
   protected readonly _type: 'flat' | 'nested' = 'flat';
 
   /**
@@ -1404,19 +1484,15 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Focuses this data node. Implemented for TreeKeyManagerItem. */
   focus(): void {
-    this._tabindex = 0;
+    this._tabindex.set(0);
     if (this._shouldFocus) {
       this._elementRef.nativeElement.focus();
     }
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /** Defocus this data node. */
   unfocus(): void {
-    this._tabindex = -1;
-
-    this._changeDetectorRef.markForCheck();
+    this._tabindex.set(-1);
   }
 
   /** Emits an activation event. Implemented for TreeKeyManagerItem. */
@@ -1443,8 +1519,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /** Makes the node focusable. Implemented for TreeKeyManagerItem. */
   makeFocusable(): void {
-    this._tabindex = 0;
-    this._changeDetectorRef.markForCheck();
+    this._tabindex.set(0);
   }
 
   _focusItem() {

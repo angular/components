@@ -65,7 +65,7 @@ export class CdkNestedTreeNode<T, K = T>
   }
 
   ngAfterContentInit() {
-    this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
+    this._dataDiffer = this._differs.find([]).create(this._tree._trackByFn());
     this._tree
       ._getDirectChildren(this.data)
       .pipe(takeUntil(this._destroyed))
