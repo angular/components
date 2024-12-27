@@ -1481,6 +1481,32 @@ describe('CdkTree', () => {
       .withContext(`expect an expanded node`)
       .toBe(1);
   });
+
+  it('should expand/collapse all nested nodes when calling expandAll/collapseAll', () => {
+    configureCdkTreeTestingModule([IsExpandableOrderingTest]);
+    const fixture = TestBed.createComponent(IsExpandableOrderingTest);
+    const component = fixture.componentInstance;
+    const data = fixture.componentInstance.dataSource;
+    treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+    data[0].children[0].children.push(new MinimalTestData('extra'));
+    data[0].children[0].children[0].children.push(new MinimalTestData('extra'));
+    fixture.detectChanges();
+
+    component.tree.expandAll();
+    fixture.detectChanges();
+    expect(getNodes(treeElement).map(n => n.getAttribute('aria-expanded'))).toEqual([
+      'true',
+      'true',
+      'true',
+      'true',
+    ]);
+
+    component.tree.collapseAll();
+    fixture.detectChanges();
+
+    expect(getNodes(treeElement).map(n => n.getAttribute('aria-expanded'))).toEqual(['false']);
+  });
 });
 
 export class TestData {
@@ -1698,10 +1724,6 @@ class SimpleCdkTreeApp {
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
   @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
-
-  expandAll() {
-    this.tree.expandAll();
-  }
 }
 
 @Component({
