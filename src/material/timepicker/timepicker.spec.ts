@@ -955,6 +955,18 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.control.touched).toBe(false);
 
+      getInput(fixture).click();
+      fixture.detectChanges();
+      dispatchFakeEvent(getInput(fixture), 'blur');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.control.touched).toBe(false);
+    });
+
+    it('should mark the control as touched on blur while dropdown is open', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.control.touched).toBe(false);
+
       dispatchFakeEvent(getInput(fixture), 'blur');
       fixture.detectChanges();
       expect(fixture.componentInstance.control.touched).toBe(true);
