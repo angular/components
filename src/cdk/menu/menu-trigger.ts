@@ -12,8 +12,10 @@ import {
   ElementRef,
   inject,
   NgZone,
+  OnChanges,
   OnDestroy,
   Renderer2,
+  SimpleChanges,
 } from '@angular/core';
 import {InputModalityDetector} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -72,7 +74,7 @@ import {eventDispatchesNativeClick} from './event-detection';
     PARENT_OR_NEW_MENU_STACK_PROVIDER,
   ],
 })
-export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
+export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnDestroy {
   private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private readonly _overlay = inject(Overlay);
   private readonly _ngZone = inject(NgZone);
@@ -131,6 +133,12 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
    */
   getMenu(): Menu | undefined {
     return this.childMenu;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['menuPosition'] && this.overlayRef) {
+      this.overlayRef.updatePositionStrategy(this._getOverlayPositionStrategy());
+    }
   }
 
   override ngOnDestroy(): void {
