@@ -17,6 +17,7 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { IterableChanges } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
@@ -554,9 +555,10 @@ export type StickySize = number | null | undefined;
 
 // @public
 export class StickyStyler {
-    constructor(_isNativeHtmlTable: boolean, _stickCellCss: string, direction: Direction, _coalescedStyleScheduler: _CoalescedStyleScheduler, _isBrowser?: boolean, _needsPositionStickyOnElement?: boolean, _positionListener?: StickyPositioningListener | undefined);
+    constructor(_isNativeHtmlTable: boolean, _stickCellCss: string, direction: Direction, _coalescedStyleScheduler: _CoalescedStyleScheduler, _isBrowser?: boolean, _needsPositionStickyOnElement?: boolean, _positionListener?: StickyPositioningListener | undefined, _tableInjector?: Injector | undefined);
     _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number, isBorderElement: boolean): void;
     clearStickyPositioning(rows: HTMLElement[], stickyDirections: StickyDirection[]): void;
+    destroy(): void;
     // (undocumented)
     direction: Direction;
     _getCalculatedZIndex(element: HTMLElement): string;

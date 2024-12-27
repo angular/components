@@ -48,7 +48,6 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
-  afterNextRender,
   Injector,
   HostAttributeToken,
 } from '@angular/core';
@@ -654,6 +653,8 @@ export class CdkTable<T>
   }
 
   ngOnDestroy() {
+    this._stickyStyler?.destroy();
+
     [
       this._rowOutlet?.viewContainer,
       this._headerRowOutlet?.viewContainer,
@@ -727,14 +728,8 @@ export class CdkTable<T>
 
     this._updateNoDataRow();
 
-    afterNextRender(
-      () => {
-        this.updateStickyColumnStyles();
-      },
-      {injector: this._injector},
-    );
-
     this.contentChanged.next();
+    this.updateStickyColumnStyles();
   }
 
   /** Adds a column definition that was not included as part of the content children. */
@@ -1201,7 +1196,7 @@ export class CdkTable<T>
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
   private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
-    const columnDefs = Array.from(rowDef.columns || []).map(columnName => {
+    const columnDefs = Array.from(rowDef?.columns || []).map(columnName => {
       const columnDef = this._columnDefsByName.get(columnName);
       if (!columnDef && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw getTableUnknownColumnError(columnName);
@@ -1396,6 +1391,7 @@ export class CdkTable<T>
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       this._stickyPositioningListener,
+      this._injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())
       .pipe(takeUntil(this._onDestroy))
