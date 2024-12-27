@@ -285,7 +285,9 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       this._formatValue(value);
     }
 
-    this._onTouched?.();
+    if (!this.timepicker().isOpen()) {
+      this._onTouched?.();
+    }
   }
 
   /** Handles the `keydown` event. */
