@@ -4,7 +4,6 @@
 
 ```ts
 
-import { ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/button';
@@ -34,7 +33,7 @@ export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl
 
 // @public
 export class MatPaginator implements OnInit, OnDestroy {
-    constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
+    constructor(...args: unknown[]);
     protected _buttonClicked(targetIndex: number, isDisabled: boolean): void;
     _changePageSize(pageSize: number): void;
     color: ThemePalette;
@@ -85,7 +84,7 @@ export class MatPaginator implements OnInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatPaginator, "mat-paginator", ["matPaginator"], { "color": { "alias": "color"; "required": false; }; "pageIndex": { "alias": "pageIndex"; "required": false; }; "length": { "alias": "length"; "required": false; }; "pageSize": { "alias": "pageSize"; "required": false; }; "pageSizeOptions": { "alias": "pageSizeOptions"; "required": false; }; "hidePageSize": { "alias": "hidePageSize"; "required": false; }; "showFirstLastButtons": { "alias": "showFirstLastButtons"; "required": false; }; "selectConfig": { "alias": "selectConfig"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "page": "page"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginator, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginator, never>;
 }
 
 // @public
