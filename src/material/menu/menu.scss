@@ -177,6 +177,7 @@ mat-menu {
 
   &[disabled] {
     cursor: default;
+    pointer-events: none;
     opacity: 0.38;
 
     // The browser prevents clicks on disabled buttons from propagating which prevents the menu
