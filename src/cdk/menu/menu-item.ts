@@ -193,6 +193,14 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       case ENTER:
         // Skip events that will trigger clicks so the handler doesn't get triggered twice.
         if (!hasModifierKey(event) && !eventDispatchesNativeClick(this._elementRef, event)) {
+          const nodeName = this._elementRef.nativeElement.nodeName;
+
+          // Avoid repeat events on non-native elements (see #30250). Note that we don't do this
+          // on the native elements so we don't interfere with their behavior (see #26296).
+          if (nodeName !== 'A' && nodeName !== 'BUTTON') {
+            event.preventDefault();
+          }
+
           this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
         }
         break;
