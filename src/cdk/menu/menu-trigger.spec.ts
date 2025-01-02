@@ -465,6 +465,22 @@ describe('MenuTrigger', () => {
       expect(secondEvent.defaultPrevented).toBe(false);
     });
 
+    it('should prevent the default action on enter presses on non-button/non-link triggers', () => {
+      fixture.componentInstance.useButtonTrigger = false;
+      fixture.changeDetectorRef.markForCheck();
+      detectChanges();
+
+      const firstEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
+      detectChanges();
+      expect(firstEvent.defaultPrevented).toBe(true);
+      expect(nativeMenus.length).toBe(2);
+
+      const secondEvent = dispatchKeyboardEvent(nativeTrigger, 'keydown', ENTER);
+      detectChanges();
+      expect(nativeMenus.length).toBe(1);
+      expect(secondEvent.defaultPrevented).toBe(true);
+    });
+
     it('should close the open menu on background click', () => {
       nativeTrigger.click();
       detectChanges();
@@ -674,7 +690,11 @@ class TriggerOpensItsMenu {
 
 @Component({
   template: `
-    <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
+    @if (useButtonTrigger) {
+      <button cdkMenuItem [cdkMenuTriggerFor]="sub1">First</button>
+    } @else {
+      <div cdkMenuItem [cdkMenuTriggerFor]="sub1">First</div>
+    }
 
     <ng-template #sub1>
       <div cdkMenu>
@@ -693,6 +713,7 @@ class StandaloneTriggerWithInlineMenu {
   @ViewChild('submenu_item', {read: ElementRef}) submenuItem?: ElementRef<HTMLElement>;
   @ViewChild('inline_item', {read: ElementRef}) nativeInlineItem: ElementRef<HTMLElement>;
   @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  useButtonTrigger = true;
 }
 
 @Component({
