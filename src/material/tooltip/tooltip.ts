@@ -371,6 +371,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
 
+  /** Whether ngOnDestroyed has been called. */
+  private _isDestroyed = false;
+
   constructor(...args: unknown[]);
 
   constructor() {
@@ -442,6 +445,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     this._destroyed.next();
     this._destroyed.complete();
+
+    this._isDestroyed = true;
 
     this._ariaDescriber.removeDescription(nativeElement, this.message, 'tooltip');
     this._focusMonitor.stopMonitoring(nativeElement);
@@ -920,19 +925,24 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._ariaDescriptionPending = true;
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, oldMessage, 'tooltip');
 
-    this._ngZone.runOutsideAngular(() => {
-      // The `AriaDescriber` has some functionality that avoids adding a description if it's the
-      // same as the `aria-label` of an element, however we can't know whether the tooltip trigger
-      // has a data-bound `aria-label` or when it'll be set for the first time. We can avoid the
-      // issue by deferring the description by a tick so Angular has time to set the `aria-label`.
-      Promise.resolve().then(() => {
-        this._ariaDescriptionPending = false;
+    // The `AriaDescriber` has some functionality that avoids adding a description if it's the
+    // same as the `aria-label` of an element, however we can't know whether the tooltip trigger
+    // has a data-bound `aria-label` or when it'll be set for the first time. We can avoid the
+    // issue by deferring the description by a tick so Angular has time to set the `aria-label`.
+    if (!this._isDestroyed) {
+      afterNextRender(
+        {
+          write: () => {
+            this._ariaDescriptionPending = false;
 
-        if (this.message && !this.disabled) {
-          this._ariaDescriber.describe(this._elementRef.nativeElement, this.message, 'tooltip');
-        }
-      });
-    });
+            if (this.message && !this.disabled) {
+              this._ariaDescriber.describe(this._elementRef.nativeElement, this.message, 'tooltip');
+            }
+          },
+        },
+        {injector: this._injector},
+      );
+    }
   }
 }
 
