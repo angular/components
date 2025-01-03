@@ -11,12 +11,10 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   InjectionToken,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   ViewEncapsulation,
   booleanAttribute,
@@ -111,6 +109,9 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
 export class MatPaginator implements OnInit, OnDestroy {
+  _intl = inject(MatPaginatorIntl);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** If set, styles the "page size" form field with the designated style. */
   _formFieldAppearance?: MatFormFieldAppearance;
 
@@ -198,11 +199,15 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** Emits when the paginator is initialized. */
   initialized: Observable<void> = this._initializedStream;
 
-  constructor(
-    public _intl: MatPaginatorIntl,
-    private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS) defaults?: MatPaginatorDefaultOptions,
-  ) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _intl = this._intl;
+    const defaults = inject<MatPaginatorDefaultOptions>(MAT_PAGINATOR_DEFAULT_OPTIONS, {
+      optional: true,
+    });
+
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
 
     if (defaults) {
