@@ -9,14 +9,13 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {
+  AfterContentInit,
   Directive,
   DoCheck,
   ElementRef,
-  InjectionToken,
   Injector,
   Input,
   OnInit,
-  Signal,
   inject,
 } from '@angular/core';
 import {
@@ -33,34 +32,8 @@ import {
 import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
 import {_computeAriaAccessibleName} from './aria-accessible-name';
 import {DateRange, DateSelectionModelChange} from './date-selection-model';
-import {DateFilterFn, MatDatepickerInputBase} from './datepicker-input-base';
-
-/** Parent component that should be wrapped around `MatStartDate` and `MatEndDate`. */
-export interface MatDateRangeInputParent<D> {
-  id: string;
-  min: D | null;
-  max: D | null;
-  dateFilter: DateFilterFn<D>;
-  rangePicker: {
-    opened: boolean;
-    id: string;
-  };
-  // @breaking-change 20.0.0 property to become required.
-  _ariaOwns?: Signal<string | null>;
-  _startInput: MatDateRangeInputPartBase<D>;
-  _endInput: MatDateRangeInputPartBase<D>;
-  _groupDisabled: boolean;
-  _handleChildValueChange(): void;
-  _openDatepicker(): void;
-}
-
-/**
- * Used to provide the date range input wrapper component
- * to the parts without circular dependencies.
- */
-export const MAT_DATE_RANGE_INPUT_PARENT = new InjectionToken<MatDateRangeInputParent<unknown>>(
-  'MAT_DATE_RANGE_INPUT_PARENT',
-);
+import {MatDatepickerInputBase} from './datepicker-input-base';
+import {MatDateRangeInput} from './date-range-input';
 
 /**
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
@@ -68,9 +41,9 @@ export const MAT_DATE_RANGE_INPUT_PARENT = new InjectionToken<MatDateRangeInputP
 @Directive()
 abstract class MatDateRangeInputPartBase<D>
   extends MatDatepickerInputBase<DateRange<D>>
-  implements OnInit, DoCheck
+  implements OnInit, AfterContentInit, DoCheck
 {
-  _rangeInput = inject<MatDateRangeInputParent<D>>(MAT_DATE_RANGE_INPUT_PARENT);
+  _rangeInput = inject<MatDateRangeInput<D>>(MatDateRangeInput);
   override _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   _defaultErrorStateMatcher = inject(ErrorStateMatcher);
   private _injector = inject(Injector);
@@ -86,6 +59,7 @@ abstract class MatDateRangeInputPartBase<D>
   protected abstract override _validator: ValidatorFn | null;
   protected abstract override _assignValueToModel(value: D | null): void;
   protected abstract override _getValueFromModel(modelValue: DateRange<D>): D | null;
+  protected abstract _register(): void;
   protected readonly _dir = inject(Directionality, {optional: true});
   private _errorStateTracker: _ErrorStateTracker;
 
@@ -133,6 +107,10 @@ abstract class MatDateRangeInputPartBase<D>
       this.ngControl = ngControl;
       this._errorStateTracker.ngControl = ngControl;
     }
+  }
+
+  ngAfterContentInit(): void {
+    this._register();
   }
 
   ngDoCheck() {
@@ -208,7 +186,7 @@ abstract class MatDateRangeInputPartBase<D>
   protected override _assignValueProgrammatically(value: D | null) {
     super._assignValueProgrammatically(value);
     const opposite = (
-      this === this._rangeInput._startInput
+      this === (this._rangeInput._startInput as MatDateRangeInputPartBase<D>)
         ? this._rangeInput._endInput
         : this._rangeInput._startInput
     ) as MatDateRangeInputPartBase<D> | undefined;
@@ -260,6 +238,10 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
   };
 
   protected _validator = Validators.compose([...super._getValidators(), this._startValidator]);
+
+  protected override _register(): void {
+    this._rangeInput._startInput = this;
+  }
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
     return modelValue.start;
@@ -348,6 +330,10 @@ export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
       ? null
       : {'matEndDateInvalid': {'start': start, 'actual': end}};
   };
+
+  protected override _register(): void {
+    this._rangeInput._endInput = this;
+  }
 
   protected _validator = Validators.compose([...super._getValidators(), this._endValidator]);
 

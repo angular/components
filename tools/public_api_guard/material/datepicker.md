@@ -41,7 +41,6 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -568,7 +567,7 @@ export class MatDatepickerToggleIcon {
 }
 
 // @public (undocumented)
-export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
+export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     _ariaDescribedBy: string | null;
     _ariaOwns: WritableSignal<string | null>;
@@ -632,7 +631,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     _updateFocus(origin: FocusOrigin): void;
     get value(): DateRange<D> | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": { "alias": "rangePicker"; "required": false; }; "required": { "alias": "required"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "separator": { "alias": "separator"; "required": false; }; "comparisonStart": { "alias": "comparisonStart"; "required": false; }; "comparisonEnd": { "alias": "comparisonEnd"; "required": false; }; }, {}, ["_startInput", "_endInput"], ["input[matStartDate]", "input[matEndDate]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": { "alias": "rangePicker"; "required": false; }; "required": { "alias": "required"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "separator": { "alias": "separator"; "required": false; }; "comparisonStart": { "alias": "comparisonStart"; "required": false; }; "comparisonEnd": { "alias": "comparisonEnd"; "required": false; }; }, {}, never, ["input[matStartDate]", "input[matEndDate]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDateRangeInput<any>, never>;
 }
@@ -685,6 +684,8 @@ export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     // (undocumented)
     _onKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    protected _register(): void;
     // (undocumented)
     protected _shouldHandleChangeEvent(change: DateSelectionModelChange<DateRange<D>>): boolean;
     // (undocumented)
@@ -837,6 +838,8 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     // (undocumented)
     _onKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    protected _register(): void;
     // (undocumented)
     protected _shouldHandleChangeEvent(change: DateSelectionModelChange<DateRange<D>>): boolean;
     // (undocumented)
