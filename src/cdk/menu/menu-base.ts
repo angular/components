@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusKeyManager, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   AfterContentInit,
@@ -43,7 +43,6 @@ import {PointerFocusTracker} from './pointer-focus-tracker';
     '[id]': 'id',
     '[attr.aria-orientation]': 'orientation',
     '[attr.data-cdk-menu-stack-id]': 'menuStack.id',
-    '(focus)': 'focusFirstItem()',
     '(focusin)': 'menuStack.setHasFocus(true)',
     '(focusout)': 'menuStack.setHasFocus(false)',
   },
@@ -52,6 +51,7 @@ export abstract class CdkMenuBase
   extends CdkMenuGroup
   implements Menu, AfterContentInit, OnDestroy
 {
+  private _focusMonitor = inject(FocusMonitor);
   protected ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
 
@@ -108,6 +108,7 @@ export abstract class CdkMenuBase
       this.menuStack.push(this);
     }
     this._setKeyManager();
+    this._handleFocus();
     this._subscribeToMenuStackHasFocus();
     this._subscribeToMenuOpen();
     this._subscribeToMenuStackClosed();
@@ -115,6 +116,7 @@ export abstract class CdkMenuBase
   }
 
   ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this.nativeElement);
     this.keyManager?.destroy();
     this.destroyed.next();
     this.destroyed.complete();
@@ -230,5 +232,19 @@ export abstract class CdkMenuBase
       });
       this.menuAim.initialize(this, this.pointerTracker!);
     }
+  }
+
+  /** Handles focus landing on the host element of the menu. */
+  private _handleFocus() {
+    this._focusMonitor
+      .monitor(this.nativeElement, false)
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(origin => {
+        // Don't forward focus on mouse interactions, because it can
+        // mess with the user's scroll position. See #30130.
+        if (origin !== null && origin !== 'mouse') {
+          this.focusFirstItem(origin);
+        }
+      });
   }
 }
