@@ -22,7 +22,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 })
 export class SidenavDemo {
   isLaunched = false;
-  fillerContent = Array(30);
+  fillerContent = Array.from({length: 30}, (_, index) => index);
   fixed = false;
   coverHeader = false;
   showHeader = false;
