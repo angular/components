@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef} from '@angular/core';
+import {Directive, ElementRef, inject} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /**
@@ -21,6 +22,7 @@ export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
 
   constructor() {
     super();
+    const document = inject(DOCUMENT);
     this.elementRef = new ElementRef(document.documentElement);
     this._scrollElement = document;
   }
