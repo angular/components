@@ -199,15 +199,27 @@ $drawer-over-drawer-z-index: 4;
     }
   }
 
-  // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
-  // entering the hidden drawer content, but children with their own `visibility` can override it.
-  // This is a fallback that completely hides the content when the element becomes hidden.
-  // Note that we can't do this in the animation definition, because the style gets recomputed too
-  // late, breaking the animation because Angular didn't have time to figure out the target
-  // transform. This can also be achieved with JS, but it has issues when starting an
-  // animation before the previous one has finished.
-  &[style*='visibility: hidden'] {
-    display: none;
+  .mat-drawer-transition & {
+    transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  &:not(.mat-drawer-opened):not(.mat-drawer-animating) {
+    // Stops the sidenav from poking out (e.g. with the box shadow) while it's off-screen.
+    // We can't use `display` because it interrupts the transition and `transition-behavior`
+    // isn't available in all browsers.
+    visibility: hidden;
+    box-shadow: none;
+
+    // The `visibility` above should prevent focus from entering the sidenav, but if a child
+    // element has `visibility`, it'll override the inherited value. This guarantees that the
+    // content won't be focusable.
+    .mat-drawer-inner-container {
+      display: none;
+    }
+  }
+
+  &.mat-drawer-opened {
+    transform: none;
   }
 }
 
