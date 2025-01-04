@@ -16,7 +16,6 @@ import {
   QueryList,
 } from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent, MAT_DRAWER_CONTAINER} from './drawer';
-import {matDrawerAnimations} from './drawer-animations';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -46,7 +45,6 @@ export class MatSidenavContent extends MatDrawerContent {}
   selector: 'mat-sidenav',
   exportAs: 'matSidenav',
   templateUrl: 'drawer.html',
-  animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',
@@ -56,7 +54,6 @@ export class MatSidenavContent extends MatDrawerContent {}
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
-    '[class.mat-drawer-opened]': 'opened',
     '[class.mat-sidenav-fixed]': 'fixedInViewport',
     '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
     '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
