@@ -23,7 +23,6 @@ import {
   AfterContentChecked,
   AfterContentInit,
   afterNextRender,
-  AfterRenderPhase,
   AfterViewInit,
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -943,31 +942,21 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * re-validate drawers when the position changes.
    */
   private _watchDrawerPosition(drawer: MatDrawer): void {
-    if (!drawer) {
-      return;
-    }
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping positions at the same time.
     drawer.onPositionChanged.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
-      afterNextRender(
-        () => {
-          this._validateDrawers();
-        },
-        {injector: this._injector, phase: AfterRenderPhase.Read},
-      );
+      afterNextRender({read: () => this._validateDrawers()}, {injector: this._injector});
     });
   }
 
   /** Subscribes to changes in drawer mode so we can run change detection. */
   private _watchDrawerMode(drawer: MatDrawer): void {
-    if (drawer) {
-      drawer._modeChanged
-        .pipe(takeUntil(merge(this._drawers.changes, this._destroyed)))
-        .subscribe(() => {
-          this.updateContentMargins();
-          this._changeDetectorRef.markForCheck();
-        });
-    }
+    drawer._modeChanged
+      .pipe(takeUntil(merge(this._drawers.changes, this._destroyed)))
+      .subscribe(() => {
+        this.updateContentMargins();
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /** Toggles the 'mat-drawer-opened' class on the main 'mat-drawer-container' element. */
