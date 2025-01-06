@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - "[0-9]+.[0-9]+.x"
+      - '[0-9]+.[0-9]+.x'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,7 +18,7 @@ defaults:
 
 env:
   # TODO: Remove when pnpm is exclusively used.
-  ASPECT_RULES_JS_FROZEN_PNPM_LOCK: "1"
+  ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
 
 jobs:
   lint:
