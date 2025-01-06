@@ -16,14 +16,14 @@ defaults:
 
 env:
   # TODO: Remove when pnpm is exclusively used.
-  ASPECT_RULES_JS_FROZEN_PNPM_LOCK: "1"
+  ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
       - name: Install node modules
         run: yarn install --immutable
       - name: Execute Linting
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
       - name: Install node modules
         run: yarn install --immutable
       - name: Execute Direct Production Build (deploy usage)
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
       - name: Install node modules
         run: yarn install --immutable
       - name: Execute Tests
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@db91da4e742cd081bfba01db2edc4e816018419b
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
       - name: Install node modules
         run: yarn install --immutable
       - name: Execute Lighthouse Audit
