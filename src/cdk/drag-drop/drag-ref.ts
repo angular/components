@@ -9,11 +9,7 @@
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
-import {
-  _getEventTarget,
-  _getShadowRoot,
-  normalizePassiveListenerOptions,
-} from '@angular/cdk/platform';
+import {_getEventTarget, _getShadowRoot, _bindEventWithOptions} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   ElementRef,
@@ -62,16 +58,16 @@ export interface DragRefConfig {
 }
 
 /** Options that can be used to bind a passive event listener. */
-const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
+const passiveEventListenerOptions = {passive: true};
 
 /** Options that can be used to bind an active event listener. */
-const activeEventListenerOptions = normalizePassiveListenerOptions({passive: false});
+const activeEventListenerOptions = {passive: false};
 
 /** Event options that can be used to bind an active, capturing event. */
-const activeCapturingEventOptions = normalizePassiveListenerOptions({
+const activeCapturingEventOptions = {
   passive: false,
   capture: true,
-});
+};
 
 /**
  * Time in milliseconds for which to ignore mouse events, after
@@ -121,6 +117,9 @@ export type PreviewContainer = 'global' | 'parent' | ElementRef<HTMLElement> | H
  * Reference to a draggable item. Used to manipulate or dispose of the item.
  */
 export class DragRef<T = any> {
+  private _rootElementCleanups: (() => void)[] | undefined;
+  private _cleanupShadowRootSelectStart: (() => void) | undefined;
+
   /** Element displayed next to the user's pointer while the element is dragged. */
   private _preview: PreviewRef | null;
 
@@ -454,15 +453,30 @@ export class DragRef<T = any> {
     const element = coerceElement(rootElement);
 
     if (element !== this._rootElement) {
-      if (this._rootElement) {
-        this._removeRootElementListeners(this._rootElement);
-      }
-
-      this._ngZone.runOutsideAngular(() => {
-        element.addEventListener('mousedown', this._pointerDown, activeEventListenerOptions);
-        element.addEventListener('touchstart', this._pointerDown, passiveEventListenerOptions);
-        element.addEventListener('dragstart', this._nativeDragStart, activeEventListenerOptions);
-      });
+      this._removeRootElementListeners();
+      this._rootElementCleanups = this._ngZone.runOutsideAngular(() => [
+        _bindEventWithOptions(
+          this._renderer,
+          element,
+          'mousedown',
+          this._pointerDown,
+          activeEventListenerOptions,
+        ),
+        _bindEventWithOptions(
+          this._renderer,
+          element,
+          'touchstart',
+          this._pointerDown,
+          passiveEventListenerOptions,
+        ),
+        _bindEventWithOptions(
+          this._renderer,
+          element,
+          'dragstart',
+          this._nativeDragStart,
+          activeEventListenerOptions,
+        ),
+      ]);
       this._initialTransform = undefined;
       this._rootElement = element;
     }
@@ -496,7 +510,7 @@ export class DragRef<T = any> {
 
   /** Removes the dragging functionality from the DOM element. */
   dispose() {
-    this._removeRootElementListeners(this._rootElement);
+    this._removeRootElementListeners();
 
     // Do this check before removing from the registry since it'll
     // stop being considered as dragged once it is removed.
@@ -626,11 +640,8 @@ export class DragRef<T = any> {
     this._pointerMoveSubscription.unsubscribe();
     this._pointerUpSubscription.unsubscribe();
     this._scrollSubscription.unsubscribe();
-    this._getShadowRoot()?.removeEventListener(
-      'selectstart',
-      shadowDomSelectStart,
-      activeCapturingEventOptions,
-    );
+    this._cleanupShadowRootSelectStart?.();
+    this._cleanupShadowRootSelectStart = undefined;
   }
 
   /** Destroys the preview element and its ViewRef. */
@@ -818,7 +829,9 @@ export class DragRef<T = any> {
       // In some browsers the global `selectstart` that we maintain in the `DragDropRegistry`
       // doesn't cross the shadow boundary so we have to prevent it at the shadow root (see #28792).
       this._ngZone.runOutsideAngular(() => {
-        shadowRoot.addEventListener(
+        this._cleanupShadowRootSelectStart = _bindEventWithOptions(
+          this._renderer,
+          shadowRoot,
           'selectstart',
           shadowDomSelectStart,
           activeCapturingEventOptions,
@@ -1290,10 +1303,9 @@ export class DragRef<T = any> {
   }
 
   /** Removes the manually-added event listeners from the root element. */
-  private _removeRootElementListeners(element: HTMLElement) {
-    element.removeEventListener('mousedown', this._pointerDown, activeEventListenerOptions);
-    element.removeEventListener('touchstart', this._pointerDown, passiveEventListenerOptions);
-    element.removeEventListener('dragstart', this._nativeDragStart, activeEventListenerOptions);
+  private _removeRootElementListeners() {
+    this._rootElementCleanups?.forEach(cleanup => cleanup());
+    this._rootElementCleanups = undefined;
   }
 
   /**

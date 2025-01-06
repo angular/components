@@ -13,6 +13,7 @@ import {
   Injector,
   NgZone,
   OnDestroy,
+  RendererFactory2,
   inject,
 } from '@angular/core';
 import {
@@ -21,7 +22,7 @@ import {
   RippleTarget,
   defaultRippleAnimationConfig,
 } from '../ripple';
-import {Platform, _getEventTarget} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** The options for the MatRippleLoader's event listeners. */
@@ -56,22 +57,31 @@ const matRippleDisabled = 'mat-ripple-loader-disabled';
  */
 @Injectable({providedIn: 'root'})
 export class MatRippleLoader implements OnDestroy {
-  private _document = inject(DOCUMENT, {optional: true});
+  private _document = inject(DOCUMENT);
   private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _globalRippleOptions = inject(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
   private _injector = inject(Injector);
+  private _eventCleanups: (() => void)[];
   private _hosts = new Map<
     HTMLElement,
     {renderer: RippleRenderer; target: RippleTarget; hasSetUpEvents: boolean}
   >();
 
   constructor() {
-    this._ngZone.runOutsideAngular(() => {
-      for (const event of rippleInteractionEvents) {
-        this._document?.addEventListener(event, this._onInteraction, eventListenerOptions);
-      }
+    const renderer = inject(RendererFactory2).createRenderer(null, null);
+
+    this._eventCleanups = this._ngZone.runOutsideAngular(() => {
+      return rippleInteractionEvents.map(name =>
+        _bindEventWithOptions(
+          renderer,
+          this._document,
+          name,
+          this._onInteraction,
+          eventListenerOptions,
+        ),
+      );
     });
   }
 
@@ -82,9 +92,7 @@ export class MatRippleLoader implements OnDestroy {
       this.destroyRipple(host);
     }
 
-    for (const event of rippleInteractionEvents) {
-      this._document?.removeEventListener(event, this._onInteraction, eventListenerOptions);
-    }
+    this._eventCleanups.forEach(cleanup => cleanup());
   }
 
   /**
